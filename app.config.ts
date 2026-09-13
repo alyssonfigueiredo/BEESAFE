@@ -42,7 +42,7 @@ const config: ExpoConfig = {
     "expo-font",
     "expo-secure-store",
     "expo-web-browser",
-    ...(appleSignIn ? ["expo-apple-authentication"] : []),
+    ...(appleSignIn ? ["expo-apple-authentication"] : ["./plugins/withoutAppleSignIn"]),
     "@maplibre/maplibre-react-native",
     [
       "expo-location",
