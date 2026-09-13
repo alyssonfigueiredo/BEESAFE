@@ -32,11 +32,11 @@ export default function ModeracaoScreen() {
         options={{
           headerShown: true,
           title: "Moderação",
-          headerStyle: { backgroundColor: colors.night },
+          headerStyle: { backgroundColor: colors.paper },
           headerTintColor: colors.ink,
         }}
       />
-      <ScrollView className="flex-1 bg-night" contentContainerClassName="gap-3 px-4 py-4">
+      <ScrollView className="flex-1 bg-paper" contentContainerClassName="gap-3 px-4 py-4">
         {!isMod && <Text className="font-body text-muted">Área restrita à moderação.</Text>}
         {isMod && isLoading && <Text className="font-body text-dim">Carregando fila…</Text>}
         {isMod && !isLoading && queue.length === 0 && (
@@ -48,7 +48,7 @@ export default function ModeracaoScreen() {
             className="gap-2 rounded-xl border border-border bg-surface p-4"
           >
             <View className="flex-row items-center justify-between">
-              <Text className="font-heading text-sm uppercase tracking-widest text-lilac">
+              <Text className="font-heading text-sm uppercase tracking-widest text-lilacInk">
                 {TYPE_LABEL[item.target_type]}
               </Text>
               <Text className="font-body text-xs text-dim">
@@ -79,7 +79,7 @@ export default function ModeracaoScreen() {
                 onPress={() => act(item.target_type, item.target_id, "restore")}
                 className="flex-1 items-center rounded-xl border border-turquoise py-2 active:opacity-80"
               >
-                <Text className="font-heading text-sm uppercase tracking-widest text-turquoise">
+                <Text className="font-heading text-sm uppercase tracking-widest text-turquoiseInk">
                   Manter
                 </Text>
               </Pressable>

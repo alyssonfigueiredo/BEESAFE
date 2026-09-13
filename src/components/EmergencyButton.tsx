@@ -72,9 +72,9 @@ export function EmergencyButton() {
               <Pressable
                 key={c.number}
                 onPress={() => Linking.openURL(`tel:${c.number}`)}
-                className="flex-row items-center gap-4 rounded-xl border border-border bg-night px-4 py-3 active:opacity-80"
+                className="flex-row items-center gap-4 rounded-xl border border-border bg-paper px-4 py-3 active:opacity-80"
               >
-                <Text className="font-display text-3xl text-coral">{c.number}</Text>
+                <Text className="font-display text-3xl text-coralInk">{c.number}</Text>
                 <View className="flex-1">
                   <Text className="font-body-bold text-base text-ink">{c.name}</Text>
                   <Text className="font-body text-sm text-dim">{c.note}</Text>
@@ -83,7 +83,7 @@ export function EmergencyButton() {
             ))}
             {local.length > 0 && (
               <View className="gap-2">
-                <Text className="font-heading text-sm uppercase tracking-widest text-turquoise">
+                <Text className="font-heading text-sm uppercase tracking-widest text-turquoiseInk">
                   Apoio em {city?.name}
                 </Text>
                 {local.map((s) => (
@@ -91,14 +91,14 @@ export function EmergencyButton() {
                     key={s.id}
                     onPress={() => Linking.openURL(s.phone ? `tel:${s.phone}` : (s.url ?? ""))}
                     disabled={!s.phone && !s.url}
-                    className="rounded-xl border border-border bg-night px-4 py-3 active:opacity-80"
+                    className="rounded-xl border border-border bg-paper px-4 py-3 active:opacity-80"
                   >
                     <Text className="font-body-bold text-sm text-ink">{s.name}</Text>
                     {!!s.description && (
                       <Text className="font-body text-xs text-dim">{s.description}</Text>
                     )}
                     {!!s.phone && (
-                      <Text className="font-body-bold text-sm text-coral">{s.phone}</Text>
+                      <Text className="font-body-bold text-sm text-coralInk">{s.phone}</Text>
                     )}
                   </Pressable>
                 ))}

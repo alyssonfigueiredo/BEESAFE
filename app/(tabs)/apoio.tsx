@@ -12,7 +12,7 @@ import {
   useToggleLike,
 } from "@/hooks/useSupport";
 import { useCity } from "@/providers/CityProvider";
-import { SUPPORT_CATEGORIES, type SupportCategory } from "@/theme/domain";
+import { onLight, SUPPORT_CATEGORIES, type SupportCategory } from "@/theme/domain";
 import { colors } from "@/theme/tokens";
 
 const CATEGORY_KEYS = Object.keys(SUPPORT_CATEGORIES) as SupportCategory[];
@@ -47,7 +47,7 @@ export default function ApoioScreen() {
 
   return (
     <ScrollView
-      className="flex-1 bg-night"
+      className="flex-1 bg-paper"
       contentContainerClassName="gap-4 px-4 py-4"
       keyboardShouldPersistTaps="handled"
     >
@@ -61,7 +61,7 @@ export default function ApoioScreen() {
           Deixe uma mensagem
         </Text>
         <TextInput
-          className="rounded-xl border border-border bg-night px-4 py-3 font-body text-base text-ink"
+          className="rounded-xl border border-border bg-paper px-4 py-3 font-body text-base text-ink"
           placeholder="Apelido (opcional, vira Anônimo)"
           placeholderTextColor={colors.dim}
           maxLength={40}
@@ -81,7 +81,7 @@ export default function ApoioScreen() {
               >
                 <Text
                   className="font-body-medium text-xs"
-                  style={{ color: active ? colors.night : c.color }}
+                  style={{ color: active ? colors.night : onLight(c.color) }}
                 >
                   {c.label}
                 </Text>
@@ -90,7 +90,7 @@ export default function ApoioScreen() {
           })}
         </View>
         <TextInput
-          className="min-h-24 rounded-xl border border-border bg-night px-4 py-3 font-body text-base text-ink"
+          className="min-h-24 rounded-xl border border-border bg-paper px-4 py-3 font-body text-base text-ink"
           placeholder="Uma palavra de acolhimento, uma dica ou um pedido de ajuda (até 1000 caracteres)"
           placeholderTextColor={colors.dim}
           multiline
@@ -136,8 +136,8 @@ export default function ApoioScreen() {
                 >
                   <Heart
                     size={16}
-                    color={colors.coral}
-                    fill={m.liked ? colors.coral : "transparent"}
+                    color={colors.coralInk}
+                    fill={m.liked ? colors.coralInk : "transparent"}
                   />
                   <Text className="font-body-medium text-xs text-muted">{m.likes}</Text>
                 </Pressable>
@@ -155,7 +155,7 @@ export default function ApoioScreen() {
           <View key={s.id} className="gap-1 border-b border-border pb-3">
             <View className="flex-row items-center justify-between gap-2">
               <Text className="min-w-0 flex-1 font-body-bold text-sm text-ink">{s.name}</Text>
-              <Text className="font-body text-xs text-turquoise">{KIND_LABEL[s.kind]}</Text>
+              <Text className="font-body text-xs text-turquoiseInk">{KIND_LABEL[s.kind]}</Text>
             </View>
             {!!s.description && (
               <Text className="font-body text-xs text-muted">{s.description}</Text>
@@ -166,8 +166,8 @@ export default function ApoioScreen() {
                   onPress={() => Linking.openURL(`tel:${s.phone}`)}
                   className="flex-row items-center gap-1"
                 >
-                  <Phone size={14} color={colors.coral} />
-                  <Text className="font-body-bold text-sm text-coral">{s.phone}</Text>
+                  <Phone size={14} color={colors.coralInk} />
+                  <Text className="font-body-bold text-sm text-coralInk">{s.phone}</Text>
                 </Pressable>
               )}
               {!!s.url && (
@@ -175,8 +175,8 @@ export default function ApoioScreen() {
                   onPress={() => Linking.openURL(s.url!)}
                   className="flex-row items-center gap-1"
                 >
-                  <ExternalLink size={14} color={colors.turquoise} />
-                  <Text className="font-body text-sm text-turquoise">Site</Text>
+                  <ExternalLink size={14} color={colors.turquoiseInk} />
+                  <Text className="font-body text-sm text-turquoiseInk">Site</Text>
                 </Pressable>
               )}
             </View>

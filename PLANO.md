@@ -67,8 +67,10 @@ content_reports   id, target_type (occurrence|place|rating|message), target_id, 
 rate_limits       user_id, action, window_start, count
 ```
 
-Enums de `occurrences.type`, `severity` e `support_messages.category` e a paleta de cores permanecem os do
-documento original.
+Enums de `occurrences.type`, `severity` e `support_messages.category` permanecem os do documento original.
+A paleta foi para o claro: fundo papel `#FAF9F6`, cartões brancos, o azul-noite `#1E2340` como texto e como
+fundo do mapa. Cada acento tem duas versões — clara para preenchimento e escura para texto sobre papel.
+O símbolo é a íris-radar: anel em degradê, varredura de 95° e blips (`scripts/gen-icons.mjs`).
 
 ### Views públicas (o que o app lê)
 

@@ -12,7 +12,7 @@ export default function RegistrarScreen() {
 
   return (
     <ScrollView
-      className="flex-1 bg-night"
+      className="flex-1 bg-paper"
       contentContainerClassName="gap-5 px-4 py-4"
       keyboardShouldPersistTaps="handled"
     >
@@ -75,7 +75,7 @@ function Note({ title, text, color }: { title: string; text: string; color?: "co
   return (
     <View>
       <Text
-        className={`font-body-bold text-sm ${color === "coral" ? "text-coral" : "text-turquoise"}`}
+        className={`font-body-bold text-sm ${color === "coral" ? "text-coralInk" : "text-turquoiseInk"}`}
       >
         {title}
       </Text>

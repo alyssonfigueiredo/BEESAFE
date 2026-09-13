@@ -20,7 +20,7 @@ export function PlaceCard({ place, verified }: { place: WelcomingPlace; verified
             >
               {place.name}
             </Text>
-            {verified && <BadgeCheck color={colors.turquoise} size={16} />}
+            {verified && <BadgeCheck color={colors.turquoiseInk} size={16} />}
           </View>
           <Text className="font-body text-xs text-dim">{PLACE_CATEGORIES[place.category]}</Text>
         </View>
@@ -39,7 +39,7 @@ export function PlaceCard({ place, verified }: { place: WelcomingPlace; verified
               </Text>
             </>
           )}
-          {place.flagged && <AlertTriangle color={colors.coral} size={14} />}
+          {place.flagged && <AlertTriangle color={colors.coralInk} size={14} />}
         </View>
         {!!place.neighborhood && (
           <Text className="font-body text-xs text-dim">{place.neighborhood}</Text>

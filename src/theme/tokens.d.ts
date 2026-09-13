@@ -1,19 +1,28 @@
 export declare const colors: {
-  night: string;
+  paper: string;
   surface: string;
+  subtle: string;
   border: string;
-  coral: string;
-  yellow: string;
-  orange: string;
-  turquoise: string;
-  lilac: string;
+  night: string;
   ink: string;
   muted: string;
   dim: string;
+  coral: string;
+  orange: string;
+  yellow: string;
+  turquoise: string;
+  lilac: string;
+  coralInk: string;
+  orangeInk: string;
+  yellowInk: string;
+  turquoiseInk: string;
+  lilacInk: string;
+  star: string;
 };
 export declare const mark: {
   ring: string[];
   sweep: string;
+  pupil: string;
 };
 export declare const fonts: {
   display: string;

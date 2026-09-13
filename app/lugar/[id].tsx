@@ -45,7 +45,7 @@ export default function PlaceScreen() {
 
   if (isLoading || !place) {
     return (
-      <View className="flex-1 items-center justify-center bg-night">
+      <View className="flex-1 items-center justify-center bg-paper">
         <Text className="font-body text-muted">
           {isLoading ? "Carregando…" : "Lugar não encontrado."}
         </Text>
@@ -61,13 +61,13 @@ export default function PlaceScreen() {
         options={{
           headerShown: true,
           title: place.name,
-          headerStyle: { backgroundColor: colors.night },
+          headerStyle: { backgroundColor: colors.paper },
           headerTintColor: colors.ink,
           headerTitleStyle: { fontFamily: "Oswald_500Medium" },
         }}
       />
       <ScrollView
-        className="flex-1 bg-night"
+        className="flex-1 bg-paper"
         contentContainerClassName="gap-4 px-4 py-4"
         keyboardShouldPersistTaps="handled"
       >
@@ -76,7 +76,7 @@ export default function PlaceScreen() {
             <Text className="font-display text-3xl uppercase tracking-widest text-ink">
               {place.name}
             </Text>
-            {place.verified && <BadgeCheck color={colors.turquoise} size={20} />}
+            {place.verified && <BadgeCheck color={colors.turquoiseInk} size={20} />}
           </View>
           <Text className="font-body text-sm text-dim">
             {PLACE_CATEGORIES[place.category]}
@@ -107,8 +107,8 @@ export default function PlaceScreen() {
           </View>
 
           {place.flagged && (
-            <View className="mt-2 flex-row items-start gap-2 rounded-xl border border-coral/60 bg-night p-3">
-              <AlertTriangle color={colors.coral} size={18} />
+            <View className="mt-2 flex-row items-start gap-2 rounded-xl border border-coral/60 bg-paper p-3">
+              <AlertTriangle color={colors.coralInk} size={18} />
               <Text className="flex-1 font-body text-sm text-muted">
                 {place.recent_occurrences} relato{place.recent_occurrences === 1 ? "" : "s"} num
                 raio de 100 m nos últimos 6 meses
@@ -134,9 +134,9 @@ export default function PlaceScreen() {
           <Text className="font-heading text-base uppercase tracking-widest text-ink">
             {mine ? "Sua avaliação" : "Avaliar este lugar"}
           </Text>
-          <Stars value={stars} size={32} onChange={setStars} color={colors.yellow} />
+          <Stars value={stars} size={32} onChange={setStars} color={colors.star} />
           <TextInput
-            className="min-h-20 rounded-xl border border-border bg-night px-4 py-3 font-body text-base text-ink"
+            className="min-h-20 rounded-xl border border-border bg-paper px-4 py-3 font-body text-base text-ink"
             placeholder="Como foi a experiência? (opcional, até 500 caracteres)"
             placeholderTextColor={colors.dim}
             multiline
@@ -166,7 +166,7 @@ export default function PlaceScreen() {
           {ratings.map((r) => (
             <View key={r.id} className="gap-1 rounded-xl border border-border bg-surface p-4">
               <View className="flex-row items-center justify-between">
-                <Stars value={r.stars} size={14} color={colors.yellow} />
+                <Stars value={r.stars} size={14} color={colors.star} />
                 <Text className="font-body text-xs text-dim">
                   {r.nickname}
                   {r.is_mine ? " (você)" : ""} ·{" "}

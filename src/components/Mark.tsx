@@ -3,8 +3,8 @@ import Svg, { Circle, Defs, LinearGradient, Path, Stop } from "react-native-svg"
 
 import { colors, mark } from "@/theme/tokens";
 
-// Símbolo da Irisa: anel de cor, varredura de radar e blips. Mesma geometria de scripts/gen-icons.mjs,
-// em uma caixa de 100 × 100. `onNight` = fundo escuro (pupila afunda, o aro de luz marca o centro).
+// Símbolo da Irisa: anel de cor, varredura de radar, blips e pupila com reflexo.
+// Mesma geometria de scripts/gen-icons.mjs, numa caixa de 100 × 100.
 
 const RING_SLICES = 48;
 const SWEEP_START = (-150 * Math.PI) / 180;
@@ -56,7 +56,7 @@ const ringSlices = Array.from({ length: RING_SLICES }, (_, i) => ({
 const sweepStart = point(33, SWEEP_START);
 const sweepEnd = point(33, SWEEP_END);
 
-export function Mark({ size = 28, onNight = true }: { size?: number; onNight?: boolean }) {
+export function Mark({ size = 28 }: { size?: number }) {
   // ids de gradiente são globais no react-native-svg: cada instância precisa do seu
   const sweepId = `sweep-${useId()}`;
 
@@ -99,20 +99,11 @@ export function Mark({ size = 28, onNight = true }: { size?: number; onNight?: b
       />
 
       <Circle cx={66} cy={36} r={3.1} fill={mark.sweep} />
-      <Circle cx={63} cy={62} r={2.4} fill={onNight ? colors.yellow : colors.coral} />
+      <Circle cx={63} cy={62} r={2.4} fill={colors.coral} />
       <Circle cx={38} cy={34} r={1.9} fill={mark.sweep} />
 
-      <Circle cx={50} cy={50} r={12} fill={onNight ? colors.night : "#161B2E"} />
-      <Circle
-        cx={50}
-        cy={50}
-        r={12}
-        fill="none"
-        stroke={mark.sweep}
-        strokeWidth={1.5}
-        strokeOpacity={0.9}
-      />
-      {!onNight && <Circle cx={46.2} cy={45.8} r={2.6} fill="#FFFFFF" fillOpacity={0.92} />}
+      <Circle cx={50} cy={50} r={13} fill={mark.pupil} />
+      <Circle cx={46.1} cy={45.6} r={2.86} fill="#FFFFFF" />
     </Svg>
   );
 }

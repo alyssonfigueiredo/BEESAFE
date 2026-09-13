@@ -26,7 +26,7 @@ function RootNavigator() {
   const { session, loading } = useAuth();
   if (loading) return null;
   return (
-    <Stack screenOptions={{ headerShown: false, contentStyle: { backgroundColor: colors.night } }}>
+    <Stack screenOptions={{ headerShown: false, contentStyle: { backgroundColor: colors.paper } }}>
       <Stack.Protected guard={!!session}>
         <Stack.Screen name="(tabs)" />
         <Stack.Screen name="lugar/[id]" />
@@ -56,12 +56,12 @@ export default function RootLayout() {
   if (!fontsLoaded && !fontError) return null;
 
   return (
-    <GestureHandlerRootView style={{ flex: 1, backgroundColor: colors.night }}>
+    <GestureHandlerRootView style={{ flex: 1, backgroundColor: colors.paper }}>
       <SafeAreaProvider>
         <QueryClientProvider client={queryClient}>
           <AuthProvider>
             <CityProvider>
-              <StatusBar style="light" />
+              <StatusBar style="dark" />
               <RootNavigator />
             </CityProvider>
           </AuthProvider>

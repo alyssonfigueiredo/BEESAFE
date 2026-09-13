@@ -1,5 +1,19 @@
 import { colors } from "./tokens";
 
+// Os acentos claros servem de preenchimento (pastilhas, pontos do mapa). Como texto sobre papel
+// eles não passam no contraste: `onLight` devolve a versão escura da mesma matiz.
+const INK_OF: Record<string, string> = {
+  [colors.coral]: colors.coralInk,
+  [colors.orange]: colors.orangeInk,
+  [colors.yellow]: colors.yellowInk,
+  [colors.turquoise]: colors.turquoiseInk,
+  [colors.lilac]: colors.lilacInk,
+};
+
+export function onLight(color: string) {
+  return INK_OF[color] ?? color;
+}
+
 export const OCCURRENCE_TYPES = {
   verbal: { label: "Agressão verbal", color: colors.yellow },
   fisica: { label: "Violência física", color: colors.coral },

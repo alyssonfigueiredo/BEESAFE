@@ -5,7 +5,7 @@ import { colors } from "@/theme/tokens";
 export default function AuthLayout() {
   return (
     <Stack
-      screenOptions={{ headerShown: false, contentStyle: { backgroundColor: colors.night } }}
+      screenOptions={{ headerShown: false, contentStyle: { backgroundColor: colors.paper } }}
     />
   );
 }

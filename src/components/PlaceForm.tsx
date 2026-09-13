@@ -78,7 +78,7 @@ export function PlaceForm({ onDone }: { onDone: (placeId: string) => void }) {
             >
               <Text
                 className="font-body-medium text-xs"
-                style={{ color: category === k ? colors.night : colors.turquoise }}
+                style={{ color: category === k ? colors.night : colors.turquoiseInk }}
               >
                 {PLACE_CATEGORIES[k]}
               </Text>
@@ -107,8 +107,8 @@ export function PlaceForm({ onDone }: { onDone: (placeId: string) => void }) {
           onPress={useMyLocation}
           className="flex-row items-center justify-center gap-2 rounded-xl border border-turquoise py-3 active:opacity-80"
         >
-          <Crosshair color={colors.turquoise} size={18} />
-          <Text className="font-heading text-sm uppercase tracking-widest text-turquoise">
+          <Crosshair color={colors.turquoiseInk} size={18} />
+          <Text className="font-heading text-sm uppercase tracking-widest text-turquoiseInk">
             Estou no lugar agora
           </Text>
         </Pressable>

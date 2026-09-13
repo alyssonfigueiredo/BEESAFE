@@ -9,7 +9,13 @@ import { Alert, Platform, Pressable, Text, TextInput, View } from "react-native"
 import { CityMap } from "@/components/CityMap";
 import { useCreateOccurrence } from "@/hooks/useCreateOccurrence";
 import { useCity } from "@/providers/CityProvider";
-import { OCCURRENCE_TYPES, SEVERITIES, type OccurrenceType, type Severity } from "@/theme/domain";
+import {
+  OCCURRENCE_TYPES,
+  onLight,
+  SEVERITIES,
+  type OccurrenceType,
+  type Severity,
+} from "@/theme/domain";
 import { colors } from "@/theme/tokens";
 
 const TYPE_KEYS = Object.keys(OCCURRENCE_TYPES) as OccurrenceType[];
@@ -128,8 +134,8 @@ export function ReportForm({ onDone }: { onDone: () => void }) {
           onPress={useMyLocation}
           className="flex-row items-center justify-center gap-2 rounded-xl border border-turquoise py-3 active:opacity-80"
         >
-          <Crosshair color={colors.turquoise} size={18} />
-          <Text className="font-heading text-sm uppercase tracking-widest text-turquoise">
+          <Crosshair color={colors.turquoiseInk} size={18} />
+          <Text className="font-heading text-sm uppercase tracking-widest text-turquoiseInk">
             Usar minha localização
           </Text>
         </Pressable>
@@ -211,7 +217,10 @@ function Choice({
       className={`items-center rounded-full border px-3 py-2 ${grow ? "flex-1" : ""}`}
       style={{ borderColor: color, backgroundColor: active ? color : "transparent" }}
     >
-      <Text className="font-body-medium text-xs" style={{ color: active ? colors.night : color }}>
+      <Text
+        className="font-body-medium text-xs"
+        style={{ color: active ? colors.night : onLight(color) }}
+      >
         {label}
       </Text>
     </Pressable>

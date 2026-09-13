@@ -44,7 +44,7 @@ export default function LoginScreen() {
   }
 
   return (
-    <SafeAreaView className="flex-1 bg-night px-6">
+    <SafeAreaView className="flex-1 bg-paper px-6">
       <View className="flex-1 justify-center gap-6">
         <Logo size="lg" />
         <Text className="font-body text-base text-muted">
@@ -57,7 +57,7 @@ export default function LoginScreen() {
             onPress={() => run(signInWithGoogle)}
             className="items-center rounded-xl bg-ink py-3 active:opacity-80 disabled:opacity-50"
           >
-            <Text className="font-heading text-base uppercase tracking-widest text-night">
+            <Text className="font-heading text-base uppercase tracking-widest text-paper">
               Entrar com Google
             </Text>
           </Pressable>
@@ -112,7 +112,7 @@ export default function LoginScreen() {
         </View>
 
         <Pressable onPress={() => setMode(mode === "login" ? "signup" : "login")}>
-          <Text className="text-center font-body text-sm text-turquoise">
+          <Text className="text-center font-body text-sm text-turquoiseInk">
             {mode === "login" ? "Não tem conta? Cadastre-se" : "Já tem conta? Entrar"}
           </Text>
         </Pressable>

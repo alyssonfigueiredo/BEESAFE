@@ -1,5 +1,7 @@
 import { Text, View } from "react-native";
 
+import { onLight } from "@/theme/domain";
+
 export function StatCard({
   label,
   value,
@@ -14,7 +16,7 @@ export function StatCard({
       <Text className="font-body text-xs uppercase tracking-wider text-dim">{label}</Text>
       <Text
         className="font-display text-2xl text-ink"
-        style={color ? { color } : undefined}
+        style={color ? { color: onLight(color) } : undefined}
         numberOfLines={1}
       >
         {value}

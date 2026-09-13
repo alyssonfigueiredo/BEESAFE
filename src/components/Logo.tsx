@@ -11,7 +11,7 @@ export function Logo({ size = "sm" }: { size?: "sm" | "lg" }) {
         <Text
           className={`font-display uppercase tracking-widest text-ink ${lg ? "text-5xl" : "text-2xl"}`}
         >
-          Iri<Text className="text-yellow">sa</Text>
+          Iri<Text className="text-yellowInk">sa</Text>
         </Text>
         {lg && <Text className="font-body text-base text-muted">a cidade vista por você</Text>}
       </View>

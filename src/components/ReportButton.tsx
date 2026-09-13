@@ -69,7 +69,7 @@ export function ReportButton({
                 >
                   <Text
                     className="font-body-medium text-xs"
-                    style={{ color: reason === r ? colors.night : colors.coral }}
+                    style={{ color: reason === r ? colors.night : colors.coralInk }}
                   >
                     {r}
                   </Text>
@@ -77,7 +77,7 @@ export function ReportButton({
               ))}
             </View>
             <TextInput
-              className="rounded-xl border border-border bg-night px-4 py-3 font-body text-base text-ink"
+              className="rounded-xl border border-border bg-paper px-4 py-3 font-body text-base text-ink"
               placeholder="Detalhe se quiser (até 500 caracteres)"
               placeholderTextColor={colors.dim}
               maxLength={500}

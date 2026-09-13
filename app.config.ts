@@ -12,9 +12,9 @@ const config: ExpoConfig = {
   version: "0.1.0",
   orientation: "portrait",
   icon: "./assets/icon.png",
-  userInterfaceStyle: "dark",
-  backgroundColor: "#0B132B",
-  primaryColor: "#FF5A5F",
+  userInterfaceStyle: "light",
+  backgroundColor: "#FAF9F6",
+  primaryColor: "#F4736F",
   ios: {
     bundleIdentifier: "br.com.irisa.app",
     supportsTablet: false,
@@ -28,7 +28,7 @@ const config: ExpoConfig = {
   android: {
     package: "br.com.irisa.app",
     adaptiveIcon: {
-      backgroundColor: "#0B132B",
+      backgroundColor: "#FAF9F6",
       foregroundImage: "./assets/android-icon-foreground.png",
       backgroundImage: "./assets/android-icon-background.png",
       monochromeImage: "./assets/android-icon-monochrome.png",
@@ -53,7 +53,7 @@ const config: ExpoConfig = {
     ],
     [
       "expo-splash-screen",
-      { backgroundColor: "#0B132B", image: "./assets/splash-icon.png", imageWidth: 160 },
+      { backgroundColor: "#FAF9F6", image: "./assets/splash-icon.png", imageWidth: 160 },
     ],
   ],
   experiments: { typedRoutes: true },

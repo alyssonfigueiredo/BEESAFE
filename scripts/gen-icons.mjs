@@ -1,13 +1,12 @@
 // Gera os ícones em assets/ a partir da marca (íris-radar). Uso: node scripts/gen-icons.mjs (precisa de Chromium).
 // Em ambientes sem o canal "chromium" do Playwright, aponte o executável em CHROMIUM_PATH.
-// eslint-disable-next-line import/no-unresolved -- dependência só do gerador, instalada sob demanda
 import { chromium } from "playwright-core";
 
-const NIGHT = "#0B132B";
+const PAPER = "#FAF9F6";
 const INK = "#161B2E";
 const SWEEP = "#5CC9B4"; // varredura: turquesa, a cor de apoio no app
 // anel: as cores do design system mais um azul de passagem, interpoladas em degradê contínuo
-const RING = ["#FF5A5F", "#FF9F45", "#FFD166", "#5CC9B4", "#6AA8EE", "#A78BFA"];
+const RING = ["#F4736F", "#F5A45D", "#F0CA75", "#5CC9B4", "#6AA8EE", "#AE96F2"];
 
 const lerp = (a, b, t) => {
   const A = a.slice(1),
@@ -65,8 +64,8 @@ const blip = (x, y, r, color) =>
   `<circle cx="${x}" cy="${y}" r="${r * 2.1}" fill="${color}" fill-opacity="0.14"/>` +
   `<circle cx="${x}" cy="${y}" r="${r}" fill="${color}"/>`;
 
-// `mono` = versão monocromática (Android). `onNight` = fundo escuro (pupila afunda, aro de luz marca o centro).
-function mark({ size, bg, pad = 0, mono = false, onNight = false }) {
+// `mono` = versão monocromática (Android).
+function mark({ size, bg, pad = 0, mono = false }) {
   const scale = 1 - pad;
   const line = mono ? "#fff" : SWEEP;
 
@@ -74,15 +73,11 @@ function mark({ size, bg, pad = 0, mono = false, onNight = false }) {
   body += sweep(line, mono ? 0.28 : 0.5, `sw${size}${mono ? "m" : ""}`);
   body += `<circle cx="50" cy="50" r="25" fill="none" stroke="${line}" stroke-width="0.8" stroke-opacity="${mono ? 0.4 : 0.35}"/>`;
   body += blip(66, 36, 3.1, mono ? "#fff" : SWEEP);
-  body += blip(63, 62, 2.4, mono ? "#fff" : onNight ? "#FFD166" : "#FF5A5F");
+  body += blip(63, 62, 2.4, mono ? "#fff" : "#F4736F");
   body += blip(38, 34, 1.9, mono ? "#fff" : SWEEP);
-  // pupila: disco cheio com aro de luz — o centro do radar
-  body += `<circle cx="50" cy="50" r="12" fill="${mono ? "#fff" : onNight ? NIGHT : INK}"/>`;
-  if (!mono) {
-    body += `<circle cx="50" cy="50" r="12" fill="none" stroke="${SWEEP}" stroke-width="1.5" stroke-opacity="0.9"/>`;
-    if (!onNight)
-      body += `<circle cx="46.2" cy="45.8" r="2.6" fill="#FFFFFF" fill-opacity="0.92"/>`;
-  }
+  // pupila escura com reflexo
+  body += `<circle cx="50" cy="50" r="13" fill="${mono ? "#fff" : INK}"/>`;
+  if (!mono) body += `<circle cx="46.1" cy="45.6" r="2.86" fill="#FFFFFF"/>`;
 
   return `<svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}" viewBox="0 0 100 100">
     ${bg === "transparent" ? "" : `<rect width="100" height="100" fill="${bg}"/>`}
@@ -90,12 +85,12 @@ function mark({ size, bg, pad = 0, mono = false, onNight = false }) {
 }
 
 const jobs = [
-  ["icon.png", { size: 1024, bg: NIGHT, pad: 0.1, onNight: true }],
-  ["splash-icon.png", { size: 512, bg: "transparent", pad: 0.04, onNight: true }],
-  ["android-icon-foreground.png", { size: 1024, bg: "transparent", pad: 0.34, onNight: true }],
-  ["android-icon-background.png", { size: 1024, bg: NIGHT, pad: 1 }],
+  ["icon.png", { size: 1024, bg: PAPER, pad: 0.1 }],
+  ["splash-icon.png", { size: 512, bg: "transparent", pad: 0.04 }],
+  ["android-icon-foreground.png", { size: 1024, bg: "transparent", pad: 0.34 }],
+  ["android-icon-background.png", { size: 1024, bg: PAPER, pad: 1 }],
   ["android-icon-monochrome.png", { size: 1024, bg: "transparent", pad: 0.34, mono: true }],
-  ["favicon.png", { size: 96, bg: NIGHT, pad: 0.08, onNight: true }],
+  ["favicon.png", { size: 96, bg: PAPER, pad: 0.08 }],
 ];
 
 const browser = await chromium.launch(

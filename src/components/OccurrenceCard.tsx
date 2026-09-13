@@ -4,7 +4,7 @@ import { Text, View } from "react-native";
 
 import { ReportButton } from "@/components/ReportButton";
 import type { PublicOccurrence } from "@/lib/types";
-import { OCCURRENCE_TYPES, SEVERITIES } from "@/theme/domain";
+import { OCCURRENCE_TYPES, onLight, SEVERITIES } from "@/theme/domain";
 
 export function formatOccurrenceDate(iso: string) {
   return format(parseISO(iso), "d 'de' MMM 'de' yyyy", { locale: ptBR });
@@ -21,7 +21,7 @@ export function OccurrenceCard({ occurrence: o }: { occurrence: PublicOccurrence
             {type.label}
           </Text>
         </View>
-        <Text className="font-body-medium text-xs" style={{ color: sev.color }}>
+        <Text className="font-body-medium text-xs" style={{ color: onLight(sev.color) }}>
           Gravidade {sev.label.toLowerCase()}
         </Text>
       </View>

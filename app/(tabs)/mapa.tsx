@@ -9,7 +9,7 @@ import { useAreaRisk, useOccurrences } from "@/hooks/useOccurrences";
 import { usePlaces } from "@/hooks/usePlaces";
 import type { PublicOccurrence } from "@/lib/types";
 import { useCity } from "@/providers/CityProvider";
-import { OCCURRENCE_TYPES, SEVERITIES, type OccurrenceType } from "@/theme/domain";
+import { OCCURRENCE_TYPES, onLight, SEVERITIES, type OccurrenceType } from "@/theme/domain";
 import { colors } from "@/theme/tokens";
 
 const TYPE_KEYS = Object.keys(OCCURRENCE_TYPES) as OccurrenceType[];
@@ -36,7 +36,7 @@ export default function MapaScreen() {
 
   if (loading || !city) {
     return (
-      <View className="flex-1 items-center justify-center bg-night px-6">
+      <View className="flex-1 items-center justify-center bg-paper px-6">
         <Text className="font-body text-base text-muted">
           {loading
             ? "Localizando sua cidade…"
@@ -47,7 +47,7 @@ export default function MapaScreen() {
   }
 
   return (
-    <ScrollView className="flex-1 bg-night" contentContainerClassName="gap-4 px-4 py-4">
+    <ScrollView className="flex-1 bg-paper" contentContainerClassName="gap-4 px-4 py-4">
       <View className="flex-row items-end justify-between">
         <View>
           <Text className="font-display text-3xl uppercase tracking-widest text-ink">Mapa</Text>
@@ -159,7 +159,10 @@ function Chip({
       className="rounded-full border px-3 py-1.5"
       style={{ borderColor: color, backgroundColor: active ? color : "transparent" }}
     >
-      <Text className="font-body-medium text-xs" style={{ color: active ? colors.night : color }}>
+      <Text
+        className="font-body-medium text-xs"
+        style={{ color: active ? colors.night : onLight(color) }}
+      >
         {label}
       </Text>
     </Pressable>

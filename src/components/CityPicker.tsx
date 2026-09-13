@@ -27,13 +27,13 @@ export function CityPicker() {
   return (
     <>
       <Pressable onPress={() => setOpen(true)} className="flex-row items-center gap-1 self-start">
-        <Text className="font-body-medium text-sm text-turquoise">
+        <Text className="font-body-medium text-sm text-turquoiseInk">
           {city ? `${city.name} · ${city.state}` : "Escolher cidade"}
         </Text>
-        <ChevronDown color={colors.turquoise} size={16} />
+        <ChevronDown color={colors.turquoiseInk} size={16} />
       </Pressable>
       <Modal visible={open} animationType="slide" onRequestClose={() => setOpen(false)}>
-        <View className="flex-1 gap-4 bg-night px-4 pt-14">
+        <View className="flex-1 gap-4 bg-paper px-4 pt-14">
           <View className="flex-row items-center justify-between">
             <Text className="font-display text-2xl uppercase tracking-widest text-ink">Cidade</Text>
             <Pressable onPress={() => setOpen(false)} hitSlop={12}>

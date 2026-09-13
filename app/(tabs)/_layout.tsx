@@ -9,14 +9,14 @@ export default function TabsLayout() {
   return (
     <Tabs
       screenOptions={{
-        headerStyle: { backgroundColor: colors.night },
+        headerStyle: { backgroundColor: colors.paper },
         headerTitle: () => <Logo size="sm" />,
         headerTitleAlign: "left",
         headerRight: () => <EmergencyButton />,
         headerShadowVisible: false,
-        sceneStyle: { backgroundColor: colors.night },
+        sceneStyle: { backgroundColor: colors.paper },
         tabBarStyle: { backgroundColor: colors.surface, borderTopColor: colors.border },
-        tabBarActiveTintColor: colors.coral,
+        tabBarActiveTintColor: colors.coralInk,
         tabBarInactiveTintColor: colors.dim,
         tabBarLabelStyle: { fontFamily: fonts.bodyMedium, fontSize: 11 },
       }}

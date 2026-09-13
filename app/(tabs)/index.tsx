@@ -21,7 +21,7 @@ export default function HomeScreen() {
   const { data: welcoming = [] } = useWelcoming(city?.id, 5);
 
   return (
-    <ScrollView className="flex-1 bg-night" contentContainerClassName="gap-4 px-4 py-4">
+    <ScrollView className="flex-1 bg-paper" contentContainerClassName="gap-4 px-4 py-4">
       <View className="gap-3 rounded-2xl border border-border bg-surface p-5">
         <Text className="font-body text-xs uppercase tracking-widest text-dim">
           Painel de segurança
@@ -44,7 +44,7 @@ export default function HomeScreen() {
           </Link>
           <Link href="/mapa" asChild>
             <Pressable className="flex-1 items-center rounded-xl border border-turquoise py-3 active:opacity-80">
-              <Text className="font-heading text-sm uppercase tracking-widest text-turquoise">
+              <Text className="font-heading text-sm uppercase tracking-widest text-turquoiseInk">
                 Ver mapa
               </Text>
             </Pressable>

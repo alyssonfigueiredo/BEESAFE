@@ -44,7 +44,7 @@ export default function PerfilScreen() {
 
   return (
     <ScrollView
-      className="flex-1 bg-night"
+      className="flex-1 bg-paper"
       contentContainerClassName="gap-4 px-4 py-4"
       keyboardShouldPersistTaps="handled"
     >
@@ -52,7 +52,7 @@ export default function PerfilScreen() {
         <Text className="font-display text-3xl uppercase tracking-widest text-ink">Perfil</Text>
         <Text className="font-body text-sm text-dim">{session?.user.email}</Text>
         {profile?.role !== "user" && profile && (
-          <Text className="font-body-bold text-xs uppercase tracking-widest text-lilac">
+          <Text className="font-body-bold text-xs uppercase tracking-widest text-lilacInk">
             {profile.role === "admin" ? "Administração" : "Moderação"}
           </Text>
         )}
@@ -63,7 +63,7 @@ export default function PerfilScreen() {
           Apelido no mural e nas avaliações
         </Text>
         <TextInput
-          className="rounded-xl border border-border bg-night px-4 py-3 font-body text-base text-ink"
+          className="rounded-xl border border-border bg-paper px-4 py-3 font-body text-base text-ink"
           placeholder="Vazio = Anônimo"
           placeholderTextColor={colors.dim}
           maxLength={40}
@@ -111,7 +111,7 @@ export default function PerfilScreen() {
         <Text className="font-heading text-base uppercase tracking-widest text-muted">Sair</Text>
       </Pressable>
       <Pressable onPress={confirmDelete} className="items-center py-3 active:opacity-80">
-        <Text className="font-body text-sm text-coral">Excluir minha conta</Text>
+        <Text className="font-body text-sm text-coralInk">Excluir minha conta</Text>
       </Pressable>
     </ScrollView>
   );
