@@ -9,9 +9,10 @@ export function Logo({ size = "sm" }: { size?: "sm" | "lg" }) {
       <Mark size={lg ? 60 : 28} />
       <View>
         <Text
-          className={`font-display uppercase tracking-widest text-ink ${lg ? "text-5xl" : "text-2xl"}`}
+          className={`font-wordmark uppercase text-ink ${lg ? "text-5xl" : "text-2xl"}`}
+          style={{ letterSpacing: lg ? 7 : 4 }}
         >
-          Iri<Text className="text-yellowInk">sa</Text>
+          Iris<Text className="text-turquoiseInk">a</Text>
         </Text>
         {lg && <Text className="font-body text-base text-muted">a cidade vista por você</Text>}
       </View>

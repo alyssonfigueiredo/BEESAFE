@@ -25,6 +25,7 @@ export declare const mark: {
   pupil: string;
 };
 export declare const fonts: {
+  wordmark: string;
   display: string;
   heading: string;
   body: string;

@@ -8,6 +8,7 @@ module.exports = {
     extend: {
       colors,
       fontFamily: {
+        wordmark: [fonts.wordmark],
         display: [fonts.display],
         heading: [fonts.heading],
         body: [fonts.body],

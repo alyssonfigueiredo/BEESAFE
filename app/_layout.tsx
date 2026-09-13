@@ -1,5 +1,6 @@
 import "../global.css";
 
+import { Jost_500Medium } from "@expo-google-fonts/jost";
 import { Oswald_500Medium, Oswald_700Bold } from "@expo-google-fonts/oswald";
 import {
   SpaceGrotesk_400Regular,
@@ -42,6 +43,7 @@ function RootNavigator() {
 
 export default function RootLayout() {
   const [fontsLoaded, fontError] = useFonts({
+    Jost_500Medium,
     Oswald_500Medium,
     Oswald_700Bold,
     SpaceGrotesk_400Regular,

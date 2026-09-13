@@ -32,6 +32,7 @@ const mark = {
 };
 
 const fonts = {
+  wordmark: "Jost_500Medium", // logotipo IRISA: geométrica leve e espaçada
   display: "Oswald_700Bold",
   heading: "Oswald_500Medium",
   body: "SpaceGrotesk_400Regular",

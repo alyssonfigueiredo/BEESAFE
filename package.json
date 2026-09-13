@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "main": "expo-router/entry",
   "dependencies": {
+    "@expo-google-fonts/jost": "^0.4.2",
     "@expo-google-fonts/oswald": "^0.4.2",
     "@expo-google-fonts/space-grotesk": "^0.4.1",
     "@maplibre/maplibre-react-native": "^11.3.10",
