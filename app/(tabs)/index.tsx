@@ -7,6 +7,8 @@ import { OccurrenceCard } from "@/components/OccurrenceCard";
 import { StatCard } from "@/components/StatCard";
 import { useCityStats } from "@/hooks/useCityStats";
 import { useAreaRisk, useOccurrences } from "@/hooks/useOccurrences";
+import { useWelcoming } from "@/hooks/usePlaces";
+import { PlaceCard } from "@/components/PlaceCard";
 import { useCity } from "@/providers/CityProvider";
 import { OCCURRENCE_TYPES } from "@/theme/domain";
 import { colors } from "@/theme/tokens";
@@ -16,6 +18,7 @@ export default function HomeScreen() {
   const { data: stats } = useCityStats(city?.id);
   const { data: occurrences = [] } = useOccurrences(city?.id);
   const { data: ranking = [] } = useAreaRisk(city?.id, 5);
+  const { data: welcoming = [] } = useWelcoming(city?.id, 5);
 
   return (
     <ScrollView className="flex-1 bg-night" contentContainerClassName="gap-4 px-4 py-4">
@@ -79,6 +82,20 @@ export default function HomeScreen() {
         )}
         {occurrences.slice(0, 6).map((o) => (
           <OccurrenceCard key={o.id} occurrence={o} />
+        ))}
+      </View>
+
+      <View className="gap-2">
+        <Text className="font-heading text-base uppercase tracking-widest text-ink">
+          Lugares mais acolhedores
+        </Text>
+        {welcoming.length === 0 && (
+          <Text className="font-body text-sm text-dim">
+            Entram aqui lugares com 3 ou mais avaliações. Avalie um lugar para começar.
+          </Text>
+        )}
+        {welcoming.map((p) => (
+          <PlaceCard key={p.id} place={p} />
         ))}
       </View>
 

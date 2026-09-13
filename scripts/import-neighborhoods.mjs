@@ -12,9 +12,9 @@ if (!url || !key) throw new Error("Defina SUPABASE_URL e SUPABASE_SERVICE_ROLE_K
 const supabase = createClient(url, key, { auth: { persistSession: false } });
 
 const CAPITAIS = [
-  1200401, 2704302, 1600303, 1302603, 2927408, 2304400, 5300108, 3205309, 5208707, 2111300, 5103403, 5002704,
-  3106200, 1501402, 2507507, 4106902, 2611606, 2211001, 3304557, 2408102, 4314902, 1100205, 1400100, 4205407,
-  3550308, 2800308, 1721000,
+  1200401, 2704302, 1600303, 1302603, 2927408, 2304400, 5300108, 3205309, 5208707, 2111300, 5103403,
+  5002704, 3106200, 1501402, 2507507, 4106902, 2611606, 2211001, 3304557, 2408102, 4314902, 1100205,
+  1400100, 4205407, 3550308, 2800308, 1721000,
 ];
 const codes = process.argv.slice(2).map(Number).filter(Boolean);
 const targets = codes.length ? codes : CAPITAIS;
@@ -39,14 +39,20 @@ async function fetchNeighborhoods(ibge) {
     .filter((f) => f.properties?.name && /Polygon$/.test(f.geometry?.type ?? ""))
     .map((f) => ({
       name: f.properties.name,
-      geom: f.geometry.type === "Polygon" ? { type: "MultiPolygon", coordinates: [f.geometry.coordinates] } : f.geometry,
+      geom:
+        f.geometry.type === "Polygon"
+          ? { type: "MultiPolygon", coordinates: [f.geometry.coordinates] }
+          : f.geometry,
     }));
 }
 
 for (const ibge of targets) {
   try {
     const rows = await fetchNeighborhoods(ibge);
-    const { data, error } = await supabase.rpc("upsert_neighborhoods", { p_city_ibge: ibge, p_rows: rows });
+    const { data, error } = await supabase.rpc("upsert_neighborhoods", {
+      p_city_ibge: ibge,
+      p_rows: rows,
+    });
     if (error) throw error;
     console.log(`${ibge}: ${rows.length} bairros no OSM, ${data ?? 0} gravados`);
   } catch (e) {

@@ -41,3 +41,23 @@ select public.upsert_neighborhoods(4314902, '[
  {"name":"Bom Fim","geom":{"type":"Polygon","coordinates":[[[-51.21,-30.04],[-51.19,-30.04],[-51.19,-30.02],[-51.21,-30.02],[-51.21,-30.04]]]}},
  {"name":"Fora","geom":{"type":"Polygon","coordinates":[[[-46.7,-23.6],[-46.6,-23.6],[-46.6,-23.5],[-46.7,-23.5],[-46.7,-23.6]]]}}
 ]'::jsonb) as gravados_deve_ser_1;
+
+-- ---------- fase 2: lugares ----------
+insert into auth.users (id, email) values ('22222222-2222-2222-2222-222222222222','b@b.com'), ('33333333-3333-3333-3333-333333333333','c@c.com');
+set role authenticated;
+set request.jwt.claim.sub = '22222222-2222-2222-2222-222222222222';
+insert into public.places (id, name, category, location) values
+  ('aaaaaaaa-0000-0000-0000-000000000001', 'Bar da Esquina', 'bar', st_setsrid(st_makepoint(-51.2234000,-30.0412000),4326)::geography);
+select score, rating_count, recent_occurrences, recent_high_occurrences, flagged from public.place_scores; -- sem avaliação, 3 relatos perto, 2 graves
+insert into public.place_ratings (place_id, stars, comment) values ('aaaaaaaa-0000-0000-0000-000000000001', 5, 'Ótimo');
+set request.jwt.claim.sub = '33333333-3333-3333-3333-333333333333';
+insert into public.place_ratings (place_id, stars) values ('aaaaaaaa-0000-0000-0000-000000000001', 4);
+-- avaliar duas vezes deve falhar
+do $$ begin
+  insert into public.place_ratings (place_id, stars) values ('aaaaaaaa-0000-0000-0000-000000000001', 1);
+  raise exception 'NAO DEVERIA';
+exception when unique_violation then raise notice 'duplicata rejeitada ok'; end $$;
+select name, score, rating_count, flagged, recent_high_occurrences from public.public_places; -- média 4.5 - 0.5*2 = 3.5
+select stars, nickname, is_mine from public.public_place_ratings order by stars desc;
+select count(*) as welcoming_needs_3_ratings from public.welcoming_ranking((select id from public.cities limit 1));
+reset role;

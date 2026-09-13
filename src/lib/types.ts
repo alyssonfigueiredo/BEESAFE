@@ -26,3 +26,39 @@ export type AreaRisk = {
   high: number;
   score: number;
 };
+
+export type PublicPlace = {
+  id: string;
+  name: string;
+  category: import("@/theme/domain").PlaceCategory;
+  address: string | null;
+  city_id: number;
+  neighborhood_id: number | null;
+  neighborhood: string | null;
+  city: string;
+  state: string;
+  verified: boolean;
+  created_at: string;
+  latitude: number;
+  longitude: number;
+  score: number | null;
+  rating_count: number;
+  recent_occurrences: number;
+  recent_high_occurrences: number;
+  flagged: boolean;
+};
+
+export type PublicPlaceRating = {
+  id: string;
+  place_id: string;
+  stars: number;
+  comment: string | null;
+  updated_at: string;
+  nickname: string;
+  is_mine: boolean;
+};
+
+export type WelcomingPlace = Pick<
+  PublicPlace,
+  "id" | "name" | "category" | "neighborhood" | "score" | "rating_count" | "flagged"
+>;

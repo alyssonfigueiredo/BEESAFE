@@ -1,4 +1,4 @@
-import { Link } from "expo-router";
+import { Link, useRouter } from "expo-router";
 import { useMemo, useState } from "react";
 import { Pressable, ScrollView, Text, View } from "react-native";
 
@@ -6,6 +6,7 @@ import { CityMap } from "@/components/CityMap";
 import { DangerRanking } from "@/components/DangerRanking";
 import { OccurrenceCard } from "@/components/OccurrenceCard";
 import { useAreaRisk, useOccurrences } from "@/hooks/useOccurrences";
+import { usePlaces } from "@/hooks/usePlaces";
 import type { PublicOccurrence } from "@/lib/types";
 import { useCity } from "@/providers/CityProvider";
 import { OCCURRENCE_TYPES, SEVERITIES, type OccurrenceType } from "@/theme/domain";
@@ -17,6 +18,9 @@ export default function MapaScreen() {
   const { city, loading } = useCity();
   const { data: occurrences = [], isLoading } = useOccurrences(city?.id);
   const { data: ranking = [] } = useAreaRisk(city?.id, 6);
+  const { data: places = [] } = usePlaces(city?.id);
+  const router = useRouter();
+  const [layers, setLayers] = useState({ relatos: true, lugares: true });
   const [filter, setFilter] = useState<OccurrenceType | "all">("all");
   const [selected, setSelected] = useState<PublicOccurrence | null>(null);
 
@@ -82,8 +86,25 @@ export default function MapaScreen() {
         ))}
       </ScrollView>
 
+      <View className="flex-row gap-2">
+        <Chip
+          label={`Relatos (${occurrences.length})`}
+          color={colors.coral}
+          active={layers.relatos}
+          onPress={() => setLayers((l) => ({ ...l, relatos: !l.relatos }))}
+        />
+        <Chip
+          label={`Lugares (${places.length})`}
+          color={colors.turquoise}
+          active={layers.lugares}
+          onPress={() => setLayers((l) => ({ ...l, lugares: !l.lugares }))}
+        />
+      </View>
+
       <CityMap
-        occurrences={filtered}
+        occurrences={layers.relatos ? filtered : []}
+        places={layers.lugares ? places : []}
+        onSelectPlace={(p) => router.push({ pathname: "/lugar/[id]", params: { id: p.id } })}
         center={{ lat: city.lat, lng: city.lng }}
         onSelect={setSelected}
         style={{ height: 420 }}
@@ -104,6 +125,12 @@ export default function MapaScreen() {
               label={`Gravidade ${s.label.toLowerCase()}`}
             />
           ))}
+        </View>
+        <View className="flex-row flex-wrap gap-x-4 gap-y-1">
+          <LegendItem color={colors.turquoise} label="Lugar 4,5+" />
+          <LegendItem color={colors.yellow} label="Lugar 3,5+" />
+          <LegendItem color={colors.coral} label="Lugar abaixo de 2,5" />
+          <LegendItem color={colors.dim} label="Sem avaliação" />
         </View>
         <View className="flex-row flex-wrap gap-x-4 gap-y-1">
           <LegendItem color={colors.yellow} label="1–2 relatos" faded />

@@ -11,14 +11,16 @@ import { View, type NativeSyntheticEvent } from "react-native";
 
 import { buildHeatCells } from "@/lib/heat";
 import { darkMapStyle } from "@/lib/mapStyle";
-import type { PublicOccurrence } from "@/lib/types";
-import { OCCURRENCE_TYPES, SEVERITIES } from "@/theme/domain";
+import type { PublicOccurrence, PublicPlace } from "@/lib/types";
+import { OCCURRENCE_TYPES, SEVERITIES, placeScoreColor } from "@/theme/domain";
 import { colors } from "@/theme/tokens";
 
 type LngLat = { lng: number; lat: number };
 
 type Props = {
   occurrences: PublicOccurrence[];
+  places?: PublicPlace[];
+  onSelectPlace?: (place: PublicPlace) => void;
   center: LngLat;
   zoom?: number;
   /** Modo seleção: esconde calor e pontos e devolve o ponto tocado. */
@@ -30,6 +32,8 @@ type Props = {
 
 export function CityMap({
   occurrences,
+  places = [],
+  onSelectPlace,
   center,
   zoom = 12,
   onPick,
@@ -68,6 +72,29 @@ export function CityMap({
     }),
     [occurrences],
   );
+
+  const placeFeatures = useMemo<GeoJSON.FeatureCollection>(
+    () => ({
+      type: "FeatureCollection",
+      features: places.map((p) => ({
+        type: "Feature",
+        id: p.id,
+        properties: {
+          id: p.id,
+          color: p.score == null ? colors.dim : placeScoreColor(Number(p.score)),
+          stroke: p.flagged ? colors.coral : colors.night,
+        },
+        geometry: { type: "Point", coordinates: [p.longitude, p.latitude] },
+      })),
+    }),
+    [places],
+  );
+
+  function handlePlacePress(e: NativeSyntheticEvent<PressEventWithFeatures>) {
+    const id = e.nativeEvent.features[0]?.properties?.id as string | undefined;
+    const place = places.find((p) => p.id === id);
+    if (place) onSelectPlace?.(place);
+  }
 
   function handlePointPress(e: NativeSyntheticEvent<PressEventWithFeatures>) {
     const id = e.nativeEvent.features[0]?.properties?.id as string | undefined;
@@ -119,6 +146,26 @@ export function CityMap({
                 circleRadius: ["get", "radius"],
                 circleStrokeColor: colors.night,
                 circleStrokeWidth: 1.5,
+              }}
+            />
+          </GeoJSONSource>
+        )}
+
+        {!pickMode && places.length > 0 && (
+          <GeoJSONSource id="places" data={placeFeatures} onPress={handlePlacePress}>
+            <Layer
+              id="place-halo"
+              type="circle"
+              style={{ circleColor: ["get", "color"], circleRadius: 14, circleOpacity: 0.18 }}
+            />
+            <Layer
+              id="place-star"
+              type="circle"
+              style={{
+                circleColor: ["get", "color"],
+                circleRadius: 8,
+                circleStrokeColor: ["get", "stroke"],
+                circleStrokeWidth: 2,
               }}
             />
           </GeoJSONSource>

@@ -1,10 +1,15 @@
 import { useRouter } from "expo-router";
-import { ScrollView, Text, View } from "react-native";
+import { useState } from "react";
+import { Pressable, ScrollView, Text, View } from "react-native";
 
+import { PlaceForm } from "@/components/PlaceForm";
 import { ReportForm } from "@/components/ReportForm";
+import { colors } from "@/theme/tokens";
 
 export default function RegistrarScreen() {
   const router = useRouter();
+  const [mode, setMode] = useState<"relato" | "lugar">("relato");
+
   return (
     <ScrollView
       className="flex-1 bg-night"
@@ -13,10 +18,39 @@ export default function RegistrarScreen() {
     >
       <View>
         <Text className="font-display text-3xl uppercase tracking-widest text-ink">Registrar</Text>
-        <Text className="font-body text-sm text-dim">Relato anônimo de LGBTIfobia</Text>
+        <Text className="font-body text-sm text-dim">
+          {mode === "relato"
+            ? "Relato anônimo de LGBTIfobia"
+            : "Um lugar para a comunidade avaliar"}
+        </Text>
       </View>
 
-      <ReportForm onDone={() => router.replace("/mapa")} />
+      <View className="flex-row rounded-xl border border-border bg-surface p-1">
+        {(["relato", "lugar"] as const).map((m) => (
+          <Pressable
+            key={m}
+            onPress={() => setMode(m)}
+            className="flex-1 items-center rounded-lg py-2"
+            style={{
+              backgroundColor:
+                mode === m ? (m === "relato" ? colors.coral : colors.turquoise) : "transparent",
+            }}
+          >
+            <Text
+              className="font-heading text-sm uppercase tracking-widest"
+              style={{ color: mode === m ? colors.night : colors.muted }}
+            >
+              {m === "relato" ? "Relato" : "Lugar"}
+            </Text>
+          </Pressable>
+        ))}
+      </View>
+
+      {mode === "relato" ? (
+        <ReportForm onDone={() => router.replace("/mapa")} />
+      ) : (
+        <PlaceForm onDone={(id) => router.replace({ pathname: "/lugar/[id]", params: { id } })} />
+      )}
 
       <View className="gap-3 rounded-xl border border-border bg-surface p-4">
         <Note
