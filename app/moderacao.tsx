@@ -31,6 +31,7 @@ export default function ModeracaoScreen() {
       <Stack.Screen
         options={{
           headerShown: true,
+          headerBackTitle: "Voltar",
           title: "Moderação",
           headerStyle: { backgroundColor: colors.paper },
           headerTintColor: colors.ink,

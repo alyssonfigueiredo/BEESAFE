@@ -76,6 +76,7 @@ export default function PlaceScreen() {
       <Stack.Screen
         options={{
           headerShown: true,
+          headerBackTitle: "Voltar",
           title: place.name,
           headerStyle: { backgroundColor: colors.paper },
           headerTintColor: colors.ink,
