@@ -35,3 +35,9 @@ reset role;
 -- exclusão da conta mantém o relato
 delete from auth.users where id = '11111111-1111-1111-1111-111111111111';
 select count(*) as kept, count(created_by) as with_author from public.occurrences;
+
+-- bairros via upsert_neighborhoods: um dentro, um fora do município
+select public.upsert_neighborhoods(4314902, '[
+ {"name":"Bom Fim","geom":{"type":"Polygon","coordinates":[[[-51.21,-30.04],[-51.19,-30.04],[-51.19,-30.02],[-51.21,-30.02],[-51.21,-30.04]]]}},
+ {"name":"Fora","geom":{"type":"Polygon","coordinates":[[[-46.7,-23.6],[-46.6,-23.6],[-46.6,-23.5],[-46.7,-23.5],[-46.7,-23.6]]]}}
+]'::jsonb) as gravados_deve_ser_1;
