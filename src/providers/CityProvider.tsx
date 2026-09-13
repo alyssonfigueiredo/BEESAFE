@@ -1,3 +1,4 @@
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as Location from "expo-location";
 import { createContext, useContext, useEffect, useState, type PropsWithChildren } from "react";
 
@@ -39,6 +40,11 @@ export function CityProvider({ children }: PropsWithChildren) {
     let cancelled = false;
     (async () => {
       try {
+        const saved = await AsyncStorage.getItem("irisa.city");
+        if (saved && !cancelled) {
+          setCity(JSON.parse(saved) as City);
+          return;
+        }
         const { status } = await Location.requestForegroundPermissionsAsync();
         if (status === "granted") {
           const pos = await Location.getCurrentPositionAsync({
