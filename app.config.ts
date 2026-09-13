@@ -3,6 +3,7 @@ import type { ExpoConfig } from "expo/config";
 const config: ExpoConfig = {
   name: "Irisa",
   slug: "irisa",
+  owner: "alyssondfa",
   scheme: "irisa",
   version: "0.1.0",
   orientation: "portrait",
@@ -53,7 +54,7 @@ const config: ExpoConfig = {
   ],
   experiments: { typedRoutes: true },
   extra: {
-    eas: { projectId: process.env.EAS_PROJECT_ID ?? "" },
+    eas: { projectId: "38a09fd2-63cc-4a90-912d-0f73022944ff" },
   },
 };
 
