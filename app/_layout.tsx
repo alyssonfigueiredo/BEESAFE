@@ -17,6 +17,7 @@ import { SafeAreaProvider } from "react-native-safe-area-context";
 
 import { queryClient } from "@/lib/query";
 import { AuthProvider, useAuth } from "@/providers/AuthProvider";
+import { CityProvider } from "@/providers/CityProvider";
 import { colors } from "@/theme/tokens";
 
 SplashScreen.preventAutoHideAsync();
@@ -56,8 +57,10 @@ export default function RootLayout() {
       <SafeAreaProvider>
         <QueryClientProvider client={queryClient}>
           <AuthProvider>
-            <StatusBar style="light" />
-            <RootNavigator />
+            <CityProvider>
+              <StatusBar style="light" />
+              <RootNavigator />
+            </CityProvider>
           </AuthProvider>
         </QueryClientProvider>
       </SafeAreaProvider>

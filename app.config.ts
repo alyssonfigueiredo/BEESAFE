@@ -38,6 +38,7 @@ const config: ExpoConfig = {
     "expo-secure-store",
     "expo-web-browser",
     "expo-apple-authentication",
+    "@maplibre/maplibre-react-native",
     [
       "expo-location",
       {

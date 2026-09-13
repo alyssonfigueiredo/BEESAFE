@@ -1,0 +1,41 @@
+import { Text, View } from "react-native";
+
+import type { AreaRisk } from "@/lib/types";
+import { riskLevel } from "@/theme/domain";
+
+export function DangerRanking({
+  items,
+  title = "Áreas de atenção",
+}: {
+  items: AreaRisk[];
+  title?: string;
+}) {
+  return (
+    <View className="gap-3 rounded-xl border border-border bg-surface p-4">
+      <Text className="font-heading text-base uppercase tracking-widest text-ink">{title}</Text>
+      {items.length === 0 && (
+        <Text className="font-body text-sm text-dim">
+          Sem relatos com bairro nos últimos 12 meses.
+        </Text>
+      )}
+      {items.map((a, i) => {
+        const level = riskLevel(Number(a.score));
+        return (
+          <View key={a.neighborhood_id} className="flex-row items-center gap-3">
+            <Text className="w-6 font-display text-lg text-dim">{i + 1}</Text>
+            <View className="flex-1">
+              <Text className="font-body-medium text-sm text-ink">{a.neighborhood}</Text>
+              <Text className="font-body text-xs text-dim">
+                {a.total} relato{Number(a.total) === 1 ? "" : "s"} · {a.high} grave
+                {Number(a.high) === 1 ? "" : "s"}
+              </Text>
+            </View>
+            <Text className="font-body-bold text-xs" style={{ color: level.color }}>
+              {level.label}
+            </Text>
+          </View>
+        );
+      })}
+    </View>
+  );
+}
