@@ -1,8 +1,9 @@
-import { useState } from "react";
-import { Alert, Pressable, Text, TextInput, View } from "react-native";
+import { useEffect, useState } from "react";
+import { Alert, Platform, Pressable, Text, TextInput, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 import { Logo } from "@/components/Logo";
+import { isAppleSignInAvailable, signInWithApple, signInWithGoogle } from "@/lib/socialAuth";
 import { supabase } from "@/lib/supabase";
 import { colors } from "@/theme/tokens";
 
@@ -11,18 +12,35 @@ export default function LoginScreen() {
   const [password, setPassword] = useState("");
   const [mode, setMode] = useState<"login" | "signup">("login");
   const [busy, setBusy] = useState(false);
+  const [appleAvailable, setAppleAvailable] = useState(false);
 
-  async function submit() {
-    if (!email || !password) return Alert.alert("Preencha e-mail e senha.");
+  useEffect(() => {
+    isAppleSignInAvailable().then(setAppleAvailable);
+  }, []);
+
+  async function run(fn: () => Promise<void>) {
     setBusy(true);
-    const { error } =
-      mode === "login"
-        ? await supabase.auth.signInWithPassword({ email, password })
-        : await supabase.auth.signUp({ email, password });
-    setBusy(false);
-    if (error) Alert.alert("Não deu certo", error.message);
-    else if (mode === "signup")
-      Alert.alert("Cadastro criado", "Confira seu e-mail para confirmar a conta.");
+    try {
+      await fn();
+    } catch (e) {
+      const msg = e instanceof Error ? e.message : String(e);
+      if (!/cancel/i.test(msg)) Alert.alert("Não deu certo", msg);
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  async function submitEmail() {
+    if (!email || !password) return Alert.alert("Preencha e-mail e senha.");
+    await run(async () => {
+      const { error } =
+        mode === "login"
+          ? await supabase.auth.signInWithPassword({ email, password })
+          : await supabase.auth.signUp({ email, password });
+      if (error) throw error;
+      if (mode === "signup")
+        Alert.alert("Cadastro criado", "Se pedirmos confirmação, confira seu e-mail.");
+    });
   }
 
   return (
@@ -32,6 +50,37 @@ export default function LoginScreen() {
         <Text className="font-body text-base text-muted">
           Sua identidade nunca aparece. O cadastro existe só para evitar relatos falsos.
         </Text>
+
+        <View className="gap-3">
+          <Pressable
+            disabled={busy}
+            onPress={() => run(signInWithGoogle)}
+            className="items-center rounded-xl bg-ink py-3 active:opacity-80 disabled:opacity-50"
+          >
+            <Text className="font-heading text-base uppercase tracking-widest text-night">
+              Entrar com Google
+            </Text>
+          </Pressable>
+          {appleAvailable && Platform.OS === "ios" && (
+            <Pressable
+              disabled={busy}
+              onPress={() => run(signInWithApple)}
+              className="items-center rounded-xl border border-ink py-3 active:opacity-80 disabled:opacity-50"
+            >
+              <Text className="font-heading text-base uppercase tracking-widest text-ink">
+                Entrar com Apple
+              </Text>
+            </Pressable>
+          )}
+        </View>
+
+        <View className="flex-row items-center gap-3">
+          <View className="h-px flex-1 bg-border" />
+          <Text className="font-body text-xs uppercase tracking-widest text-dim">
+            ou com e-mail
+          </Text>
+          <View className="h-px flex-1 bg-border" />
+        </View>
 
         <View className="gap-3">
           <TextInput
@@ -53,8 +102,8 @@ export default function LoginScreen() {
           />
           <Pressable
             disabled={busy}
-            onPress={submit}
-            className="items-center rounded-xl bg-coral py-3 active:opacity-80"
+            onPress={submitEmail}
+            className="items-center rounded-xl bg-coral py-3 active:opacity-80 disabled:opacity-50"
           >
             <Text className="font-heading text-lg uppercase tracking-widest text-night">
               {mode === "login" ? "Entrar" : "Criar conta"}
@@ -67,10 +116,6 @@ export default function LoginScreen() {
             {mode === "login" ? "Não tem conta? Cadastre-se" : "Já tem conta? Entrar"}
           </Text>
         </Pressable>
-
-        <Text className="text-center font-body text-xs text-dim">
-          Login com Google e Apple entram na fase 1.
-        </Text>
       </View>
     </SafeAreaView>
   );

@@ -18,6 +18,7 @@ export const supabase = createClient(url ?? "http://localhost:54321", anonKey ??
     autoRefreshToken: true,
     persistSession: true,
     detectSessionInUrl: false,
+    flowType: "pkce",
   },
 });
 
