@@ -1,16 +1,17 @@
 import {
   Camera,
+  type CameraRef,
   GeoJSONSource,
   Layer,
   Map,
   Marker,
   type PressEventWithFeatures,
 } from "@maplibre/maplibre-react-native";
-import { useMemo } from "react";
+import { useEffect, useMemo, useRef } from "react";
 import { View, type NativeSyntheticEvent } from "react-native";
 
 import { buildHeatCells } from "@/lib/heat";
-import { darkMapStyle } from "@/lib/mapStyle";
+import { mapStyle } from "@/lib/mapStyle";
 import type { PublicOccurrence, PublicPlace } from "@/lib/types";
 import { OCCURRENCE_TYPES, SEVERITIES, placeScoreColor } from "@/theme/domain";
 import { colors } from "@/theme/tokens";
@@ -90,6 +91,26 @@ export function CityMap({
     [places],
   );
 
+  // Enquadra relatos + lugares na primeira vez que chegam; depois não mexe na câmera do usuário.
+  const cameraRef = useRef<CameraRef>(null);
+  const fitted = useRef(false);
+  const dataKey = pickMode ? 0 : occurrences.length + places.length;
+  useEffect(() => {
+    if (fitted.current || dataKey === 0) return;
+    const pts: [number, number][] = [
+      ...occurrences.map((o) => [o.longitude, o.latitude] as [number, number]),
+      ...places.map((p) => [p.longitude, p.latitude] as [number, number]),
+    ];
+    const lngs = pts.map((p) => p[0]);
+    const lats = pts.map((p) => p[1]);
+    const pad = 0.006; // ~600 m, evita bounds degenerado com 1 ponto
+    cameraRef.current?.fitBounds(
+      [Math.min(...lngs) - pad, Math.min(...lats) - pad, Math.max(...lngs) + pad, Math.max(...lats) + pad],
+      { padding: { top: 24, right: 24, bottom: 24, left: 24 }, duration: 0 },
+    );
+    fitted.current = true;
+  }, [dataKey, occurrences, places]);
+
   function handlePlacePress(e: NativeSyntheticEvent<PressEventWithFeatures>) {
     const id = e.nativeEvent.features[0]?.properties?.id as string | undefined;
     const place = places.find((p) => p.id === id);
@@ -105,7 +126,7 @@ export function CityMap({
     <View style={[{ flex: 1, overflow: "hidden", borderRadius: 16 }, style]}>
       <Map
         style={{ flex: 1 }}
-        mapStyle={darkMapStyle}
+        mapStyle={mapStyle}
         logo={false}
         attribution
         attributionPosition={{ bottom: 8, right: 8 }}
@@ -117,7 +138,7 @@ export function CityMap({
           else onSelect?.(null);
         }}
       >
-        <Camera initialViewState={{ center: [center.lng, center.lat], zoom }} />
+        <Camera ref={cameraRef} initialViewState={{ center: [center.lng, center.lat], zoom }} />
 
         {!pickMode && (
           <GeoJSONSource id="heat" data={heat}>
