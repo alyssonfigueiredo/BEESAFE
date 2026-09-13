@@ -12,7 +12,7 @@ export function Logo({ size = "sm" }: { size?: "sm" | "lg" }) {
           className={`font-wordmark uppercase text-ink ${lg ? "text-5xl" : "text-2xl"}`}
           style={{ letterSpacing: lg ? 7 : 4 }}
         >
-          Iris<Text className="text-turquoiseInk">a</Text>
+          Iris<Text className="text-yellow">a</Text>
         </Text>
         {lg && <Text className="font-body text-base text-muted">a cidade vista por você</Text>}
       </View>
