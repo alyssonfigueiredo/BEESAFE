@@ -18,7 +18,6 @@ export declare const colors: {
   turquoiseInk: string;
   lilacInk: string;
   amber: string;
-  star: string;
 };
 export declare const mark: {
   ring: string[];

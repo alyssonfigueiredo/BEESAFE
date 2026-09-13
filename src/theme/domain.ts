@@ -14,6 +14,16 @@ export function onLight(color: string) {
   return INK_OF[color] ?? color;
 }
 
+// Escala do marcador de nota (Rainbow/IrisScore): o anel da marca em cinco passos.
+// A ordem é a do anel; a posição preenchida é que carrega o valor, não a cor.
+export const SCALE = [
+  colors.coral,
+  colors.orange,
+  colors.yellow,
+  colors.turquoise,
+  colors.lilac,
+] as const;
+
 export const OCCURRENCE_TYPES = {
   verbal: { label: "Agressão verbal", color: colors.yellow },
   fisica: { label: "Violência física", color: colors.coral },

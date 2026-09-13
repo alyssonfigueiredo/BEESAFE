@@ -2,7 +2,7 @@ import { Link } from "expo-router";
 import { AlertTriangle, BadgeCheck } from "lucide-react-native";
 import { Pressable, Text, View } from "react-native";
 
-import { Stars } from "@/components/Stars";
+import { Rainbow } from "@/components/Rainbow";
 import type { WelcomingPlace } from "@/lib/types";
 import { PLACE_CATEGORIES, placeScoreColor } from "@/theme/domain";
 import { colors } from "@/theme/tokens";
@@ -29,7 +29,7 @@ export function PlaceCard({ place, verified }: { place: WelcomingPlace; verified
             <Text className="font-body text-sm text-dim">Sem avaliações ainda</Text>
           ) : (
             <>
-              <Stars value={score} size={14} />
+              <Rainbow value={score} size={8} />
               <Text className="font-body-bold text-sm" style={{ color: placeScoreColor(score) }}>
                 {score.toFixed(1)}
               </Text>

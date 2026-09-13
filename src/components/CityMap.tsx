@@ -159,7 +159,7 @@ export function CityMap({
               style={{ circleColor: ["get", "color"], circleRadius: 14, circleOpacity: 0.18 }}
             />
             <Layer
-              id="place-star"
+              id="place-dot"
               type="circle"
               style={{
                 circleColor: ["get", "color"],

@@ -7,7 +7,8 @@ import { Alert, Pressable, ScrollView, Text, TextInput, View } from "react-nativ
 
 import { CityMap } from "@/components/CityMap";
 import { ReportButton } from "@/components/ReportButton";
-import { Stars } from "@/components/Stars";
+import { IrisScore } from "@/components/IrisScore";
+import { Rainbow } from "@/components/Rainbow";
 import { usePlace, usePlaceRatings, useRatePlace } from "@/hooks/usePlaces";
 import { PLACE_CATEGORIES, placeScoreColor } from "@/theme/domain";
 import { colors } from "@/theme/tokens";
@@ -31,7 +32,7 @@ export default function PlaceScreen() {
   const setComment = (v: string) => setDraft({ ...current, comment: v });
 
   async function submit() {
-    if (!stars) return Alert.alert("Escolha de 1 a 5 estrelas.");
+    if (!stars) return Alert.alert("Escolha uma nota de 1 a 5.");
     try {
       await rate.mutateAsync({ stars, comment });
       Alert.alert(
@@ -92,11 +93,11 @@ export default function PlaceScreen() {
               </Text>
             ) : (
               <>
-                <Text className="font-display text-4xl" style={{ color: placeScoreColor(score) }}>
-                  {score.toFixed(1)}
-                </Text>
+                <IrisScore value={score} size={54} />
                 <View>
-                  <Stars value={score} />
+                  <Text className="font-display text-4xl" style={{ color: placeScoreColor(score) }}>
+                    {score.toFixed(1)}
+                  </Text>
                   <Text className="font-body text-xs text-dim">
                     {place.rating_count} avaliaç{place.rating_count === 1 ? "ão" : "ões"}
                     {place.rating_count < 3 ? " · poucas para o ranking" : ""}
@@ -134,7 +135,7 @@ export default function PlaceScreen() {
           <Text className="font-heading text-base uppercase tracking-widest text-ink">
             {mine ? "Sua avaliação" : "Avaliar este lugar"}
           </Text>
-          <Stars value={stars} size={32} onChange={setStars} color={colors.star} />
+          <Rainbow value={stars} size={16} onChange={setStars} />
           <TextInput
             className="min-h-20 rounded-xl border border-border bg-paper px-4 py-3 font-body text-base text-ink"
             placeholder="Como foi a experiência? (opcional, até 500 caracteres)"
@@ -166,7 +167,7 @@ export default function PlaceScreen() {
           {ratings.map((r) => (
             <View key={r.id} className="gap-1 rounded-xl border border-border bg-surface p-4">
               <View className="flex-row items-center justify-between">
-                <Stars value={r.stars} size={14} color={colors.star} />
+                <Rainbow value={r.stars} size={7} />
                 <Text className="font-body text-xs text-dim">
                   {r.nickname}
                   {r.is_mine ? " (você)" : ""} ·{" "}
