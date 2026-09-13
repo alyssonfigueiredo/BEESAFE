@@ -9,12 +9,17 @@ import Animated, {
   withTiming,
 } from "react-native-reanimated";
 
+import { useSupportServices } from "@/hooks/useSupport";
+import { useCity } from "@/providers/CityProvider";
 import { EMERGENCY_CONTACTS } from "@/theme/domain";
 import { colors } from "@/theme/tokens";
 
 export function EmergencyButton() {
   const [open, setOpen] = useState(false);
   const pulse = useSharedValue(0);
+  const { city } = useCity();
+  const { data: services = [] } = useSupportServices(city?.id);
+  const local = services.filter((s) => s.city_id != null || s.state != null);
 
   useEffect(() => {
     pulse.value = withRepeat(
@@ -76,9 +81,29 @@ export function EmergencyButton() {
                 </View>
               </Pressable>
             ))}
-            <Text className="font-body text-xs text-dim">
-              Serviços de apoio da sua cidade aparecem aqui na fase 3.
-            </Text>
+            {local.length > 0 && (
+              <View className="gap-2">
+                <Text className="font-heading text-sm uppercase tracking-widest text-turquoise">
+                  Apoio em {city?.name}
+                </Text>
+                {local.map((s) => (
+                  <Pressable
+                    key={s.id}
+                    onPress={() => Linking.openURL(s.phone ? `tel:${s.phone}` : (s.url ?? ""))}
+                    disabled={!s.phone && !s.url}
+                    className="rounded-xl border border-border bg-night px-4 py-3 active:opacity-80"
+                  >
+                    <Text className="font-body-bold text-sm text-ink">{s.name}</Text>
+                    {!!s.description && (
+                      <Text className="font-body text-xs text-dim">{s.description}</Text>
+                    )}
+                    {!!s.phone && (
+                      <Text className="font-body-bold text-sm text-coral">{s.phone}</Text>
+                    )}
+                  </Pressable>
+                ))}
+              </View>
+            )}
           </View>
         </View>
       </Modal>

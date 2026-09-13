@@ -15,5 +15,6 @@ run supabase/dev/supabase-stubs.sql
 for f in supabase/migrations/*.sql; do run "$f"; done
 run supabase/seed.sql
 run supabase/dev/supabase-grants.sql
+run supabase/seed_services.sql 2>/dev/null || true
 "$PG/psql" -h "$D" -p "$PORT" -d irisa -v ON_ERROR_STOP=1 -f supabase/dev/smoke.sql
 echo "smoke ok"

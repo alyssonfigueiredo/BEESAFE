@@ -61,3 +61,24 @@ select name, score, rating_count, flagged, recent_high_occurrences from public.p
 select stars, nickname, is_mine from public.public_place_ratings order by stars desc;
 select count(*) as welcoming_needs_3_ratings from public.welcoming_ranking((select id from public.cities limit 1));
 reset role;
+
+-- ---------- fase 3: apoio ----------
+set role authenticated;
+set request.jwt.claim.sub = '22222222-2222-2222-2222-222222222222';
+insert into public.support_messages (nickname, category, content) values ('Lu', 'dica', 'Evitem a rua X à noite');
+insert into public.support_messages (category, content) values ('acolhimento', 'Vocês não estão sozinhes');
+select count(*) as direct_messages_should_be_0 from public.support_messages;
+insert into public.support_likes (message_id) select id from public.public_support_messages where nickname = 'Lu';
+set request.jwt.claim.sub = '33333333-3333-3333-3333-333333333333';
+insert into public.support_likes (message_id) select id from public.public_support_messages where nickname = 'Lu';
+select nickname, category, likes, liked from public.public_support_messages order by created_at;
+select name, kind, phone from public.support_services_for((select id from public.cities limit 1)) limit 3;
+select count(*) as services_total from public.support_services_for((select id from public.cities limit 1));
+select public.update_my_profile('  Cacau ', (select id from public.cities limit 1));
+select nickname, default_city_id is not null as has_city from public.profiles where id = auth.uid();
+select nickname from public.public_place_ratings where is_mine; -- deve ser Cacau
+select public.delete_my_account();
+reset role;
+select count(*) as users_left from auth.users;
+select count(*) as ratings_left from public.place_ratings;  -- avaliação do usuário excluído some
+select likes from public.public_support_messages where nickname = 'Lu';  -- like some: 1

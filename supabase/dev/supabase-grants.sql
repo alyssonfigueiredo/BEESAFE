@@ -6,3 +6,5 @@ grant execute on all functions in schema public to anon, authenticated;
 grant usage on schema realtime to anon, authenticated;
 grant select on realtime.messages to anon, authenticated;
 grant usage on schema extensions to anon, authenticated;
+grant usage on schema auth to anon, authenticated;
+grant execute on function auth.uid() to anon, authenticated;
