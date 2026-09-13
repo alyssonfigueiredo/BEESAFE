@@ -26,7 +26,7 @@ begin
   end if;
   with src as (
     select r->>'name' as name,
-           st_multi(st_makevalid(st_setsrid(st_geomfromgeojson((r->'geom')::text), 4326))) as geom
+           st_multi(st_collectionextract(st_makevalid(st_setsrid(st_geomfromgeojson((r->'geom')::text), 4326)), 3)) as geom
     from jsonb_array_elements(p_rows) r
   ), ok as (
     select s.name, s.geom from src s
