@@ -10,7 +10,17 @@ insert into public.support_services (name, kind, phone, url, description) values
 ('Defensoria Pública da União', 'juridico', null, 'https://www.dpu.def.br', 'Assistência jurídica gratuita')
 on conflict do nothing;
 
--- Porto Alegre (cidade de origem do projeto)
+-- Curitiba (cidade de referência do projeto)
+insert into public.support_services (name, kind, phone, url, description, city_id)
+select 'Grupo Dignidade', 'ong', null, 'https://www.grupodignidade.org.br', 'ONG de Curitiba pela cidadania LGBTI+ desde 1992', id
+from public.cities where ibge_code = 4106902
+on conflict do nothing;
+insert into public.support_services (name, kind, phone, url, description, city_id)
+select 'Centro de Cidadania LGBTQIA+ de Curitiba', 'acolhimento', null, 'https://www.instagram.com/centrocidadanialgbtqia/', 'Acolhimento e encaminhamento para a população LGBTQIA+', id
+from public.cities where ibge_code = 4106902
+on conflict do nothing;
+
+-- Porto Alegre
 insert into public.support_services (name, kind, phone, url, description, city_id)
 select 'Nuances — Grupo Pela Livre Expressão Sexual', 'ong', null, 'https://nuances.com.br', 'ONG de Porto Alegre desde 1991', id
 from public.cities where ibge_code = 4314902

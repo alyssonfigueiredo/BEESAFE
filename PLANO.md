@@ -1,6 +1,6 @@
 # PLANO — Irisa — "a cidade vista por você"
 
-Evolução do "Aliança Segura" (Base44, Porto Alegre) para um app nacional, publicado nas lojas, com dois lados:
+Evolução do "Aliança Segura" (Base44, Porto Alegre) para um app nacional com Curitiba como cidade de referência, publicado nas lojas, com dois lados:
 relatos anônimos de LGBTIfobia (o lado do risco) e lugares avaliados com estrelas (o lado do acolhimento).
 
 ## 1. Decisões fechadas

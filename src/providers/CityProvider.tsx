@@ -20,7 +20,7 @@ const CityContext = createContext<CityState>({
   setCity: () => {},
 });
 
-const FALLBACK = { name: "Porto Alegre", state: "RS" };
+const FALLBACK = { name: "Curitiba", state: "PR" };
 
 async function cityByName(name: string, state: string): Promise<City | null> {
   const { data } = await supabase
