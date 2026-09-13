@@ -19,7 +19,35 @@ const CAPITAIS = [
 const codes = process.argv.slice(2).map(Number).filter(Boolean);
 const targets = codes.length ? codes : CAPITAIS;
 
-const OVERPASS = process.env.OVERPASS_URL ?? "https://overpass-api.de/api/interpreter";
+const MIRRORS = process.env.OVERPASS_URL
+  ? [process.env.OVERPASS_URL]
+  : [
+      "https://overpass-api.de/api/interpreter",
+      "https://overpass.kumi.systems/api/interpreter",
+      "https://overpass.private.coffee/api/interpreter",
+    ];
+
+async function overpass(query) {
+  let last;
+  for (const url of MIRRORS) {
+    try {
+      const r = await fetch(url, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded; charset=utf-8",
+          Accept: "application/json",
+          "User-Agent": "irisa-import/1.0 (https://github.com/alyssonfigueiredo/beesafe)",
+        },
+        body: "data=" + encodeURIComponent(query),
+      });
+      if (r.ok) return r.json();
+      last = new Error(`Overpass ${r.status} (${url})`);
+    } catch (e) {
+      last = e;
+    }
+  }
+  throw last;
+}
 
 async function fetchNeighborhoods(ibge) {
   // Municípios brasileiros no OSM carregam a tag IBGE:GEOCODIGO.
@@ -31,9 +59,7 @@ async function fetchNeighborhoods(ibge) {
       relation["place"~"^(suburb|neighbourhood|quarter)$"]["type"="multipolygon"](area.city);
     );
     out body; >; out skel qt;`;
-  const r = await fetch(OVERPASS, { method: "POST", body: "data=" + encodeURIComponent(query) });
-  if (!r.ok) throw new Error(`Overpass ${r.status}`);
-  const osm = await r.json();
+  const osm = await overpass(query);
   const fc = osmtogeojson(osm);
   return fc.features
     .filter((f) => f.properties?.name && /Polygon$/.test(f.geometry?.type ?? ""))
