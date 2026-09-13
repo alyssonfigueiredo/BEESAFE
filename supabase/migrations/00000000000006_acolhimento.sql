@@ -4,10 +4,10 @@
 
 -- ---------- eixos da avaliação ----------
 alter table public.place_ratings
-  add column welcome smallint check (welcome between 1 and 5),
-  add column affection smallint check (affection between 1 and 5),
-  add column restroom smallint check (restroom between 1 and 5),
-  add column crowd smallint check (crowd between 1 and 5);
+  add column if not exists welcome smallint check (welcome between 1 and 5),
+  add column if not exists affection smallint check (affection between 1 and 5),
+  add column if not exists restroom smallint check (restroom between 1 and 5),
+  add column if not exists crowd smallint check (crowd between 1 and 5);
 
 comment on column public.place_ratings.welcome is 'A equipe te tratou bem?';
 comment on column public.place_ratings.affection is 'Dava para ficar à vontade com quem você ama?';
@@ -15,13 +15,14 @@ comment on column public.place_ratings.restroom is 'Usou o banheiro sem ser ques
 comment on column public.place_ratings.crowd is 'E as outras pessoas no ambiente?';
 
 -- Ou os quatro eixos, ou nenhum: meia avaliação não vira nota.
+alter table public.place_ratings drop constraint if exists place_ratings_axes_complete;
 alter table public.place_ratings add constraint place_ratings_axes_complete check (
   num_nonnulls(welcome, affection, restroom, crowd) in (0, 4)
 );
 
 -- Nota da avaliação: os eixos pesam onde o risco é maior. Avaliações antigas (só estrela)
 -- continuam valendo pelo valor que têm.
-alter table public.place_ratings add column overall numeric(3, 2)
+alter table public.place_ratings add column if not exists overall numeric(3, 2)
   generated always as (
     case
       when welcome is not null
@@ -32,6 +33,7 @@ alter table public.place_ratings add column overall numeric(3, 2)
 
 -- `stars` segue existindo como o arredondamento da nota, para o que ainda lê essa coluna.
 alter table public.place_ratings alter column stars drop not null;
+alter table public.place_ratings drop constraint if exists place_ratings_has_value;
 alter table public.place_ratings add constraint place_ratings_has_value check (
   stars is not null or welcome is not null
 );
@@ -47,19 +49,20 @@ begin
   return new;
 end $$;
 
+drop trigger if exists place_ratings_fill_stars on public.place_ratings;
 create trigger place_ratings_fill_stars before insert or update on public.place_ratings
   for each row execute function public.fill_rating_stars();
 
 -- ---------- relato ligado ao lugar ----------
 -- Sem isso o raio de 100 m pune igual o bar e a calçada da esquina.
 alter table public.occurrences
-  add column place_id uuid references public.places (id) on delete set null;
-create index occurrences_place_idx on public.occurrences (place_id) where place_id is not null;
+  add column if not exists place_id uuid references public.places (id) on delete set null;
+create index if not exists occurrences_place_idx on public.occurrences (place_id) where place_id is not null;
 
 -- ---------- prior das categorias ----------
 -- A média bayesiana precisa de um ponto de partida: a média da categoria naquela cidade,
 -- com a média geral e 3.5 como reservas.
-create table public.rating_priors (
+create table if not exists public.rating_priors (
   scope text primary key, -- 'global' ou '<city_id>:<category>'
   prior numeric(3, 2) not null,
   sample_count integer not null default 0,
@@ -97,13 +100,13 @@ $$;
 
 -- ---------- score e selo ----------
 alter table public.place_scores
-  add column score_welcome numeric(3, 2),
-  add column score_affection numeric(3, 2),
-  add column score_restroom numeric(3, 2),
-  add column score_crowd numeric(3, 2),
-  add column rating_stddev numeric(3, 2),
-  add column recent_on_site integer not null default 0,
-  add column badge text;
+  add column if not exists score_welcome numeric(3, 2),
+  add column if not exists score_affection numeric(3, 2),
+  add column if not exists score_restroom numeric(3, 2),
+  add column if not exists score_crowd numeric(3, 2),
+  add column if not exists rating_stddev numeric(3, 2),
+  add column if not exists recent_on_site integer not null default 0,
+  add column if not exists badge text;
 
 comment on column public.place_scores.badge is 'acolhedor | bem | dividido | atencao | poucas | null';
 
@@ -204,6 +207,7 @@ end $$;
 
 -- ---------- RLS das novas tabelas ----------
 alter table public.rating_priors enable row level security;
+drop policy if exists "priors: leitura" on public.rating_priors;
 create policy "priors: leitura" on public.rating_priors for select to authenticated using (true);
 
 -- ---------- views ----------
