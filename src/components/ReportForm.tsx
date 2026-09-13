@@ -7,6 +7,7 @@ import { useState } from "react";
 import { Alert, Platform, Pressable, Text, TextInput, View } from "react-native";
 
 import { CityMap } from "@/components/CityMap";
+import { PlacePicker, type PickedPlace } from "@/components/PlacePicker";
 import { useCreateOccurrence } from "@/hooks/useCreateOccurrence";
 import { useCity } from "@/providers/CityProvider";
 import {
@@ -30,6 +31,7 @@ export function ReportForm({ onDone }: { onDone: () => void }) {
   const [showPicker, setShowPicker] = useState(Platform.OS === "ios");
   const [point, setPoint] = useState<{ lat: number; lng: number } | null>(null);
   const [description, setDescription] = useState("");
+  const [place, setPlace] = useState<PickedPlace>(null);
 
   async function useMyLocation() {
     const { status } = await Location.requestForegroundPermissionsAsync();
@@ -37,6 +39,7 @@ export function ReportForm({ onDone }: { onDone: () => void }) {
       return Alert.alert("Sem permissão de localização", "Toque no mapa para marcar o ponto.");
     const pos = await Location.getCurrentPositionAsync({ accuracy: Location.Accuracy.High });
     setPoint({ lat: pos.coords.latitude, lng: pos.coords.longitude });
+    setPlace(null);
   }
 
   async function submit() {
@@ -53,6 +56,7 @@ export function ReportForm({ onDone }: { onDone: () => void }) {
         lat: point.lat,
         lng: point.lng,
         occurrence_date: format(date, "yyyy-MM-dd"),
+        place_id: place?.id ?? null,
       });
       Alert.alert(
         "Relato registrado",
@@ -143,7 +147,10 @@ export function ReportForm({ onDone }: { onDone: () => void }) {
           occurrences={[]}
           center={center}
           zoom={point ? 15 : 12}
-          onPick={setPoint}
+          onPick={(p) => {
+            setPoint(p);
+            setPlace(null);
+          }}
           picked={point}
           style={{ height: 260 }}
         />
@@ -151,6 +158,12 @@ export function ReportForm({ onDone }: { onDone: () => void }) {
           {point ? `${point.lat.toFixed(5)}, ${point.lng.toFixed(5)}` : "Nenhum ponto marcado"}
         </Text>
       </Field>
+
+      {point && (
+        <Field label="Foi em um lugar cadastrado?" hint="opcional">
+          <PlacePicker point={point} value={place} onChange={setPlace} />
+        </Field>
+      )}
 
       <Field label="Descrição (opcional)" hint={`${description.length}/2000`}>
         <TextInput

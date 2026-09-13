@@ -10,6 +10,7 @@ export type NewOccurrence = {
   lat: number;
   lng: number;
   occurrence_date: string; // yyyy-mm-dd
+  place_id?: string | null; // relato que aponta um estabelecimento cadastrado
 };
 
 const MESSAGES: Record<string, string> = {
@@ -30,6 +31,7 @@ export function useCreateOccurrence() {
         description: input.description.trim() || null,
         location: `SRID=4326;POINT(${input.lng} ${input.lat})`,
         occurrence_date: input.occurrence_date,
+        place_id: input.place_id ?? null,
       });
       if (error) throw new Error(MESSAGES[error.code ?? ""] ?? error.message);
     },
@@ -37,6 +39,9 @@ export function useCreateOccurrence() {
       client.invalidateQueries({ queryKey: ["occurrences"] });
       client.invalidateQueries({ queryKey: ["area-risk"] });
       client.invalidateQueries({ queryKey: ["city-stats"] });
+      client.invalidateQueries({ queryKey: ["places"] });
+      client.invalidateQueries({ queryKey: ["place"] });
+      client.invalidateQueries({ queryKey: ["welcoming"] });
     },
   });
 }

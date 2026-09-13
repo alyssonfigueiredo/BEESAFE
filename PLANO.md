@@ -102,7 +102,8 @@ quatro eixos de 1 a 5, e é a combinação deles que vira a nota:
 - Média bayesiana com `m = 5` e prior da categoria naquela cidade (reservas: média geral, 3,5), para que
   duas notas 5 não liderem a cidade. Priors ficam em `rating_priors`, recalculados de hora em hora.
 - Alerta cruzado: relatos ativos num raio de 100 m nos últimos 6 meses dão `flag` e penalidade de 0,5 por
-  relato grave; relato que aponta o próprio lugar (`occurrences.place_id`) penaliza em dobro.
+  relato grave; relato que aponta o próprio lugar (`occurrences.place_id`, escolhido no formulário de relato
+  entre os lugares num raio de 300 m) penaliza em dobro e aparece na fila de moderação com o nome do lugar.
 - Selo (`place_scores.badge`), que é o que a pessoa lê antes do número:
   `poucas` (< 5 avaliações) · `atencao` (relato no local nos últimos 30 dias, ou nota abaixo de 2,5) ·
   `dividido` (desvio > 1,3 — costuma depender de quem está no turno) · `acolhedor` (≥ 4,3) · `bem` (≥ 3,8).
