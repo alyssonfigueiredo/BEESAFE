@@ -85,7 +85,7 @@ create index occurrences_created_by_idx on public.occurrences (created_by);
 
 -- Resolve cidade e bairro a partir do ponto. Ponto fora de município cadastrado é rejeitado.
 create or replace function public.resolve_occurrence_area()
-returns trigger language plpgsql as $$
+returns trigger language plpgsql set search_path = public, extensions as $$
 declare pt geometry := new.location::geometry;
 begin
   select id into new.city_id from public.cities where st_contains(geom, pt) limit 1;

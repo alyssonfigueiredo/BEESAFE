@@ -1,5 +1,7 @@
 -- Stubs mínimos do Supabase (auth, realtime, roles) para rodar as migrations num Postgres comum com PostGIS.
 create schema auth;
+create schema extensions;
+alter database irisa set search_path = public, extensions;  -- igual ao Supabase
 create table auth.users (id uuid primary key default gen_random_uuid(), email text);
 create function auth.uid() returns uuid language sql stable as $$ select nullif(current_setting('request.jwt.claim.sub', true), '')::uuid $$;
 create role anon nologin; create role authenticated nologin;

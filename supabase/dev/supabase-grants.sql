@@ -5,3 +5,4 @@ grant all on all sequences in schema public to anon, authenticated;
 grant execute on all functions in schema public to anon, authenticated;
 grant usage on schema realtime to anon, authenticated;
 grant select on realtime.messages to anon, authenticated;
+grant usage on schema extensions to anon, authenticated;
