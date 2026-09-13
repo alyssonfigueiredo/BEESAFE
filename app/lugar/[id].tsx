@@ -6,6 +6,7 @@ import { useState } from "react";
 import { Alert, Pressable, ScrollView, Text, TextInput, View } from "react-native";
 
 import { CityMap } from "@/components/CityMap";
+import { ReportButton } from "@/components/ReportButton";
 import { Stars } from "@/components/Stars";
 import { usePlace, usePlaceRatings, useRatePlace } from "@/hooks/usePlaces";
 import { PLACE_CATEGORIES, placeScoreColor } from "@/theme/domain";
@@ -82,6 +83,7 @@ export default function PlaceScreen() {
             {place.neighborhood ? ` · ${place.neighborhood}` : ""} · {place.city}
           </Text>
           {!!place.address && <Text className="font-body text-sm text-muted">{place.address}</Text>}
+          <ReportButton type="place" id={place.id} />
 
           <View className="mt-2 flex-row items-center gap-3">
             {score == null ? (
@@ -172,6 +174,7 @@ export default function PlaceScreen() {
                 </Text>
               </View>
               {!!r.comment && <Text className="font-body text-sm text-muted">{r.comment}</Text>}
+              {!r.is_mine && <ReportButton type="rating" id={r.id} compact />}
             </View>
           ))}
         </View>

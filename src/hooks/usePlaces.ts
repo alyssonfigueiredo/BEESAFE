@@ -73,6 +73,8 @@ const MESSAGES: Record<string, string> = {
   "23505": "Você já avaliou este lugar. Edite sua avaliação.",
   "23514": "Confira os campos: nome entre 2 e 80 letras, comentário até 500.",
   "42501": "Sua sessão expirou. Entre de novo.",
+  P0002: "Limite diário atingido. Tente amanhã.",
+  P0003: "Contas novas podem adicionar lugares após 24 horas.",
 };
 const translate = (e: { code?: string; message: string }) =>
   new Error(MESSAGES[e.code ?? ""] ?? e.message);

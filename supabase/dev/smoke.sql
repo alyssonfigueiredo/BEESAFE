@@ -44,6 +44,7 @@ select public.upsert_neighborhoods(4314902, '[
 
 -- ---------- fase 2: lugares ----------
 insert into auth.users (id, email) values ('22222222-2222-2222-2222-222222222222','b@b.com'), ('33333333-3333-3333-3333-333333333333','c@c.com');
+update public.profiles set created_at = now() - interval '2 days';  -- contas novas não criam lugares
 set role authenticated;
 set request.jwt.claim.sub = '22222222-2222-2222-2222-222222222222';
 insert into public.places (id, name, category, location) values
@@ -82,3 +83,46 @@ reset role;
 select count(*) as users_left from auth.users;
 select count(*) as ratings_left from public.place_ratings;  -- avaliação do usuário excluído some
 select likes from public.public_support_messages where nickname = 'Lu';  -- like some: 1
+
+-- ---------- fase 4: moderação ----------
+insert into auth.users (id, email) values
+  ('44444444-4444-4444-4444-444444444444','d@d.com'),
+  ('55555555-5555-5555-5555-555555555555','e@e.com'),
+  ('66666666-6666-6666-6666-666666666666','f@f.com');
+update public.profiles set created_at = now() - interval '2 days';
+set role authenticated;
+set request.jwt.claim.sub = '44444444-4444-4444-4444-444444444444';
+-- rate limit: 5 relatos/dia
+do $$ begin
+  for i in 1..5 loop
+    insert into public.occurrences (type, location, occurrence_date) values ('verbal', st_setsrid(st_makepoint(-51.2234,-30.0412),4326)::geography, current_date);
+  end loop;
+  begin
+    insert into public.occurrences (type, location, occurrence_date) values ('verbal', st_setsrid(st_makepoint(-51.2234,-30.0412),4326)::geography, current_date);
+    raise exception 'NAO DEVERIA';
+  exception when sqlstate 'P0002' then raise notice 'rate limit ok: %', sqlerrm; end;
+end $$;
+-- denúncias: 3 pessoas diferentes escondem a mensagem
+select id as msg from public.public_support_messages where nickname = 'Lu' \gset
+insert into public.content_reports (target_type, target_id, reason) values ('message', :'msg', 'conteúdo ofensivo');
+set request.jwt.claim.sub = '55555555-5555-5555-5555-555555555555';
+insert into public.content_reports (target_type, target_id, reason) values ('message', :'msg', 'spam');
+select count(*) as still_visible from public.public_support_messages where id = :'msg';
+set request.jwt.claim.sub = '66666666-6666-6666-6666-666666666666';
+insert into public.content_reports (target_type, target_id, reason) values ('message', :'msg', 'spam de novo');
+select count(*) as hidden_now_0 from public.public_support_messages where id = :'msg';
+-- não moderador não vê fila
+do $$ begin
+  perform * from public.moderation_queue();
+  raise exception 'NAO DEVERIA';
+exception when insufficient_privilege then raise notice 'fila protegida ok'; end $$;
+reset role;
+update public.profiles set role = 'moderator' where id = '66666666-6666-6666-6666-666666666666';
+set role authenticated;
+select target_type, reports, summary, current_status from public.moderation_queue();
+select public.moderate('message', :'msg', 'restore');
+select count(*) as restored_1 from public.public_support_messages where id = :'msg';
+select count(*) as open_reports_0 from public.content_reports where status = 'open';
+select public.verify_place('aaaaaaaa-0000-0000-0000-000000000001', true);
+select verified from public.public_places;
+reset role;

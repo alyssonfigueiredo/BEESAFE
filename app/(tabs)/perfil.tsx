@@ -1,3 +1,4 @@
+import { Link } from "expo-router";
 import { useState } from "react";
 import { Alert, Pressable, ScrollView, Text, TextInput, View } from "react-native";
 
@@ -94,6 +95,15 @@ export default function PerfilScreen() {
         </Text>
       </View>
 
+      {profile && profile.role !== "user" && (
+        <Link href="/moderacao" asChild>
+          <Pressable className="items-center rounded-xl bg-lilac py-3 active:opacity-80">
+            <Text className="font-heading text-base uppercase tracking-widest text-night">
+              Fila de moderação
+            </Text>
+          </Pressable>
+        </Link>
+      )}
       <Pressable
         onPress={() => supabase.auth.signOut()}
         className="items-center rounded-xl border border-border py-3 active:opacity-80"

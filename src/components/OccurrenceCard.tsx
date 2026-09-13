@@ -2,6 +2,7 @@ import { format, parseISO } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { Text, View } from "react-native";
 
+import { ReportButton } from "@/components/ReportButton";
 import type { PublicOccurrence } from "@/lib/types";
 import { OCCURRENCE_TYPES, SEVERITIES } from "@/theme/domain";
 
@@ -32,10 +33,13 @@ export function OccurrenceCard({ occurrence: o }: { occurrence: PublicOccurrence
           {o.description}
         </Text>
       )}
-      <Text className="font-body text-xs text-dim">
-        {formatOccurrenceDate(o.occurrence_date)}
-        {o.is_obfuscated ? " · posição aproximada" : ""}
-      </Text>
+      <View className="flex-row items-center justify-between">
+        <Text className="font-body text-xs text-dim">
+          {formatOccurrenceDate(o.occurrence_date)}
+          {o.is_obfuscated ? " · posição aproximada" : ""}
+        </Text>
+        <ReportButton type="occurrence" id={o.id} compact />
+      </View>
     </View>
   );
 }

@@ -4,6 +4,7 @@ import { ExternalLink, Heart, Phone } from "lucide-react-native";
 import { useState } from "react";
 import { Alert, Linking, Pressable, ScrollView, Text, TextInput, View } from "react-native";
 
+import { ReportButton } from "@/components/ReportButton";
 import {
   usePostSupportMessage,
   useSupportMessages,
@@ -127,6 +128,7 @@ export default function ApoioScreen() {
               <Text className="font-body text-base text-ink">{m.content}</Text>
               <View className="flex-row items-center justify-between">
                 <Text className="font-body-medium text-xs text-dim">{m.nickname}</Text>
+                <ReportButton type="message" id={m.id} compact />
                 <Pressable
                   onPress={() => toggle.mutate({ id: m.id, liked: m.liked })}
                   className="flex-row items-center gap-1"

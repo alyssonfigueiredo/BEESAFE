@@ -16,6 +16,7 @@ const MESSAGES: Record<string, string> = {
   P0001: "Esse ponto está fora de um município cadastrado. Ajuste o marcador.",
   "23514": "Data inválida: não pode ser no futuro e a descrição tem no máximo 2000 caracteres.",
   "42501": "Sua sessão expirou. Entre de novo.",
+  P0002: "Limite de 5 relatos por dia atingido. Tente amanhã.",
 };
 
 export function useCreateOccurrence() {
