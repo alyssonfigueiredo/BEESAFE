@@ -7,7 +7,7 @@ Irisa — a cidade vista por você
 Mapa colaborativo de segurança e lugares acolhedores para pessoas LGBTQIA+.
 
 ## Descrição completa
-A Irisa é feita pela comunidade LGBTQIA+ para a comunidade. Registre, de forma 100% anônima, ocorrências de LGBTIfobia e veja no mapa as áreas que pedem atenção na sua cidade. Avalie bares, restaurantes, baladas, cafés e serviços com estrelas e descubra os lugares mais acolhedores perto de você.
+A Irisa é feita pela comunidade LGBTQIA+ para a comunidade. Registre, de forma 100% anônima, ocorrências de LGBTIfobia e veja no mapa as áreas que pedem atenção na sua cidade. Avalie bares, restaurantes, baladas, cafés e serviços em quatro eixos — atendimento, afeto, banheiro e clientela — e descubra os lugares mais acolhedores perto de você.
 
 - Relatos anônimos: seu nome e e-mail nunca aparecem, nem para moderadores.
 - Mapa com zonas de atenção e ranking de bairros, atualizado em tempo real.

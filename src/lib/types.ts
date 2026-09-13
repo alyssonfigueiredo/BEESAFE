@@ -46,19 +46,42 @@ export type PublicPlace = {
   recent_occurrences: number;
   recent_high_occurrences: number;
   flagged: boolean;
+  score_welcome: number | null;
+  score_affection: number | null;
+  score_restroom: number | null;
+  score_crowd: number | null;
+  rating_stddev: number | null;
+  recent_on_site: number;
+  badge: import("@/theme/domain").Badge | null;
 };
 
 export type PublicPlaceRating = {
   id: string;
   place_id: string;
-  stars: number;
+  stars: number | null;
   comment: string | null;
   updated_at: string;
   nickname: string;
   is_mine: boolean;
+  welcome: number | null;
+  affection: number | null;
+  restroom: number | null;
+  crowd: number | null;
+  overall: number | null;
 };
 
 export type WelcomingPlace = Pick<
   PublicPlace,
-  "id" | "name" | "category" | "neighborhood" | "score" | "rating_count" | "flagged"
+  | "id"
+  | "name"
+  | "category"
+  | "neighborhood"
+  | "score"
+  | "rating_count"
+  | "flagged"
+  | "badge"
+  | "score_welcome"
+  | "score_affection"
+  | "score_restroom"
+  | "score_crowd"
 >;

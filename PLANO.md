@@ -1,13 +1,13 @@
 # PLANO — Irisa — "a cidade vista por você"
 
 Evolução do "Aliança Segura" (Base44, Porto Alegre) para um app nacional com Curitiba como cidade de referência, publicado nas lojas, com dois lados:
-relatos anônimos de LGBTIfobia (o lado do risco) e lugares avaliados com estrelas (o lado do acolhimento).
+relatos anônimos de LGBTIfobia (o lado do risco) e lugares com nota de acolhimento (o lado do acolhimento).
 
 ## 1. Decisões fechadas
 
 | Tema            | Decisão                                                                                                                                                                                                                                                                                              |
 | --------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Escopo MVP      | Relatos + mapa + lugares com estrelas + mural de apoio + emergência                                                                                                                                                                                                                                  |
+| Escopo MVP      | Relatos + mapa + lugares com nota de acolhimento + mural de apoio + emergência                                                                                                                                                                                                                                  |
 | Backend         | Supabase (Postgres + PostGIS, Auth, Realtime, RLS, Edge Functions, Storage)                                                                                                                                                                                                                          |
 | Frontend        | React Native com Expo (iOS + Android via EAS). Sem versão web no MVP                                                                                                                                                                                                                                 |
 | Moderação       | Papel `moderator`, fila de denúncias, rate limit por usuário                                                                                                                                                                                                                                         |
@@ -56,8 +56,11 @@ occurrences       id, type, severity, description, location (geography point), c
                   occurrence_date, created_by (nunca exposto), status (active|hidden|removed), created_at
 places            id, name, category (bar|restaurante|balada|cafe|hotel|servico|praca|outro), location,
                   address, city_id, neighborhood_id, created_by, verified, status, created_at
-place_ratings     id, place_id, user_id, stars (1..5), comment, created_at   -- único (place_id, user_id)
-place_scores      place_id, score, rating_count, recent_occurrences, flag, updated_at   -- materializado
+place_ratings     id, place_id, user_id, welcome/affection/restroom/crowd (1..5), overall (gerada),
+                  stars (derivada), comment, created_at   -- único (place_id, user_id)
+place_scores      place_id, score, rating_count, score_* por eixo, rating_stddev, badge,
+                  recent_occurrences, recent_on_site, flag, updated_at   -- materializado
+rating_priors     scope ('global' | '<city_id>:<category>'), prior, sample_count   -- base da média bayesiana
 support_messages  id, nickname, category, content, likes, created_by, status, created_at
 support_likes     message_id, user_id   -- 1 like por usuário, substitui "1 por sessão"
 support_services  id, name, kind (policia|saude|direitos|acolhimento|ong), phone, url, city_id (null = nacional),
@@ -88,15 +91,25 @@ O símbolo é a íris-radar: anel em degradê, varredura de 95° e blips (`scrip
 - Escopo: bairros dentro da cidade selecionada; cidades dentro da UF; UFs no país.
 - Zonas de calor no mapa: mesma regra de agrupamento do original, aplicada aos pontos visíveis no viewport.
 
-### Score de lugar
+### Score de acolhimento
 
-- Média ponderada das estrelas com decaimento exponencial, meia-vida de 6 meses.
-- Confiabilidade: exibir sempre `rating_count`; lugares com menos de 3 avaliações mostram "poucas avaliações"
-  e não entram no ranking de acolhedores.
-- Alerta cruzado: se houver relatos ativos num raio de 100 m nos últimos 6 meses, o lugar recebe `flag` e uma
-  penalidade de 0,5 estrela por relato de gravidade alta (mínimo 1,0). O alerta é exibido junto ao score.
-- Cor da estrela no mapa: ≥ 4,5 turquesa, ≥ 3,5 amarelo, ≥ 2,5 laranja, abaixo coral.
-- Ranking "lugares mais acolhedores" por cidade, ao lado do ranking de risco.
+Uma nota só não diz se dá para usar o banheiro ou andar de mãos dadas. Cada avaliação responde
+quatro eixos de 1 a 5, e é a combinação deles que vira a nota:
+
+`0,30 atendimento + 0,30 afeto + 0,25 banheiro + 0,15 clientela`
+
+- Média ponderada por recência (decaimento exponencial, meia-vida de 6 meses).
+- Média bayesiana com `m = 5` e prior da categoria naquela cidade (reservas: média geral, 3,5), para que
+  duas notas 5 não liderem a cidade. Priors ficam em `rating_priors`, recalculados de hora em hora.
+- Alerta cruzado: relatos ativos num raio de 100 m nos últimos 6 meses dão `flag` e penalidade de 0,5 por
+  relato grave; relato que aponta o próprio lugar (`occurrences.place_id`) penaliza em dobro.
+- Selo (`place_scores.badge`), que é o que a pessoa lê antes do número:
+  `poucas` (< 5 avaliações) · `atencao` (relato no local nos últimos 30 dias, ou nota abaixo de 2,5) ·
+  `dividido` (desvio > 1,3 — costuma depender de quem está no turno) · `acolhedor` (≥ 4,3) · `bem` (≥ 3,8).
+  O elogio usa o score encolhido, o alerta usa a média crua: é assim que se erra para o lado seguro.
+- Marcador: `Rainbow` (o anel da marca em cinco faixas) na lista e nos eixos, `IrisScore` (o anel) na ficha.
+  A cor é identidade, não juízo — quem carrega bom/ruim é o número e o selo.
+- Ranking "lugares mais acolhedores" por cidade: mínimo de 5 avaliações, nunca inclui `atencao`.
 
 ### Anti-abuso
 
@@ -116,7 +129,7 @@ Tabs: Início, Mapa, Registrar, Apoio, Perfil.
   ou "adicionar lugar".
 - **Registrar**: relato (tipo, data, gravidade, ponto no mapa ou GPS, descrição) com cidade/bairro resolvidos
   automaticamente; ou novo lugar (nome, categoria, ponto, endereço).
-- **Ficha do lugar**: score, estrelas, alerta cruzado, lista de avaliações anônimas por apelido, avaliar/editar.
+- **Ficha do lugar**: score, selo, quatro eixos, alerta cruzado, avaliações anônimas por apelido, avaliar/editar.
 - **Apoio**: mural (igual ao original, like por usuário) e serviços de apoio da cidade atual + nacionais.
 - **Emergência** (botão pulsante no header): 190, 192, 100, 188 e serviços locais da cidade.
 - **Perfil**: cidade padrão, apelido do mural, minhas contribuições, excluir conta (exigência das lojas), sair.
@@ -136,7 +149,7 @@ Tabs: Início, Mapa, Registrar, Apoio, Perfil.
 | ---- | ---------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | 0    | Nome, projeto Supabase, projeto Expo, design tokens, CI. **Feito**                                                                                         |
 | 1    | Auth (e-mail, Google, Apple), cidades/bairros no PostGIS, relatos, mapa, ranking. **Feito no código**; falta você configurar Google/Apple e importar dados |
-| 2    | Lugares, avaliações, score, ficha do lugar, ranking de acolhedores. **Feito**                                                                              |
+| 2    | Lugares, avaliações em quatro eixos, score bayesiano, selos, ficha, ranking. **Feito**                                                                              |
 | 3    | Mural de apoio, serviços por cidade, emergência, perfil e exclusão de conta. **Feito**                                                                     |
 | 4    | Moderação, denúncias, rate limit, auto-ocultação. **Feito**                                                                                                |
 | 5    | Política de privacidade, termos e ficha das lojas em docs/. **Faltam**: contas nas lojas, hospedar a política, builds de produção                          |

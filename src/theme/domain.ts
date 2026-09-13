@@ -59,7 +59,76 @@ export const PLACE_CATEGORIES = {
 } as const;
 export type PlaceCategory = keyof typeof PLACE_CATEGORIES;
 
-/** Cor da estrela de um lugar pela faixa de score. */
+// ---------- acolhimento ----------
+// Quatro eixos em vez de uma nota só: o peso é maior onde o risco é maior. Os mesmos pesos
+// estão em compute_place_score (migration 00000000000006) — mudou aqui, muda lá.
+export const AXES = {
+  welcome: {
+    label: "Atendimento",
+    question: "A equipe te tratou bem?",
+    hint: "Sem constrangimento, sem olhar torto, sem insistir no “senhor”.",
+    weight: 0.3,
+  },
+  affection: {
+    label: "Afeto",
+    question: "Dava para ficar à vontade com quem você ama?",
+    hint: "De mãos dadas, um beijo, sem plateia.",
+    weight: 0.3,
+  },
+  restroom: {
+    label: "Banheiro",
+    question: "E o banheiro?",
+    hint: "Usou o que quis, sem ser questionade.",
+    weight: 0.25,
+  },
+  crowd: {
+    label: "Clientela",
+    question: "E as outras pessoas no ambiente?",
+    hint: "Quem estava em volta, não a equipe.",
+    weight: 0.15,
+  },
+} as const;
+export type Axis = keyof typeof AXES;
+export const AXIS_KEYS = Object.keys(AXES) as Axis[];
+
+// Selos: o número diz quanto, o selo diz o que fazer com isso.
+export const BADGES = {
+  acolhedor: {
+    label: "Acolhedor",
+    color: colors.turquoise,
+    ink: colors.turquoiseInk,
+    note: "Nota alta e consistente entre quem frequenta.",
+  },
+  bem: {
+    label: "Bem avaliado",
+    color: colors.yellow,
+    ink: colors.yellowInk,
+    note: "Avaliações boas, sem unanimidade.",
+  },
+  dividido: {
+    label: "Opiniões divididas",
+    color: colors.lilac,
+    ink: colors.lilacInk,
+    note: "As experiências variam muito — costuma depender de quem está no turno.",
+  },
+  atencao: {
+    label: "Atenção",
+    color: colors.coral,
+    ink: colors.coralInk,
+    note: "Relato recente no local ou avaliações ruins repetidas.",
+  },
+  poucas: {
+    label: "Poucas avaliações",
+    color: colors.subtle,
+    ink: colors.muted,
+    note: "Ainda não dá para dizer: são precisas 5 avaliações.",
+  },
+} as const;
+export type Badge = keyof typeof BADGES;
+
+export const RATING_MIN = 5; // avaliações necessárias para o lugar ganhar selo e entrar no ranking
+
+/** Cor do número da nota pela faixa de score. */
 export function placeScoreColor(score: number): string {
   if (score >= 4.5) return colors.turquoise;
   if (score >= 3.5) return colors.yellow;

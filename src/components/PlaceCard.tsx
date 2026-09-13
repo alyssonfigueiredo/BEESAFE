@@ -2,13 +2,22 @@ import { Link } from "expo-router";
 import { AlertTriangle, BadgeCheck } from "lucide-react-native";
 import { Pressable, Text, View } from "react-native";
 
+import { AxisStrip } from "@/components/AxisBars";
+import { Badge } from "@/components/Badge";
 import { Rainbow } from "@/components/Rainbow";
 import type { WelcomingPlace } from "@/lib/types";
-import { PLACE_CATEGORIES, placeScoreColor } from "@/theme/domain";
+import { PLACE_CATEGORIES, RATING_MIN, placeScoreColor } from "@/theme/domain";
 import { colors } from "@/theme/tokens";
 
 export function PlaceCard({ place, verified }: { place: WelcomingPlace; verified?: boolean }) {
   const score = place.score == null ? null : Number(place.score);
+  const axes = {
+    welcome: place.score_welcome,
+    affection: place.score_affection,
+    restroom: place.score_restroom,
+    crowd: place.score_crowd,
+  };
+
   return (
     <Link href={{ pathname: "/lugar/[id]", params: { id: place.id } }} asChild>
       <Pressable className="gap-2 rounded-xl border border-border bg-surface p-4 active:opacity-80">
@@ -24,25 +33,26 @@ export function PlaceCard({ place, verified }: { place: WelcomingPlace; verified
           </View>
           <Text className="font-body text-xs text-dim">{PLACE_CATEGORIES[place.category]}</Text>
         </View>
-        <View className="flex-row items-center gap-2">
-          {score == null ? (
-            <Text className="font-body text-sm text-dim">Sem avaliações ainda</Text>
-          ) : (
-            <>
+
+        {score == null ? (
+          <Text className="font-body text-sm text-dim">Sem avaliações ainda</Text>
+        ) : (
+          <>
+            <View className="flex-row items-center gap-2">
               <Rainbow value={score} size={8} />
               <Text className="font-body-bold text-sm" style={{ color: placeScoreColor(score) }}>
                 {score.toFixed(1)}
               </Text>
-              <Text className="font-body text-xs text-dim">
-                ({place.rating_count}
-                {place.rating_count < 3 ? ", poucas" : ""})
-              </Text>
-            </>
-          )}
-          {place.flagged && <AlertTriangle color={colors.coralInk} size={14} />}
-        </View>
-        {!!place.neighborhood && (
-          <Text className="font-body text-xs text-dim">{place.neighborhood}</Text>
+              {place.badge && <Badge badge={place.badge} />}
+              {place.flagged && <AlertTriangle color={colors.coralInk} size={14} />}
+            </View>
+            <AxisStrip scores={axes} />
+            <Text className="font-body text-xs text-dim">
+              {place.rating_count} avaliaç{place.rating_count === 1 ? "ão" : "ões"}
+              {place.rating_count < RATING_MIN ? ` de ${RATING_MIN} necessárias` : ""}
+              {place.neighborhood ? ` · ${place.neighborhood}` : ""}
+            </Text>
+          </>
         )}
       </Pressable>
     </Link>

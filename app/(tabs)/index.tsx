@@ -10,7 +10,7 @@ import { useAreaRisk, useOccurrences } from "@/hooks/useOccurrences";
 import { useWelcoming } from "@/hooks/usePlaces";
 import { PlaceCard } from "@/components/PlaceCard";
 import { useCity } from "@/providers/CityProvider";
-import { OCCURRENCE_TYPES } from "@/theme/domain";
+import { OCCURRENCE_TYPES, RATING_MIN } from "@/theme/domain";
 import { colors } from "@/theme/tokens";
 
 export default function HomeScreen() {
@@ -91,7 +91,7 @@ export default function HomeScreen() {
         </Text>
         {welcoming.length === 0 && (
           <Text className="font-body text-sm text-dim">
-            Entram aqui lugares com 3 ou mais avaliações. Avalie um lugar para começar.
+            Entram aqui lugares com {RATING_MIN} ou mais avaliações. Avalie um lugar para começar.
           </Text>
         )}
         {welcoming.map((p) => (

@@ -5,13 +5,18 @@ import { AlertTriangle, BadgeCheck } from "lucide-react-native";
 import { useState } from "react";
 import { Alert, Pressable, ScrollView, Text, TextInput, View } from "react-native";
 
+import { AxisBars } from "@/components/AxisBars";
+import { Badge } from "@/components/Badge";
 import { CityMap } from "@/components/CityMap";
-import { ReportButton } from "@/components/ReportButton";
 import { IrisScore } from "@/components/IrisScore";
 import { Rainbow } from "@/components/Rainbow";
+import { ReportButton } from "@/components/ReportButton";
 import { usePlace, usePlaceRatings, useRatePlace } from "@/hooks/usePlaces";
-import { PLACE_CATEGORIES, placeScoreColor } from "@/theme/domain";
+import { AXES, AXIS_KEYS, BADGES, PLACE_CATEGORIES, placeScoreColor } from "@/theme/domain";
+import type { Axis } from "@/theme/domain";
 import { colors } from "@/theme/tokens";
+
+type Draft = Record<Axis, number> & { key: string; comment: string };
 
 export default function PlaceScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
@@ -19,22 +24,32 @@ export default function PlaceScreen() {
   const { data: ratings = [] } = usePlaceRatings(id);
   const rate = useRatePlace(id);
   const mine = ratings.find((r) => r.is_mine);
-  const [draft, setDraft] = useState<{ key: string; stars: number; comment: string } | null>(null);
+  const [draft, setDraft] = useState<Draft | null>(null);
   const mineKey = mine ? `${mine.id}:${mine.updated_at}` : "none";
   // Reinicia o rascunho quando a avaliação própria muda (padrão "derive state from props").
-  const current =
+  const current: Draft =
     draft?.key === mineKey
       ? draft
-      : { key: mineKey, stars: mine?.stars ?? 0, comment: mine?.comment ?? "" };
-  const stars = current.stars;
-  const comment = current.comment;
-  const setStars = (v: number) => setDraft({ ...current, stars: v });
-  const setComment = (v: string) => setDraft({ ...current, comment: v });
+      : {
+          key: mineKey,
+          welcome: mine?.welcome ?? 0,
+          affection: mine?.affection ?? 0,
+          restroom: mine?.restroom ?? 0,
+          crowd: mine?.crowd ?? 0,
+          comment: mine?.comment ?? "",
+        };
+  const missing = AXIS_KEYS.filter((k) => !current[k]);
 
   async function submit() {
-    if (!stars) return Alert.alert("Escolha uma nota de 1 a 5.");
+    if (missing.length) return Alert.alert(`Falta responder: ${AXES[missing[0]].label}.`);
     try {
-      await rate.mutateAsync({ stars, comment });
+      await rate.mutateAsync({
+        welcome: current.welcome,
+        affection: current.affection,
+        restroom: current.restroom,
+        crowd: current.crowd,
+        comment: current.comment,
+      });
       Alert.alert(
         mine ? "Avaliação atualizada" : "Avaliação registrada",
         "Obrigado por ajudar a comunidade.",
@@ -86,33 +101,47 @@ export default function PlaceScreen() {
           {!!place.address && <Text className="font-body text-sm text-muted">{place.address}</Text>}
           <ReportButton type="place" id={place.id} />
 
-          <View className="mt-2 flex-row items-center gap-3">
-            {score == null ? (
-              <Text className="font-body text-base text-dim">
-                Sem avaliações ainda. Seja a primeira pessoa.
-              </Text>
-            ) : (
-              <>
+          {score == null ? (
+            <Text className="mt-2 font-body text-base text-dim">
+              Sem avaliações ainda. Seja a primeira pessoa.
+            </Text>
+          ) : (
+            <View className="mt-2 gap-3">
+              <View className="flex-row items-center gap-3">
                 <IrisScore value={score} size={54} />
-                <View>
+                <View className="flex-1 gap-1">
                   <Text className="font-display text-4xl" style={{ color: placeScoreColor(score) }}>
                     {score.toFixed(1)}
                   </Text>
+                  {place.badge && <Badge badge={place.badge} size="lg" />}
                   <Text className="font-body text-xs text-dim">
-                    {place.rating_count} avaliaç{place.rating_count === 1 ? "ão" : "ões"}
-                    {place.rating_count < 3 ? " · poucas para o ranking" : ""}
+                    {place.rating_count} avaliaç{place.rating_count === 1 ? "ão" : "ões"} de quem
+                    frequenta
                   </Text>
                 </View>
-              </>
-            )}
-          </View>
+              </View>
+              {place.badge && (
+                <Text className="font-body text-xs text-muted">{BADGES[place.badge].note}</Text>
+              )}
+              <AxisBars
+                scores={{
+                  welcome: place.score_welcome,
+                  affection: place.score_affection,
+                  restroom: place.score_restroom,
+                  crowd: place.score_crowd,
+                }}
+              />
+            </View>
+          )}
 
           {place.flagged && (
             <View className="mt-2 flex-row items-start gap-2 rounded-xl border border-coral/60 bg-paper p-3">
               <AlertTriangle color={colors.coralInk} size={18} />
               <Text className="flex-1 font-body text-sm text-muted">
-                {place.recent_occurrences} relato{place.recent_occurrences === 1 ? "" : "s"} num
-                raio de 100 m nos últimos 6 meses
+                {place.recent_on_site > 0
+                  ? `${place.recent_on_site} relato${place.recent_on_site === 1 ? "" : "s"} apontando este lugar`
+                  : `${place.recent_occurrences} relato${place.recent_occurrences === 1 ? "" : "s"} num raio de 100 m`}{" "}
+                nos últimos 6 meses
                 {place.recent_high_occurrences > 0
                   ? `, ${place.recent_high_occurrences} grave${place.recent_high_occurrences === 1 ? "" : "s"}`
                   : ""}
@@ -131,20 +160,30 @@ export default function PlaceScreen() {
           style={{ height: 180 }}
         />
 
-        <View className="gap-3 rounded-xl border border-border bg-surface p-4">
+        <View className="gap-4 rounded-xl border border-border bg-surface p-4">
           <Text className="font-heading text-base uppercase tracking-widest text-ink">
-            {mine ? "Sua avaliação" : "Avaliar este lugar"}
+            {mine ? "Sua avaliação" : "Como foi lá?"}
           </Text>
-          <Rainbow value={stars} size={16} onChange={setStars} />
+          {AXIS_KEYS.map((k) => (
+            <View key={k} className="gap-2">
+              <Text className="font-body-medium text-sm text-ink">{AXES[k].question}</Text>
+              <Text className="font-body text-xs text-dim">{AXES[k].hint}</Text>
+              <Rainbow
+                value={current[k]}
+                size={16}
+                onChange={(v) => setDraft({ ...current, [k]: v })}
+              />
+            </View>
+          ))}
           <TextInput
             className="min-h-20 rounded-xl border border-border bg-paper px-4 py-3 font-body text-base text-ink"
-            placeholder="Como foi a experiência? (opcional, até 500 caracteres)"
+            placeholder="Quer contar como foi? (opcional, até 500 caracteres)"
             placeholderTextColor={colors.dim}
             multiline
             textAlignVertical="top"
             maxLength={500}
-            value={comment}
-            onChangeText={setComment}
+            value={current.comment}
+            onChangeText={(v) => setDraft({ ...current, comment: v })}
           />
           <Pressable
             disabled={rate.isPending}
@@ -167,13 +206,22 @@ export default function PlaceScreen() {
           {ratings.map((r) => (
             <View key={r.id} className="gap-1 rounded-xl border border-border bg-surface p-4">
               <View className="flex-row items-center justify-between">
-                <Rainbow value={r.stars} size={7} />
+                <Rainbow value={Number(r.overall ?? r.stars ?? 0)} size={7} />
                 <Text className="font-body text-xs text-dim">
                   {r.nickname}
                   {r.is_mine ? " (você)" : ""} ·{" "}
                   {formatDistanceToNow(parseISO(r.updated_at), { locale: ptBR, addSuffix: true })}
                 </Text>
               </View>
+              <AxisBars
+                scores={{
+                  welcome: r.welcome,
+                  affection: r.affection,
+                  restroom: r.restroom,
+                  crowd: r.crowd,
+                }}
+                size={5}
+              />
               {!!r.comment && <Text className="font-body text-sm text-muted">{r.comment}</Text>}
               {!r.is_mine && <ReportButton type="rating" id={r.id} compact />}
             </View>

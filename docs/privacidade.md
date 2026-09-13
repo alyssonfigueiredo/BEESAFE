@@ -10,7 +10,7 @@ Irisa (projeto independente, sem fins lucrativos). Contato: [e-mail a definir].
 ## 2. Quais dados coletamos
 - **Conta**: e-mail e senha (com hash), ou identificador fornecido pelo Google ou pela Apple quando você entra com essas contas. Usamos apenas para autenticar e para impedir spam. Não pedimos nome, CPF, telefone ou orientação sexual.
 - **Relatos**: tipo, gravidade, data, ponto no mapa e descrição opcional. O relato fica vinculado à sua conta apenas no banco de dados, para fins de segurança e moderação. Esse vínculo nunca é exibido a ninguém, nem a moderadores.
-- **Lugares e avaliações**: nome do lugar, categoria, endereço, ponto no mapa, estrelas e comentário. Avaliações e mensagens mostram apenas o apelido que você escolher (ou "Anônimo").
+- **Lugares e avaliações**: nome do lugar, categoria, endereço, ponto no mapa, notas dos quatro eixos de acolhimento e comentário. Avaliações e mensagens mostram apenas o apelido que você escolher (ou "Anônimo").
 - **Localização**: usada no aparelho para centralizar o mapa e marcar um ponto quando você pede. Não guardamos histórico de localização.
 - **Dados técnicos**: logs de acesso mantidos pelo provedor de infraestrutura (Supabase) por até 7 dias, para segurança.
 

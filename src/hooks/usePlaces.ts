@@ -2,7 +2,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 import { supabase } from "@/lib/supabase";
 import type { PublicPlace, PublicPlaceRating, WelcomingPlace } from "@/lib/types";
-import type { PlaceCategory } from "@/theme/domain";
+import type { Axis, PlaceCategory } from "@/theme/domain";
 
 export function usePlaces(cityId: number | undefined) {
   return useQuery({
@@ -111,14 +111,17 @@ export function useCreatePlace() {
   });
 }
 
+export type RatingInput = Record<Axis, number> & { comment: string };
+
 export function useRatePlace(placeId: string) {
   const client = useQueryClient();
   return useMutation({
-    mutationFn: async ({ stars, comment }: { stars: number; comment: string }) => {
+    mutationFn: async ({ comment, ...axes }: RatingInput) => {
+      // `stars` é derivada dos eixos por trigger no banco.
       const { error } = await supabase
         .from("place_ratings")
         .upsert(
-          { place_id: placeId, stars, comment: comment.trim() || null },
+          { place_id: placeId, ...axes, comment: comment.trim() || null },
           { onConflict: "place_id,user_id" },
         );
       if (error) throw translate(error);
