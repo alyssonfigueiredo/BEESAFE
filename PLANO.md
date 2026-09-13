@@ -1,4 +1,4 @@
-# PLANO — Íris (nome provisório) — "a cidade vista por você"
+# PLANO — Irisa — "a cidade vista por você"
 
 Evolução do "Aliança Segura" (Base44, Porto Alegre) para um app nacional, publicado nas lojas, com dois lados:
 relatos anônimos de LGBTIfobia (o lado do risco) e lugares avaliados com estrelas (o lado do acolhimento).
@@ -14,7 +14,7 @@ relatos anônimos de LGBTIfobia (o lado do risco) e lugares avaliados com estrel
 | Anonimato | Autor nunca sai do banco; RLS garante. Login obrigatório |
 | Coordenadas | Exatas no banco. Exibição pública ofuscada (~100 m) só na janela em que a vítima pode ainda estar no local; depois exata |
 | Dados fictícios | Só em ambiente de desenvolvimento (seed). Produção nasce vazia |
-| Nome | Íris (provisório). Slogan: "a cidade vista por você". Instagram @irisapp livre. Pendente: INPI (IRIS, classes 9/42/45; risco: Iris Segurança Inteligente) e domínio iris.app.br. Marca composta sugerida: Íris Cidade ou Íris Queer |
+| Nome | **Irisa** (verbo irisar: dar cores de arco-íris). INPI: sem processo para IRISA (busca 2026-09-13). "IRIS" seco inviável: Iris BS System (cl. 42, em vigor) e Iris Segurança Inteligente (cl. 45, em vigor). Registrar IRISA nas classes 9, 42 e 45; risco residual de oposição por semelhança na 45 |
 
 Sobre a janela de ofuscação: o app não tem como saber se a vítima ainda está no local. Proxy proposto: relato com
 `occurrence_date` nas últimas 24 h aparece ofuscado no mapa público; após 24 h aparece exato. Valor ajustável.
@@ -135,7 +135,7 @@ Tabs: Início, Mapa, Registrar, Apoio, Perfil.
 
 ## 8. Pendências
 
-- Reservar @irisapp; checar INPI e registro.br; identidade visual (ícone, splash). Bundle id sugerido: br.app.iris
+- Reservar Instagram (@irisa ocupado; @irisa.app ou @irisaapp livres em busca), registrar irisa.com.br e irisa.app.br (sem DNS), protocolar IRISA no INPI (9, 42, 45). Identidade visual. Bundle id: br.com.irisa.app
 - Confirmar janela de ofuscação de 24 h.
 - Lista inicial de serviços de apoio por capital.
 - Fonte dos polígonos de bairro por cidade (OSM cobre bem as capitais, mal o interior).
