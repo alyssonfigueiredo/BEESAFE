@@ -11,6 +11,10 @@ export declare const colors: {
   muted: string;
   dim: string;
 };
+export declare const mark: {
+  ring: string[];
+  sweep: string;
+};
 export declare const fonts: {
   display: string;
   heading: string;

@@ -13,6 +13,12 @@ const colors = {
   dim: "#94A3B8",
 };
 
+// Marca (símbolo íris-radar): o anel tem um azul de passagem que não é cor de interface.
+const mark = {
+  ring: ["#FF5A5F", "#FF9F45", "#FFD166", "#5CC9B4", "#6AA8EE", "#A78BFA"],
+  sweep: "#5CC9B4",
+};
+
 const fonts = {
   display: "Oswald_700Bold",
   heading: "Oswald_500Medium",
@@ -21,4 +27,4 @@ const fonts = {
   bodyBold: "SpaceGrotesk_700Bold",
 };
 
-module.exports = { colors, fonts };
+module.exports = { colors, fonts, mark };

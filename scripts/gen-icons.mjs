@@ -1,45 +1,108 @@
-// Gera os ícones em assets/ a partir da marca (anel + pupila). Uso: node scripts/gen-icons.mjs (precisa de Chromium).
+// Gera os ícones em assets/ a partir da marca (íris-radar). Uso: node scripts/gen-icons.mjs (precisa de Chromium).
+// Em ambientes sem o canal "chromium" do Playwright, aponte o executável em CHROMIUM_PATH.
+// eslint-disable-next-line import/no-unresolved -- dependência só do gerador, instalada sob demanda
 import { chromium } from "playwright-core";
-import fs from "node:fs";
 
 const NIGHT = "#0B132B";
-// marca: íris. anel com as cores do design system + pupila noturna. `mono` = versão monocromática.
-function mark({ size, bg, pad = 0, mono = false }) {
-  const r = (size / 2) * (1 - pad);
-  const cx = size / 2,
-    cy = size / 2;
-  const cols = mono
-    ? ["#fff", "#fff", "#fff", "#fff", "#fff"]
-    : ["#FF5A5F", "#FF9F45", "#FFD166", "#5BC0BE", "#A78BFA"];
-  // 5 arcos iguais no anel
-  const arcs = cols
-    .map((c, i) => {
-      const a0 = (i / 5) * 2 * Math.PI - Math.PI / 2,
-        a1 = ((i + 1) / 5) * 2 * Math.PI - Math.PI / 2;
-      const ro = r * 0.92,
-        ri = r * 0.58;
-      const p = (rr, a) => `${cx + rr * Math.cos(a)} ${cy + rr * Math.sin(a)}`;
-      return `<path d="M ${p(ro, a0)} A ${ro} ${ro} 0 0 1 ${p(ro, a1)} L ${p(ri, a1)} A ${ri} ${ri} 0 0 0 ${p(ri, a0)} Z" fill="${c}" stroke="${bg === "transparent" ? NIGHT : bg}" stroke-width="${size * 0.012}"/>`;
-    })
-    .join("");
-  const pupil =
-    `<circle cx="${cx}" cy="${cy}" r="${r * 0.36}" fill="${mono ? "#fff" : NIGHT}"/>` +
-    (mono
-      ? ""
-      : `<circle cx="${cx - r * 0.12}" cy="${cy - r * 0.14}" r="${r * 0.08}" fill="#FFD166"/>`);
-  return `<svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}" viewBox="0 0 ${size} ${size}">
-    ${bg === "transparent" ? "" : `<rect width="${size}" height="${size}" fill="${bg}"/>`}${arcs}${pupil}</svg>`;
+const INK = "#161B2E";
+const SWEEP = "#5CC9B4"; // varredura: turquesa, a cor de apoio no app
+// anel: as cores do design system mais um azul de passagem, interpoladas em degradê contínuo
+const RING = ["#FF5A5F", "#FF9F45", "#FFD166", "#5CC9B4", "#6AA8EE", "#A78BFA"];
+
+const lerp = (a, b, t) => {
+  const A = a.slice(1),
+    B = b.slice(1);
+  let out = "#";
+  for (let i = 0; i < 3; i++) {
+    const x = parseInt(A.slice(i * 2, i * 2 + 2), 16),
+      y = parseInt(B.slice(i * 2, i * 2 + 2), 16);
+    out += Math.round(x + (y - x) * t)
+      .toString(16)
+      .padStart(2, "0");
+  }
+  return out;
+};
+const ringColor = (t) => {
+  const p = t * RING.length,
+    i = Math.floor(p) % RING.length;
+  return lerp(RING[i], RING[(i + 1) % RING.length], p - Math.floor(p));
+};
+
+const P = (r, a) => `${(50 + r * Math.cos(a)).toFixed(2)} ${(50 + r * Math.sin(a)).toFixed(2)}`;
+// setor de anel (ri = 0 vira fatia cheia)
+const slice = (ro, ri, a0, a1, fill, opacity) =>
+  `<path d="M ${P(ro, a0)} A ${ro} ${ro} 0 0 1 ${P(ro, a1)} L ${P(ri, a1)} A ${ri} ${ri} 0 0 0 ${P(ri, a0)} Z" fill="${fill}"${
+    opacity === undefined ? "" : ` fill-opacity="${opacity}"`
+  }/>`;
+
+const ring = (mono) => {
+  const n = 96;
+  let out = "";
+  for (let i = 0; i < n; i++) {
+    const a0 = (i / n) * 2 * Math.PI - Math.PI / 2;
+    const a1 = ((i + 1) / n) * 2 * Math.PI - Math.PI / 2 + 0.05; // sobreposição: evita costura entre as fatias
+    out += slice(48, 35, a0, a1, mono ? "#fff" : ringColor(i / n));
+  }
+  return out;
+};
+
+// varredura com rastro: uma fatia só, com degradê do início do rastro até o feixe
+const sweep = (color, maxOpacity, id) => {
+  const start = (-150 * Math.PI) / 180,
+    end = (-55 * Math.PI) / 180;
+  const g0 = P(33, start).split(" "),
+    g1 = P(33, end).split(" ");
+  return (
+    `<defs><linearGradient id="${id}" gradientUnits="userSpaceOnUse" x1="${g0[0]}" y1="${g0[1]}" x2="${g1[0]}" y2="${g1[1]}">` +
+    `<stop offset="0%" stop-color="${color}" stop-opacity="0"/>` +
+    `<stop offset="100%" stop-color="${color}" stop-opacity="${maxOpacity}"/></linearGradient></defs>` +
+    slice(33, 0, start, end, `url(#${id})`) +
+    `<path d="M 50 50 L ${P(33, end)}" stroke="${color}" stroke-width="1.6" stroke-linecap="round" stroke-opacity="0.75"/>`
+  );
+};
+
+const blip = (x, y, r, color) =>
+  `<circle cx="${x}" cy="${y}" r="${r * 2.1}" fill="${color}" fill-opacity="0.14"/>` +
+  `<circle cx="${x}" cy="${y}" r="${r}" fill="${color}"/>`;
+
+// `mono` = versão monocromática (Android). `onNight` = fundo escuro (pupila afunda, aro de luz marca o centro).
+function mark({ size, bg, pad = 0, mono = false, onNight = false }) {
+  const scale = 1 - pad;
+  const line = mono ? "#fff" : SWEEP;
+
+  let body = ring(mono);
+  body += sweep(line, mono ? 0.28 : 0.5, `sw${size}${mono ? "m" : ""}`);
+  body += `<circle cx="50" cy="50" r="25" fill="none" stroke="${line}" stroke-width="0.8" stroke-opacity="${mono ? 0.4 : 0.35}"/>`;
+  body += blip(66, 36, 3.1, mono ? "#fff" : SWEEP);
+  body += blip(63, 62, 2.4, mono ? "#fff" : onNight ? "#FFD166" : "#FF5A5F");
+  body += blip(38, 34, 1.9, mono ? "#fff" : SWEEP);
+  // pupila: disco cheio com aro de luz — o centro do radar
+  body += `<circle cx="50" cy="50" r="12" fill="${mono ? "#fff" : onNight ? NIGHT : INK}"/>`;
+  if (!mono) {
+    body += `<circle cx="50" cy="50" r="12" fill="none" stroke="${SWEEP}" stroke-width="1.5" stroke-opacity="0.9"/>`;
+    if (!onNight)
+      body += `<circle cx="46.2" cy="45.8" r="2.6" fill="#FFFFFF" fill-opacity="0.92"/>`;
+  }
+
+  return `<svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}" viewBox="0 0 100 100">
+    ${bg === "transparent" ? "" : `<rect width="100" height="100" fill="${bg}"/>`}
+    <g transform="translate(50 50) scale(${scale}) translate(-50 -50)">${body}</g></svg>`;
 }
 
 const jobs = [
-  ["icon.png", { size: 1024, bg: NIGHT, pad: 0.12 }],
-  ["splash-icon.png", { size: 512, bg: "transparent", pad: 0.05 }],
-  ["android-icon-foreground.png", { size: 1024, bg: "transparent", pad: 0.36 }],
+  ["icon.png", { size: 1024, bg: NIGHT, pad: 0.1, onNight: true }],
+  ["splash-icon.png", { size: 512, bg: "transparent", pad: 0.04, onNight: true }],
+  ["android-icon-foreground.png", { size: 1024, bg: "transparent", pad: 0.34, onNight: true }],
   ["android-icon-background.png", { size: 1024, bg: NIGHT, pad: 1 }],
-  ["android-icon-monochrome.png", { size: 1024, bg: "transparent", pad: 0.36, mono: true }],
-  ["favicon.png", { size: 96, bg: NIGHT, pad: 0.1 }],
+  ["android-icon-monochrome.png", { size: 1024, bg: "transparent", pad: 0.34, mono: true }],
+  ["favicon.png", { size: 96, bg: NIGHT, pad: 0.08, onNight: true }],
 ];
-const browser = await chromium.launch({ channel: "chromium" });
+
+const browser = await chromium.launch(
+  process.env.CHROMIUM_PATH
+    ? { executablePath: process.env.CHROMIUM_PATH }
+    : { channel: "chromium" },
+);
 const page = await browser.newPage();
 for (const [name, opts] of jobs) {
   const svg = mark(opts);
