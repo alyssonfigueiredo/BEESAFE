@@ -1,0 +1,20 @@
+name: DB smoke
+
+on:
+  push:
+    paths: ["supabase/**", "scripts/db-smoke.sh"]
+  pull_request:
+    paths: ["supabase/**", "scripts/db-smoke.sh"]
+
+jobs:
+  smoke:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - name: Instala Postgres 16 + PostGIS + pg_cron
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq postgresql-16 postgresql-16-postgis-3 postgresql-16-cron
+          sudo systemctl stop postgresql || true
+      - name: Roda migrations e smoke test
+        run: sudo -u postgres env PG_BIN=/usr/lib/postgresql/16/bin PORT=54329 bash scripts/db-smoke.sh

@@ -130,15 +130,15 @@ Tabs: Início, Mapa, Registrar, Apoio, Perfil.
 
 ## 7. Fases
 
-| Fase | Entrega                                                                         |
-| ---- | ------------------------------------------------------------------------------- |
-| 0    | Nome, projeto Supabase, projeto Expo, design tokens, CI (lint, typecheck, EAS)  |
-| 1    | Auth, cidades/bairros no PostGIS, relatos, mapa com calor, ranking de risco     |
-| 2    | Lugares, avaliações, score, ficha do lugar, ranking de acolhedores              |
-| 3    | Mural de apoio, serviços por cidade, emergência, perfil e exclusão de conta     |
-| 4    | Moderação, denúncias, rate limit, auto-ocultação                                |
-| 5    | TestFlight e Play internal testing, política de privacidade, submissão às lojas |
-| 6+   | Notificações de área, rotas seguras, versão web                                 |
+| Fase | Entrega                                                                                                                                                    |
+| ---- | ---------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 0    | Nome, projeto Supabase, projeto Expo, design tokens, CI. **Feito**                                                                                         |
+| 1    | Auth (e-mail, Google, Apple), cidades/bairros no PostGIS, relatos, mapa, ranking. **Feito no código**; falta você configurar Google/Apple e importar dados |
+| 2    | Lugares, avaliações, score, ficha do lugar, ranking de acolhedores. **Feito**                                                                              |
+| 3    | Mural de apoio, serviços por cidade, emergência, perfil e exclusão de conta. **Feito**                                                                     |
+| 4    | Moderação, denúncias, rate limit, auto-ocultação. **Feito**                                                                                                |
+| 5    | Política de privacidade, termos e ficha das lojas em docs/. **Faltam**: contas nas lojas, hospedar a política, builds de produção                          |
+| 6+   | Notificações de área, rotas seguras, versão web                                                                                                            |
 
 ## 8. Pendências
 
