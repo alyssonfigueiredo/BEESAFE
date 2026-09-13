@@ -17,6 +17,7 @@ export declare const colors: {
   yellowInk: string;
   turquoiseInk: string;
   lilacInk: string;
+  amber: string;
   star: string;
 };
 export declare const mark: {

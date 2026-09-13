@@ -21,6 +21,7 @@ const colors = {
   yellowInk: "#8A6512",
   turquoiseInk: "#1B7A6E",
   lilacInk: "#6D4FD8",
+  amber: "#E0A32E", // amarelo do logotipo abaixo de 20 px, e das estrelas de avaliação
   star: "#E0A32E", // estrelas de avaliação sobre fundo claro
 };
 
