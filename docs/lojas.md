@@ -49,7 +49,7 @@ Publicadas pelo GitHub Pages (workflow `.github/workflows/pages.yml`, fonte `doc
 - Site: https://alyssonfigueiredo.github.io/BEESAFE/
 - Política de privacidade: https://alyssonfigueiredo.github.io/BEESAFE/privacidade.html
 - Termos: https://alyssonfigueiredo.github.io/BEESAFE/termos.html
-- Suporte: e-mail de contato (criar um dedicado, ex.: irisa.app@gmail.com, e trocar o "[e-mail a definir]" em docs/privacidade.md).
+- Suporte: e-mail de contato appirisa@gmail.com.
 
 ## Play Console — o que colar em cada tela
 
@@ -61,7 +61,7 @@ Publicadas pelo GitHub Pages (workflow `.github/workflows/pages.yml`, fonte `doc
 | Idioma padrão | Português (Brasil) |
 | App ou jogo | App |
 | Gratuito ou pago | Gratuito |
-| E-mail de contato | (o e-mail de suporte) |
+| E-mail de contato | appirisa@gmail.com |
 | Categoria | Social |
 | Tags | Comunidade, Segurança, LGBTQIA+ |
 

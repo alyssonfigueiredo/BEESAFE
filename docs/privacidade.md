@@ -6,7 +6,7 @@ A Irisa é um aplicativo comunitário para pessoas LGBTQIA+ registrarem, de form
 
 ## 1. Quem é o controlador
 
-Irisa (projeto independente, sem fins lucrativos). Contato: [e-mail a definir].
+Irisa (projeto independente, sem fins lucrativos). Contato: appirisa@gmail.com.
 
 ## 2. Quais dados coletamos
 
