@@ -1,5 +1,9 @@
 import type { ExpoConfig } from "expo/config";
 
+// Sign in with Apple exige conta Apple Developer paga. Fica ligado só nos builds do EAS (APP_ENV definido em eas.json);
+// no build local com Personal Team (npx expo run:ios) fica desligado.
+const appleSignIn = process.env.APP_ENV === "preview" || process.env.APP_ENV === "production";
+
 const config: ExpoConfig = {
   name: "Irisa",
   slug: "irisa",
@@ -14,7 +18,7 @@ const config: ExpoConfig = {
   ios: {
     bundleIdentifier: "br.com.irisa.app",
     supportsTablet: false,
-    usesAppleSignIn: true,
+    usesAppleSignIn: appleSignIn,
     infoPlist: {
       NSLocationWhenInUseUsageDescription:
         "A Irisa usa sua localização para mostrar a cidade ao redor e marcar o ponto de um relato ou lugar.",
@@ -38,7 +42,7 @@ const config: ExpoConfig = {
     "expo-font",
     "expo-secure-store",
     "expo-web-browser",
-    "expo-apple-authentication",
+    ...(appleSignIn ? ["expo-apple-authentication"] : []),
     "@maplibre/maplibre-react-native",
     [
       "expo-location",
