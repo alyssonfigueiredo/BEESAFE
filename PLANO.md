@@ -5,16 +5,16 @@ relatos anônimos de LGBTIfobia (o lado do risco) e lugares avaliados com estrel
 
 ## 1. Decisões fechadas
 
-| Tema | Decisão |
-|---|---|
-| Escopo MVP | Relatos + mapa + lugares com estrelas + mural de apoio + emergência |
-| Backend | Supabase (Postgres + PostGIS, Auth, Realtime, RLS, Edge Functions, Storage) |
-| Frontend | React Native com Expo (iOS + Android via EAS). Sem versão web no MVP |
-| Moderação | Papel `moderator`, fila de denúncias, rate limit por usuário |
-| Anonimato | Autor nunca sai do banco; RLS garante. Login obrigatório |
-| Coordenadas | Exatas no banco. Exibição pública ofuscada (~100 m) só na janela em que a vítima pode ainda estar no local; depois exata |
-| Dados fictícios | Só em ambiente de desenvolvimento (seed). Produção nasce vazia |
-| Nome | **Irisa** (verbo irisar: dar cores de arco-íris). INPI: sem processo para IRISA (busca 2026-09-13). "IRIS" seco inviável: Iris BS System (cl. 42, em vigor) e Iris Segurança Inteligente (cl. 45, em vigor). Registrar IRISA nas classes 9, 42 e 45; risco residual de oposição por semelhança na 45 |
+| Tema            | Decisão                                                                                                                                                                                                                                                                                              |
+| --------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Escopo MVP      | Relatos + mapa + lugares com estrelas + mural de apoio + emergência                                                                                                                                                                                                                                  |
+| Backend         | Supabase (Postgres + PostGIS, Auth, Realtime, RLS, Edge Functions, Storage)                                                                                                                                                                                                                          |
+| Frontend        | React Native com Expo (iOS + Android via EAS). Sem versão web no MVP                                                                                                                                                                                                                                 |
+| Moderação       | Papel `moderator`, fila de denúncias, rate limit por usuário                                                                                                                                                                                                                                         |
+| Anonimato       | Autor nunca sai do banco; RLS garante. Login obrigatório                                                                                                                                                                                                                                             |
+| Coordenadas     | Exatas no banco. Exibição pública ofuscada (~100 m) só na janela em que a vítima pode ainda estar no local; depois exata                                                                                                                                                                             |
+| Dados fictícios | Só em ambiente de desenvolvimento (seed). Produção nasce vazia                                                                                                                                                                                                                                       |
+| Nome            | **Irisa** (verbo irisar: dar cores de arco-íris). INPI: sem processo para IRISA (busca 2026-09-13). "IRIS" seco inviável: Iris BS System (cl. 42, em vigor) e Iris Segurança Inteligente (cl. 45, em vigor). Registrar IRISA nas classes 9, 42 e 45; risco residual de oposição por semelhança na 45 |
 
 Sobre a janela de ofuscação: o app não tem como saber se a vítima ainda está no local. Proxy proposto: relato com
 `occurrence_date` nas últimas 24 h aparece ofuscado no mapa público; após 24 h aparece exato. Valor ajustável.
@@ -22,6 +22,7 @@ Sobre a janela de ofuscação: o app não tem como saber se a vítima ainda est�
 ## 2. Stack
 
 ### App (Expo)
+
 - Expo SDK atual, TypeScript, Expo Router (rotas por arquivo), EAS Build/Submit/Update.
 - Mapa: `@maplibre/maplibre-react-native`. Gratuito, sem chave, aceita os tiles raster da Esri (Canvas Dark Gray)
   já validados no protótipo. Descarta `react-native-maps` porque Android exigiria chave do Google Maps.
@@ -32,6 +33,7 @@ Sobre a janela de ofuscação: o app não tem como saber se a vítima ainda est�
 - Datas: `date-fns` com locale `pt-BR`. Ícones: `lucide-react-native`.
 
 ### Backend (Supabase)
+
 - Postgres com extensões `postgis`, `pg_cron`, `pg_trgm`.
 - Auth: e-mail/senha, Google e Apple. Apple Sign In é obrigatório na App Store quando existe login social.
 - RLS em todas as tabelas. Views públicas expõem apenas colunas não identificáveis.
@@ -39,6 +41,7 @@ Sobre a janela de ofuscação: o app não tem como saber se a vítima ainda est�
 - `pg_cron`: recálculo de scores agregados a cada hora.
 
 ### Geocodificação (cidade, UF, bairro a partir do ponto)
+
 - Município e UF: malhas do IBGE importadas no PostGIS, resolvido por point-in-polygon, sem chamada externa.
 - Bairro: polígonos do OSM importados onde existirem. Fallback: Nominatim via Edge Function com cache por célula
   de ~100 m e respeito ao limite de 1 req/s. Sem bairro resolvido o relato fica no nível de cidade.
@@ -68,6 +71,7 @@ Enums de `occurrences.type`, `severity` e `support_messages.category` e a paleta
 documento original.
 
 ### Views públicas (o que o app lê)
+
 - `public_occurrences`: sem `created_by`; `location` substituído por `display_location`, ofuscado quando
   `occurrence_date > now() - 24h`.
 - `public_places` com join em `place_scores`.
@@ -76,12 +80,14 @@ documento original.
 ## 4. Regras de negócio
 
 ### Ranking de risco (mantido do original, agora por escopo)
+
 - Score da área = nº relatos + 3 × relatos de gravidade alta, janela de 12 meses.
 - Nível: ≥ 12 alto (coral), ≥ 6 médio (laranja), abaixo baixo (amarelo).
 - Escopo: bairros dentro da cidade selecionada; cidades dentro da UF; UFs no país.
 - Zonas de calor no mapa: mesma regra de agrupamento do original, aplicada aos pontos visíveis no viewport.
 
 ### Score de lugar
+
 - Média ponderada das estrelas com decaimento exponencial, meia-vida de 6 meses.
 - Confiabilidade: exibir sempre `rating_count`; lugares com menos de 3 avaliações mostram "poucas avaliações"
   e não entram no ranking de acolhedores.
@@ -91,6 +97,7 @@ documento original.
 - Ranking "lugares mais acolhedores" por cidade, ao lado do ranking de risco.
 
 ### Anti-abuso
+
 - Rate limit: 5 relatos/dia, 10 avaliações/dia, 20 mensagens/dia por usuário. Aplicado por Edge Function.
 - Uma avaliação por usuário por lugar, editável.
 - Conta com menos de 24 h de idade não pode criar lugares.
@@ -123,15 +130,15 @@ Tabs: Início, Mapa, Registrar, Apoio, Perfil.
 
 ## 7. Fases
 
-| Fase | Entrega |
-|---|---|
-| 0 | Nome, projeto Supabase, projeto Expo, design tokens, CI (lint, typecheck, EAS) |
-| 1 | Auth, cidades/bairros no PostGIS, relatos, mapa com calor, ranking de risco |
-| 2 | Lugares, avaliações, score, ficha do lugar, ranking de acolhedores |
-| 3 | Mural de apoio, serviços por cidade, emergência, perfil e exclusão de conta |
-| 4 | Moderação, denúncias, rate limit, auto-ocultação |
-| 5 | TestFlight e Play internal testing, política de privacidade, submissão às lojas |
-| 6+ | Notificações de área, rotas seguras, versão web |
+| Fase | Entrega                                                                         |
+| ---- | ------------------------------------------------------------------------------- |
+| 0    | Nome, projeto Supabase, projeto Expo, design tokens, CI (lint, typecheck, EAS)  |
+| 1    | Auth, cidades/bairros no PostGIS, relatos, mapa com calor, ranking de risco     |
+| 2    | Lugares, avaliações, score, ficha do lugar, ranking de acolhedores              |
+| 3    | Mural de apoio, serviços por cidade, emergência, perfil e exclusão de conta     |
+| 4    | Moderação, denúncias, rate limit, auto-ocultação                                |
+| 5    | TestFlight e Play internal testing, política de privacidade, submissão às lojas |
+| 6+   | Notificações de área, rotas seguras, versão web                                 |
 
 ## 8. Pendências
 
