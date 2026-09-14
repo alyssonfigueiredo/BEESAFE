@@ -55,7 +55,7 @@ where n.city_id = o.city_id and o.neighborhood_id is null
 8. `migrations/00000000000006_acolhimento.sql`
 9. `migrations/00000000000007_relato_no_lugar.sql`
 10. `seed_services.sql` (depois do import de municípios: serviços nacionais, Curitiba e Porto Alegre)
-11. Opcional, só em ambiente de teste: `seed/curitiba-teste.sql` (8 usuários e 5 lugares cobrindo os 5 selos). O bloco comentado no fim remove tudo. **Remover antes do lançamento.**
+11. O seed fictício de Curitiba foi removido do repositório. Para apagar os dados de teste que ainda estejam no banco, rode `seed/limpar-curitiba-teste.sql` (apaga só os ids `11111111-`/`22222222-`/`33333333-` e recalcula os priors).
 
 Tudo acima já está aplicado no projeto `ntjirpqulrnieeglpiei`.
 

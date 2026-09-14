@@ -17,10 +17,10 @@ Nome: **Irisa** (INPI livre; @irisapp livre). Bundle id `br.com.irisa.app`. Cont
 
 ## Estado atual (2026-09-14)
 
-- Branch de trabalho e default do repo: `claude/ecstatic-darwin-cmf7sw`. Sempre commitar e dar push nela.
+- Branch de trabalho: `claude/laughing-keller-my8t7c` (default do repo: `claude/ecstatic-darwin-cmf7sw`).
 - MVP completo e rodando no iPhone do usuário (Xcode, Apple ID gratuito, expira em 7 dias) e em APK Android (EAS preview).
-- Supabase projeto `ntjirpqulrnieeglpiei`, região São Paulo. Todas as 8 migrations + seeds aplicadas, inclusive
-  `supabase/seed/curitiba-teste.sql` (dados fictícios: **remover antes do lançamento**, bloco no fim do arquivo).
+- Supabase projeto `ntjirpqulrnieeglpiei`, região São Paulo. Todas as 8 migrations + seeds aplicadas.
+  O seed fictício de Curitiba saiu do repositório; `supabase/seed/limpar-curitiba-teste.sql` apaga o que sobrou no banco.
 - Chaves legadas desativadas: app usa `sb_publishable_...`, scripts usam `sb_secret_...` (só na máquina dele).
 - Dados geográficos: municípios do PR (399) e bairros de Curitiba (74) importados.
 - Login: e-mail/senha OK, Google configurado no Supabase (testar no Android exige SHA-1 da keystore EAS no Google Cloud),
@@ -59,7 +59,7 @@ Checks antes de commitar: `npm run lint && npm run typecheck`. Migrations testá
 1. Conta no Google Play Console (US$25, pode ser a conta pessoal dele; adicionar appirisa@gmail.com como admin).
    Preencher com docs/lojas.md. Teste fechado: 12 testadores por 14 dias, depois produção.
 2. SHA-1 da keystore EAS (`npx eas-cli credentials -p android`) no Google Cloud para login Google no Android.
-3. Remover seed de teste; importar bairros das outras capitais (`import-neighborhoods.mjs` sem argumentos).
+3. Importar bairros das outras capitais (`import-neighborhoods.mjs` sem argumentos).
 4. Apple Developer (US$99/ano) quando decidir publicar no iOS; ou via ONG parceira (Apple isenta ONGs).
 5. Fase 6+: notificações por área, rotas seguras, versão web.
 

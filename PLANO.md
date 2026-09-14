@@ -160,7 +160,7 @@ Tabs: Início, Mapa, Registrar, Apoio, Perfil.
 
 - Reservar Instagram @irisapp (livre), registrar irisa.com.br e irisa.app.br, protocolar IRISA no INPI (9, 42, 45). Bundle id: br.com.irisa.app. Contato: appirisa@gmail.com.
 - Layout do Início: decidido manter o painel (opção A). Mockup A/B: `docs/mockup.html`. Pitch: `docs/pitch.html` (publicados no site).
-- Antes do lançamento: remover `supabase/seed/curitiba-teste.sql` do banco; cadastrar SHA-1 da keystore EAS no Google Cloud para login Google no Android; importar bairros das demais capitais.
+- Antes do lançamento: apagar os dados de teste do banco com `supabase/seed/limpar-curitiba-teste.sql`; cadastrar SHA-1 da keystore EAS no Google Cloud para login Google no Android; importar bairros das demais capitais.
 - Confirmar janela de ofuscação de 24 h.
 - Lista inicial de serviços de apoio por capital.
 - Fonte dos polígonos de bairro por cidade (OSM cobre bem as capitais, mal o interior).
