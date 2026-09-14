@@ -1,6 +1,6 @@
 -- Irisa · dados de TESTE para Curitiba (5 lugares cobrindo os 5 selos).
 -- Cole no SQL Editor do Supabase e rode. Pode rodar de novo sem duplicar.
--- Para apagar tudo depois, use o bloco de limpeza no fim do arquivo.
+-- Para apagar tudo depois, rode `supabase/seed/limpar-teste.sql`.
 
 -- Confere que Curitiba está importada (os lugares precisam cair dentro do polígono da cidade).
 do $$
@@ -110,8 +110,5 @@ from public.public_places
 where city_id = (select id from public.cities where name ilike 'curitiba' limit 1)
 order by score desc nulls last;
 
--- ---------- LIMPEZA (rode só quando quiser apagar os dados de teste) ----------
--- delete from public.occurrences where id::text like '33333333-%';
--- delete from public.places     where id::text like '22222222-%';
--- delete from auth.users        where id::text like '11111111-0000-4000-8000-%';
--- select public.refresh_rating_priors();
+-- ---------- LIMPEZA ----------
+-- Para apagar tudo isto, rode `supabase/seed/limpar-teste.sql`.

@@ -1,7 +1,8 @@
 // Importa bairros do OpenStreetMap (relações boundary=administrative admin_level=10) para public.neighborhoods.
 // Roda na SUA máquina:
 //   SUPABASE_URL=... SUPABASE_SERVICE_ROLE_KEY=... node scripts/import-neighborhoods.mjs 4314902 [outro_codigo_ibge ...]
-// Sem argumentos: todas as capitais. Overpass tem limite de uso; o script espera 5 s entre cidades.
+// Sem argumentos: todas as capitais. O município precisa já estar em public.cities (scripts/import-cities.mjs).
+// Overpass tem limite de uso: 5 s entre cidades e uma segunda tentativa no fim para as que falharem.
 
 import { createClient } from "@supabase/supabase-js";
 import osmtogeojson from "osmtogeojson";
@@ -17,7 +18,7 @@ const CAPITAIS = [
   1400100, 4205407, 3550308, 2800308, 1721000,
 ];
 const codes = process.argv.slice(2).map(Number).filter(Boolean);
-const targets = codes.length ? codes : CAPITAIS;
+const requested = codes.length ? codes : CAPITAIS;
 
 const MIRRORS = process.env.OVERPASS_URL
   ? [process.env.OVERPASS_URL]
@@ -72,18 +73,74 @@ async function fetchNeighborhoods(ibge) {
     }));
 }
 
+// O município precisa existir em public.cities (upsert_neighborhoods exige). Avisa em vez de falhar 27 vezes.
+const { data: known, error: knownError } = await supabase
+  .from("cities")
+  .select("ibge_code, name, state")
+  .in("ibge_code", requested);
+if (knownError) throw knownError;
+
+const byCode = new Map((known ?? []).map((c) => [c.ibge_code, c]));
+const missing = requested.filter((c) => !byCode.has(c));
+const targets = requested.filter((c) => byCode.has(c));
+
+if (missing.length) {
+  console.warn(
+    `Fora da tabela cities (rode scripts/import-cities.mjs antes): ${missing.join(", ")}`,
+  );
+}
+if (!targets.length) {
+  console.error("Nenhum município importado entre os pedidos. Rode: node scripts/import-cities.mjs");
+  process.exit(1);
+}
+
+const sleep = (ms) => new Promise((res) => setTimeout(res, ms));
+
+async function importOne(ibge) {
+  const rows = await fetchNeighborhoods(ibge);
+  const { data, error } = await supabase.rpc("upsert_neighborhoods", {
+    p_city_ibge: ibge,
+    p_rows: rows,
+  });
+  if (error) throw error;
+  return { found: rows.length, saved: data ?? 0 };
+}
+
+const failed = [];
 for (const ibge of targets) {
+  const city = byCode.get(ibge);
+  const label = `${city.name}/${city.state} (${ibge})`;
   try {
-    const rows = await fetchNeighborhoods(ibge);
-    const { data, error } = await supabase.rpc("upsert_neighborhoods", {
-      p_city_ibge: ibge,
-      p_rows: rows,
-    });
-    if (error) throw error;
-    console.log(`${ibge}: ${rows.length} bairros no OSM, ${data ?? 0} gravados`);
+    const { found, saved } = await importOne(ibge);
+    console.log(`${label}: ${found} bairros no OSM, ${saved} gravados`);
   } catch (e) {
-    console.error(`${ibge}: falhou —`, e.message);
+    console.error(`${label}: falhou — ${e.message}`);
+    failed.push(ibge);
   }
-  await new Promise((res) => setTimeout(res, 5000));
+  await sleep(5000);
+}
+
+// Overpass derruba requisição por excesso de uso; uma segunda passada costuma resolver.
+if (failed.length) {
+  console.log(`\nSegunda tentativa em ${failed.length} cidade(s)...`);
+  const stillFailed = [];
+  for (const ibge of failed) {
+    const city = byCode.get(ibge);
+    const label = `${city.name}/${city.state} (${ibge})`;
+    await sleep(15000);
+    try {
+      const { found, saved } = await importOne(ibge);
+      console.log(`${label}: ${found} bairros no OSM, ${saved} gravados`);
+    } catch (e) {
+      console.error(`${label}: falhou de novo — ${e.message}`);
+      stillFailed.push(ibge);
+    }
+  }
+  if (stillFailed.length) {
+    console.error(
+      `\nNão importados: ${stillFailed.join(" ")}\nRode de novo só eles: node scripts/import-neighborhoods.mjs ${stillFailed.join(" ")}`,
+    );
+    process.exit(1);
+  }
 }
 console.log("ok");

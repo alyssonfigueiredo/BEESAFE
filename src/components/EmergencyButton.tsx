@@ -14,6 +14,9 @@ import { useCity } from "@/providers/CityProvider";
 import { EMERGENCY_CONTACTS } from "@/theme/domain";
 import { colors } from "@/theme/tokens";
 
+// Telefones do banco vêm formatados ("(11) 3225-0019"); o esquema tel: só aceita dígitos e +.
+const telDigits = (phone: string) => phone.replace(/[^\d+]/g, "");
+
 export function EmergencyButton() {
   const [open, setOpen] = useState(false);
   const pulse = useSharedValue(0);
@@ -89,7 +92,7 @@ export function EmergencyButton() {
                 {local.map((s) => (
                   <Pressable
                     key={s.id}
-                    onPress={() => Linking.openURL(s.phone ? `tel:${s.phone}` : (s.url ?? ""))}
+                    onPress={() => Linking.openURL(s.phone ? `tel:${telDigits(s.phone)}` : (s.url ?? ""))}
                     disabled={!s.phone && !s.url}
                     className="rounded-xl border border-border bg-paper px-4 py-3 active:opacity-80"
                   >

@@ -32,8 +32,20 @@ SUPABASE_URL=https://<ref>.supabase.co SUPABASE_SERVICE_ROLE_KEY=sb_secret_... n
 SUPABASE_URL=https://<ref>.supabase.co SUPABASE_SERVICE_ROLE_KEY=sb_secret_... node scripts/import-neighborhoods.mjs 4106902
 ```
 
-- Municípios: IBGE, por UF (41 = PR). Feito: PR (399 municípios).
+- Municípios: IBGE, por UF (41 = PR). Feito: PR (399 municípios). Sem argumentos importa as 27 UFs (~5.570 municípios).
 - Bairros: OSM via Overpass (3 mirrors, fallback automático). Feito: Curitiba (74 bairros). Sem argumentos importa todas as capitais.
+  A cidade precisa já estar em `cities`: rode `import-cities.mjs` antes. O script avisa quais faltam, tenta de novo
+  no fim as que o Overpass derrubou e imprime o comando para repetir só as que sobraram.
+
+Para cobrir o país inteiro (na ordem):
+
+```bash
+SUPABASE_URL=https://<ref>.supabase.co SUPABASE_SERVICE_ROLE_KEY=sb_secret_... node scripts/import-cities.mjs
+SUPABASE_URL=https://<ref>.supabase.co SUPABASE_SERVICE_ROLE_KEY=sb_secret_... node scripts/import-neighborhoods.mjs
+```
+
+Depois rode de novo o `seed_services.sql` (traz os serviços das capitais que passaram a existir) e o UPDATE de
+reprocessamento de bairros abaixo.
 - Bairros são atribuídos ao relato no insert. Depois de importar bairros de uma cidade que já tinha relatos, reprocesse:
 
 ```sql
@@ -54,9 +66,20 @@ where n.city_id = o.city_id and o.neighborhood_id is null
 7. `migrations/00000000000005_moderation.sql`
 8. `migrations/00000000000006_acolhimento.sql`
 9. `migrations/00000000000007_relato_no_lugar.sql`
-10. `seed_services.sql` (depois do import de municípios: serviços nacionais, Curitiba e Porto Alegre)
-11. Opcional, só em ambiente de teste: `seed/curitiba-teste.sql` (8 usuários e 5 lugares cobrindo os 5 selos). O bloco comentado no fim remove tudo. **Remover antes do lançamento.**
+10. `migrations/00000000000008_servicos_unicos.sql`
+11. `seed_services.sql` (depois do import de municípios: nacionais + capitais já importadas). Idempotente: rodar de novo atualiza e acrescenta.
+12. Opcional, só em ambiente de teste: `seed/curitiba-teste.sql` (8 usuários e 5 lugares cobrindo os 5 selos).
+    **Remover antes do lançamento** com `seed/limpar-teste.sql`.
 
-Tudo acima já está aplicado no projeto `ntjirpqulrnieeglpiei`.
+Aplicado no projeto `ntjirpqulrnieeglpiei` até o item 9. Faltam rodar lá: `00000000000008_servicos_unicos.sql`,
+a nova versão do `seed_services.sql` e, antes do lançamento, `seed/limpar-teste.sql`.
+
+## Serviços de apoio
+
+`seed_services.sql` tem os nacionais e os de Curitiba, Porto Alegre, São Paulo, Rio de Janeiro, Belo Horizonte,
+Salvador, Recife, Fortaleza e Brasília — só entradas conferidas em fonte oficial (prefeitura, governo estadual ou
+site da própria ONG). As demais capitais ainda dependem de levantamento local; enquanto não houver, o app mostra
+os nacionais, entre eles o Mapa da Cidadania da ABGLT, que cobre os 27 estados. Serviço com telefone errado é pior
+que serviço ausente: não acrescente entrada sem conferir na fonte.
 
 Para promover alguém a moderador: `update public.profiles set role = 'moderator' where id = '<uuid do usuário>';`
