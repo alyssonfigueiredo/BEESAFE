@@ -7,7 +7,11 @@ begin;
 -- Relato de teste (o ligado à Boate Vértice).
 delete from public.occurrences where id::text like '33333333-%';
 
--- Lugares de teste. Em cascata levam place_ratings e place_scores.
+-- Avaliações de teste antes dos lugares: se os lugares forem primeiro, a cascata dispara
+-- on_rating_change e compute_place_score tenta gravar place_scores de um lugar que já sumiu.
+delete from public.place_ratings where place_id::text like '22222222-%';
+
+-- Lugares de teste. Em cascata levam place_scores.
 delete from public.places where id::text like '22222222-%';
 
 -- Contas de teste. Em cascata levam profiles, avaliações e apoios que sobrarem.
