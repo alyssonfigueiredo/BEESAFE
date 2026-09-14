@@ -153,12 +153,14 @@ Tabs: Início, Mapa, Registrar, Apoio, Perfil.
 | 2    | Lugares, avaliações em quatro eixos, score bayesiano, selos, ficha, ranking. **Feito**                                                                     |
 | 3    | Mural de apoio, serviços por cidade, emergência, perfil e exclusão de conta. **Feito**                                                                     |
 | 4    | Moderação, denúncias, rate limit, auto-ocultação. **Feito**                                                                                                |
-| 5    | Política de privacidade, termos e ficha das lojas em docs/. **Faltam**: contas nas lojas, hospedar a política, builds de produção                          |
+| 5    | Política, termos e site publicados (GitHub Pages), ficha das lojas, APK Android via EAS, app rodando no iPhone. **Faltam**: conta Play Console, teste fechado, Apple Developer |
 | 6+   | Notificações de área, rotas seguras, versão web                                                                                                            |
 
 ## 8. Pendências
 
-- Reservar Instagram (@irisa ocupado; @irisa.app ou @irisaapp livres em busca), registrar irisa.com.br e irisa.app.br (sem DNS), protocolar IRISA no INPI (9, 42, 45). Identidade visual. Bundle id: br.com.irisa.app
+- Reservar Instagram @irisapp (livre), registrar irisa.com.br e irisa.app.br, protocolar IRISA no INPI (9, 42, 45). Bundle id: br.com.irisa.app. Contato: appirisa@gmail.com.
+- Layout do Início: decidido manter o painel (opção A). Mockup A/B: https://claude.ai/code/artifact/dbd02405-5fa3-4d72-bc70-a74ffcf12470. Pitch: https://claude.ai/code/artifact/ad5b490e-c80f-46e4-b6b8-ac20c0bc3626.
+- Antes do lançamento: remover `supabase/seed/curitiba-teste.sql` do banco; cadastrar SHA-1 da keystore EAS no Google Cloud para login Google no Android; importar bairros das demais capitais.
 - Confirmar janela de ofuscação de 24 h.
 - Lista inicial de serviços de apoio por capital.
 - Fonte dos polígonos de bairro por cidade (OSM cobre bem as capitais, mal o interior).

@@ -16,10 +16,32 @@ Regras:
 `scripts/db-smoke.sh` sobe um Postgres temporário (precisa de `postgresql-16-postgis-3` e `postgresql-16-cron`),
 aplica `dev/supabase-stubs.sql` (auth, realtime e roles fingidos), as migrations, o seed e roda `dev/smoke.sql`.
 
+## Chaves
+
+As chaves legadas (anon/service_role JWT) estão desativadas no projeto. Use:
+
+- App (`.env`): `sb_publishable_...` em `EXPO_PUBLIC_SUPABASE_ANON_KEY`.
+- Scripts de import: `sb_secret_...` em `SUPABASE_SERVICE_ROLE_KEY`. Nunca no repositório nem em chat.
+
 ## Dados geográficos
 
-- Municípios: `node scripts/import-cities.mjs` com `SUPABASE_URL` e `SUPABASE_SERVICE_ROLE_KEY` (roda na sua máquina).
-- Bairros: import do OSM por cidade, fase 1.x. Sem bairro o relato fica no nível de cidade.
+Rodam na sua máquina, com as variáveis na frente do comando:
+
+```bash
+SUPABASE_URL=https://<ref>.supabase.co SUPABASE_SERVICE_ROLE_KEY=sb_secret_... node scripts/import-cities.mjs 41
+SUPABASE_URL=https://<ref>.supabase.co SUPABASE_SERVICE_ROLE_KEY=sb_secret_... node scripts/import-neighborhoods.mjs 4106902
+```
+
+- Municípios: IBGE, por UF (41 = PR). Feito: PR (399 municípios).
+- Bairros: OSM via Overpass (3 mirrors, fallback automático). Feito: Curitiba (74 bairros). Sem argumentos importa todas as capitais.
+- Bairros são atribuídos ao relato no insert. Depois de importar bairros de uma cidade que já tinha relatos, reprocesse:
+
+```sql
+update public.occurrences o set neighborhood_id = n.id
+from public.neighborhoods n
+where n.city_id = o.city_id and o.neighborhood_id is null
+  and st_contains(n.geom, o.location::geometry);
+```
 
 ## Ordem para aplicar no SQL Editor da Supabase
 
@@ -30,6 +52,11 @@ aplica `dev/supabase-stubs.sql` (auth, realtime e roles fingidos), as migrations
 5. `migrations/00000000000003_places.sql`
 6. `migrations/00000000000004_support.sql`
 7. `migrations/00000000000005_moderation.sql`
-8. `seed_services.sql` (depois do import de municípios, para os serviços de Porto Alegre entrarem)
+8. `migrations/00000000000006_acolhimento.sql`
+9. `migrations/00000000000007_relato_no_lugar.sql`
+10. `seed_services.sql` (depois do import de municípios: serviços nacionais, Curitiba e Porto Alegre)
+11. Opcional, só em ambiente de teste: `seed/curitiba-teste.sql` (8 usuários e 5 lugares cobrindo os 5 selos). O bloco comentado no fim remove tudo. **Remover antes do lançamento.**
+
+Tudo acima já está aplicado no projeto `ntjirpqulrnieeglpiei`.
 
 Para promover alguém a moderador: `update public.profiles set role = 'moderator' where id = '<uuid do usuário>';`
