@@ -22,7 +22,8 @@ Nome: **Irisa** (INPI livre; @irisapp livre). Bundle id `br.com.irisa.app`. Cont
 - Supabase projeto `ntjirpqulrnieeglpiei`, região São Paulo. Todas as 8 migrations + seeds aplicadas.
   O seed fictício de Curitiba saiu do repositório; `supabase/seed/limpar-curitiba-teste.sql` apaga o que sobrou no banco.
 - Chaves legadas desativadas: app usa `sb_publishable_...`, scripts usam `sb_secret_...` (só na máquina dele).
-- Dados geográficos: municípios do PR (399) e bairros de Curitiba (74) importados.
+- Dados geográficos: os 5.570 municípios das 27 UFs e os bairros das capitais importados. Sem bairros no OSM:
+  Brasília, São Luís e Palmas (São Paulo só 9). `upsert_neighborhoods` agrupa nomes repetidos antes do upsert.
 - Login: e-mail/senha OK, Google configurado no Supabase (testar no Android exige SHA-1 da keystore EAS no Google Cloud),
   Apple só em builds EAS (`APP_ENV=preview|production`).
 - Site público (GitHub Pages, workflow `pages.yml`, fonte `docs/*.md` → `scripts/build-site.mjs` → `site/`):
@@ -59,7 +60,7 @@ Checks antes de commitar: `npm run lint && npm run typecheck`. Migrations testá
 1. Conta no Google Play Console (US$25, pode ser a conta pessoal dele; adicionar appirisa@gmail.com como admin).
    Preencher com docs/lojas.md. Teste fechado: 12 testadores por 14 dias, depois produção.
 2. SHA-1 da keystore EAS (`npx eas-cli credentials -p android`) no Google Cloud para login Google no Android.
-3. Importar bairros das outras capitais (`import-neighborhoods.mjs` sem argumentos).
+3. Fonte alternativa de bairros para Brasília, São Luís, Palmas e São Paulo (OSM não cobre).
 4. Apple Developer (US$99/ano) quando decidir publicar no iOS; ou via ONG parceira (Apple isenta ONGs).
 5. Fase 6+: notificações por área, rotas seguras, versão web.
 

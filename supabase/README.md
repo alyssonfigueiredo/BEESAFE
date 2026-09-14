@@ -32,8 +32,11 @@ SUPABASE_URL=https://<ref>.supabase.co SUPABASE_SERVICE_ROLE_KEY=sb_secret_... n
 SUPABASE_URL=https://<ref>.supabase.co SUPABASE_SERVICE_ROLE_KEY=sb_secret_... node scripts/import-neighborhoods.mjs 4106902
 ```
 
-- Municípios: IBGE, por UF (41 = PR). Feito: PR (399 municípios).
-- Bairros: OSM via Overpass (3 mirrors, fallback automático). Feito: Curitiba (74 bairros). Sem argumentos importa todas as capitais.
+- Municípios: IBGE, por UF (41 = PR). Feito: as 27 UFs (5.570 municípios).
+- Bairros: OSM via Overpass (3 mirrors, fallback automático). Sem argumentos importa todas as capitais.
+  Feito: as capitais, menos Brasília, São Luís e Palmas, que não têm `admin_level=10` no OSM
+  (São Paulo tem só 9 polígonos, também limitação da fonte). Capital que falhar com 504 é só repetir
+  passando o código IBGE dela.
 - Bairros são atribuídos ao relato no insert. Depois de importar bairros de uma cidade que já tinha relatos, reprocesse:
 
 ```sql
@@ -41,6 +44,11 @@ update public.occurrences o set neighborhood_id = n.id
 from public.neighborhoods n
 where n.city_id = o.city_id and o.neighborhood_id is null
   and st_contains(n.geom, o.location::geometry);
+
+update public.places p set neighborhood_id = n.id
+from public.neighborhoods n
+where n.city_id = p.city_id and p.neighborhood_id is null
+  and st_contains(n.geom, p.location::geometry);
 ```
 
 ## Ordem para aplicar no SQL Editor da Supabase
