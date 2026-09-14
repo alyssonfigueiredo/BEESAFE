@@ -51,6 +51,8 @@ const page = (title, body) => `<!doctype html>
 
 mkdirSync("site", { recursive: true });
 copyFileSync("assets/icon.png", "site/icon.png");
+copyFileSync("docs/pitch.html", "site/pitch.html");
+copyFileSync("docs/mockup.html", "site/mockup.html");
 writeFileSync("site/privacidade.html", page("Política de Privacidade", md(readFileSync("docs/privacidade.md", "utf8"))));
 writeFileSync("site/termos.html", page("Termos de Uso", md(readFileSync("docs/termos.md", "utf8"))));
 writeFileSync("site/index.html", page("Irisa", `

@@ -159,7 +159,7 @@ Tabs: Início, Mapa, Registrar, Apoio, Perfil.
 ## 8. Pendências
 
 - Reservar Instagram @irisapp (livre), registrar irisa.com.br e irisa.app.br, protocolar IRISA no INPI (9, 42, 45). Bundle id: br.com.irisa.app. Contato: appirisa@gmail.com.
-- Layout do Início: decidido manter o painel (opção A). Mockup A/B: https://claude.ai/code/artifact/dbd02405-5fa3-4d72-bc70-a74ffcf12470. Pitch: https://claude.ai/code/artifact/ad5b490e-c80f-46e4-b6b8-ac20c0bc3626.
+- Layout do Início: decidido manter o painel (opção A). Mockup A/B: `docs/mockup.html`. Pitch: `docs/pitch.html` (publicados no site).
 - Antes do lançamento: remover `supabase/seed/curitiba-teste.sql` do banco; cadastrar SHA-1 da keystore EAS no Google Cloud para login Google no Android; importar bairros das demais capitais.
 - Confirmar janela de ofuscação de 24 h.
 - Lista inicial de serviços de apoio por capital.

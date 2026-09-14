@@ -1,0 +1,349 @@
+<!doctype html>
+<html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Irisa · Mockup A/B</title><style>body{margin:0}</style></head><body>
+<title>Irisa Mockup</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;700&family=Space+Grotesk:wght@400;500;700&display=swap">
+<style>
+  :root{
+    --night:#0B132B;--surface:#1C2540;--border:#3A506B;--coral:#FF5A5F;--yellow:#FFD166;--orange:#FF9F45;
+    --turq:#5BC0BE;--lilac:#A78BFA;--ink:#FFFFFF;--muted:#CBD5E1;--dim:#94A3B8;--page:#060B1C;
+    --display:"Oswald",Impact,"Arial Narrow",sans-serif;--body:"Space Grotesk","Helvetica Neue",Arial,sans-serif;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--page);color:var(--ink);font-family:var(--body);padding:32px 16px 48px}
+  h1{font-family:var(--display);text-transform:uppercase;letter-spacing:.12em;font-size:28px;margin:0 0 4px}
+  h1 span{color:var(--yellow)}
+  .sub{color:var(--dim);font-size:14px;margin:0 0 28px;max-width:60ch}
+  .row{display:flex;flex-wrap:wrap;gap:24px;justify-content:center}
+  .phone{width:360px;height:740px;background:var(--night);border:10px solid #111a33;border-radius:44px;overflow:hidden;display:flex;flex-direction:column;position:relative;box-shadow:0 30px 60px rgba(0,0,0,.6)}
+  .phone .cap{position:absolute;top:0;left:50%;transform:translateX(-50%);width:120px;height:28px;background:#111a33;border-radius:0 0 18px 18px;z-index:5}
+  .hdr{display:flex;align-items:center;justify-content:space-between;padding:40px 16px 10px;flex:none}
+  .logo{font-family:var(--display);font-weight:700;font-size:22px;letter-spacing:.14em;text-transform:uppercase}
+  .logo b{color:var(--yellow);font-weight:700}
+  .siren{width:38px;height:38px;border-radius:50%;background:var(--coral);display:grid;place-items:center;position:relative;animation:pulse 1.8s infinite}
+  .siren svg{width:20px;height:20px;stroke:var(--night);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+  @keyframes pulse{0%{box-shadow:0 0 0 0 rgba(255,90,95,.6)}100%{box-shadow:0 0 0 14px rgba(255,90,95,0)}}
+  @media (prefers-reduced-motion:reduce){.siren{animation:none}}
+  .body{flex:1;overflow:hidden;padding:0 14px;display:flex;flex-direction:column;gap:12px}
+  .tabs{flex:none;display:flex;background:var(--surface);border-top:1px solid var(--border);padding:8px 6px 22px}
+  .tab{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;font-size:10px;font-weight:500;color:var(--dim)}
+  .tab.on{color:var(--coral)}
+  .tab svg{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+  .card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:14px;display:flex;flex-direction:column;gap:8px}
+  .h{font-family:var(--display);text-transform:uppercase;letter-spacing:.12em;font-size:15px}
+  .big{font-family:var(--display);text-transform:uppercase;letter-spacing:.12em;font-size:30px;line-height:1}
+  .eyebrow{font-size:10px;text-transform:uppercase;letter-spacing:.14em;color:var(--dim)}
+  .p{font-size:13px;color:var(--muted);line-height:1.4}
+  .small{font-size:11px;color:var(--dim)}
+  .link{color:var(--turq);font-size:12px;font-weight:500}
+  .btns{display:flex;gap:8px}
+  .btn{flex:1;text-align:center;font-family:var(--display);text-transform:uppercase;letter-spacing:.14em;font-size:13px;padding:10px;border-radius:12px}
+  .btn.coral{background:var(--coral);color:var(--night)}
+  .btn.turq{border:1px solid var(--turq);color:var(--turq)}
+  .btn.yellow{background:var(--yellow);color:var(--night)}
+  .stats{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+  .stat{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:12px;display:flex;flex-direction:column;gap:2px}
+  .stat .v{font-family:var(--display);font-size:24px;font-variant-numeric:tabular-nums}
+  .chips{display:flex;gap:6px;overflow:hidden;white-space:nowrap}
+  .chip{font-size:11px;font-weight:500;padding:5px 10px;border-radius:999px;border:1px solid;flex:none}
+  .badge{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;padding:3px 9px;border-radius:999px;color:var(--night)}
+  .between{display:flex;justify-content:space-between;align-items:center;gap:8px}
+  .rank{display:flex;align-items:center;gap:10px;font-size:13px}
+  .rank .n{font-family:var(--display);font-size:18px;color:var(--dim);width:18px}
+  .rank .lvl{font-size:11px;font-weight:700;margin-left:auto}
+  .map{position:relative;border-radius:14px;overflow:hidden;background:#1a1a1f;border:1px solid var(--border)}
+  .map canvas{display:block;width:100%;height:100%}
+  .field{display:flex;flex-direction:column;gap:6px}
+  .lbl{font-family:var(--display);text-transform:uppercase;letter-spacing:.14em;font-size:12px;color:var(--muted)}
+  .input{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:10px 12px;font-size:13px;color:var(--dim)}
+  .seg{display:flex;background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:4px}
+  .seg div{flex:1;text-align:center;font-family:var(--display);text-transform:uppercase;letter-spacing:.14em;font-size:12px;padding:7px;border-radius:9px;color:var(--muted)}
+  .seg .on{background:var(--coral);color:var(--night)}
+  .stars{letter-spacing:2px;font-size:13px}
+  .legend{display:flex;flex-wrap:wrap;gap:6px 14px}
+  .legend span{display:inline-flex;align-items:center;gap:6px;font-size:11px;color:var(--muted)}
+  .legend i{width:10px;height:10px;border-radius:50%;display:inline-block}
+  .note{font-size:12px;color:var(--muted);line-height:1.4}
+  .note b{display:block;color:var(--turq);font-size:12px}
+  .caption{text-align:center;color:var(--dim);font-size:12px;margin-top:8px;letter-spacing:.08em;text-transform:uppercase}
+  .cell{display:flex;flex-direction:column;gap:0}
+  .full{position:absolute;inset:0}
+  .full canvas{width:100%;height:100%;display:block}
+  .float{position:absolute;left:14px;right:14px;top:44px;display:flex;justify-content:space-between;align-items:center;z-index:3}
+  .pill{display:inline-flex;align-items:center;gap:8px;background:rgba(11,19,43,.92);border:1px solid var(--border);border-radius:999px;padding:8px 12px;font-size:12px;font-weight:500;backdrop-filter:blur(6px)}
+  .pill i{width:8px;height:8px;border-radius:50%;display:inline-block}
+  .fab{position:absolute;right:16px;bottom:318px;width:52px;height:52px;border-radius:50%;background:var(--coral);color:var(--night);display:grid;place-items:center;font-size:30px;font-family:var(--display);z-index:3;box-shadow:0 8px 20px rgba(0,0,0,.5)}
+  .sheet{position:absolute;left:0;right:0;bottom:78px;background:var(--night);border-top:1px solid var(--border);border-radius:22px 22px 0 0;padding:10px 14px 12px;display:flex;flex-direction:column;gap:10px;z-index:3}
+  .grab{width:40px;height:4px;border-radius:2px;background:var(--border);align-self:center}
+  .hcards{display:flex;gap:8px;overflow:hidden}
+  .hcard{flex:none;width:150px;background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:10px;display:flex;flex-direction:column;gap:4px}
+  .hcard .nm{font-family:var(--display);text-transform:uppercase;letter-spacing:.08em;font-size:13px}
+  .tabs2{position:absolute;left:0;right:0;bottom:0;display:flex;align-items:flex-end;background:var(--surface);border-top:1px solid var(--border);padding:8px 6px 22px;z-index:4}
+  .tabs2 .tab{flex:1}
+  .sos{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;font-size:10px;font-weight:700;color:var(--coral);margin-top:-30px}
+  .sos .ring{width:60px;height:60px;border-radius:50%;background:var(--coral);display:grid;place-items:center;animation:pulse 1.8s infinite;border:4px solid var(--night)}
+  .sos svg{width:26px;height:26px;stroke:var(--night);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+  @media (prefers-reduced-motion:reduce){.sos .ring{animation:none}}
+</style>
+
+<h1>Iri<span>sa</span></h1>
+<p class="sub">Mockup das telas com o design system do app. As duas primeiras comparam A (hoje) e B (proposta) inspirada nas referências: mapa em tela cheia, status do bairro, halo de risco, SOS central e lista "Perto de você".: fundo azul-noite, Oswald nos títulos, Space Grotesk no texto, coral para ação, turquesa para acolhimento. Dados de exemplo em Curitiba.</p>
+
+<div class="row">
+
+<!-- INÍCIO ANTIGO (versão atual do código) -->
+<div class="cell"><div class="phone"><div class="cap"></div>
+  <div class="hdr"><div class="logo">Iri<b>sa</b></div><div class="siren"><svg viewBox="0 0 24 24"><path d="M7 18v-6a5 5 0 0 1 10 0v6"/><path d="M5 21h14"/><path d="M12 2v2M4.2 5.2l1.4 1.4M19.8 5.2l-1.4 1.4"/></svg></div></div>
+  <div class="body">
+    <div class="card" style="padding:18px">
+      <div class="eyebrow">Painel de segurança</div>
+      <div class="big">Curitiba</div>
+      <div class="link">Curitiba · PR ▾</div>
+      <div class="p">Relatos anônimos da comunidade LGBTQIA+ e áreas que pedem atenção. Registrar leva um minuto.</div>
+      <div class="btns"><div class="btn coral">Registrar</div><div class="btn turq">Ver mapa</div></div>
+    </div>
+    <div class="stats">
+      <div class="stat"><div class="eyebrow">Relatos</div><div class="v">142</div></div>
+      <div class="stat"><div class="eyebrow">Últimos 30 dias</div><div class="v" style="color:var(--yellow)">23</div></div>
+      <div class="stat"><div class="eyebrow">Mais frequente</div><div class="v" style="color:var(--yellow);font-size:18px">Agressão verbal</div></div>
+      <div class="stat"><div class="eyebrow">Área crítica</div><div class="v" style="color:var(--coral);font-size:18px">Centro</div></div>
+    </div>
+    <div class="h">Relatos recentes</div>
+    <div class="card">
+      <div class="between"><span class="badge" style="background:var(--coral)">Violência física</span><span class="small" style="color:var(--coral)">Gravidade alta</span></div>
+      <div class="h" style="font-size:14px">Centro · <span style="color:var(--dim)">anônimo</span></div>
+      <div class="p">Saída de bar na Rua São Francisco, madrugada de sábado.</div>
+      <div class="small">12 de set. de 2026 · posição aproximada</div>
+    </div>
+    <div class="card">
+      <div class="h">Bairros com mais relatos</div>
+      <div class="rank"><span class="n">1</span><span>Centro</span><span class="lvl" style="color:var(--coral)">Risco alto</span></div>
+      <div class="rank"><span class="n">2</span><span>Rebouças</span><span class="lvl" style="color:var(--orange)">Risco médio</span></div>
+    </div>
+  </div>
+  <div class="tabs">
+    <div class="tab on"><svg viewBox="0 0 24 24"><path d="M3 11l9-8 9 8v10a1 1 0 0 1-1 1h-5v-7h-6v7H4a1 1 0 0 1-1-1z"/></svg>Início</div>
+    <div class="tab"><svg viewBox="0 0 24 24"><path d="M1 6v16l7-4 8 4 7-4V2l-7 4-8-4z"/><path d="M8 2v16M16 6v16"/></svg>Mapa</div>
+    <div class="tab"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 8v8M8 12h8"/></svg>Registrar</div>
+    <div class="tab"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="4"/><path d="M4.9 4.9l4.2 4.2M14.9 14.9l4.2 4.2M14.9 9.1l4.2-4.2M4.9 19.1l4.2-4.2"/></svg>Apoio</div>
+    <div class="tab"><svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>Perfil</div>
+  </div>
+</div><div class="caption">A · Início em painel (como está hoje)</div></div>
+
+<!-- INÍCIO (nova direção: mapa em tela cheia) -->
+<div class="cell"><div class="phone"><div class="cap"></div>
+  <div class="full"><canvas id="home" width="340" height="720"></canvas></div>
+  <div class="float">
+    <div class="logo" style="text-shadow:0 2px 8px rgba(0,0,0,.6)">Iri<b>sa</b></div>
+    <div class="pill"><i style="background:var(--yellow)"></i>Batel · Risco baixo</div>
+  </div>
+  <div class="fab">+</div>
+  <div class="sheet">
+    <div class="grab"></div>
+    <div class="between"><div class="h">Perto de você</div><span class="link">Curitiba · PR ▾</span></div>
+    <div class="hcards">
+      <div class="hcard"><div class="nm">Bar do Gato</div><div class="stars" style="color:var(--turq);font-size:11px">★★★★★ <span style="color:var(--muted)">4.7</span></div><div class="small">Bar · 220 m</div></div>
+      <div class="hcard"><div class="nm">Café Ateliê</div><div class="stars" style="color:var(--turq);font-size:11px">★★★★★ <span style="color:var(--muted)">4.6</span></div><div class="small">Café · 410 m</div></div>
+      <div class="hcard"><div class="nm">Vila Batel</div><div class="stars" style="color:var(--yellow);font-size:11px">★★★★☆ <span style="color:var(--muted)">3.9</span></div><div class="small">Balada · 650 m</div></div>
+    </div>
+    <div class="between" style="border-top:1px solid var(--border);padding-top:8px"><span class="badge" style="background:var(--yellow)">Agressão verbal</span><span class="small">Centro · há 2 dias · 1,1 km</span></div>
+    <div class="between"><span class="badge" style="background:var(--coral)">Violência física</span><span class="small">Rebouças · há 5 dias · 2,3 km</span></div>
+  </div>
+  <div class="tabs2">
+    <div class="tab on"><svg viewBox="0 0 24 24"><path d="M1 6v16l7-4 8 4 7-4V2l-7 4-8-4z"/><path d="M8 2v16M16 6v16"/></svg>Mapa</div>
+    <div class="tab"><svg viewBox="0 0 24 24"><path d="M12 2l3 7h7l-5.5 4.5L18 21l-6-4-6 4 1.5-7.5L2 9h7z"/></svg>Lugares</div>
+    <div class="sos"><div class="ring"><svg viewBox="0 0 24 24"><path d="M7 18v-6a5 5 0 0 1 10 0v6"/><path d="M5 21h14"/><path d="M12 2v2M4.2 5.2l1.4 1.4M19.8 5.2l-1.4 1.4"/></svg></div>SOS</div>
+    <div class="tab"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="4"/><path d="M4.9 4.9l4.2 4.2M14.9 14.9l4.2 4.2M14.9 9.1l4.2-4.2M4.9 19.1l4.2-4.2"/></svg>Apoio</div>
+    <div class="tab"><svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>Perfil</div>
+  </div>
+</div><div class="caption">B · Início como mapa em tela cheia (proposta)</div></div>
+
+<!-- MAPA -->
+<div class="cell"><div class="phone"><div class="cap"></div>
+  <div class="hdr"><div class="logo">Iri<b>sa</b></div><div class="siren"><svg viewBox="0 0 24 24"><path d="M7 18v-6a5 5 0 0 1 10 0v6"/><path d="M5 21h14"/><path d="M12 2v2M4.2 5.2l1.4 1.4M19.8 5.2l-1.4 1.4"/></svg></div></div>
+  <div class="body">
+    <div class="between" style="align-items:flex-end"><div><div class="big">Mapa</div><div class="small">Curitiba · PR · 142 relatos</div></div><div class="btn coral" style="flex:none;padding:8px 14px">Registrar</div></div>
+    <div class="chips">
+      <span class="chip" style="border-color:var(--muted);background:var(--muted);color:var(--night)">Todos (142)</span>
+      <span class="chip" style="border-color:var(--yellow);color:var(--yellow)">Agressão verbal (61)</span>
+      <span class="chip" style="border-color:var(--coral);color:var(--coral)">Violência física (24)</span>
+      <span class="chip" style="border-color:var(--orange);color:var(--orange)">Ameaça (19)</span>
+    </div>
+    <div class="chips">
+      <span class="chip" style="border-color:var(--coral);background:var(--coral);color:var(--night)">Relatos (142)</span>
+      <span class="chip" style="border-color:var(--turq);background:var(--turq);color:var(--night)">Lugares (37)</span>
+    </div>
+    <div class="map" style="height:300px"><canvas id="map" width="332" height="300"></canvas></div>
+    <div class="card">
+      <div class="h">Áreas de atenção</div>
+      <div class="rank"><span class="n">1</span><span>Centro</span><span class="lvl" style="color:var(--coral)">Risco alto</span></div>
+      <div class="rank"><span class="n">2</span><span>Rebouças</span><span class="lvl" style="color:var(--orange)">Risco médio</span></div>
+      <div class="rank"><span class="n">3</span><span>Batel</span><span class="lvl" style="color:var(--yellow)">Risco baixo</span></div>
+    </div>
+    <div class="card">
+      <div class="h">Legenda</div>
+      <div class="legend"><span><i style="background:var(--yellow)"></i>Gravidade baixa</span><span><i style="background:var(--orange)"></i>média</span><span><i style="background:var(--coral)"></i>alta</span><span><i style="background:var(--turq)"></i>Lugar 4,5+</span><span><i style="background:var(--dim)"></i>Sem avaliação</span></div>
+    </div>
+  </div>
+  <div class="tabs">
+    <div class="tab"><svg viewBox="0 0 24 24"><path d="M3 11l9-8 9 8v10a1 1 0 0 1-1 1h-5v-7h-6v7H4a1 1 0 0 1-1-1z"/></svg>Início</div>
+    <div class="tab on"><svg viewBox="0 0 24 24"><path d="M1 6v16l7-4 8 4 7-4V2l-7 4-8-4z"/><path d="M8 2v16M16 6v16"/></svg>Mapa</div>
+    <div class="tab"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 8v8M8 12h8"/></svg>Registrar</div>
+    <div class="tab"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="4"/><path d="M4.9 4.9l4.2 4.2M14.9 14.9l4.2 4.2M14.9 9.1l4.2-4.2M4.9 19.1l4.2-4.2"/></svg>Apoio</div>
+    <div class="tab"><svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>Perfil</div>
+  </div>
+</div><div class="caption">A · Mapa em cartão (como está hoje)</div></div>
+
+<!-- REGISTRAR -->
+<div class="cell"><div class="phone"><div class="cap"></div>
+  <div class="hdr"><div class="logo">Iri<b>sa</b></div><div class="siren"><svg viewBox="0 0 24 24"><path d="M7 18v-6a5 5 0 0 1 10 0v6"/><path d="M5 21h14"/><path d="M12 2v2M4.2 5.2l1.4 1.4M19.8 5.2l-1.4 1.4"/></svg></div></div>
+  <div class="body">
+    <div><div class="big">Registrar</div><div class="small">Relato anônimo de LGBTIfobia</div></div>
+    <div class="seg"><div class="on">Relato</div><div>Lugar</div></div>
+    <div class="field"><div class="lbl">Tipo</div>
+      <div class="chips" style="flex-wrap:wrap;white-space:normal">
+        <span class="chip" style="border-color:var(--yellow);background:var(--yellow);color:var(--night)">Agressão verbal</span>
+        <span class="chip" style="border-color:var(--coral);color:var(--coral)">Violência física</span>
+        <span class="chip" style="border-color:var(--orange);color:var(--orange)">Ameaça</span>
+        <span class="chip" style="border-color:var(--turq);color:var(--turq)">Discriminação</span>
+        <span class="chip" style="border-color:var(--lilac);color:var(--lilac)">Vandalismo</span>
+      </div></div>
+    <div class="field"><div class="lbl">Data</div><div class="input" style="color:var(--ink)">13 de setembro de 2026</div></div>
+    <div class="field"><div class="lbl">Gravidade</div>
+      <div class="btns"><span class="chip" style="flex:1;text-align:center;border-color:var(--yellow);color:var(--yellow)">Baixa</span><span class="chip" style="flex:1;text-align:center;border-color:var(--orange);background:var(--orange);color:var(--night)">Média</span><span class="chip" style="flex:1;text-align:center;border-color:var(--coral);color:var(--coral)">Alta</span></div></div>
+    <div class="field"><div class="between"><div class="lbl">Local</div><span class="small">−25.43012, −49.27125</span></div>
+      <div class="btn turq">⌖ Usar minha localização</div>
+      <div class="map" style="height:130px"><canvas id="pick" width="332" height="130"></canvas></div></div>
+    <div class="field"><div class="between"><div class="lbl">Descrição (opcional)</div><span class="small">0/2000</span></div><div class="input" style="min-height:52px">O que aconteceu? Não inclua seu nome nem dados que identifiquem você ou outras pessoas.</div></div>
+    <div class="btn coral" style="padding:13px">Registrar relato</div>
+  </div>
+  <div class="tabs">
+    <div class="tab"><svg viewBox="0 0 24 24"><path d="M3 11l9-8 9 8v10a1 1 0 0 1-1 1h-5v-7h-6v7H4a1 1 0 0 1-1-1z"/></svg>Início</div>
+    <div class="tab"><svg viewBox="0 0 24 24"><path d="M1 6v16l7-4 8 4 7-4V2l-7 4-8-4z"/><path d="M8 2v16M16 6v16"/></svg>Mapa</div>
+    <div class="tab on"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 8v8M8 12h8"/></svg>Registrar</div>
+    <div class="tab"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="4"/><path d="M4.9 4.9l4.2 4.2M14.9 14.9l4.2 4.2M14.9 9.1l4.2-4.2M4.9 19.1l4.2-4.2"/></svg>Apoio</div>
+    <div class="tab"><svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>Perfil</div>
+  </div>
+</div><div class="caption">Registrar</div></div>
+
+<!-- LUGAR -->
+<div class="cell"><div class="phone"><div class="cap"></div>
+  <div class="hdr"><div class="logo" style="font-size:15px">‹ &nbsp;Bar do Gato</div><div class="siren"><svg viewBox="0 0 24 24"><path d="M7 18v-6a5 5 0 0 1 10 0v6"/><path d="M5 21h14"/><path d="M12 2v2M4.2 5.2l1.4 1.4M19.8 5.2l-1.4 1.4"/></svg></div></div>
+  <div class="body">
+    <div class="card" style="padding:18px">
+      <div class="big" style="font-size:26px">Bar do Gato <span style="color:var(--turq);font-size:16px">✔</span></div>
+      <div class="small">Bar · São Francisco · Curitiba</div>
+      <div class="p">Rua Trajano Reis, 227</div>
+      <div style="display:flex;align-items:center;gap:12px;margin-top:6px">
+        <div class="big" style="font-size:40px;color:var(--turq)">4.7</div>
+        <div><div class="stars" style="color:var(--turq)">★★★★★</div><div class="small">38 avaliações</div></div>
+      </div>
+      <div style="display:flex;gap:8px;border:1px solid rgba(255,90,95,.6);border-radius:12px;padding:10px;background:var(--night)">
+        <span style="color:var(--coral)">⚠</span><span class="p">1 relato num raio de 100 m nos últimos 6 meses. A nota já desconta isso.</span>
+      </div>
+    </div>
+    <div class="card">
+      <div class="h">Avaliar este lugar</div>
+      <div class="stars" style="font-size:26px;color:var(--yellow)">★★★★☆</div>
+      <div class="input" style="min-height:44px">Como foi a experiência? (opcional, até 500 caracteres)</div>
+      <div class="btn yellow">Enviar avaliação</div>
+    </div>
+    <div class="h">Avaliações</div>
+    <div class="card">
+      <div class="between"><span class="stars" style="color:var(--yellow)">★★★★★</span><span class="small">Nina · há 3 dias</span></div>
+      <div class="p">Equipe treinada, banheiro sem gênero, sexta tem drag. Casa cheia e segura.</div>
+    </div>
+    <div class="card">
+      <div class="between"><span class="stars" style="color:var(--yellow)">★★★★☆</span><span class="small">Anônimo · há 2 semanas</span></div>
+      <div class="p">Ótimo dentro, mas a rua de trás fica escura depois da 1h.</div>
+    </div>
+  </div>
+  <div class="tabs">
+    <div class="tab"><svg viewBox="0 0 24 24"><path d="M3 11l9-8 9 8v10a1 1 0 0 1-1 1h-5v-7h-6v7H4a1 1 0 0 1-1-1z"/></svg>Início</div>
+    <div class="tab on"><svg viewBox="0 0 24 24"><path d="M1 6v16l7-4 8 4 7-4V2l-7 4-8-4z"/><path d="M8 2v16M16 6v16"/></svg>Mapa</div>
+    <div class="tab"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 8v8M8 12h8"/></svg>Registrar</div>
+    <div class="tab"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="4"/><path d="M4.9 4.9l4.2 4.2M14.9 14.9l4.2 4.2M14.9 9.1l4.2-4.2M4.9 19.1l4.2-4.2"/></svg>Apoio</div>
+    <div class="tab"><svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>Perfil</div>
+  </div>
+</div><div class="caption">Ficha do lugar</div></div>
+
+<!-- APOIO -->
+<div class="cell"><div class="phone"><div class="cap"></div>
+  <div class="hdr"><div class="logo">Iri<b>sa</b></div><div class="siren"><svg viewBox="0 0 24 24"><path d="M7 18v-6a5 5 0 0 1 10 0v6"/><path d="M5 21h14"/><path d="M12 2v2M4.2 5.2l1.4 1.4M19.8 5.2l-1.4 1.4"/></svg></div></div>
+  <div class="body">
+    <div><div class="big">Apoio</div><div class="small">Mural da comunidade e serviços de apoio</div></div>
+    <div class="card">
+      <div class="h">Deixe uma mensagem</div>
+      <div class="input">Apelido (opcional, vira Anônimo)</div>
+      <div class="chips"><span class="chip" style="border-color:var(--turq);background:var(--turq);color:var(--night)">Acolhimento</span><span class="chip" style="border-color:var(--yellow);color:var(--yellow)">Dica de segurança</span><span class="chip" style="border-color:var(--coral);color:var(--coral)">Pedido de ajuda</span></div>
+      <div class="btn turq">Publicar</div>
+    </div>
+    <div class="card">
+      <div class="between"><span class="badge" style="background:var(--yellow)">Dica de segurança</span><span class="small">há 2 horas</span></div>
+      <div class="p" style="color:var(--ink)">Sábado à noite, evitem a Rua Riachuelo entre a Praça Tiradentes e a XV. Vão pela Marechal.</div>
+      <div class="between"><span class="small">Lu</span><span class="small" style="color:var(--coral)">♥ 14</span></div>
+    </div>
+    <div class="card">
+      <div class="between"><span class="badge" style="background:var(--turq)">Acolhimento</span><span class="small">ontem</span></div>
+      <div class="p" style="color:var(--ink)">Vocês não estão sozinhes. O Centro de Cidadania atende sem agendamento.</div>
+      <div class="between"><span class="small">Anônimo</span><span class="small" style="color:var(--coral)">♥ 31</span></div>
+    </div>
+    <div class="card">
+      <div class="h">Serviços de apoio · Curitiba</div>
+      <div class="between"><span class="p" style="color:var(--ink);font-weight:700">Grupo Dignidade</span><span class="small" style="color:var(--turq)">ONG</span></div>
+      <div class="between"><span class="p" style="color:var(--ink);font-weight:700">Centro de Cidadania LGBTQIA+</span><span class="small" style="color:var(--turq)">Acolhimento</span></div>
+      <div class="between"><span class="p" style="color:var(--ink);font-weight:700">Disque 100</span><span class="small" style="color:var(--coral);font-weight:700">100</span></div>
+      <div class="between"><span class="p" style="color:var(--ink);font-weight:700">CVV</span><span class="small" style="color:var(--coral);font-weight:700">188</span></div>
+    </div>
+  </div>
+  <div class="tabs">
+    <div class="tab"><svg viewBox="0 0 24 24"><path d="M3 11l9-8 9 8v10a1 1 0 0 1-1 1h-5v-7h-6v7H4a1 1 0 0 1-1-1z"/></svg>Início</div>
+    <div class="tab"><svg viewBox="0 0 24 24"><path d="M1 6v16l7-4 8 4 7-4V2l-7 4-8-4z"/><path d="M8 2v16M16 6v16"/></svg>Mapa</div>
+    <div class="tab"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 8v8M8 12h8"/></svg>Registrar</div>
+    <div class="tab on"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="4"/><path d="M4.9 4.9l4.2 4.2M14.9 14.9l4.2 4.2M14.9 9.1l4.2-4.2M4.9 19.1l4.2-4.2"/></svg>Apoio</div>
+    <div class="tab"><svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>Perfil</div>
+  </div>
+</div><div class="caption">Apoio</div></div>
+
+</div>
+
+<script>
+// Mapa escuro sintético: quadras, ruas, calor e pontos, no espírito dos tiles Canvas Dark Gray da Esri.
+function drawMap(id, opts){
+  const c=document.getElementById(id); if(!c) return; const x=c.getContext("2d"); const W=c.width,H=c.height;
+  x.fillStyle="#22252b"; x.fillRect(0,0,W,H);
+  let s=7;const rnd=()=>{s=(s*16807)%2147483647;return s/2147483647};
+  x.fillStyle="#2b2f36";
+  for(let i=0;i<40;i++){x.fillRect(rnd()*W,rnd()*H,20+rnd()*60,14+rnd()*40)}
+  x.strokeStyle="#3a3f47"; x.lineWidth=2;
+  for(let i=0;i<8;i++){const y=rnd()*H;x.beginPath();x.moveTo(0,y);x.lineTo(W,y+(rnd()-.5)*60);x.stroke()}
+  for(let i=0;i<8;i++){const xx=rnd()*W;x.beginPath();x.moveTo(xx,0);x.lineTo(xx+(rnd()-.5)*60,H);x.stroke()}
+  x.strokeStyle="#4a5058"; x.lineWidth=4; x.beginPath(); x.moveTo(0,H*.55); x.lineTo(W,H*.4); x.stroke();
+  x.beginPath(); x.moveTo(W*.35,0); x.lineTo(W*.45,H); x.stroke();
+  if(opts.home){
+    // halo de risco do bairro em volta da posição do usuário
+    const ux=W*.5, uy=H*.36;
+    const g=x.createRadialGradient(ux,uy,10,ux,uy,110); g.addColorStop(0,"rgba(255,209,102,.35)"); g.addColorStop(1,"rgba(255,209,102,0)");
+    x.fillStyle=g; x.beginPath(); x.arc(ux,uy,110,0,7); x.fill();
+    x.strokeStyle="rgba(255,209,102,.5)"; x.setLineDash([4,6]); x.lineWidth=1; x.beginPath(); x.arc(ux,uy,110,0,7); x.stroke(); x.setLineDash([]);
+    const heatH=[[.68,.12,30,"#FF5A5F"],[.22,.2,22,"#FF9F45"]];
+    for(const [px,py,r,col] of heatH){x.globalAlpha=.3;x.fillStyle=col;x.beginPath();x.arc(px*W,py*H,r,0,7);x.fill();x.globalAlpha=1}
+    const ptsH=[[.68,.12,"#FF5A5F",7],[.72,.16,"#FFD166",5],[.22,.2,"#FF9F45",5],[.4,.55,"#FFD166",5]];
+    for(const [px,py,col,r] of ptsH){x.fillStyle=col;x.beginPath();x.arc(px*W,py*H,r,0,7);x.fill();x.lineWidth=1.5;x.strokeStyle="#0B132B";x.stroke()}
+    const plH=[[.56,.42,"#5BC0BE"],[.35,.3,"#5BC0BE"],[.8,.5,"#FFD166"]];
+    for(const [px,py,col] of plH){x.globalAlpha=.18;x.fillStyle=col;x.beginPath();x.arc(px*W,py*H,14,0,7);x.fill();x.globalAlpha=1;x.beginPath();x.arc(px*W,py*H,8,0,7);x.fill();x.lineWidth=2;x.strokeStyle="#0B132B";x.stroke()}
+    x.fillStyle="#5BC0BE"; x.beginPath(); x.arc(ux,uy,8,0,7); x.fill(); x.lineWidth=3; x.strokeStyle="#fff"; x.stroke();
+    return;
+  }
+  if(opts.pick){ x.fillStyle="#FFD166"; x.beginPath(); x.arc(W*.5,H*.5,9,0,7); x.fill(); x.lineWidth=3; x.strokeStyle="#0B132B"; x.stroke(); return; }
+  const heat=[[.42,.45,46,"#FF5A5F"],[.62,.3,34,"#FF9F45"],[.25,.7,24,"#FFD166"],[.75,.7,19,"#FFD166"]];
+  for(const [px,py,r,col] of heat){x.globalAlpha=.3;x.fillStyle=col;x.beginPath();x.arc(px*W,py*H,r,0,7);x.fill();x.globalAlpha=1}
+  const pts=[[.4,.43,"#FF5A5F",7],[.45,.48,"#FF9F45",5],[.38,.5,"#FFD166",5],[.6,.3,"#FF5A5F",7],[.66,.34,"#FFD166",5],[.25,.7,"#FF9F45",5],[.75,.72,"#FFD166",5],[.55,.6,"#FF9F45",5],[.3,.3,"#FFD166",5]];
+  for(const [px,py,col,r] of pts){x.fillStyle=col;x.beginPath();x.arc(px*W,py*H,r,0,7);x.fill();x.lineWidth=1.5;x.strokeStyle="#0B132B";x.stroke()}
+  const places=[[.5,.25,"#5BC0BE"],[.2,.5,"#5BC0BE"],[.8,.5,"#FFD166"],[.65,.85,"#94A3B8"],[.35,.85,"#FF5A5F"]];
+  for(const [px,py,col] of places){x.globalAlpha=.18;x.fillStyle=col;x.beginPath();x.arc(px*W,py*H,14,0,7);x.fill();x.globalAlpha=1;x.beginPath();x.arc(px*W,py*H,8,0,7);x.fill();x.lineWidth=2;x.strokeStyle="#0B132B";x.stroke()}
+  x.fillStyle="#94A3B8"; x.font="9px sans-serif"; x.fillText("Tiles © Esri",W-58,H-6);
+}
+drawMap("map",{}); drawMap("pick",{pick:true}); drawMap("home",{home:true});
+</script>
+
+</body></html>

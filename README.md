@@ -48,7 +48,7 @@ Migrations, seeds e imports geográficos: [supabase/README.md](./supabase/README
 - [docs/lojas.md](./docs/lojas.md): ficha completa para Play Console e App Store.
 - [docs/auth-social.md](./docs/auth-social.md): Google e Apple no Supabase.
 - [docs/privacidade.md](./docs/privacidade.md) e [docs/termos.md](./docs/termos.md): publicados em https://alyssonfigueiredo.github.io/BEESAFE/ (workflow `pages.yml`, gerador `scripts/build-site.mjs`).
-- Apresentação (pitch) e mockup: artifacts no claude.ai, links no PLANO.
+- [docs/pitch.html](./docs/pitch.html) (apresentação) e [docs/mockup.html](./docs/mockup.html) (mockup A/B): também em https://alyssonfigueiredo.github.io/BEESAFE/pitch.html e /mockup.html.
 
 ## Checks
 
