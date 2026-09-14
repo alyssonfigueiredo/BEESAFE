@@ -32,9 +32,14 @@ begin
     select s.name, s.geom from src s
     join public.cities c on c.id = v_city_id
     where st_intersects(c.geom, st_pointonsurface(s.geom))
+  ), dedup as (
+    -- O OSM repete o mesmo nome de bairro em relações separadas (ilhas, partes do bairro).
+    -- Sem agrupar, o on conflict tenta tocar a mesma linha duas vezes na mesma instrução e falha.
+    select name, st_multi(st_collectionextract(st_makevalid(st_union(geom)), 3)) as geom
+    from ok group by name
   ), ins as (
     insert into public.neighborhoods (city_id, name, geom)
-    select v_city_id, name, geom from ok
+    select v_city_id, name, geom from dedup
     on conflict (city_id, name) do update set geom = excluded.geom
     returning 1
   )
