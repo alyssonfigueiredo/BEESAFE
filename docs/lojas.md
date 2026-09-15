@@ -103,7 +103,7 @@ Tudo o mais: não coletado. Nada é usado para publicidade ou analytics.
 **Recursos gráficos da página da loja**
 
 - Ícone 512×512 PNG: `assets/icon.png` (já em 1024, redimensionar).
-- Gráfico de recursos 1024×500: fundo #FAF9F6, símbolo íris + "IRISA" + frase "A cidade vista por você".
+- Gráfico de recursos 1024×500: `node scripts/gen-feature-graphic.mjs` gera `assets/feature-graphic.png`.
 - Screenshots (mín. 2, 16:9 ou 9:16, 320–3840 px): Início, Mapa, Ficha do lugar, Registrar, Apoio, tirados do build de preview (sem botão de desenvolvimento).
 
 **Teste fechado (obrigatório para conta pessoal nova)**: faixa "Teste fechado" → lista de e-mails com 12+ testadores → eles aceitam o link e instalam pela Play → 14 dias contínuos → "Solicitar acesso à produção" e responder o questionário.
@@ -128,4 +128,4 @@ App Privacy: Email Address (Account management, linked); Precise Location (App f
 
 - Denúncia de conteúdo: sim (botão Denunciar em todo conteúdo).
 - Bloqueio/ocultação: 3 denúncias ocultam automaticamente; moderação remove.
-- Moderação com tempo de resposta: definir SLA público (ex.: 72 h).
+- Moderação com tempo de resposta: 72 h, declarado no item 5 dos Termos de Uso.
