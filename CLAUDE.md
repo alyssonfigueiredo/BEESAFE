@@ -51,6 +51,7 @@ npx expo run:ios --device --configuration Release   # sem Metro, para prints
 npx eas-cli build -p android --profile preview      # APK por link
 npx eas-cli build -p android --profile production   # AAB para a Play Store
 SUPABASE_URL=... SUPABASE_SERVICE_ROLE_KEY=sb_secret_... node scripts/import-neighborhoods.mjs <ibge>
+SUPABASE_URL=... SUPABASE_SERVICE_ROLE_KEY=sb_secret_... node scripts/import-places-osm.mjs 4106902 --limite 60
 ```
 
 Checks antes de commitar: `npm run lint && npm run typecheck`. Migrations testáveis localmente com `scripts/db-smoke.sh`.

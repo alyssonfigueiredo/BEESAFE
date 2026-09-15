@@ -33,6 +33,8 @@ SUPABASE_URL=https://<ref>.supabase.co SUPABASE_SERVICE_ROLE_KEY=sb_secret_... n
 ```
 
 - Municípios: IBGE, por UF (41 = PR). Feito: as 27 UFs (5.570 municípios).
+- Lugares iniciais: OSM via Overpass, `scripts/import-places-osm.mjs [ibge] [--limite N] [--bairros "Centro,Batel"]`.
+  Entram sem nota, só para o mapa não abrir vazio. Pula nomes que já existem na cidade.
 - Bairros: OSM via Overpass (3 mirrors, fallback automático). Sem argumentos importa todas as capitais.
   Feito: as capitais, menos Brasília, São Luís e Palmas, que não têm `admin_level=10` no OSM
   (São Paulo tem só 9 polígonos, também limitação da fonte). Capital que falhar com 504 é só repetir
