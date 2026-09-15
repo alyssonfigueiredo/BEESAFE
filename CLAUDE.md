@@ -28,6 +28,11 @@ Nome: **Irisa** (INPI livre; @irisapp livre). Bundle id `br.com.irisa.app`. Cont
   Apple só em builds EAS (`APP_ENV=preview|production`).
 - Site público (GitHub Pages, workflow `pages.yml`, fonte `docs/*.md` → `scripts/build-site.mjs` → `site/`):
   https://alyssonfigueiredo.github.io/BEESAFE/ com privacidade.html, termos.html, pitch.html, mockup.html.
+- Curitiba semeada com 60 lugares reais do OSM (bar/café/restaurante/balada/hotel), sem nota e sem selo,
+  só para o mapa não abrir vazio. A tag `lgbtq` do OSM quase não existe no Brasil (1 lugar em Curitiba):
+  a lista da cena tem que vir do usuário, conferida um a um. Decidido não exibir rótulo LGBTQIA+ na ficha
+  (lista pública vira alvo); o selo vem dos quatro eixos de acolhimento.
+- Decidido lançar primeiro no Android. iOS fica para depois do primeiro retorno da Play Store.
 - Layout do Início decidido: painel (opção A do mockup).
 - Ficha das lojas pronta em docs/lojas.md.
 
@@ -63,6 +68,8 @@ Checks antes de commitar: `npm run lint && npm run typecheck`. Migrations testá
 2. SHA-1 da keystore EAS (`npx eas-cli credentials -p android`) no Google Cloud para login Google no Android.
 3. Fonte alternativa de bairros para Brasília, São Luís, Palmas e São Paulo (OSM não cobre).
 4. Apple Developer (US$99/ano) quando decidir publicar no iOS; ou via ONG parceira (Apple isenta ONGs).
+   Antes da primeira submissão iOS falta implementar ocultar autor (regra 1.2 de conteúdo de usuário);
+   denúncia, moderação e excluir conta já existem.
 5. Fase 6+: notificações por área, rotas seguras, versão web.
 
 ## Armadilhas já resolvidas (não repetir)
