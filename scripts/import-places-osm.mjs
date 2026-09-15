@@ -116,13 +116,20 @@ for (const p of jaExistem ?? []) porNome.delete(p.name.trim().toLowerCase());
 
 // Lugares da cena primeiro: são os que a comunidade procura e os que dão sentido ao mapa.
 // A tag não vira rótulo no app — só decide quem entra quando há mais candidatos que o limite.
-const escolhidos = [...porNome.values()]
-  .sort(
-    (a, b) =>
-      Number(b.daCena) - Number(a.daCena) ||
-      PRIORIDADE.indexOf(a.categoria) - PRIORIDADE.indexOf(b.categoria),
-  )
-  .slice(0, limite);
+const daCenaPrimeiro = [...porNome.values()].sort((a, b) => Number(b.daCena) - Number(a.daCena));
+
+// Reveza entre as categorias em vez de encher o limite com a mais numerosa: Curitiba tem
+// centenas de bares mapeados, e sem revezar o mapa abria só com bar.
+const filas = new Map(PRIORIDADE.map((c) => [c, daCenaPrimeiro.filter((p) => p.categoria === c)]));
+for (const p of daCenaPrimeiro) if (!filas.has(p.categoria)) filas.set(p.categoria, []);
+for (const p of daCenaPrimeiro) if (!PRIORIDADE.includes(p.categoria)) filas.get(p.categoria).push(p);
+
+const escolhidos = [];
+while (escolhidos.length < limite) {
+  const rodada = [...filas.values()].map((f) => f.shift()).filter(Boolean);
+  if (!rodada.length) break;
+  escolhidos.push(...rodada.slice(0, limite - escolhidos.length));
+}
 
 if (!escolhidos.length) {
   console.log(`${cidade.name}: nada novo a inserir.`);
