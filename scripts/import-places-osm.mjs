@@ -64,12 +64,16 @@ async function overpass(query) {
   throw last;
 }
 
+// A tag lgbtq marca lugar da cena ou que se declara acolhedor. Esses entram mesmo sem endereço:
+// são os que a comunidade mais procura, e o endereço dá para completar depois.
 const query = `
   [out:json][timeout:180];
   area["boundary"="administrative"]["admin_level"="8"]["IBGE:GEOCODIGO"="${ibge}"]->.cidade;
   (
     nwr["amenity"~"^(bar|pub|cafe|restaurant|nightclub)$"]["name"]["addr:street"](area.cidade);
     nwr["tourism"="hotel"]["name"]["addr:street"](area.cidade);
+    nwr["lgbtq"]["name"](area.cidade);
+    nwr["lgbtq:primary"]["name"](area.cidade);
   );
   out center tags;`;
 
@@ -78,7 +82,9 @@ const osm = await overpass(query);
 const candidatos = [];
 for (const el of osm.elements) {
   const t = el.tags ?? {};
-  const categoria = CATEGORIAS[t.amenity] ?? (t.tourism === "hotel" ? "hotel" : null);
+  const daCena = !!(t.lgbtq || t["lgbtq:primary"]);
+  const categoria =
+    CATEGORIAS[t.amenity] ?? (t.tourism === "hotel" ? "hotel" : daCena ? "outro" : null);
   const lat = el.lat ?? el.center?.lat;
   const lon = el.lon ?? el.center?.lon;
   if (!categoria || !t.name || lat == null || lon == null) continue;
@@ -87,7 +93,7 @@ for (const el of osm.elements) {
   const nome = t.name.trim().slice(0, 80);
   if (nome.length < 2) continue;
   const endereco = [t["addr:street"], t["addr:housenumber"]].filter(Boolean).join(", ").slice(0, 200);
-  candidatos.push({ nome, categoria, endereco, lat, lon });
+  candidatos.push({ nome, categoria, endereco, lat, lon, daCena });
 }
 
 // O OSM repete o mesmo estabelecimento em nó e polígono: um por nome.
@@ -108,8 +114,14 @@ const { data: jaExistem, error: erroExistentes } = await supabase
 if (erroExistentes) throw erroExistentes;
 for (const p of jaExistem ?? []) porNome.delete(p.name.trim().toLowerCase());
 
+// Lugares da cena primeiro: são os que a comunidade procura e os que dão sentido ao mapa.
+// A tag não vira rótulo no app — só decide quem entra quando há mais candidatos que o limite.
 const escolhidos = [...porNome.values()]
-  .sort((a, b) => PRIORIDADE.indexOf(a.categoria) - PRIORIDADE.indexOf(b.categoria))
+  .sort(
+    (a, b) =>
+      Number(b.daCena) - Number(a.daCena) ||
+      PRIORIDADE.indexOf(a.categoria) - PRIORIDADE.indexOf(b.categoria),
+  )
   .slice(0, limite);
 
 if (!escolhidos.length) {
@@ -130,7 +142,10 @@ if (error) throw error;
 
 const contagem = {};
 for (const c of escolhidos) contagem[c.categoria] = (contagem[c.categoria] ?? 0) + 1;
-console.log(`${cidade.name}: ${escolhidos.length} lugares inseridos`);
+const totalDaCena = escolhidos.filter((c) => c.daCena).length;
+console.log(
+  `${cidade.name}: ${escolhidos.length} lugares inseridos (${totalDaCena} com tag lgbtq no OSM)`,
+);
 console.log(
   Object.entries(contagem)
     .map(([k, v]) => `  ${k}: ${v}`)
