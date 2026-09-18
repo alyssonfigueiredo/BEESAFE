@@ -5,7 +5,7 @@
 set -euo pipefail
 
 DEST="${DEST:-screenshots}"
-DISPOSITIVO="${DISPOSITIVO:-iPhone 16 Pro}"
+DISPOSITIVO="${DISPOSITIVO:-}" # vazio = escolhe o primeiro iPhone disponível
 mkdir -p "$DEST"
 
 if ! xcrun simctl help >/dev/null 2>&1; then
@@ -15,13 +15,17 @@ if ! xcrun simctl help >/dev/null 2>&1; then
   exit 1
 fi
 
-if ! xcrun simctl list devices available | grep -q "^    $DISPOSITIVO "; then
+IPHONES=$(xcrun simctl list devices available | grep -E "^    iPhone" | sed 's/ (.*//;s/^    //')
+if [ -z "$IPHONES" ]; then
+  echo "✗ Nenhum simulador de iPhone instalado."
+  echo "  Baixe um runtime: Xcode → Settings → Components → iOS Simulator"
+  exit 1
+fi
+if [ -z "$DISPOSITIVO" ]; then
+  DISPOSITIVO=$(echo "$IPHONES" | head -1)
+elif ! echo "$IPHONES" | grep -qx "$DISPOSITIVO"; then
   echo "✗ Não existe um simulador chamado \"$DISPOSITIVO\". Os disponíveis são:"
-  xcrun simctl list devices available | grep -E "^    iPhone" | sed 's/ (.*//'
-  echo "  Se a lista veio vazia, baixe um runtime no Xcode:"
-  echo "    Xcode → Settings → Components → iOS Simulator"
-  echo "  Depois rode com um nome da lista:"
-  echo "    DISPOSITIVO=\"iPhone 15\" bash scripts/screenshots.sh"
+  echo "$IPHONES" | sed 's/^/    /'
   exit 1
 fi
 
