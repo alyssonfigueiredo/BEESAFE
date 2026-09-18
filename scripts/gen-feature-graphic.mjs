@@ -42,11 +42,28 @@ const html = `<html><head><meta charset="utf-8"><style>
   <div><h1>Irisa</h1><p>A cidade vista por você</p></div>
 </body></html>`;
 
-const browser = await chromium.launch(
-  process.env.CHROMIUM_PATH
-    ? { executablePath: process.env.CHROMIUM_PATH }
-    : { channel: "chromium" },
-);
+async function abrirNavegador() {
+  const tentativas = [];
+  if (process.env.CHROMIUM_PATH) tentativas.push({ executablePath: process.env.CHROMIUM_PATH });
+  tentativas.push({ channel: "chromium" }, { channel: "chrome" }, { channel: "msedge" });
+  tentativas.push({
+    executablePath: "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome",
+  });
+  let ultimo;
+  for (const opcao of tentativas) {
+    try {
+      return await chromium.launch(opcao);
+    } catch (e) {
+      ultimo = e;
+    }
+  }
+  console.error(
+    "✗ Nenhum navegador encontrado. Instale o Chrome, ou rode: npx playwright install chromium",
+  );
+  throw ultimo;
+}
+
+const browser = await abrirNavegador();
 const page = await browser.newPage();
 await page.setViewportSize({ width: LARGURA, height: ALTURA });
 await page.setContent(html);
