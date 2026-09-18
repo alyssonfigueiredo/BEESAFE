@@ -53,6 +53,10 @@ Publicadas pelo GitHub Pages (workflow `.github/workflows/pages.yml`, fonte `doc
 
 ## Play Console — o que colar em cada tela
 
+> Os **valores** abaixo são do projeto e estão corretos. Os **nomes de menu e a ordem das telas** são
+> aproximados: a Google reorganiza o Console com frequência. Quando a tela não bater com o texto,
+> vale o que está na tela. Verificado em 18/09/2026 apenas no que a documentação pública confirma.
+
 **Painel → Configurar o app**
 
 | Campo | Valor |
@@ -73,7 +77,9 @@ Publicadas pelo GitHub Pages (workflow `.github/workflows/pages.yml`, fonte `doc
 
 **Classificação de conteúdo (IARC)**: categoria "Rede social, comunicação, conteúdo gerado pelo usuário". Respostas: violência = "referências a violência" (relatos descrevem agressões, sem imagens); sexualidade = não; drogas = não; linguagem = pode conter (conteúdo de usuários); conteúdo gerado por usuários = sim, com moderação; compartilha localização = sim, com consentimento (ponto escolhido pelo usuário). Resultado esperado: 16+ / "Classificação L" varia por região.
 
-**Público-alvo**: 16 anos ou mais (não marcar "crianças").
+**Público-alvo**: são caixas de seleção por faixa etária, não um valor único. Marcar apenas **18 anos ou mais**
+(ou 16-17 junto, se quiser alcançar essa faixa). Nenhuma faixa abaixo de 16 — marcar criança puxa a Política
+Familiar, que o app não cumpre. Depois o Console pergunta se o app pode atrair crianças mesmo assim: responder que não.
 
 **Aplicativos de notícias**: não.
 
@@ -106,7 +112,13 @@ Tudo o mais: não coletado. Nada é usado para publicidade ou analytics.
 - Gráfico de recursos 1024×500: `node scripts/gen-feature-graphic.mjs` gera `assets/feature-graphic.png`.
 - Screenshots (mín. 2, 16:9 ou 9:16, 320–3840 px): `bash scripts/screenshots.sh` captura Início, Mapa, Ficha do lugar, Registrar e Apoio no Simulador do iPhone e salva em `screenshots/` (pausa uma vez para o login).
 
-**Teste fechado (obrigatório para conta pessoal nova)**: faixa "Teste fechado" → lista de e-mails com 12+ testadores → eles aceitam o link e instalam pela Play → 14 dias contínuos → "Solicitar acesso à produção" e responder o questionário.
+**Teste fechado (obrigatório para conta pessoal criada depois de 13/11/2023)**: faixa "Teste fechado" →
+lista de e-mails com 12+ testadores → eles aceitam o link e instalam pela Play → **12 testadores opted-in por
+14 dias seguidos** → "Solicitar acesso à produção" e responder o questionário.
+
+Detalhes que derrubam a contagem: quem entra e sai antes dos 14 dias não conta; quem sai e volta recomeça a
+contagem; o que vale é estar opted-in no momento do pedido, com os 14 dias anteriores contínuos. Convide uns 18
+para sobrar margem.
 
 ## App Store Connect — o que colar
 
