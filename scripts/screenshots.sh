@@ -37,8 +37,14 @@ echo "▶ Ligando o simulador ($DISPOSITIVO)"
 xcrun simctl boot "$DISPOSITIVO" 2>/dev/null || true
 xcrun simctl bootstatus "$DISPOSITIVO" -b
 
-echo "▶ Compilando e instalando o app no Simulador (demora na primeira vez)"
-npx expo run:ios --device "$DISPOSITIVO" --configuration Release
+if [ "${PULAR_BUILD:-}" = "1" ]; then
+  echo "▶ Usando o app já instalado no Simulador (PULAR_BUILD=1)"
+else
+  echo "▶ Compilando e instalando o app no Simulador (demora na primeira vez)"
+  # --no-bundler: em Release o bundle já vai embutido, e sem isso o Metro segura o terminal
+  # e o script nunca chega aqui.
+  npx expo run:ios --device "$DISPOSITIVO" --configuration Release --no-bundler
+fi
 
 # Um lugar real de Curitiba, para o print da ficha. Usa a chave pública do .env, nunca a secreta.
 ID_LUGAR=""
