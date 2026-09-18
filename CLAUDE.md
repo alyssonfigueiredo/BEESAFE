@@ -68,10 +68,11 @@ Checks antes de commitar: `npm run lint && npm run typecheck`. Migrations testá
    Preencher com docs/lojas.md. Teste fechado: 12 testadores por 14 dias, depois produção.
 2. SHA-1 da keystore EAS (`npx eas-cli credentials -p android`) no Google Cloud para login Google no Android.
 3. Fonte alternativa de bairros para Brasília, São Luís, Palmas e São Paulo (OSM não cobre).
-4. Apple Developer (US$99/ano) quando decidir publicar no iOS; ou via ONG parceira (Apple isenta ONGs).
-   Antes da primeira submissão iOS falta implementar ocultar autor (regra 1.2 de conteúdo de usuário);
-   denúncia, moderação e excluir conta já existem.
-5. Fase 6+: notificações por área, rotas seguras, versão web.
+4. Implementar ocultar autor (bloqueio por usuário). Hoje não existe: no IARC está declarado **Não**,
+   e a Apple exige pela regra 1.2. Ao implementar, atualizar a resposta do questionário na mesma versão.
+5. Apple Developer (US$99/ano) quando decidir publicar no iOS; ou via ONG parceira (Apple isenta ONGs).
+   Denúncia, moderação e excluir conta já existem.
+6. Fase 6+: notificações por área, rotas seguras, versão web.
 
 ## Armadilhas já resolvidas (não repetir)
 

@@ -139,5 +139,7 @@ App Privacy: Email Address (Account management, linked); Precise Location (App f
 ## Conteúdo gerado por usuário (exigências das lojas)
 
 - Denúncia de conteúdo: sim (botão Denunciar em todo conteúdo).
-- Bloqueio/ocultação: 3 denúncias ocultam automaticamente; moderação remove.
+- Bloqueio pelo usuário: **não existe**. No questionário IARC a resposta é **Não** — declarar Sim sem ter a
+  funcionalidade derruba o app. Quando o ocultar autor entrar, atualizar a resposta junto com a versão.
+- Ocultação automática: 3 denúncias de pessoas diferentes ocultam até revisão; moderação remove.
 - Moderação com tempo de resposta: 72 h, declarado no item 5 dos Termos de Uso.
