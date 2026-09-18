@@ -104,7 +104,7 @@ Tudo o mais: não coletado. Nada é usado para publicidade ou analytics.
 
 - Ícone 512×512 PNG: `assets/icon.png` (já em 1024, redimensionar).
 - Gráfico de recursos 1024×500: `node scripts/gen-feature-graphic.mjs` gera `assets/feature-graphic.png`.
-- Screenshots (mín. 2, 16:9 ou 9:16, 320–3840 px): Início, Mapa, Ficha do lugar, Registrar, Apoio, tirados do build de preview (sem botão de desenvolvimento).
+- Screenshots (mín. 2, 16:9 ou 9:16, 320–3840 px): `bash scripts/screenshots.sh` captura Início, Mapa, Ficha do lugar, Registrar e Apoio no Simulador do iPhone e salva em `screenshots/` (pausa uma vez para o login).
 
 **Teste fechado (obrigatório para conta pessoal nova)**: faixa "Teste fechado" → lista de e-mails com 12+ testadores → eles aceitam o link e instalam pela Play → 14 dias contínuos → "Solicitar acesso à produção" e responder o questionário.
 
