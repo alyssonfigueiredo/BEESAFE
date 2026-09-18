@@ -8,8 +8,25 @@ DEST="${DEST:-screenshots}"
 DISPOSITIVO="${DISPOSITIVO:-iPhone 16 Pro}"
 mkdir -p "$DEST"
 
+DEV="$(xcode-select -p 2>/dev/null || true)"
+if [ ! -d "$DEV/Applications/Simulator.app" ]; then
+  echo "✗ Não achei o Simulador."
+  echo "  O xcode-select está apontando para: ${DEV:-nada}"
+  echo "  Se o Xcode está instalado, rode uma vez:"
+  echo "    sudo xcode-select -s /Applications/Xcode.app/Contents/Developer"
+  echo "  Se não está, instale o Xcode pela App Store, abra uma vez e aceite os termos."
+  exit 1
+fi
+
 echo "▶ Abrindo o Simulador ($DISPOSITIVO)"
-open -a Simulator
+open -a "$DEV/Applications/Simulator.app"
+if ! xcrun simctl list devices available | grep -q "^    $DISPOSITIVO "; then
+  echo "✗ Não existe um simulador chamado \"$DISPOSITIVO\". Os disponíveis são:"
+  xcrun simctl list devices available | grep -E "^    iPhone" | sed 's/ (.*//;s/^    /    /'
+  echo "  Rode assim com o nome que você quiser:"
+  echo "    DISPOSITIVO=\"iPhone 15\" bash scripts/screenshots.sh"
+  exit 1
+fi
 xcrun simctl boot "$DISPOSITIVO" 2>/dev/null || true
 xcrun simctl bootstatus "$DISPOSITIVO" -b
 
