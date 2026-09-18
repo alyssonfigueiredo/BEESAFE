@@ -49,6 +49,7 @@ Publicadas pelo GitHub Pages (workflow `.github/workflows/pages.yml`, fonte `doc
 - Site: https://alyssonfigueiredo.github.io/BEESAFE/
 - Política de privacidade: https://alyssonfigueiredo.github.io/BEESAFE/privacidade.html
 - Termos: https://alyssonfigueiredo.github.io/BEESAFE/termos.html
+- Exclusão de conta: https://alyssonfigueiredo.github.io/BEESAFE/excluir-conta.html
 - Suporte: e-mail de contato appirisa@gmail.com.
 
 ## Play Console — o que colar em cada tela
@@ -92,7 +93,7 @@ Familiar, que o app não cumpre. Depois o Console pergunta se o app pode atrair 
 | O app coleta ou compartilha dados do usuário? | Sim |
 | Dados criptografados em trânsito? | Sim |
 | Permite solicitar exclusão dos dados? | Sim (dentro do app: Perfil → Excluir minha conta) |
-| URL de exclusão de conta | https://alyssonfigueiredo.github.io/BEESAFE/privacidade.html (seção 7) |
+| URL de exclusão de conta | https://alyssonfigueiredo.github.io/BEESAFE/excluir-conta.html |
 
 Tipos de dados: marcar exatamente estes.
 

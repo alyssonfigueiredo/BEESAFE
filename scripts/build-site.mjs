@@ -44,7 +44,7 @@ const page = (title, body) => `<!doctype html>
 <html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>${esc(title)} · Irisa</title><link rel="icon" href="icon.png"><style>${style}</style></head>
 <body><header><img src="icon.png" alt=""><a href="./">IRIS<b>A</b></a>
-<nav><a href="privacidade.html">Privacidade</a><a href="termos.html">Termos</a></nav></header>
+<nav><a href="privacidade.html">Privacidade</a><a href="termos.html">Termos</a><a href="excluir-conta.html">Excluir conta</a></nav></header>
 <main>${body}</main>
 <footer>Irisa · projeto comunitário, sem fins lucrativos · <a href="privacidade.html">Privacidade</a> · <a href="termos.html">Termos</a></footer>
 </body></html>`;
@@ -55,6 +55,7 @@ copyFileSync("docs/pitch.html", "site/pitch.html");
 copyFileSync("docs/mockup.html", "site/mockup.html");
 writeFileSync("site/privacidade.html", page("Política de Privacidade", md(readFileSync("docs/privacidade.md", "utf8"))));
 writeFileSync("site/termos.html", page("Termos de Uso", md(readFileSync("docs/termos.md", "utf8"))));
+writeFileSync("site/excluir-conta.html", page("Excluir sua conta", md(readFileSync("docs/excluir-conta.md", "utf8"))));
 writeFileSync("site/index.html", page("Irisa", `
 <div class="hero"><img src="icon.png" alt="Irisa">
 <h1>A cidade vista por você</h1>
