@@ -83,3 +83,6 @@ Checks antes de commitar: `npm run lint && npm run typecheck`. Migrations testá
 - MapLibre usa LngLat como `[lng, lat]`. Câmera enquadra dados só no primeiro carregamento (`CityMap.tsx`).
 - ESLint proíbe setState em effect: usar estado derivado ou useQuery.
 - SQL Editor do Supabase mostra "No rows returned" em UPDATE bem-sucedido; confirmar com SELECT.
+- As variáveis do EAS são por ambiente: `env:push preview` não vale para `production`. Se o build não
+  imprimir `EXPO_PUBLIC_SUPABASE_ANON_KEY, EXPO_PUBLIC_SUPABASE_URL` carregadas, o app sai sem backend.
+  Antes do primeiro build de produção: `npx eas-cli env:push production --path .env`.
