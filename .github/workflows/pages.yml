@@ -2,7 +2,7 @@ name: Pages
 
 on:
   push:
-    branches: [claude/ecstatic-darwin-cmf7sw, main]
+    branches: [claude/ecstatic-darwin-cmf7sw, claude/laughing-keller-my8t7c, main]
     paths: [site/**, docs/**, scripts/build-site.mjs, .github/workflows/pages.yml]
   workflow_dispatch:
 
