@@ -1,4 +1,4 @@
-# Irisa — a cidade vista por você
+# Irisa — quanta cor tem aqui?
 
 App nacional para a comunidade LGBTQIA+: relatos anônimos de LGBTIfobia, lugares avaliados em quatro eixos de acolhimento e mural de apoio.
 Plano completo em [PLANO.md](./PLANO.md).

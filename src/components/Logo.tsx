@@ -21,7 +21,7 @@ export function Logo({ size = "sm" }: { size?: "sm" | "lg" }) {
         >
           Iris<Text style={{ color: accent }}>a</Text>
         </Text>
-        {lg && <Text className="font-body text-base text-muted">a cidade vista por você</Text>}
+        {lg && <Text className="font-body text-base text-muted">quanta cor tem aqui?</Text>}
       </View>
     </View>
   );

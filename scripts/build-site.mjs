@@ -58,7 +58,7 @@ writeFileSync("site/termos.html", page("Termos de Uso", md(readFileSync("docs/te
 writeFileSync("site/excluir-conta.html", page("Excluir sua conta", md(readFileSync("docs/excluir-conta.md", "utf8"))));
 writeFileSync("site/index.html", page("Irisa", `
 <div class="hero"><img src="icon.png" alt="Irisa">
-<h1>A cidade vista por você</h1>
+<h1>Quanta cor tem aqui?</h1>
 <p>Mapa colaborativo de segurança e lugares acolhedores para pessoas LGBTQIA+. Relatos anônimos, áreas que pedem atenção e avaliações de quem frequenta.</p>
 <div class="btns"><a class="btn" href="https://www.instagram.com/irisapp">Instagram</a><a class="btn alt" href="mailto:appirisa@gmail.com">appirisa@gmail.com</a><a class="btn alt" href="privacidade.html">Política de privacidade</a></div></div>
 <div class="cards">
