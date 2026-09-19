@@ -2,11 +2,12 @@
 
 ## Nome
 
-Irisa — a cidade vista por você
+Irisa (nome do app nas lojas, sem subtítulo — o ícone fica limpo no celular).
+Assinatura da marca, para a vitrine e o material de divulgação: **Irisa — quanta cor tem aqui?**
 
 ## Descrição curta (80 caracteres)
 
-Mapa colaborativo de segurança e lugares acolhedores para pessoas LGBTQIA+.
+Quanta cor tem aqui? Mapa de segurança e lugares acolhedores LGBTQIA+.
 
 ## Descrição completa
 
