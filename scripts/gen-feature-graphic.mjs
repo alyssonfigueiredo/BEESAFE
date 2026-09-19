@@ -39,7 +39,7 @@ const html = `<html><head><meta charset="utf-8"><style>
     margin:18px 0 0;color:${INK};opacity:.78}
 </style></head><body>
   <div class="marca">${mark({ size: 260, bg: "transparent", pad: 0.02 })}</div>
-  <div><h1>Irisa</h1><p>A cidade vista por você</p></div>
+  <div><h1>Irisa</h1><p>Quanta cor tem aqui?</p></div>
 </body></html>`;
 
 async function abrirNavegador() {
