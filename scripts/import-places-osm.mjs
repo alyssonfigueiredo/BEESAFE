@@ -144,15 +144,34 @@ const linhas = escolhidos.map((c) => ({
   verified: false,
 }));
 
-const { error } = await supabase.from("places").insert(linhas);
-if (error) throw error;
+// O trigger que descobre o município pelo ponto recusa coordenada fora de qualquer polígono
+// cadastrado (o OSM tem ponto errado e área administrativa que passa do limite do IBGE). Como
+// um insert em bloco morre inteiro por causa de um ponto assim, tenta o bloco e, se ele cair,
+// grava um a um pulando só os recusados.
+const inseridos = [];
+const recusados = [];
+const { error: erroBloco } = await supabase.from("places").insert(linhas);
+if (!erroBloco) {
+  inseridos.push(...escolhidos);
+} else {
+  for (let i = 0; i < linhas.length; i++) {
+    const { error } = await supabase.from("places").insert(linhas[i]);
+    if (error) recusados.push({ nome: escolhidos[i].nome, motivo: error.message });
+    else inseridos.push(escolhidos[i]);
+  }
+  if (!inseridos.length) throw erroBloco;
+}
 
 const contagem = {};
-for (const c of escolhidos) contagem[c.categoria] = (contagem[c.categoria] ?? 0) + 1;
-const totalDaCena = escolhidos.filter((c) => c.daCena).length;
+for (const c of inseridos) contagem[c.categoria] = (contagem[c.categoria] ?? 0) + 1;
+const totalDaCena = inseridos.filter((c) => c.daCena).length;
 console.log(
-  `${cidade.name}: ${escolhidos.length} lugares inseridos (${totalDaCena} com tag lgbtq no OSM)`,
+  `${cidade.name}: ${inseridos.length} lugares inseridos (${totalDaCena} com tag lgbtq no OSM)`,
 );
+if (recusados.length) {
+  console.log(`  ${recusados.length} recusados pelo banco:`);
+  for (const r of recusados) console.log(`    ${r.nome} — ${r.motivo}`);
+}
 console.log(
   Object.entries(contagem)
     .map(([k, v]) => `  ${k}: ${v}`)
