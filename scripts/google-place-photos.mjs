@@ -1,7 +1,7 @@
 // Casa cada lugar com o cadastro do Google Places e guarda a referência da foto principal.
 // Roda na SUA máquina, nunca no app:
 //   set -a && source .env.scripts && set +a
-//   node scripts/google-place-photos.mjs 4106902          # uma cidade (código IBGE)
+//   node scripts/google-place-photos.mjs 2611606 2507507  # cidades (IBGE), nesta ordem
 //   node scripts/google-place-photos.mjs --todas          # todas as cidades com lugares
 //
 // .env.scripts precisa de SUPABASE_SERVICE_ROLE_KEY e GOOGLE_MAPS_API_KEY (chave com a
@@ -21,7 +21,9 @@ const supabase = createClient(url, key, { auth: { persistSession: false } });
 
 const args = process.argv.slice(2);
 const todas = args.includes("--todas");
-const ibge = Number(args.find((a) => /^\d+$/.test(a))) || (todas ? null : 4106902);
+// A ordem importa: a cota do dia acaba no meio, então quem vem primeiro é quem entra.
+const ibges = args.filter((a) => /^\d+$/.test(a)).map(Number);
+if (!todas && !ibges.length) ibges.push(4106902);
 
 // Um lugar do Google só é aceito se estiver a até este raio do nosso ponto: fora disso é
 // homônimo em outro bairro, e a foto errada é pior que nenhuma.
@@ -188,9 +190,12 @@ if (todas) {
   if (erroCidades) throw erroCidades;
   cidades = lista;
 } else {
-  const { data, error } = await supabase.from("cities").select("id, name").eq("ibge_code", ibge).single();
-  if (error) throw error;
-  cidades = [data];
+  cidades = [];
+  for (const ibge of ibges) {
+    const { data, error } = await supabase.from("cities").select("id, name").eq("ibge_code", ibge).single();
+    if (error) throw new Error(`Município ${ibge}: ${error.message}`);
+    cidades.push(data);
+  }
 }
 
 try {
