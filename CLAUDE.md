@@ -34,6 +34,8 @@ Nome: **Irisa** (INPI livre; @irisapp livre). Bundle id `br.com.irisa.app`. Cont
   a lista da cena tem que vir do usuário, conferida um a um. Decidido não exibir rótulo LGBTQIA+ na ficha
   (lista pública vira alvo); o selo vem dos quatro eixos de acolhimento.
 - Decidido lançar primeiro no Android. iOS fica para depois do primeiro retorno da Play Store.
+- Cidades de lançamento: Curitiba, Recife e João Pessoa (onde ele tem gente para avaliar os primeiros
+  lugares). As outras quatro semeadas ficam prontas para quando chegar usuário.
 - Layout do Início decidido: painel (opção A do mockup).
 - Ficha das lojas pronta em docs/lojas.md.
 - Foto dos lugares via Google Places (New) com cota travada no gratuito: migration 9, script
