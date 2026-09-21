@@ -102,9 +102,13 @@ export default function PlaceScreen() {
           {!!place.address && <Text className="font-body text-sm text-muted">{place.address}</Text>}
           <ReportButton type="place" id={place.id} />
 
+          {/* A pergunta abre a seção do acolhimento nos dois casos: com nota ela nomeia o que os
+              quatro eixos respondem; sem nota, é o convite para alguém responder primeiro. */}
+          <Text className="mt-3 font-display text-lg text-ink">Quanta cor tem esse lugar?</Text>
+
           {score == null ? (
-            <Text className="mt-2 font-body text-base text-dim">
-              Sem avaliações ainda. Seja a primeira pessoa.
+            <Text className="font-body text-base text-dim">
+              Ninguém avaliou ainda. Seja a primeira pessoa a dizer.
             </Text>
           ) : (
             <View className="mt-2 gap-3">
