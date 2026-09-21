@@ -128,8 +128,10 @@ async function processarCidade(cidade) {
 
   for (const lugar of lugares) {
     const atual = estado.get(lugar.id) ?? {};
-    const fotoFresca = atual.google_photo_at && new Date(atual.google_photo_at) > limite;
-    if (atual.google_place_id && fotoFresca) {
+    // A data marca a última tentativa, com ou sem sucesso: quem não foi encontrado também
+    // espera 25 dias antes de gastar cota de novo.
+    const tentadoHaPouco = atual.google_photo_at && new Date(atual.google_photo_at) > limite;
+    if (tentadoHaPouco) {
       contagem.pulados++;
       continue;
     }
@@ -173,7 +175,7 @@ async function processarCidade(cidade) {
 
   console.log(
     `${cidade.name}: ${contagem.casados} casados, ${contagem.renovados} renovados, ` +
-      `${contagem.semFoto} sem foto no Google, ${contagem.naoAchou} não encontrados, ${contagem.pulados} já em dia`,
+      `${contagem.semFoto} sem foto no Google, ${contagem.naoAchou} não encontrados, ${contagem.pulados} já tentados`,
   );
 }
 
@@ -191,4 +193,9 @@ if (todas) {
   cidades = [data];
 }
 
-for (const c of cidades) await processarCidade(c);
+try {
+  for (const c of cidades) await processarCidade(c);
+} catch (e) {
+  if (!String(e.message).startsWith("COTA")) throw e;
+  console.log("\nCota do dia esgotada — a trava segurou. Roda de novo amanhã; ele continua de onde parou.");
+}
