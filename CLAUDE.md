@@ -28,8 +28,9 @@ Nome: **Irisa** (INPI livre; @irisapp livre). Bundle id `br.com.irisa.app`. Cont
   Apple só em builds EAS (`APP_ENV=preview|production`).
 - Site público (GitHub Pages, workflow `pages.yml`, fonte `docs/*.md` → `scripts/build-site.mjs` → `site/`):
   https://alyssonfigueiredo.github.io/BEESAFE/ com privacidade.html, termos.html, pitch.html, mockup.html.
-- Curitiba semeada com 60 lugares reais do OSM (bar/café/restaurante/balada/hotel), sem nota e sem selo,
-  só para o mapa não abrir vazio. A tag `lgbtq` do OSM quase não existe no Brasil (1 lugar em Curitiba):
+- Sete cidades semeadas com lugares reais do OSM (bar/café/restaurante/balada/hotel), sem nota e sem selo,
+  só para o mapa não abrir vazio: Curitiba 60, Recife 60, João Pessoa 43, São Paulo 80, Rio 84,
+  Salvador 63, Porto Alegre 60. A tag `lgbtq` do OSM quase não existe no Brasil (1 lugar em Curitiba):
   a lista da cena tem que vir do usuário, conferida um a um. Decidido não exibir rótulo LGBTQIA+ na ficha
   (lista pública vira alvo); o selo vem dos quatro eixos de acolhimento.
 - Decidido lançar primeiro no Android. iOS fica para depois do primeiro retorno da Play Store.
@@ -84,6 +85,13 @@ Checks antes de commitar: `npm run lint && npm run typecheck`. Migrations testá
 - MapLibre usa LngLat como `[lng, lat]`. Câmera enquadra dados só no primeiro carregamento (`CityMap.tsx`).
 - ESLint proíbe setState em effect: usar estado derivado ou useQuery.
 - SQL Editor do Supabase mostra "No rows returned" em UPDATE bem-sucedido; confirmar com SELECT.
+- A malha do IBGE recorta lagoa e recua a linha de costa: praia e orla ficam FORA do polígono do
+  município. `resolve_occurrence_area` e `city_at` caem para o município mais próximo até 2 km
+  (migration 8). Sem isso, relato na praia de Copacabana era recusado.
+- `import-places-osm.mjs` tenta o insert em bloco e, se cair, grava um a um listando os recusados:
+  um ponto ruim do OSM não pode derrubar a importação inteira.
+- A chave de serviço fica em `.env.scripts` (fora do git, nunca no `.env` que o EAS empacota):
+  `set -a && source .env.scripts && set +a` antes de rodar qualquer script de import.
 - As variáveis do EAS são por ambiente: `env:push preview` não vale para `production`. Se o build não
   imprimir `EXPO_PUBLIC_SUPABASE_ANON_KEY, EXPO_PUBLIC_SUPABASE_URL` carregadas, o app sai sem backend.
   Antes do primeiro build de produção: `npx eas-cli env:push production --path .env`.
