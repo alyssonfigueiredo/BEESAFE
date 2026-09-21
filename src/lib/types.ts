@@ -53,6 +53,10 @@ export type PublicPlace = {
   rating_stddev: number | null;
   recent_on_site: number;
   badge: import("@/theme/domain").Badge | null;
+  // Foto do Google Places, só enquanto dentro dos 30 dias permitidos (a view esconde a vencida).
+  photo_name: string | null;
+  photo_author: string | null;
+  photo_author_uri: string | null;
 };
 
 export type PublicPlaceRating = {
@@ -84,4 +88,7 @@ export type WelcomingPlace = Pick<
   | "score_affection"
   | "score_restroom"
   | "score_crowd"
+  | "photo_name"
+  | "photo_author"
+  | "photo_author_uri"
 >;

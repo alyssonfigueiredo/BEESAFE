@@ -4,6 +4,7 @@ import { Pressable, Text, View } from "react-native";
 
 import { AxisStrip } from "@/components/AxisBars";
 import { Badge } from "@/components/Badge";
+import { PlacePhoto } from "@/components/PlacePhoto";
 import { Rainbow } from "@/components/Rainbow";
 import type { WelcomingPlace } from "@/lib/types";
 import { PLACE_CATEGORIES, RATING_MIN, placeScoreColor } from "@/theme/domain";
@@ -20,40 +21,49 @@ export function PlaceCard({ place, verified }: { place: WelcomingPlace; verified
 
   return (
     <Link href={{ pathname: "/lugar/[id]", params: { id: place.id } }} asChild>
-      <Pressable className="gap-2 rounded-xl border border-border bg-surface p-4 active:opacity-80">
-        <View className="flex-row items-center justify-between gap-2">
-          <View className="min-w-0 flex-1 flex-row items-center gap-1">
-            <Text
-              className="font-heading text-base uppercase tracking-wide text-ink"
-              numberOfLines={1}
-            >
-              {place.name}
-            </Text>
-            {verified && <BadgeCheck color={colors.turquoiseInk} size={16} />}
-          </View>
-          <Text className="font-body text-xs text-dim">{PLACE_CATEGORIES[place.category]}</Text>
-        </View>
-
-        {score == null ? (
-          <Text className="font-body text-sm text-dim">Sem avaliações ainda</Text>
-        ) : (
-          <>
-            <View className="flex-row items-center gap-2">
-              <Rainbow value={score} size={8} />
-              <Text className="font-body-bold text-sm" style={{ color: placeScoreColor(score) }}>
-                {score.toFixed(1)}
+      <Pressable className="flex-row gap-3 rounded-xl border border-border bg-surface p-3 active:opacity-80">
+        <PlacePhoto
+          category={place.category}
+          photoName={place.photo_name}
+          photoAuthor={place.photo_author}
+          photoAuthorUri={place.photo_author_uri}
+          size={64}
+        />
+        <View className="min-w-0 flex-1 gap-2">
+          <View className="flex-row items-center justify-between gap-2">
+            <View className="min-w-0 flex-1 flex-row items-center gap-1">
+              <Text
+                className="font-heading text-base uppercase tracking-wide text-ink"
+                numberOfLines={1}
+              >
+                {place.name}
               </Text>
-              {place.badge && <Badge badge={place.badge} />}
-              {place.flagged && <AlertTriangle color={colors.coralInk} size={14} />}
+              {verified && <BadgeCheck color={colors.turquoiseInk} size={16} />}
             </View>
-            <AxisStrip scores={axes} />
-            <Text className="font-body text-xs text-dim">
-              {place.rating_count} avaliaç{place.rating_count === 1 ? "ão" : "ões"}
-              {place.rating_count < RATING_MIN ? ` de ${RATING_MIN} necessárias` : ""}
-              {place.neighborhood ? ` · ${place.neighborhood}` : ""}
-            </Text>
-          </>
-        )}
+            <Text className="font-body text-xs text-dim">{PLACE_CATEGORIES[place.category]}</Text>
+          </View>
+
+          {score == null ? (
+            <Text className="font-body text-sm text-dim">Sem avaliações ainda</Text>
+          ) : (
+            <>
+              <View className="flex-row items-center gap-2">
+                <Rainbow value={score} size={8} />
+                <Text className="font-body-bold text-sm" style={{ color: placeScoreColor(score) }}>
+                  {score.toFixed(1)}
+                </Text>
+                {place.badge && <Badge badge={place.badge} />}
+                {place.flagged && <AlertTriangle color={colors.coralInk} size={14} />}
+              </View>
+              <AxisStrip scores={axes} />
+              <Text className="font-body text-xs text-dim">
+                {place.rating_count} avaliaç{place.rating_count === 1 ? "ão" : "ões"}
+                {place.rating_count < RATING_MIN ? ` de ${RATING_MIN} necessárias` : ""}
+                {place.neighborhood ? ` · ${place.neighborhood}` : ""}
+              </Text>
+            </>
+          )}
+        </View>
       </Pressable>
     </Link>
   );

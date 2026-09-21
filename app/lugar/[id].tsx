@@ -9,6 +9,7 @@ import { AxisBars } from "@/components/AxisBars";
 import { Badge } from "@/components/Badge";
 import { CityMap } from "@/components/CityMap";
 import { IrisScore } from "@/components/IrisScore";
+import { PlacePhoto } from "@/components/PlacePhoto";
 import { Rainbow } from "@/components/Rainbow";
 import { ReportButton } from "@/components/ReportButton";
 import { usePlace, usePlaceRatings, useRatePlace } from "@/hooks/usePlaces";
@@ -89,6 +90,13 @@ export default function PlaceScreen() {
         keyboardShouldPersistTaps="handled"
       >
         <View className="gap-2 rounded-2xl border border-border bg-surface p-5">
+          <PlacePhoto
+            category={place.category}
+            photoName={place.photo_name}
+            photoAuthor={place.photo_author}
+            photoAuthorUri={place.photo_author_uri}
+            variant="banner"
+          />
           <View className="flex-row items-center gap-2">
             <Text className="font-display text-3xl uppercase tracking-widest text-ink">
               {place.name}

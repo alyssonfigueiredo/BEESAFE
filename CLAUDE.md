@@ -19,7 +19,7 @@ Nome: **Irisa** (INPI livre; @irisapp livre). Bundle id `br.com.irisa.app`. Cont
 
 - Branch de trabalho: `claude/laughing-keller-my8t7c` (default do repo: `claude/ecstatic-darwin-cmf7sw`).
 - MVP completo e rodando no iPhone do usuário (Xcode, Apple ID gratuito, expira em 7 dias) e em APK Android (EAS preview).
-- Supabase projeto `ntjirpqulrnieeglpiei`, região São Paulo. Todas as 8 migrations + seeds aplicadas.
+- Supabase projeto `ntjirpqulrnieeglpiei`, região São Paulo. Migrations 0–8 aplicadas; a 9 (foto Google) precisa ser colada no SQL Editor.
   O seed fictício de Curitiba saiu do repositório; `supabase/seed/limpar-curitiba-teste.sql` apaga o que sobrou no banco.
 - Chaves legadas desativadas: app usa `sb_publishable_...`, scripts usam `sb_secret_...` (só na máquina dele).
 - Dados geográficos: os 5.570 municípios das 27 UFs e os bairros das capitais importados. Sem bairros no OSM:
@@ -36,6 +36,13 @@ Nome: **Irisa** (INPI livre; @irisapp livre). Bundle id `br.com.irisa.app`. Cont
 - Decidido lançar primeiro no Android. iOS fica para depois do primeiro retorno da Play Store.
 - Layout do Início decidido: painel (opção A do mockup).
 - Ficha das lojas pronta em docs/lojas.md.
+- Foto dos lugares via Google Places (New) com cota travada no gratuito: migration 9, script
+  `scripts/google-place-photos.mjs`, componente `PlacePhoto` (cai no ícone da categoria sem foto).
+  Setup e limites em docs/fotos.md. Sem `EXPO_PUBLIC_GOOGLE_MAPS_KEY` o app não pede foto.
+- Ficha do lugar abre a seção de acolhimento com "Quanta cor tem esse lugar?". Layout da ficha e
+  a tela de lista de lugares (que NÃO existe: lugares só aparecem como pino no mapa e na seção
+  do Início, que exige 5 avaliações) ainda em decisão — mocks em ficha-lugar.html/lugares.html
+  foram mostrados ao usuário.
 
 ## Stack
 
@@ -56,8 +63,10 @@ npx expo start --dev-client               # Metro; tecla r recarrega
 npx expo run:ios --device --configuration Release   # sem Metro, para prints
 npx eas-cli build -p android --profile preview      # APK por link
 npx eas-cli build -p android --profile production   # AAB para a Play Store
-SUPABASE_URL=... SUPABASE_SERVICE_ROLE_KEY=sb_secret_... node scripts/import-neighborhoods.mjs <ibge>
-SUPABASE_URL=... SUPABASE_SERVICE_ROLE_KEY=sb_secret_... node scripts/import-places-osm.mjs 4106902 --limite 60
+set -a && source .env.scripts && set +a           # carrega SUPABASE_SERVICE_ROLE_KEY e GOOGLE_MAPS_API_KEY
+node scripts/import-neighborhoods.mjs <ibge>
+node scripts/import-places-osm.mjs 4106902 --limite 60
+node scripts/google-place-photos.mjs --todas         # fotos do Google, cota travada (docs/fotos.md)
 bash scripts/screenshots.sh                          # prints das lojas no Simulador
 ```
 
