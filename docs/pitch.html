@@ -100,6 +100,7 @@
   .flow{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
   .flow .card{flex:1;min-width:150px}
   .photo{position:relative;border-radius:11px;overflow:hidden;background:linear-gradient(135deg,#F5A45D,#F4736F 45%,#AE96F2);}
+  .photo .shot{position:absolute;inset:0;width:100%;height:100%;display:block}
   .photo .cred{position:absolute;left:0;right:0;bottom:0;padding:3px 6px;font-size:7.5px;color:#fff;background:linear-gradient(transparent,rgba(0,0,0,.55))}
   .tile{width:44px;height:44px;border-radius:9px;flex:none;display:flex;align-items:center;justify-content:center;font-size:16px}
   .arrow{font-size:24px;color:var(--dim)}
@@ -216,7 +217,45 @@
       <div class="ph-hdr"><div class="ph-logo" style="font-size:12px">‹</div><div class="siren"></div></div>
       <div class="ph-body">
         <div class="ph-card" style="padding:0;overflow:hidden">
-          <div class="photo" style="height:96px"><div class="cred">Foto: Ana M. · Google</div></div>
+          <div class="photo" style="height:56px;flex:none"><svg class="shot" viewBox="0 0 240 100" preserveAspectRatio="xMidYMid slice" aria-label="Foto ilustrativa do bar">
+  <defs>
+    <linearGradient id="pd" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3A2A4E"/><stop offset="1" stop-color="#5B3A50"/></linearGradient>
+    <radialGradient id="gl" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#F0CA75" stop-opacity=".75"/><stop offset="1" stop-color="#F0CA75" stop-opacity="0"/></radialGradient>
+    <linearGradient id="bal" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#C08A4E"/><stop offset="1" stop-color="#8A5F33"/></linearGradient>
+  </defs>
+  <rect width="240" height="100" fill="url(#pd)"/>
+  <rect x="0" y="0" width="240" height="26" fill="#2E2140"/>
+  <g>
+    <circle cx="40" cy="30" r="26" fill="url(#gl)"/><circle cx="120" cy="26" r="30" fill="url(#gl)"/><circle cx="200" cy="30" r="26" fill="url(#gl)"/>
+    <g stroke="#1E2340" stroke-width="1.4"><path d="M40 0v14"/><path d="M120 0v10"/><path d="M200 0v14"/></g>
+    <g fill="#F0CA75"><path d="M32 14h16l-5 7H37z"/><path d="M112 10h16l-5 7h-6z"/><path d="M192 14h16l-5 7h-6z"/></g>
+  </g>
+  <rect x="0" y="34" width="240" height="30" fill="#241B36" opacity=".8"/>
+  <g>
+    <rect x="12" y="56" width="216" height="3" rx="1.5" fill="#6B4B2E"/>
+    <g opacity=".95">
+      <rect x="18" y="42" width="7" height="14" rx="2" fill="#F4736F"/><rect x="30" y="39" width="7" height="17" rx="2" fill="#F5A45D"/>
+      <rect x="42" y="43" width="7" height="13" rx="2" fill="#F0CA75"/><rect x="54" y="40" width="7" height="16" rx="2" fill="#5CC9B4"/>
+      <rect x="66" y="44" width="7" height="12" rx="2" fill="#6AA8EE"/><rect x="78" y="41" width="7" height="15" rx="2" fill="#AE96F2"/>
+      <rect x="156" y="42" width="7" height="14" rx="2" fill="#F4736F"/><rect x="168" y="40" width="7" height="16" rx="2" fill="#F5A45D"/>
+      <rect x="180" y="43" width="7" height="13" rx="2" fill="#F0CA75"/><rect x="192" y="39" width="7" height="17" rx="2" fill="#5CC9B4"/>
+      <rect x="204" y="44" width="7" height="12" rx="2" fill="#6AA8EE"/><rect x="216" y="41" width="7" height="15" rx="2" fill="#AE96F2"/>
+    </g>
+  </g>
+  <g>
+    <rect x="94" y="36" width="56" height="18" rx="4" fill="#1E2340" stroke="#F0CA75" stroke-width="1.2"/>
+    <text x="122" y="48" text-anchor="middle" font-family="Oswald,Impact,sans-serif" font-size="9" fill="#F0CA75" letter-spacing="1.2">BAR DO GATO</text>
+  </g>
+  <rect x="0" y="72" width="240" height="6" fill="url(#bal)"/>
+  <rect x="0" y="78" width="240" height="22" fill="#241B36"/>
+  <g fill="#15182B">
+    <circle cx="62" cy="62" r="8"/><path d="M48 100c0-16 6-28 14-28s14 12 14 28z"/>
+    <circle cx="86" cy="65" r="7"/><path d="M74 100c0-14 5-25 12-25s12 11 12 25z"/>
+    <circle cx="172" cy="64" r="7.5"/><path d="M159 100c0-15 6-26 13-26s13 11 13 26z"/>
+  </g>
+  <g fill="#F0CA75" opacity=".9"><rect x="106" y="64" width="5" height="9" rx="1"/><rect x="130" y="65" width="5" height="8" rx="1"/></g>
+  <rect x="0" y="86" width="240" height="14" fill="#0F1222" opacity=".45"/>
+</svg><div class="cred">Foto: Ana M. · Google</div></div>
           <div style="padding:9px;display:flex;flex-direction:column;gap:5px">
             <div class="ph-big" style="font-size:17px">Bar do Gato <span style="color:var(--turqInk);font-size:11px">✔</span></div>
             <div class="ph-small">Bar · São Francisco · Curitiba</div>
@@ -242,7 +281,45 @@
         <div class="input">🔍 Buscar por nome</div>
         <div class="chips"><span class="chip" style="border-color:var(--night);background:var(--night);color:#fff">Perto de você</span><span class="chip" style="border-color:var(--border);color:var(--muted)">Todos (60)</span><span class="chip" style="border-color:var(--border);color:var(--muted)">Bar (18)</span><span class="chip" style="border-color:var(--border);color:var(--muted)">Café (11)</span></div>
         <div class="ph-card" style="flex-direction:row;gap:8px;align-items:center">
-          <div class="photo tile"></div>
+          <div class="photo tile"><svg class="shot" viewBox="0 0 240 100" preserveAspectRatio="xMidYMid slice" aria-label="Foto ilustrativa do bar">
+  <defs>
+    <linearGradient id="pd" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3A2A4E"/><stop offset="1" stop-color="#5B3A50"/></linearGradient>
+    <radialGradient id="gl" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#F0CA75" stop-opacity=".75"/><stop offset="1" stop-color="#F0CA75" stop-opacity="0"/></radialGradient>
+    <linearGradient id="bal" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#C08A4E"/><stop offset="1" stop-color="#8A5F33"/></linearGradient>
+  </defs>
+  <rect width="240" height="100" fill="url(#pd)"/>
+  <rect x="0" y="0" width="240" height="26" fill="#2E2140"/>
+  <g>
+    <circle cx="40" cy="30" r="26" fill="url(#gl)"/><circle cx="120" cy="26" r="30" fill="url(#gl)"/><circle cx="200" cy="30" r="26" fill="url(#gl)"/>
+    <g stroke="#1E2340" stroke-width="1.4"><path d="M40 0v14"/><path d="M120 0v10"/><path d="M200 0v14"/></g>
+    <g fill="#F0CA75"><path d="M32 14h16l-5 7H37z"/><path d="M112 10h16l-5 7h-6z"/><path d="M192 14h16l-5 7h-6z"/></g>
+  </g>
+  <rect x="0" y="34" width="240" height="30" fill="#241B36" opacity=".8"/>
+  <g>
+    <rect x="12" y="56" width="216" height="3" rx="1.5" fill="#6B4B2E"/>
+    <g opacity=".95">
+      <rect x="18" y="42" width="7" height="14" rx="2" fill="#F4736F"/><rect x="30" y="39" width="7" height="17" rx="2" fill="#F5A45D"/>
+      <rect x="42" y="43" width="7" height="13" rx="2" fill="#F0CA75"/><rect x="54" y="40" width="7" height="16" rx="2" fill="#5CC9B4"/>
+      <rect x="66" y="44" width="7" height="12" rx="2" fill="#6AA8EE"/><rect x="78" y="41" width="7" height="15" rx="2" fill="#AE96F2"/>
+      <rect x="156" y="42" width="7" height="14" rx="2" fill="#F4736F"/><rect x="168" y="40" width="7" height="16" rx="2" fill="#F5A45D"/>
+      <rect x="180" y="43" width="7" height="13" rx="2" fill="#F0CA75"/><rect x="192" y="39" width="7" height="17" rx="2" fill="#5CC9B4"/>
+      <rect x="204" y="44" width="7" height="12" rx="2" fill="#6AA8EE"/><rect x="216" y="41" width="7" height="15" rx="2" fill="#AE96F2"/>
+    </g>
+  </g>
+  <g>
+    <rect x="94" y="36" width="56" height="18" rx="4" fill="#1E2340" stroke="#F0CA75" stroke-width="1.2"/>
+    <text x="122" y="48" text-anchor="middle" font-family="Oswald,Impact,sans-serif" font-size="9" fill="#F0CA75" letter-spacing="1.2">BAR DO GATO</text>
+  </g>
+  <rect x="0" y="72" width="240" height="6" fill="url(#bal)"/>
+  <rect x="0" y="78" width="240" height="22" fill="#241B36"/>
+  <g fill="#15182B">
+    <circle cx="62" cy="62" r="8"/><path d="M48 100c0-16 6-28 14-28s14 12 14 28z"/>
+    <circle cx="86" cy="65" r="7"/><path d="M74 100c0-14 5-25 12-25s12 11 12 25z"/>
+    <circle cx="172" cy="64" r="7.5"/><path d="M159 100c0-15 6-26 13-26s13 11 13 26z"/>
+  </g>
+  <g fill="#F0CA75" opacity=".9"><rect x="106" y="64" width="5" height="9" rx="1"/><rect x="130" y="65" width="5" height="8" rx="1"/></g>
+  <rect x="0" y="86" width="240" height="14" fill="#0F1222" opacity=".45"/>
+</svg></div>
           <div style="flex:1;display:flex;flex-direction:column;gap:3px">
             <div class="between"><span class="ph-h">Bar do Gato</span><b style="color:var(--turqInk)">4.7</b></div>
             <span class="badge" style="background:#5CC9B42E;color:var(--turqInk);align-self:flex-start">Acolhedor</span>
