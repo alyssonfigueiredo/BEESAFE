@@ -39,10 +39,11 @@ Nome: **Irisa** (INPI livre; @irisapp livre). Bundle id `br.com.irisa.app`. Cont
 - Foto dos lugares via Google Places (New) com cota travada no gratuito: migration 9, script
   `scripts/google-place-photos.mjs`, componente `PlacePhoto` (cai no ícone da categoria sem foto).
   Setup e limites em docs/fotos.md. Sem `EXPO_PUBLIC_GOOGLE_MAPS_KEY` o app não pede foto.
-- Ficha do lugar abre a seção de acolhimento com "Quanta cor tem esse lugar?". Layout da ficha e
-  a tela de lista de lugares (que NÃO existe: lugares só aparecem como pino no mapa e na seção
-  do Início, que exige 5 avaliações) ainda em decisão — mocks em ficha-lugar.html/lugares.html
-  foram mostrados ao usuário.
+- Aba **Lugares** (`app/(tabs)/lugares.tsx`): busca por nome, filtro por categoria, ordem por
+  distância. Entrou no lugar de Registrar na barra (a rota `/registrar` segue viva, escondida;
+  os botões vermelhos do Início e do Mapa levam nela). Ficha do lugar: foto, alerta de relatos
+  antes da nota, "Quanta cor tem esse lugar?" abrindo a seção do acolhimento, "Como chegar"
+  (app de mapas do celular) no lugar do mini-mapa, formulário aberto só sem nota, denúncia no fim.
 
 ## Stack
 

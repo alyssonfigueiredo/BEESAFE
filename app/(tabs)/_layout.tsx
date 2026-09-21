@@ -1,5 +1,5 @@
 import { Tabs } from "expo-router";
-import { Home, LifeBuoy, Map, PlusCircle, User } from "lucide-react-native";
+import { Home, LifeBuoy, Map, Store, User } from "lucide-react-native";
 
 import { EmergencyButton } from "@/components/EmergencyButton";
 import { Logo } from "@/components/Logo";
@@ -30,12 +30,15 @@ export default function TabsLayout() {
         options={{ title: "Mapa", tabBarIcon: ({ color }) => <Map color={color} size={22} /> }}
       />
       <Tabs.Screen
-        name="registrar"
+        name="lugares"
         options={{
-          title: "Registrar",
-          tabBarIcon: ({ color }) => <PlusCircle color={color} size={22} />,
+          title: "Lugares",
+          tabBarIcon: ({ color }) => <Store color={color} size={22} />,
         }}
       />
+      {/* Registrar saiu da barra: o botão vermelho no Início e no Mapa leva até aqui. A rota
+          continua existindo para esses links. */}
+      <Tabs.Screen name="registrar" options={{ href: null }} />
       <Tabs.Screen
         name="apoio"
         options={{

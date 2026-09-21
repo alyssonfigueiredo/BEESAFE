@@ -6,11 +6,24 @@ import { AxisStrip } from "@/components/AxisBars";
 import { Badge } from "@/components/Badge";
 import { PlacePhoto } from "@/components/PlacePhoto";
 import { Rainbow } from "@/components/Rainbow";
+import { formatDistance } from "@/lib/geo";
 import type { WelcomingPlace } from "@/lib/types";
 import { PLACE_CATEGORIES, RATING_MIN, placeScoreColor } from "@/theme/domain";
 import { colors } from "@/theme/tokens";
 
-export function PlaceCard({ place, verified }: { place: WelcomingPlace; verified?: boolean }) {
+export function PlaceCard({
+  place,
+  verified,
+  distance,
+}: {
+  place: WelcomingPlace;
+  verified?: boolean;
+  /** Metros até quem está olhando; sem localização, fica de fora. */
+  distance?: number | null;
+}) {
+  const onde = [place.neighborhood, distance != null ? formatDistance(distance) : null]
+    .filter(Boolean)
+    .join(" · ");
   const score = place.score == null ? null : Number(place.score);
   const axes = {
     welcome: place.score_welcome,
@@ -44,7 +57,12 @@ export function PlaceCard({ place, verified }: { place: WelcomingPlace; verified
           </View>
 
           {score == null ? (
-            <Text className="font-body text-sm text-dim">Sem avaliações ainda</Text>
+            <>
+              <Text className="font-body text-sm text-muted">
+                Quanta cor tem esse lugar? Ninguém disse ainda.
+              </Text>
+              {!!onde && <Text className="font-body text-xs text-dim">{onde}</Text>}
+            </>
           ) : (
             <>
               <View className="flex-row items-center gap-2">
@@ -59,7 +77,7 @@ export function PlaceCard({ place, verified }: { place: WelcomingPlace; verified
               <Text className="font-body text-xs text-dim">
                 {place.rating_count} avaliaç{place.rating_count === 1 ? "ão" : "ões"}
                 {place.rating_count < RATING_MIN ? ` de ${RATING_MIN} necessárias` : ""}
-                {place.neighborhood ? ` · ${place.neighborhood}` : ""}
+                {onde ? ` · ${onde}` : ""}
               </Text>
             </>
           )}

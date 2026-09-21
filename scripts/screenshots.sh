@@ -64,7 +64,7 @@ echo "▶ Capturando (uma tela por vez)"
 tela 1-inicio "a tela Início"
 tela 2-mapa "o Mapa, com Curitiba enquadrada"
 tela 3-lugar "a ficha de um lugar (toque em um marcador ou em um item da lista)"
-tela 4-registrar "a tela Registrar"
+tela 4-lugares "a aba Lugares (lista com busca)"
 tela 5-apoio "a tela Apoio"
 
 echo
