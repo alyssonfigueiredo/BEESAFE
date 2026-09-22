@@ -22,10 +22,12 @@ Nome: **Irisa** (INPI livre; @irisapp livre). Bundle id `br.com.irisa.app`. Cont
 - Supabase projeto `ntjirpqulrnieeglpiei`, região São Paulo. Migrations 0–8 aplicadas; a 9 (foto Google) precisa ser colada no SQL Editor.
   O seed fictício de Curitiba saiu do repositório; `supabase/seed/limpar-curitiba-teste.sql` apaga o que sobrou no banco.
 - Chaves legadas desativadas: app usa `sb_publishable_...`, scripts usam `sb_secret_...` (só na máquina dele).
-- Dados geográficos: os 5.570 municípios das 27 UFs e os bairros das capitais importados. Onde o OSM não
-  cobre, os distritos do IBGE servem de bairro (`scripts/import-districts-ibge.mjs`): São Paulo tem 96.
-  Brasília não tem solução pelo IBGE — o DF é um município de um distrito só, e as regiões administrativas
-  (Ceilândia, Taguatinga) são do GDF. `upsert_neighborhoods` agrupa nomes repetidos antes do upsert.
+- Dados geográficos: os 5.570 municípios das 27 UFs e os bairros de 24 capitais importados do OSM.
+  São Paulo saiu com 96 pelo nível 9 (`--nivel 9`, que lá são os distritos). Seguem sem bairro:
+  Brasília, São Luís e Palmas — não existe no OSM em nenhum nível, e a API de malhas do IBGE recusa
+  recorte abaixo do município ("intrarregiao NÃO aceita valores"), então `import-districts-ibge.mjs`
+  só serve para listar nomes. Sem bairro o relato cai na cidade e o app funciona.
+  `upsert_neighborhoods` agrupa nomes repetidos antes do upsert.
 - Login: e-mail/senha OK, Google pelo navegador do sistema via Supabase (PKCE, cliente OAuth do tipo
   Aplicativo da Web) — não usa o SDK nativo, então SHA-1 não entra em nada; Apple nativo, só em builds
   EAS (`APP_ENV=preview|production`).
@@ -94,7 +96,7 @@ Checks antes de commitar: `npm run lint && npm run typecheck`. Migrations testá
 
 1. Teste fechado no Google Play: manter 12 testadores opted-in por 14 dias seguidos e depois
    "Solicitar acesso à produção". A versão 8 já está em revisão.
-2. Fonte alternativa de bairros para Brasília, São Luís, Palmas e São Paulo (OSM não cobre).
+2. Bairros de Brasília, São Luís e Palmas: só via prefeitura/GDF, se um dia valer a pena.
 3. Implementar ocultar autor (bloqueio por usuário). Hoje não existe: no IARC está declarado **Não**,
    e a Apple exige pela regra 1.2. Ao implementar, atualizar a resposta do questionário na mesma versão.
 4. Apple Developer (US$99/ano) quando decidir publicar no iOS; ou via ONG parceira (Apple isenta ONGs).
