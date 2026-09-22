@@ -22,8 +22,10 @@ Nome: **Irisa** (INPI livre; @irisapp livre). Bundle id `br.com.irisa.app`. Cont
 - Supabase projeto `ntjirpqulrnieeglpiei`, região São Paulo. Migrations 0–8 aplicadas; a 9 (foto Google) precisa ser colada no SQL Editor.
   O seed fictício de Curitiba saiu do repositório; `supabase/seed/limpar-curitiba-teste.sql` apaga o que sobrou no banco.
 - Chaves legadas desativadas: app usa `sb_publishable_...`, scripts usam `sb_secret_...` (só na máquina dele).
-- Dados geográficos: os 5.570 municípios das 27 UFs e os bairros das capitais importados. Sem bairros no OSM:
-  Brasília, São Luís e Palmas (São Paulo só 9). `upsert_neighborhoods` agrupa nomes repetidos antes do upsert.
+- Dados geográficos: os 5.570 municípios das 27 UFs e os bairros das capitais importados. Onde o OSM não
+  cobre, os distritos do IBGE servem de bairro (`scripts/import-districts-ibge.mjs`): São Paulo tem 96.
+  Brasília não tem solução pelo IBGE — o DF é um município de um distrito só, e as regiões administrativas
+  (Ceilândia, Taguatinga) são do GDF. `upsert_neighborhoods` agrupa nomes repetidos antes do upsert.
 - Login: e-mail/senha OK, Google pelo navegador do sistema via Supabase (PKCE, cliente OAuth do tipo
   Aplicativo da Web) — não usa o SDK nativo, então SHA-1 não entra em nada; Apple nativo, só em builds
   EAS (`APP_ENV=preview|production`).
@@ -76,6 +78,7 @@ npx eas-cli build -p android --profile preview      # APK por link
 npx eas-cli build -p android --profile production   # AAB para a Play Store
 set -a && source .env.scripts && set +a           # carrega SUPABASE_SERVICE_ROLE_KEY e GOOGLE_MAPS_API_KEY
 node scripts/import-neighborhoods.mjs <ibge>
+node scripts/import-districts-ibge.mjs 3550308     # bairros pelos distritos do IBGE (onde o OSM não cobre)
 node scripts/import-places-osm.mjs 4106902 --limite 60
 node scripts/google-place-photos.mjs --todas         # fotos do Google, cota travada (docs/fotos.md)
 bash scripts/screenshots.sh                          # prints das lojas no Simulador
