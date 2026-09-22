@@ -96,7 +96,11 @@ Checks antes de commitar: `npm run lint && npm run typecheck`. Migrations testá
 
 1. Teste fechado no Google Play: manter 12 testadores opted-in por 14 dias seguidos e depois
    "Solicitar acesso à produção". A versão 8 já está em revisão.
-2. Bairros de Brasília, São Luís e Palmas: só via prefeitura/GDF, se um dia valer a pena.
+2. Bairros de Brasília, São Luís e Palmas — tem que existir fonte, o OSM é que não cobre. Pistas
+   ainda não testadas: (a) malha de setores censitários do Censo 2022 no geoftp do IBGE, que traz
+   nome de bairro por setor e dá para dissolver por nome; (b) GeoPortal da Seduh/DF para as regiões
+   administrativas; (c) dados abertos das prefeituras de São Luís e Palmas (em Palmas a cidade é
+   organizada em quadras, não bairros — o nome do "bairro" ali pode ser a quadra).
 3. Implementar ocultar autor (bloqueio por usuário). Hoje não existe: no IARC está declarado **Não**,
    e a Apple exige pela regra 1.2. Ao implementar, atualizar a resposta do questionário na mesma versão.
 4. Apple Developer (US$99/ano) quando decidir publicar no iOS; ou via ONG parceira (Apple isenta ONGs).
