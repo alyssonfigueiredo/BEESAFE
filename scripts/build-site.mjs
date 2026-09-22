@@ -57,6 +57,7 @@ copyFileSync("docs/Irisa-apresentacao.pdf", "site/Irisa-apresentacao.pdf");
 writeFileSync("site/privacidade.html", page("Política de Privacidade", md(readFileSync("docs/privacidade.md", "utf8"))));
 writeFileSync("site/termos.html", page("Termos de Uso", md(readFileSync("docs/termos.md", "utf8"))));
 writeFileSync("site/excluir-conta.html", page("Excluir sua conta", md(readFileSync("docs/excluir-conta.md", "utf8"))));
+writeFileSync("site/seguranca-infantil.html", page("Padrões de segurança infantil", md(readFileSync("docs/seguranca-infantil.md", "utf8"))));
 writeFileSync("site/index.html", page("Irisa", `
 <div class="hero"><img src="icon.png" alt="Irisa">
 <h1>Quanta cor tem aqui?</h1>
