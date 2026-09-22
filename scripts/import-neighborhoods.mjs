@@ -6,9 +6,9 @@
 import { createClient } from "@supabase/supabase-js";
 import osmtogeojson from "osmtogeojson";
 
-const url = process.env.SUPABASE_URL;
+const url = process.env.SUPABASE_URL ?? "https://ntjirpqulrnieeglpiei.supabase.co";
 const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
-if (!url || !key) throw new Error("Defina SUPABASE_URL e SUPABASE_SERVICE_ROLE_KEY");
+if (!key) throw new Error("Defina SUPABASE_SERVICE_ROLE_KEY (set -a && source .env.scripts && set +a)");
 const supabase = createClient(url, key, { auth: { persistSession: false } });
 
 const CAPITAIS = [
