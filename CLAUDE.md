@@ -24,8 +24,9 @@ Nome: **Irisa** (INPI livre; @irisapp livre). Bundle id `br.com.irisa.app`. Cont
 - Chaves legadas desativadas: app usa `sb_publishable_...`, scripts usam `sb_secret_...` (só na máquina dele).
 - Dados geográficos: os 5.570 municípios das 27 UFs e os bairros das capitais importados. Sem bairros no OSM:
   Brasília, São Luís e Palmas (São Paulo só 9). `upsert_neighborhoods` agrupa nomes repetidos antes do upsert.
-- Login: e-mail/senha OK, Google configurado no Supabase (testar no Android exige SHA-1 da keystore EAS no Google Cloud),
-  Apple só em builds EAS (`APP_ENV=preview|production`).
+- Login: e-mail/senha OK, Google pelo navegador do sistema via Supabase (PKCE, cliente OAuth do tipo
+  Aplicativo da Web) — não usa o SDK nativo, então SHA-1 não entra em nada; Apple nativo, só em builds
+  EAS (`APP_ENV=preview|production`).
 - Site público (GitHub Pages, workflow `pages.yml`, fonte `docs/*.md` → `scripts/build-site.mjs` → `site/`):
   https://alyssonfigueiredo.github.io/BEESAFE/ com privacidade.html, termos.html, pitch.html, mockup.html.
 - Sete cidades semeadas com lugares reais do OSM (bar/café/restaurante/balada/hotel), sem nota e sem selo,
@@ -84,15 +85,14 @@ Checks antes de commitar: `npm run lint && npm run typecheck`. Migrations testá
 
 ## Próximos passos (em ordem)
 
-1. Conta no Google Play Console (US$25, pode ser a conta pessoal dele; adicionar appirisa@gmail.com como admin).
-   Preencher com docs/lojas.md. Teste fechado: 12 testadores por 14 dias, depois produção.
-2. SHA-1 da keystore EAS (`npx eas-cli credentials -p android`) no Google Cloud para login Google no Android.
-3. Fonte alternativa de bairros para Brasília, São Luís, Palmas e São Paulo (OSM não cobre).
-4. Implementar ocultar autor (bloqueio por usuário). Hoje não existe: no IARC está declarado **Não**,
+1. Teste fechado no Google Play: manter 12 testadores opted-in por 14 dias seguidos e depois
+   "Solicitar acesso à produção". A versão 8 já está em revisão.
+2. Fonte alternativa de bairros para Brasília, São Luís, Palmas e São Paulo (OSM não cobre).
+3. Implementar ocultar autor (bloqueio por usuário). Hoje não existe: no IARC está declarado **Não**,
    e a Apple exige pela regra 1.2. Ao implementar, atualizar a resposta do questionário na mesma versão.
-5. Apple Developer (US$99/ano) quando decidir publicar no iOS; ou via ONG parceira (Apple isenta ONGs).
+4. Apple Developer (US$99/ano) quando decidir publicar no iOS; ou via ONG parceira (Apple isenta ONGs).
    Denúncia, moderação e excluir conta já existem.
-6. Fase 6+: notificações por área, rotas seguras, versão web.
+5. Fase 6+: notificações por área, rotas seguras, versão web.
 
 ## Armadilhas já resolvidas (não repetir)
 
