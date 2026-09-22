@@ -1,6 +1,6 @@
 // Importa bairros do OpenStreetMap (relações boundary=administrative admin_level=10) para public.neighborhoods.
 // Roda na SUA máquina:
-//   SUPABASE_URL=... SUPABASE_SERVICE_ROLE_KEY=... node scripts/import-neighborhoods.mjs 4314902 [outro_codigo_ibge ...]
+//   node scripts/import-neighborhoods.mjs 4314902 [outro_codigo_ibge ...] [--nivel 9]
 // Sem argumentos: todas as capitais. Overpass tem limite de uso; o script espera 5 s entre cidades.
 
 import { createClient } from "@supabase/supabase-js";
@@ -16,7 +16,12 @@ const CAPITAIS = [
   5002704, 3106200, 1501402, 2507507, 4106902, 2611606, 2211001, 3304557, 2408102, 4314902, 1100205,
   1400100, 4205407, 3550308, 2800308, 1721000,
 ];
-const codes = process.argv.slice(2).map(Number).filter(Boolean);
+const args = process.argv.slice(2);
+// --nivel 9 usa o nível administrativo 9 do OSM (subprefeitura em SP, região administrativa no DF),
+// onde o 10 (bairro) não existe.
+const iNivel = args.indexOf("--nivel");
+const nivel = iNivel >= 0 ? args[iNivel + 1] : "10";
+const codes = args.filter((a, i) => /^\d+$/.test(a) && i !== iNivel + 1).map(Number);
 const targets = codes.length ? codes : CAPITAIS;
 
 const MIRRORS = process.env.OVERPASS_URL
@@ -55,7 +60,7 @@ async function fetchNeighborhoods(ibge) {
     [out:json][timeout:120];
     area["boundary"="administrative"]["admin_level"="8"]["IBGE:GEOCODIGO"="${ibge}"]->.city;
     (
-      relation["boundary"="administrative"]["admin_level"="10"](area.city);
+      relation["boundary"="administrative"]["admin_level"="${nivel}"](area.city);
       relation["place"~"^(suburb|neighbourhood|quarter)$"]["type"="multipolygon"](area.city);
     );
     out body; >; out skel qt;`;
@@ -80,7 +85,7 @@ for (const ibge of targets) {
       p_rows: rows,
     });
     if (error) throw error;
-    console.log(`${ibge}: ${rows.length} bairros no OSM, ${data ?? 0} gravados`);
+    console.log(`${ibge}: ${rows.length} áreas no OSM (nível ${nivel}), ${data ?? 0} gravadas`);
   } catch (e) {
     console.error(`${ibge}: falhou —`, e.message);
   }
