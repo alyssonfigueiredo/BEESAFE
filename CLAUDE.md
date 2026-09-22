@@ -34,6 +34,13 @@ Nome: **Irisa** (INPI livre; @irisapp livre). Bundle id `br.com.irisa.app`. Cont
   a lista da cena tem que vir do usuário, conferida um a um. Decidido não exibir rótulo LGBTQIA+ na ficha
   (lista pública vira alvo); o selo vem dos quatro eixos de acolhimento.
 - Decidido lançar primeiro no Android. iOS fica para depois do primeiro retorno da Play Store.
+- Play Console: versão 8 (0.1.0) enviada para revisão na faixa de teste fechado em 22/09/2026, com a
+  ficha da loja, os prints e o gráfico de recursos. Falta a lista de testadores completar 12 pessoas
+  por 14 dias seguidos antes de pedir produção. Apps da categoria Social exigem a declaração de
+  padrões de segurança infantil (CSAE): política em `docs/seguranca-infantil.md`, publicada em
+  /seguranca-infantil.html, contato appirisa@gmail.com.
+- Fotos do Google por cidade (22/09/2026): Curitiba 51/60, Recife 48/60, João Pessoa 32/43. Quem não
+  casou fica sem foto e cai no ícone da categoria; o script só tenta de novo depois de 25 dias.
 - Cidades de lançamento: Curitiba, Recife e João Pessoa (onde ele tem gente para avaliar os primeiros
   lugares). As outras quatro semeadas ficam prontas para quando chegar usuário.
 - Layout do Início decidido: painel (opção A do mockup).
