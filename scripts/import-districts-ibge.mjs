@@ -30,8 +30,10 @@ for (const ibge of alvos) {
     }
     const nomePorCodigo = new Map(distritos.map((d) => [String(d.id), d.nome]));
 
+    // O "+" de vnd.geo+json vira espaço na query string: precisa ir codificado, senão o IBGE responde 400.
+    const formato = encodeURIComponent("application/vnd.geo+json");
     const malha = await json(
-      `${IBGE}/v4/malhas/municipios/${ibge}?formato=application/vnd.geo+json&intrarregiao=distrito`,
+      `${IBGE}/v4/malhas/municipios/${ibge}?formato=${formato}&intrarregiao=distrito`,
     );
     const rows = [];
     for (const f of malha.features ?? []) {
