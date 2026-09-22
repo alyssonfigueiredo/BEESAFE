@@ -81,6 +81,10 @@ node scripts/google-place-photos.mjs --todas         # fotos do Google, cota tra
 bash scripts/screenshots.sh                          # prints das lojas no Simulador
 ```
 
+Sem o Mac (pelo celular): GitHub → Actions → **Importar cidade** → Run workflow. Pede o código IBGE e
+roda bairros, lugares e fotos com as chaves guardadas nos Secrets do repositório
+(`SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY`, `GOOGLE_MAPS_API_KEY`).
+
 Checks antes de commitar: `npm run lint && npm run typecheck`. Migrations testáveis localmente com `scripts/db-smoke.sh`.
 
 ## Próximos passos (em ordem)

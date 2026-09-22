@@ -1,0 +1,52 @@
+# Importa bairros, lugares e fotos de uma cidade sem precisar do Mac: Actions → Importar cidade → Run workflow.
+name: Importar cidade
+
+on:
+  workflow_dispatch:
+    inputs:
+      ibge:
+        description: "Código IBGE da cidade (ex.: 2211001 = Teresina)"
+        required: true
+        type: string
+      bairros:
+        description: "Importar bairros do OpenStreetMap"
+        type: boolean
+        default: true
+      lugares:
+        description: "Importar estabelecimentos do OpenStreetMap"
+        type: boolean
+        default: true
+      limite:
+        description: "Quantos lugares no máximo"
+        type: string
+        default: "60"
+      fotos:
+        description: "Buscar fotos no Google (gasta a cota do dia)"
+        type: boolean
+        default: false
+
+concurrency: importar-cidade
+
+jobs:
+  importar:
+    runs-on: ubuntu-latest
+    env:
+      SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+      SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+      GOOGLE_MAPS_API_KEY: ${{ secrets.GOOGLE_MAPS_API_KEY }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Bairros
+        if: inputs.bairros
+        run: node scripts/import-neighborhoods.mjs "${{ inputs.ibge }}"
+      - name: Lugares
+        if: inputs.lugares
+        run: node scripts/import-places-osm.mjs "${{ inputs.ibge }}" --limite "${{ inputs.limite }}"
+      - name: Fotos
+        if: inputs.fotos
+        run: node scripts/google-place-photos.mjs "${{ inputs.ibge }}"
