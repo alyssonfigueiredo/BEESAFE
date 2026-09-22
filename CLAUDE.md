@@ -118,6 +118,9 @@ Checks antes de commitar: `npm run lint && npm run typecheck`. Migrations testá
   um ponto ruim do OSM não pode derrubar a importação inteira.
 - A chave de serviço fica em `.env.scripts` (fora do git, nunca no `.env` que o EAS empacota):
   `set -a && source .env.scripts && set +a` antes de rodar qualquer script de import.
+- No Play Console, NÃO marcar "Emergência e primeiros socorros" em Recursos de saúde. O botão de
+  emergência só disca 190/192/100/188: não é recurso de saúde. Marcado, o app cai na regra de "só
+  organização distribui" e é recusado (aconteceu em 22/09/2026, versão 8).
 - As variáveis do EAS são por ambiente: `env:push preview` não vale para `production`. Se o build não
   imprimir `EXPO_PUBLIC_SUPABASE_ANON_KEY, EXPO_PUBLIC_SUPABASE_URL` carregadas, o app sai sem backend.
   Antes do primeiro build de produção: `npx eas-cli env:push production --path .env`.
