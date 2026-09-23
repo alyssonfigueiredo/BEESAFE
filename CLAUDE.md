@@ -33,9 +33,9 @@ Nome: **Irisa** (INPI livre; @irisapp livre). Bundle id `br.com.irisa.app`. Cont
   EAS (`APP_ENV=preview|production`).
 - Site público (GitHub Pages, workflow `pages.yml`, fonte `docs/*.md` → `scripts/build-site.mjs` → `site/`):
   https://alyssonfigueiredo.github.io/BEESAFE/ com privacidade.html, termos.html, pitch.html, mockup.html.
-- Sete cidades semeadas com lugares reais do OSM (bar/café/restaurante/balada/hotel), sem nota e sem selo,
-  só para o mapa não abrir vazio: Curitiba 60, Recife 60, João Pessoa 43, São Paulo 80, Rio 84,
-  Salvador 63, Porto Alegre 60. A tag `lgbtq` do OSM quase não existe no Brasil (1 lugar em Curitiba):
+- Oito cidades semeadas com lugares reais do OSM (bar/café/restaurante/balada/hotel), sem nota e sem selo,
+  só para o mapa não abrir vazio: Curitiba 60, Recife 60, João Pessoa 43, Joinville (IBGE 4209102),
+  São Paulo 80, Rio 84, Salvador 63, Porto Alegre 60. A tag `lgbtq` do OSM quase não existe no Brasil (1 lugar em Curitiba):
   a lista da cena tem que vir do usuário, conferida um a um. Decidido não exibir rótulo LGBTQIA+ na ficha
   (lista pública vira alvo); o selo vem dos quatro eixos de acolhimento.
 - Decidido lançar primeiro no Android. iOS fica para depois do primeiro retorno da Play Store.
@@ -46,8 +46,12 @@ Nome: **Irisa** (INPI livre; @irisapp livre). Bundle id `br.com.irisa.app`. Cont
   /seguranca-infantil.html, contato appirisa@gmail.com.
 - Fotos do Google por cidade (22/09/2026): Curitiba 51/60, Recife 48/60, João Pessoa 32/43. Quem não
   casou fica sem foto e cai no ícone da categoria; o script só tenta de novo depois de 25 dias.
-- Cidades de lançamento: Curitiba, Recife e João Pessoa (onde ele tem gente para avaliar os primeiros
-  lugares). As outras quatro semeadas ficam prontas para quando chegar usuário.
+- Cidades de lançamento: Curitiba, Recife, João Pessoa e Joinville (onde ele tem gente para avaliar os
+  primeiros lugares). As outras semeadas ficam prontas para quando chegar usuário.
+- Captação: a apresentação (docs/pitch.html + docs/Irisa-apresentacao.pdf) é usada para atrair usuário,
+  ONG/coletivo e testador — o fecho traz contato e convite. Mensagem de convite aos testadores pede só o
+  e-mail da conta Google do Android; o link de participação só depois da versão publicar na faixa.
+  Meta de 20 a 25 testadores (o mínimo do Google é 12, e cair abaixo disso reinicia os 14 dias).
 - Layout do Início decidido: painel (opção A do mockup).
 - Ficha das lojas pronta em docs/lojas.md.
 - Foto dos lugares via Google Places (New) com cota travada no gratuito: migration 9, script
