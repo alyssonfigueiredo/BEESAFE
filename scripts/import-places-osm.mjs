@@ -29,6 +29,7 @@ const CATEGORIAS = {
   pub: "bar",
   nightclub: "balada",
   cafe: "cafe",
+  ice_cream: "cafe",
   restaurant: "restaurante",
   hotel: "hotel",
 };
@@ -64,14 +65,17 @@ async function overpass(query) {
   throw last;
 }
 
-// A tag lgbtq marca lugar da cena ou que se declara acolhedor. Esses entram mesmo sem endereço:
-// são os que a comunidade mais procura, e o endereço dá para completar depois.
+// Endereço NÃO é exigência: no Brasil a maioria dos bares do OSM tem nome e ponto, mas não
+// addr:street. Exigir a rua descartava a maior parte do acervo antes mesmo de contar, e a coluna
+// aceita nulo — o "Como chegar" do app usa a coordenada. Quem tem rua aparece com ela; quem não
+// tem aparece com o bairro que o trigger descobre pelo ponto.
+// A tag lgbtq marca lugar da cena ou que se declara acolhedor.
 const query = `
   [out:json][timeout:180];
   area["boundary"="administrative"]["admin_level"="8"]["IBGE:GEOCODIGO"="${ibge}"]->.cidade;
   (
-    nwr["amenity"~"^(bar|pub|cafe|restaurant|nightclub)$"]["name"]["addr:street"](area.cidade);
-    nwr["tourism"="hotel"]["name"]["addr:street"](area.cidade);
+    nwr["amenity"~"^(bar|pub|cafe|restaurant|nightclub|ice_cream)$"]["name"](area.cidade);
+    nwr["tourism"="hotel"]["name"](area.cidade);
     nwr["lgbtq"]["name"](area.cidade);
     nwr["lgbtq:primary"]["name"](area.cidade);
   );
@@ -116,7 +120,10 @@ for (const p of jaExistem ?? []) porNome.delete(p.name.trim().toLowerCase());
 
 // Lugares da cena primeiro: são os que a comunidade procura e os que dão sentido ao mapa.
 // A tag não vira rótulo no app — só decide quem entra quando há mais candidatos que o limite.
-const daCenaPrimeiro = [...porNome.values()].sort((a, b) => Number(b.daCena) - Number(a.daCena));
+// Da cena primeiro; empatados, quem tem endereço na frente — ficha mais completa para o testador.
+const daCenaPrimeiro = [...porNome.values()].sort(
+  (a, b) => Number(b.daCena) - Number(a.daCena) || Number(!!b.endereco) - Number(!!a.endereco),
+);
 
 // Reveza entre as categorias em vez de encher o limite com a mais numerosa: Curitiba tem
 // centenas de bares mapeados, e sem revezar o mapa abria só com bar.

@@ -139,7 +139,11 @@ Checks antes de commitar: `npm run lint && npm run typecheck`. Migrations testá
   município. `resolve_occurrence_area` e `city_at` caem para o município mais próximo até 2 km
   (migration 8). Sem isso, relato na praia de Copacabana era recusado.
 - `import-places-osm.mjs` tenta o insert em bloco e, se cair, grava um a um listando os recusados:
-  um ponto ruim do OSM não pode derrubar a importação inteira.
+  um ponto ruim do OSM não pode derrubar a importação inteira. Desde 23/09/2026 o script NÃO exige
+  `addr:street`: no Brasil a maioria dos bares do OSM tem nome e ponto mas não rua, e exigir a rua
+  descartava a maior parte do acervo. Endereço entra quando existe. Atenção: com a migration 10 no ar,
+  o trigger anti-duplicata pode recusar pontos de nome parecido a menos de 150 m (rede com duas lojas
+  perto, por exemplo) — eles aparecem na lista de recusados do script, e isso é o comportamento certo.
 - A chave de serviço fica em `.env.scripts` (fora do git, nunca no `.env` que o EAS empacota):
   `set -a && source .env.scripts && set +a` antes de rodar qualquer script de import.
 - No Play Console, NÃO marcar "Emergência e primeiros socorros" em Recursos de saúde. O botão de
