@@ -45,8 +45,8 @@ Nome: **Irisa** (INPI livre; @irisapp livre). Bundle id `br.com.irisa.app`. Cont
   convite para ser das primeiras pessoas. Para não cansar, o detalhamento fica atrás de botões que
   abrem com animação (`.xp-btn` em grupo, um aberto por vez; `.xc` para cartões) — nada foi cortado,
   só guardado. Regra dele: não remover informação da página; se não couber, esconder atrás de botão.
-  O `docs/index.html` é gerado por um script de montagem a partir de um molde + trechos do
-  `pitch.html` (telas, radar, desenho do mapa); editar direto o `docs/index.html` também funciona.
+  As telas, o radar e o desenho do mapa foram copiados do `pitch.html` para dentro do
+  `docs/index.html`; mudanças na landing se fazem direto nesse arquivo.
   `docs/og.png` é a prévia de link (WhatsApp/Instagram), 1200×630, tirada do próprio hero.
 - Oito cidades semeadas com lugares reais do OSM (bar/café/restaurante/balada/hotel), sem nota e sem selo,
   só para o mapa não abrir vazio: Curitiba 60, Recife 60, João Pessoa 43, Joinville 180 (IBGE 4209102),
