@@ -154,7 +154,7 @@ Tabs: Início, Mapa, Registrar, Apoio, Perfil.
 | 3    | Mural de apoio, serviços por cidade, emergência, perfil e exclusão de conta. **Feito**                                                                     |
 | 4    | Moderação, denúncias, rate limit, auto-ocultação. **Feito**                                                                                                |
 | 5    | Política, termos e site publicados (GitHub Pages), ficha das lojas, APK Android via EAS, app rodando no iPhone. **Faltam**: conta Play Console, teste fechado, Apple Developer |
-| 6+   | Notificações de área, rotas seguras, versão web                                                                                                            |
+| 6+   | Aviso de proximidade (chegar perto de área com relatos recentes e receber um toque discreto — o único mecanismo que faz a proteção agir sem a pessoa abrir o app; exige localização em segundo plano, permissão explícita e cuidado com bateria), rotas seguras, versão web                                                                                                            |
 
 ## 8. Pendências
 

@@ -1,6 +1,6 @@
 import { formatDistanceToNow, parseISO } from "date-fns";
 import { ptBR } from "date-fns/locale";
-import { Stack, useLocalSearchParams } from "expo-router";
+import { Link, Stack, useLocalSearchParams } from "expo-router";
 import { AlertTriangle, BadgeCheck, Navigation } from "lucide-react-native";
 import { useState } from "react";
 import { Alert, Linking, Platform, Pressable, ScrollView, Text, TextInput, View } from "react-native";
@@ -119,9 +119,26 @@ export default function PlaceScreen() {
             </Text>
             {place.verified && <BadgeCheck color={colors.turquoiseInk} size={20} />}
           </View>
+          {/* O bairro leva para a ficha da área: quem olha um bar quer saber da rua em volta. */}
           <Text className="font-body text-sm text-dim">
             {PLACE_CATEGORIES[place.category]}
-            {place.neighborhood ? ` · ${place.neighborhood}` : ""} · {place.city}
+            {place.neighborhood && place.neighborhood_id ? (
+              <>
+                {" · "}
+                <Link
+                  href={{
+                    pathname: "/bairro/[id]",
+                    params: { id: String(place.neighborhood_id) },
+                  }}
+                  className="text-turquoiseInk underline"
+                >
+                  {place.neighborhood}
+                </Link>
+              </>
+            ) : (
+              ""
+            )}{" "}
+            · {place.city}
           </Text>
           {!!place.address && <Text className="font-body text-sm text-muted">{place.address}</Text>}
 

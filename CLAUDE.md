@@ -21,8 +21,9 @@ Nome: **Irisa** (INPI livre; @irisapp livre). Bundle id `br.com.irisa.app`. Cont
 - MVP completo e rodando no iPhone do usuário (Xcode, Apple ID gratuito, expira em 7 dias) e em APK Android (EAS preview).
 - Supabase projeto `ntjirpqulrnieeglpiei`, região São Paulo. Migrations 0–11 aplicadas
   (10 = anti-duplicata de lugar, 11 = initplan da RLS, ambas coladas em 23/09/2026).
-  **A 12 (relato do entorno para de descontar a nota do lugar) e a 13 (nível de atenção da região)
-  ainda precisam ser coladas no SQL Editor, nessa ordem.**
+  **As migrations 12 a 15 ainda precisam ser coladas no SQL Editor, nessa ordem: 12 (relato do
+  entorno para de descontar a nota), 13 (nível de atenção da região), 14 (onde e quando no relato),
+  15 (ficha do bairro).**
   O seed fictício de Curitiba saiu do repositório; `supabase/seed/limpar-curitiba-teste.sql` apaga o que sobrou no banco.
 - Chaves legadas desativadas: app usa `sb_publishable_...`, scripts usam `sb_secret_...` (só na máquina dele).
 - Dados geográficos: os 5.570 municípios das 27 UFs e os bairros de 24 capitais importados do OSM.
@@ -84,6 +85,15 @@ Nome: **Irisa** (INPI livre; @irisapp livre). Bundle id `br.com.irisa.app`. Cont
   tolerante a acento e caixa) a menos de 150 m de um lugar ativo; a RPC `places_similar` devolve os
   parecidos num raio de 300 m e o `PlaceForm` mostra o cartão de aviso antes de enviar. O bloqueio já
   vale para a build 8 (é no banco); o cartão e o link abrindo direto na aba Lugar só na build 9.
+- Relato tem **onde** (`setting`: rua, praça, transporte, dentro de um lugar, serviço público, outro)
+  e **quando** (`period`: madrugada, manhã, tarde, noite), migration 14. Os dois são **opcionais de
+  propósito**: quem registra acabou de passar por violência, e exigir classificação nesse momento é
+  atrito no pior momento. Campo que não existe na hora do registro não pode ser preenchido depois —
+  foi por isso que entraram antes do teste começar.
+- **Ficha do bairro** (`app/bairro/[id].tsx`, migration 15): a tela onde os dois lados se encontram.
+  Resumo da área (total, graves, contagem por tipo/onde/quando), lugares do bairro (avaliados
+  primeiro) e relatos do bairro. Chega pelo ranking do Início e pelo bairro da ficha do lugar.
+  Sem relato, a tela diz que isso **não** significa área segura — significa que ninguém registrou.
 - Aba **Lugares** (`app/(tabs)/lugares.tsx`): busca por nome, filtro por categoria, ordem por
   distância. Entrou no lugar de Registrar na barra (a rota `/registrar` segue viva, escondida;
   os botões vermelhos do Início e do Mapa levam nela). Ficha do lugar: foto, alerta de relatos

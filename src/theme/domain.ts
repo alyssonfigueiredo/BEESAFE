@@ -40,6 +40,26 @@ export const SEVERITIES = {
 } as const;
 export type Severity = keyof typeof SEVERITIES;
 
+// Onde foi e quando foi. Os dois são opcionais: quem registra acabou de passar por violência,
+// e exigir classificação nesse momento é atrito no pior momento possível.
+export const OCCURRENCE_SETTINGS = {
+  rua: { label: "Rua ou calçada", color: colors.coral },
+  praca: { label: "Praça ou parque", color: colors.turquoise },
+  transporte: { label: "Transporte", color: colors.orange },
+  estabelecimento: { label: "Dentro de um lugar", color: colors.lilac },
+  servico: { label: "Serviço público", color: colors.yellow },
+  outro: { label: "Outro", color: colors.dim },
+} as const;
+export type OccurrenceSetting = keyof typeof OCCURRENCE_SETTINGS;
+
+export const DAY_PERIODS = {
+  madrugada: { label: "Madrugada", hint: "0h às 6h", color: colors.lilac },
+  manha: { label: "Manhã", hint: "6h às 12h", color: colors.yellow },
+  tarde: { label: "Tarde", hint: "12h às 18h", color: colors.orange },
+  noite: { label: "Noite", hint: "18h às 0h", color: colors.turquoise },
+} as const;
+export type DayPeriod = keyof typeof DAY_PERIODS;
+
 export const SUPPORT_CATEGORIES = {
   acolhimento: { label: "Acolhimento", color: colors.turquoise },
   dica: { label: "Dica de segurança", color: colors.yellow },

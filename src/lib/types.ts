@@ -12,6 +12,10 @@ export type PublicOccurrence = {
   state: string;
   occurrence_date: string;
   created_at: string;
+  /** Onde foi: rua, praça, transporte… Nulo em relato antigo ou de quem preferiu não dizer. */
+  setting: import("@/theme/domain").OccurrenceSetting | null;
+  /** Período do dia. Nulo pelo mesmo motivo. */
+  period: import("@/theme/domain").DayPeriod | null;
   is_obfuscated: boolean;
   latitude: number;
   longitude: number;

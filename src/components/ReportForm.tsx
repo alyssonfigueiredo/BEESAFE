@@ -11,9 +11,13 @@ import { PlacePicker, type PickedPlace } from "@/components/PlacePicker";
 import { useCreateOccurrence } from "@/hooks/useCreateOccurrence";
 import { useCity } from "@/providers/CityProvider";
 import {
+  DAY_PERIODS,
+  OCCURRENCE_SETTINGS,
   OCCURRENCE_TYPES,
   onLight,
   SEVERITIES,
+  type DayPeriod,
+  type OccurrenceSetting,
   type OccurrenceType,
   type Severity,
 } from "@/theme/domain";
@@ -21,6 +25,8 @@ import { colors } from "@/theme/tokens";
 
 const TYPE_KEYS = Object.keys(OCCURRENCE_TYPES) as OccurrenceType[];
 const SEV_KEYS = Object.keys(SEVERITIES) as Severity[];
+const SETTING_KEYS = Object.keys(OCCURRENCE_SETTINGS) as OccurrenceSetting[];
+const PERIOD_KEYS = Object.keys(DAY_PERIODS) as DayPeriod[];
 
 export function ReportForm({ onDone }: { onDone: () => void }) {
   const { city, userLocation } = useCity();
@@ -32,6 +38,10 @@ export function ReportForm({ onDone }: { onDone: () => void }) {
   const [point, setPoint] = useState<{ lat: number; lng: number } | null>(null);
   const [description, setDescription] = useState("");
   const [place, setPlace] = useState<PickedPlace>(null);
+  // Começam vazios e assim podem ficar: são opcionais, e um toque a mais no pior momento da
+  // vida de alguém é atrito que não vale o dado.
+  const [setting, setSetting] = useState<OccurrenceSetting | null>(null);
+  const [period, setPeriod] = useState<DayPeriod | null>(null);
 
   async function useMyLocation() {
     const { status } = await Location.requestForegroundPermissionsAsync();
@@ -57,6 +67,8 @@ export function ReportForm({ onDone }: { onDone: () => void }) {
         lng: point.lng,
         occurrence_date: format(date, "yyyy-MM-dd"),
         place_id: place?.id ?? null,
+        setting,
+        period,
       });
       Alert.alert(
         "Relato registrado",
@@ -157,6 +169,38 @@ export function ReportForm({ onDone }: { onDone: () => void }) {
         <Text className="font-body text-xs text-dim">
           {point ? `${point.lat.toFixed(5)}, ${point.lng.toFixed(5)}` : "Nenhum ponto marcado"}
         </Text>
+      </Field>
+
+      <Field
+        label="Onde foi"
+        hint="opcional — ajuda a ler o mapa (“nessa praça”, “nesse ponto de ônibus”)"
+      >
+        <View className="flex-row flex-wrap gap-2">
+          {SETTING_KEYS.map((k) => (
+            <Choice
+              key={k}
+              label={OCCURRENCE_SETTINGS[k].label}
+              color={OCCURRENCE_SETTINGS[k].color}
+              active={setting === k}
+              onPress={() => setSetting(setting === k ? null : k)}
+            />
+          ))}
+        </View>
+      </Field>
+
+      <Field label="Quando foi" hint="opcional — muita violência tem hora">
+        <View className="flex-row gap-2">
+          {PERIOD_KEYS.map((k) => (
+            <Choice
+              key={k}
+              label={DAY_PERIODS[k].label}
+              color={DAY_PERIODS[k].color}
+              active={period === k}
+              onPress={() => setPeriod(period === k ? null : k)}
+              grow
+            />
+          ))}
+        </View>
       </Field>
 
       {point && (

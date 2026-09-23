@@ -1,7 +1,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 import { supabase } from "@/lib/supabase";
-import type { OccurrenceType, Severity } from "@/theme/domain";
+import type { DayPeriod, OccurrenceSetting, OccurrenceType, Severity } from "@/theme/domain";
 
 export type NewOccurrence = {
   type: OccurrenceType;
@@ -11,6 +11,8 @@ export type NewOccurrence = {
   lng: number;
   occurrence_date: string; // yyyy-mm-dd
   place_id?: string | null; // relato que aponta um estabelecimento cadastrado
+  setting?: OccurrenceSetting | null; // onde foi: rua, praça, transporte… opcional
+  period?: DayPeriod | null; // período do dia, opcional
 };
 
 const MESSAGES: Record<string, string> = {
@@ -32,6 +34,8 @@ export function useCreateOccurrence() {
         location: `SRID=4326;POINT(${input.lng} ${input.lat})`,
         occurrence_date: input.occurrence_date,
         place_id: input.place_id ?? null,
+        setting: input.setting ?? null,
+        period: input.period ?? null,
       });
       if (error) throw new Error(MESSAGES[error.code ?? ""] ?? error.message);
     },
