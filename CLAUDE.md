@@ -76,6 +76,12 @@ Nome: **Irisa** (INPI livre; @irisapp livre). Bundle id `br.com.irisa.app`. Cont
   Web"). A pessoa toca em "Tornar-se testador" e só então o link da loja abre. Se o de participação
   também der "não encontrado", a versão não está "Disponível para testadores": olhar Visão geral da
   publicação (mudanças não enviadas, ou publicação gerenciada segurando a versão aprovada).
+  **Lista de testadores também passa por revisão:** marcar/editar a lista numa faixa fechada é uma
+  mudança que só vale depois de "Enviar mudanças para análise" e aprovada. Em 23/09/2026 a versão 8
+  estava no ar mas a lista nunca tinha sido enviada — todo testador via "App not available … for this
+  account". Enviada às 19h30 junto com a versão 9. O link "internal test version … shared with you" é
+  do compartilhamento interno (não conta para os 12) e exige ativar o recurso na Play Store do celular
+  (Configurações → Sobre → tocar 7× na versão → Geral → Compartilhamento interno de apps).
   Meta de 20 a 25 testadores (o mínimo do Google é 12, e cair abaixo disso reinicia os 14 dias).
 - Layout do Início decidido: painel (opção A do mockup). Desde 23/09/2026 o painel abre com
   “Sua cidade” e dois botões do mesmo tamanho — **Avaliar um lugar** (turquesa) e **Registrar relato**
