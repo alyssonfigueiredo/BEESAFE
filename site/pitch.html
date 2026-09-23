@@ -11,6 +11,10 @@
   }
   *{box-sizing:border-box}
   html{scroll-snap-type:y mandatory}
+  /* celular e tela baixa: slide passa da altura da tela, então rola livre (o encaixe puxava para o próximo no meio da leitura) */
+  @media (max-width:900px),(max-height:720px),(pointer:coarse){html{scroll-snap-type:none}.slide{min-height:auto;padding-block:64px}}
+  .slide{overflow-x:clip}
+  @media (max-width:700px){.slide>*{min-width:0;max-width:100%}.grid[style*="grid-template-columns"]{grid-template-columns:1fr!important}.tablewrap{width:100%}.kbd{display:none}}
   body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.45}
   .slide{min-height:100vh;scroll-snap-align:start;padding:56px clamp(16px,6vw,96px);display:flex;flex-direction:column;justify-content:center;gap:24px;position:relative;border-bottom:1px solid var(--border)}
   .slide.dark{background:var(--night);color:#fff}
@@ -805,13 +809,13 @@ if(!estatico){
   const pinos=c=>{const t0=performance.now(),dur=1400;const f=t=>{const p=Math.min(1,(t-t0)/dur);drawMap(c,c.classList.contains("pick"),p);if(p<1)requestAnimationFrame(f)};setTimeout(()=>requestAnimationFrame(f),500)};
   const obs2=new IntersectionObserver(es=>es.forEach(e=>{if(!e.isIntersecting||e.target.dataset.done)return;e.target.dataset.done=1;
     e.target.querySelectorAll("[data-count]").forEach(el=>setTimeout(()=>contar(el),500));
-    e.target.querySelectorAll("canvas.mapc").forEach(pinos)}),{threshold:.45});
+    e.target.querySelectorAll("canvas.mapc").forEach(pinos)}),{threshold:0,rootMargin:"0px 0px -25% 0px"});
   slides.forEach(s=>obs2.observe(s));
   // parallax leve nos celulares e no ícone, seguindo o mouse
   addEventListener("mousemove",e=>{const dx=(e.clientX/innerWidth-.5),dy=(e.clientY/innerHeight-.5);
     document.querySelectorAll(".slide.in .cell").forEach((c,i)=>{c.style.transform=`translate(${dx*(6+i*2)}px,${dy*(4+i)}px)`});
     document.querySelectorAll(".slide.in .hero-icon,.slide.in .marca").forEach(c=>{c.style.translate=`${dx*-10}px ${dy*-8}px`})},{passive:true});
-  const obs=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting)e.target.classList.add("in")}),{threshold:.45});
+  const obs=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting)e.target.classList.add("in")}),{threshold:0,rootMargin:"0px 0px -15% 0px"});
   slides.forEach(s=>obs.observe(s));
   // a capa entra sem esperar rolagem
   requestAnimationFrame(()=>slides[0].classList.add("in"));
