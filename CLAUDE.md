@@ -52,8 +52,8 @@ Nome: **Irisa** (INPI livre; @irisapp livre). Bundle id `br.com.irisa.app`. Cont
   casou fica sem foto e cai no ícone da categoria; o script só tenta de novo depois de 25 dias.
 - Cidades de lançamento: Curitiba, Recife, João Pessoa e Joinville (onde ele tem gente para avaliar os
   primeiros lugares). As outras semeadas ficam prontas para quando chegar usuário.
-- Captação: a apresentação (docs/pitch.html + docs/Irisa-apresentacao.pdf, 16 slides desde 23/09/2026:
-  capa com a pergunta em arco-íris, slide de abertura em conversa, acolhimento antes das telas, slide da
+- Captação: a apresentação (docs/pitch.html + docs/Irisa-apresentacao.pdf, 17 slides desde 23/09/2026:
+  capa com a pergunta em arco-íris, slide de abertura em conversa, acolhimento e registro (tipos, emergência, apoio) antes das telas, slide da
   regra “o lugar recebe cor, a rua recebe aviso” com a ficha do bairro, e slide de proposta para ONGs)
   é usada para atrair usuário, ONG/coletivo e testador — o fecho traz contato e convite. Mensagem de convite aos testadores pede só o
   e-mail da conta Google do Android; o link de participação só depois da versão publicar na faixa.
