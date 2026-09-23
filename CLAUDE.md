@@ -55,7 +55,11 @@ Nome: **Irisa** (INPI livre; @irisapp livre). Bundle id `br.com.irisa.app`. Cont
 - Captação: a apresentação (docs/pitch.html + docs/Irisa-apresentacao.pdf, 17 slides desde 23/09/2026:
   capa com a pergunta em arco-íris, slide de abertura em conversa, acolhimento e registro (tipos, emergência, apoio) antes das telas, slide da
   regra “o lugar recebe cor, a rua recebe aviso” com a ficha do bairro, e slide de proposta para ONGs)
-  é usada para atrair usuário, ONG/coletivo e testador — o fecho traz contato e convite. Mensagem de convite aos testadores pede só o
+  é usada para atrair usuário, ONG/coletivo e testador — o fecho traz contato e convite.
+  O mesmo `pitch.html` é a versão animada no navegador (letras e palavras entrando, halos nos slides
+  escuros, percentuais contando, pinos do mapa em sequência, radar girando, celulares flutuando,
+  barra de progresso, tecla **A** ou `?auto=8` para autoplay). O PDF é gerado com `?static`, que
+  desliga tudo isso; `prefers-reduced-motion` também desliga. Mensagem de convite aos testadores pede só o
   e-mail da conta Google do Android; o link de participação só depois da versão publicar na faixa.
   Meta de 20 a 25 testadores (o mínimo do Google é 12, e cair abaixo disso reinicia os 14 dias).
 - Layout do Início decidido: painel (opção A do mockup). Desde 23/09/2026 o painel abre com
@@ -128,6 +132,7 @@ node scripts/import-districts-ibge.mjs 3550308     # bairros pelos distritos do 
 node scripts/import-places-osm.mjs 4106902 --limite 60
 node scripts/google-place-photos.mjs --todas         # fotos do Google, cota travada (docs/fotos.md)
 bash scripts/screenshots.sh                          # prints das lojas no Simulador
+node scripts/pitch-pdf.mjs                           # regera docs/Irisa-apresentacao.pdf a partir de docs/pitch.html
 ```
 
 Sem o Mac (pelo celular): GitHub → Actions → **Importar cidade** → Run workflow. Pede o código IBGE e
