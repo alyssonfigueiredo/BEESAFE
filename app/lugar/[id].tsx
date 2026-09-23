@@ -5,6 +5,7 @@ import { AlertTriangle, BadgeCheck, Navigation } from "lucide-react-native";
 import { useState } from "react";
 import { Alert, Linking, Platform, Pressable, ScrollView, Text, TextInput, View } from "react-native";
 
+import { AreaLevel } from "@/components/AreaLevel";
 import { AxisBars } from "@/components/AxisBars";
 import { Badge } from "@/components/Badge";
 import { IrisScore } from "@/components/IrisScore";
@@ -125,28 +126,20 @@ export default function PlaceScreen() {
           {!!place.address && <Text className="font-body text-sm text-muted">{place.address}</Text>}
 
           {/* Segurança antes da nota: quem abre a ficha decidindo se vai precisa disto primeiro.
-              Relato no entorno é informação de região, não acusação ao lugar — o texto separa os
-              dois casos, e só o que aponta o lugar mexe na nota (migration 12). */}
-          {place.flagged && (
+              Dois avisos distintos e nessa ordem: a região (sobre a rua) e, só se existir, o relato
+              que aponta este lugar (sobre o lugar, e aí sim desconta da nota). */}
+          {place.area_level && <AreaLevel level={place.area_level} size="lg" />}
+
+          {place.recent_on_site > 0 && (
             <View className="mt-1 flex-row items-start gap-2 rounded-xl border border-coral/60 bg-paper p-3">
               <AlertTriangle color={colors.coralInk} size={18} />
               <Text className="flex-1 font-body text-sm text-muted">
-                {place.recent_on_site > 0 ? (
-                  <>
-                    {place.recent_on_site} relato{place.recent_on_site === 1 ? "" : "s"} apontando
-                    este lugar nos últimos 6 meses
-                    {place.recent_high_occurrences > 0
-                      ? `, ${place.recent_high_occurrences} grave${place.recent_high_occurrences === 1 ? "" : "s"}`
-                      : ""}
-                    .{place.recent_high_occurrences > 0 ? " A nota desconta isso." : ""}
-                  </>
-                ) : (
-                  <>
-                    {place.recent_occurrences} relato
-                    {place.recent_occurrences === 1 ? "" : "s"} nesta região nos últimos 6 meses, num
-                    raio de 100 m. Não é sobre este lugar e não mexe na nota dele — é sobre a rua.
-                  </>
-                )}
+                {place.recent_on_site} relato{place.recent_on_site === 1 ? "" : "s"} apontando este
+                lugar nos últimos 6 meses
+                {place.recent_high_occurrences > 0
+                  ? `, ${place.recent_high_occurrences} grave${place.recent_high_occurrences === 1 ? "" : "s"}`
+                  : ""}
+                .{place.recent_high_occurrences > 0 ? " A nota desconta isso." : ""}
               </Text>
             </View>
           )}

@@ -1,7 +1,8 @@
 import { Link } from "expo-router";
-import { AlertTriangle, BadgeCheck } from "lucide-react-native";
+import { BadgeCheck } from "lucide-react-native";
 import { Pressable, Text, View } from "react-native";
 
+import { AreaLevel } from "@/components/AreaLevel";
 import { AxisStrip } from "@/components/AxisBars";
 import { Badge } from "@/components/Badge";
 import { PlacePhoto } from "@/components/PlacePhoto";
@@ -81,15 +82,9 @@ export function PlaceCard({
             </>
           )}
 
-          {place.flagged && (
-            <View className="flex-row items-center gap-1.5 self-start rounded-lg px-2 py-1"
-              style={{ backgroundColor: colors.coral + "2E" }}>
-              <AlertTriangle color={colors.coralInk} size={13} />
-              <Text className="font-body-medium text-xs text-coralInk">
-                Relatos nesta região
-              </Text>
-            </View>
-          )}
+          {/* O aviso é da região, não do lugar — e aparece também em lugar sem nota, que é o caso
+              mais comum hoje. Sem relato não aparece nada: silêncio não é selo de segurança. */}
+          {place.area_level && <AreaLevel level={place.area_level} />}
         </View>
       </Pressable>
     </Link>

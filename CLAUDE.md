@@ -21,7 +21,8 @@ Nome: **Irisa** (INPI livre; @irisapp livre). Bundle id `br.com.irisa.app`. Cont
 - MVP completo e rodando no iPhone do usuário (Xcode, Apple ID gratuito, expira em 7 dias) e em APK Android (EAS preview).
 - Supabase projeto `ntjirpqulrnieeglpiei`, região São Paulo. Migrations 0–11 aplicadas
   (10 = anti-duplicata de lugar, 11 = initplan da RLS, ambas coladas em 23/09/2026).
-  **A 12 (relato do entorno para de descontar a nota do lugar) ainda precisa ser colada no SQL Editor.**
+  **A 12 (relato do entorno para de descontar a nota do lugar) e a 13 (nível de atenção da região)
+  ainda precisam ser coladas no SQL Editor, nessa ordem.**
   O seed fictício de Curitiba saiu do repositório; `supabase/seed/limpar-curitiba-teste.sql` apaga o que sobrou no banco.
 - Chaves legadas desativadas: app usa `sb_publishable_...`, scripts usam `sb_secret_...` (só na máquina dele).
 - Dados geográficos: os 5.570 municípios das 27 UFs e os bairros de 24 capitais importados do OSM.
@@ -61,6 +62,11 @@ Nome: **Irisa** (INPI livre; @irisapp livre). Bundle id `br.com.irisa.app`. Cont
   ganhou título próprio (“Segurança na cidade”) para ser metade deliberada e não sobra.
   Enquanto ninguém tem as 5 avaliações do ranking, a seção mostra quem já recebeu alguma nota;
   sem nenhuma, mostra a chamada para avaliar o primeiro lugar.
+- **Confiança da região (migration 13):** `place_scores.area_level` é `atencao` (1 a 3) ou `alerta`
+  (4+) pelo peso `total + 3 × graves` dos relatos a 100 m em 180 dias — o mesmo peso de
+  `area_risk_ranking`. **Nunca existe nível “tranquila”**: com poucos usuários, ausência de relato é
+  ausência de gente registrando, e dizer “região segura” seria a falha mais perigosa possível.
+  Componente `AreaLevel` (`sm` no cartão, `lg` na ficha).
 - **O alerta de relato é da rua, não do estabelecimento.** Ele acontece no beco, na praça, no ponto
   de ônibus. No cartão do lugar ele aparece como contexto (“Relato de LGBTIfobia por perto”,
   também em lugar sem nota, que é o caso mais comum); no Mapa aparece como área. **Não criar filtro

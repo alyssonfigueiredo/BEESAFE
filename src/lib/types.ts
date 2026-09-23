@@ -46,6 +46,10 @@ export type PublicPlace = {
   recent_occurrences: number;
   recent_high_occurrences: number;
   flagged: boolean;
+  /** Relatos a 100 m em 180 dias, grave contando 3x. É medida da REGIÃO, não do lugar. */
+  area_score: number;
+  /** null = sem relato. Nunca significa "seguro": com poucos usuários, silêncio não é ausência de risco. */
+  area_level: "atencao" | "alerta" | null;
   score_welcome: number | null;
   score_affection: number | null;
   score_restroom: number | null;
@@ -83,6 +87,7 @@ export type WelcomingPlace = Pick<
   | "score"
   | "rating_count"
   | "flagged"
+  | "area_level"
   | "badge"
   | "score_welcome"
   | "score_affection"
