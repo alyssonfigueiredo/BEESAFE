@@ -55,6 +55,11 @@ Nome: **Irisa** (INPI livre; @irisapp livre). Bundle id `br.com.irisa.app`. Cont
   Meta de 20 a 25 testadores (o mínimo do Google é 12, e cair abaixo disso reinicia os 14 dias).
 - Layout do Início decidido: painel (opção A do mockup).
 - Ficha das lojas pronta em docs/lojas.md.
+- Serviços de apoio por cidade em `supabase/seed_services.sql`: nacionais + Curitiba, Porto Alegre e,
+  desde 23/09/2026, Recife, João Pessoa e Joinville. Os dois telefones municipais (Recife e João Pessoa)
+  vieram de página oficial mas **ainda não foram confirmados por ligação** — telefone errado em app de
+  segurança é pior que telefone ausente. Joinville não tem centro de referência municipal: entraram a
+  UNA LGBT e a Comissão da Diversidade da OAB. Reconferir os contatos a cada seis meses.
 - Foto dos lugares via Google Places (New) com cota travada no gratuito: migration 9, script
   `scripts/google-place-photos.mjs`, componente `PlacePhoto` (cai no ícone da categoria sem foto).
   Setup e limites em docs/fotos.md. Sem `EXPO_PUBLIC_GOOGLE_MAPS_KEY` o app não pede foto.
