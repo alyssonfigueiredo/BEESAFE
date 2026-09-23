@@ -160,7 +160,7 @@ Tabs: Início, Mapa, Registrar, Apoio, Perfil.
 
 - Reservar Instagram @irisapp (livre), registrar irisa.com.br e irisa.app.br, protocolar IRISA no INPI (9, 42, 45). Bundle id: br.com.irisa.app. Contato: appirisa@gmail.com.
 - Layout do Início: decidido manter o painel (opção A). Mockup A/B: `docs/mockup.html`. Pitch: `docs/pitch.html` (publicados no site).
-- Antes do lançamento: apagar os dados de teste do banco com `supabase/seed/limpar-curitiba-teste.sql`; cadastrar SHA-1 da keystore EAS no Google Cloud para login Google no Android. Bairros das capitais importados (falta fonte para Brasília, São Luís, Palmas e São Paulo).
+- Antes do lançamento: apagar os dados de teste do banco com `supabase/seed/limpar-curitiba-teste.sql`. O login Google usa o navegador do sistema via Supabase (PKCE, cliente OAuth do tipo Aplicativo da Web), então **não existe passo de SHA-1**. Bairros das capitais importados; São Paulo saiu pelo nível 9 do OSM. Falta fonte para Brasília, São Luís e Palmas.
 - Confirmar janela de ofuscação de 24 h.
 - Lista inicial de serviços de apoio por capital.
 - Fonte dos polígonos de bairro por cidade (OSM cobre bem as capitais, mal o interior).
@@ -170,3 +170,37 @@ Tabs: Início, Mapa, Registrar, Apoio, Perfil.
 Acolhe (projeto All Out), SafeSpot, BeeSafe (5+ apps), Espaço/Lugar/Território Livre (Espaço Livre foi app do nicho),
 tudo com "Arco-Íris" (saturado em ONGs, inclusive Resistência Arco-Íris do Dandarah), Estrela Guia (colide com Estrela Bet),
 Zona Rosa (nome de bairro). Concorrentes mapeados: Dandarah, TODXS, Espaço Livre, By Concierge, QLIST, The Queer Spot.
+
+## 10. E os estabelecimentos? (decidido em 23/09/2026, não implementar ainda)
+
+A pergunta aparece sozinha na primeira conversa com ONG ou com dono de bar: *se a região é perigosa,
+o lugar não deveria perder nota, nem que fosse para empurrar o comércio a cobrar iluminação e ronda?*
+
+**A resposta é não, e o motivo não é delicadeza.** Um bar não instala policiamento nem troca poste:
+punir por algo sem agência gera ressentimento, não ação. O sinal também não chega — dono de
+estabelecimento não é usuário do app, então a punição existiria sem destinatário. E o viés seria
+sistemático contra quem o app quer proteger: relato se concentra em centro e região de vida noturna,
+que é onde está a cena LGBTQIA+; o ranking acabaria recomendando o restaurante de shopping em bairro
+nobre onde ninguém registra nada. Pior: bairro sem usuário não tem relato, logo não tem desconto — o
+app recompensaria a ausência de dados.
+
+Por isso a migration 12 tirou a penalidade do entorno da nota, e a 13 criou `area_level`: o lugar tem
+nota de acolhimento, a região tem nível de atenção, lado a lado, sem uma julgar a outra.
+
+**Os dois caminhos legítimos, para quando houver usuário:**
+
+1. **Selos de compromisso** — atributos que o estabelecimento *controla* e pode conquistar: entrada e
+   calçada iluminadas, equipe orientada, banheiro de uso livre, política escrita contra discriminação
+   visível no local. O lugar declara, a comunidade confirma ou desmente nas avaliações. É o arco-íris
+   da vitrine, só que auditado por quem esteve lá em vez de comprado numa gráfica. Não implementar
+   antes de existir gente para conferir: auto-declaração sem confirmação é vitrine de novo.
+2. **Ficha do bairro** — tela que junta, numa área, os relatos e os lugares acolhedores dela. É o
+   documento que um grupo de comerciantes leva à subprefeitura pedindo ronda e iluminação. A mesma
+   informação que, como desconto, seria ameaça e faria inimigo; como dado público, é instrumento e
+   faz aliado. Também é o que recompõe o acoplamento entre os dois lados do app, que a 12 afrouxou,
+   e o que sustenta a promessa de "dados agregados para organizações e poder público" da apresentação.
+
+**Se algum dia o risco da região tiver que influir na lista de lugares, que seja escolha do usuário**
+— um filtro ou uma ordenação que ele liga, vê o que sumiu e desliga — nunca ajuste silencioso dentro
+da nota. Um número que responde duas perguntas não responde nenhuma: ninguém saberia se 3.2 significa
+"a equipe foi fria" ou "a quadra é perigosa".
