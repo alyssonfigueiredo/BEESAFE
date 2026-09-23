@@ -59,7 +59,7 @@ export function PlaceCard({
           {score == null ? (
             <>
               <Text className="font-body text-sm text-muted">
-                Quanta cor tem esse lugar? Ninguém disse ainda.
+                Quanta cor tem esse lugar? Seja a primeira pessoa a dizer.
               </Text>
               {!!onde && <Text className="font-body text-xs text-dim">{onde}</Text>}
             </>
@@ -71,7 +71,6 @@ export function PlaceCard({
                   {score.toFixed(1)}
                 </Text>
                 {place.badge && <Badge badge={place.badge} />}
-                {place.flagged && <AlertTriangle color={colors.coralInk} size={14} />}
               </View>
               <AxisStrip scores={axes} />
               <Text className="font-body text-xs text-dim">
@@ -80,6 +79,16 @@ export function PlaceCard({
                 {onde ? ` · ${onde}` : ""}
               </Text>
             </>
+          )}
+
+          {place.flagged && (
+            <View className="flex-row items-center gap-1.5 self-start rounded-lg px-2 py-1"
+              style={{ backgroundColor: colors.coral + "2E" }}>
+              <AlertTriangle color={colors.coralInk} size={13} />
+              <Text className="font-body-medium text-xs text-coralInk">
+                Relato de LGBTIfobia por perto
+              </Text>
+            </View>
           )}
         </View>
       </Pressable>

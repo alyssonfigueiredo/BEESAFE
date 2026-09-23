@@ -53,7 +53,17 @@ Nome: **Irisa** (INPI livre; @irisapp livre). Bundle id `br.com.irisa.app`. Cont
   ONG/coletivo e testador — o fecho traz contato e convite. Mensagem de convite aos testadores pede só o
   e-mail da conta Google do Android; o link de participação só depois da versão publicar na faixa.
   Meta de 20 a 25 testadores (o mínimo do Google é 12, e cair abaixo disso reinicia os 14 dias).
-- Layout do Início decidido: painel (opção A do mockup).
+- Layout do Início decidido: painel (opção A do mockup). Desde 23/09/2026 o painel abre com
+  “Sua cidade” e dois botões do mesmo tamanho — **Avaliar um lugar** (turquesa) e **Registrar relato**
+  (coral): avaliar é o uso de toda semana, registrar é o uso que ninguém quer precisar, e nenhum
+  dos dois pode parecer secundário. A seção de lugares subiu para antes do bloco de segurança, que
+  ganhou título próprio (“Segurança na cidade”) para ser metade deliberada e não sobra.
+  Enquanto ninguém tem as 5 avaliações do ranking, a seção mostra quem já recebeu alguma nota;
+  sem nenhuma, mostra a chamada para avaliar o primeiro lugar.
+- **O alerta de relato é da rua, não do estabelecimento.** Ele acontece no beco, na praça, no ponto
+  de ônibus. No cartão do lugar ele aparece como contexto (“Relato de LGBTIfobia por perto”,
+  também em lugar sem nota, que é o caso mais comum); no Mapa aparece como área. **Não criar filtro
+  de lugares por alerta**: faria a violência parecer atributo do bar e puniria quem só está perto.
 - Ficha das lojas pronta em docs/lojas.md.
 - Serviços de apoio por cidade em `supabase/seed_services.sql`, já no banco: nacionais + Curitiba,
   Porto Alegre e, desde 23/09/2026, Recife, João Pessoa e Joinville. Os dois telefones municipais (Recife e João Pessoa)

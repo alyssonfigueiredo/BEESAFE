@@ -22,8 +22,15 @@ export default function LugaresScreen() {
   const { data: places = [], isLoading } = usePlaces(city?.id);
   const [busca, setBusca] = useState("");
   const [categoria, setCategoria] = useState<PlaceCategory | "all">("all");
+  // Recorte transversal à categoria, só para responder "onde a comunidade já falou".
+  // NÃO existe filtro por alerta aqui de propósito: relato é da rua, do beco, da praça — filtrar
+  // lugar por ele faria a violência parecer atributo do bar, e puniria quem só está perto.
+  // O alerta aparece como contexto no cartão e como área no Mapa, que é onde ele é verdadeiro.
+  const [recorte, setRecorte] = useState<"tudo" | "avaliados">("tudo");
 
   // Categorias na ordem do domínio, só as que existem nesta cidade, com a contagem.
+  const avaliados = useMemo(() => places.filter((p) => p.rating_count > 0).length, [places]);
+
   const categorias = useMemo(() => {
     const n: Partial<Record<PlaceCategory, number>> = {};
     for (const p of places) n[p.category] = (n[p.category] ?? 0) + 1;
@@ -40,6 +47,7 @@ export default function LugaresScreen() {
     const termo = simplifica(busca.trim());
     const comDistancia = places
       .filter((p) => categoria === "all" || p.category === categoria)
+      .filter((p) => recorte !== "avaliados" || p.rating_count > 0)
       .filter((p) => !termo || simplifica(p.name).includes(termo))
       .map((p) => ({
         place: p,
@@ -52,7 +60,7 @@ export default function LugaresScreen() {
         ? a.distance - b.distance
         : a.place.name.localeCompare(b.place.name, "pt-BR"),
     );
-  }, [places, busca, categoria, userLocation]);
+  }, [places, busca, categoria, recorte, userLocation]);
 
   if (loading || !city) {
     return (
@@ -94,6 +102,21 @@ export default function LugaresScreen() {
               returnKeyType="search"
             />
           </View>
+
+          {avaliados > 0 && (
+            <ScrollView
+              horizontal
+              showsHorizontalScrollIndicator={false}
+              contentContainerClassName="gap-2"
+            >
+              <Chip label="Tudo" active={recorte === "tudo"} onPress={() => setRecorte("tudo")} />
+              <Chip
+                label={`Já avaliados (${avaliados})`}
+                active={recorte === "avaliados"}
+                onPress={() => setRecorte("avaliados")}
+              />
+            </ScrollView>
+          )}
 
           <ScrollView
             horizontal
