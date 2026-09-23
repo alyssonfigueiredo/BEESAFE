@@ -162,6 +162,11 @@ Checks antes de commitar: `npm run lint && npm run typecheck`. Migrations testá
   as tabelas-base não têm policy de leitura para usuário comum, e a view é o único caminho — ela
   esconde `created_by`, filtra `status = 'active'` e arredonda coordenada recente. Não converter
   para `security_invoker`, o app pararia de ler.
+- O ambiente `github-pages` tinha regra de proteção que só aceitava deploy da branch padrão: todo push
+  da branch de trabalho falhava em 3 s ("not allowed to deploy to github-pages due to environment
+  protection rules") e o site ficou congelado de 18/09 a 23/09 — inclusive a página de segurança
+  infantil declarada ao Google. Corrigido em Settings → Environments → github-pages → Deployment
+  branches. Se o site parar de atualizar, olhar primeiro em Actions → Pages se o run está verde.
 - Overpass devolve 406 sem Content-Type/User-Agent; script já tem 3 mirrors.
 - `st_makevalid` pode gerar GeometryCollection: usar `st_collectionextract(..., 3)`.
 - Bairro é atribuído no insert do relato; após importar bairros, rodar o UPDATE de reprocessamento (supabase/README.md).
