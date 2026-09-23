@@ -86,7 +86,7 @@ export function PlaceCard({
               style={{ backgroundColor: colors.coral + "2E" }}>
               <AlertTriangle color={colors.coralInk} size={13} />
               <Text className="font-body-medium text-xs text-coralInk">
-                Relato de LGBTIfobia por perto
+                Relatos nesta região
               </Text>
             </View>
           )}

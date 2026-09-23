@@ -69,8 +69,9 @@ where n.city_id = p.city_id and p.neighborhood_id is null
 12. `migrations/00000000000009_foto_google.sql`
 13. `migrations/00000000000010_lugar_duplicado.sql`
 14. `migrations/00000000000011_rls_initplan.sql`
+15. `migrations/00000000000012_relato_nao_e_do_lugar.sql`
 15. O seed fictício de Curitiba foi removido do repositório. Para apagar os dados de teste que ainda estejam no banco, rode `seed/limpar-curitiba-teste.sql` (apaga só os ids `11111111-`/`22222222-`/`33333333-` e recalcula os priors).
 
-Tudo acima aplicado no projeto `ntjirpqulrnieeglpiei` (a 10 e a 11 em 23/09/2026).
+Aplicado até a 11 (a 10 e a 11 em 23/09/2026). **A 12 ainda precisa ser colada no SQL Editor.**
 
 Para promover alguém a moderador: `update public.profiles set role = 'moderator' where id = '<uuid do usuário>';`

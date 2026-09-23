@@ -21,6 +21,7 @@ Nome: **Irisa** (INPI livre; @irisapp livre). Bundle id `br.com.irisa.app`. Cont
 - MVP completo e rodando no iPhone do usuário (Xcode, Apple ID gratuito, expira em 7 dias) e em APK Android (EAS preview).
 - Supabase projeto `ntjirpqulrnieeglpiei`, região São Paulo. Migrations 0–11 aplicadas
   (10 = anti-duplicata de lugar, 11 = initplan da RLS, ambas coladas em 23/09/2026).
+  **A 12 (relato do entorno para de descontar a nota do lugar) ainda precisa ser colada no SQL Editor.**
   O seed fictício de Curitiba saiu do repositório; `supabase/seed/limpar-curitiba-teste.sql` apaga o que sobrou no banco.
 - Chaves legadas desativadas: app usa `sb_publishable_...`, scripts usam `sb_secret_...` (só na máquina dele).
 - Dados geográficos: os 5.570 municípios das 27 UFs e os bairros de 24 capitais importados do OSM.
@@ -90,8 +91,9 @@ Light Gray (sem chave), Supabase JS. Fontes: Urbanist (wordmark), Oswald (displa
 Paleta clara em `src/theme/tokens.js` (paper #FAF9F6, night #1E2340, coral/orange/yellow/turquoise/lilac, âmbar #E0A32E).
 Backend: Postgres + PostGIS (schema `extensions`, funções precisam de `set search_path = public, extensions`),
 RLS em tudo, views públicas sem `created_by`, realtime por broadcast, pg_cron, rate limits por trigger.
-Ranking de acolhimento: média bayesiana (m=5, priors por categoria), meia-vida 6 meses, penalidade por relatos
-a 100 m, selos poucas/atencao/dividido/acolhedor/bem, mínimo 5 avaliações. Obfuscação ~100 m só para relatos de hoje/ontem.
+Ranking de acolhimento: média bayesiana (m=5, priors por categoria), meia-vida 6 meses, penalidade SÓ por
+relato que aponta o lugar (`occurrences.place_id`), selos poucas/atencao/dividido/acolhedor/bem, mínimo 5
+avaliações. Relato no entorno de 100 m aparece como contexto de região e NÃO desconta nota (migration 12). Obfuscação ~100 m só para relatos de hoje/ontem.
 
 ## Comandos que o usuário roda no Mac (pasta BEESAFE)
 
