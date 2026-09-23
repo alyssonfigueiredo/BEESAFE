@@ -8,13 +8,21 @@
 -- Os dois são OPCIONAIS de propósito. Quem registra acabou de passar por violência; exigir
 -- classificação nesse momento é atrito no pior momento possível.
 
-create type public.occurrence_setting as enum (
-  'rua', 'praca', 'transporte', 'estabelecimento', 'servico', 'outro'
-);
+do $$ begin
+  if not exists (select 1 from pg_type where typname = 'occurrence_setting') then
+    create type public.occurrence_setting as enum (
+      'rua', 'praca', 'transporte', 'estabelecimento', 'servico', 'outro'
+    );
+  end if;
+end $$;
 comment on type public.occurrence_setting is
   'rua=rua ou calçada | praca=praça ou parque | transporte=transporte, ponto ou estação | estabelecimento=dentro de um lugar | servico=serviço público (hospital, escola, repartição)';
 
-create type public.day_period as enum ('madrugada', 'manha', 'tarde', 'noite');
+do $$ begin
+  if not exists (select 1 from pg_type where typname = 'day_period') then
+    create type public.day_period as enum ('madrugada', 'manha', 'tarde', 'noite');
+  end if;
+end $$;
 comment on type public.day_period is 'madrugada=0-6h | manha=6-12h | tarde=12-18h | noite=18-24h';
 
 alter table public.occurrences
@@ -41,15 +49,16 @@ select
   c.state,
   o.occurrence_date,
   o.created_at,
-  o.setting,
-  o.period,
   (o.occurrence_date >= current_date - 1) as is_obfuscated,
   case when o.occurrence_date >= current_date - 1
        then st_y(st_snaptogrid(o.location::geometry, 0.001))
        else st_y(o.location::geometry) end as latitude,
   case when o.occurrence_date >= current_date - 1
        then st_x(st_snaptogrid(o.location::geometry, 0.001))
-       else st_x(o.location::geometry) end as longitude
+       else st_x(o.location::geometry) end as longitude,
+  -- Coluna nova de view só pode entrar no fim: create or replace recusa mudança de posição.
+  o.setting,
+  o.period
 from public.occurrences o
 join public.cities c on c.id = o.city_id
 left join public.neighborhoods n on n.id = o.neighborhood_id

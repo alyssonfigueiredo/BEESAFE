@@ -130,7 +130,7 @@ export default function PlaceScreen() {
                     pathname: "/bairro/[id]",
                     params: { id: String(place.neighborhood_id) },
                   }}
-                  className="text-turquoiseInk underline"
+                  style={{ color: colors.turquoiseInk, textDecorationLine: "underline" }}
                 >
                   {place.neighborhood}
                 </Link>

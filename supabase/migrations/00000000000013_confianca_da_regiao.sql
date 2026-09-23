@@ -115,10 +115,12 @@ select p.id, p.name, p.category, p.address, p.city_id, p.neighborhood_id,
        st_y(p.location::geometry) as latitude, st_x(p.location::geometry) as longitude,
        s.score, s.rating_count, s.recent_occurrences, s.recent_high_occurrences, s.flagged,
        s.score_welcome, s.score_affection, s.score_restroom, s.score_crowd,
-       s.rating_stddev, s.recent_on_site, s.badge, s.area_score, s.area_level,
+       s.rating_stddev, s.recent_on_site, s.badge,
        case when p.google_photo_at > now() - interval '30 days' then p.google_photo_name end as photo_name,
        case when p.google_photo_at > now() - interval '30 days' then p.google_photo_author end as photo_author,
-       case when p.google_photo_at > now() - interval '30 days' then p.google_photo_author_uri end as photo_author_uri
+       case when p.google_photo_at > now() - interval '30 days' then p.google_photo_author_uri end as photo_author_uri,
+       -- Coluna nova de view só pode entrar no fim: create or replace recusa mudança de posição.
+       s.area_score, s.area_level
 from public.places p
 join public.cities c on c.id = p.city_id
 left join public.neighborhoods n on n.id = p.neighborhood_id
