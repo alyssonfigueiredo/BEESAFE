@@ -14,6 +14,7 @@ Irisa (projeto independente, sem fins lucrativos). Contato: appirisa@gmail.com.
 - **Relatos**: tipo, gravidade, data, ponto no mapa e descrição opcional. O relato fica vinculado à sua conta apenas no banco de dados, para fins de segurança e moderação. Esse vínculo nunca é exibido a ninguém, nem a moderadores.
 - **Lugares e avaliações**: nome do lugar, categoria, endereço, ponto no mapa, notas dos quatro eixos de acolhimento e comentário. Avaliações e mensagens mostram apenas o apelido que você escolher (ou "Anônimo").
 - **Localização**: usada no aparelho para centralizar o mapa e marcar um ponto quando você pede. Não guardamos histórico de localização.
+- **Inscrição no teste (site)**: se você pede para testar o app pelo site, guardamos o e-mail informado e o tipo de celular (Android ou iPhone). Usamos só para liberar o acesso ao teste na Google Play ou avisar quando sair no iPhone. Não enviamos propaganda nem compartilhamos esse e-mail. Para apagar, escreva para appirisa@gmail.com.
 - **Dados técnicos**: logs de acesso mantidos pelo provedor de infraestrutura (Supabase) por até 7 dias, para segurança.
 
 ## 3. Como protegemos o anonimato

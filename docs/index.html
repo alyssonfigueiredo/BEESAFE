@@ -263,6 +263,46 @@ footer .sos-line{width:100%;color:#fff;font-family:var(--display);text-transform
 .trio{align-items:start}
 @media (prefers-reduced-motion:reduce){.xp,.xp .st,.xp-in::before,.pm,.pm::before,.pm::after,.xp-btn::before{transition:none!important;animation:none!important}}
 
+/* ---- inscrição no teste ---- */
+.signup{position:relative;margin-top:36px;max-width:620px;display:flex;flex-direction:column;gap:14px}
+.seg{position:relative;display:inline-flex;align-self:flex-start;padding:4px;border-radius:999px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.14)}
+.seg label{position:relative;z-index:1;cursor:pointer}
+.seg input{position:absolute;opacity:0;pointer-events:none}
+.seg span{display:block;padding:9px 20px;font-family:var(--display);text-transform:uppercase;letter-spacing:.14em;font-size:13px;color:#C9CDDD;transition:color .35s}
+.seg input:checked+span{color:var(--night)}
+.seg input:focus-visible+span{outline:2px solid var(--turq);outline-offset:2px;border-radius:999px}
+.seg-bg{position:absolute;z-index:0;top:4px;bottom:4px;left:4px;width:var(--w,50%);border-radius:999px;background:var(--turq);transform:translateX(var(--x,0));transition:transform .5s cubic-bezier(.3,1.3,.4,1),width .5s cubic-bezier(.3,1.3,.4,1),background .4s}
+.seg.ios .seg-bg{background:var(--lilac)}
+.field{position:relative;display:flex;gap:10px;padding:8px;border-radius:20px;background:rgba(255,255,255,.06);border:1.5px solid rgba(255,255,255,.16);transition:border-color .35s,box-shadow .35s,background .35s}
+.field:focus-within{border-color:var(--turq);background:rgba(255,255,255,.09);box-shadow:0 0 0 6px rgba(92,201,180,.14),0 20px 50px -24px rgba(92,201,180,.6)}
+.field::before{content:"";position:absolute;inset:-1.5px;border-radius:inherit;padding:1.5px;background:linear-gradient(90deg,var(--coral),var(--orange),var(--yellow),var(--turq),var(--blue),var(--lilac),var(--coral));background-size:200% 100%;-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;opacity:0;transition:opacity .4s;pointer-events:none}
+.field:focus-within::before{opacity:1}
+.js .field:focus-within::before{animation:flow 3s linear infinite}
+@keyframes flow{to{background-position:200% 0}}
+.field input{flex:1;min-width:0;background:transparent;border:0;outline:0;color:#fff;font:500 18px/1.2 var(--body);padding:12px 14px}
+.field input::placeholder{color:#8E94AA}
+.field .btn{flex:none;position:relative;padding:14px 22px}
+.field .btn .spin{position:absolute;inset:0;margin:auto;width:20px;height:20px;border-radius:50%;border:2.5px solid rgba(30,35,64,.25);border-top-color:var(--night);opacity:0}
+.signup.sending .btn .btl{opacity:0}.signup.sending .btn .spin{opacity:1;animation:girar .8s linear infinite}
+@keyframes girar{to{transform:rotate(360deg)}}
+.signup.erro .field{border-color:var(--coral);animation:shake .45s cubic-bezier(.3,.9,.3,1)}
+@keyframes shake{20%{transform:translateX(-7px)}40%{transform:translateX(6px)}60%{transform:translateX(-4px)}80%{transform:translateX(2px)}}
+.hint{font-size:14.5px;color:#AEB3C6!important;transition:color .3s}
+.signup.erro .hint{color:#FFB3AF!important}
+.hp{position:absolute;left:-9999px;width:1px;height:1px;opacity:0}
+.done{position:absolute;inset:0;display:flex;align-items:center;gap:18px;padding:18px 22px;border-radius:22px;background:linear-gradient(135deg,rgba(92,201,180,.18),rgba(174,150,242,.18));border:1.5px solid rgba(92,201,180,.5);opacity:0;visibility:hidden;transform:scale(.96);transition:opacity .5s ease .15s,transform .6s cubic-bezier(.3,1.3,.4,1) .15s,visibility 0s .6s}
+.done svg{width:52px;height:52px;flex:none}
+.done circle{fill:none;stroke:var(--turq);stroke-width:3;stroke-dasharray:151;stroke-dashoffset:151;transition:stroke-dashoffset .8s cubic-bezier(.6,0,.3,1) .35s}
+.done path{fill:none;stroke:#fff;stroke-width:3.5;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:36;stroke-dashoffset:36;transition:stroke-dashoffset .45s ease 1s}
+.done b{display:block;font-family:var(--display);font-weight:500;text-transform:uppercase;letter-spacing:.1em;font-size:20px;color:#fff}
+.done span{color:#D5D8E4;font-size:15.5px}
+.signup.ok>:not(.done){opacity:0;visibility:hidden;transition:opacity .3s,visibility 0s .3s}
+.signup.ok .done{opacity:1;visibility:visible;transform:none;transition:opacity .5s ease .15s,transform .6s cubic-bezier(.3,1.3,.4,1) .15s,visibility 0s}
+.signup.ok .done circle,.signup.ok .done path{stroke-dashoffset:0}
+.confete{position:fixed;width:9px;height:9px;border-radius:2px;pointer-events:none;z-index:60}
+@media(max-width:560px){.field{flex-direction:column;padding:8px}.field .btn{justify-content:center}.done{position:relative;inset:auto}.signup.ok>:not(.done){display:none}}
+@media (prefers-reduced-motion:reduce){.seg-bg,.field,.done,.done circle,.done path{transition:none!important;animation:none!important}}
+
 /* ---- telas do app (mesmo CSS da apresentação) ---- */
   .phones{display:flex;gap:18px;flex-wrap:wrap;justify-content:center}
   .phone{width:250px;height:520px;background:var(--paper);border:8px solid #2a2f45;border-radius:36px;overflow:hidden;position:relative;display:flex;flex-direction:column;flex:none}
@@ -703,14 +743,27 @@ footer .sos-line{width:100%;color:#fff;font-family:var(--display);text-transform
     <div class="eyebrow rv">Em fase de testes</div>
     <h2 class="rv d1">Seja uma das primeiras pessoas</h2>
     <p class="lead rv d2" style="margin-top:20px">A Irisa está em fase de testes. Quem entra agora usa antes de todo mundo e ajuda a desenhar o mapa desde o primeiro lugar.</p>
+    <form class="signup rv d2" id="signup" novalidate>
+      <div class="seg" role="radiogroup" aria-label="Seu celular">
+        <label><input type="radio" name="plat" value="android" checked><span>Android</span></label>
+        <label><input type="radio" name="plat" value="ios"><span>iPhone</span></label>
+        <i class="seg-bg" aria-hidden="true"></i>
+      </div>
+      <div class="field">
+        <input id="email" type="email" name="email" inputmode="email" autocomplete="email" autocapitalize="off" spellcheck="false" required placeholder="seu-email@gmail.com" aria-describedby="hint">
+        <button class="btn primary" type="submit"><span class="btl">Quero testar</span><span class="spin" aria-hidden="true"></span></button>
+      </div>
+      <input class="hp" type="text" name="site" tabindex="-1" autocomplete="off" aria-hidden="true">
+      <p class="hint" id="hint" data-android="Use o e-mail da conta Google do seu Android. Ele só serve para liberar o seu acesso." data-ios="Deixe seu e-mail e avisamos quando a Irisa chegar ao iPhone.">Use o e-mail da conta Google do seu Android. Ele só serve para liberar o seu acesso.</p>
+      <div class="done" aria-live="polite">
+        <svg viewBox="0 0 52 52" aria-hidden="true"><circle cx="26" cy="26" r="24"/><path d="M15 27l7 7 15-15"/></svg>
+        <div><b>Pronto, você está na lista.</b><span class="done-msg">O convite para instalar chega nesse e-mail.</span></div>
+      </div>
+    </form>
     <div class="steps">
-      <div class="step rv d1"><span class="n">1</span><div><b>Mande seu e-mail</b><p>O da conta Google do seu Android. Só serve para liberar o acesso.</p></div></div>
+      <div class="step rv d1"><span class="n">1</span><div><b>Deixe seu e-mail</b><p>O da conta Google do seu Android, aqui em cima. Nada mais.</p></div></div>
       <div class="step rv d2"><span class="n">2</span><div><b>Receba o convite</b><p>Um link para instalar pela Play Store, como qualquer app.</p></div></div>
       <div class="step rv d3"><span class="n">3</span><div><b>Irise os seus lugares</b><p>Avalie os lugares que você já frequenta. Achou algo estranho? Conta pra gente.</p></div></div>
-    </div>
-    <div class="btns rv">
-      <a class="btn primary" href="mailto:appirisa@gmail.com?subject=Quero%20testar%20a%20Irisa&amp;body=Meu%20e-mail%20da%20conta%20Google%20do%20Android%3A%20%0A%0AMinha%20cidade%3A%20">Quero testar no Android</a>
-      <a class="btn ghost" href="mailto:appirisa@gmail.com?subject=Me%20avisa%20quando%20a%20Irisa%20sair%20no%20iPhone">Tenho iPhone, me avisa</a>
     </div>
 
     <div class="ong rv" id="ongs">
@@ -785,6 +838,36 @@ footer .sos-line{width:100%;color:#fff;font-family:var(--display);text-transform
   }
   document.querySelectorAll(".xp").forEach(function(p){p.setAttribute("aria-hidden","true")});
   document.querySelectorAll(".xp-btn,.xc-h").forEach(function(b){b.addEventListener("click",function(){abrir(b)})});
+  // inscrição no teste: grava o e-mail no Supabase (função tester_signup; a tabela não é legível de fora)
+  var SB_URL="https://ntjirpqulrnieeglpiei.supabase.co", SB_KEY="__SUPABASE_PUBLISHABLE_KEY__";
+  var form=document.getElementById("signup");
+  if(form){
+    var seg=form.querySelector(".seg"),bg=seg.querySelector(".seg-bg"),hint=form.querySelector("#hint"),inp=form.querySelector("#email"),msg=form.querySelector(".done-msg");
+    var plat=function(){return form.querySelector("input[name=plat]:checked").value};
+    var posSeg=function(){var l=form.querySelector("input[name=plat]:checked").parentNode;bg.style.setProperty("--x",(l.offsetLeft-4)+"px");bg.style.setProperty("--w",l.offsetWidth+"px");seg.classList.toggle("ios",plat()==="ios");hint.textContent=hint.dataset[plat()]};
+    form.querySelectorAll("input[name=plat]").forEach(function(r){r.addEventListener("change",posSeg)});
+    posSeg();addEventListener("resize",posSeg);if(document.fonts)document.fonts.ready.then(posSeg);
+    var confete=function(){if(reduz)return;var r=form.getBoundingClientRect(),cs=["#F4736F","#F5A45D","#F0CA75","#5CC9B4","#6AA8EE","#AE96F2"];
+      for(var k=0;k<46;k++){(function(k){var c=document.createElement("i");c.className="confete";c.style.background=cs[k%6];c.style.left=(r.left+40+Math.random()*Math.min(r.width,420))+"px";c.style.top=(r.top+30)+"px";document.body.appendChild(c);
+        var dx=(Math.random()-.5)*260,dy=-(120+Math.random()*220),rot=(Math.random()-.5)*720;
+        c.animate([{transform:"translate(0,0) rotate(0)",opacity:1},{transform:"translate("+dx+"px,"+dy+"px) rotate("+rot/2+"deg)",opacity:1,offset:.45},{transform:"translate("+dx*1.3+"px,"+(dy+320)+"px) rotate("+rot+"deg)",opacity:0}],{duration:1500+Math.random()*700,easing:"cubic-bezier(.2,.7,.3,1)"}).onfinish=function(){c.remove()}})(k)}};
+    var erro=function(t){form.classList.remove("sending","erro");void form.offsetWidth;form.classList.add("erro");hint.textContent=t;inp.focus()};
+    inp.addEventListener("input",function(){if(form.classList.contains("erro")){form.classList.remove("erro");hint.textContent=hint.dataset[plat()]}});
+    form.addEventListener("submit",function(e){
+      e.preventDefault();if(form.classList.contains("sending"))return;
+      var em=inp.value.trim().toLowerCase();
+      if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(em))return erro("Confere o e-mail: parece que falta alguma coisa.");
+      var fim=function(){msg.textContent=plat()==="ios"?"Avisamos nesse e-mail quando sair no iPhone.":"O convite para instalar chega nesse e-mail.";form.classList.remove("sending");form.classList.add("ok");confete()};
+      if(form.site.value)return fim();
+      if(SB_KEY.indexOf("__")===0){location.href="mailto:appirisa@gmail.com?subject="+encodeURIComponent("Quero testar a Irisa")+"&body="+encodeURIComponent("Meu e-mail: "+em+" ("+plat()+")");return}
+      form.classList.add("sending");
+      fetch(SB_URL+"/rest/v1/rpc/tester_signup",{method:"POST",headers:{"apikey":SB_KEY,"Content-Type":"application/json"},body:JSON.stringify({p_email:em,p_platform:plat()})})
+        .then(function(r){if(r.ok)return fim();return r.json().catch(function(){return{}}).then(function(j){erro(j&&j.message==="E-mail inválido"?"Confere o e-mail: parece que falta alguma coisa.":"Não deu certo agora. Tenta de novo em instantes.")})})
+        .catch(function(){erro("Sem conexão. Tenta de novo em instantes.")});
+    });
+    // os botões "Quero testar" do topo levam ao campo já com o cursor
+    document.querySelectorAll('a[href="#testar"]').forEach(function(a){a.addEventListener("click",function(){setTimeout(function(){inp.focus({preventScroll:true})},reduz?0:700)})});
+  }
   // celulares flutuam
   document.querySelectorAll(".stage .phone,.showcase .phone").forEach(function(p,i){p.classList.add("float");if(i%2)p.classList.add("b")});
   // radar gira (SMIL: funciona no Safari do iPhone)

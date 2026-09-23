@@ -59,6 +59,10 @@ writeFileSync("site/termos.html", page("Termos de Uso", md(readFileSync("docs/te
 writeFileSync("site/excluir-conta.html", page("Excluir sua conta", md(readFileSync("docs/excluir-conta.md", "utf8"))));
 writeFileSync("site/seguranca-infantil.html", page("Padrões de segurança infantil", md(readFileSync("docs/seguranca-infantil.md", "utf8"))));
 // A landing é escrita à mão em docs/index.html (mesma marca, fontes e telas da apresentação).
-copyFileSync("docs/index.html", "site/index.html");
+// A chave publishable do Supabase (pública por natureza, a mesma que vai dentro do app) entra no build
+// pela variável SUPABASE_PUBLISHABLE_KEY do GitHub Actions. Sem ela, o formulário cai no e-mail.
+const pubKey = process.env.SUPABASE_PUBLISHABLE_KEY ?? "";
+if (pubKey && !pubKey.startsWith("sb_publishable_")) throw new Error("SUPABASE_PUBLISHABLE_KEY precisa ser a chave sb_publishable_ (nunca a secreta)");
+writeFileSync("site/index.html", readFileSync("docs/index.html", "utf8").replace("__SUPABASE_PUBLISHABLE_KEY__", pubKey || "__SUPABASE_PUBLISHABLE_KEY__"));
 copyFileSync("docs/og.png", "site/og.png");
 console.log("site/ gerado");

@@ -27,6 +27,8 @@ jobs:
         with:
           node-version: 22
       - run: node scripts/build-site.mjs
+        env:
+          SUPABASE_PUBLISHABLE_KEY: ${{ vars.SUPABASE_PUBLISHABLE_KEY }}
       - uses: actions/configure-pages@v5
         with:
           enablement: true

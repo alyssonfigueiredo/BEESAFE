@@ -21,7 +21,8 @@ Nome: **Irisa** (INPI livre; @irisapp livre). Bundle id `br.com.irisa.app`. Cont
 - MVP completo e rodando no iPhone do usuário (Xcode, Apple ID gratuito, expira em 7 dias) e em APK Android (EAS preview).
 - Supabase projeto `ntjirpqulrnieeglpiei`, região São Paulo. Migrations 0–15 aplicadas
   (10 a 15 coladas em 23/09/2026: anti-duplicata, initplan da RLS, relato do entorno não desconta
-  nota, nível de atenção da região, onde/quando no relato, ficha do bairro). Build 9 (versionCode 9) gerada
+  nota, nível de atenção da região, onde/quando no relato, ficha do bairro). **A 16 (inscrição de
+  testadores pelo site) ainda precisa ser colada.** Build 9 (versionCode 9) gerada
   no EAS em 23/09/2026 com o cartão anti-duplicata, onde/quando, ficha do bairro e o Início novo;
   subir na mesma faixa de teste fechado, sem mexer na lista de testadores.
   O seed fictício de Curitiba saiu do repositório; `supabase/seed/limpar-curitiba-teste.sql` apaga o que sobrou no banco.
@@ -45,6 +46,13 @@ Nome: **Irisa** (INPI livre; @irisapp livre). Bundle id `br.com.irisa.app`. Cont
   convite para ser das primeiras pessoas. Para não cansar, o detalhamento fica atrás de botões que
   abrem com animação (`.xp-btn` em grupo, um aberto por vez; `.xc` para cartões) — nada foi cortado,
   só guardado. Regra dele: não remover informação da página; se não couber, esconder atrás de botão.
+  **Inscrição de testadores:** a página tem um formulário só com e-mail + Android/iPhone. Grava pela
+  RPC `tester_signup` (migration 16) na tabela `tester_signups`, que não tem policy nenhuma — o site
+  só consegue inserir, ninguém lê de fora. Ele lê no SQL Editor com `supabase/testadores.sql`
+  (e-mails pendentes já separados por vírgula para colar na lista da Play Console; depois marca
+  `added_at`). A chave `sb_publishable_` entra no build pela variável de Actions
+  `SUPABASE_PUBLISHABLE_KEY` (Settings → Secrets and variables → Actions → aba Variables); o build
+  recusa qualquer chave que não comece com `sb_publishable_`. Sem a variável, o botão cai no e-mail.
   As telas, o radar e o desenho do mapa foram copiados do `pitch.html` para dentro do
   `docs/index.html`; mudanças na landing se fazem direto nesse arquivo.
   `docs/og.png` é a prévia de link (WhatsApp/Instagram), 1200×630, tirada do próprio hero.
