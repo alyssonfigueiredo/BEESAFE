@@ -21,7 +21,7 @@ const args = process.argv.slice(2);
 // onde o 10 (bairro) não existe.
 const iNivel = args.indexOf("--nivel");
 const nivel = iNivel >= 0 ? args[iNivel + 1] : "10";
-const codes = args.filter((a, i) => /^\d+$/.test(a) && i !== iNivel + 1).map(Number);
+const codes = args.filter((a, i) => /^\d+$/.test(a) && !(iNivel >= 0 && i === iNivel + 1)).map(Number);
 const targets = codes.length ? codes : CAPITAIS;
 
 const MIRRORS = process.env.OVERPASS_URL
