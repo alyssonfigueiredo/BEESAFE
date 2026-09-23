@@ -123,7 +123,7 @@ export default function LugaresScreen() {
         </Text>
       }
       ListFooterComponent={
-        <Link href="/registrar" asChild>
+        <Link href={{ pathname: "/registrar", params: { modo: "lugar" } }} asChild>
           <Pressable className="items-center py-3 active:opacity-70">
             <Text className="font-body text-sm text-turquoiseInk underline">
               Não achou? Cadastre um lugar

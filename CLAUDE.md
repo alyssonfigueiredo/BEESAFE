@@ -19,7 +19,8 @@ Nome: **Irisa** (INPI livre; @irisapp livre). Bundle id `br.com.irisa.app`. Cont
 
 - Branch de trabalho: `claude/laughing-keller-my8t7c` (default do repo: `claude/ecstatic-darwin-cmf7sw`).
 - MVP completo e rodando no iPhone do usuário (Xcode, Apple ID gratuito, expira em 7 dias) e em APK Android (EAS preview).
-- Supabase projeto `ntjirpqulrnieeglpiei`, região São Paulo. Migrations 0–8 aplicadas; a 9 (foto Google) precisa ser colada no SQL Editor.
+- Supabase projeto `ntjirpqulrnieeglpiei`, região São Paulo. Migrations 0–9 aplicadas (a 9 saiu do papel
+  quando as fotos do Google começaram a gravar). **A 10 (lugar duplicado) ainda precisa ser colada no SQL Editor.**
   O seed fictício de Curitiba saiu do repositório; `supabase/seed/limpar-curitiba-teste.sql` apaga o que sobrou no banco.
 - Chaves legadas desativadas: app usa `sb_publishable_...`, scripts usam `sb_secret_...` (só na máquina dele).
 - Dados geográficos: os 5.570 municípios das 27 UFs e os bairros de 24 capitais importados do OSM.

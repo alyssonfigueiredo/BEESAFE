@@ -1,4 +1,4 @@
-import { useRouter } from "expo-router";
+import { useLocalSearchParams, useRouter } from "expo-router";
 import { useState } from "react";
 import { Pressable, ScrollView, Text, View } from "react-native";
 
@@ -8,7 +8,17 @@ import { colors } from "@/theme/tokens";
 
 export default function RegistrarScreen() {
   const router = useRouter();
-  const [mode, setMode] = useState<"relato" | "lugar">("relato");
+  // ?modo=lugar abre direto na aba do cadastro: quem veio do "Cadastre um lugar" da aba Lugares
+  // já sabe o que quer, e não deve ter que achar o seletor.
+  const { modo } = useLocalSearchParams<{ modo?: string }>();
+  const [mode, setMode] = useState<"relato" | "lugar">(modo === "lugar" ? "lugar" : "relato");
+  // A tela fica montada no fundo (é uma aba escondida), então o useState só valeria na primeira
+  // abertura. Ajuste durante o render — o padrão do React para reagir a prop nova sem effect.
+  const [modoVisto, setModoVisto] = useState(modo);
+  if (modo !== modoVisto) {
+    setModoVisto(modo);
+    setMode(modo === "lugar" ? "lugar" : "relato");
+  }
 
   return (
     <ScrollView

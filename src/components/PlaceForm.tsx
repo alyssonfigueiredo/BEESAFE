@@ -1,10 +1,11 @@
+import { useRouter } from "expo-router";
 import * as Location from "expo-location";
 import { Crosshair } from "lucide-react-native";
 import { useState } from "react";
 import { Alert, Pressable, Text, TextInput, View } from "react-native";
 
 import { CityMap } from "@/components/CityMap";
-import { useCreatePlace } from "@/hooks/usePlaces";
+import { useCreatePlace, useSimilarPlaces } from "@/hooks/usePlaces";
 import { useCity } from "@/providers/CityProvider";
 import { PLACE_CATEGORIES, type PlaceCategory } from "@/theme/domain";
 import { colors } from "@/theme/tokens";
@@ -13,11 +14,16 @@ const CATEGORY_KEYS = Object.keys(PLACE_CATEGORIES) as PlaceCategory[];
 
 export function PlaceForm({ onDone }: { onDone: (placeId: string) => void }) {
   const { city, userLocation } = useCity();
+  const router = useRouter();
   const create = useCreatePlace();
   const [name, setName] = useState("");
   const [category, setCategory] = useState<PlaceCategory>("bar");
   const [address, setAddress] = useState("");
   const [point, setPoint] = useState<{ lat: number; lng: number } | null>(null);
+  // Sugere o que já existe antes de criar outro. O banco ainda barra o duplicado óbvio
+  // (trigger da migration 10); isto aqui é para a pessoa não chegar lá e levar um erro.
+  const similar = useSimilarPlaces(name, point);
+  const jaExistem = similar.data ?? [];
 
   async function useMyLocation() {
     const { status } = await Location.requestForegroundPermissionsAsync();
@@ -121,6 +127,31 @@ export function PlaceForm({ onDone }: { onDone: (placeId: string) => void }) {
           style={{ height: 260 }}
         />
       </View>
+
+      {jaExistem.length > 0 && (
+        <View className="gap-3 rounded-xl border border-amber bg-surface p-4">
+          <Text className="font-heading text-sm uppercase tracking-widest text-ink">
+            {jaExistem.length === 1 ? "Já existe um parecido" : "Já existem parecidos"}
+          </Text>
+          <Text className="font-body text-sm text-dim">
+            Se for o mesmo lugar, abra e avalie — a nota da comunidade some quando o mesmo bar
+            vira duas fichas.
+          </Text>
+          {jaExistem.map((p) => (
+            <Pressable
+              key={p.id}
+              onPress={() => router.push({ pathname: "/lugar/[id]", params: { id: p.id } })}
+              className="rounded-lg border border-border bg-paper px-3 py-2 active:opacity-70"
+            >
+              <Text className="font-body-medium text-base text-ink">{p.name}</Text>
+              <Text className="font-body text-xs text-dim">
+                {PLACE_CATEGORIES[p.category]}
+                {p.neighborhood ? ` · ${p.neighborhood}` : ""} · a {Math.round(p.distance_m)} m
+              </Text>
+            </Pressable>
+          ))}
+        </View>
+      )}
 
       <Pressable
         disabled={create.isPending}
