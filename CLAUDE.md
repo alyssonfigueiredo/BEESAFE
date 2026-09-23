@@ -20,7 +20,7 @@ Nome: **Irisa** (INPI livre; @irisapp livre). Bundle id `br.com.irisa.app`. Cont
 - Branch de trabalho: `claude/laughing-keller-my8t7c` (default do repo: `claude/ecstatic-darwin-cmf7sw`).
 - MVP completo e rodando no iPhone do usuário (Xcode, Apple ID gratuito, expira em 7 dias) e em APK Android (EAS preview).
 - Supabase projeto `ntjirpqulrnieeglpiei`, região São Paulo. Migrations 0–9 aplicadas (a 9 saiu do papel
-  quando as fotos do Google começaram a gravar). **A 10 (lugar duplicado) ainda precisa ser colada no SQL Editor.**
+  quando as fotos do Google começaram a gravar). **A 10 (lugar duplicado) e a 11 (initplan da RLS) ainda precisam ser coladas no SQL Editor.**
   O seed fictício de Curitiba saiu do repositório; `supabase/seed/limpar-curitiba-teste.sql` apaga o que sobrou no banco.
 - Chaves legadas desativadas: app usa `sb_publishable_...`, scripts usam `sb_secret_...` (só na máquina dele).
 - Dados geográficos: os 5.570 municípios das 27 UFs e os bairros de 24 capitais importados do OSM.
@@ -119,6 +119,10 @@ Checks antes de commitar: `npm run lint && npm run typecheck`. Migrations testá
 
 ## Armadilhas já resolvidas (não repetir)
 
+- O aviso "Security Definer View" do linter da Supabase nas views `public_*` é proposital, não bug:
+  as tabelas-base não têm policy de leitura para usuário comum, e a view é o único caminho — ela
+  esconde `created_by`, filtra `status = 'active'` e arredonda coordenada recente. Não converter
+  para `security_invoker`, o app pararia de ler.
 - Overpass devolve 406 sem Content-Type/User-Agent; script já tem 3 mirrors.
 - `st_makevalid` pode gerar GeometryCollection: usar `st_collectionextract(..., 3)`.
 - Bairro é atribuído no insert do relato; após importar bairros, rodar o UPDATE de reprocessamento (supabase/README.md).
