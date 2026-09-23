@@ -19,8 +19,8 @@ Nome: **Irisa** (INPI livre; @irisapp livre). Bundle id `br.com.irisa.app`. Cont
 
 - Branch de trabalho: `claude/laughing-keller-my8t7c` (default do repo: `claude/ecstatic-darwin-cmf7sw`).
 - MVP completo e rodando no iPhone do usuário (Xcode, Apple ID gratuito, expira em 7 dias) e em APK Android (EAS preview).
-- Supabase projeto `ntjirpqulrnieeglpiei`, região São Paulo. Migrations 0–9 aplicadas (a 9 saiu do papel
-  quando as fotos do Google começaram a gravar). **A 10 (lugar duplicado) e a 11 (initplan da RLS) ainda precisam ser coladas no SQL Editor.**
+- Supabase projeto `ntjirpqulrnieeglpiei`, região São Paulo. Migrations 0–11 aplicadas
+  (10 = anti-duplicata de lugar, 11 = initplan da RLS, ambas coladas em 23/09/2026).
   O seed fictício de Curitiba saiu do repositório; `supabase/seed/limpar-curitiba-teste.sql` apaga o que sobrou no banco.
 - Chaves legadas desativadas: app usa `sb_publishable_...`, scripts usam `sb_secret_...` (só na máquina dele).
 - Dados geográficos: os 5.570 municípios das 27 UFs e os bairros de 24 capitais importados do OSM.
@@ -55,14 +55,18 @@ Nome: **Irisa** (INPI livre; @irisapp livre). Bundle id `br.com.irisa.app`. Cont
   Meta de 20 a 25 testadores (o mínimo do Google é 12, e cair abaixo disso reinicia os 14 dias).
 - Layout do Início decidido: painel (opção A do mockup).
 - Ficha das lojas pronta em docs/lojas.md.
-- Serviços de apoio por cidade em `supabase/seed_services.sql`: nacionais + Curitiba, Porto Alegre e,
-  desde 23/09/2026, Recife, João Pessoa e Joinville. Os dois telefones municipais (Recife e João Pessoa)
+- Serviços de apoio por cidade em `supabase/seed_services.sql`, já no banco: nacionais + Curitiba,
+  Porto Alegre e, desde 23/09/2026, Recife, João Pessoa e Joinville. Os dois telefones municipais (Recife e João Pessoa)
   vieram de página oficial mas **ainda não foram confirmados por ligação** — telefone errado em app de
   segurança é pior que telefone ausente. Joinville não tem centro de referência municipal: entraram a
   UNA LGBT e a Comissão da Diversidade da OAB. Reconferir os contatos a cada seis meses.
 - Foto dos lugares via Google Places (New) com cota travada no gratuito: migration 9, script
   `scripts/google-place-photos.mjs`, componente `PlacePhoto` (cai no ícone da categoria sem foto).
   Setup e limites em docs/fotos.md. Sem `EXPO_PUBLIC_GOOGLE_MAPS_KEY` o app não pede foto.
+- Anti-duplicata de lugar (migration 10): trigger barra insert com nome parecido (trigram > 0.6,
+  tolerante a acento e caixa) a menos de 150 m de um lugar ativo; a RPC `places_similar` devolve os
+  parecidos num raio de 300 m e o `PlaceForm` mostra o cartão de aviso antes de enviar. O bloqueio já
+  vale para a build 8 (é no banco); o cartão e o link abrindo direto na aba Lugar só na build 9.
 - Aba **Lugares** (`app/(tabs)/lugares.tsx`): busca por nome, filtro por categoria, ordem por
   distância. Entrou no lugar de Registrar na barra (a rota `/registrar` segue viva, escondida;
   os botões vermelhos do Início e do Mapa levam nela). Ficha do lugar: foto, alerta de relatos
