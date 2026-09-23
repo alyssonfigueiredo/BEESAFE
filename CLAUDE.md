@@ -38,7 +38,7 @@ Nome: **Irisa** (INPI livre; @irisapp livre). Bundle id `br.com.irisa.app`. Cont
 - Site público (GitHub Pages, workflow `pages.yml`, fonte `docs/*.md` → `scripts/build-site.mjs` → `site/`):
   https://alyssonfigueiredo.github.io/BEESAFE/ com privacidade.html, termos.html, pitch.html, mockup.html.
 - Oito cidades semeadas com lugares reais do OSM (bar/café/restaurante/balada/hotel), sem nota e sem selo,
-  só para o mapa não abrir vazio: Curitiba 60, Recife 60, João Pessoa 43, Joinville (IBGE 4209102),
+  só para o mapa não abrir vazio: Curitiba 60, Recife 60, João Pessoa 43, Joinville 180 (IBGE 4209102),
   São Paulo 80, Rio 84, Salvador 63, Porto Alegre 60. A tag `lgbtq` do OSM quase não existe no Brasil (1 lugar em Curitiba):
   a lista da cena tem que vir do usuário, conferida um a um. Decidido não exibir rótulo LGBTQIA+ na ficha
   (lista pública vira alvo); o selo vem dos quatro eixos de acolhimento.
@@ -48,8 +48,13 @@ Nome: **Irisa** (INPI livre; @irisapp livre). Bundle id `br.com.irisa.app`. Cont
   por 14 dias seguidos antes de pedir produção. Apps da categoria Social exigem a declaração de
   padrões de segurança infantil (CSAE): política em `docs/seguranca-infantil.md`, publicada em
   /seguranca-infantil.html, contato appirisa@gmail.com.
-- Fotos do Google por cidade (22/09/2026): Curitiba 51/60, Recife 48/60, João Pessoa 32/43. Quem não
-  casou fica sem foto e cai no ícone da categoria; o script só tenta de novo depois de 25 dias.
+- Fotos do Google por cidade (23/09/2026): Curitiba 51/60, Recife 48/60, João Pessoa 32/43,
+  Joinville 114/180 (29 nunca tentados). Quem não casou fica sem foto e cai no ícone da categoria;
+  o script só tenta de novo depois de 25 dias. A cota é 150 buscas/dia no projeto inteiro (app + script).
+  **Fila de fotos, um comando por dia** (cada um para sozinho quando a cota acaba e continua no dia seguinte):
+  24/09 `node scripts/google-place-photos.mjs 4209102` e depois `4106902`; 25/09 `2611606`; 26/09 `2507507`.
+  Antes disso, reimportar Curitiba/Recife/João Pessoa com `--limite 200` (o import antigo exigia endereço
+  e parou em 60/60/43; Joinville sem o filtro deu 180).
 - Cidades de lançamento: Curitiba, Recife, João Pessoa e Joinville (onde ele tem gente para avaliar os
   primeiros lugares). As outras semeadas ficam prontas para quando chegar usuário.
 - Captação: a apresentação (docs/pitch.html + docs/Irisa-apresentacao.pdf, 17 slides desde 23/09/2026:
