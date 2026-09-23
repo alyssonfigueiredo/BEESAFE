@@ -1,31 +1,655 @@
 <!doctype html>
-<html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Irisa · Irisa</title><link rel="icon" href="icon.png"><style>
-:root{--paper:#FAF9F6;--surface:#fff;--ink:#1E2340;--muted:#6B7080;--border:#E6E3DC;--coral:#F4736F;--amber:#E0A32E;--turq:#2F8F7E}
-*{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.6 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
-header{display:flex;align-items:center;gap:10px;padding:18px clamp(16px,6vw,96px);border-bottom:1px solid var(--border)}
-header a{color:var(--ink);text-decoration:none;font-weight:600;letter-spacing:.18em;font-size:18px}header a b{color:var(--amber);font-weight:600}
-header img{width:28px;height:28px}nav{margin-left:auto;display:flex;gap:18px}nav a{letter-spacing:0;font-weight:500;color:var(--muted);font-size:14px}
-main{max-width:760px;margin:0 auto;padding:40px clamp(16px,6vw,96px) 80px}
-h1{font-size:2rem;line-height:1.2;margin:0 0 8px}h2{font-size:1.15rem;margin:32px 0 8px}p,li{margin:8px 0}a{color:var(--turq)}
-.hero{text-align:center;padding:48px 0 24px}.hero img{width:96px;height:96px;border-radius:24px}.hero p{color:var(--muted);max-width:520px;margin:12px auto}
-.btns{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:20px}.btn{padding:12px 20px;border-radius:12px;font-weight:600;text-decoration:none;color:var(--ink);background:var(--coral)}.btn.alt{background:transparent;border:1px solid var(--turq);color:var(--turq)}
-.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin-top:36px}.card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:16px}.card b{display:block;margin-bottom:4px}.card span{color:var(--muted);font-size:14px}
-footer{color:var(--muted);font-size:13px;text-align:center;padding:24px}
-</style></head>
-<body><header><img src="icon.png" alt=""><a href="./">IRIS<b>A</b></a>
-<nav><a href="privacidade.html">Privacidade</a><a href="termos.html">Termos</a><a href="excluir-conta.html">Excluir conta</a></nav></header>
-<main>
-<div class="hero"><img src="icon.png" alt="Irisa">
-<h1>Quanta cor tem aqui?</h1>
-<p>Mapa colaborativo de segurança e lugares acolhedores para pessoas LGBTQIA+. Relatos anônimos, áreas que pedem atenção e avaliações de quem frequenta.</p>
-<div class="btns"><a class="btn" href="https://www.instagram.com/irisapp">Instagram</a><a class="btn alt" href="mailto:appirisa@gmail.com">appirisa@gmail.com</a><a class="btn alt" href="privacidade.html">Política de privacidade</a></div></div>
-<div class="cards">
-<div class="card"><b>Relatos anônimos</b><span>Seu nome e e-mail nunca aparecem, nem para moderadores.</span></div>
-<div class="card"><b>Mapa de atenção</b><span>Zonas e ranking de bairros, atualizados em tempo real.</span></div>
-<div class="card"><b>Lugares acolhedores</b><span>Atendimento, afeto, banheiro e clientela, avaliados pela comunidade.</span></div>
-<div class="card"><b>Apoio e emergência</b><span>Mural da comunidade, serviços da sua cidade e 190 / 192 / 100 / 188.</span></div>
-</div>
-<p style="text-align:center;color:var(--muted);margin-top:36px">Em risco imediato, ligue 190.</p></main>
-<footer>Irisa · projeto comunitário, sem fins lucrativos · <a href="privacidade.html">Privacidade</a> · <a href="termos.html">Termos</a></footer>
-</body></html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Irisa · Quanta cor tem aqui?</title>
+<meta name="description" content="App da comunidade LGBTQIA+ para dizer quanta cor tem cada bar, café e balada, e registrar sem nome o que não deveria ter acontecido na rua. Em teste no Android.">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Irisa · Quanta cor tem aqui?">
+<meta property="og:description" content="Avalie o acolhimento dos lugares e registre, sem nome, a LGBTIfobia na rua. Em teste no Android: entre para testar.">
+<meta property="og:image" content="https://alyssonfigueiredo.github.io/BEESAFE/og.png">
+<meta property="og:url" content="https://alyssonfigueiredo.github.io/BEESAFE/">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#1E2340">
+<link rel="icon" href="icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Urbanist:wght@500;600&family=Oswald:wght@300;400;500;700&family=Space+Grotesk:wght@400;500;700&display=swap">
+<style>
+:root{
+  --paper:#FAF9F6;--surface:#FFFFFF;--subtle:#F1EDE7;--border:#E4DED5;--night:#1E2340;--night2:#161B2E;--ink:#1E2340;--muted:#4F576F;--dim:#8A90A2;
+  --coral:#F4736F;--orange:#F5A45D;--yellow:#F0CA75;--turq:#5CC9B4;--lilac:#AE96F2;--blue:#6AA8EE;
+  --coralInk:#B23C3A;--orangeInk:#96601C;--yellowInk:#8A6512;--turqInk:#1B7A6E;--lilacInk:#6D4FD8;--amber:#E0A32E;
+  --wordmark:"Urbanist","Helvetica Neue",Arial,sans-serif;--display:"Oswald",Impact,"Arial Narrow",sans-serif;--body:"Space Grotesk","Helvetica Neue",Arial,sans-serif;
+  --rainbow:linear-gradient(90deg,var(--coral),var(--orange),var(--yellow),var(--turq),var(--blue),var(--lilac));
+  --gut:clamp(16px,6vw,96px);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--body);font-size:17px;line-height:1.5;overflow-x:hidden}
+a{color:inherit}
+p{margin:0}
+.wrap{max-width:1180px;margin:0 auto;padding:0 var(--gut)}
+section{position:relative}
+.eyebrow{font-family:var(--display);text-transform:uppercase;letter-spacing:.22em;font-size:13px;color:var(--turqInk)}
+.dark .eyebrow{color:var(--turq)}
+h1,h2,h3{font-family:var(--display);text-transform:uppercase;margin:0;text-wrap:balance}
+h2{font-weight:500;letter-spacing:.06em;font-size:clamp(32px,4.6vw,60px);line-height:1}
+h3{font-weight:500;letter-spacing:.1em;font-size:18px}
+.lead{font-size:clamp(18px,1.8vw,21px);color:var(--muted);max-width:56ch}
+.dark{background:var(--night);color:#fff}
+.dark .lead,.dark p{color:#D5D8E4}
+.rule{height:6px;width:140px;border-radius:3px;background:var(--rainbow)}
+.btn{display:inline-flex;align-items:center;gap:10px;font-family:var(--display);text-transform:uppercase;letter-spacing:.14em;font-size:15px;padding:15px 24px;border-radius:14px;text-decoration:none;border:0;cursor:pointer;transition:transform .25s cubic-bezier(.2,.7,.2,1),box-shadow .25s}
+.btn:hover{transform:translateY(-2px)}
+.btn.primary{background:var(--coral);color:var(--night);box-shadow:0 10px 30px -10px rgba(244,115,111,.7)}
+.btn.turq{background:var(--turq);color:var(--night);box-shadow:0 10px 30px -10px rgba(92,201,180,.7)}
+.btn.ghost{background:transparent;color:inherit;border:1.5px solid currentColor}
+.btns{display:flex;flex-wrap:wrap;gap:12px}
+
+/* nav */
+nav.top{position:fixed;inset:0 0 auto;z-index:50;transition:background .3s,box-shadow .3s,color .3s;color:#fff}
+nav.top .wrap{display:flex;align-items:center;gap:20px;height:68px}
+nav.top.solid{background:rgba(250,249,246,.88);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);box-shadow:0 1px 0 var(--border);color:var(--ink)}
+.logo{display:flex;align-items:center;gap:10px;text-decoration:none;font-family:var(--wordmark);font-weight:500;text-transform:uppercase;letter-spacing:.18em;font-size:20px}
+.logo b{font-weight:500;color:var(--yellow)}
+nav.top.solid .logo b{color:var(--amber)}
+.mark{width:26px;height:26px;border-radius:50%;background:conic-gradient(from -90deg,var(--coral),var(--orange),var(--yellow),var(--turq),var(--blue),var(--lilac),var(--coral));position:relative;flex:none}
+.mark::after{content:"";position:absolute;inset:4px;border-radius:50%;background:var(--night2)}
+nav.top.solid .mark::after{background:#fff}
+.mark::before{content:"";position:absolute;left:50%;top:50%;width:8px;height:8px;margin:-4px;border-radius:50%;background:#fff;z-index:1}
+nav.top.solid .mark::before{background:var(--night2)}
+.links{margin-left:auto;display:flex;align-items:center;gap:26px;font-size:15px}
+.links a{text-decoration:none;opacity:.85}
+.links a:hover{opacity:1}
+.links .btn{padding:10px 16px;font-size:13px;opacity:1}
+@media(max-width:860px){.links a:not(.btn){display:none}}
+
+/* hero */
+.hero{min-height:100vh;min-height:100svh;display:flex;align-items:center;padding:110px 0 80px;overflow:hidden;isolation:isolate}
+.hero::before,.hero::after{content:"";position:absolute;inset:-25%;z-index:-1;pointer-events:none;filter:blur(40px);
+  background:radial-gradient(34% 34% at 20% 30%,rgba(92,201,180,.30),transparent 70%),radial-gradient(30% 30% at 80% 72%,rgba(174,150,242,.30),transparent 70%)}
+.hero::after{background:radial-gradient(26% 26% at 72% 18%,rgba(244,115,111,.26),transparent 70%),radial-gradient(24% 24% at 28% 82%,rgba(240,202,117,.20),transparent 70%)}
+.js .hero::before{animation:drift 20s ease-in-out infinite alternate}
+.js .hero::after{animation:drift 24s ease-in-out -8s infinite alternate-reverse}
+@keyframes drift{0%{transform:translate(0,0) rotate(0)}100%{transform:translate(5%,-4%) rotate(8deg)}}
+.hero .wrap{display:grid;grid-template-columns:1.05fr .95fr;gap:48px;align-items:center;width:100%}
+.wordmark{font-family:var(--wordmark);font-weight:500;text-transform:uppercase;letter-spacing:.16em;font-size:clamp(20px,2vw,24px)}
+.wordmark b{font-weight:500;color:var(--yellow)}
+.hero h1{font-weight:300;letter-spacing:.05em;font-size:clamp(50px,8.4vw,120px);line-height:.92;margin:22px 0 26px}
+.hero h1 em{font-style:normal;font-weight:500;background:var(--rainbow);-webkit-background-clip:text;background-clip:text;color:transparent}
+.hero .lead{color:#E3E6EF;margin-top:26px}
+.hero .meta{margin-top:26px;font-size:14px;color:#AEB3C6;display:flex;flex-wrap:wrap;gap:8px 18px}
+.hero .meta span{display:inline-flex;align-items:center;gap:8px}
+.hero .meta span::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--turq)}
+.hero .btns{margin-top:32px}
+.stage{position:relative;height:600px;display:flex;justify-content:center;align-items:center}
+.stage .radar{position:absolute;width:560px;max-width:120%;opacity:.9;left:50%;top:50%;transform:translate(-50%,-50%)}
+.stage .cell{position:absolute}
+.stage .cell:nth-of-type(1){transform:translate(-86px,10px) rotate(-7deg)}
+.stage .cell:nth-of-type(2){transform:translate(96px,-6px) rotate(5deg)}
+.stage .caption{display:none}
+@media(max-width:960px){.hero .wrap{grid-template-columns:1fr}.stage{height:560px}}
+@media(max-width:560px){.stage{height:540px}.stage .cell:nth-of-type(1){display:none}.stage .cell:nth-of-type(2){transform:rotate(3deg)}.stage .radar{width:440px}}
+
+/* faixa que corre */
+.marquee{background:var(--night2);color:#fff;overflow:hidden;padding:20px 0;border-block:1px solid rgba(255,255,255,.08)}
+.marquee .track{display:flex;gap:48px;width:max-content;font-family:var(--display);text-transform:uppercase;letter-spacing:.12em;font-size:clamp(20px,2.4vw,28px);font-weight:400;white-space:nowrap}
+.js .marquee .track{animation:marq 40s linear infinite}
+.marquee i{font-style:normal;color:var(--yellow)}
+.marquee .dot{width:12px;height:12px;border-radius:50%;background:var(--rainbow);align-self:center;flex:none}
+@keyframes marq{to{transform:translateX(-50%)}}
+
+/* blocos */
+.block{padding:clamp(80px,11vw,140px) 0;overflow-x:clip}
+.split{display:grid;grid-template-columns:1fr 1fr;gap:clamp(32px,6vw,80px);align-items:center}
+.split.rev>:first-child{order:2}
+@media(max-width:900px){.split{grid-template-columns:1fr}.split.rev>:first-child{order:0}}
+.split .txt{display:flex;flex-direction:column;gap:22px}
+.showcase{display:flex;justify-content:center;position:relative}
+.showcase .halo{position:absolute;width:min(420px,90vw);height:min(420px,90vw);border-radius:50%;filter:blur(60px);opacity:.45;left:50%;top:50%;transform:translate(-50%,-50%);z-index:0}
+.showcase .cell{position:relative;z-index:1}
+.showcase .caption{display:none}
+.axes{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.axis-card{background:var(--surface);border:1px solid var(--border);border-radius:18px;padding:18px;display:flex;flex-direction:column;gap:6px;transition:transform .3s cubic-bezier(.2,.7,.2,1),box-shadow .3s}
+.axis-card:hover{transform:translateY(-4px);box-shadow:0 18px 40px -24px rgba(30,35,64,.35)}
+.axis-card b{font-family:var(--display);font-weight:500;font-size:40px;line-height:1;letter-spacing:.02em}
+.axis-card h3{font-size:15px}
+.axis-card p{font-size:14px;color:var(--muted)}
+.badges{display:flex;flex-wrap:wrap;gap:8px}
+.badges span{padding:6px 12px;border-radius:8px;font-weight:500;font-size:14px}
+.tipos{display:flex;flex-wrap:wrap;gap:8px}
+.tipos span{padding:8px 14px;border-radius:999px;font-weight:500;font-size:14px;color:var(--night)}
+.checks{list-style:none;margin:0;padding:0;display:grid;gap:12px}
+.checks li{display:flex;gap:12px;align-items:flex-start}
+.checks li::before{content:"";width:10px;height:10px;border-radius:50%;background:var(--c,var(--turq));flex:none;margin-top:8px}
+
+/* regra */
+.regra h2{font-size:clamp(36px,5vw,68px);line-height:.98}
+.regra h2 .a{color:var(--turqInk)}.regra h2 .b{color:var(--coralInk)}
+.trio{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:48px}
+@media(max-width:900px){.trio{grid-template-columns:1fr}}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:24px;display:flex;flex-direction:column;gap:10px}
+.card p{color:var(--muted);font-size:15.5px}
+.dark .card{background:rgba(255,255,255,.05);border-color:rgba(255,255,255,.12)}
+.dark .card p{color:#C9CDDD}
+
+/* emergência */
+.sos{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:40px}
+@media(max-width:760px){.sos{grid-template-columns:repeat(2,1fr)}}
+.sos a{text-decoration:none;border-radius:20px;padding:22px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.14);display:flex;flex-direction:column;gap:4px;transition:background .25s,transform .25s}
+.sos a:hover{background:rgba(244,115,111,.16);transform:translateY(-3px)}
+.sos b{font-family:var(--display);font-weight:500;font-size:clamp(44px,5vw,64px);line-height:1;color:#fff}
+.sos span{font-size:14px;color:#C9CDDD}
+.pulse{width:16px;height:16px;border-radius:50%;background:var(--coral);display:inline-block;vertical-align:middle;margin-right:12px}
+.js .pulse{animation:pulse 1.8s infinite}
+@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(244,115,111,.6)}100%{box-shadow:0 0 0 16px rgba(244,115,111,0)}}
+
+/* anonimato */
+.anon .card .ic{width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center}
+.anon .card .ic svg{width:22px;height:22px}
+
+/* cidades */
+.cities{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:40px}
+@media(max-width:900px){.cities{grid-template-columns:repeat(2,1fr)}}
+.city{border-radius:20px;padding:22px;min-height:170px;display:flex;flex-direction:column;justify-content:flex-end;gap:4px;position:relative;overflow:hidden;color:var(--night)}
+.city::after{content:"";position:absolute;right:-30px;top:-30px;width:120px;height:120px;border-radius:50%;border:14px solid rgba(255,255,255,.35)}
+.city b{font-family:var(--display);font-weight:500;text-transform:uppercase;letter-spacing:.06em;font-size:26px;line-height:1}
+.city span{font-size:14px;opacity:.8}
+
+/* testar */
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin:40px 0}
+@media(max-width:900px){.steps{grid-template-columns:1fr}}
+.step{display:flex;gap:16px;align-items:flex-start}
+.step .n{font-family:var(--display);font-weight:500;font-size:44px;line-height:.9;background:var(--rainbow);-webkit-background-clip:text;background-clip:text;color:transparent;flex:none;width:36px}
+.step p{color:#C9CDDD}
+.step b{display:block;color:#fff;font-weight:500;margin-bottom:4px}
+.progress-g{margin-top:8px;display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+.progress-g i{width:22px;height:22px;border-radius:7px;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2)}
+.progress-g i.on{background:var(--turq);border-color:var(--turq)}
+.progress-g small{color:#AEB3C6;margin-left:10px;font-size:14px}
+.ong{margin-top:64px;border-radius:24px;padding:clamp(24px,4vw,44px);background:linear-gradient(135deg,rgba(92,201,180,.14),rgba(174,150,242,.14));border:1px solid rgba(255,255,255,.14);display:grid;grid-template-columns:1.3fr .7fr;gap:28px;align-items:center}
+@media(max-width:860px){.ong{grid-template-columns:1fr}}
+
+footer{background:var(--night2);color:#AEB3C6;padding:48px 0 40px;font-size:14px}
+footer .wrap{display:flex;flex-wrap:wrap;gap:20px 40px;align-items:center;justify-content:space-between}
+footer nav{display:flex;flex-wrap:wrap;gap:10px 22px}
+footer a{text-decoration:none}footer a:hover{color:#fff}
+footer .sos-line{width:100%;color:#fff;font-family:var(--display);text-transform:uppercase;letter-spacing:.14em;font-size:13px}
+
+/* revelar ao rolar (só com JS; sem JS tudo aparece) */
+.js .rv{opacity:0;transform:translateY(28px);filter:blur(6px);transition:opacity .9s ease,transform .9s cubic-bezier(.2,.7,.2,1),filter .9s ease}
+.js .rv.in{opacity:1;transform:none;filter:none}
+.js .rv.d1{transition-delay:.1s}.js .rv.d2{transition-delay:.2s}.js .rv.d3{transition-delay:.3s}.js .rv.d4{transition-delay:.4s}
+.js .rule.rv{transform:scaleX(0);transform-origin:left;filter:none}.js .rule.rv.in{transform:none}
+.js .hero h1 .w{display:inline-block;opacity:0;transform:translateY(.35em);filter:blur(10px);transition:opacity .7s ease,transform .9s cubic-bezier(.2,.7,.2,1),filter .8s ease}
+.js .hero.in h1 .w{opacity:1;transform:none;filter:none}
+.js .float{animation:float 7s ease-in-out infinite}
+.js .float.b{animation-delay:-3.2s}
+@keyframes float{0%,100%{translate:0 0}50%{translate:0 -12px}}
+.js .rb i::after{width:0;transition:width 1s cubic-bezier(.2,.7,.2,1) .6s}
+.js .in .rb i::after{width:var(--f,100%)}
+.js .bar i{width:0!important;transition:width 1s cubic-bezier(.2,.7,.2,1) .6s}
+.js .in .bar i{width:var(--w)!important}
+.radar .blip{animation:blip 5s ease-out infinite;transform-box:fill-box;transform-origin:center}
+.radar .blip.b2{animation-delay:1.7s}.radar .blip.b3{animation-delay:3.3s}
+@keyframes blip{0%{opacity:.35;transform:scale(1)}8%{opacity:1;transform:scale(1.6)}30%{opacity:.9;transform:scale(1)}100%{opacity:.35}}
+@media (prefers-reduced-motion:reduce){
+  .js .rv,.js .hero h1 .w{opacity:1!important;transform:none!important;filter:none!important;transition:none!important}
+  .js .float,.js .hero::before,.js .hero::after,.js .marquee .track,.js .pulse,.radar .blip,.siren{animation:none!important}
+}
+
+/* ---- telas do app (mesmo CSS da apresentação) ---- */
+  .phones{display:flex;gap:18px;flex-wrap:wrap;justify-content:center}
+  .phone{width:250px;height:520px;background:var(--paper);border:8px solid #2a2f45;border-radius:36px;overflow:hidden;position:relative;display:flex;flex-direction:column;flex:none}
+  .phone .cap{position:absolute;top:0;left:50%;transform:translateX(-50%);width:80px;height:20px;background:#2a2f45;border-radius:0 0 12px 12px;z-index:5}
+  .ph-hdr{display:flex;align-items:center;justify-content:space-between;padding:30px 12px 8px;flex:none}
+  .ph-logo{display:flex;align-items:center;gap:6px;font-family:var(--wordmark);font-weight:500;text-transform:uppercase;letter-spacing:.15em;font-size:15px}
+  .ph-logo b{font-weight:500;color:var(--amber)}
+  .siren{width:28px;height:28px;border-radius:50%;background:var(--coral);animation:pulse 1.8s infinite}
+  @keyframes pulse{0%{box-shadow:0 0 0 0 rgba(244,115,111,.5)}100%{box-shadow:0 0 0 10px rgba(244,115,111,0)}}
+  @media (prefers-reduced-motion:reduce){.siren{animation:none}}
+  .ph-body{flex:1;overflow:hidden;padding:0 10px;display:flex;flex-direction:column;gap:8px;font-size:10px}
+  .ph-card{background:var(--surface);border:1px solid var(--border);border-radius:11px;padding:9px;display:flex;flex-direction:column;gap:5px}
+  .ph-h{font-family:var(--display);text-transform:uppercase;letter-spacing:.1em;font-size:11px}
+  .ph-big{font-family:var(--display);text-transform:uppercase;letter-spacing:.08em;font-size:20px;line-height:1}
+  .ph-eyebrow{font-size:8px;text-transform:uppercase;letter-spacing:.12em;color:var(--dim)}
+  .ph-p{color:var(--muted);font-size:9.5px;line-height:1.35}
+  .ph-small{color:var(--dim);font-size:8.5px}
+  .ph-btn{text-align:center;font-family:var(--display);text-transform:uppercase;letter-spacing:.12em;font-size:10px;padding:7px;border-radius:9px;flex:1}
+  .ph-stats{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+  .ph-stat{background:var(--surface);border:1px solid var(--border);border-radius:11px;padding:8px}
+  .ph-stat .v{font-family:var(--display);font-size:17px}
+  .ph-tabs{display:flex;background:var(--surface);border-top:1px solid var(--border);padding:6px 4px 14px;flex:none}
+  .ph-tab{flex:1;text-align:center;font-size:8px;color:var(--dim);font-weight:500}
+  .ph-tab.on{color:var(--coralInk)}
+  .ph-tab i{display:block;width:14px;height:14px;margin:0 auto 2px;border-radius:4px;background:currentColor;opacity:.75}
+  .chips{display:flex;gap:4px;overflow:hidden;white-space:nowrap}
+  .chip{font-size:8px;font-weight:500;padding:3px 7px;border-radius:999px;border:1px solid;flex:none}
+  .badge{font-size:8px;font-weight:500;padding:2px 6px;border-radius:5px}
+  .between{display:flex;justify-content:space-between;align-items:center;gap:6px}
+  .rank{display:flex;align-items:center;gap:6px}
+  .rank .n{font-family:var(--display);font-size:13px;color:var(--dim);width:12px}
+  .map{position:relative;border-radius:11px;overflow:hidden;background:#EAEAE6}
+  .map canvas{display:block;width:100%;height:100%}
+  .rb{display:flex;gap:3px}
+  .rb i{display:block;width:16px;height:5px;border-radius:3px;background:var(--border);overflow:hidden;position:relative}
+  .rb i::after{content:"";position:absolute;inset:0;width:var(--f,100%);background:var(--c);border-radius:3px}
+  .axis{display:flex;align-items:center;gap:6px;font-size:8.5px;color:var(--muted)}
+  .axis span:first-child{width:46px}
+  .axis b{margin-left:auto;color:var(--ink)}
+  .ring{width:44px;height:44px;border-radius:50%;background:conic-gradient(var(--coral) 0 72deg,var(--orange) 72deg 144deg,var(--yellow) 144deg 216deg,var(--turq) 216deg 288deg,var(--lilac) 288deg 338deg,var(--border) 338deg 360deg);position:relative;flex:none}
+  .ring::after{content:"";position:absolute;inset:7px;border-radius:50%;background:#fff}
+  .ring::before{content:"";position:absolute;left:50%;top:50%;width:14px;height:14px;margin:-7px;border-radius:50%;background:#161B2E;z-index:1}
+  .input{background:var(--surface);border:1px solid var(--border);border-radius:9px;padding:7px 8px;color:var(--dim);font-size:9px}
+  .lbl{font-family:var(--display);text-transform:uppercase;letter-spacing:.12em;font-size:9px;color:var(--muted)}
+  .caption{text-align:center;color:var(--dim);font-size:12px;margin-top:8px;letter-spacing:.08em;text-transform:uppercase;font-family:var(--display)}
+  .cell{display:flex;flex-direction:column}
+  .photo{position:relative;border-radius:11px;overflow:hidden;background:linear-gradient(135deg,#F5A45D,#F4736F 45%,#AE96F2);}
+  .photo .shot{position:absolute;inset:0;width:100%;height:100%;display:block}
+  .photo .cred{position:absolute;left:0;right:0;bottom:0;padding:3px 6px;font-size:7.5px;color:#fff;background:linear-gradient(transparent,rgba(0,0,0,.55))}
+  .tile{width:44px;height:44px;border-radius:9px;flex:none;display:flex;align-items:center;justify-content:center;font-size:16px}
+  .bar{display:flex;align-items:center;gap:6px;font-size:8.5px;color:var(--muted)}
+  .bar span:first-child{width:50px}
+  .bar i{display:block;height:5px;border-radius:3px;background:var(--c);width:var(--w);flex:none}
+  .bar b{margin-left:auto;color:var(--ink)}
+.phone{color:var(--ink);text-align:left}
+
+.siren{width:28px;height:28px;border-radius:50%;background:var(--coral);animation:pulse 1.8s infinite}
+.phone{box-shadow:0 40px 80px -30px rgba(10,12,30,.55),0 0 0 1px rgba(255,255,255,.04)}
+.ph-hdr .mark{width:20px;height:20px}
+.ph-hdr .mark::after{inset:3px;background:#fff}
+.ph-hdr .mark::before{width:6px;height:6px;margin:-3px;background:#161B2E}
+</style>
+</head>
+<body>
+<script>document.documentElement.classList.add("js")</script>
+
+<nav class="top" id="top">
+  <div class="wrap">
+    <a class="logo" href="#"><span class="mark"></span><span>Iris<b>a</b></span></a>
+    <div class="links">
+      <a href="#lugares">Como funciona</a>
+      <a href="#seguranca">Segurança</a>
+      <a href="#ongs">Para ONGs</a>
+      <a class="btn primary" href="#testar">Quero testar</a>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero dark" id="hero">
+  <div class="wrap">
+    <div>
+      <div class="wordmark">Iris<b>a</b> · app da comunidade LGBTQIA+</div>
+      <h1><span class="w">Quanta</span> <em class="w">cor</em> <span class="w">tem</span> <span class="w">aqui?</span></h1>
+      <div class="rule rv d2" style="width:min(100%,440px);height:8px"></div>
+      <p class="lead rv d3">Diga quanta cor tem cada bar, café e balada. E guarde, sem nome, o que não deveria ter acontecido na rua. Um mapa feito por quem viveu, para quem vem depois.</p>
+      <div class="btns rv d4">
+        <a class="btn primary" href="#testar">Quero testar</a>
+        <a class="btn ghost" href="pitch.html">Ver a apresentação</a>
+      </div>
+      <div class="meta rv d4"><span>Aprovado pelo Google Play</span><span>Em teste no Android</span><span>Anônimo por construção</span></div>
+    </div>
+    <div class="stage">
+      <svg class="radar" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+    
+    <g transform="translate(50 50) scale(1) translate(-50 -50)"><path d="M 50.00 2.00 A 48 48 0 0 1 55.53 2.32 L 54.03 15.23 A 35 35 0 0 0 50.00 15.00 Z" fill="#f4736f"/><path d="M 53.14 2.10 A 48 48 0 0 1 58.64 2.78 L 56.30 15.57 A 35 35 0 0 0 52.29 15.07 Z" fill="#f4766e"/><path d="M 56.27 2.41 A 48 48 0 0 1 61.71 3.45 L 58.54 16.06 A 35 35 0 0 0 54.57 15.30 Z" fill="#f4796d"/><path d="M 59.36 2.92 A 48 48 0 0 1 64.73 4.31 L 60.74 16.69 A 35 35 0 0 0 56.83 15.67 Z" fill="#f47c6c"/><path d="M 62.42 3.64 A 48 48 0 0 1 67.68 5.38 L 62.89 17.46 A 35 35 0 0 0 59.06 16.19 Z" fill="#f47f6b"/><path d="M 65.43 4.55 A 48 48 0 0 1 70.56 6.63 L 64.99 18.37 A 35 35 0 0 0 61.25 16.86 Z" fill="#f48269"/><path d="M 68.37 5.65 A 48 48 0 0 1 73.35 8.06 L 67.03 19.42 A 35 35 0 0 0 63.39 17.66 Z" fill="#f48568"/><path d="M 71.23 6.95 A 48 48 0 0 1 76.05 9.68 L 68.99 20.60 A 35 35 0 0 0 65.48 18.61 Z" fill="#f48867"/><path d="M 74.00 8.43 A 48 48 0 0 1 78.63 11.47 L 70.88 21.91 A 35 35 0 0 0 67.50 19.69 Z" fill="#f58c66"/><path d="M 76.67 10.09 A 48 48 0 0 1 81.09 13.43 L 72.67 23.33 A 35 35 0 0 0 69.44 20.90 Z" fill="#f58f65"/><path d="M 79.22 11.92 A 48 48 0 0 1 83.41 15.54 L 74.36 24.87 A 35 35 0 0 0 71.31 22.23 Z" fill="#f59264"/><path d="M 81.65 13.91 A 48 48 0 0 1 85.60 17.80 L 75.95 26.52 A 35 35 0 0 0 73.08 23.69 Z" fill="#f59563"/><path d="M 83.94 16.06 A 48 48 0 0 1 87.62 20.19 L 77.43 28.27 A 35 35 0 0 0 74.75 25.25 Z" fill="#f59862"/><path d="M 86.09 18.35 A 48 48 0 0 1 89.49 22.72 L 78.80 30.11 A 35 35 0 0 0 76.31 26.92 Z" fill="#f59b60"/><path d="M 88.08 20.78 A 48 48 0 0 1 91.19 25.36 L 80.04 32.03 A 35 35 0 0 0 77.77 28.69 Z" fill="#f59e5f"/><path d="M 89.91 23.33 A 48 48 0 0 1 92.72 28.11 L 81.15 34.04 A 35 35 0 0 0 79.10 30.56 Z" fill="#f5a15e"/><path d="M 91.57 26.00 A 48 48 0 0 1 94.06 30.95 L 82.12 36.11 A 35 35 0 0 0 80.31 32.50 Z" fill="#f5a45d"/><path d="M 93.05 28.77 A 48 48 0 0 1 95.21 33.87 L 82.96 38.24 A 35 35 0 0 0 81.39 34.52 Z" fill="#f5a65f"/><path d="M 94.35 31.63 A 48 48 0 0 1 96.17 36.86 L 83.66 40.42 A 35 35 0 0 0 82.34 36.61 Z" fill="#f4a960"/><path d="M 95.45 34.57 A 48 48 0 0 1 96.93 39.91 L 84.22 42.64 A 35 35 0 0 0 83.14 38.75 Z" fill="#f4ab62"/><path d="M 96.36 37.58 A 48 48 0 0 1 97.49 43.00 L 84.63 44.90 A 35 35 0 0 0 83.81 40.94 Z" fill="#f4ae63"/><path d="M 97.08 40.64 A 48 48 0 0 1 97.84 46.12 L 84.89 47.17 A 35 35 0 0 0 84.33 43.17 Z" fill="#f3b065"/><path d="M 97.59 43.73 A 48 48 0 0 1 97.99 49.26 L 85.00 49.46 A 35 35 0 0 0 84.70 45.43 Z" fill="#f3b266"/><path d="M 97.90 46.86 A 48 48 0 0 1 97.94 52.40 L 84.96 51.75 A 35 35 0 0 0 84.93 47.71 Z" fill="#f3b568"/><path d="M 98.00 50.00 A 48 48 0 0 1 97.68 55.53 L 84.77 54.03 A 35 35 0 0 0 85.00 50.00 Z" fill="#f3b769"/><path d="M 97.90 53.14 A 48 48 0 0 1 97.22 58.64 L 84.43 56.30 A 35 35 0 0 0 84.93 52.29 Z" fill="#f2b96b"/><path d="M 97.59 56.27 A 48 48 0 0 1 96.55 61.71 L 83.94 58.54 A 35 35 0 0 0 84.70 54.57 Z" fill="#f2bc6c"/><path d="M 97.08 59.36 A 48 48 0 0 1 95.69 64.73 L 83.31 60.74 A 35 35 0 0 0 84.33 56.83 Z" fill="#f2be6e"/><path d="M 96.36 62.42 A 48 48 0 0 1 94.62 67.68 L 82.54 62.89 A 35 35 0 0 0 83.81 59.06 Z" fill="#f1c16f"/><path d="M 95.45 65.43 A 48 48 0 0 1 93.37 70.56 L 81.63 64.99 A 35 35 0 0 0 83.14 61.25 Z" fill="#f1c371"/><path d="M 94.35 68.37 A 48 48 0 0 1 91.94 73.35 L 80.58 67.03 A 35 35 0 0 0 82.34 63.39 Z" fill="#f1c572"/><path d="M 93.05 71.23 A 48 48 0 0 1 90.32 76.05 L 79.40 68.99 A 35 35 0 0 0 81.39 65.48 Z" fill="#f0c874"/><path d="M 91.57 74.00 A 48 48 0 0 1 88.53 78.63 L 78.09 70.88 A 35 35 0 0 0 80.31 67.50 Z" fill="#f0ca75"/><path d="M 89.91 76.67 A 48 48 0 0 1 86.57 81.09 L 76.67 72.67 A 35 35 0 0 0 79.10 69.44 Z" fill="#e7ca79"/><path d="M 88.08 79.22 A 48 48 0 0 1 84.46 83.41 L 75.13 74.36 A 35 35 0 0 0 77.77 71.31 Z" fill="#deca7d"/><path d="M 86.09 81.65 A 48 48 0 0 1 82.20 85.60 L 73.48 75.95 A 35 35 0 0 0 76.31 73.08 Z" fill="#d4ca81"/><path d="M 83.94 83.94 A 48 48 0 0 1 79.81 87.62 L 71.73 77.43 A 35 35 0 0 0 74.75 74.75 Z" fill="#cbca85"/><path d="M 81.65 86.09 A 48 48 0 0 1 77.28 89.49 L 69.89 78.80 A 35 35 0 0 0 73.08 76.31 Z" fill="#c2ca89"/><path d="M 79.22 88.08 A 48 48 0 0 1 74.64 91.19 L 67.97 80.04 A 35 35 0 0 0 71.31 77.77 Z" fill="#b9ca8d"/><path d="M 76.67 89.91 A 48 48 0 0 1 71.89 92.72 L 65.96 81.15 A 35 35 0 0 0 69.44 79.10 Z" fill="#afca91"/><path d="M 74.00 91.57 A 48 48 0 0 1 69.05 94.06 L 63.89 82.12 A 35 35 0 0 0 67.50 80.31 Z" fill="#a6ca95"/><path d="M 71.23 93.05 A 48 48 0 0 1 66.13 95.21 L 61.76 82.96 A 35 35 0 0 0 65.48 81.39 Z" fill="#9dc998"/><path d="M 68.37 94.35 A 48 48 0 0 1 63.14 96.17 L 59.58 83.66 A 35 35 0 0 0 63.39 82.34 Z" fill="#94c99c"/><path d="M 65.43 95.45 A 48 48 0 0 1 60.09 96.93 L 57.36 84.22 A 35 35 0 0 0 61.25 83.14 Z" fill="#8ac9a0"/><path d="M 62.42 96.36 A 48 48 0 0 1 57.00 97.49 L 55.10 84.63 A 35 35 0 0 0 59.06 83.81 Z" fill="#81c9a4"/><path d="M 59.36 97.08 A 48 48 0 0 1 53.88 97.84 L 52.83 84.89 A 35 35 0 0 0 56.83 84.33 Z" fill="#78c9a8"/><path d="M 56.27 97.59 A 48 48 0 0 1 50.74 97.99 L 50.54 85.00 A 35 35 0 0 0 54.57 84.70 Z" fill="#6fc9ac"/><path d="M 53.14 97.90 A 48 48 0 0 1 47.60 97.94 L 48.25 84.96 A 35 35 0 0 0 52.29 84.93 Z" fill="#65c9b0"/><path d="M 50.00 98.00 A 48 48 0 0 1 44.47 97.68 L 45.97 84.77 A 35 35 0 0 0 50.00 85.00 Z" fill="#5cc9b4"/><path d="M 46.86 97.90 A 48 48 0 0 1 41.36 97.22 L 43.70 84.43 A 35 35 0 0 0 47.71 84.93 Z" fill="#5dc7b8"/><path d="M 43.73 97.59 A 48 48 0 0 1 38.29 96.55 L 41.46 83.94 A 35 35 0 0 0 45.43 84.70 Z" fill="#5ec5bb"/><path d="M 40.64 97.08 A 48 48 0 0 1 35.27 95.69 L 39.26 83.31 A 35 35 0 0 0 43.17 84.33 Z" fill="#5fc3bf"/><path d="M 37.58 96.36 A 48 48 0 0 1 32.32 94.62 L 37.11 82.54 A 35 35 0 0 0 40.94 83.81 Z" fill="#60c1c3"/><path d="M 34.57 95.45 A 48 48 0 0 1 29.44 93.37 L 35.01 81.63 A 35 35 0 0 0 38.75 83.14 Z" fill="#60bfc6"/><path d="M 31.63 94.35 A 48 48 0 0 1 26.65 91.94 L 32.97 80.58 A 35 35 0 0 0 36.61 82.34 Z" fill="#61bdca"/><path d="M 28.77 93.05 A 48 48 0 0 1 23.95 90.32 L 31.01 79.40 A 35 35 0 0 0 34.52 81.39 Z" fill="#62bbcd"/><path d="M 26.00 91.57 A 48 48 0 0 1 21.37 88.53 L 29.12 78.09 A 35 35 0 0 0 32.50 80.31 Z" fill="#63b9d1"/><path d="M 23.33 89.91 A 48 48 0 0 1 18.91 86.57 L 27.33 76.67 A 35 35 0 0 0 30.56 79.10 Z" fill="#64b6d5"/><path d="M 20.78 88.08 A 48 48 0 0 1 16.59 84.46 L 25.64 75.13 A 35 35 0 0 0 28.69 77.77 Z" fill="#65b4d8"/><path d="M 18.35 86.09 A 48 48 0 0 1 14.40 82.20 L 24.05 73.48 A 35 35 0 0 0 26.92 76.31 Z" fill="#66b2dc"/><path d="M 16.06 83.94 A 48 48 0 0 1 12.38 79.81 L 22.57 71.73 A 35 35 0 0 0 25.25 74.75 Z" fill="#67b0e0"/><path d="M 13.91 81.65 A 48 48 0 0 1 10.51 77.28 L 21.20 69.89 A 35 35 0 0 0 23.69 73.08 Z" fill="#67aee3"/><path d="M 11.92 79.22 A 48 48 0 0 1 8.81 74.64 L 19.96 67.97 A 35 35 0 0 0 22.23 71.31 Z" fill="#68ace7"/><path d="M 10.09 76.67 A 48 48 0 0 1 7.28 71.89 L 18.85 65.96 A 35 35 0 0 0 20.90 69.44 Z" fill="#69aaea"/><path d="M 8.43 74.00 A 48 48 0 0 1 5.94 69.05 L 17.88 63.89 A 35 35 0 0 0 19.69 67.50 Z" fill="#6aa8ee"/><path d="M 6.95 71.23 A 48 48 0 0 1 4.79 66.13 L 17.04 61.76 A 35 35 0 0 0 18.61 65.48 Z" fill="#6ea7ee"/><path d="M 5.65 68.37 A 48 48 0 0 1 3.83 63.14 L 16.34 59.58 A 35 35 0 0 0 17.66 63.39 Z" fill="#73a6ef"/><path d="M 4.55 65.43 A 48 48 0 0 1 3.07 60.09 L 15.78 57.36 A 35 35 0 0 0 16.86 61.25 Z" fill="#77a5ef"/><path d="M 3.64 62.42 A 48 48 0 0 1 2.51 57.00 L 15.37 55.10 A 35 35 0 0 0 16.19 59.06 Z" fill="#7ba4ef"/><path d="M 2.92 59.36 A 48 48 0 0 1 2.16 53.88 L 15.11 52.83 A 35 35 0 0 0 15.67 56.83 Z" fill="#7fa2ef"/><path d="M 2.41 56.27 A 48 48 0 0 1 2.01 50.74 L 15.00 50.54 A 35 35 0 0 0 15.30 54.57 Z" fill="#84a1f0"/><path d="M 2.10 53.14 A 48 48 0 0 1 2.06 47.60 L 15.04 48.25 A 35 35 0 0 0 15.07 52.29 Z" fill="#88a0f0"/><path d="M 2.00 50.00 A 48 48 0 0 1 2.32 44.47 L 15.23 45.97 A 35 35 0 0 0 15.00 50.00 Z" fill="#8c9ff0"/><path d="M 2.10 46.86 A 48 48 0 0 1 2.78 41.36 L 15.57 43.70 A 35 35 0 0 0 15.07 47.71 Z" fill="#909ef0"/><path d="M 2.41 43.73 A 48 48 0 0 1 3.45 38.29 L 16.06 41.46 A 35 35 0 0 0 15.30 45.43 Z" fill="#959df1"/><path d="M 2.92 40.64 A 48 48 0 0 1 4.31 35.27 L 16.69 39.26 A 35 35 0 0 0 15.67 43.17 Z" fill="#999cf1"/><path d="M 3.64 37.58 A 48 48 0 0 1 5.38 32.32 L 17.46 37.11 A 35 35 0 0 0 16.19 40.94 Z" fill="#9d9bf1"/><path d="M 4.55 34.57 A 48 48 0 0 1 6.63 29.44 L 18.37 35.01 A 35 35 0 0 0 16.86 38.75 Z" fill="#a199f1"/><path d="M 5.65 31.63 A 48 48 0 0 1 8.06 26.65 L 19.42 32.97 A 35 35 0 0 0 17.66 36.61 Z" fill="#a698f2"/><path d="M 6.95 28.77 A 48 48 0 0 1 9.68 23.95 L 20.60 31.01 A 35 35 0 0 0 18.61 34.52 Z" fill="#aa97f2"/><path d="M 8.43 26.00 A 48 48 0 0 1 11.47 21.37 L 21.91 29.12 A 35 35 0 0 0 19.69 32.50 Z" fill="#ae96f2"/><path d="M 10.09 23.33 A 48 48 0 0 1 13.43 18.91 L 23.33 27.33 A 35 35 0 0 0 20.90 30.56 Z" fill="#b294ea"/><path d="M 11.92 20.78 A 48 48 0 0 1 15.54 16.59 L 24.87 25.64 A 35 35 0 0 0 22.23 28.69 Z" fill="#b792e2"/><path d="M 13.91 18.35 A 48 48 0 0 1 17.80 14.40 L 26.52 24.05 A 35 35 0 0 0 23.69 26.92 Z" fill="#bb8fd9"/><path d="M 16.06 16.06 A 48 48 0 0 1 20.19 12.38 L 28.27 22.57 A 35 35 0 0 0 25.25 25.25 Z" fill="#c08dd1"/><path d="M 18.35 13.91 A 48 48 0 0 1 22.72 10.51 L 30.11 21.20 A 35 35 0 0 0 26.92 23.69 Z" fill="#c48bc9"/><path d="M 20.78 11.92 A 48 48 0 0 1 25.36 8.81 L 32.03 19.96 A 35 35 0 0 0 28.69 22.23 Z" fill="#c889c1"/><path d="M 23.33 10.09 A 48 48 0 0 1 28.11 7.28 L 34.04 18.85 A 35 35 0 0 0 30.56 20.90 Z" fill="#cd87b9"/><path d="M 26.00 8.43 A 48 48 0 0 1 30.95 5.94 L 36.11 17.88 A 35 35 0 0 0 32.50 19.69 Z" fill="#d185b1"/><path d="M 28.77 6.95 A 48 48 0 0 1 33.87 4.79 L 38.24 17.04 A 35 35 0 0 0 34.52 18.61 Z" fill="#d582a8"/><path d="M 31.63 5.65 A 48 48 0 0 1 36.86 3.83 L 40.42 16.34 A 35 35 0 0 0 36.61 17.66 Z" fill="#da80a0"/><path d="M 34.57 4.55 A 48 48 0 0 1 39.91 3.07 L 42.64 15.78 A 35 35 0 0 0 38.75 16.86 Z" fill="#de7e98"/><path d="M 37.58 3.64 A 48 48 0 0 1 43.00 2.51 L 44.90 15.37 A 35 35 0 0 0 40.94 16.19 Z" fill="#e37c90"/><path d="M 40.64 2.92 A 48 48 0 0 1 46.12 2.16 L 47.17 15.11 A 35 35 0 0 0 43.17 15.67 Z" fill="#e77a88"/><path d="M 43.73 2.41 A 48 48 0 0 1 49.26 2.01 L 49.46 15.00 A 35 35 0 0 0 45.43 15.30 Z" fill="#eb777f"/><path d="M 46.86 2.10 A 48 48 0 0 1 52.40 2.06 L 51.75 15.04 A 35 35 0 0 0 47.71 15.07 Z" fill="#f07577"/><defs><linearGradient id="sw100" gradientUnits="userSpaceOnUse" x1="21.42" y1="33.50" x2="68.93" y2="22.97"><stop offset="0%" stop-color="#5CC9B4" stop-opacity="0"/><stop offset="100%" stop-color="#5CC9B4" stop-opacity="0.5"/></linearGradient></defs><g class="sweep"><animateTransform class="giro" attributeName="transform" type="rotate" from="0 50 50" to="360 50 50" dur="5s" repeatCount="indefinite" begin="indefinite"/><path d="M 21.42 33.50 A 33 33 0 0 1 68.93 22.97 L 50.00 50.00 A 0 0 0 0 0 50.00 50.00 Z" fill="url(#sw100)"/><path d="M 50 50 L 68.93 22.97" stroke="#5CC9B4" stroke-width="1.6" stroke-linecap="round" stroke-opacity="0.75"/></g><circle cx="50" cy="50" r="25" fill="none" stroke="#5CC9B4" stroke-width="0.8" stroke-opacity="0.35"/><circle cx="66" cy="36" r="6.510000000000001" fill="#5CC9B4" fill-opacity="0.14"/><circle class="blip" cx="66" cy="36" r="3.1" fill="#5CC9B4"/><circle cx="63" cy="62" r="5.04" fill="#F4736F" fill-opacity="0.14"/><circle class="blip b2" cx="63" cy="62" r="2.4" fill="#F4736F"/><circle cx="38" cy="34" r="3.9899999999999998" fill="#5CC9B4" fill-opacity="0.14"/><circle class="blip b3" cx="38" cy="34" r="1.9" fill="#5CC9B4"/><circle cx="50" cy="50" r="13" fill="#161B2E"/><circle cx="46.1" cy="45.6" r="2.86" fill="#FFFFFF"/></g></svg>
+      <div class="cell"><div class="phone"><div class="cap"></div>
+      <div class="ph-hdr"><div class="ph-logo"><span class="mark"></span><span>Iris<b>a</b></span></div><div class="siren"></div></div>
+      <div class="ph-body">
+        <div class="ph-card"><div class="ph-eyebrow">Sua cidade</div><div class="ph-big">Curitiba</div><div class="ph-small" style="color:var(--turqInk)">Curitiba · PR ▾</div>
+          <div style="display:flex;gap:5px"><div class="ph-btn" style="background:var(--turq);color:var(--night)">Avaliar um lugar</div><div class="ph-btn" style="background:var(--coral);color:var(--night)">Registrar relato</div></div></div>
+        <div class="ph-h">Lugares mais acolhedores</div>
+        <div class="ph-card"><div class="between"><span class="ph-h">Bar do Gato</span><span class="ph-small">Bar</span></div>
+          <div class="between" style="justify-content:flex-start"><div class="rb"><i style="--c:var(--coral)"></i><i style="--c:var(--orange)"></i><i style="--c:var(--yellow)"></i><i style="--c:var(--turq)"></i><i style="--c:var(--lilac);--f:70%"></i></div><b style="color:var(--turqInk)">4.7</b><span class="badge" style="background:#5CC9B42E;color:var(--turqInk)">Acolhedor</span></div>
+          <div class="ph-small">38 avaliações · São Francisco</div></div>
+        <div class="ph-h">Segurança na cidade</div>
+        <div class="ph-stats">
+          <div class="ph-stat"><div class="ph-eyebrow">Relatos</div><div class="v">142</div></div>
+          <div class="ph-stat"><div class="ph-eyebrow">Últimos 30 dias</div><div class="v" style="color:var(--yellowInk)">23</div></div>
+          <div class="ph-stat"><div class="ph-eyebrow">Mais frequente</div><div class="v" style="font-size:12px;color:var(--yellowInk)">Agressão verbal</div></div>
+          <div class="ph-stat"><div class="ph-eyebrow">Área crítica</div><div class="v" style="font-size:12px;color:var(--coralInk)">Centro</div></div>
+        </div>
+      </div>
+      <div class="ph-tabs"><div class="ph-tab on"><i></i>Início</div><div class="ph-tab"><i></i>Mapa</div><div class="ph-tab"><i></i>Lugares</div><div class="ph-tab"><i></i>Apoio</div><div class="ph-tab"><i></i>Perfil</div></div>
+    </div><div class="caption">Início</div></div>
+      <div class="cell"><div class="phone"><div class="cap"></div>
+      <div class="ph-hdr"><div class="ph-logo"><span class="mark"></span><span>Iris<b>a</b></span></div><div class="siren"></div></div>
+      <div class="ph-body">
+        <div class="between"><div><div class="ph-big">Mapa</div><div class="ph-small">Curitiba · 142 relatos</div></div><div class="ph-btn" style="flex:none;background:var(--coral);color:var(--night);padding:5px 9px">Registrar</div></div>
+        <div class="chips"><span class="chip" style="border-color:var(--night);background:var(--night);color:#fff">Todos (142)</span><span class="chip" style="border-color:var(--yellowInk);color:var(--yellowInk)">Agressão verbal (61)</span><span class="chip" style="border-color:var(--coralInk);color:var(--coralInk)">Física (24)</span></div>
+        <div class="map" style="height:230px"><canvas class="mapc" width="230" height="230"></canvas></div>
+        <div class="ph-card"><div class="ph-h">Áreas de atenção</div>
+          <div class="rank"><span class="n">1</span><span>Centro</span><b style="margin-left:auto;color:var(--coralInk)">Risco alto</b></div>
+          <div class="rank"><span class="n">2</span><span>Rebouças</span><b style="margin-left:auto;color:var(--orangeInk)">Risco médio</b></div>
+          <div class="rank"><span class="n">3</span><span>Batel</span><b style="margin-left:auto;color:var(--yellowInk)">Risco baixo</b></div></div>
+      </div>
+      <div class="ph-tabs"><div class="ph-tab"><i></i>Início</div><div class="ph-tab on"><i></i>Mapa</div><div class="ph-tab"><i></i>Lugares</div><div class="ph-tab"><i></i>Apoio</div><div class="ph-tab"><i></i>Perfil</div></div>
+    </div><div class="caption">Mapa</div></div>
+    </div>
+  </div>
+</section>
+
+<div class="marquee" aria-hidden="true"><div class="track">
+  <span>Nesse bar pode.</span><span class="dot"></span><span>Nessa rua, de noite, não.</span><span class="dot"></span><span>Quanta <i>cor</i> tem esse lugar?</span><span class="dot"></span><span>Dito por quem viveu.</span><span class="dot"></span><span>Guardado sem nome.</span><span class="dot"></span><span>Lido por quem vem depois.</span><span class="dot"></span><span>Nesse bar pode.</span><span class="dot"></span><span>Nessa rua, de noite, não.</span><span class="dot"></span><span>Quanta <i>cor</i> tem esse lugar?</span><span class="dot"></span><span>Dito por quem viveu.</span><span class="dot"></span><span>Guardado sem nome.</span><span class="dot"></span><span>Lido por quem vem depois.</span><span class="dot"></span>
+</div></div>
+
+<!-- IRISAR -->
+<section class="block" id="lugares">
+  <div class="wrap split">
+    <div class="txt">
+      <div class="eyebrow rv">O uso de toda semana</div>
+      <h2 class="rv d1">Irisar um lugar</h2>
+      <div class="rule rv d2"></div>
+      <p class="lead rv d2">O app não pergunta quantas estrelas. Pergunta quanta cor. Quatro perguntas de 1 a 5, respondidas por quem esteve lá. O arco-íris deixa de ser adesivo na vitrine e vira medida.</p>
+      <div class="axes">
+        <div class="axis-card rv d1"><b style="color:var(--coralInk)" data-count="30">30%</b><h3>Atendimento</h3><p>A equipe te tratou bem? Sem olhar torto, sem insistir no "senhor".</p></div>
+        <div class="axis-card rv d2"><b style="color:var(--orangeInk)" data-count="30">30%</b><h3>Afeto</h3><p>Dava para ficar de mãos dadas, um beijo, sem plateia?</p></div>
+        <div class="axis-card rv d3"><b style="color:var(--yellowInk)" data-count="25">25%</b><h3>Banheiro</h3><p>Usou o que quis, sem ser questionade.</p></div>
+        <div class="axis-card rv d4"><b style="color:var(--turqInk)" data-count="15">15%</b><h3>Clientela</h3><p>E as outras pessoas em volta?</p></div>
+      </div>
+      <div class="badges rv">
+        <span style="background:#5CC9B42E;color:var(--turqInk)">Acolhedor</span>
+        <span style="background:#F0CA752E;color:var(--yellowInk)">Bem avaliado</span>
+        <span style="background:#AE96F22E;color:var(--lilacInk)">Opiniões divididas</span>
+        <span style="background:#F4736F2E;color:var(--coralInk)">Atenção</span>
+      </div>
+      <p class="rv" style="color:var(--muted);font-size:15px">Selo só com cinco avaliações. Avaliação antiga pesa menos. Duas notas 5 não fazem um lugar liderar a cidade.</p>
+    </div>
+    <div class="showcase rv d2">
+      <div class="halo" style="background:radial-gradient(circle,var(--turq),var(--yellow) 60%,transparent 70%)"></div>
+      <div class="cell"><div class="phone"><div class="cap"></div>
+      <div class="ph-hdr"><div class="ph-logo" style="font-size:12px">‹</div><div class="siren"></div></div>
+      <div class="ph-body">
+        <div class="ph-card" style="padding:0;overflow:hidden">
+          <div class="photo" style="height:48px;flex:none"><svg class="shot" viewBox="0 0 240 100" preserveAspectRatio="xMidYMid slice" aria-label="Foto ilustrativa do bar">
+  <defs>
+    <linearGradient id="pd" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3A2A4E"/><stop offset="1" stop-color="#5B3A50"/></linearGradient>
+    <radialGradient id="gl" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#F0CA75" stop-opacity=".75"/><stop offset="1" stop-color="#F0CA75" stop-opacity="0"/></radialGradient>
+    <linearGradient id="bal" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#C08A4E"/><stop offset="1" stop-color="#8A5F33"/></linearGradient>
+  </defs>
+  <rect width="240" height="100" fill="url(#pd)"/>
+  <rect x="0" y="0" width="240" height="26" fill="#2E2140"/>
+  <g>
+    <circle cx="40" cy="30" r="26" fill="url(#gl)"/><circle cx="120" cy="26" r="30" fill="url(#gl)"/><circle cx="200" cy="30" r="26" fill="url(#gl)"/>
+    <g stroke="#1E2340" stroke-width="1.4"><path d="M40 0v14"/><path d="M120 0v10"/><path d="M200 0v14"/></g>
+    <g fill="#F0CA75"><path d="M32 14h16l-5 7H37z"/><path d="M112 10h16l-5 7h-6z"/><path d="M192 14h16l-5 7h-6z"/></g>
+  </g>
+  <rect x="0" y="34" width="240" height="30" fill="#241B36" opacity=".8"/>
+  <g>
+    <rect x="12" y="56" width="216" height="3" rx="1.5" fill="#6B4B2E"/>
+    <g opacity=".95">
+      <rect x="18" y="42" width="7" height="14" rx="2" fill="#F4736F"/><rect x="30" y="39" width="7" height="17" rx="2" fill="#F5A45D"/>
+      <rect x="42" y="43" width="7" height="13" rx="2" fill="#F0CA75"/><rect x="54" y="40" width="7" height="16" rx="2" fill="#5CC9B4"/>
+      <rect x="66" y="44" width="7" height="12" rx="2" fill="#6AA8EE"/><rect x="78" y="41" width="7" height="15" rx="2" fill="#AE96F2"/>
+      <rect x="156" y="42" width="7" height="14" rx="2" fill="#F4736F"/><rect x="168" y="40" width="7" height="16" rx="2" fill="#F5A45D"/>
+      <rect x="180" y="43" width="7" height="13" rx="2" fill="#F0CA75"/><rect x="192" y="39" width="7" height="17" rx="2" fill="#5CC9B4"/>
+      <rect x="204" y="44" width="7" height="12" rx="2" fill="#6AA8EE"/><rect x="216" y="41" width="7" height="15" rx="2" fill="#AE96F2"/>
+    </g>
+  </g>
+  <g>
+    <rect x="94" y="36" width="56" height="18" rx="4" fill="#1E2340" stroke="#F0CA75" stroke-width="1.2"/>
+    <text x="122" y="48" text-anchor="middle" font-family="Oswald,Impact,sans-serif" font-size="9" fill="#F0CA75" letter-spacing="1.2">BAR DO GATO</text>
+  </g>
+  <rect x="0" y="72" width="240" height="6" fill="url(#bal)"/>
+  <rect x="0" y="78" width="240" height="22" fill="#241B36"/>
+  <g fill="#15182B">
+    <circle cx="62" cy="62" r="8"/><path d="M48 100c0-16 6-28 14-28s14 12 14 28z"/>
+    <circle cx="86" cy="65" r="7"/><path d="M74 100c0-14 5-25 12-25s12 11 12 25z"/>
+    <circle cx="172" cy="64" r="7.5"/><path d="M159 100c0-15 6-26 13-26s13 11 13 26z"/>
+  </g>
+  <g fill="#F0CA75" opacity=".9"><rect x="106" y="64" width="5" height="9" rx="1"/><rect x="130" y="65" width="5" height="8" rx="1"/></g>
+  <rect x="0" y="86" width="240" height="14" fill="#0F1222" opacity=".45"/>
+</svg><div class="cred">Foto: Ana M. · Google</div></div>
+          <div style="padding:9px;display:flex;flex-direction:column;gap:5px">
+            <div class="ph-big" style="font-size:17px">Bar do Gato <span style="color:var(--turqInk);font-size:11px">✔</span></div>
+            <div class="ph-small">Bar · São Francisco · Curitiba</div>
+            <div class="ph-small">R. Mateus Leme, 1424</div>
+            <div class="ph-p" style="border:1px solid #F4736F99;border-radius:8px;padding:6px;background:var(--paper)">⚠ 1 relato nesta região nos últimos 6 meses, num raio de 100 m. Não é sobre este lugar — é sobre a rua.</div>
+            <div class="ph-h" style="margin-top:2px">Quanta cor tem esse lugar?</div>
+            <div style="display:flex;align-items:center;gap:8px"><div class="ring"></div><div><b style="font-family:var(--display);font-size:22px;color:var(--turqInk)">4.7</b><br><span class="badge" style="background:#5CC9B42E;color:var(--turqInk)">Acolhedor</span><div class="ph-small">38 avaliações</div></div></div>
+            <div class="axis"><span>Atendimento</span><div class="rb"><i style="--c:var(--coral)"></i><i style="--c:var(--orange)"></i><i style="--c:var(--yellow)"></i><i style="--c:var(--turq)"></i><i style="--c:var(--lilac);--f:80%"></i></div><b>4.8</b></div>
+            <div class="axis"><span>Afeto</span><div class="rb"><i style="--c:var(--coral)"></i><i style="--c:var(--orange)"></i><i style="--c:var(--yellow)"></i><i style="--c:var(--turq)"></i><i style="--c:var(--lilac);--f:90%"></i></div><b>4.9</b></div>
+            <div class="axis"><span>Banheiro</span><div class="rb"><i style="--c:var(--coral)"></i><i style="--c:var(--orange)"></i><i style="--c:var(--yellow)"></i><i style="--c:var(--turq)"></i><i style="--c:var(--lilac);--f:50%"></i></div><b>4.5</b></div>
+            <div class="axis"><span>Clientela</span><div class="rb"><i style="--c:var(--coral)"></i><i style="--c:var(--orange)"></i><i style="--c:var(--yellow)"></i><i style="--c:var(--turq);--f:80%"></i><i style="--c:var(--lilac);--f:0%"></i></div><b>3.8</b></div>
+          </div>
+        </div>
+        <div style="display:flex;gap:5px"><div class="ph-btn" style="border:1px solid var(--turqInk);color:var(--turqInk)">➤ Como chegar</div><div class="ph-btn" style="background:var(--yellow);color:var(--night)">Avaliar este lugar</div></div>
+      </div>
+      <div class="ph-tabs"><div class="ph-tab"><i></i>Início</div><div class="ph-tab"><i></i>Mapa</div><div class="ph-tab on"><i></i>Lugares</div><div class="ph-tab"><i></i>Apoio</div><div class="ph-tab"><i></i>Perfil</div></div>
+    </div><div class="caption">Ficha do lugar</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- REGISTRAR -->
+<section class="block dark" id="seguranca">
+  <div class="wrap split rev">
+    <div class="txt">
+      <div class="eyebrow rv">O uso que ninguém quer precisar</div>
+      <h2 class="rv d1">Registrar leva um minuto</h2>
+      <div class="rule rv d2"></div>
+      <p class="lead rv d2">Um relato é fato, local e apoio. Sem nome, sem perfil, sem ninguém saber quem escreveu. Nem a moderação.</p>
+      <div class="tipos rv d3">
+        <span style="background:var(--yellow)">Agressão verbal</span><span style="background:var(--coral)">Violência física</span><span style="background:var(--orange)">Ameaça</span><span style="background:var(--turq)">Discriminação</span><span style="background:var(--lilac)">Vandalismo</span>
+      </div>
+      <ul class="checks rv d3">
+        <li style="--c:var(--yellow)">Onde foi e quando foi, se você quiser dizer. Nada é obrigatório no pior momento.</li>
+        <li style="--c:var(--coral)">Entra no mapa na hora. Se foi hoje ou ontem, o ponto é borrado em 100 m, porque você pode ainda estar lá.</li>
+        <li style="--c:var(--turq)">Vira área de atenção e alimenta a ficha do bairro, que um coletivo pode levar à prefeitura.</li>
+      </ul>
+    </div>
+    <div class="showcase rv d2">
+      <div class="halo" style="background:radial-gradient(circle,var(--coral),var(--lilac) 60%,transparent 70%)"></div>
+      <div class="cell"><div class="phone"><div class="cap"></div>
+      <div class="ph-hdr"><div class="ph-logo"><span class="mark"></span><span>Iris<b>a</b></span></div><div class="siren"></div></div>
+      <div class="ph-body">
+        <div><div class="ph-big">Registrar</div><div class="ph-small">Relato anônimo de LGBTIfobia</div></div>
+        <div class="lbl">Tipo</div>
+        <div class="chips" style="flex-wrap:wrap;white-space:normal"><span class="chip" style="border-color:var(--yellow);background:var(--yellow);color:var(--night)">Agressão verbal</span><span class="chip" style="border-color:var(--coralInk);color:var(--coralInk)">Violência física</span><span class="chip" style="border-color:var(--orangeInk);color:var(--orangeInk)">Ameaça</span><span class="chip" style="border-color:var(--turqInk);color:var(--turqInk)">Discriminação</span></div>
+        <div class="lbl">Gravidade</div>
+        <div style="display:flex;gap:4px"><span class="chip" style="flex:1;text-align:center;border-color:var(--yellowInk);color:var(--yellowInk)">Baixa</span><span class="chip" style="flex:1;text-align:center;border-color:var(--orange);background:var(--orange);color:var(--night)">Média</span><span class="chip" style="flex:1;text-align:center;border-color:var(--coralInk);color:var(--coralInk)">Alta</span></div>
+        <div class="lbl">Local</div>
+        <div class="ph-btn" style="border:1px solid var(--turqInk);color:var(--turqInk)">⌖ Usar minha localização</div>
+        <div class="map" style="height:90px"><canvas class="mapc pick" width="230" height="90"></canvas></div>
+        <div class="lbl">Onde foi · quando foi <span style="color:var(--dim);letter-spacing:0;text-transform:none">(opcional)</span></div>
+        <div class="chips"><span class="chip" style="border-color:var(--coral);background:var(--coral);color:var(--night)">Rua</span><span class="chip" style="border-color:var(--border);color:var(--muted)">Praça</span><span class="chip" style="border-color:var(--border);color:var(--muted)">Transporte</span><span class="chip" style="border-color:var(--border);color:var(--muted)">Dentro de um lugar</span></div>
+        <div class="chips"><span class="chip" style="border-color:var(--border);color:var(--muted)">Madrugada</span><span class="chip" style="border-color:var(--border);color:var(--muted)">Manhã</span><span class="chip" style="border-color:var(--border);color:var(--muted)">Tarde</span><span class="chip" style="border-color:var(--turq);background:var(--turq);color:var(--night)">Noite</span></div>
+        <div class="input">Foi em um lugar cadastrado? ▾</div>
+        <div class="ph-btn" style="background:var(--coral);color:var(--night);flex:none">Registrar relato</div>
+      </div>
+      <div class="ph-tabs"><div class="ph-tab"><i></i>Início</div><div class="ph-tab"><i></i>Mapa</div><div class="ph-tab"><i></i>Lugares</div><div class="ph-tab"><i></i>Apoio</div><div class="ph-tab"><i></i>Perfil</div></div>
+    </div><div class="caption">Registrar (botão vermelho)</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- REGRA -->
+<section class="block regra">
+  <div class="wrap">
+    <div class="split">
+      <div class="txt">
+        <div class="eyebrow rv">A regra que segura os dois lados</div>
+        <h2 class="rv d1"><span class="a">O lugar recebe cor.</span><br><span class="b">A rua recebe aviso.</span></h2>
+        <p class="lead rv d2">Violência acontece no beco, na praça, no ponto de ônibus. Relato na esquina não derruba a nota do bar. Quem perde confiança é a região, e o app avisa quem vai passar por ali.</p>
+      </div>
+      <div class="showcase rv d2">
+        <div class="halo" style="background:radial-gradient(circle,var(--yellow),var(--coral) 60%,transparent 70%)"></div>
+        <div class="cell"><div class="phone"><div class="cap"></div>
+        <div class="ph-hdr"><div class="ph-logo" style="font-size:12px">‹ Bairro</div><div class="siren"></div></div>
+        <div class="ph-body">
+          <div class="ph-card"><div class="ph-eyebrow">Curitiba · PR</div><div class="ph-big">Centro</div>
+            <div class="ph-small"><b style="color:var(--coralInk)">Risco alto</b> · 31 relatos em 12 meses, 6 graves</div>
+            <div class="ph-small">24 lugares cadastrados · 9 já avaliados</div></div>
+          <div class="ph-card"><div class="ph-h">O que foi relatado</div>
+            <div class="ph-eyebrow">Onde</div>
+            <div class="bar"><span>Rua</span><i style="--c:var(--coral);--w:62%"></i><b>17</b></div>
+            <div class="bar"><span>Transporte</span><i style="--c:var(--orange);--w:29%"></i><b>8</b></div>
+            <div class="bar"><span>Praça</span><i style="--c:var(--turq);--w:22%"></i><b>6</b></div>
+            <div class="ph-eyebrow" style="margin-top:3px">Quando</div>
+            <div class="bar"><span>Noite</span><i style="--c:var(--turq);--w:65%"></i><b>18</b></div>
+            <div class="bar"><span>Madrugada</span><i style="--c:var(--lilac);--w:36%"></i><b>10</b></div></div>
+          <div class="ph-h">Lugares deste bairro</div>
+          <div class="ph-card"><div class="between"><span class="ph-h">Bar do Gato</span><span class="badge" style="background:#5CC9B42E;color:var(--turqInk)">Acolhedor</span></div>
+            <div class="ph-small">4.7 · 38 avaliações</div>
+            <div class="badge" style="align-self:flex-start;background:#F0CA752E;color:var(--yellowInk)">⚠ Região com relato</div></div>
+          <div class="ph-card"><div class="between"><span class="ph-h">Café Cultura</span><span class="ph-small">Café</span></div>
+            <div class="ph-small">Quanta cor tem esse lugar? Seja a primeira pessoa a dizer.</div></div>
+        </div>
+        <div class="ph-tabs"><div class="ph-tab on"><i></i>Início</div><div class="ph-tab"><i></i>Mapa</div><div class="ph-tab"><i></i>Lugares</div><div class="ph-tab"><i></i>Apoio</div><div class="ph-tab"><i></i>Perfil</div></div>
+      </div><div class="caption">Ficha do bairro</div></div>
+      </div>
+    </div>
+    <div class="trio">
+      <div class="card rv d1"><h3 style="color:var(--turqInk)">Ninguém é punido pela vizinhança</h3><p>Só o relato que aponta o próprio lugar desconta da nota dele. O resto aparece como contexto da rua.</p></div>
+      <div class="card rv d2"><h3 style="color:var(--coralInk)">Silêncio não vira selo</h3><p>Sem relato, o app nunca diz "área segura". Diz que ninguém registrou ainda. É diferente.</p></div>
+      <div class="card rv d3"><h3 style="color:var(--yellowInk)">A ficha do bairro</h3><p>O que foi relatado na área, por tipo, onde e quando, junto dos lugares acolhedores dela.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- EMERGÊNCIA -->
+<section class="block dark" style="padding-block:clamp(70px,9vw,110px)">
+  <div class="wrap">
+    <div class="eyebrow rv">Em todas as telas</div>
+    <h2 class="rv d1"><span class="pulse"></span>Pedir ajuda, um toque</h2>
+    <p class="lead rv d2" style="margin-top:20px">O botão no topo do app disca direto. Abaixo dos números nacionais, os serviços LGBT da sua cidade: centro de referência, casa de acolhimento, orientação jurídica.</p>
+    <div class="sos">
+      <a class="rv d1" href="tel:190"><b>190</b><span>Polícia</span></a>
+      <a class="rv d2" href="tel:192"><b>192</b><span>SAMU</span></a>
+      <a class="rv d3" href="tel:100"><b>100</b><span>Direitos Humanos</span></a>
+      <a class="rv d4" href="tel:188"><b>188</b><span>CVV</span></a>
+    </div>
+  </div>
+</section>
+
+<!-- ANONIMATO -->
+<section class="block anon">
+  <div class="wrap">
+    <div class="eyebrow rv">Anonimato por construção</div>
+    <h2 class="rv d1">Ninguém sabe que foi você</h2>
+    <div class="trio">
+      <div class="card rv d1"><div class="ic" style="background:#5CC9B42E;color:var(--turqInk)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg></div><h3>Nem o criador vê</h3><p>O banco guarda o relato sem expor quem escreveu. Nem quem administra o app consegue ligar texto a pessoa.</p></div>
+      <div class="card rv d2"><div class="ic" style="background:#AE96F22E;color:var(--lilacInk)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v2"/><circle cx="10" cy="7" r="4"/><path d="M22 2 16 8"/><path d="M16 2l6 6"/></svg></div><h3>Sem perfil público</h3><p>Não tem seguidor, não tem foto, não tem mensagem direta. Não há como alguém te procurar pelo app.</p></div>
+      <div class="card rv d3"><div class="ic" style="background:#F4736F2E;color:var(--coralInk)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s7-6.2 7-12a7 7 0 0 0-14 0c0 5.8 7 12 7 12z"/><path d="M4 4l16 16"/></svg></div><h3>Sem lista de "lugar LGBT"</h3><p>Lista pública vira alvo. O selo vem da avaliação da comunidade, não de um rótulo na vitrine.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- CIDADES -->
+<section class="block" style="padding-top:0">
+  <div class="wrap">
+    <div class="eyebrow rv">Onde começa</div>
+    <h2 class="rv d1">Quatro cidades, mapa já aberto</h2>
+    <p class="lead rv d2" style="margin-top:20px">Bares, cafés, restaurantes e baladas já estão no mapa. Falta a opinião de quem frequenta. As primeiras avaliações são as que fazem o app existir.</p>
+    <div class="cities">
+      <div class="city rv d1" style="background:var(--turq)"><b>Curitiba</b><span>Paraná</span></div>
+      <div class="city rv d2" style="background:var(--coral)"><b>Recife</b><span>Pernambuco</span></div>
+      <div class="city rv d3" style="background:var(--yellow)"><b>João Pessoa</b><span>Paraíba</span></div>
+      <div class="city rv d4" style="background:var(--lilac)"><b>Joinville</b><span>Santa Catarina</span></div>
+    </div>
+    <p class="rv" style="margin-top:18px;color:var(--muted);font-size:15px">Funciona em qualquer cidade do Brasil. Estas quatro são onde a gente começa a pedir avaliação.</p>
+  </div>
+</section>
+
+<!-- TESTAR -->
+<section class="block dark" id="testar">
+  <div class="wrap">
+    <div class="eyebrow rv">Entre antes de todo mundo</div>
+    <h2 class="rv d1">Seja uma das 12 pessoas</h2>
+    <p class="lead rv d2" style="margin-top:20px">Para o Google liberar a publicação, o app precisa de 12 pessoas testando por 14 dias seguidos. É só instalar, deixar no celular e irisar os lugares que você já frequenta.</p>
+    <div class="progress-g rv d2" aria-label="9 de 12 testadores">
+      <i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i><i></i><i></i><small>9 de 12 · faltam 3</small>
+    </div>
+    <div class="steps">
+      <div class="step rv d1"><span class="n">1</span><div><b>Mande seu e-mail</b><p>O da conta Google do seu Android. Só serve para liberar o download.</p></div></div>
+      <div class="step rv d2"><span class="n">2</span><div><b>Receba o link</b><p>Você entra na loja pelo link e instala como qualquer app.</p></div></div>
+      <div class="step rv d3"><span class="n">3</span><div><b>Fique 14 dias</b><p>Deixe instalado e irise os cinco lugares que você mais frequenta. Achou algo estranho? Conta pra gente.</p></div></div>
+    </div>
+    <div class="btns rv">
+      <a class="btn primary" href="mailto:appirisa@gmail.com?subject=Quero%20testar%20a%20Irisa&amp;body=Meu%20e-mail%20da%20conta%20Google%20do%20Android%3A%20%0A%0AMinha%20cidade%3A%20">Quero testar no Android</a>
+      <a class="btn ghost" href="mailto:appirisa@gmail.com?subject=Me%20avisa%20quando%20a%20Irisa%20sair%20no%20iPhone">Tenho iPhone, me avisa</a>
+    </div>
+
+    <div class="ong rv" id="ongs">
+      <div>
+        <div class="eyebrow">Para ONGs e coletivos</div>
+        <h2 style="font-size:clamp(28px,3.4vw,44px);margin-top:12px">O app é a ferramenta. O trabalho já é de vocês.</h2>
+        <p style="margin-top:16px">Relatos de uma área, por tipo, onde e quando, é o dado que um coletivo leva à subprefeitura pedindo ronda e iluminação. Queremos pensar junto: moderação compartilhada, dados agregados da cidade, serviços locais no app.</p>
+      </div>
+      <div class="btns" style="flex-direction:column;align-items:stretch">
+        <a class="btn turq" href="pitch.html" style="justify-content:center">Ver a apresentação</a>
+        <a class="btn ghost" href="Irisa-apresentacao.pdf" style="justify-content:center">Baixar o PDF</a>
+        <a class="btn ghost" href="mailto:appirisa@gmail.com?subject=Irisa%20%C2%B7%20parceria" style="justify-content:center">Falar com a gente</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <a class="logo" href="#" style="color:#fff"><span class="mark"></span><span>Iris<b>a</b></span></a>
+    <nav>
+      <a href="privacidade.html">Privacidade</a>
+      <a href="termos.html">Termos</a>
+      <a href="excluir-conta.html">Excluir conta</a>
+      <a href="seguranca-infantil.html">Segurança infantil</a>
+      <a href="https://www.instagram.com/irisapp">Instagram</a>
+      <a href="mailto:appirisa@gmail.com">appirisa@gmail.com</a>
+    </nav>
+    <div class="sos-line"><span class="pulse" style="width:10px;height:10px"></span>Em risco imediato, ligue 190</div>
+    <div>Projeto comunitário, sem fins lucrativos.</div>
+  </div>
+</footer>
+
+<script>
+(function(){
+  var reduz=matchMedia("(prefers-reduced-motion:reduce)").matches;
+  // nav fica sólida depois do hero
+  var nav=document.getElementById("top"),hero=document.getElementById("hero");
+  var navObs=new IntersectionObserver(function(es){nav.classList.toggle("solid",!es[0].isIntersecting)},{rootMargin:"-68px 0px 0px 0px"});
+  navObs.observe(hero);
+  // palavras do título entram uma a uma
+  document.querySelectorAll(".hero h1 .w").forEach(function(w,i){w.style.transitionDelay=(.15+i*.12)+"s"});
+  requestAnimationFrame(function(){hero.classList.add("in")});
+  // revelar ao rolar + contar percentuais + desenhar mapa
+  function contar(el){var alvo=+el.dataset.count,t0=performance.now();(function f(t){var p=Math.min(1,(t-t0)/1100),e=1-Math.pow(1-p,3);el.textContent=Math.round(alvo*e)+"%";if(p<1)requestAnimationFrame(f)})(t0)}
+  var obs=new IntersectionObserver(function(es){es.forEach(function(e){if(!e.isIntersecting)return;e.target.classList.add("in");
+    if(e.target.dataset.count&&!reduz)contar(e.target);
+    e.target.querySelectorAll&&e.target.querySelectorAll("[data-count]").forEach(function(c){if(!reduz)contar(c)});
+    obs.unobserve(e.target)})},{threshold:.18,rootMargin:"0px 0px -6% 0px"});
+  document.querySelectorAll(".rv,.showcase,.stage").forEach(function(el){obs.observe(el)});
+  // celulares flutuam
+  document.querySelectorAll(".stage .phone,.showcase .phone").forEach(function(p,i){p.classList.add("float");if(i%2)p.classList.add("b")});
+  // radar gira (SMIL: funciona no Safari do iPhone)
+  if(!reduz)document.querySelectorAll("animateTransform.giro").forEach(function(a){try{a.beginElement()}catch(e){}});
+  // parallax leve no hero
+  if(!reduz)addEventListener("mousemove",function(e){var dx=e.clientX/innerWidth-.5,dy=e.clientY/innerHeight-.5;
+    document.querySelectorAll(".stage .cell").forEach(function(c,i){c.style.translate=(dx*(10+i*8))+"px "+(dy*(8+i*4))+"px"});
+    var r=document.querySelector(".stage .radar");if(r)r.style.translate=(dx*-14)+"px "+(dy*-10)+"px"},{passive:true});
+  // mapa ilustrativo
+  function drawMap(c, pick, prog=1){
+  const x=c.getContext("2d"); const W=c.width,H=c.height;
+  x.fillStyle="#EAEAE6"; x.fillRect(0,0,W,H);
+  let s=7;const rnd=()=>{s=(s*16807)%2147483647;return s/2147483647};
+  x.fillStyle="#D8D8D2"; for(let i=0;i<30;i++){x.fillRect(rnd()*W,rnd()*H,14+rnd()*40,10+rnd()*28)}
+  x.strokeStyle="#FFFFFF"; x.lineWidth=1.5;
+  for(let i=0;i<7;i++){const y=rnd()*H;x.beginPath();x.moveTo(0,y);x.lineTo(W,y+(rnd()-.5)*40);x.stroke()}
+  for(let i=0;i<7;i++){const xx=rnd()*W;x.beginPath();x.moveTo(xx,0);x.lineTo(xx+(rnd()-.5)*40,H);x.stroke()}
+  x.strokeStyle="#FFFFFF"; x.lineWidth=3; x.beginPath(); x.moveTo(0,H*.55); x.lineTo(W,H*.4); x.stroke();
+  if(pick){x.fillStyle="#E0A32E";x.beginPath();x.arc(W*.5,H*.5,6,0,7);x.fill();x.lineWidth=2;x.strokeStyle="#1E2340";x.stroke();return}
+  const heat=[[.42,.45,32,"#F4736F"],[.62,.3,24,"#F5A45D"],[.25,.7,17,"#F0CA75"]];
+  for(const [px,py,r,col] of heat){x.globalAlpha=.3*prog;x.fillStyle=col;x.beginPath();x.arc(px*W,py*H,r*(.6+.4*prog),0,7);x.fill();x.globalAlpha=1}
+  const pts=[[.4,.43,"#F4736F",5],[.45,.48,"#F5A45D",4],[.38,.5,"#F0CA75",4],[.6,.3,"#F4736F",5],[.66,.34,"#F0CA75",4],[.25,.7,"#F5A45D",4],[.75,.72,"#F0CA75",4]];
+  const nPts=Math.ceil(pts.length*prog);
+  pts.slice(0,nPts).forEach(([px,py,col,r],k)=>{const f=k===nPts-1?Math.min(1,(prog*pts.length-k)):1;x.fillStyle=col;x.beginPath();x.arc(px*W,py*H,r*(.4+.6*f),0,7);x.fill();x.lineWidth=1;x.strokeStyle="#1E2340";x.stroke()});
+  const places=[[.5,.25,"#5CC9B4"],[.2,.5,"#5CC9B4"],[.8,.5,"#F0CA75"],[.65,.85,"#8A90A2"]];
+  for(const [px,py,col] of places){x.globalAlpha=.2;x.fillStyle=col;x.beginPath();x.arc(px*W,py*H,10,0,7);x.fill();x.globalAlpha=1;x.beginPath();x.arc(px*W,py*H,5.5,0,7);x.fill();x.lineWidth=1.5;x.strokeStyle="#1E2340";x.stroke()}
+}
+
+  document.querySelectorAll("canvas.mapc").forEach(function(c){drawMap(c,c.classList.contains("pick"))});
+})();
+</script>
+</body>
+</html>
