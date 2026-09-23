@@ -166,7 +166,12 @@ Checks antes de commitar: `npm run lint && npm run typecheck`. Migrations testá
   da branch de trabalho falhava em 3 s ("not allowed to deploy to github-pages due to environment
   protection rules") e o site ficou congelado de 18/09 a 23/09 — inclusive a página de segurança
   infantil declarada ao Google. Corrigido em Settings → Environments → github-pages → Deployment
-  branches. Se o site parar de atualizar, olhar primeiro em Actions → Pages se o run está verde.
+  branches. Depois disso o **Source** em Settings → Pages estava em “Deploy from a branch”: o GitHub
+  publicava a raiz do repositório por cima do nosso deploy (“pages build and deployment” rodava a cada
+  push e o site alternava entre no ar e 404). Tem que ser **GitHub Actions**. E no Run workflow manual,
+  escolher a branch de trabalho — o menu vem na branch padrão, que é a antiga. Se o site parar de
+  atualizar, olhar primeiro em Actions → Pages se o run está verde e se não há “pages build and
+  deployment” rodando junto.
 - Overpass devolve 406 sem Content-Type/User-Agent; script já tem 3 mirrors.
 - `st_makevalid` pode gerar GeometryCollection: usar `st_collectionextract(..., 3)`.
 - Bairro é atribuído no insert do relato; após importar bairros, rodar o UPDATE de reprocessamento (supabase/README.md).
