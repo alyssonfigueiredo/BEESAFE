@@ -40,7 +40,13 @@ Nome: **Irisa** (INPI livre; @irisapp livre). Bundle id `br.com.irisa.app`. Cont
   A raiz é uma landing escrita à mão em `docs/index.html` (23/09/2026): hero escuro com a pergunta,
   seções Irisar / Registrar / regra da rua / emergência / anonimato / cidades / testar / ONGs, com as
   telas copiadas da apresentação. Chamada principal é o e-mail para entrar no teste (mailto) — trocar
-  pelo link da Play Store quando o app sair em produção, e atualizar o contador "9 de 12".
+  pelo link da Play Store quando o app sair em produção. Decisão dele: a página não fala em número de
+  testadores nem em dias de teste (isso é assunto de quem desenvolve), só "em fase de testes" e o
+  convite para ser das primeiras pessoas. Para não cansar, o detalhamento fica atrás de botões que
+  abrem com animação (`.xp-btn` em grupo, um aberto por vez; `.xc` para cartões) — nada foi cortado,
+  só guardado. Regra dele: não remover informação da página; se não couber, esconder atrás de botão.
+  O `docs/index.html` é gerado por um script de montagem a partir de um molde + trechos do
+  `pitch.html` (telas, radar, desenho do mapa); editar direto o `docs/index.html` também funciona.
   `docs/og.png` é a prévia de link (WhatsApp/Instagram), 1200×630, tirada do próprio hero.
 - Oito cidades semeadas com lugares reais do OSM (bar/café/restaurante/balada/hotel), sem nota e sem selo,
   só para o mapa não abrir vazio: Curitiba 60, Recife 60, João Pessoa 43, Joinville 180 (IBGE 4209102),

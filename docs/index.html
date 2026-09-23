@@ -199,6 +199,70 @@ footer .sos-line{width:100%;color:#fff;font-family:var(--display);text-transform
   .js .float,.js .hero::before,.js .hero::after,.js .marquee .track,.js .pulse,.radar .blip,.siren{animation:none!important}
 }
 
+/* ---- botões que abrem detalhes ---- */
+.xp-row{display:flex;flex-wrap:wrap;gap:10px}
+.xp-btn{--a:var(--turq);position:relative;isolation:isolate;overflow:hidden;display:inline-flex;align-items:center;gap:12px;padding:11px 18px 11px 11px;border-radius:999px;border:1.5px solid var(--border);background:var(--surface);color:var(--ink);font-family:var(--display);text-transform:uppercase;letter-spacing:.12em;font-size:13.5px;text-align:left;line-height:1.3;cursor:pointer;
+  transition:transform .35s cubic-bezier(.2,.7,.2,1),border-color .35s,box-shadow .35s,color .35s;-webkit-tap-highlight-color:transparent}
+.xp-btn::before{content:"";position:absolute;inset:0;z-index:-1;background:var(--a);opacity:.18;transform:scaleX(0);transform-origin:left;transition:transform .55s cubic-bezier(.2,.7,.2,1)}
+.xp-btn::after{content:"";position:absolute;inset:-1px;z-index:-1;border-radius:inherit;background:linear-gradient(110deg,transparent 30%,rgba(255,255,255,.55) 50%,transparent 70%);transform:translateX(-120%);transition:transform .9s ease}
+.xp-btn:hover{transform:translateY(-2px);border-color:var(--a);box-shadow:0 12px 28px -16px var(--a)}
+.xp-btn:hover::after{transform:translateX(120%)}
+.xp-btn[aria-expanded=true]{border-color:var(--a)}
+.xp-btn[aria-expanded=true]::before{transform:scaleX(1)}
+.xp-btn:focus-visible,.xc-h:focus-visible{outline:2px solid var(--a);outline-offset:3px}
+.dark .xp-btn{background:rgba(255,255,255,.05);border-color:rgba(255,255,255,.16);color:#fff}
+.dark .xp-btn::before{opacity:.26}
+.dark .xp-btn:hover,.dark .xp-btn[aria-expanded=true]{border-color:var(--a)}
+.pm{position:relative;width:26px;height:26px;border-radius:50%;background:var(--a);flex:none;transition:transform .5s cubic-bezier(.3,1.4,.4,1)}
+.pm::before,.pm::after{content:"";position:absolute;left:50%;top:50%;width:11px;height:2px;margin:-1px 0 0 -5.5px;border-radius:2px;background:var(--night);transition:transform .45s cubic-bezier(.3,1.4,.4,1)}
+.pm::after{transform:rotate(90deg)}
+[aria-expanded=true]>.pm{transform:rotate(135deg)}
+.js .xp-btn .pm{animation:nudge 3.6s ease-in-out infinite}
+.js .xp-btn:nth-child(2) .pm{animation-delay:.4s}.js .xp-btn:nth-child(3) .pm{animation-delay:.8s}
+.js [aria-expanded=true]>.pm,.js .xp-btn:hover .pm{animation:none}
+@keyframes nudge{0%,80%,100%{box-shadow:0 0 0 0 transparent}88%{box-shadow:0 0 0 6px color-mix(in srgb,var(--a) 30%,transparent)}}
+
+/* painel: abre pela altura, o conteúdo entra em sequência */
+.xp{display:grid;grid-template-rows:0fr;opacity:0;transition:grid-template-rows .65s cubic-bezier(.2,.7,.2,1),opacity .45s ease,margin .5s ease;margin-top:0}
+.xp>div{overflow:hidden;min-height:0}
+.xp.open{grid-template-rows:1fr;opacity:1;margin-top:18px}
+.xp-in{position:relative;padding:4px 0 4px 20px;display:flex;flex-direction:column;gap:14px}
+.xp-in::before{content:"";position:absolute;left:0;top:6px;bottom:6px;width:3px;border-radius:3px;background:var(--rainbow);background:linear-gradient(180deg,var(--coral),var(--orange),var(--yellow),var(--turq),var(--blue),var(--lilac));transform:scaleY(0);transform-origin:top;transition:transform .8s cubic-bezier(.2,.7,.2,1) .1s}
+.xp.open .xp-in::before{transform:none}
+.xp .st{opacity:0;transform:translateY(14px);filter:blur(5px);transition:opacity .5s ease,transform .6s cubic-bezier(.2,.7,.2,1),filter .5s ease;transition-delay:calc(.12s + var(--i,0) * .07s)}
+.xp.open .st{opacity:1;transform:none;filter:none}
+.xp-in p{color:var(--muted);font-size:16px;max-width:60ch}
+.dark .xp-in p{color:#D5D8E4}
+.note{font-size:15px!important}
+.checks li span b{color:var(--ink);font-weight:500}
+.dark .checks li span b{color:#fff}
+.dark .checks li{color:#D5D8E4}
+.mini{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.mini small{font-family:var(--display);text-transform:uppercase;letter-spacing:.16em;font-size:12px;color:var(--yellow);width:100%}
+.mini span{padding:6px 12px;border-radius:999px;border:1px solid rgba(255,255,255,.22);font-size:14px;color:#fff}
+.svc{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px}
+.svc>div{display:flex;flex-direction:column;gap:6px;padding:16px;border-radius:16px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.12)}
+.svc b{font-family:var(--display);font-weight:500;text-transform:uppercase;letter-spacing:.1em;color:var(--turq);font-size:15px}
+.svc span{font-size:14.5px;color:#D5D8E4}
+.mural{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
+.mural>div{padding:16px;border-radius:16px;background:var(--paper);color:var(--ink);display:flex;flex-direction:column;gap:8px}
+.mural>div p{color:var(--ink)!important;font-size:15px}
+.badge-l{align-self:flex-start;font-size:12px;font-weight:500;padding:3px 9px;border-radius:6px;color:var(--night)}
+
+/* cartões que abrem */
+.xc{--a:var(--turq);background:var(--surface);border:1px solid var(--border);border-radius:20px;overflow:hidden;transition:transform .35s cubic-bezier(.2,.7,.2,1),box-shadow .35s,border-color .35s;align-self:start}
+.xc:hover{transform:translateY(-3px);box-shadow:0 20px 44px -26px rgba(30,35,64,.4)}
+.xc:has([aria-expanded=true]){border-color:var(--a);box-shadow:0 20px 44px -26px var(--a)}
+.xc-h{all:unset;box-sizing:border-box;width:100%;display:flex;align-items:center;gap:14px;padding:20px 22px;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.xc-h h3{flex:1;text-align:left;font-size:17px;line-height:1.25}
+.xc-h .ic{width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;flex:none;transition:transform .5s cubic-bezier(.3,1.4,.4,1)}
+.xc-h .ic svg{width:22px;height:22px}
+.xc-h[aria-expanded=true] .ic{transform:rotate(-8deg) scale(1.08)}
+.xc .xp.open{margin-top:0}
+.xc .xp-in{margin:0 22px 22px;padding-left:16px}
+.trio{align-items:start}
+@media (prefers-reduced-motion:reduce){.xp,.xp .st,.xp-in::before,.pm,.pm::before,.pm::after,.xp-btn::before{transition:none!important;animation:none!important}}
+
 /* ---- telas do app (mesmo CSS da apresentação) ---- */
   .phones{display:flex;gap:18px;flex-wrap:wrap;justify-content:center}
   .phone{width:250px;height:520px;background:var(--paper);border:8px solid #2a2f45;border-radius:36px;overflow:hidden;position:relative;display:flex;flex-direction:column;flex:none}
@@ -269,7 +333,8 @@ footer .sos-line{width:100%;color:#fff;font-family:var(--display);text-transform
 .ph-tab:nth-child(4) i{--ic:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Ccircle%20cx%3D%2212%22%20cy%3D%2212%22%20r%3D%2210%22/%3E%3Cpath%20d%3D%22m4.93%204.93%204.24%204.24%22/%3E%3Cpath%20d%3D%22m14.83%209.17%204.24-4.24%22/%3E%3Cpath%20d%3D%22m14.83%2014.83%204.24%204.24%22/%3E%3Cpath%20d%3D%22m9.17%2014.83-4.24%204.24%22/%3E%3Ccircle%20cx%3D%2212%22%20cy%3D%2212%22%20r%3D%224%22/%3E%3C/svg%3E")}
 .ph-tab:nth-child(5) i{--ic:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M19%2021v-2a4%204%200%200%200-4-4H9a4%204%200%200%200-4%204v2%22/%3E%3Ccircle%20cx%3D%2212%22%20cy%3D%227%22%20r%3D%224%22/%3E%3C/svg%3E")}
 .ph-tab{color:var(--dim)}.ph-tab.on{color:var(--coralInk)}
-.ph-body>.ph-btn{flex:none}.ph-body>*{flex-shrink:0}.chip{line-height:1.3;display:inline-flex;align-items:center;justify-content:center}
+.ph-body>.ph-btn{flex:none}.phone{height:572px}
+.ph-body>*{flex-shrink:0}.chip{line-height:1.3;display:inline-flex;align-items:center;justify-content:center}
 </style>
 </head>
 <body>
@@ -353,19 +418,40 @@ footer .sos-line{width:100%;color:#fff;font-family:var(--display);text-transform
       <h2 class="rv d1">Irisar um lugar</h2>
       <div class="rule rv d2"></div>
       <p class="lead rv d2">O app não pergunta quantas estrelas. Pergunta quanta cor. Quatro perguntas de 1 a 5, respondidas por quem esteve lá. O arco-íris deixa de ser adesivo na vitrine e vira medida.</p>
-      <div class="axes">
-        <div class="axis-card rv d1"><b style="color:var(--coralInk)" data-count="30">30%</b><h3>Atendimento</h3><p>A equipe te tratou bem? Sem olhar torto, sem insistir no "senhor".</p></div>
-        <div class="axis-card rv d2"><b style="color:var(--orangeInk)" data-count="30">30%</b><h3>Afeto</h3><p>Dava para ficar de mãos dadas, um beijo, sem plateia?</p></div>
-        <div class="axis-card rv d3"><b style="color:var(--yellowInk)" data-count="25">25%</b><h3>Banheiro</h3><p>Usou o que quis, sem ser questionade.</p></div>
-        <div class="axis-card rv d4"><b style="color:var(--turqInk)" data-count="15">15%</b><h3>Clientela</h3><p>E as outras pessoas em volta?</p></div>
+      <div class="xp-row rv d3" data-xp-group>
+        <button class="xp-btn" style="--a:var(--coral)" aria-expanded="false" aria-controls="xp-criterios"><span class="pm"></span>Os quatro critérios</button>
+        <button class="xp-btn" style="--a:var(--yellow)" aria-expanded="false" aria-controls="xp-selos"><span class="pm"></span>Os selos</button>
+        <button class="xp-btn" style="--a:var(--turq)" aria-expanded="false" aria-controls="xp-engana"><span class="pm"></span>Feito para não enganar</button>
       </div>
-      <div class="badges rv">
-        <span style="background:#5CC9B42E;color:var(--turqInk)">Acolhedor</span>
-        <span style="background:#F0CA752E;color:var(--yellowInk)">Bem avaliado</span>
-        <span style="background:#AE96F22E;color:var(--lilacInk)">Opiniões divididas</span>
-        <span style="background:#F4736F2E;color:var(--coralInk)">Atenção</span>
-      </div>
-      <p class="rv" style="color:var(--muted);font-size:15px">Selo só com cinco avaliações. Avaliação antiga pesa menos. Duas notas 5 não fazem um lugar liderar a cidade.</p>
+      <div class="xp" id="xp-criterios"><div><div class="xp-in">
+        <div class="axes">
+          <div class="axis-card st"><b style="color:var(--coralInk)" data-count="30">30%</b><h3>Atendimento</h3><p>A equipe te tratou bem? Sem constrangimento, sem olhar torto, sem insistir no "senhor".</p></div>
+          <div class="axis-card st"><b style="color:var(--orangeInk)" data-count="30">30%</b><h3>Afeto</h3><p>Dava para ficar à vontade com quem você ama? De mãos dadas, um beijo, sem plateia.</p></div>
+          <div class="axis-card st"><b style="color:var(--yellowInk)" data-count="25">25%</b><h3>Banheiro</h3><p>Usou o que quis, sem ser questionade.</p></div>
+          <div class="axis-card st"><b style="color:var(--turqInk)" data-count="15">15%</b><h3>Clientela</h3><p>E as outras pessoas no ambiente? Quem estava em volta, não a equipe.</p></div>
+        </div>
+        <p class="st note">Cada critério tem um peso. Onde o risco é maior, o peso é maior.</p>
+      </div></div></div>
+      <div class="xp" id="xp-selos"><div><div class="xp-in">
+        <div class="badges st">
+          <span style="background:#5CC9B42E;color:var(--turqInk)">Acolhedor</span>
+          <span style="background:#F0CA752E;color:var(--yellowInk)">Bem avaliado</span>
+          <span style="background:#AE96F22E;color:var(--lilacInk)">Opiniões divididas</span>
+          <span style="background:#F4736F2E;color:var(--coralInk)">Atenção</span>
+          <span style="background:var(--subtle);color:var(--muted)">Poucas avaliações</span>
+        </div>
+        <p class="st note">O selo diz o que fazer com o número. "Opiniões divididas" existe porque o acolhimento muitas vezes depende de quem está no turno.</p>
+        <p class="st note">Selo e ranking só aparecem a partir de cinco avaliações. Antes disso, o lugar mostra "Quanta cor tem esse lugar? Seja a primeira pessoa a dizer."</p>
+      </div></div></div>
+      <div class="xp" id="xp-engana"><div><div class="xp-in">
+        <ul class="checks">
+          <li class="st" style="--c:var(--coral)"><span><b>Duas notas 5 não lideram a cidade.</b> A média é bayesiana e exige no mínimo cinco avaliações.</span></li>
+          <li class="st" style="--c:var(--orange)"><span><b>O que é recente pesa mais.</b> Avaliação antiga perde força com o tempo, com meia-vida de seis meses.</span></li>
+          <li class="st" style="--c:var(--yellow)"><span><b>Só o que aconteceu ali conta.</b> Relato que aponta o próprio lugar desconta da nota. Violência na rua em volta vira aviso da região, não nota do bar.</span></li>
+          <li class="st" style="--c:var(--turq)"><span><b>Erra para o lado seguro.</b> O elogio usa a nota ajustada; o alerta usa a média crua.</span></li>
+          <li class="st" style="--c:var(--lilac)"><span><b>Um lugar, uma ficha.</b> Antes de cadastrar, o app mostra os parecidos que já existem por perto, para ninguém dividir as avaliações em duas.</span></li>
+        </ul>
+      </div></div></div>
     </div>
     <div class="showcase rv d2">
       <div class="halo" style="background:radial-gradient(circle,var(--turq),var(--yellow) 60%,transparent 70%)"></div>
@@ -425,7 +511,7 @@ footer .sos-line{width:100%;color:#fff;font-family:var(--display);text-transform
             <div class="axis"><span>Clientela</span><div class="rb"><i style="--c:var(--coral)"></i><i style="--c:var(--orange)"></i><i style="--c:var(--yellow)"></i><i style="--c:var(--turq);--f:80%"></i><i style="--c:var(--lilac);--f:0%"></i></div><b>3.8</b></div>
           </div>
         </div>
-        <div style="display:flex;gap:5px"><div class="ph-btn" style="border:1px solid var(--turqInk);color:var(--turqInk)">➤ Como chegar</div><div class="ph-btn" style="background:var(--yellow);color:var(--night)">Avaliar</div></div>
+        <div style="display:flex;gap:5px"><div class="ph-btn" style="border:1px solid var(--turqInk);color:var(--turqInk)">➤ Como chegar</div><div class="ph-btn" style="background:var(--yellow);color:var(--night);white-space:nowrap;letter-spacing:.06em;font-size:9.5px">Avaliar este lugar</div></div>
       </div>
       <div class="ph-tabs"><div class="ph-tab"><i></i>Início</div><div class="ph-tab"><i></i>Mapa</div><div class="ph-tab on"><i></i>Lugares</div><div class="ph-tab"><i></i>Apoio</div><div class="ph-tab"><i></i>Perfil</div></div>
     </div><div class="caption">Ficha do lugar</div></div>
@@ -444,11 +530,31 @@ footer .sos-line{width:100%;color:#fff;font-family:var(--display);text-transform
       <div class="tipos rv d3">
         <span style="background:var(--yellow)">Agressão verbal</span><span style="background:var(--coral)">Violência física</span><span style="background:var(--orange)">Ameaça</span><span style="background:var(--turq)">Discriminação</span><span style="background:var(--lilac)">Vandalismo</span>
       </div>
-      <ul class="checks rv d3">
-        <li style="--c:var(--yellow)">Onde foi e quando foi, se você quiser dizer. Nada é obrigatório no pior momento.</li>
-        <li style="--c:var(--coral)">Entra no mapa na hora. Se foi hoje ou ontem, o ponto é borrado em 100 m, porque você pode ainda estar lá.</li>
-        <li style="--c:var(--turq)">Vira área de atenção e alimenta a ficha do bairro, que um coletivo pode levar à prefeitura.</li>
-      </ul>
+      <div class="xp-row rv d3" data-xp-group>
+        <button class="xp-btn" style="--a:var(--coral)" aria-expanded="false" aria-controls="xp-depois"><span class="pm"></span>O que acontece depois</button>
+        <button class="xp-btn" style="--a:var(--yellow)" aria-expanded="false" aria-controls="xp-ondequando"><span class="pm"></span>Onde e quando</button>
+        <button class="xp-btn" style="--a:var(--lilac)" aria-expanded="false" aria-controls="xp-cuidado"><span class="pm"></span>Moderação e cuidado</button>
+      </div>
+      <div class="xp" id="xp-depois"><div><div class="xp-in">
+        <ul class="checks">
+          <li class="st" style="--c:var(--coral)"><span><b>Entra no mapa na hora.</b> Vira ponto e, somado a outros, área de atenção.</span></li>
+          <li class="st" style="--c:var(--yellow)"><span><b>Atualiza o bairro.</b> O ranking de bairros, o nível de atenção da região e a ficha do bairro mudam com ele.</span></li>
+          <li class="st" style="--c:var(--turq)"><span><b>Vira documento.</b> A ficha do bairro reúne o que foi relatado por tipo, onde e quando. É o que um coletivo leva à prefeitura pedindo ronda e iluminação.</span></li>
+        </ul>
+      </div></div></div>
+      <div class="xp" id="xp-ondequando"><div><div class="xp-in">
+        <p class="st">Dois campos, os dois opcionais. Quem registra acabou de passar por algo, e nada deve ser obrigatório no pior momento.</p>
+        <div class="st mini"><small>Onde foi</small><span>Rua</span><span>Praça</span><span>Transporte</span><span>Dentro de um lugar</span><span>Serviço público</span></div>
+        <div class="st mini"><small>Quando foi</small><span>Madrugada</span><span>Manhã</span><span>Tarde</span><span>Noite</span></div>
+        <p class="st">Quem responde ajuda a mostrar onde e quando a violência se repete: a praça à noite, o ponto de ônibus de madrugada.</p>
+      </div></div></div>
+      <div class="xp" id="xp-cuidado"><div><div class="xp-in">
+        <ul class="checks">
+          <li class="st" style="--c:var(--lilac)"><span><b>Ponto borrado quando é recente.</b> Relato de hoje ou de ontem aparece com uns 100 m de imprecisão, porque você pode ainda estar lá.</span></li>
+          <li class="st" style="--c:var(--turq)"><span><b>Gravidade baixa, média ou alta.</b> E uma descrição livre, se você quiser escrever.</span></li>
+          <li class="st" style="--c:var(--coral)"><span><b>Denúncia e revisão.</b> Qualquer relato pode ser denunciado e a moderação revisa e oculta o que for abuso, sem nunca ver quem escreveu.</span></li>
+        </ul>
+      </div></div></div>
     </div>
     <div class="showcase rv d2">
       <div class="halo" style="background:radial-gradient(circle,var(--coral),var(--lilac) 60%,transparent 70%)"></div>
@@ -462,11 +568,11 @@ footer .sos-line{width:100%;color:#fff;font-family:var(--display);text-transform
         <div style="display:flex;gap:4px"><span class="chip" style="flex:1;text-align:center;border-color:var(--yellowInk);color:var(--yellowInk)">Baixa</span><span class="chip" style="flex:1;text-align:center;border-color:var(--orange);background:var(--orange);color:var(--night)">Média</span><span class="chip" style="flex:1;text-align:center;border-color:var(--coralInk);color:var(--coralInk)">Alta</span></div>
         <div class="lbl">Local</div>
         <div class="ph-btn" style="border:1px solid var(--turqInk);color:var(--turqInk)">⌖ Usar minha localização</div>
-        <div class="map" style="height:56px"><canvas class="mapc pick"></canvas></div>
+        <div class="map" style="height:64px"><canvas class="mapc pick"></canvas></div>
         <div class="lbl">Onde foi · quando foi <span style="color:var(--dim);letter-spacing:0;text-transform:none">(opcional)</span></div>
         <div class="chips"><span class="chip" style="border-color:var(--coral);background:var(--coral);color:var(--night)">Rua</span><span class="chip" style="border-color:var(--border);color:var(--muted)">Praça</span><span class="chip" style="border-color:var(--border);color:var(--muted)">Transporte</span><span class="chip" style="border-color:var(--border);color:var(--muted)">Dentro de um lugar</span></div>
         <div class="chips"><span class="chip" style="border-color:var(--border);color:var(--muted)">Madrugada</span><span class="chip" style="border-color:var(--border);color:var(--muted)">Manhã</span><span class="chip" style="border-color:var(--border);color:var(--muted)">Tarde</span><span class="chip" style="border-color:var(--turq);background:var(--turq);color:var(--night)">Noite</span></div>
-        
+        <div class="input">Foi em um lugar cadastrado? ▾</div>
         <div class="ph-btn" style="background:var(--coral);color:var(--night);flex:none">Registrar relato</div>
       </div>
       <div class="ph-tabs"><div class="ph-tab"><i></i>Início</div><div class="ph-tab"><i></i>Mapa</div><div class="ph-tab"><i></i>Lugares</div><div class="ph-tab"><i></i>Apoio</div><div class="ph-tab"><i></i>Perfil</div></div>
@@ -512,9 +618,12 @@ footer .sos-line{width:100%;color:#fff;font-family:var(--display);text-transform
       </div>
     </div>
     <div class="trio">
-      <div class="card rv d1"><h3 style="color:var(--turqInk)">Ninguém é punido pela vizinhança</h3><p>Só o relato que aponta o próprio lugar desconta da nota dele. O resto aparece como contexto da rua.</p></div>
-      <div class="card rv d2"><h3 style="color:var(--coralInk)">Silêncio não vira selo</h3><p>Sem relato, o app nunca diz "área segura". Diz que ninguém registrou ainda. É diferente.</p></div>
-      <div class="card rv d3"><h3 style="color:var(--yellowInk)">A ficha do bairro</h3><p>O que foi relatado na área, por tipo, onde e quando, junto dos lugares acolhedores dela.</p></div>
+      <div class="xc rv d1" style="--a:var(--turq)"><button class="xc-h" aria-expanded="false" aria-controls="xc-viz"><h3 style="color:var(--turqInk)">Ninguém é punido pela vizinhança</h3><span class="pm"></span></button>
+        <div class="xp" id="xc-viz"><div><div class="xp-in"><p class="st">Só o relato que aponta o próprio lugar desconta da nota dele. O resto aparece como contexto da rua: "Região com relato", nunca como defeito do bar.</p></div></div></div></div>
+      <div class="xc rv d2" style="--a:var(--coral)"><button class="xc-h" aria-expanded="false" aria-controls="xc-sil"><h3 style="color:var(--coralInk)">Silêncio não vira selo</h3><span class="pm"></span></button>
+        <div class="xp" id="xc-sil"><div><div class="xp-in"><p class="st">Sem relato, o app nunca diz "área segura". Diz que ninguém registrou ainda. Com pouca gente usando, ausência de relato é ausência de gente, e dizer o contrário seria o erro mais perigoso possível.</p></div></div></div></div>
+      <div class="xc rv d3" style="--a:var(--yellow)"><button class="xc-h" aria-expanded="false" aria-controls="xc-ficha"><h3 style="color:var(--yellowInk)">A ficha do bairro</h3><span class="pm"></span></button>
+        <div class="xp" id="xc-ficha"><div><div class="xp-in"><p class="st">O que foi relatado na área, por tipo, onde e quando, junto dos lugares acolhedores dela. É onde os dois lados do app se encontram.</p></div></div></div></div>
     </div>
   </div>
 </section>
@@ -524,13 +633,35 @@ footer .sos-line{width:100%;color:#fff;font-family:var(--display);text-transform
   <div class="wrap">
     <div class="eyebrow rv">Em todas as telas</div>
     <h2 class="rv d1"><span class="pulse"></span>Pedir ajuda, um toque</h2>
-    <p class="lead rv d2" style="margin-top:20px">O botão no topo do app disca direto. Abaixo dos números nacionais, os serviços LGBT da sua cidade: centro de referência, casa de acolhimento, orientação jurídica.</p>
+    <p class="lead rv d2" style="margin-top:20px">O botão no topo do app disca direto. Abaixo dos números nacionais, os serviços LGBT da sua cidade.</p>
     <div class="sos">
       <a class="rv d1" href="tel:190"><b>190</b><span>Polícia</span></a>
       <a class="rv d2" href="tel:192"><b>192</b><span>SAMU</span></a>
       <a class="rv d3" href="tel:100"><b>100</b><span>Direitos Humanos</span></a>
       <a class="rv d4" href="tel:188"><b>188</b><span>CVV</span></a>
     </div>
+    <div class="xp-row rv" data-xp-group style="margin-top:28px">
+      <button class="xp-btn" style="--a:var(--turq)" aria-expanded="false" aria-controls="xp-servicos"><span class="pm"></span>Serviços de apoio por cidade</button>
+      <button class="xp-btn" style="--a:var(--lilac)" aria-expanded="false" aria-controls="xp-mural"><span class="pm"></span>Mural da comunidade</button>
+    </div>
+    <div class="xp" id="xp-servicos"><div><div class="xp-in">
+      <div class="svc">
+        <div class="st"><b>Curitiba</b><span>Grupo Dignidade</span><span>Centro de Cidadania LGBTQIA+</span></div>
+        <div class="st"><b>Recife</b><span>Centro Municipal de Referência em Cidadania LGBT</span><span>Casa de Acolhimento LGBTI+ Roberta Nascimento</span><span>Movimento Leões do Norte</span></div>
+        <div class="st"><b>João Pessoa</b><span>Centro de Cidadania LGBT</span><span>Espaço LGBT da Paraíba</span></div>
+        <div class="st"><b>Joinville</b><span>UNA LGBT Joinville</span><span>Comissão da Diversidade Sexual e de Gênero da OAB</span></div>
+        <div class="st"><b>Em todo o Brasil</b><span>Acolhe LGBT+</span><span>ANTRA</span><span>ABGLT</span><span>Defensoria Pública da União</span></div>
+      </div>
+      <p class="st note">Quem passou por algo não sai do app com um formulário na mão: sai com um telefone para ligar.</p>
+    </div></div></div>
+    <div class="xp" id="xp-mural"><div><div class="xp-in">
+      <div class="mural">
+        <div class="st"><span class="badge-l" style="background:var(--yellow)">Dica de segurança</span><p>Sábado à noite, evitem a Riachuelo entre a Tiradentes e a XV. Vão pela Marechal.</p></div>
+        <div class="st"><span class="badge-l" style="background:var(--turq)">Acolhimento</span><p>Vocês não estão sozinhes. O Centro de Cidadania atende sem agendamento.</p></div>
+        <div class="st"><span class="badge-l" style="background:var(--coral)">Pedido de ajuda</span><p>Alguém conhece advogade que atenda caso de discriminação no trabalho?</p></div>
+      </div>
+      <p class="st note">Um mural por cidade, com a mesma regra de anonimato e moderação dos relatos.</p>
+    </div></div></div>
   </div>
 </section>
 
@@ -540,9 +671,12 @@ footer .sos-line{width:100%;color:#fff;font-family:var(--display);text-transform
     <div class="eyebrow rv">Anonimato por construção</div>
     <h2 class="rv d1">Ninguém sabe que foi você</h2>
     <div class="trio">
-      <div class="card rv d1"><div class="ic" style="background:#5CC9B42E;color:var(--turqInk)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg></div><h3>Nem o criador vê</h3><p>O banco guarda o relato sem expor quem escreveu. Nem quem administra o app consegue ligar texto a pessoa.</p></div>
-      <div class="card rv d2"><div class="ic" style="background:#AE96F22E;color:var(--lilacInk)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v2"/><circle cx="10" cy="7" r="4"/><path d="M22 2 16 8"/><path d="M16 2l6 6"/></svg></div><h3>Sem perfil público</h3><p>Não tem seguidor, não tem foto, não tem mensagem direta. Não há como alguém te procurar pelo app.</p></div>
-      <div class="card rv d3"><div class="ic" style="background:#F4736F2E;color:var(--coralInk)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s7-6.2 7-12a7 7 0 0 0-14 0c0 5.8 7 12 7 12z"/><path d="M4 4l16 16"/></svg></div><h3>Sem lista de "lugar LGBT"</h3><p>Lista pública vira alvo. O selo vem da avaliação da comunidade, não de um rótulo na vitrine.</p></div>
+      <div class="xc rv d1" style="--a:var(--turq)"><button class="xc-h" aria-expanded="false" aria-controls="xc-criador"><span class="ic" style="background:#5CC9B42E;color:var(--turqInk)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg></span><h3>Nem o criador vê</h3><span class="pm"></span></button>
+        <div class="xp" id="xc-criador"><div><div class="xp-in"><p class="st">O banco guarda o relato sem expor quem escreveu. Nem quem administra o app consegue ligar texto a pessoa.</p></div></div></div></div>
+      <div class="xc rv d2" style="--a:var(--lilac)"><button class="xc-h" aria-expanded="false" aria-controls="xc-perfil"><span class="ic" style="background:#AE96F22E;color:var(--lilacInk)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v2"/><circle cx="10" cy="7" r="4"/><path d="M22 2 16 8"/><path d="M16 2l6 6"/></svg></span><h3>Sem perfil público</h3><span class="pm"></span></button>
+        <div class="xp" id="xc-perfil"><div><div class="xp-in"><p class="st">Não tem seguidor, não tem foto, não tem mensagem direta. Não há como alguém te procurar pelo app.</p></div></div></div></div>
+      <div class="xc rv d3" style="--a:var(--coral)"><button class="xc-h" aria-expanded="false" aria-controls="xc-lista"><span class="ic" style="background:#F4736F2E;color:var(--coralInk)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s7-6.2 7-12a7 7 0 0 0-14 0c0 5.8 7 12 7 12z"/><path d="M4 4l16 16"/></svg></span><h3>Sem lista de "lugar LGBT"</h3><span class="pm"></span></button>
+        <div class="xp" id="xc-lista"><div><div class="xp-in"><p class="st">Lista pública vira alvo. O selo vem da avaliação da comunidade, não de um rótulo na vitrine.</p></div></div></div></div>
     </div>
   </div>
 </section>
@@ -566,16 +700,13 @@ footer .sos-line{width:100%;color:#fff;font-family:var(--display);text-transform
 <!-- TESTAR -->
 <section class="block dark" id="testar">
   <div class="wrap">
-    <div class="eyebrow rv">Entre antes de todo mundo</div>
-    <h2 class="rv d1">Seja uma das 12 pessoas</h2>
-    <p class="lead rv d2" style="margin-top:20px">Para o Google liberar a publicação, o app precisa de 12 pessoas testando por 14 dias seguidos. É só instalar, deixar no celular e irisar os lugares que você já frequenta.</p>
-    <div class="progress-g rv d2" aria-label="9 de 12 testadores">
-      <i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i><i></i><i></i><small>9 de 12 · faltam 3</small>
-    </div>
+    <div class="eyebrow rv">Em fase de testes</div>
+    <h2 class="rv d1">Seja uma das primeiras pessoas</h2>
+    <p class="lead rv d2" style="margin-top:20px">A Irisa está em fase de testes. Quem entra agora usa antes de todo mundo e ajuda a desenhar o mapa desde o primeiro lugar.</p>
     <div class="steps">
-      <div class="step rv d1"><span class="n">1</span><div><b>Mande seu e-mail</b><p>O da conta Google do seu Android. Só serve para liberar o download.</p></div></div>
-      <div class="step rv d2"><span class="n">2</span><div><b>Receba o link</b><p>Você entra na loja pelo link e instala como qualquer app.</p></div></div>
-      <div class="step rv d3"><span class="n">3</span><div><b>Fique 14 dias</b><p>Deixe instalado e irise os cinco lugares que você mais frequenta. Achou algo estranho? Conta pra gente.</p></div></div>
+      <div class="step rv d1"><span class="n">1</span><div><b>Mande seu e-mail</b><p>O da conta Google do seu Android. Só serve para liberar o acesso.</p></div></div>
+      <div class="step rv d2"><span class="n">2</span><div><b>Receba o convite</b><p>Um link para instalar pela Play Store, como qualquer app.</p></div></div>
+      <div class="step rv d3"><span class="n">3</span><div><b>Irise os seus lugares</b><p>Avalie os lugares que você já frequenta. Achou algo estranho? Conta pra gente.</p></div></div>
     </div>
     <div class="btns rv">
       <a class="btn primary" href="mailto:appirisa@gmail.com?subject=Quero%20testar%20a%20Irisa&amp;body=Meu%20e-mail%20da%20conta%20Google%20do%20Android%3A%20%0A%0AMinha%20cidade%3A%20">Quero testar no Android</a>
@@ -586,7 +717,18 @@ footer .sos-line{width:100%;color:#fff;font-family:var(--display);text-transform
       <div>
         <div class="eyebrow">Para ONGs e coletivos</div>
         <h2 style="font-size:clamp(28px,3.4vw,44px);margin-top:12px">O app é a ferramenta. O trabalho já é de vocês.</h2>
-        <p style="margin-top:16px">Relatos de uma área, por tipo, onde e quando, é o dado que um coletivo leva à subprefeitura pedindo ronda e iluminação. Queremos pensar junto: moderação compartilhada, dados agregados da cidade, serviços locais no app.</p>
+        <p style="margin-top:16px">Sem uma organização que já está há anos nesse trabalho, o app é só um app bonito. Com ela, é instrumento.</p>
+        <div class="xp-row" data-xp-group style="margin-top:20px">
+          <button class="xp-btn" style="--a:var(--turq)" aria-expanded="false" aria-controls="xp-juntos"><span class="pm"></span>O que podemos construir juntos</button>
+        </div>
+        <div class="xp" id="xp-juntos"><div><div class="xp-in">
+          <ul class="checks">
+            <li class="st" style="--c:var(--turq)"><span><b>Dados que viram pedido.</b> Relatos de uma área, por tipo, onde e quando, é o dado que um coletivo leva à subprefeitura pedindo ronda e iluminação.</span></li>
+            <li class="st" style="--c:var(--yellow)"><span><b>Moderação compartilhada.</b> Quem conhece a comunidade local ajuda a cuidar do que é publicado.</span></li>
+            <li class="st" style="--c:var(--coral)"><span><b>Serviços locais no app.</b> O contato de vocês aparece para quem acabou de passar por algo na sua cidade.</span></li>
+            <li class="st" style="--c:var(--lilac)"><span><b>Crítica dura desde já.</b> Queremos ouvir o que não faz sentido antes de o app chegar a todo mundo.</span></li>
+          </ul>
+        </div></div></div>
       </div>
       <div class="btns" style="flex-direction:column;align-items:stretch">
         <a class="btn turq" href="pitch.html" style="justify-content:center">Ver a apresentação</a>
@@ -626,10 +768,23 @@ footer .sos-line{width:100%;color:#fff;font-family:var(--display);text-transform
   // revelar ao rolar + contar percentuais + desenhar mapa
   function contar(el){var alvo=+el.dataset.count,t0=performance.now();(function f(t){var p=Math.min(1,(t-t0)/1100),e=1-Math.pow(1-p,3);el.textContent=Math.round(alvo*e)+"%";if(p<1)requestAnimationFrame(f)})(t0)}
   var obs=new IntersectionObserver(function(es){es.forEach(function(e){if(!e.isIntersecting)return;e.target.classList.add("in");
-    if(e.target.dataset.count&&!reduz)contar(e.target);
-    e.target.querySelectorAll&&e.target.querySelectorAll("[data-count]").forEach(function(c){if(!reduz)contar(c)});
     obs.unobserve(e.target)})},{threshold:.18,rootMargin:"0px 0px -6% 0px"});
   document.querySelectorAll(".rv,.showcase,.stage").forEach(function(el){obs.observe(el)});
+  // botões que abrem detalhes: um aberto por grupo, conteúdo entra em sequência
+  function abrir(btn,forcar){
+    var p=document.getElementById(btn.getAttribute("aria-controls"));if(!p)return;
+    var vai=forcar!==undefined?forcar:btn.getAttribute("aria-expanded")!=="true";
+    var g=btn.closest("[data-xp-group]");
+    if(vai&&g)g.querySelectorAll('[aria-expanded="true"]').forEach(function(o){if(o!==btn)abrir(o,false)});
+    btn.setAttribute("aria-expanded",vai);p.classList.toggle("open",vai);p.setAttribute("aria-hidden",!vai);
+    if(vai){
+      p.querySelectorAll(".st").forEach(function(s,i){s.style.setProperty("--i",i)});
+      p.querySelectorAll("[data-count]").forEach(function(c){if(!reduz)contar(c)});
+      setTimeout(function(){var r=p.getBoundingClientRect();if(r.bottom>innerHeight-20)p.scrollIntoView({behavior:reduz?"auto":"smooth",block:"nearest"})},420);
+    }
+  }
+  document.querySelectorAll(".xp").forEach(function(p){p.setAttribute("aria-hidden","true")});
+  document.querySelectorAll(".xp-btn,.xc-h").forEach(function(b){b.addEventListener("click",function(){abrir(b)})});
   // celulares flutuam
   document.querySelectorAll(".stage .phone,.showcase .phone").forEach(function(p,i){p.classList.add("float");if(i%2)p.classList.add("b")});
   // radar gira (SMIL: funciona no Safari do iPhone)
