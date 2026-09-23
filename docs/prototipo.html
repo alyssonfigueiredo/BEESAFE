@@ -1,0 +1,615 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Irisa Protótipo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;700&family=Space+Grotesk:wght@400;500;700&family=Urbanist:wght@500&display=swap">
+<style>
+:root{
+  --paper:#FAF9F6;--surface:#FFFFFF;--subtle:#F1EDE7;--border:#E4DED5;
+  --night:#1E2340;--ink:#1E2340;--muted:#4F576F;--dim:#8A90A2;
+  --coral:#F4736F;--orange:#F5A45D;--yellow:#F0CA75;--turquoise:#5CC9B4;--lilac:#AE96F2;
+  --coralInk:#B23C3A;--orangeInk:#96601C;--yellowInk:#8A6512;--turquoiseInk:#1B7A6E;--lilacInk:#6D4FD8;
+  --amber:#E0A32E;
+  --display:"Oswald",Impact,sans-serif;--body:"Space Grotesk",Helvetica,Arial,sans-serif;--wordmark:"Urbanist",sans-serif;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{margin:0;background:#EDEAE3;font-family:var(--body);color:var(--ink);display:flex;flex-direction:column;align-items:center;gap:14px;padding:22px 12px 40px}
+.page-title{font-family:var(--display);text-transform:uppercase;letter-spacing:.14em;font-size:18px;margin:0}
+.page-sub{font-size:13px;color:var(--muted);max-width:52ch;text-align:center;margin:0}
+.phone{width:380px;max-width:100%;height:780px;max-height:88vh;background:var(--paper);border:10px solid #15182b;border-radius:42px;overflow:hidden;display:flex;flex-direction:column;position:relative;box-shadow:0 24px 50px rgba(30,35,64,.28)}
+.notch{position:absolute;top:0;left:50%;transform:translateX(-50%);width:118px;height:26px;background:#15182b;border-radius:0 0 16px 16px;z-index:20}
+header.bar{flex:none;display:flex;align-items:center;justify-content:space-between;padding:38px 14px 10px;background:var(--paper)}
+.logo{display:flex;align-items:center;gap:10px}
+.logo .word{font-family:var(--wordmark);font-weight:500;text-transform:uppercase;font-size:24px;letter-spacing:.15em;line-height:1.1}
+.logo .word i{font-style:normal;color:var(--yellow)}
+.back{font-family:var(--display);font-size:15px;text-transform:uppercase;letter-spacing:.08em;background:none;border:0;color:var(--ink);display:flex;align-items:center;gap:8px;cursor:pointer;padding:0}
+.siren{position:relative;width:40px;height:40px;border:0;background:none;cursor:pointer;display:grid;place-items:center}
+.siren .halo{position:absolute;inset:0;border-radius:50%;background:var(--coral);animation:pulse 1.8s ease-out infinite}
+.siren .dot{position:relative;width:40px;height:40px;border-radius:50%;background:var(--coral);display:grid;place-items:center}
+.siren svg{width:20px;height:20px;stroke:var(--night);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+@keyframes pulse{0%{transform:scale(1);opacity:.6}100%{transform:scale(1.6);opacity:0}}
+@media (prefers-reduced-motion:reduce){.siren .halo{animation:none;opacity:0}}
+main{flex:1;overflow-y:auto;overflow-x:hidden;padding:16px 16px 26px;display:flex;flex-direction:column;gap:16px;background:var(--paper);scrollbar-width:thin}
+main>*{flex:0 0 auto}
+.map{flex:0 0 auto}
+nav.tabs{flex:none;display:flex;background:var(--surface);border-top:1px solid var(--border);padding:8px 4px 20px}
+nav.tabs button{flex:1;background:none;border:0;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:3px;font-family:var(--body);font-weight:500;font-size:11px;color:var(--dim);padding:2px 0}
+nav.tabs button.on{color:var(--coralInk)}
+nav.tabs svg{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:16px;display:flex;flex-direction:column;gap:8px}
+.card.hero{border-radius:16px;padding:20px;gap:12px}
+.eyebrow{font-size:12px;text-transform:uppercase;letter-spacing:.12em;color:var(--dim)}
+.display{font-family:var(--display);font-weight:700;text-transform:uppercase;letter-spacing:.14em;color:var(--ink);line-height:1.1}
+.d36{font-size:34px}.d30{font-size:28px}.d24{font-size:22px}
+.h{font-family:var(--display);font-weight:500;text-transform:uppercase;letter-spacing:.14em;font-size:16px;color:var(--ink)}
+.h-sm{font-family:var(--display);font-weight:500;text-transform:uppercase;letter-spacing:.14em;font-size:13px;color:var(--muted)}
+.p{font-size:14px;color:var(--muted);line-height:1.45}
+.small{font-size:12px;color:var(--dim)}
+.link{background:none;border:0;padding:0;cursor:pointer;font-family:var(--body);font-weight:500;font-size:14px;color:var(--turquoiseInk);display:inline-flex;align-items:center;gap:4px}
+.row{display:flex;gap:8px}
+.row.wrap{flex-wrap:wrap}
+.between{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.btn{flex:1;border:0;cursor:pointer;border-radius:12px;padding:13px 10px;font-family:var(--display);font-weight:500;text-transform:uppercase;letter-spacing:.14em;font-size:14px}
+.btn:active{opacity:.8}
+.btn.coral{background:var(--coral);color:var(--night)}
+.btn.turq{background:var(--turquoise);color:var(--night)}
+.btn.yellow{background:var(--yellow);color:var(--night)}
+.btn.lilac{background:var(--lilac);color:var(--night)}
+.btn.ghost-turq{background:transparent;border:1px solid var(--turquoise);color:var(--turquoiseInk)}
+.btn.ghost{background:transparent;border:1px solid var(--border);color:var(--muted)}
+.btn.sm{flex:none;padding:9px 14px;font-size:13px;border-radius:10px}
+.chip{border-radius:999px;border:1px solid;padding:7px 13px;font-family:var(--body);font-weight:500;font-size:12px;background:transparent;cursor:pointer;white-space:nowrap}
+.pill{border-radius:999px;padding:4px 12px;font-family:var(--body);font-weight:700;font-size:12px;text-transform:uppercase;letter-spacing:.06em;color:var(--night)}
+.badge{align-self:flex-start;border-radius:6px;padding:3px 8px;font-family:var(--body);font-weight:500;font-size:11px}
+.badge.lg{padding:4px 10px;font-size:13px}
+input,textarea{width:100%;font-family:var(--body);font-size:15px;color:var(--ink);background:var(--paper);border:1px solid var(--border);border-radius:12px;padding:12px 14px;outline:none}
+input:focus,textarea:focus{border-color:var(--turquoise)}
+textarea{min-height:92px;resize:none}
+.stat{flex:1;min-width:0;background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:14px;display:flex;flex-direction:column;gap:3px}
+.stat .v{font-family:var(--display);font-weight:700;font-size:22px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.seg{display:flex;background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:4px}
+.seg button{flex:1;border:0;background:transparent;cursor:pointer;border-radius:9px;padding:9px;font-family:var(--display);font-weight:500;text-transform:uppercase;letter-spacing:.14em;font-size:14px;color:var(--muted)}
+.map{position:relative;border:1px solid var(--border);border-radius:12px;overflow:hidden;background:var(--subtle)}
+.map canvas{display:block;width:100%;height:100%;cursor:crosshair}
+.map .attr{position:absolute;right:6px;bottom:4px;font-size:9px;color:var(--dim)}
+.rank{display:flex;align-items:center;gap:12px}
+.rank .n{font-family:var(--display);font-weight:500;font-size:19px;color:var(--dim);width:22px}
+.legend{display:flex;flex-wrap:wrap;gap:4px 16px}
+.legend span{display:inline-flex;align-items:center;gap:6px;font-size:12px;color:var(--muted)}
+.legend i{width:12px;height:12px;border-radius:6px;display:inline-block}
+.tap{cursor:pointer}
+.tap:active{opacity:.8}
+.axis{display:flex;align-items:center;gap:8px}
+.axis .lbl{width:84px;font-size:12px;color:var(--muted)}
+.axis .val{flex:1;text-align:right;font-weight:500;font-size:12px;color:var(--ink)}
+.strip{display:flex;gap:6px}
+.strip i{flex:1;height:4px;border-radius:2px;background:var(--border);overflow:hidden;display:block}
+.strip i b{display:block;height:100%;border-radius:2px}
+.sheet-bg{position:absolute;inset:0;background:rgba(21,24,43,.55);z-index:30;display:flex;flex-direction:column;justify-content:flex-end}
+.sheet{background:var(--surface);border-top:1px solid var(--border);border-radius:22px 22px 0 0;padding:22px 22px 30px;display:flex;flex-direction:column;gap:14px;max-height:80%;overflow-y:auto}
+.full-modal{position:absolute;inset:0;background:var(--paper);z-index:30;display:flex;flex-direction:column;gap:14px;padding:46px 16px 16px}
+.emg{display:flex;align-items:center;gap:14px;border:1px solid var(--border);border-radius:12px;background:var(--paper);padding:12px 14px;cursor:pointer}
+.emg .num{font-family:var(--display);font-weight:700;font-size:28px;color:var(--coralInk)}
+.x{background:none;border:0;cursor:pointer;color:var(--muted);font-size:26px;line-height:1;padding:0}
+.list-item{border-bottom:1px solid var(--border);padding:12px 0;cursor:pointer;font-size:15px}
+.hint{font-size:12px;color:var(--dim)}
+.toast{position:absolute;left:16px;right:16px;bottom:96px;z-index:40;background:var(--night);color:#fff;border-radius:12px;padding:12px 14px;font-size:13px;box-shadow:0 10px 24px rgba(0,0,0,.3);opacity:0;transform:translateY(8px);transition:.25s}
+.toast.on{opacity:1;transform:none}
+.warn{display:flex;gap:8px;align-items:flex-start;border:1px solid rgba(244,115,111,.6);border-radius:12px;background:var(--paper);padding:12px}
+.note b{display:block;font-weight:700;font-size:14px;color:var(--turquoiseInk)}
+.note.coral b{color:var(--coralInk)}
+.foot{font-size:12px;color:var(--muted);text-align:center;max-width:52ch}
+</style>
+</head>
+<body>
+<h1 class="page-title">Irisa · protótipo navegável</h1>
+<p class="page-sub">Telas do código atual, com dados de exemplo de Curitiba. Clique nas abas, nos lugares, na sirene, no seletor de cidade e nos formulários.</p>
+
+<div class="phone" id="phone">
+  <div class="notch"></div>
+  <header class="bar" id="bar"></header>
+  <main id="main"></main>
+  <nav class="tabs" id="tabs"></nav>
+  <div id="overlay"></div>
+  <div class="toast" id="toast"></div>
+</div>
+<p class="foot">Protótipo em HTML: o mapa é um desenho sintético no lugar do MapLibre, e nada é gravado no Supabase.</p>
+
+<script>
+/* ---------- tokens ---------- */
+const C={paper:"#FAF9F6",surface:"#FFFFFF",subtle:"#F1EDE7",border:"#E4DED5",night:"#1E2340",ink:"#1E2340",muted:"#4F576F",dim:"#8A90A2",coral:"#F4736F",orange:"#F5A45D",yellow:"#F0CA75",turquoise:"#5CC9B4",lilac:"#AE96F2",coralInk:"#B23C3A",orangeInk:"#96601C",yellowInk:"#8A6512",turquoiseInk:"#1B7A6E",lilacInk:"#6D4FD8",amber:"#E0A32E"};
+const INK={[C.coral]:C.coralInk,[C.orange]:C.orangeInk,[C.yellow]:C.yellowInk,[C.turquoise]:C.turquoiseInk,[C.lilac]:C.lilacInk};
+const onLight=c=>INK[c]||c;
+const SCALE=[C.coral,C.orange,C.yellow,C.turquoise,C.lilac];
+const TYPES={verbal:{label:"Agressão verbal",color:C.yellow},fisica:{label:"Violência física",color:C.coral},ameaca:{label:"Ameaça",color:C.orange},discriminacao:{label:"Discriminação",color:C.turquoise},vandalismo:{label:"Vandalismo",color:C.lilac}};
+const SEV={baixa:{label:"Baixa",color:C.yellow},media:{label:"Média",color:C.orange},alta:{label:"Alta",color:C.coral}};
+const SUPCAT={acolhimento:{label:"Acolhimento",color:C.turquoise},dica:{label:"Dica de segurança",color:C.yellow},pedido_ajuda:{label:"Pedido de ajuda",color:C.coral}};
+const PLACECAT={bar:"Bar",restaurante:"Restaurante",balada:"Balada",cafe:"Café",hotel:"Hotel",servico:"Serviço",praca:"Praça",outro:"Outro"};
+const AXES={welcome:{label:"Atendimento",question:"A equipe te tratou bem?",hint:"Sem constrangimento, sem olhar torto, sem insistir no “senhor”."},affection:{label:"Afeto",question:"Dava para ficar à vontade com quem você ama?",hint:"De mãos dadas, um beijo, sem plateia."},restroom:{label:"Banheiro",question:"E o banheiro?",hint:"Usou o que quis, sem ser questionade."},crowd:{label:"Clientela",question:"E as outras pessoas no ambiente?",hint:"Quem estava em volta, não a equipe."}};
+const AXIS_KEYS=["welcome","affection","restroom","crowd"];
+const BADGES={acolhedor:{label:"Acolhedor",color:C.turquoise,ink:C.turquoiseInk,note:"Nota alta e consistente entre quem frequenta."},bem:{label:"Bem avaliado",color:C.yellow,ink:C.yellowInk,note:"Avaliações boas, sem unanimidade."},dividido:{label:"Opiniões divididas",color:C.lilac,ink:C.lilacInk,note:"As experiências variam muito — costuma depender de quem está no turno."},atencao:{label:"Atenção",color:C.coral,ink:C.coralInk,note:"Relato recente no local ou avaliações ruins repetidas."},poucas:{label:"Poucas avaliações",color:C.subtle,ink:C.muted,note:"Ainda não dá para dizer: são precisas 5 avaliações."}};
+const RATING_MIN=5;
+const scoreColor=s=>s>=4.5?C.turquoise:s>=3.5?C.yellow:s>=2.5?C.orange:C.coral;
+const riskLevel=s=>s>=12?{label:"Risco alto",color:C.coral}:s>=6?{label:"Risco médio",color:C.orange}:{label:"Risco baixo",color:C.yellow};
+const EMERGENCY=[{number:"190",name:"Polícia",note:"Risco imediato"},{number:"192",name:"SAMU",note:"Emergência médica"},{number:"100",name:"Disque Direitos Humanos",note:"Denúncia de LGBTIfobia"},{number:"188",name:"CVV",note:"Apoio emocional 24h"}];
+
+/* ---------- dados de exemplo ---------- */
+const DB={
+  city:{name:"Curitiba",state:"PR",lat:-25.4284,lng:-49.2733},
+  cities:[["Curitiba","PR"],["Curitibanos","SC"],["Cuiabá","MT"],["Campinas","SP"],["Recife","PE"],["Porto Alegre","RS"]],
+  stats:{total:142,last30:23,topType:"verbal",topHood:"Centro"},
+  typeCounts:{verbal:61,fisica:24,ameaca:19,discriminacao:26,vandalismo:12},
+  occurrences:[
+    {id:"o1",type:"fisica",severity:"alta",neighborhood:"Centro",date:"12 de set. de 2026",obf:false,description:"Saída de bar na Rua São Francisco, madrugada de sábado. Grupo gritou e empurrou o casal."},
+    {id:"o2",type:"verbal",severity:"media",neighborhood:"Rebouças",date:"9 de set. de 2026",obf:false,description:"Xingamentos no ponto de ônibus enquanto esperávamos a linha da madrugada."},
+    {id:"o3",type:"ameaca",severity:"alta",neighborhood:"Centro",date:"5 de set. de 2026",obf:true,description:"Homem seguiu a gente por duas quadras dizendo que ia “resolver”."},
+    {id:"o4",type:"discriminacao",severity:"baixa",neighborhood:"Batel",date:"1 de set. de 2026",obf:false,description:"Recepção recusou usar o nome social na reserva."},
+    {id:"o5",type:"vandalismo",severity:"media",neighborhood:"Água Verde",date:"27 de ago. de 2026",obf:false,description:"Pichação com insulto na fachada do coletivo."}
+  ],
+  ranking:[{id:1,n:"Centro",total:38,high:11,score:71},{id:2,n:"Rebouças",total:17,high:3,score:26},{id:3,n:"Batel",total:9,high:1,score:12},{id:4,n:"Água Verde",total:6,high:0,score:6},{id:5,n:"Cristo Rei",total:4,high:0,score:4}],
+  places:[
+    {id:"p1",name:"Bar do Gato",category:"bar",neighborhood:"São Francisco",address:"Rua Trajano Reis, 227",verified:true,score:4.7,count:38,badge:"acolhedor",welcome:4.8,affection:4.9,restroom:4.5,crowd:4.4,flagged:true,recent:1,high:0,onSite:0},
+    {id:"p2",name:"Café Ateliê",category:"cafe",neighborhood:"Alto da XV",address:"Av. João Gualberto, 1200",verified:false,score:4.6,count:21,badge:"acolhedor",welcome:4.7,affection:4.6,restroom:4.6,crowd:4.3,flagged:false},
+    {id:"p3",name:"Vila Batel",category:"balada",neighborhood:"Batel",address:"Rua Bispo Dom José, 2380",verified:false,score:3.9,count:14,badge:"bem",welcome:4.1,affection:3.8,restroom:3.6,crowd:3.9,flagged:false},
+    {id:"p4",name:"Restaurante Marumbi",category:"restaurante",neighborhood:"Centro",address:"Rua XV de Novembro, 500",verified:false,score:3.2,count:9,badge:"dividido",welcome:3.6,affection:2.8,restroom:3.4,crowd:3.0,flagged:true,recent:2,high:1,onSite:1},
+    {id:"p5",name:"Hotel Iguaçu",category:"hotel",neighborhood:"Centro",address:"Rua Amintas de Barros, 96",verified:false,score:null,count:2,badge:"poucas"}
+  ],
+  ratings:[
+    {id:"r1",nick:"Nina",when:"há 3 dias",mine:false,overall:4.8,welcome:5,affection:5,restroom:5,crowd:4,comment:"Equipe treinada, banheiro sem gênero, sexta tem drag. Casa cheia e segura."},
+    {id:"r2",nick:"Anônimo",when:"há 2 semanas",mine:false,overall:4.2,welcome:4,affection:5,restroom:4,crowd:4,comment:"Ótimo dentro, mas a rua de trás fica escura depois da 1h."},
+    {id:"r3",nick:"Theo",when:"há 1 mês",mine:false,overall:4.6,welcome:5,affection:5,restroom:4,crowd:4,comment:""}
+  ],
+  messages:[
+    {id:"m1",category:"dica",nick:"Lu",when:"há 2 horas",likes:14,liked:false,content:"Sábado à noite, evitem a Rua Riachuelo entre a Praça Tiradentes e a XV. Vão pela Marechal."},
+    {id:"m2",category:"acolhimento",nick:"Anônimo",when:"ontem",likes:31,liked:true,content:"Vocês não estão sozinhes. O Centro de Cidadania atende sem agendamento."},
+    {id:"m3",category:"pedido_ajuda",nick:"Rafa",when:"há 2 dias",likes:8,liked:false,content:"Alguém conhece advogade para orientação sobre nome social no trabalho?"}
+  ],
+  services:[
+    {name:"Grupo Dignidade",kind:"ong",desc:"Assessoria jurídica e acolhimento",phone:"(41) 3222-3025",url:"#"},
+    {name:"Centro de Cidadania LGBTQIA+",kind:"acolhimento",desc:"Atendimento sem agendamento",phone:"(41) 3350-3700",url:""},
+    {name:"Disque Direitos Humanos",kind:"direitos",desc:"Denúncia 24h",phone:"100",url:""},
+    {name:"CVV",kind:"saude",desc:"Apoio emocional 24h",phone:"188",url:"#"}
+  ],
+  profile:{email:"voce@exemplo.com",nickname:"",role:"user"}
+};
+const KIND={policia:"Polícia",saude:"Saúde",direitos:"Direitos humanos",acolhimento:"Acolhimento",ong:"ONG",juridico:"Jurídico"};
+
+/* ---------- estado ---------- */
+const S={tab:"inicio",screen:null,placeId:null,overlay:null,
+  mapFilter:"all",layers:{relatos:true,lugares:true},selected:null,
+  regMode:"relato",regType:"verbal",regSev:"media",regPoint:null,regDesc:"",
+  placeName:"",placeCat:"bar",placeAddr:"",placePoint:null,
+  supCat:"acolhimento",supNick:"",supText:"",
+  draft:{welcome:0,affection:0,restroom:0,crowd:0,comment:""},
+  city:DB.city,nickname:"",citySearch:""};
+
+/* ---------- helpers ---------- */
+const el=(h)=>{const t=document.createElement("template");t.innerHTML=h.trim();return t.content.firstElementChild};
+const esc=(s)=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+function toast(msg){const t=document.getElementById("toast");t.textContent=msg;t.classList.add("on");clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove("on"),2200)}
+
+const ICON={
+  home:'<path d="M3 11l9-8 9 8v10a1 1 0 0 1-1 1h-5v-7h-6v7H4a1 1 0 0 1-1-1z"/>',
+  map:'<path d="M1 6v16l7-4 8 4 7-4V2l-7 4-8-4z"/><path d="M8 2v16M16 6v16"/>',
+  plus:'<circle cx="12" cy="12" r="10"/><path d="M12 8v8M8 12h8"/>',
+  buoy:'<circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="4"/><path d="M4.9 4.9l4.2 4.2M14.9 14.9l4.2 4.2M14.9 9.1l4.2-4.2M4.9 19.1l4.2-4.2"/>',
+  user:'<path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>',
+  siren:'<path d="M7 18v-6a5 5 0 0 1 10 0v6"/><path d="M5 21h14"/><path d="M12 2v2M4.2 5.2l1.4 1.4M19.8 5.2l-1.4 1.4"/>',
+  heart:'<path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1-1.1a5.5 5.5 0 0 0-7.8 7.8l8.8 8.8 8.8-8.8a5.5 5.5 0 0 0 0-7.8z"/>',
+  phone:'<path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.7a2 2 0 0 1-.5 2.1L8.1 9.9a16 16 0 0 0 6 6l1.4-1.2a2 2 0 0 1 2.1-.5c.9.3 1.8.6 2.7.7a2 2 0 0 1 1.7 2z"/>',
+  ext:'<path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><path d="M15 3h6v6M10 14L21 3"/>',
+  check:'<path d="M9 12l2 2 4-4"/><circle cx="12" cy="12" r="10"/>',
+  warn:'<path d="M10.3 3.9L1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/><path d="M12 9v4M12 17h.01"/>',
+  cross:'<path d="M12 2v20M2 12h20"/>',
+  chev:'<path d="M6 9l6 6 6-6"/>',
+  flag:'<path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><path d="M4 22v-7"/>'
+};
+const svg=(name,color,size=20,fill="none")=>`<svg viewBox="0 0 24 24" width="${size}" height="${size}" style="stroke:${color};fill:${fill};stroke-width:2;stroke-linecap:round;stroke-linejoin:round">${ICON[name]}</svg>`;
+
+/* ---------- marca ---------- */
+const RING=["#F4736F","#F5A45D","#F0CA75","#5CC9B4","#6AA8EE","#AE96F2"];
+function lerp(a,b,t){let o="#";for(let i=1;i<7;i+=2){const x=parseInt(a.slice(i,i+2),16),y=parseInt(b.slice(i,i+2),16);o+=Math.round(x+(y-x)*t).toString(16).padStart(2,"0")}return o}
+function pt(r,a){return{x:50+r*Math.cos(a),y:50+r*Math.sin(a)}}
+function slice(ro,ri,a0,a1){const o0=pt(ro,a0),o1=pt(ro,a1),i1=pt(ri,a1),i0=pt(ri,a0);return `M ${o0.x} ${o0.y} A ${ro} ${ro} 0 0 1 ${o1.x} ${o1.y} L ${i1.x} ${i1.y} A ${ri} ${ri} 0 0 0 ${i0.x} ${i0.y} Z`}
+function markSvg(size){
+  const N=48,S0=-150*Math.PI/180,S1=-55*Math.PI/180;let p="";
+  for(let i=0;i<N;i++){const t=i/N,q=t*RING.length,k=Math.floor(q)%RING.length;
+    p+=`<path d="${slice(48,35,(i/N)*2*Math.PI-Math.PI/2,((i+1)/N)*2*Math.PI-Math.PI/2+0.05)}" fill="${lerp(RING[k],RING[(k+1)%RING.length],q-Math.floor(q))}"/>`}
+  const s=pt(33,S0),e=pt(33,S1),id="g"+Math.random().toString(36).slice(2,7);
+  return `<svg width="${size}" height="${size}" viewBox="0 0 100 100"><defs><linearGradient id="${id}" gradientUnits="userSpaceOnUse" x1="${s.x}" y1="${s.y}" x2="${e.x}" y2="${e.y}"><stop offset="0" stop-color="#5CC9B4" stop-opacity="0"/><stop offset="1" stop-color="#5CC9B4" stop-opacity=".5"/></linearGradient></defs>${p}
+  <path d="${slice(33,0,S0,S1)}" fill="url(#${id})"/>
+  <path d="M 50 50 L ${e.x} ${e.y}" stroke="#5CC9B4" stroke-width="1.6" stroke-linecap="round" stroke-opacity=".75"/>
+  <circle cx="50" cy="50" r="25" fill="none" stroke="#5CC9B4" stroke-width=".8" stroke-opacity=".35"/>
+  <circle cx="66" cy="36" r="3.1" fill="#5CC9B4"/><circle cx="63" cy="62" r="2.4" fill="${C.coral}"/><circle cx="38" cy="34" r="1.9" fill="#5CC9B4"/>
+  <circle cx="50" cy="50" r="13" fill="#161B2E"/><circle cx="46.1" cy="45.6" r="2.86" fill="#fff"/></svg>`;
+}
+function irisScore(value,size=54){
+  const c=size/2,ro=size*.47,ri=size*.315,pu=size*.155;
+  const P=(r,deg)=>{const a=(deg-90)*Math.PI/180;return{x:c+r*Math.cos(a),y:c+r*Math.sin(a)}};
+  const ann=(a0,a1)=>{const o0=P(ro,a0),o1=P(ro,a1),i1=P(ri,a1),i0=P(ri,a0);return `M ${o0.x} ${o0.y} A ${ro} ${ro} 0 0 1 ${o1.x} ${o1.y} L ${i1.x} ${i1.y} A ${ri} ${ri} 0 0 0 ${i0.x} ${i0.y} Z`};
+  let arcs="";
+  SCALE.forEach((col,i)=>{const f=Math.max(0,Math.min(1,value-i));if(f>.01)arcs+=`<path d="${ann(i*72+0.6,i*72+72*f)}" fill="${col}"/>`});
+  return `<svg width="${size}" height="${size}" viewBox="0 0 ${size} ${size}"><circle cx="${c}" cy="${c}" r="${(ro+ri)/2}" fill="none" stroke="${C.border}" stroke-width="${ro-ri}"/>${arcs}<circle cx="${c}" cy="${c}" r="${pu}" fill="#161B2E"/><circle cx="${c-pu*.3}" cy="${c-pu*.32}" r="${pu*.22}" fill="${C.surface}"/></svg>`;
+}
+function rainbow(value,size=8,name){
+  const w=Math.round(size*3.1),gap=Math.max(2,Math.round(size*.34));
+  return `<div style="display:flex;gap:${gap}px">`+SCALE.map((col,i)=>{
+    const f=Math.max(0,Math.min(1,value-i));
+    const inner=f>0?`<span style="display:block;width:${Math.max(size,w*f)}px;height:${size}px;border-radius:${size/2}px;background:${col}"></span>`:"";
+    const seg=`<span style="display:block;width:${w}px;height:${size}px;border-radius:${size/2}px;background:${C.border};overflow:hidden">${inner}</span>`;
+    return name?`<button class="tap" style="border:0;background:none;padding:2px 0;cursor:pointer" data-rate="${name}" data-v="${i+1}">${seg}</button>`:seg;
+  }).join("")+`</div>`;
+}
+function axisBars(sc,size=8){
+  const shown=AXIS_KEYS.filter(k=>sc[k]!=null);if(!shown.length)return "";
+  return `<div style="display:flex;flex-direction:column;gap:6px">`+shown.map(k=>`<div class="axis"><span class="lbl">${AXES[k].label}</span>${rainbow(Number(sc[k]),size)}<span class="val">${Number(sc[k]).toFixed(1)}</span></div>`).join("")+`</div>`;
+}
+function axisStrip(sc){
+  if(AXIS_KEYS.some(k=>sc[k]==null))return "";
+  return `<div class="strip">`+AXIS_KEYS.map((k,i)=>`<i><b style="width:${Math.max(6,Number(sc[k])/5*100)}%;background:${SCALE[i]}"></b></i>`).join("")+`</div>`;
+}
+function badgeHtml(key,lg){const b=BADGES[key];if(!b)return "";return `<span class="badge${lg?" lg":""}" style="background:${b.color}${key==="poucas"?"":"2E"};color:${b.ink}">${b.label}</span>`}
+
+/* ---------- mapa sintético (claro, estilo Esri Light Gray) ---------- */
+function drawMap(cv,opts){
+  const x=cv.getContext("2d"),W=cv.width,H=cv.height;
+  x.fillStyle="#F3F1ED";x.fillRect(0,0,W,H);
+  let s=7;const rnd=()=>{s=(s*16807)%2147483647;return s/2147483647};
+  x.fillStyle="#E8E5DE";for(let i=0;i<46;i++)x.fillRect(rnd()*W,rnd()*H,18+rnd()*70,12+rnd()*46);
+  x.strokeStyle="#FFFFFF";x.lineWidth=3;
+  for(let i=0;i<9;i++){const y=rnd()*H;x.beginPath();x.moveTo(0,y);x.lineTo(W,y+(rnd()-.5)*60);x.stroke()}
+  for(let i=0;i<9;i++){const xx=rnd()*W;x.beginPath();x.moveTo(xx,0);x.lineTo(xx+(rnd()-.5)*60,H);x.stroke()}
+  x.strokeStyle="#DCD8D0";x.lineWidth=5;x.beginPath();x.moveTo(0,H*.55);x.lineTo(W,H*.4);x.stroke();
+  x.beginPath();x.moveTo(W*.35,0);x.lineTo(W*.45,H);x.stroke();
+  if(opts.heat!==false){
+    for(const[px,py,r,col] of [[.42,.45,46,C.coral],[.62,.3,34,C.orange],[.25,.7,24,C.yellow],[.75,.7,19,C.yellow]]){
+      x.globalAlpha=.28;x.fillStyle=col;x.beginPath();x.arc(px*W,py*H,r,0,7);x.fill();x.globalAlpha=1}
+  }
+  if(opts.occurrences!==false){
+    for(const[px,py,col,r] of [[.4,.43,C.coral,7],[.45,.48,C.orange,5],[.38,.5,C.yellow,5],[.6,.3,C.coral,7],[.66,.34,C.yellow,5],[.25,.7,C.orange,5],[.75,.72,C.yellow,5],[.55,.6,C.orange,5],[.3,.3,C.yellow,5]]){
+      x.fillStyle=col;x.beginPath();x.arc(px*W,py*H,r,0,7);x.fill();x.lineWidth=1.5;x.strokeStyle="#fff";x.stroke()}
+  }
+  if(opts.places){
+    for(const[px,py,col] of [[.5,.25,C.turquoise],[.2,.5,C.turquoise],[.8,.5,C.yellow],[.65,.85,C.dim],[.35,.85,C.coral]]){
+      x.globalAlpha=.2;x.fillStyle=col;x.beginPath();x.arc(px*W,py*H,14,0,7);x.fill();x.globalAlpha=1;
+      x.beginPath();x.arc(px*W,py*H,8,0,7);x.fill();x.lineWidth=2;x.strokeStyle="#fff";x.stroke()}
+  }
+  if(opts.picked){x.fillStyle=C.coral;x.beginPath();x.arc(opts.picked.x*W,opts.picked.y*H,10,0,7);x.fill();x.lineWidth=3;x.strokeStyle="#fff";x.stroke()}
+}
+function mapHtml(id,h,cls){return `<div class="map" style="height:${h}px"><canvas id="${id}" width="332" height="${h}"${cls?` data-pick="${cls}"`:""}></canvas><span class="attr">Tiles © Esri</span></div>`}
+
+/* ---------- barra superior ---------- */
+function renderBar(){
+  const bar=document.getElementById("bar");
+  if(S.screen==="lugar"){
+    const p=DB.places.find(x=>x.id===S.placeId);
+    bar.innerHTML=`<button class="back" data-back="1">‹ ${esc(p.name)}</button>`+sirenHtml();
+  }else{
+    bar.innerHTML=`<div class="logo">${markSvg(28)}<span class="word">Iris<i>a</i></span></div>`+sirenHtml();
+  }
+}
+const sirenHtml=()=>`<button class="siren" data-overlay="emergencia" aria-label="Emergência"><span class="halo"></span><span class="dot">${svg("siren",C.night,20)}</span></button>`;
+
+/* ---------- abas ---------- */
+const TABS=[["inicio","Início","home"],["mapa","Mapa","map"],["registrar","Registrar","plus"],["apoio","Apoio","buoy"],["perfil","Perfil","user"]];
+function renderTabs(){
+  document.getElementById("tabs").innerHTML=TABS.map(([k,l,i])=>
+    `<button data-tab="${k}" class="${S.tab===k&&!S.screen?"on":""}"><svg viewBox="0 0 24 24">${ICON[i]}</svg>${l}</button>`).join("");
+}
+
+/* ---------- telas ---------- */
+function screenInicio(){
+  const st=DB.stats,t=TYPES[st.topType];
+  return `
+  <div class="card hero">
+    <span class="eyebrow">Painel de segurança</span>
+    <div class="display d36">${esc(S.city.name)}</div>
+    <button class="link" data-overlay="cidade">${esc(S.city.name)} · ${S.city.state} ${svg("chev",C.turquoiseInk,16)}</button>
+    <p class="p">Relatos anônimos da comunidade LGBTQIA+ e áreas que pedem atenção. Registrar leva um minuto.</p>
+    <div class="row">
+      <button class="btn coral" data-tab="registrar">Registrar</button>
+      <button class="btn ghost-turq" data-tab="mapa">Ver mapa</button>
+    </div>
+  </div>
+  <div class="row">${stat("Relatos",st.total)}${stat("Últimos 30 dias",st.last30,C.yellow)}</div>
+  <div class="row">${stat("Mais frequente",t.label,t.color)}${stat("Área crítica",st.topHood,C.coral)}</div>
+  <div style="display:flex;flex-direction:column;gap:8px">
+    <span class="h">Relatos recentes</span>
+    ${DB.occurrences.slice(0,3).map(occCard).join("")}
+  </div>
+  <div style="display:flex;flex-direction:column;gap:8px">
+    <span class="h">Lugares mais acolhedores</span>
+    ${DB.places.filter(p=>p.count>=RATING_MIN).slice(0,3).map(placeCard).join("")}
+  </div>
+  ${ranking("Bairros com mais relatos")}`;
+}
+const stat=(l,v,col)=>`<div class="stat"><span class="eyebrow">${l}</span><span class="v" style="color:${col?onLight(col):C.ink}">${esc(v)}</span></div>`;
+
+function occCard(o){
+  const t=TYPES[o.type],s=SEV[o.severity];
+  return `<div class="card">
+    <div class="between"><span class="pill" style="background:${t.color}">${t.label}</span>
+    <span style="font-weight:500;font-size:12px;color:${onLight(s.color)}">Gravidade ${s.label.toLowerCase()}</span></div>
+    <span class="h" style="font-size:15px;letter-spacing:.06em">${esc(o.neighborhood)} · <span style="color:${C.dim}">anônimo</span></span>
+    ${o.description?`<p class="p">${esc(o.description)}</p>`:""}
+    <div class="between"><span class="small">${o.date}${o.obf?" · posição aproximada":""}</span>
+    <button class="link" style="color:${C.dim};font-size:12px" data-denuncia="1">${svg("flag",C.dim,13)} Denunciar</button></div>
+  </div>`;
+}
+function placeCard(p){
+  const axes={welcome:p.welcome,affection:p.affection,restroom:p.restroom,crowd:p.crowd};
+  return `<div class="card tap" data-place="${p.id}">
+    <div class="between"><span style="display:flex;align-items:center;gap:5px;min-width:0"><span class="h" style="font-size:15px;letter-spacing:.06em">${esc(p.name)}</span>${p.verified?svg("check",C.turquoiseInk,16):""}</span>
+    <span class="small">${PLACECAT[p.category]}</span></div>
+    ${p.score==null?`<span class="p" style="color:${C.dim}">Sem avaliações ainda</span>`:`
+    <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">${rainbow(p.score,8)}
+      <b style="font-size:14px;color:${scoreColor(p.score)}">${p.score.toFixed(1)}</b>${badgeHtml(p.badge)}${p.flagged?svg("warn",C.coralInk,14):""}</div>
+    ${axisStrip(axes)}
+    <span class="small">${p.count} avaliaç${p.count===1?"ão":"ões"}${p.count<RATING_MIN?` de ${RATING_MIN} necessárias`:""} · ${esc(p.neighborhood)}</span>`}
+  </div>`;
+}
+function ranking(title="Áreas de atenção"){
+  return `<div class="card"><span class="h">${title}</span>${DB.ranking.map((a,i)=>{const l=riskLevel(a.score);
+    return `<div class="rank"><span class="n">${i+1}</span><span style="flex:1"><span style="display:block;font-weight:500;font-size:14px">${esc(a.n)}</span><span class="small">${a.total} relatos · ${a.high} grave${a.high===1?"":"s"}</span></span><b style="font-size:12px;color:${l.color}">${l.label}</b></div>`}).join("")}</div>`;
+}
+
+function screenMapa(){
+  const counts=DB.typeCounts,total=DB.stats.total;
+  const chips=[chip(`Todos (${total})`,C.muted,S.mapFilter==="all",`filter:all`)]
+    .concat(Object.keys(TYPES).map(k=>chip(`${TYPES[k].label} (${counts[k]||0})`,TYPES[k].color,S.mapFilter===k,`filter:${k}`))).join("");
+  const sel=S.selected?DB.occurrences.find(o=>o.id===S.selected):null;
+  return `
+  <div class="between" style="align-items:flex-end">
+    <span><span class="display d30" style="display:block">Mapa</span><span class="small">${esc(S.city.name)} · ${S.city.state} · ${total} relatos</span></span>
+    <button class="btn coral sm" data-tab="registrar">Registrar</button>
+  </div>
+  <div style="display:flex;gap:8px;overflow-x:auto;padding-bottom:2px">${chips}</div>
+  <div class="row">${chip(`Relatos (${total})`,C.coral,S.layers.relatos,"layer:relatos")}${chip(`Lugares (${DB.places.length})`,C.turquoise,S.layers.lugares,"layer:lugares")}</div>
+  ${mapHtml("map-main",300,"select")}
+  <span class="hint">Toque no mapa para selecionar um relato (no app é o MapLibre com os tiles da Esri).</span>
+  ${sel?occCard(sel):""}
+  ${ranking()}
+  <div class="card"><span class="h">Legenda</span>
+    <div class="legend">${Object.values(SEV).map(s=>`<span><i style="background:${s.color}"></i>Gravidade ${s.label.toLowerCase()}</span>`).join("")}</div>
+    <div class="legend"><span><i style="background:${C.turquoise}"></i>Lugar 4,5+</span><span><i style="background:${C.yellow}"></i>Lugar 3,5+</span><span><i style="background:${C.coral}"></i>Lugar abaixo de 2,5</span><span><i style="background:${C.dim}"></i>Sem avaliação</span></div>
+    <div class="legend"><span><i style="background:${C.yellow};opacity:.4"></i>1–2 relatos</span><span><i style="background:${C.orange};opacity:.4"></i>3–4 relatos</span><span><i style="background:${C.coral};opacity:.4"></i>5+ relatos</span></div>
+  </div>`;
+}
+const chip=(label,color,active,act)=>`<button class="chip" data-act="${act}" style="border-color:${color};background:${active?color:"transparent"};color:${active?C.night:onLight(color)}">${label}</button>`;
+
+function screenRegistrar(){
+  const seg=`<div class="seg">${["relato","lugar"].map(m=>`<button data-act="mode:${m}" style="${S.regMode===m?`background:${m==="relato"?C.coral:C.turquoise};color:${C.night}`:""}">${m==="relato"?"Relato":"Lugar"}</button>`).join("")}</div>`;
+  const body=S.regMode==="relato"?formRelato():formLugar();
+  return `
+  <div><span class="display d30" style="display:block">Registrar</span><span class="small">${S.regMode==="relato"?"Relato anônimo de LGBTIfobia":"Um lugar para a comunidade avaliar"}</span></div>
+  ${seg}${body}
+  <div class="card">
+    <div class="note"><b>100% anônimo</b><span class="p">Seu nome e e-mail nunca aparecem. Nem moderadores veem quem registrou.</span></div>
+    <div class="note"><b>Por que preciso estar logado?</b><span class="p">Para evitar spam e relatos falsos. A identidade fica só no banco e nunca é exibida.</span></div>
+    <div class="note coral"><b>Em risco agora?</b><span class="p">Use o botão de emergência no topo. Polícia 190, Disque 100.</span></div>
+  </div>`;
+}
+function field(label,hint,inner){return `<div style="display:flex;flex-direction:column;gap:8px"><div class="between" style="align-items:baseline"><span class="h-sm">${label}</span>${hint?`<span class="hint">${hint}</span>`:""}</div>${inner}</div>`}
+function formRelato(){
+  return `<div style="display:flex;flex-direction:column;gap:20px">
+  ${field("Tipo","",`<div class="row wrap">${Object.keys(TYPES).map(k=>chip(TYPES[k].label,TYPES[k].color,S.regType===k,`type:${k}`)).join("")}</div>`)}
+  ${field("Data","",`<div class="card" style="padding:12px 14px"><span style="font-size:15px">23 de setembro de 2026</span></div>`)}
+  ${field("Gravidade","",`<div class="row">${Object.keys(SEV).map(k=>`<button class="chip" data-act="sev:${k}" style="flex:1;border-color:${SEV[k].color};background:${S.regSev===k?SEV[k].color:"transparent"};color:${S.regSev===k?C.night:onLight(SEV[k].color)}">${SEV[k].label}</button>`).join("")}</div>`)}
+  ${field("Local","O bairro é identificado automaticamente.",
+    `<button class="btn ghost-turq" data-act="geo">⌖ Usar minha localização</button>
+     ${mapHtml("map-pick",240,"pick")}
+     <span class="hint">${S.regPoint?`${S.regPoint.lat.toFixed(5)}, ${S.regPoint.lng.toFixed(5)}`:"Nenhum ponto marcado — toque no mapa"}</span>`)}
+  ${field("Descrição (opcional)",`${S.regDesc.length}/2000`,`<textarea data-bind="regDesc" maxlength="2000" placeholder="O que aconteceu? Não inclua seu nome nem dados que identifiquem você ou outras pessoas.">${esc(S.regDesc)}</textarea>`)}
+  <button class="btn coral" style="padding:15px" data-act="enviarRelato">Registrar relato</button></div>`;
+}
+function formLugar(){
+  return `<div style="display:flex;flex-direction:column;gap:20px">
+  ${field("Nome","",`<input data-bind="placeName" maxlength="80" placeholder="Ex.: Bar da Esquina" value="${esc(S.placeName)}">`)}
+  ${field("Categoria","",`<div class="row wrap">${Object.keys(PLACECAT).map(k=>`<button class="chip" data-act="pcat:${k}" style="border-color:${C.turquoise};background:${S.placeCat===k?C.turquoise:"transparent"};color:${S.placeCat===k?C.night:C.turquoiseInk}">${PLACECAT[k]}</button>`).join("")}</div>`)}
+  ${field("Endereço (opcional)","",`<input data-bind="placeAddr" placeholder="Rua, número" value="${esc(S.placeAddr)}">`)}
+  ${field("Local","",`<button class="btn ghost-turq" data-act="geo2">⌖ Usar minha localização</button>${mapHtml("map-pick2",220,"pick2")}<span class="hint">${S.placePoint?`${S.placePoint.lat.toFixed(5)}, ${S.placePoint.lng.toFixed(5)}`:"Nenhum ponto marcado — toque no mapa"}</span>`)}
+  <button class="btn turq" style="padding:15px" data-act="enviarLugar">Cadastrar lugar</button></div>`;
+}
+
+function screenApoio(){
+  return `
+  <div><span class="display d30" style="display:block">Apoio</span><span class="small">Mural da comunidade e serviços de apoio</span></div>
+  <div class="card">
+    <span class="h">Deixe uma mensagem</span>
+    <input data-bind="supNick" maxlength="40" placeholder="Apelido (opcional, vira Anônimo)" value="${esc(S.supNick)}">
+    <div class="row wrap">${Object.keys(SUPCAT).map(k=>chip(SUPCAT[k].label,SUPCAT[k].color,S.supCat===k,`supcat:${k}`)).join("")}</div>
+    <textarea data-bind="supText" maxlength="1000" placeholder="Uma palavra de acolhimento, uma dica ou um pedido de ajuda (até 1000 caracteres)">${esc(S.supText)}</textarea>
+    <button class="btn turq" data-act="publicar">Publicar</button>
+  </div>
+  ${DB.messages.map(m=>{const c=SUPCAT[m.category];return `<div class="card">
+    <div class="between"><span class="pill" style="background:${c.color}">${c.label}</span><span class="small">${m.when}</span></div>
+    <p style="font-size:15px;color:${C.ink};margin:0;line-height:1.45">${esc(m.content)}</p>
+    <div class="between"><span class="small" style="font-weight:500">${esc(m.nick)}</span>
+      <button class="link" style="color:${C.dim};font-size:12px" data-denuncia="1">${svg("flag",C.dim,13)}</button>
+      <button class="link" data-act="like:${m.id}" style="color:${C.muted};font-size:12px">${svg("heart",C.coralInk,16,m.liked?C.coralInk:"none")} ${m.likes}</button></div>
+  </div>`}).join("")}
+  <div class="card"><span class="h">Serviços de apoio · ${esc(S.city.name)}</span>
+  ${DB.services.map(s=>`<div style="border-bottom:1px solid ${C.border};padding-bottom:12px;display:flex;flex-direction:column;gap:4px">
+    <div class="between"><b style="font-size:14px">${esc(s.name)}</b><span style="font-size:12px;color:${C.turquoiseInk}">${KIND[s.kind]}</span></div>
+    <span class="small">${esc(s.desc)}</span>
+    <div class="row" style="gap:14px">${s.phone?`<button class="link" style="color:${C.coralInk};font-weight:700" data-act="tel:${s.phone}">${svg("phone",C.coralInk,14)} ${s.phone}</button>`:""}${s.url?`<button class="link" data-act="site">${svg("ext",C.turquoiseInk,14)} Site</button>`:""}</div>
+  </div>`).join("")}</div>`;
+}
+
+function screenPerfil(){
+  return `
+  <div><span class="display d30" style="display:block">Perfil</span><span class="small">${esc(DB.profile.email)}</span></div>
+  <div class="card">
+    <span class="h-sm">Apelido no mural e nas avaliações</span>
+    <input data-bind="nickname" maxlength="40" placeholder="Vazio = Anônimo" value="${esc(S.nickname)}">
+    <span class="h-sm">Cidade padrão</span>
+    <button class="link" data-overlay="cidade">${esc(S.city.name)} · ${S.city.state} ${svg("chev",C.turquoiseInk,16)}</button>
+    <button class="btn turq" data-act="salvarPerfil">Salvar</button>
+  </div>
+  <div class="card"><span class="h-sm">Privacidade</span>
+    <p class="p">Relatos e mensagens nunca mostram seu nome ou e-mail. Só o apelido que você escolher aparece no mural e nas avaliações de lugares.</p></div>
+  <button class="btn ghost" data-act="sair">Sair</button>
+  <button class="link" style="color:${C.coralInk};align-self:center;font-size:14px" data-act="excluir">Excluir minha conta</button>`;
+}
+
+function screenLugar(){
+  const p=DB.places.find(x=>x.id===S.placeId);
+  const axes={welcome:p.welcome,affection:p.affection,restroom:p.restroom,crowd:p.crowd};
+  const d=S.draft;
+  return `
+  <div class="card hero">
+    <div style="display:flex;align-items:center;gap:8px"><span class="display d30">${esc(p.name)}</span>${p.verified?svg("check",C.turquoiseInk,20):""}</div>
+    <span class="small">${PLACECAT[p.category]} · ${esc(p.neighborhood)} · ${esc(S.city.name)}</span>
+    ${p.address?`<span class="p">${esc(p.address)}</span>`:""}
+    <button class="link" style="color:${C.dim};font-size:12px;align-self:flex-start" data-denuncia="1">${svg("flag",C.dim,13)} Denunciar lugar</button>
+    ${p.score==null?`<span class="p" style="color:${C.dim};font-size:15px">Sem avaliações ainda. Seja a primeira pessoa.</span>`:`
+    <div style="display:flex;align-items:center;gap:12px">${irisScore(p.score,54)}
+      <div style="flex:1;display:flex;flex-direction:column;gap:3px">
+        <span class="display" style="font-size:34px;letter-spacing:0;color:${scoreColor(p.score)}">${p.score.toFixed(1)}</span>
+        ${badgeHtml(p.badge,true)}
+        <span class="small">${p.count} avaliações de quem frequenta</span>
+      </div></div>
+    <span class="small">${BADGES[p.badge].note}</span>
+    ${axisBars(axes)}`}
+    ${p.flagged?`<div class="warn">${svg("warn",C.coralInk,18)}<span class="p" style="flex:1">${p.onSite>0?`${p.onSite} relato apontando este lugar`:`${p.recent} relato${p.recent===1?"":"s"} num raio de 100 m`} nos últimos 6 meses${p.high>0?`, ${p.high} grave`:""}.${p.high>0?" A nota já desconta isso.":""}</span></div>`:""}
+  </div>
+  ${mapHtml("map-place",170,"")}
+  <div class="card" style="gap:16px">
+    <span class="h">Como foi lá?</span>
+    ${AXIS_KEYS.map(k=>`<div style="display:flex;flex-direction:column;gap:6px">
+      <span style="font-weight:500;font-size:14px">${AXES[k].question}</span>
+      <span class="hint">${AXES[k].hint}</span>
+      ${rainbow(d[k],16,k)}</div>`).join("")}
+    <textarea data-bind="draftComment" maxlength="500" placeholder="Quer contar como foi? (opcional, até 500 caracteres)">${esc(d.comment)}</textarea>
+    <button class="btn yellow" data-act="avaliar">Enviar avaliação</button>
+  </div>
+  <div style="display:flex;flex-direction:column;gap:8px">
+    <span class="h">Avaliações</span>
+    ${DB.ratings.map(r=>`<div class="card">
+      <div class="between">${rainbow(r.overall,7)}<span class="small">${esc(r.nick)} · ${r.when}</span></div>
+      ${axisBars({welcome:r.welcome,affection:r.affection,restroom:r.restroom,crowd:r.crowd},5)}
+      ${r.comment?`<p class="p">${esc(r.comment)}</p>`:""}
+    </div>`).join("")}
+  </div>`;
+}
+
+/* ---------- overlays ---------- */
+function overlayEmergencia(){
+  return `<div class="sheet-bg" data-close="1"><div class="sheet" data-stop="1">
+    <div class="between"><span class="display d24">Emergência</span><button class="x" data-close="1">×</button></div>
+    ${EMERGENCY.map(c=>`<div class="emg" data-act="tel:${c.number}"><span class="num">${c.number}</span><span style="flex:1"><b style="display:block;font-size:15px">${c.name}</b><span class="small">${c.note}</span></span></div>`).join("")}
+    <span class="h-sm" style="color:${C.turquoiseInk}">Apoio em ${esc(S.city.name)}</span>
+    ${DB.services.slice(0,2).map(s=>`<div class="emg" style="display:block" data-act="tel:${s.phone}"><b style="font-size:14px">${esc(s.name)}</b><span class="small" style="display:block">${esc(s.desc)}</span><b style="font-size:14px;color:${C.coralInk}">${s.phone}</b></div>`).join("")}
+  </div></div>`;
+}
+function overlayCidade(){
+  const q=S.citySearch.trim().toLowerCase();
+  const res=q.length>=2?DB.cities.filter(([n])=>n.toLowerCase().includes(q)):[];
+  return `<div class="full-modal">
+    <div class="between"><span class="display d24">Cidade</span><button class="x" data-close="1">×</button></div>
+    <input data-bind="citySearch" placeholder="Digite o nome da cidade" value="${esc(S.citySearch)}" autofocus>
+    <div style="flex:1;overflow-y:auto">${res.map(([n,s])=>`<div class="list-item" data-act="setcity:${n}|${s}">${n} <span style="color:${C.dim}">· ${s}</span></div>`).join("")||(q.length>=2?`<span class="small">Nenhuma cidade encontrada.</span>`:"")}</div>
+  </div>`;
+}
+
+/* ---------- render ---------- */
+function render(keepScroll){
+  const main=document.getElementById("main");
+  const y=keepScroll?main.scrollTop:0;
+  renderBar();renderTabs();
+  main.innerHTML=S.screen==="lugar"?screenLugar():
+    S.tab==="inicio"?screenInicio():S.tab==="mapa"?screenMapa():S.tab==="registrar"?screenRegistrar():S.tab==="apoio"?screenApoio():screenPerfil();
+  document.getElementById("overlay").innerHTML=S.overlay==="emergencia"?overlayEmergencia():S.overlay==="cidade"?overlayCidade():"";
+  main.scrollTop=y;
+  const m=document.getElementById("map-main");if(m)drawMap(m,{places:S.layers.lugares,occurrences:S.layers.relatos,heat:S.layers.relatos});
+  const p1=document.getElementById("map-pick");if(p1)drawMap(p1,{heat:false,occurrences:false,picked:S.regPoint&&S.regPoint.rel});
+  const p2=document.getElementById("map-pick2");if(p2)drawMap(p2,{heat:false,occurrences:false,picked:S.placePoint&&S.placePoint.rel});
+  const p3=document.getElementById("map-place");if(p3)drawMap(p3,{heat:false,occurrences:false,places:true,picked:{x:.5,y:.5}});
+  const auto=document.querySelector("[autofocus]");if(auto)auto.focus();
+}
+
+/* ---------- eventos ---------- */
+document.getElementById("phone").addEventListener("click",e=>{
+  const t=e.target.closest("[data-tab],[data-place],[data-back],[data-overlay],[data-close],[data-act],[data-rate],[data-denuncia],[data-pick],[data-stop]");
+  if(!t)return;
+  if(t.dataset.stop!==undefined&&!t.closest("[data-act]"))e.stopPropagation();
+  if(t.dataset.close!==undefined&&t.dataset.stop===undefined){S.overlay=null;return render()}
+  if(t.dataset.overlay){S.overlay=t.dataset.overlay;S.citySearch="";return render(true)}
+  if(t.dataset.denuncia!==undefined){return toast("Denúncia enviada para a moderação.")}
+  if(t.dataset.tab){S.tab=t.dataset.tab;S.screen=null;S.selected=null;return render()}
+  if(t.dataset.place){S.placeId=t.dataset.place;S.screen="lugar";S.draft={welcome:0,affection:0,restroom:0,crowd:0,comment:""};return render()}
+  if(t.dataset.back!==undefined){S.screen=null;return render()}
+  if(t.dataset.rate){S.draft[t.dataset.rate]=Number(t.dataset.v);return render(true)}
+  if(t.dataset.pick){
+    const cv=t,r=cv.getBoundingClientRect(),rel={x:(e.clientX-r.left)/r.width,y:(e.clientY-r.top)/r.height};
+    const pos={lat:S.city.lat+(0.5-rel.y)*0.08,lng:S.city.lng+(rel.x-0.5)*0.08,rel};
+    if(cv.dataset.pick==="pick")S.regPoint=pos;
+    else if(cv.dataset.pick==="pick2")S.placePoint=pos;
+    else if(cv.dataset.pick==="select"){const i=Math.floor(rel.x*DB.occurrences.length);S.selected=DB.occurrences[Math.max(0,Math.min(DB.occurrences.length-1,i))].id}
+    return render(true);
+  }
+  const a=t.dataset.act;if(!a)return;
+  const [k,v]=a.split(":");
+  if(k==="filter")S.mapFilter=v;
+  else if(k==="layer")S.layers[v]=!S.layers[v];
+  else if(k==="mode")S.regMode=v;
+  else if(k==="type")S.regType=v;
+  else if(k==="sev")S.regSev=v;
+  else if(k==="pcat")S.placeCat=v;
+  else if(k==="supcat")S.supCat=v;
+  else if(k==="geo"){S.regPoint={lat:S.city.lat,lng:S.city.lng,rel:{x:.5,y:.5}};toast("Localização usada (exemplo).")}
+  else if(k==="geo2"){S.placePoint={lat:S.city.lat,lng:S.city.lng,rel:{x:.5,y:.5}};toast("Localização usada (exemplo).")}
+  else if(k==="tel")toast(`No app, abre o discador em ${v}.`);
+  else if(k==="site")toast("No app, abre o site do serviço.");
+  else if(k==="like"){const m=DB.messages.find(x=>x.id===v);m.liked=!m.liked;m.likes+=m.liked?1:-1}
+  else if(k==="publicar"){
+    if(!S.supText.trim())return toast("Escreva a mensagem.");
+    DB.messages.unshift({id:"m"+Date.now(),category:S.supCat,nick:S.supNick.trim()||"Anônimo",when:"agora",likes:0,liked:false,content:S.supText.trim()});
+    S.supText="";toast("Mensagem publicada no mural.");
+  }
+  else if(k==="enviarRelato"){
+    if(!S.regPoint)return toast("Falta o local: toque no mapa.");
+    DB.occurrences.unshift({id:"o"+Date.now(),type:S.regType,severity:S.regSev,neighborhood:"Centro",date:"23 de set. de 2026",obf:true,description:S.regDesc.trim()});
+    DB.stats.total++;DB.stats.last30++;DB.typeCounts[S.regType]++;S.regDesc="";S.regPoint=null;S.tab="mapa";
+    toast("Relato registrado. Já aparece no mapa, sem identificação sua.");
+  }
+  else if(k==="enviarLugar"){
+    if(S.placeName.trim().length<2)return toast("Dê um nome ao lugar.");
+    if(!S.placePoint)return toast("Falta o local: toque no mapa.");
+    const id="p"+Date.now();
+    DB.places.push({id,name:S.placeName.trim(),category:S.placeCat,neighborhood:"Centro",address:S.placeAddr,verified:false,score:null,count:0,badge:"poucas"});
+    S.placeName="";S.placeAddr="";S.placePoint=null;S.placeId=id;S.screen="lugar";
+    S.draft={welcome:0,affection:0,restroom:0,crowd:0,comment:""};toast("Lugar cadastrado. Avalie para começar.");
+  }
+  else if(k==="avaliar"){
+    const miss=AXIS_KEYS.filter(x=>!S.draft[x]);
+    if(miss.length)return toast(`Falta responder: ${AXES[miss[0]].label}.`);
+    const p=DB.places.find(x=>x.id===S.placeId);
+    DB.ratings.unshift({id:"r"+Date.now(),nick:S.nickname.trim()||"Anônimo",when:"agora",mine:true,
+      overall:(S.draft.welcome*.3+S.draft.affection*.3+S.draft.restroom*.25+S.draft.crowd*.15),
+      welcome:S.draft.welcome,affection:S.draft.affection,restroom:S.draft.restroom,crowd:S.draft.crowd,comment:S.draft.comment});
+    p.count++;toast("Avaliação registrada. Obrigado por ajudar a comunidade.");
+  }
+  else if(k==="salvarPerfil")toast("Salvo.");
+  else if(k==="sair")toast("No app, encerra a sessão.");
+  else if(k==="excluir")toast("No app, pede confirmação antes de excluir a conta.");
+  else if(k==="setcity"){const [n,st]=v.split("|");S.city={name:n,state:st,lat:S.city.lat,lng:S.city.lng};S.overlay=null;toast(`Cidade: ${n} · ${st}`)}
+  render(true);
+});
+document.getElementById("phone").addEventListener("input",e=>{
+  const b=e.target.dataset.bind;if(!b)return;
+  if(b==="draftComment")S.draft.comment=e.target.value;else S[b]=e.target.value;
+  if(b==="citySearch"||b==="regDesc"){const pos=e.target.selectionStart;render(true);const n=document.querySelector(`[data-bind="${b}"]`);if(n){n.focus();try{n.setSelectionRange(pos,pos)}catch(_){}}}
+});
+/* abertura direta por hash: #mapa, #registrar, #apoio, #perfil, #lugar */
+(function(){const h=decodeURIComponent(location.hash.replace("#",""));
+ if(["inicio","mapa","registrar","apoio","perfil"].includes(h))S.tab=h;
+ else if(h==="lugar"){S.screen="lugar";S.placeId="p1"}})();
+render();
+</script>
+</body>
+</html>
