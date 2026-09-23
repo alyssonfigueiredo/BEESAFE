@@ -37,6 +37,11 @@ Nome: **Irisa** (INPI livre; @irisapp livre). Bundle id `br.com.irisa.app`. Cont
   EAS (`APP_ENV=preview|production`).
 - Site público (GitHub Pages, workflow `pages.yml`, fonte `docs/*.md` → `scripts/build-site.mjs` → `site/`):
   https://alyssonfigueiredo.github.io/BEESAFE/ com privacidade.html, termos.html, pitch.html, mockup.html.
+  A raiz é uma landing escrita à mão em `docs/index.html` (23/09/2026): hero escuro com a pergunta,
+  seções Irisar / Registrar / regra da rua / emergência / anonimato / cidades / testar / ONGs, com as
+  telas copiadas da apresentação. Chamada principal é o e-mail para entrar no teste (mailto) — trocar
+  pelo link da Play Store quando o app sair em produção, e atualizar o contador "9 de 12".
+  `docs/og.png` é a prévia de link (WhatsApp/Instagram), 1200×630, tirada do próprio hero.
 - Oito cidades semeadas com lugares reais do OSM (bar/café/restaurante/balada/hotel), sem nota e sem selo,
   só para o mapa não abrir vazio: Curitiba 60, Recife 60, João Pessoa 43, Joinville 180 (IBGE 4209102),
   São Paulo 80, Rio 84, Salvador 63, Porto Alegre 60. A tag `lgbtq` do OSM quase não existe no Brasil (1 lugar em Curitiba):
@@ -66,6 +71,11 @@ Nome: **Irisa** (INPI livre; @irisapp livre). Bundle id `br.com.irisa.app`. Cont
   barra de progresso, tecla **A** ou `?auto=8` para autoplay). O PDF é gerado com `?static`, que
   desliga tudo isso; `prefers-reduced-motion` também desliga. Mensagem de convite aos testadores pede só o
   e-mail da conta Google do Android; o link de participação só depois da versão publicar na faixa.
+  **O link que se manda ao testador é o de participação, não o da loja:**
+  https://play.google.com/apps/testing/br.com.irisa.app (Teste fechado → Testadores → "Participar na
+  Web"). A pessoa toca em "Tornar-se testador" e só então o link da loja abre. Se o de participação
+  também der "não encontrado", a versão não está "Disponível para testadores": olhar Visão geral da
+  publicação (mudanças não enviadas, ou publicação gerenciada segurando a versão aprovada).
   Meta de 20 a 25 testadores (o mínimo do Google é 12, e cair abaixo disso reinicia os 14 dias).
 - Layout do Início decidido: painel (opção A do mockup). Desde 23/09/2026 o painel abre com
   “Sua cidade” e dois botões do mesmo tamanho — **Avaliar um lugar** (turquesa) e **Registrar relato**
