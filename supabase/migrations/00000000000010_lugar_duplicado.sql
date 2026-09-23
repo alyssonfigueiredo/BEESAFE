@@ -70,6 +70,7 @@ end $$;
 
 -- Nome começa com "places_b" para rodar antes de places_rate_limit e places_resolve_area
 -- (o Postgres dispara triggers do mesmo momento em ordem alfabética): o erro mais útil vem primeiro.
+drop trigger if exists places_block_duplicate on public.places;
 create trigger places_block_duplicate
   before insert on public.places
   for each row execute function public.block_duplicate_place();
