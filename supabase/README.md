@@ -75,6 +75,6 @@ where n.city_id = p.city_id and p.neighborhood_id is null
 18. `migrations/00000000000015_ficha_do_bairro.sql`
 15. O seed fictício de Curitiba foi removido do repositório. Para apagar os dados de teste que ainda estejam no banco, rode `seed/limpar-curitiba-teste.sql` (apaga só os ids `11111111-`/`22222222-`/`33333333-` e recalcula os priors).
 
-Aplicado até a 11 (a 10 e a 11 em 23/09/2026). **As migrations 12 a 15 ainda precisam ser coladas no SQL Editor, nessa ordem.**
+Aplicado até a 15 (10 a 15 em 23/09/2026).
 
 Para promover alguém a moderador: `update public.profiles set role = 'moderator' where id = '<uuid do usuário>';`

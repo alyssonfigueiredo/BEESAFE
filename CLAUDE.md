@@ -19,11 +19,10 @@ Nome: **Irisa** (INPI livre; @irisapp livre). Bundle id `br.com.irisa.app`. Cont
 
 - Branch de trabalho: `claude/laughing-keller-my8t7c` (default do repo: `claude/ecstatic-darwin-cmf7sw`).
 - MVP completo e rodando no iPhone do usuário (Xcode, Apple ID gratuito, expira em 7 dias) e em APK Android (EAS preview).
-- Supabase projeto `ntjirpqulrnieeglpiei`, região São Paulo. Migrations 0–11 aplicadas
-  (10 = anti-duplicata de lugar, 11 = initplan da RLS, ambas coladas em 23/09/2026).
-  **As migrations 12 a 15 ainda precisam ser coladas no SQL Editor, nessa ordem: 12 (relato do
-  entorno para de descontar a nota), 13 (nível de atenção da região), 14 (onde e quando no relato),
-  15 (ficha do bairro).**
+- Supabase projeto `ntjirpqulrnieeglpiei`, região São Paulo. Migrations 0–15 aplicadas
+  (10 a 15 coladas em 23/09/2026: anti-duplicata, initplan da RLS, relato do entorno não desconta
+  nota, nível de atenção da região, onde/quando no relato, ficha do bairro). O banco já está
+  pronto para a build 9; a build 8 em teste roda sem quebrar.
   O seed fictício de Curitiba saiu do repositório; `supabase/seed/limpar-curitiba-teste.sql` apaga o que sobrou no banco.
 - Chaves legadas desativadas: app usa `sb_publishable_...`, scripts usam `sb_secret_...` (só na máquina dele).
 - Dados geográficos: os 5.570 municípios das 27 UFs e os bairros de 24 capitais importados do OSM.
