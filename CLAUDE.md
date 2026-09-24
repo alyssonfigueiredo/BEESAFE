@@ -72,6 +72,10 @@ Nome: **Irisa** (INPI livre; @irisapp livre). Bundle id `br.com.irisa.app`. Cont
   adesivo de link). Link camuflado: bit.ly/appirisa (conta dele) apontando para o site.
   **Carrossel de estreia:** `docs/carrossel.html` (8 lâminas 1080×1350, mesmo estilo) e
   `node scripts/carrossel-png.mjs` exporta `docs/carrossel/01..08.png`. Fecha com "O link está na bio".
+  Segundo post: `docs/carrossel-2.html` ("Estrelas não dizem nada pra gente": as quatro perguntas com
+  peso, nota e selo, fecho perguntando o último lugar que fez sentir bem-vinde), exportado com
+  `node scripts/carrossel-png.mjs docs/carrossel-2.html` para `docs/carrossel-2/`. Decisão: a capa
+  do carrossel de estreia é o gancho da conversa, não a logo (a marca fica no rodapé de toda lâmina).
   **Palavra da marca: "bem-vinde"** (decisão dele em 24/09/2026): a frase "O mapa dos lugares onde a gente
   é bem-vinde, feito por nós" está na bio do Instagram, no hero da landing e no painel do Início do app.
   Não listar categorias ("bar, café e balada") como se fossem tudo: hotel e restaurante são a maioria.
