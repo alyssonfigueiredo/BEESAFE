@@ -162,11 +162,17 @@ if (!erroBloco) {
   inseridos.push(...escolhidos);
 } else {
   for (let i = 0; i < linhas.length; i++) {
-    const { error } = await supabase.from("places").insert(linhas[i]);
+    let { error } = await supabase.from("places").insert(linhas[i]);
+    // Gateway Timeout é o PostgREST, não o dado: tenta mais uma vez antes de desistir do ponto.
+    if (error && /timeout/i.test(error.message)) ({ error } = await supabase.from("places").insert(linhas[i]));
     if (error) recusados.push({ nome: escolhidos[i].nome, motivo: error.message });
     else inseridos.push(escolhidos[i]);
   }
-  if (!inseridos.length) throw erroBloco;
+  if (!inseridos.length) {
+    console.log(`${cidade.name}: nenhum lugar inserido. Motivos:`);
+    for (const r of recusados) console.log(`    ${r.nome} — ${r.motivo}`);
+    process.exit(1);
+  }
 }
 
 const contagem = {};
