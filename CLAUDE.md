@@ -101,7 +101,8 @@ Nome: **Irisa** (INPI livre; @irisapp livre). Bundle id `br.com.irisa.app`. Cont
   Antes disso, reimportar Curitiba/Recife/João Pessoa com `--limite 200` (o import antigo exigia endereço
   e parou em 60/60/43; Joinville sem o filtro deu 180).
 - Cidades de lançamento: Curitiba, Recife, João Pessoa e Joinville (onde ele tem gente para avaliar os
-  primeiros lugares). As outras semeadas ficam prontas para quando chegar usuário.
+  primeiros lugares). Em 24/09/2026 ele decidiu somar Natal, São Paulo e Rio (lugares com `--limite 200`,
+  fotos na fila, serviços no seed). As outras semeadas ficam prontas para quando chegar usuário.
 - Captação: a apresentação (docs/pitch.html + docs/Irisa-apresentacao.pdf, 17 slides desde 23/09/2026:
   capa com a pergunta em arco-íris, slide de abertura em conversa, acolhimento e registro (tipos, emergência, apoio) antes das telas, slide da
   regra “o lugar recebe cor, a rua recebe aviso” com a ficha do bairro, e slide de proposta para ONGs)
@@ -142,7 +143,9 @@ Nome: **Irisa** (INPI livre; @irisapp livre). Bundle id `br.com.irisa.app`. Cont
   de lugares por alerta**: faria a violência parecer atributo do bar e puniria quem só está perto.
 - Ficha das lojas pronta em docs/lojas.md.
 - Serviços de apoio por cidade em `supabase/seed_services.sql`, já no banco: nacionais + Curitiba,
-  Porto Alegre e, desde 23/09/2026, Recife, João Pessoa e Joinville. Os dois telefones municipais (Recife e João Pessoa)
+  Porto Alegre e, desde 23/09/2026, Recife, João Pessoa e Joinville; em 24/09/2026 entraram São Paulo (5 Centros
+  de Cidadania LGBTI, um por região), Rio (Disque Cidadania LGBT 0800 023 4567 + Centro Capital I) e Natal
+  (Centro Municipal de Cidadania LGBT). Os telefones municipais (Recife, João Pessoa, SP, Rio e Natal)
   vieram de página oficial mas **ainda não foram confirmados por ligação** — telefone errado em app de
   segurança é pior que telefone ausente. Joinville não tem centro de referência municipal: entraram a
   UNA LGBT e a Comissão da Diversidade da OAB. Reconferir os contatos a cada seis meses.

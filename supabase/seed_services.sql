@@ -85,3 +85,54 @@ select 'Comissão da Diversidade Sexual e de Gênero — OAB Joinville', 'juridi
        'Orientação jurídica em casos de discriminação por orientação sexual ou identidade de gênero', id
 from public.cities where ibge_code = 4209102
 on conflict do nothing;
+
+-- ---------------------------------------------------------------------------
+-- São Paulo, Rio de Janeiro e Natal (24/09/2026). Contatos das páginas oficiais
+-- (prefeitura.sp.gov.br, rj.gov.br, natal.rn.gov.br). NÃO confirmados por ligação.
+-- ---------------------------------------------------------------------------
+
+-- São Paulo: cinco Centros de Cidadania LGBTI da Prefeitura, um por região.
+insert into public.support_services (name, kind, phone, url, description, city_id)
+select 'Centro de Cidadania LGBTI Luiz Carlos Ruas (Centro)', 'acolhimento', '(11) 3225-0019',
+       'https://prefeitura.sp.gov.br/web/lgbti/w/rede_de_atendimento/271098',
+       'Atendimento jurídico, psicológico e social da Prefeitura. Rua Visconde de Ouro Preto, 118, Consolação', id
+from public.cities where ibge_code = 3550308 on conflict do nothing;
+insert into public.support_services (name, kind, phone, url, description, city_id)
+select 'Centro de Cidadania LGBTI Claudia Wonder (Zona Oeste)', 'acolhimento', '(11) 3832-7507',
+       'https://prefeitura.sp.gov.br/web/lgbti/w/rede_de_atendimento/271098',
+       'Atendimento jurídico, psicológico e social. Av. Ricardo Medina Filho, 603, Lapa', id
+from public.cities where ibge_code = 3550308 on conflict do nothing;
+insert into public.support_services (name, kind, phone, url, description, city_id)
+select 'Centro de Cidadania LGBTI Edson Néris (Zona Sul)', 'acolhimento', '(11) 5523-0413',
+       'https://prefeitura.sp.gov.br/web/lgbti/w/rede_de_atendimento/271098',
+       'Atendimento jurídico, psicológico e social. Rua Conde de Itu, 673, Santo Amaro', id
+from public.cities where ibge_code = 3550308 on conflict do nothing;
+insert into public.support_services (name, kind, phone, url, description, city_id)
+select 'Centro de Cidadania LGBTI Laura Vermont (Zona Leste)', 'acolhimento', '(11) 2032-3737',
+       'https://prefeitura.sp.gov.br/web/lgbti/w/rede_de_atendimento/271098',
+       'Atendimento jurídico, psicológico e social. Av. Nordestina, 496, São Miguel Paulista', id
+from public.cities where ibge_code = 3550308 on conflict do nothing;
+insert into public.support_services (name, kind, phone, url, description, city_id)
+select 'Centro de Cidadania LGBTI Luana Barbosa dos Reis (Zona Norte)', 'acolhimento', '(11) 2924-5225',
+       'https://prefeitura.sp.gov.br/web/lgbti/w/rede_de_atendimento/271098',
+       'Atendimento jurídico, psicológico e social. Rua Plínio Pasqui, 186, Parada Inglesa', id
+from public.cities where ibge_code = 3550308 on conflict do nothing;
+
+-- Rio de Janeiro: serviço estadual 24 h e o centro da capital.
+insert into public.support_services (name, kind, phone, url, description, city_id)
+select 'Disque Cidadania LGBT (Governo do RJ)', 'direitos', '0800 023 4567',
+       'https://www.rj.gov.br/secsocial/politicas_publicas_lgbtqi',
+       'Denúncia e orientação em caso de LGBTIfobia. 24 h, gratuito. WhatsApp (21) 97706-2831', id
+from public.cities where ibge_code = 3304557 on conflict do nothing;
+insert into public.support_services (name, kind, phone, url, description, city_id)
+select 'Centro de Cidadania LGBTI Capital I', 'acolhimento', '(21) 2334-9577',
+       'https://www.rj.gov.br/secsocial/politicas_publicas_lgbtqi',
+       'Atendimento social, psicológico e jurídico. Central do Brasil, 7º andar, Centro', id
+from public.cities where ibge_code = 3304557 on conflict do nothing;
+
+-- Natal
+insert into public.support_services (name, kind, phone, url, description, city_id)
+select 'Centro Municipal de Cidadania LGBT de Natal', 'acolhimento', '(84) 3232-8075',
+       'https://www.natal.rn.gov.br/news/post2/43477',
+       'Atendimento psicossocial e sociojurídico da Prefeitura. Av. Nascimento de Castro, 1982, Lagoa Nova. Seg a sex, 8h às 16h. WhatsApp (84) 99633-1575', id
+from public.cities where ibge_code = 2408102 on conflict do nothing;
