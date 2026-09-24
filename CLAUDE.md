@@ -81,9 +81,10 @@ Nome: **Irisa** (INPI livre; @irisapp livre). Bundle id `br.com.irisa.app`. Cont
   **Palavra da marca: "bem-vinde"** (decisão dele em 24/09/2026): a frase "O mapa dos lugares onde a gente
   é bem-vinde, feito por nós" está na bio do Instagram, no hero da landing e no painel do Início do app.
   Não listar categorias ("bar, café e balada") como se fossem tudo: hotel e restaurante são a maioria.
-- Oito cidades semeadas com lugares reais do OSM (bar/café/restaurante/balada/hotel), sem nota e sem selo,
-  só para o mapa não abrir vazio: Curitiba 60, Recife 60, João Pessoa 43, Joinville 180 (IBGE 4209102),
-  São Paulo 80, Rio 84, Salvador 63, Porto Alegre 60. A tag `lgbtq` do OSM quase não existe no Brasil (1 lugar em Curitiba):
+- Nove cidades semeadas com lugares reais do OSM (bar/café/restaurante/balada/hotel), sem nota e sem selo,
+  só para o mapa não abrir vazio. Desde 24/09/2026 (`--limite 200`): Curitiba 256, Recife 119, João Pessoa 43
+  (o OSM não tem mais nada lá nas nossas categorias — o resto entra por usuário), Joinville 180 (IBGE 4209102),
+  Natal 199 (2408102), São Paulo 280 (3550308), Rio 284 (3304557), Salvador 63, Porto Alegre 60. A tag `lgbtq` do OSM quase não existe no Brasil (1 lugar em Curitiba):
   a lista da cena tem que vir do usuário, conferida um a um. Decidido não exibir rótulo LGBTQIA+ na ficha
   (lista pública vira alvo); o selo vem dos quatro eixos de acolhimento.
 - Decidido lançar primeiro no Android. iOS fica para depois do primeiro retorno da Play Store.
@@ -96,10 +97,9 @@ Nome: **Irisa** (INPI livre; @irisapp livre). Bundle id `br.com.irisa.app`. Cont
   Joinville 114/180 (29 nunca tentados). Quem não casou fica sem foto e cai no ícone da categoria;
   o script só tenta de novo depois de 25 dias. A cota é 150 buscas/dia no projeto inteiro (app + script)
   e renova à meia-noite do Pacífico = **4h da manhã em Brasília** (rodar antes disso dá "cota esgotada").
-  **Fila de fotos, um comando por dia** (cada um para sozinho quando a cota acaba e continua no dia seguinte):
-  24/09 `node scripts/google-place-photos.mjs 4209102` e depois `4106902`; 25/09 `2611606`; 26/09 `2507507`.
-  Antes disso, reimportar Curitiba/Recife/João Pessoa com `--limite 200` (o import antigo exigia endereço
-  e parou em 60/60/43; Joinville sem o filtro deu 180).
+  **Fila de fotos, um comando por dia** (cada um para sozinho quando a cota acaba e continua no dia seguinte).
+  Depois dos imports de 24/09 há ~1.100 lugares sem foto (uma semana e meia de cota): 25/09 `2507507` e
+  `4106902`; 26/09 `4106902` de novo; 27/09 `2611606`; 28/09 `4209102`; depois `2408102`, `3550308`, `3304557`.
 - Cidades de lançamento: Curitiba, Recife, João Pessoa e Joinville (onde ele tem gente para avaliar os
   primeiros lugares). Em 24/09/2026 ele decidiu somar Natal, São Paulo e Rio (lugares com `--limite 200`,
   fotos na fila, serviços no seed). As outras semeadas ficam prontas para quando chegar usuário.
