@@ -53,6 +53,7 @@ Nome: **Irisa** (INPI livre; @irisapp livre). Bundle id `br.com.irisa.app`. Cont
   `added_at`). A chave `sb_publishable_` entra no build pela variável de Actions
   `SUPABASE_PUBLISHABLE_KEY` (Settings → Secrets and variables → Actions → aba Variables); o build
   recusa qualquer chave que não comece com `sb_publishable_`. Sem a variável, o botão cai no e-mail.
+  Variável criada e formulário testado de ponta a ponta em 24/09/2026 (e-mail gravou).
   As telas, o radar e o desenho do mapa foram copiados do `pitch.html` para dentro do
   `docs/index.html`; mudanças na landing se fazem direto nesse arquivo.
   `docs/og.png` é a prévia de link (WhatsApp/Instagram), 1200×630, tirada do próprio hero.
@@ -93,7 +94,8 @@ Nome: **Irisa** (INPI livre; @irisapp livre). Bundle id `br.com.irisa.app`. Cont
   **Lista de testadores também passa por revisão:** marcar/editar a lista numa faixa fechada é uma
   mudança que só vale depois de "Enviar mudanças para análise" e aprovada. Em 23/09/2026 a versão 8
   estava no ar mas a lista nunca tinha sido enviada — todo testador via "App not available … for this
-  account". Enviada às 19h30 junto com a versão 9. O link "internal test version … shared with you" é
+  account". Enviada às 19h30 junto com a versão 9; aprovada e **app disponível para os testadores
+  desde 24/09/2026** (contar os 14 dias a partir de quando 12 pessoas tiverem aceitado). O link "internal test version … shared with you" é
   do compartilhamento interno (não conta para os 12) e exige ativar o recurso na Play Store do celular
   (Configurações → Sobre → tocar 7× na versão → Geral → Compartilhamento interno de apps).
   Meta de 20 a 25 testadores (o mínimo do Google é 12, e cair abaixo disso reinicia os 14 dias).
