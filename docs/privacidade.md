@@ -1,6 +1,6 @@
 # Política de Privacidade — Irisa
 
-Última atualização: 13 de setembro de 2026.
+Última atualização: 24 de setembro de 2026.
 
 A Irisa é um aplicativo comunitário para pessoas LGBTQIA+ registrarem, de forma anônima, ocorrências de LGBTIfobia e avaliarem lugares acolhedores. Esta política explica quais dados coletamos, por que, e o que fazemos com eles, em conformidade com a Lei Geral de Proteção de Dados (Lei 13.709/2018).
 
@@ -29,7 +29,7 @@ Consentimento (art. 7º, I) para a conta e o conteúdo que você publica; legít
 
 ## 5. Compartilhamento
 
-Não vendemos nem compartilhamos dados pessoais. Dados agregados e anônimos (contagens por bairro, por exemplo) podem ser publicados ou repassados a organizações da sociedade civil e órgãos públicos para políticas de enfrentamento à LGBTIfobia.
+Não vendemos nem compartilhamos dados pessoais, salvo por ordem judicial ou requisição de autoridade competente com base legal, limitada ao estritamente necessário (Marco Civil da Internet, arts. 10 e 22). Dados agregados e anônimos (contagens por bairro, por exemplo) podem ser publicados ou repassados a organizações da sociedade civil e órgãos públicos para políticas de enfrentamento à LGBTIfobia.
 
 ## 6. Provedores
 
