@@ -57,6 +57,15 @@ Nome: **Irisa** (INPI livre; @irisapp livre). Bundle id `br.com.irisa.app`. Cont
   As telas, o radar e o desenho do mapa foram copiados do `pitch.html` para dentro do
   `docs/index.html`; mudanças na landing se fazem direto nesse arquivo.
   `docs/og.png` é a prévia de link (WhatsApp/Instagram), 1200×630, tirada do próprio hero.
+  **Story de divulgação (24/09/2026):** `docs/story.html` é um story vertical 1080×1920 de 27 s no
+  mesmo estilo da landing (radar girando, palavras entrando com desfoque, telas do app, confete).
+  Seis cenas: marca → "Nesse bar pode / Nessa rua, de noite, não" → "Quanta cor tem aqui?" com a
+  ficha do lugar → "Registrar leva um minuto" com a tela Registrar e 190/192/100/188 → "O lugar
+  recebe cor / A rua recebe aviso" → "Já está no ar", cidades e o link. Todas as animações são Web
+  Animations presas a um relógio (`window.__setT(ms)`), e `node scripts/story-video.mjs` grava quadro a
+  quadro em `docs/Irisa-story.mp4` (H.264, 30 fps; precisa de ffmpeg com libx264, `FFMPEG=` aponta
+  outro binário). Sem áudio: a música entra no próprio Instagram. Publicado em /story.html e
+  /Irisa-story.mp4.
 - Oito cidades semeadas com lugares reais do OSM (bar/café/restaurante/balada/hotel), sem nota e sem selo,
   só para o mapa não abrir vazio: Curitiba 60, Recife 60, João Pessoa 43, Joinville 180 (IBGE 4209102),
   São Paulo 80, Rio 84, Salvador 63, Porto Alegre 60. A tag `lgbtq` do OSM quase não existe no Brasil (1 lugar em Curitiba):
