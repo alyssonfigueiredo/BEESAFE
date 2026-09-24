@@ -15,9 +15,13 @@ on:
       lugares:
         description: "Importar estabelecimentos do OpenStreetMap"
         type: boolean
+        default: false
+      overture:
+        description: "Importar estabelecimentos do Overture Maps (base maior; entra tudo com confiança ≥ 0.5)"
+        type: boolean
         default: true
       limite:
-        description: "Quantos lugares no máximo"
+        description: "Quantos lugares no máximo (só para o OpenStreetMap)"
         type: string
         default: "60"
       fotos:
@@ -47,6 +51,9 @@ jobs:
       - name: Lugares
         if: inputs.lugares
         run: node scripts/import-places-osm.mjs "${{ inputs.ibge }}" --limite "${{ inputs.limite }}"
+      - name: Lugares (Overture)
+        if: inputs.overture
+        run: node scripts/import-places-overture.mjs "${{ inputs.ibge }}"
       - name: Fotos
         if: inputs.fotos
         run: node scripts/google-place-photos.mjs "${{ inputs.ibge }}"

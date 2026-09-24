@@ -85,7 +85,18 @@ Nome: **Irisa** (INPI livre; @irisapp livre). Bundle id `br.com.irisa.app`. Cont
   só para o mapa não abrir vazio. Desde 24/09/2026 (`--limite 200`): Curitiba 256, Recife 119, João Pessoa 43
   (o OSM não tem mais nada lá nas nossas categorias — o resto entra por usuário), Joinville 180 (IBGE 4209102),
   Natal 199 (2408102), São Paulo 280 (3550308), Rio 284 (3304557), Salvador 63, Porto Alegre 60. A tag `lgbtq` do OSM quase não existe no Brasil (1 lugar em Curitiba):
-  a lista da cena tem que vir do usuário, conferida um a um. Decidido não exibir rótulo LGBTQIA+ na ficha
+  a lista da cena tem que vir do usuário, conferida um a um.
+  **Overture Maps (24/09/2026):** o OSM ficou pobre e ele não quer depender de usuário cadastrando lugar.
+  `scripts/import-places-overture.mjs <ibge>` lê a base aberta do Overture (Meta/Microsoft/Amazon/TomTom,
+  licença CDLA-Permissive 2.0, release mensal; muita coisa vem das páginas do Facebook) direto do S3
+  público, só os blocos Parquet que cruzam a caixa do município (hyparquet, JS puro, ~30 s por capital).
+  Polígono do município vem da API de malhas do IBGE; filtra pela taxonomia (bar/balada/café/restaurante/
+  hotel; motel entra como hotel, padaria e sorveteria como café, casa noturna adulta fica fora), confiança
+  ≥ 0.5 (`--confianca`), tira repetidos a 150 m e o que já existe no banco com nome igual a 150 m. Sem
+  `--limite` entra tudo: Curitiba dá ~10.700 candidatos (vs. 256 do OSM). `--simular` só conta, sem chave.
+  `gay_bar` do Overture só dá prioridade, não vira rótulo. Atribuição das fontes está nos termos (item 12).
+  No workflow Importar cidade o Overture é o padrão e o OSM ficou desligado. Fotos: cada lugar novo entra
+  na fila do Google (150/dia), então uma capital inteira leva meses de cota — aceito, cai no ícone. Decidido não exibir rótulo LGBTQIA+ na ficha
   (lista pública vira alvo); o selo vem dos quatro eixos de acolhimento.
 - Decidido lançar primeiro no Android. iOS fica para depois do primeiro retorno da Play Store.
 - Play Console: versão 8 (0.1.0) enviada para revisão na faixa de teste fechado em 22/09/2026, com a
@@ -195,6 +206,7 @@ set -a && source .env.scripts && set +a           # carrega SUPABASE_SERVICE_ROL
 node scripts/import-neighborhoods.mjs <ibge>
 node scripts/import-districts-ibge.mjs 3550308     # bairros pelos distritos do IBGE (onde o OSM não cobre)
 node scripts/import-places-osm.mjs 4106902 --limite 60
+node scripts/import-places-overture.mjs 4106902          # Overture Maps, tudo com confiança ≥ 0.5 (--simular só conta)
 node scripts/google-place-photos.mjs --todas         # fotos do Google, cota travada (docs/fotos.md)
 bash scripts/screenshots.sh                          # prints das lojas no Simulador
 node scripts/pitch-pdf.mjs                           # regera docs/Irisa-apresentacao.pdf a partir de docs/pitch.html

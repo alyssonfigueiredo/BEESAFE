@@ -13,4 +13,5 @@
 9. **Licença**: ao publicar, você autoriza a Irisa a exibir e agregar o conteúdo, de forma anônima, dentro do aplicativo e em análises públicas.
 10. **Responsabilidade**: a Irisa não se responsabiliza por decisões tomadas com base nas informações do aplicativo.
 11. **Encerramento**: podemos suspender contas que violem estes termos. Você pode excluir sua conta a qualquer momento.
-12. **Foro**: legislação brasileira; foro da comarca do controlador.
+12. **Fontes de dados**: os estabelecimentos que já aparecem no mapa antes de qualquer avaliação vêm de bases abertas — OpenStreetMap (© colaboradores do OpenStreetMap, licença ODbL) e Overture Maps Foundation (licença CDLA-Permissive 2.0) — e podem estar desatualizados; a correção vem da comunidade e da moderação. As fotos vêm do Google e seguem os termos do Google Maps Platform.
+13. **Foro**: legislação brasileira; foro da comarca do controlador.
