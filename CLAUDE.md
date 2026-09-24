@@ -69,7 +69,12 @@ Nome: **Irisa** (INPI livre; @irisapp livre). Bundle id `br.com.irisa.app`. Cont
   precisa de ffmpeg com libx264, `FFMPEG=` aponta outro binário). Sem áudio: a música entra no
   Instagram. Publicado em /story.html e /Irisa-story.mp4. `REELS=1 node scripts/story-video.mjs` grava
   `docs/Irisa-reels.mp4` com o fecho "O link está na legenda" e sem a área tracejada (Reels não aceita
-  adesivo de link). Link camuflado: bit.ly/irisa-app (conta dele) apontando para o site.
+  adesivo de link). Link camuflado: bit.ly/appirisa (conta dele) apontando para o site.
+  **Carrossel de estreia:** `docs/carrossel.html` (8 lâminas 1080×1350, mesmo estilo) e
+  `node scripts/carrossel-png.mjs` exporta `docs/carrossel/01..08.png`. Fecha com "O link está na bio".
+  **Palavra da marca: "bem-vinde"** (decisão dele em 24/09/2026): a frase "O mapa dos lugares onde a gente
+  é bem-vinde, feito por nós" está na bio do Instagram, no hero da landing e no painel do Início do app.
+  Não listar categorias ("bar, café e balada") como se fossem tudo: hotel e restaurante são a maioria.
 - Oito cidades semeadas com lugares reais do OSM (bar/café/restaurante/balada/hotel), sem nota e sem selo,
   só para o mapa não abrir vazio: Curitiba 60, Recife 60, João Pessoa 43, Joinville 180 (IBGE 4209102),
   São Paulo 80, Rio 84, Salvador 63, Porto Alegre 60. A tag `lgbtq` do OSM quase não existe no Brasil (1 lugar em Curitiba):

@@ -39,8 +39,9 @@ export default function HomeScreen() {
         </Text>
         <CityPicker />
         <Text className="font-body text-sm text-muted">
-          Diga quanta cor tem os lugares por onde você passa. E registre, sem se identificar, o que
-          não deveria ter acontecido.
+          O mapa dos lugares onde a gente é bem-vinde, feito por nós. Diga quanta cor tem os
+          lugares por onde você passa. E registre, sem se identificar, o que não deveria ter
+          acontecido.
         </Text>
         {/* Dois botões do mesmo tamanho: avaliar é o uso de toda semana, registrar é o uso que
             ninguém quer precisar — e nenhum dos dois pode parecer secundário. */}
