@@ -70,7 +70,8 @@ Nome: **Irisa** (INPI livre; @irisapp livre). Bundle id `br.com.irisa.app`. Cont
   /seguranca-infantil.html, contato appirisa@gmail.com.
 - Fotos do Google por cidade (23/09/2026): Curitiba 51/60, Recife 48/60, João Pessoa 32/43,
   Joinville 114/180 (29 nunca tentados). Quem não casou fica sem foto e cai no ícone da categoria;
-  o script só tenta de novo depois de 25 dias. A cota é 150 buscas/dia no projeto inteiro (app + script).
+  o script só tenta de novo depois de 25 dias. A cota é 150 buscas/dia no projeto inteiro (app + script)
+  e renova à meia-noite do Pacífico = **4h da manhã em Brasília** (rodar antes disso dá "cota esgotada").
   **Fila de fotos, um comando por dia** (cada um para sozinho quando a cota acaba e continua no dia seguinte):
   24/09 `node scripts/google-place-photos.mjs 4209102` e depois `4106902`; 25/09 `2611606`; 26/09 `2507507`.
   Antes disso, reimportar Curitiba/Recife/João Pessoa com `--limite 200` (o import antigo exigia endereço
