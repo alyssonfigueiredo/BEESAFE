@@ -592,7 +592,7 @@ body{display:flex;align-items:center;justify-content:center;height:100vh}
     <h1 class="disp c" id="t9" style="position:absolute;top:610px;width:100%;font-size:170px;line-height:.9"><span class="w">Já</span> <span class="w">está</span><br><span class="w rainbow">no ar</span></h1>
     <p class="body c" id="b9" style="position:absolute;top:960px;left:100px;right:100px;margin:0">Seja uma das primeiras pessoas a dizer quanta cor tem a sua cidade.</p>
     <div id="toque" style="position:absolute;top:1140px;width:100%;display:flex;flex-direction:column;align-items:center;gap:8px">
-      <span class="pill" style="background:var(--coral);font-size:40px;padding:24px 46px;box-shadow:0 20px 60px -20px rgba(244,115,111,.8)">Toque no link e entre</span>
+      <span class="pill" style="background:var(--coral);font-size:40px;padding:24px 46px;box-shadow:0 20px 60px -20px rgba(244,115,111,.8)" id="cta">Toque no link e entre</span>
       <svg class="arrow" id="arrow" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v15"/><path d="m6 13 6 6 6-6"/></svg>
     </div>
     <div class="linkzone" id="lz"></div>
@@ -728,6 +728,7 @@ A($("#lz"),[{borderColor:"rgba(255,255,255,.18)"},{borderColor:"rgba(92,201,180,
 window.__setT=function(t){document.getAnimations().forEach(a=>{a.pause();a.currentTime=t});ticks.forEach(f=>f(t))};
 window.__TOTAL=TOTAL;
 const fit=()=>{const k=Math.min(innerWidth/1080,innerHeight/1920);$("#stage").style.transform="scale("+k+")"};
+if(new URLSearchParams(location.search).has("reels")){$("#cta").textContent="O link está na legenda";$("#lz").style.display="none"}
 if(new URLSearchParams(location.search).has("capture")){document.documentElement.classList.add("capture");window.__setT(0)}
 else{fit();addEventListener("resize",fit);let t0=performance.now();(function loop(now){const t=(now-t0)%TOTAL;window.__setT(t);requestAnimationFrame(loop)})(t0)}
 </script>

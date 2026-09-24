@@ -67,7 +67,9 @@ Nome: **Irisa** (INPI livre; @irisapp livre). Bundle id `br.com.irisa.app`. Cont
   dele: o link vai no adesivo). Animações são Web Animations presas a um relógio (`window.__setT(ms)`),
   e `node scripts/story-video.mjs` grava quadro a quadro em `docs/Irisa-story.mp4` (H.264, 30 fps;
   precisa de ffmpeg com libx264, `FFMPEG=` aponta outro binário). Sem áudio: a música entra no
-  Instagram. Publicado em /story.html e /Irisa-story.mp4.
+  Instagram. Publicado em /story.html e /Irisa-story.mp4. `REELS=1 node scripts/story-video.mjs` grava
+  `docs/Irisa-reels.mp4` com o fecho "O link está na legenda" e sem a área tracejada (Reels não aceita
+  adesivo de link). Link camuflado: bit.ly/irisa-app (conta dele) apontando para o site.
 - Oito cidades semeadas com lugares reais do OSM (bar/café/restaurante/balada/hotel), sem nota e sem selo,
   só para o mapa não abrir vazio: Curitiba 60, Recife 60, João Pessoa 43, Joinville 180 (IBGE 4209102),
   São Paulo 80, Rio 84, Salvador 63, Porto Alegre 60. A tag `lgbtq` do OSM quase não existe no Brasil (1 lugar em Curitiba):
