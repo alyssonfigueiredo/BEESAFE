@@ -67,9 +67,11 @@ Nome: **Irisa** (INPI livre; @irisapp livre). Bundle id `br.com.irisa.app`. Cont
   dele: o link vai no adesivo). Animações são Web Animations presas a um relógio (`window.__setT(ms)`),
   e `node scripts/story-video.mjs` grava quadro a quadro em `docs/Irisa-story.mp4` (H.264, 30 fps;
   precisa de ffmpeg com libx264, `FFMPEG=` aponta outro binário). Sem áudio: a música entra no
-  Instagram. Publicado em /story.html e /Irisa-story.mp4. `REELS=1 node scripts/story-video.mjs` grava
-  `docs/Irisa-reels.mp4` com o fecho "O link está na legenda" e sem a área tracejada (Reels não aceita
-  adesivo de link). Link camuflado: bit.ly/appirisa (conta dele) apontando para o site.
+  Instagram. Publicado em /story.html e /Irisa-story.mp4. A linha do tempo base tem 49 s e `?k=`
+  estica só os inícios (não a velocidade das entradas): ele achou o texto rápido demais, então
+  `MODE=story` (k 1.2245 → 60 s, máximo de um story sem cortar), `MODE=storybio` (60 s, fecho "O link
+  está na bio" + @irisapp + cidades, `docs/Irisa-story-bio.mp4`) e `MODE=reels` (k 1.592 → 78 s, mesmo
+  fecho, `docs/Irisa-reels.mp4`; Reels não aceita adesivo nem link na legenda). `?bio` na URL liga o fecho. Link camuflado: bit.ly/appirisa (conta dele) apontando para o site.
   **Carrossel de estreia:** `docs/carrossel.html` (8 lâminas 1080×1350, mesmo estilo) e
   `node scripts/carrossel-png.mjs` exporta `docs/carrossel/01..08.png`. Fecha com "O link está na bio".
   Segundo post: `docs/carrossel-2.html` ("Estrelas não dizem nada pra gente": as quatro perguntas com

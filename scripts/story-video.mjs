@@ -7,14 +7,17 @@ import { spawn } from "node:child_process";
 import { resolve } from "node:path";
 
 const FPS = Number(process.env.FPS ?? 30);
-// REELS=1 troca o fecho por "O link está na legenda" (Reels não aceita adesivo de link) e grava docs/Irisa-reels.mp4.
-const REELS = !!process.env.REELS;
-const OUT = process.env.OUT ?? (REELS ? "docs/Irisa-reels.mp4" : "docs/Irisa-story.mp4");
+// MODE=story (60 s, área tracejada para o adesivo de link) · MODE=reels (78 s, fecho "O link está na bio")
+// · MODE=storybio (60 s, fecho "O link está na bio"). Padrão: story.
+const MODE = process.env.MODE ?? "story";
+const CFG = { story: { k: 1.2245, bio: false, out: "docs/Irisa-story.mp4" }, reels: { k: 1.592, bio: true, out: "docs/Irisa-reels.mp4" }, storybio: { k: 1.2245, bio: true, out: "docs/Irisa-story-bio.mp4" } }[MODE];
+if (!CFG) throw new Error("MODE deve ser story, reels ou storybio");
+const OUT = process.env.OUT ?? CFG.out;
 const ffmpeg = process.env.FFMPEG ?? "ffmpeg";
 
 const b = await chromium.launch({ executablePath: process.env.PW_CHROMIUM ?? "/opt/pw-browsers/chromium", args: ["--ignore-certificate-errors"] });
 const pg = await b.newPage({ viewport: { width: 1080, height: 1920 }, deviceScaleFactor: 1 });
-await pg.goto("file://" + resolve("docs/story.html") + "?capture" + (REELS ? "&reels" : ""), { waitUntil: "networkidle" });
+await pg.goto("file://" + resolve("docs/story.html") + `?capture&k=${CFG.k}` + (CFG.bio ? "&bio" : ""), { waitUntil: "networkidle" });
 await pg.evaluate(() => document.fonts.ready);
 const total = await pg.evaluate(() => window.__TOTAL);
 const frames = Math.round((total / 1000) * FPS);

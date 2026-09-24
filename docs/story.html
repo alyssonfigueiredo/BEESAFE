@@ -596,6 +596,10 @@ body{display:flex;align-items:center;justify-content:center;height:100vh}
       <svg class="arrow" id="arrow" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v15"/><path d="m6 13 6 6 6-6"/></svg>
     </div>
     <div class="linkzone" id="lz"></div>
+    <div id="biobox" style="display:none;position:absolute;top:1330px;width:100%;flex-direction:column;align-items:center;gap:44px">
+      <div id="handle" style="display:flex;align-items:center;gap:26px;font-family:var(--wordmark);font-weight:500;letter-spacing:.12em;font-size:96px;line-height:1"><span class="mark" style="width:78px;height:78px"></span><span>@irisapp</span></div>
+      <div id="bioct" style="display:flex;flex-wrap:wrap;justify-content:center;gap:14px;max-width:900px"><span class="ct" style="background:var(--turq);font-size:30px;padding:12px 22px">Curitiba</span><span class="ct" style="background:var(--coral);font-size:30px;padding:12px 22px">Recife</span><span class="ct" style="background:var(--yellow);font-size:30px;padding:12px 22px">João Pessoa</span><span class="ct" style="background:var(--lilac);font-size:30px;padding:12px 22px">Joinville</span></div>
+    </div>
     <div id="confs"></div>
   </section>
 </div>
@@ -624,12 +628,14 @@ document.querySelectorAll("canvas.mapc").forEach(function(c){drawMap(c,c.classLi
 
 const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
 const EO="cubic-bezier(.2,.7,.2,1)", BACK="cubic-bezier(.3,1.4,.4,1)";
-const A=(el,kf,start,dur,ease=EO,extra={})=>el&&el.animate(kf,Object.assign({delay:start,duration:dur,easing:ease,fill:"both"},extra));
+// K estica a linha do tempo (só os inícios, não a velocidade das entradas): ?k=1.2245 → 60 s, ?k=1.592 → 78 s.
+const Q=new URLSearchParams(location.search), K=Number(Q.get("k")||1);
+const A=(el,kf,start,dur,ease=EO,extra={})=>el&&el.animate(kf,Object.assign({delay:start*K,duration:dur,easing:ease,fill:"both"},extra));
 const IN_BLUR=[{opacity:0,transform:"translateY(40px)",filter:"blur(16px)"},{opacity:1,transform:"none",filter:"blur(0)"}];
 const POP=[{opacity:0,transform:"translateY(30px) scale(.85)"},{opacity:1,transform:"none"}];
 const SLAM=[{opacity:0,transform:"scale(1.6)",filter:"blur(18px)"},{opacity:1,transform:"scale(1)",filter:"blur(0)"}];
 const words=(sel,start,step=110,dur=800)=>$$(sel+" .w").forEach((w,i)=>A(w,IN_BLUR,start+i*step,dur));
-const scene=(id,a,b)=>{const s=$(id);A(s,[{opacity:0},{opacity:1}],a,350,"linear");A(s,[{opacity:1,transform:"none",filter:"blur(0)"},{opacity:0,transform:"translateY(-60px) scale(.98)",filter:"blur(14px)"}],b-450,450,"ease-in")};
+const scene=(id,a,b)=>{const s=$(id);A(s,[{opacity:0},{opacity:1}],a,350,"linear");A(s,[{opacity:1,transform:"none",filter:"blur(0)"},{opacity:0,transform:"translateY(-60px) scale(.98)",filter:"blur(14px)"}],b-450/K,450,"ease-in")};
 const ticks=[];
 const TOTAL=49000;
 
@@ -676,7 +682,7 @@ $$("#ax .pill").forEach((p,i)=>{A(p,[{opacity:0,transform:"scale(.3) translateY(
 scene("#s4",20600,25400);
 words("#t4n",20700,110,800);
 A($("#ring"),[{opacity:0,transform:"scale(.6) rotate(-90deg)"},{opacity:1,transform:"none"}],21400,900,BACK);
-ticks.push(t=>{const p=Math.max(0,Math.min(1,(t-21900)/1500)),e=1-Math.pow(1-p,3);$("#ring").style.setProperty("--p",(e*94)+"%");$("#nota").textContent=(e*4.7).toFixed(1)});
+ticks.push(t=>{const p=Math.max(0,Math.min(1,(t-21900*K)/1500)),e=1-Math.pow(1-p,3);$("#ring").style.setProperty("--p",(e*94)+"%");$("#nota").textContent=(e*4.7).toFixed(1)});
 A($("#bb"),[{opacity:0,transform:"scale(.3)"},{opacity:1,transform:"none"}],23400,600,BACK);
 A($("#b4n"),IN_BLUR,23800,800);
 
@@ -726,10 +732,12 @@ A($("#lz"),[{borderColor:"rgba(255,255,255,.18)"},{borderColor:"rgba(92,201,180,
   A(c,[{opacity:0,transform:"translate(0,0) rotate(0)"},{opacity:1,transform:"translate("+dx*.5+"px,"+dy+"px) rotate("+rot/2+"deg)",offset:.35},{opacity:0,transform:"translate("+dx+"px,"+(dy+1500)+"px) rotate("+rot+"deg)"}],43900+r()*400,d,"cubic-bezier(.2,.7,.3,1)")}})();
 
 window.__setT=function(t){document.getAnimations().forEach(a=>{a.pause();a.currentTime=t});ticks.forEach(f=>f(t))};
-window.__TOTAL=TOTAL;
+window.__TOTAL=TOTAL*K;
 const fit=()=>{const k=Math.min(innerWidth/1080,innerHeight/1920);$("#stage").style.transform="scale("+k+")"};
-if(new URLSearchParams(location.search).has("reels")){$("#cta").textContent="O link está na legenda";$("#lz").style.display="none"}
+if(Q.has("bio")){$("#cta").textContent="O link está na bio";$("#lz").style.display="none";$("#arrow").style.display="none";$("#biobox").style.display="flex";
+  A($("#handle"),[{opacity:0,transform:"translateY(50px)",filter:"blur(12px)"},{opacity:1,transform:"none",filter:"blur(0)"}],45600,800);
+  $$("#bioct .ct").forEach((c,i)=>A(c,[{opacity:0,transform:"scale(.4)"},{opacity:1,transform:"none"}],46300+i*160,500,BACK))}
 if(new URLSearchParams(location.search).has("capture")){document.documentElement.classList.add("capture");window.__setT(0)}
-else{fit();addEventListener("resize",fit);let t0=performance.now();(function loop(now){const t=(now-t0)%TOTAL;window.__setT(t);requestAnimationFrame(loop)})(t0)}
+else{fit();addEventListener("resize",fit);let t0=performance.now();(function loop(now){const t=(now-t0)%(TOTAL*K);window.__setT(t);requestAnimationFrame(loop)})(t0)}
 </script>
 </body></html>
