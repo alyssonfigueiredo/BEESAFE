@@ -8,7 +8,7 @@
 // Lê direto dos arquivos Parquet no S3 público do Overture, só os blocos que cruzam a caixa da
 // cidade (JS puro, sem binário): uma capital leva de 1 a 3 minutos e uns 200 MB de rede.
 
-import { asyncBufferFromUrl, parquetMetadataAsync, parquetReadObjects } from "hyparquet";
+import { parquetMetadataAsync, parquetReadObjects } from "hyparquet";
 import { compressors } from "hyparquet-compressors";
 import { readFileSync } from "node:fs";
 
@@ -114,12 +114,36 @@ async function releaseMaisNovo() {
 
 const COLUNAS = ["id", "names", "taxonomy", "confidence", "operating_status", "addresses", "bbox"];
 
+// O S3 fecha a conexão no meio de leituras longas ("other side closed"): cada pedaço do arquivo
+// é pedido de novo até 5 vezes antes de desistir, em vez de derrubar a cidade inteira.
+async function comRetentativa(fn, rotulo) {
+  let ultimo;
+  for (let i = 0; i < 5; i++) {
+    try { return await fn(); }
+    catch (e) { ultimo = e; await new Promise((r) => setTimeout(r, 1000 * 2 ** i)); }
+  }
+  throw new Error(`${rotulo}: ${ultimo?.cause?.message ?? ultimo?.message ?? ultimo}`);
+}
+async function arquivoRemoto(url) {
+  const cabeca = await comRetentativa(() => fetch(url, { method: "HEAD" }).then((r) => { if (!r.ok) throw new Error(`HTTP ${r.status}`); return r; }), url);
+  const byteLength = Number(cabeca.headers.get("content-length"));
+  return {
+    byteLength,
+    slice: (inicio, fim = byteLength) =>
+      comRetentativa(async () => {
+        const r = await fetch(url, { headers: { Range: `bytes=${inicio}-${fim - 1}` } });
+        if (r.status !== 206 && r.status !== 200) throw new Error(`HTTP ${r.status}`);
+        return r.arrayBuffer();
+      }, `${url.slice(-30)} bytes ${inicio}-${fim}`),
+  };
+}
+
 async function lugaresNaCaixa(release, bb) {
   const arquivos = (await listar(`release/${release}/theme=places/type=place/`)).filter((k) => k.endsWith(".parquet"));
   const achados = [];
   let blocos = 0;
   for (const chave of arquivos) {
-    const file = await asyncBufferFromUrl({ url: BASE + chave });
+    const file = await arquivoRemoto(BASE + chave);
     const meta = await parquetMetadataAsync(file);
     const caminhos = meta.row_groups[0].columns.map((c) => c.meta_data.path_in_schema.join("."));
     const ix = caminhos.indexOf("bbox.xmin");
@@ -260,7 +284,7 @@ for (let i = 0; i < escolhidos.length; i += LOTE) {
       let { error } = await supabase.from("places").insert(linha(c));
       if (error && /timeout/i.test(error.message)) ({ error } = await supabase.from("places").insert(linha(c)));
       if (error) {
-        const m = error.message.replace(/".*?"/g, "…");
+        const m = error.code === "P0004" ? "parecido com um lugar que já existe a menos de 150 m" : error.message.replace(/".*?"/g, "…");
         motivos.set(m, [...(motivos.get(m) ?? []), c.nome]);
       } else inseridos.push(c);
     }
@@ -275,6 +299,6 @@ console.log(`${cidade.name}: ${inseridos.length} lugares inseridos do Overture (
 console.log(Object.entries(contagem).map(([k, v]) => `  ${k}: ${v}`).join("\n"));
 if (motivos.size) {
   console.log("  recusados pelo banco:");
-  for (const [m, nomes] of motivos) console.log(`    ${nomes.length}× ${m} (ex.: ${nomes.slice(0, 3).join("; ")})`);
+  for (const [m, nomes] of motivos) console.log(`    ${nomes.length}× ${m}`);
 }
 if (!inseridos.length) process.exit(1);
