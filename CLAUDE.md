@@ -100,7 +100,8 @@ Nome: **Irisa** (INPI livre; @irisapp livre). Bundle id `br.com.irisa.app`. Cont
   **Fila de fotos por relevância (migration 17, 25/09/2026):** `places.prominence` (0–100 = confiança do
   Overture ×60 + site 15 + redes 15 + telefone 10) é gravada na importação e por
   `import-places-overture.mjs <ibge> --atualizar` (só preenche quem já está no banco). O script de fotos
-  ordena avaliados primeiro, depois prominence; a coluna não aparece no app nem entra em nota.
+  ordena avaliados primeiro, depois prominence, revezando as cidades (o 1º de cada, depois o 2º…);
+  `--todas --listar` mostra os 150 do dia sem gastar cota. A coluna não aparece no app nem entra em nota.
   Popularidade real (nº de avaliações do Google) é campo Enterprise e não pode ser guardado. Decidido não exibir rótulo LGBTQIA+ na ficha
   (lista pública vira alvo); o selo vem dos quatro eixos de acolhimento.
 - Decidido lançar primeiro no Android. iOS fica para depois do primeiro retorno da Play Store.

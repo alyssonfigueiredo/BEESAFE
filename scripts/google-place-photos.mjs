@@ -3,6 +3,8 @@
 //   set -a && source .env.scripts && set +a
 //   node scripts/google-place-photos.mjs 2611606 2507507  # cidades (IBGE), nesta ordem
 //   node scripts/google-place-photos.mjs --todas          # todas as cidades com lugares
+//   node scripts/google-place-photos.mjs --todas --listar # só mostra os 150 que entrariam hoje
+// Ordem da fila: avaliados primeiro, depois prominence (migration 17), revezando as cidades.
 //
 // .env.scripts precisa de SUPABASE_SERVICE_ROLE_KEY e GOOGLE_MAPS_API_KEY (chave com a
 // Places API (New) habilitada e a cota travada no gratuito — ver docs/fotos.md).
@@ -21,6 +23,9 @@ const supabase = createClient(url, key, { auth: { persistSession: false } });
 
 const args = process.argv.slice(2);
 const todas = args.includes("--todas");
+// --listar [N]: mostra os próximos N da fila (padrão 150, a cota do dia) sem chamar o Google.
+const iListar = args.indexOf("--listar");
+const listar = iListar >= 0 ? Number(args[iListar + 1]) || 150 : 0;
 // A ordem importa: a cota do dia acaba no meio, então quem vem primeiro é quem entra.
 const ibges = args.filter((a) => /^\d+$/.test(a)).map(Number);
 if (!todas && !ibges.length) ibges.push(4106902);
@@ -111,7 +116,9 @@ async function detalhes(placeId) {
   return chamada(`places/${placeId}`, { fieldMask: "id,photos" });
 }
 
-async function processarCidade(cidade) {
+// Fila de uma cidade, já ordenada: avaliados primeiro, depois os mais confirmados pelas fontes
+// (prominence, migration 17). Quem foi tentado há menos de 25 dias fica de fora.
+async function filaDaCidade(cidade) {
   const lugares = [];
   for (let de = 0; ; de += 1000) {
     const { data, error } = await supabase
@@ -123,7 +130,6 @@ async function processarCidade(cidade) {
     lugares.push(...(data ?? []));
     if (!data || data.length < 1000) break;
   }
-
   const internos = [];
   for (let de = 0; ; de += 1000) {
     const { data, error } = await supabase
@@ -136,78 +142,74 @@ async function processarCidade(cidade) {
     if (!data || data.length < 1000) break;
   }
   const estado = new Map(internos.map((p) => [p.id, p]));
-
-  // A cota é de 150 buscas por dia para milhares de lugares: quem já foi avaliado vai na frente,
-  // depois os mais confirmados pelas fontes (prominence, migration 17). O resto fica no ícone.
-  lugares.sort((a, b) =>
-    (b.rating_count ?? 0) - (a.rating_count ?? 0) ||
-    (estado.get(b.id)?.prominence ?? 0) - (estado.get(a.id)?.prominence ?? 0),
-  );
-
   const limite = new Date(Date.now() - RENOVAR_APOS_DIAS * 86400000);
-  const contagem = { casados: 0, renovados: 0, semFoto: 0, naoAchou: 0, pulados: 0 };
-
-  for (const lugar of lugares) {
-    const atual = estado.get(lugar.id) ?? {};
-    // A data marca a última tentativa, com ou sem sucesso: quem não foi encontrado também
-    // espera 25 dias antes de gastar cota de novo.
-    const tentadoHaPouco = atual.google_photo_at && new Date(atual.google_photo_at) > limite;
-    if (tentadoHaPouco) {
-      contagem.pulados++;
-      continue;
-    }
-
-    try {
-      let place;
-      if (!atual.google_place_id) {
-        place = await buscar(lugar);
-        if (!place) {
-          contagem.naoAchou++;
-          // Marca a tentativa para não gastar cota de novo com o mesmo lugar amanhã.
-          await supabase.from("places").update({ google_photo_at: new Date().toISOString() }).eq("id", lugar.id);
-          await pausa(PAUSA_MS);
-          continue;
-        }
-        contagem.casados++;
-      } else {
-        place = await detalhes(atual.google_place_id);
-        contagem.renovados++;
-      }
-
-      const foto = fotoDe(place);
-      if (!foto) contagem.semFoto++;
-      const { error: erroUpdate } = await supabase
-        .from("places")
-        .update({
-          google_place_id: place.id ?? atual.google_place_id,
-          google_photo_name: foto?.name ?? null,
-          google_photo_author: foto?.author ?? null,
-          google_photo_author_uri: foto?.uri ?? null,
-          google_photo_at: new Date().toISOString(),
-        })
-        .eq("id", lugar.id);
-      if (erroUpdate) throw erroUpdate;
-    } catch (e) {
-      if (String(e.message).startsWith("COTA")) throw e;
-      console.log(`  ${lugar.name}: ${e.message}`);
-    }
-    await pausa(PAUSA_MS);
-  }
-
-  console.log(
-    `${cidade.name}: ${contagem.casados} casados, ${contagem.renovados} renovados, ` +
-      `${contagem.semFoto} sem foto no Google, ${contagem.naoAchou} não encontrados, ${contagem.pulados} já tentados`,
+  const pendentes = lugares
+    .map((l) => ({ ...l, cidade, atual: estado.get(l.id) ?? {} }))
+    .filter((l) => !(l.atual.google_photo_at && new Date(l.atual.google_photo_at) > limite));
+  pendentes.sort(
+    (x, y) => (y.rating_count ?? 0) - (x.rating_count ?? 0) || (y.atual.prominence ?? 0) - (x.atual.prominence ?? 0),
   );
+  return { pendentes, pulados: lugares.length - pendentes.length };
+}
+
+// Revezamento entre cidades: o 1º de cada uma, depois o 2º de cada uma… Assim a cota do dia
+// (150) rende os melhores de todas em vez de esgotar a primeira da lista.
+function revezar(filas) {
+  const saida = [];
+  for (let i = 0; filas.some((f) => f[i]); i++) for (const f of filas) if (f[i]) saida.push(f[i]);
+  return saida;
+}
+
+async function processar(lugar, contagem) {
+  const { atual } = lugar;
+  try {
+    let place;
+    if (!atual.google_place_id) {
+      place = await buscar(lugar);
+      if (!place) {
+        contagem.naoAchou++;
+        // Marca a tentativa para não gastar cota de novo com o mesmo lugar amanhã.
+        await supabase.from("places").update({ google_photo_at: new Date().toISOString() }).eq("id", lugar.id);
+        await pausa(PAUSA_MS);
+        return;
+      }
+      contagem.casados++;
+    } else {
+      place = await detalhes(atual.google_place_id);
+      contagem.renovados++;
+    }
+    const foto = fotoDe(place);
+    if (!foto) contagem.semFoto++;
+    const { error: erroUpdate } = await supabase
+      .from("places")
+      .update({
+        google_place_id: place.id ?? atual.google_place_id,
+        google_photo_name: foto?.name ?? null,
+        google_photo_author: foto?.author ?? null,
+        google_photo_author_uri: foto?.uri ?? null,
+        google_photo_at: new Date().toISOString(),
+      })
+      .eq("id", lugar.id);
+    if (erroUpdate) throw erroUpdate;
+  } catch (e) {
+    if (String(e.message).startsWith("COTA")) throw e;
+    console.log(`  ${lugar.name}: ${e.message}`);
+  }
+  await pausa(PAUSA_MS);
 }
 
 let cidades;
 if (todas) {
-  const { data, error } = await supabase.from("places").select("city_id").eq("status", "active");
-  if (error) throw error;
-  const ids = [...new Set(data.map((p) => p.city_id).filter(Boolean))];
-  const { data: lista, error: erroCidades } = await supabase.from("cities").select("id, name").in("id", ids);
+  const ids = new Set();
+  for (let de = 0; ; de += 1000) {
+    const { data, error } = await supabase.from("places").select("city_id").eq("status", "active").range(de, de + 999);
+    if (error) throw error;
+    for (const p of data ?? []) if (p.city_id) ids.add(p.city_id);
+    if (!data || data.length < 1000) break;
+  }
+  const { data: lista, error: erroCidades } = await supabase.from("cities").select("id, name").in("id", [...ids]);
   if (erroCidades) throw erroCidades;
-  cidades = lista;
+  cidades = lista.sort((x, y) => x.name.localeCompare(y.name));
 } else {
   cidades = [];
   for (const ibge of ibges) {
@@ -217,9 +219,30 @@ if (todas) {
   }
 }
 
+const filas = [];
+let pulados = 0;
+for (const c of cidades) {
+  const f = await filaDaCidade(c);
+  filas.push(f.pendentes);
+  pulados += f.pulados;
+}
+const fila = revezar(filas);
+
+if (listar) {
+  console.log(`Próximos ${Math.min(listar, fila.length)} da fila (${fila.length} pendentes, ${pulados} já tentados):`);
+  for (const l of fila.slice(0, listar))
+    console.log(`  ${l.cidade.name.padEnd(16)} ${String(l.atual.prominence ?? 0).padStart(3)}  ${l.rating_count ? `★${l.rating_count} ` : ""}${l.name}`);
+  process.exit(0);
+}
+
+const contagem = { casados: 0, renovados: 0, semFoto: 0, naoAchou: 0 };
 try {
-  for (const c of cidades) await processarCidade(c);
+  for (const l of fila) await processar(l, contagem);
 } catch (e) {
   if (!String(e.message).startsWith("COTA")) throw e;
   console.log("\nCota do dia esgotada — a trava segurou. Roda de novo amanhã; ele continua de onde parou.");
 }
+console.log(
+  `${contagem.casados} casados, ${contagem.renovados} renovados, ${contagem.semFoto} sem foto no Google, ` +
+    `${contagem.naoAchou} não encontrados, ${pulados} já tentados`,
+);
