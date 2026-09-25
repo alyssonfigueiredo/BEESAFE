@@ -260,8 +260,10 @@ const existentesPorChave = new Map();
 for (const e of existentes) existentesPorChave.set(e.k, [...(existentesPorChave.get(e.k) ?? []), e]);
 const novos = unicos.filter((c) => !(existentesPorChave.get(chave(c.nome)) ?? []).some((e) => metros(e, c) < 150));
 
-if (atualizar) {
-  // Casa cada candidato com o lugar já gravado (mesmo nome a menos de 150 m) e só escreve prominence.
+// Quem já está no banco (OSM ou rodada anterior) recebe a prominence do Overture aqui, tanto no
+// modo normal quanto em --atualizar: rodar de novo numa cidade importada não insere nada e só
+// preenche a coluna.
+{
   const pares = [];
   for (const c of unicos) {
     const e = (existentesPorChave.get(chave(c.nome)) ?? []).find((x) => metros(x, c) < 150);
@@ -274,11 +276,13 @@ if (atualizar) {
       if (error) throw error;
       feitos++;
     }));
-    process.stdout.write(`\r  atualizando prominence: ${feitos}/${pares.length}   `);
+    if (pares.length) process.stdout.write(`\r  prominence atualizada em ${feitos}/${pares.length} lugares já existentes   `);
   }
-  process.stdout.write("\n");
-  console.log(`${cidade.name}: ${feitos} lugares com prominence atualizada (${existentes.length} no banco).`);
-  process.exit(0);
+  if (pares.length) process.stdout.write("\n");
+  if (atualizar) {
+    console.log(`${cidade.name}: ${feitos} lugares com prominence atualizada (${existentes.length} no banco).`);
+    process.exit(0);
+  }
 }
 
 const filas = new Map(PRIORIDADE.map((c) => [c, novos.filter((p) => p.categoria === c)]));
