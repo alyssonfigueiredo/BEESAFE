@@ -9,7 +9,7 @@ const SRC = process.argv[2] ?? "docs/carrossel.html";
 const DIR = SRC.replace(/\.html$/, "");
 mkdirSync(DIR, { recursive: true });
 const b = await chromium.launch({ executablePath: process.env.PW_CHROMIUM ?? "/opt/pw-browsers/chromium", args: ["--ignore-certificate-errors"] });
-const pg = await b.newPage({ viewport: { width: 1200, height: 1400 }, deviceScaleFactor: 1 });
+const pg = await b.newPage({ viewport: { width: 1200, height: 1400 }, deviceScaleFactor: Number(process.env.SCALE ?? 1) });
 await pg.goto("file://" + resolve(SRC), { waitUntil: "networkidle" });
 await pg.evaluate(() => document.fonts.ready);
 const n = await pg.locator(".sl").count();
