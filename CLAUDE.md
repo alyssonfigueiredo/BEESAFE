@@ -19,7 +19,7 @@ Nome: **Irisa** (INPI livre; @irisapp livre). Bundle id `br.com.irisa.app`. Cont
 
 - Branch de trabalho: `claude/laughing-keller-my8t7c` (default do repo: `claude/ecstatic-darwin-cmf7sw`).
 - MVP completo e rodando no iPhone do usuário (Xcode, Apple ID gratuito, expira em 7 dias) e em APK Android (EAS preview).
-- Supabase projeto `ntjirpqulrnieeglpiei`, região São Paulo. Migrations 0–16 aplicadas
+- Supabase projeto `ntjirpqulrnieeglpiei`, região São Paulo. Migrations 0–17 aplicadas (17 = prominence, colada em 25/09/2026)
   (10 a 15 coladas em 23/09/2026: anti-duplicata, initplan da RLS, relato do entorno não desconta
   nota, nível de atenção da região, onde/quando no relato, ficha do bairro). A 16 (inscrição de
   testadores pelo site) colada em 23/09/2026. Build 9 (versionCode 9) gerada
@@ -96,7 +96,12 @@ Nome: **Irisa** (INPI livre; @irisapp livre). Bundle id `br.com.irisa.app`. Cont
   `--limite` entra tudo: Curitiba dá ~10.700 candidatos (vs. 256 do OSM). `--simular` só conta, sem chave.
   `gay_bar` do Overture só dá prioridade, não vira rótulo. Atribuição das fontes está nos termos (item 12).
   No workflow Importar cidade o Overture é o padrão e o OSM ficou desligado. Fotos: cada lugar novo entra
-  na fila do Google (150/dia), então uma capital inteira leva meses de cota — aceito, cai no ícone. Decidido não exibir rótulo LGBTQIA+ na ficha
+  na fila do Google (150/dia), então uma capital inteira leva meses de cota — aceito, cai no ícone.
+  **Fila de fotos por relevância (migration 17, 25/09/2026):** `places.prominence` (0–100 = confiança do
+  Overture ×60 + site 15 + redes 15 + telefone 10) é gravada na importação e por
+  `import-places-overture.mjs <ibge> --atualizar` (só preenche quem já está no banco). O script de fotos
+  ordena avaliados primeiro, depois prominence; a coluna não aparece no app nem entra em nota.
+  Popularidade real (nº de avaliações do Google) é campo Enterprise e não pode ser guardado. Decidido não exibir rótulo LGBTQIA+ na ficha
   (lista pública vira alvo); o selo vem dos quatro eixos de acolhimento.
 - Decidido lançar primeiro no Android. iOS fica para depois do primeiro retorno da Play Store.
 - Play Console: versão 8 (0.1.0) enviada para revisão na faixa de teste fechado em 22/09/2026, com a

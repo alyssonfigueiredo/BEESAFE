@@ -112,18 +112,37 @@ async function detalhes(placeId) {
 }
 
 async function processarCidade(cidade) {
-  const { data: lugares, error } = await supabase
-    .from("public_places")
-    .select("id, name, address, city, latitude, longitude")
-    .eq("city_id", cidade.id);
-  if (error) throw error;
+  const lugares = [];
+  for (let de = 0; ; de += 1000) {
+    const { data, error } = await supabase
+      .from("public_places")
+      .select("id, name, address, city, latitude, longitude, rating_count")
+      .eq("city_id", cidade.id)
+      .range(de, de + 999);
+    if (error) throw error;
+    lugares.push(...(data ?? []));
+    if (!data || data.length < 1000) break;
+  }
 
-  const { data: internos, error: erroInternos } = await supabase
-    .from("places")
-    .select("id, google_place_id, google_photo_at")
-    .eq("city_id", cidade.id);
-  if (erroInternos) throw erroInternos;
+  const internos = [];
+  for (let de = 0; ; de += 1000) {
+    const { data, error } = await supabase
+      .from("places")
+      .select("id, google_place_id, google_photo_at, prominence")
+      .eq("city_id", cidade.id)
+      .range(de, de + 999);
+    if (error) throw error;
+    internos.push(...(data ?? []));
+    if (!data || data.length < 1000) break;
+  }
   const estado = new Map(internos.map((p) => [p.id, p]));
+
+  // A cota é de 150 buscas por dia para milhares de lugares: quem já foi avaliado vai na frente,
+  // depois os mais confirmados pelas fontes (prominence, migration 17). O resto fica no ícone.
+  lugares.sort((a, b) =>
+    (b.rating_count ?? 0) - (a.rating_count ?? 0) ||
+    (estado.get(b.id)?.prominence ?? 0) - (estado.get(a.id)?.prominence ?? 0),
+  );
 
   const limite = new Date(Date.now() - RENOVAR_APOS_DIAS * 86400000);
   const contagem = { casados: 0, renovados: 0, semFoto: 0, naoAchou: 0, pulados: 0 };

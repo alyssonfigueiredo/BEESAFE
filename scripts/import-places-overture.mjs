@@ -3,7 +3,8 @@
 // mais que o OSM no Brasil porque boa parte vem das páginas do Facebook. Entram sem nota nenhuma.
 // Roda na SUA máquina (ou no workflow Importar cidade), nunca no app:
 //   set -a && source .env.scripts && set +a
-//   node scripts/import-places-overture.mjs <ibge> [--limite N] [--confianca 0.5] [--simular]
+//   node scripts/import-places-overture.mjs <ibge> [--limite N] [--confianca 0.5] [--simular] [--atualizar]
+// --atualizar não insere nada: só grava prominence (migration 17) em quem já está no banco.
 // Sem --limite entra tudo que passar nos filtros. --simular só conta, não grava nada (dispensa a chave).
 // Lê direto dos arquivos Parquet no S3 público do Overture, só os blocos que cruzam a caixa da
 // cidade (JS puro, sem binário): uma capital leva de 1 a 3 minutos e uns 200 MB de rede.
@@ -20,6 +21,7 @@ const flag = (name) => {
   return i >= 0 ? args[i + 1] : undefined;
 };
 const simular = args.includes("--simular");
+const atualizar = args.includes("--atualizar"); // só grava prominence em quem já está no banco, não insere
 const limite = Number(flag("limite")) || Infinity;
 // Overture: abaixo de 0.5 a própria fonte diz que o lugar pode não existir mais (página abandonada).
 const confiancaMinima = Number(flag("confianca") ?? 0.5);
@@ -112,7 +114,7 @@ async function releaseMaisNovo() {
   return rels[rels.length - 1];
 }
 
-const COLUNAS = ["id", "names", "taxonomy", "confidence", "operating_status", "addresses", "bbox"];
+const COLUNAS = ["id", "names", "taxonomy", "confidence", "operating_status", "addresses", "bbox", "websites", "socials", "phones"];
 
 // O S3 fecha a conexão no meio de leituras longas ("other side closed"): cada pedaço do arquivo
 // é pedido de novo até 5 vezes antes de desistir, em vez de derrubar a cidade inteira.
@@ -198,7 +200,10 @@ for (const r of brutos) {
   if (!dentroDoMunicipio([r.x, r.y], poligonos)) { descartes.foraDoMunicipio++; continue; }
   const daCena = /gay|lgbt/.test(JSON.stringify(r.taxonomy ?? ""));
   const endereco = (r.addresses?.[0]?.freeform ?? "").trim().slice(0, 200);
-  candidatos.push({ nome, categoria: cat, endereco, lat: r.y, lon: r.x, daCena, confianca: r.confidence });
+  // 0–100: quanto o lugar é confirmado por fontes (confiança do Overture) e por presença
+  // própria (site, redes, telefone). Só ordena a fila de fotos.
+  const prominence = Math.min(100, Math.round(r.confidence * 60) + (r.websites?.length ? 15 : 0) + (r.socials?.length ? 15 : 0) + (r.phones?.length ? 10 : 0));
+  candidatos.push({ nome, categoria: cat, endereco, lat: r.y, lon: r.x, daCena, confianca: r.confidence, prominence });
 }
 
 // O Overture repete estabelecimento (página duplicada no Facebook): mesmo nome a menos de 150 m,
@@ -246,14 +251,35 @@ if (erroCidade) throw erroCidade;
 const existentes = [];
 for (let de = 0; ; de += 1000) {
   const { data, error } = await supabase
-    .from("public_places").select("name, latitude, longitude").eq("city_id", cidade.id).range(de, de + 999);
+    .from("public_places").select("id, name, latitude, longitude").eq("city_id", cidade.id).range(de, de + 999);
   if (error) throw error;
-  existentes.push(...(data ?? []).map((p) => ({ k: chave(p.name), lat: p.latitude, lon: p.longitude })));
+  existentes.push(...(data ?? []).map((p) => ({ id: p.id, k: chave(p.name), lat: p.latitude, lon: p.longitude })));
   if (!data || data.length < 1000) break;
 }
 const existentesPorChave = new Map();
 for (const e of existentes) existentesPorChave.set(e.k, [...(existentesPorChave.get(e.k) ?? []), e]);
 const novos = unicos.filter((c) => !(existentesPorChave.get(chave(c.nome)) ?? []).some((e) => metros(e, c) < 150));
+
+if (atualizar) {
+  // Casa cada candidato com o lugar já gravado (mesmo nome a menos de 150 m) e só escreve prominence.
+  const pares = [];
+  for (const c of unicos) {
+    const e = (existentesPorChave.get(chave(c.nome)) ?? []).find((x) => metros(x, c) < 150);
+    if (e) pares.push({ id: e.id, prominence: c.prominence });
+  }
+  let feitos = 0;
+  for (let i = 0; i < pares.length; i += 20) {
+    await Promise.all(pares.slice(i, i + 20).map(async (p) => {
+      const { error } = await supabase.from("places").update({ prominence: p.prominence }).eq("id", p.id);
+      if (error) throw error;
+      feitos++;
+    }));
+    process.stdout.write(`\r  atualizando prominence: ${feitos}/${pares.length}   `);
+  }
+  process.stdout.write("\n");
+  console.log(`${cidade.name}: ${feitos} lugares com prominence atualizada (${existentes.length} no banco).`);
+  process.exit(0);
+}
 
 const filas = new Map(PRIORIDADE.map((c) => [c, novos.filter((p) => p.categoria === c)]));
 const escolhidos = [];
@@ -270,7 +296,7 @@ console.log(`${cidade.name}: ${existentes.length} já no banco, ${escolhidos.len
 
 const linha = (c) => ({
   name: c.nome, category: c.categoria, address: c.endereco || null,
-  location: `SRID=4326;POINT(${c.lon} ${c.lat})`, verified: false,
+  location: `SRID=4326;POINT(${c.lon} ${c.lat})`, verified: false, prominence: c.prominence,
 });
 const inseridos = [];
 const motivos = new Map();
