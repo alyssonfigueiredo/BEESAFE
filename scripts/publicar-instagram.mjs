@@ -76,6 +76,7 @@ async function main() {
   let mudou = false;
   for (const item of fila) {
     if (item.publicado) continue;
+    if (!item.aprovado) continue; // nunca publica sem "aprovado": true marcado à mão
     if (new Date(item.quando) > agora) continue;
     console.log(`publicando ${item.id} (${item.tipo})...`);
     try {
