@@ -470,7 +470,8 @@ sls.forEach(sl=>{const h=sl.querySelector(".disp");if(!h)return;const t=h.textCo
   const svg=sl.querySelector(".art svg");let k=0;
   if(svg){[...svg.children].forEach(el=>{if(el.tagName==="defs")return;
       const list=el.classList.contains("stagger")?[...el.children]:[el];
-      list.forEach(e=>{if(e.tagName==="rect"&&e.getAttribute("fill")==="url(#rb)"){e.classList.add("rl")}else{e.classList.add("it")}e.style.setProperty("--i",k++)})})}
+      list.forEach(e=>{const w=document.createElementNS("http://www.w3.org/2000/svg","g");e.replaceWith(w);w.appendChild(e);
+        w.classList.add(e.tagName==="rect"&&e.getAttribute("fill")==="url(#rb)"?"rl":"it");w.style.setProperty("--i",k++)})})}
   sl.querySelectorAll(".how > div").forEach((d,i)=>d.style.setProperty("--i",i));
 });
 // revelação
