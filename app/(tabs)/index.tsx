@@ -1,6 +1,7 @@
 import { Link } from "expo-router";
 import { Pressable, ScrollView, Text, View } from "react-native";
 
+import { useScreenInsets } from "@/hooks/useScreenInsets";
 import { CityPicker } from "@/components/CityPicker";
 import { DangerRanking } from "@/components/DangerRanking";
 import { OccurrenceCard } from "@/components/OccurrenceCard";
@@ -14,6 +15,7 @@ import { OCCURRENCE_TYPES, RATING_MIN } from "@/theme/domain";
 import { colors } from "@/theme/tokens";
 
 export default function HomeScreen() {
+  const insets = useScreenInsets();
   const { city, loading } = useCity();
   const { data: stats } = useCityStats(city?.id);
   const { data: occurrences = [] } = useOccurrences(city?.id);
@@ -29,19 +31,20 @@ export default function HomeScreen() {
     .slice(0, 5);
 
   return (
-    <ScrollView className="flex-1 bg-paper" contentContainerClassName="gap-4 px-4 py-4">
+    <ScrollView
+      className="flex-1 bg-paper"
+      contentContainerClassName="gap-4 px-4"
+      contentContainerStyle={insets}
+    >
       <View className="gap-3 rounded-2xl border border-border bg-surface p-5">
-        <Text className="font-body text-xs uppercase tracking-widest text-dim">
-          Sua cidade
-        </Text>
+        <Text className="font-body text-xs uppercase tracking-widest text-dim">Sua cidade</Text>
         <Text className="font-display text-4xl uppercase tracking-widest text-ink">
           {loading ? "Localizando…" : (city?.name ?? "Sem cidade")}
         </Text>
         <CityPicker />
         <Text className="font-body text-sm text-muted">
-          O mapa dos lugares onde a gente é bem-vinde, feito por nós. Diga quanta cor tem os
-          lugares por onde você passa. E registre, sem se identificar, o que não deveria ter
-          acontecido.
+          O mapa dos lugares onde a gente é bem-vinde, feito por nós. Diga quanta cor tem os lugares
+          por onde você passa. E registre, sem se identificar, o que não deveria ter acontecido.
         </Text>
         {/* Dois botões do mesmo tamanho: avaliar é o uso de toda semana, registrar é o uso que
             ninguém quer precisar — e nenhum dos dois pode parecer secundário. */}

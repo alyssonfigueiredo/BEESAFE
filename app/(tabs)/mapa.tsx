@@ -2,6 +2,7 @@ import { Link, useRouter } from "expo-router";
 import { useMemo, useState } from "react";
 import { Pressable, ScrollView, Text, View } from "react-native";
 
+import { useScreenInsets } from "@/hooks/useScreenInsets";
 import { CityMap } from "@/components/CityMap";
 import { DangerRanking } from "@/components/DangerRanking";
 import { OccurrenceCard } from "@/components/OccurrenceCard";
@@ -15,6 +16,7 @@ import { colors } from "@/theme/tokens";
 const TYPE_KEYS = Object.keys(OCCURRENCE_TYPES) as OccurrenceType[];
 
 export default function MapaScreen() {
+  const insets = useScreenInsets();
   const { city, loading } = useCity();
   const { data: occurrences = [], isLoading } = useOccurrences(city?.id);
   const { data: ranking = [] } = useAreaRisk(city?.id, 6);
@@ -47,7 +49,11 @@ export default function MapaScreen() {
   }
 
   return (
-    <ScrollView className="flex-1 bg-paper" contentContainerClassName="gap-4 px-4 py-4">
+    <ScrollView
+      className="flex-1 bg-paper"
+      contentContainerClassName="gap-4 px-4"
+      contentContainerStyle={insets}
+    >
       <View className="flex-row items-end justify-between">
         <View>
           <Text className="font-display text-3xl uppercase tracking-widest text-ink">Mapa</Text>

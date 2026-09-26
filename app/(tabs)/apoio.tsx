@@ -4,6 +4,7 @@ import { ExternalLink, Heart, Phone } from "lucide-react-native";
 import { useState } from "react";
 import { Alert, Linking, Pressable, ScrollView, Text, TextInput, View } from "react-native";
 
+import { useScreenInsets } from "@/hooks/useScreenInsets";
 import { ReportButton } from "@/components/ReportButton";
 import {
   usePostSupportMessage,
@@ -26,6 +27,7 @@ const KIND_LABEL: Record<string, string> = {
 };
 
 export default function ApoioScreen() {
+  const insets = useScreenInsets();
   const { city } = useCity();
   const { data: messages = [] } = useSupportMessages();
   const { data: services = [] } = useSupportServices(city?.id);
@@ -48,7 +50,8 @@ export default function ApoioScreen() {
   return (
     <ScrollView
       className="flex-1 bg-paper"
-      contentContainerClassName="gap-4 px-4 py-4"
+      contentContainerClassName="gap-4 px-4"
+      contentContainerStyle={insets}
       keyboardShouldPersistTaps="handled"
     >
       <View>

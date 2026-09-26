@@ -1,10 +1,12 @@
 import { formatDistanceToNow, parseISO } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { Stack } from "expo-router";
-import { Alert, Pressable, ScrollView, Text, View } from "react-native";
+import { Alert, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 
+import { useScreenInsets } from "@/hooks/useScreenInsets";
 import { useModerate, useModerationQueue } from "@/hooks/useModeration";
 import { useProfile } from "@/hooks/useProfile";
+import { Glass } from "@/components/Glass";
 import { colors } from "@/theme/tokens";
 
 const TYPE_LABEL = {
@@ -15,6 +17,7 @@ const TYPE_LABEL = {
 } as const;
 
 export default function ModeracaoScreen() {
+  const insets = useScreenInsets({ tabs: false });
   const { data: profile } = useProfile();
   const isMod = profile?.role === "moderator" || profile?.role === "admin";
   const { data: queue = [], isLoading } = useModerationQueue(isMod);
@@ -33,11 +36,17 @@ export default function ModeracaoScreen() {
           headerShown: true,
           headerBackTitle: "Voltar",
           title: "Moderação",
-          headerStyle: { backgroundColor: colors.paper },
+          headerTransparent: true,
+          headerStyle: { backgroundColor: "transparent" },
+          headerBackground: () => <Glass style={StyleSheet.absoluteFill} />,
           headerTintColor: colors.ink,
         }}
       />
-      <ScrollView className="flex-1 bg-paper" contentContainerClassName="gap-3 px-4 py-4">
+      <ScrollView
+        className="flex-1 bg-paper"
+        contentContainerClassName="gap-3 px-4"
+        contentContainerStyle={insets}
+      >
         {!isMod && <Text className="font-body text-muted">Área restrita à moderação.</Text>}
         {isMod && isLoading && <Text className="font-body text-dim">Carregando fila…</Text>}
         {isMod && !isLoading && queue.length === 0 && (

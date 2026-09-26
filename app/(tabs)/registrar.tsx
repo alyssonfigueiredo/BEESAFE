@@ -2,11 +2,13 @@ import { useLocalSearchParams, useRouter } from "expo-router";
 import { useState } from "react";
 import { Pressable, ScrollView, Text, View } from "react-native";
 
+import { useScreenInsets } from "@/hooks/useScreenInsets";
 import { PlaceForm } from "@/components/PlaceForm";
 import { ReportForm } from "@/components/ReportForm";
 import { colors } from "@/theme/tokens";
 
 export default function RegistrarScreen() {
+  const insets = useScreenInsets();
   const router = useRouter();
   // ?modo=lugar abre direto na aba do cadastro: quem veio do "Cadastre um lugar" da aba Lugares
   // já sabe o que quer, e não deve ter que achar o seletor.
@@ -23,7 +25,8 @@ export default function RegistrarScreen() {
   return (
     <ScrollView
       className="flex-1 bg-paper"
-      contentContainerClassName="gap-5 px-4 py-4"
+      contentContainerClassName="gap-5 px-4"
+      contentContainerStyle={insets}
       keyboardShouldPersistTaps="handled"
     >
       <View>

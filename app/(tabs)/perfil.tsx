@@ -2,6 +2,7 @@ import { Link } from "expo-router";
 import { useState } from "react";
 import { Alert, Pressable, ScrollView, Text, TextInput, View } from "react-native";
 
+import { useScreenInsets } from "@/hooks/useScreenInsets";
 import { CityPicker } from "@/components/CityPicker";
 import { useDeleteAccount, useProfile, useUpdateProfile } from "@/hooks/useProfile";
 import { supabase } from "@/lib/supabase";
@@ -10,6 +11,7 @@ import { useCity } from "@/providers/CityProvider";
 import { colors } from "@/theme/tokens";
 
 export default function PerfilScreen() {
+  const insets = useScreenInsets();
   const { session } = useAuth();
   const { city } = useCity();
   const { data: profile } = useProfile();
@@ -45,7 +47,8 @@ export default function PerfilScreen() {
   return (
     <ScrollView
       className="flex-1 bg-paper"
-      contentContainerClassName="gap-4 px-4 py-4"
+      contentContainerClassName="gap-4 px-4"
+      contentContainerStyle={insets}
       keyboardShouldPersistTaps="handled"
     >
       <View>

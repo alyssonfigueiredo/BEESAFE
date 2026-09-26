@@ -3,8 +3,19 @@ import { ptBR } from "date-fns/locale";
 import { Link, Stack, useLocalSearchParams } from "expo-router";
 import { AlertTriangle, BadgeCheck, Navigation } from "lucide-react-native";
 import { useState } from "react";
-import { Alert, Linking, Platform, Pressable, ScrollView, Text, TextInput, View } from "react-native";
+import {
+  Alert,
+  Linking,
+  Platform,
+  Pressable,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TextInput,
+  View,
+} from "react-native";
 
+import { useScreenInsets } from "@/hooks/useScreenInsets";
 import { AreaLevel } from "@/components/AreaLevel";
 import { AxisBars } from "@/components/AxisBars";
 import { Badge } from "@/components/Badge";
@@ -15,11 +26,13 @@ import { ReportButton } from "@/components/ReportButton";
 import { usePlace, usePlaceRatings, useRatePlace } from "@/hooks/usePlaces";
 import { AXES, AXIS_KEYS, BADGES, PLACE_CATEGORIES, placeScoreColor } from "@/theme/domain";
 import type { Axis } from "@/theme/domain";
+import { Glass } from "@/components/Glass";
 import { colors } from "@/theme/tokens";
 
 type Draft = Record<Axis, number> & { key: string; comment: string };
 
 export default function PlaceScreen() {
+  const insets = useScreenInsets({ tabs: false });
   const { id } = useLocalSearchParams<{ id: string }>();
   const { data: place, isLoading } = usePlace(id);
   const { data: ratings = [] } = usePlaceRatings(id);
@@ -95,14 +108,17 @@ export default function PlaceScreen() {
           headerBackTitle: "Voltar",
           // O nome já é o título do cartão; repetir no header era ruído.
           title: "",
-          headerStyle: { backgroundColor: colors.paper },
+          headerTransparent: true,
+          headerStyle: { backgroundColor: "transparent" },
+          headerBackground: () => <Glass style={StyleSheet.absoluteFill} />,
           headerTintColor: colors.ink,
           headerShadowVisible: false,
         }}
       />
       <ScrollView
         className="flex-1 bg-paper"
-        contentContainerClassName="gap-4 px-4 py-4"
+        contentContainerClassName="gap-4 px-4"
+        contentContainerStyle={insets}
         keyboardShouldPersistTaps="handled"
       >
         <View className="gap-2 rounded-2xl border border-border bg-surface p-5">
