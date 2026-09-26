@@ -1,0 +1,160 @@
+<!doctype html>
+<html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Irisa · Reels 2 · quatro perguntas</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Urbanist:wght@500;600&family=Oswald:wght@300;400;500;700&family=Space+Grotesk:wght@400;500;700&display=swap">
+<style>
+:root{--night:#1E2340;--night2:#161B2E;--dim:#8A90A2;--coral:#F4736F;--orange:#F5A45D;--yellow:#F0CA75;--turq:#5CC9B4;--lilac:#AE96F2;--blue:#6AA8EE;
+  --wordmark:"Urbanist","Helvetica Neue",Arial,sans-serif;--display:"Oswald",Impact,"Arial Narrow",sans-serif;--body:"Space Grotesk","Helvetica Neue",Arial,sans-serif}
+*{box-sizing:border-box}p{margin:0}
+html,body{margin:0;background:#0d1020;overflow:hidden}
+body{display:flex;align-items:center;justify-content:center;height:100vh;font-family:var(--body)}
+#stage{position:relative;width:1080px;height:1920px;flex:none;overflow:hidden;background:var(--night);color:#fff;transform-origin:center}
+.capture body,.capture{background:var(--night)}
+.halo{position:absolute;inset:-30%;pointer-events:none;filter:blur(60px)}
+.h1{background:radial-gradient(30% 22% at 20% 25%,rgba(92,201,180,.38),transparent 70%),radial-gradient(28% 20% at 82% 70%,rgba(174,150,242,.36),transparent 70%)}
+.h2{background:radial-gradient(24% 18% at 75% 18%,rgba(244,115,111,.30),transparent 70%),radial-gradient(24% 18% at 25% 85%,rgba(240,202,117,.24),transparent 70%)}
+.grain{position:absolute;inset:0;opacity:.07;background-image:radial-gradient(rgba(255,255,255,.8) 1px,transparent 1px);background-size:4px 4px;mix-blend-mode:overlay;pointer-events:none}
+.scene{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;opacity:0;padding:0 80px}
+.c{text-align:center}
+.disp{font-family:var(--display);text-transform:uppercase;font-weight:500;letter-spacing:.04em;line-height:.95;margin:0}
+.w{display:inline-block;will-change:transform,opacity,filter}
+.rainbow{background:linear-gradient(90deg,var(--coral),var(--orange),var(--yellow),var(--turq),var(--blue),var(--lilac));-webkit-background-clip:text;background-clip:text;color:transparent}
+.rule{height:12px;border-radius:6px;background:linear-gradient(90deg,var(--coral),var(--orange),var(--yellow),var(--turq),var(--blue),var(--lilac));transform-origin:left}
+.small{font-family:var(--display);text-transform:uppercase;letter-spacing:.26em;font-size:30px;color:var(--turq)}
+.body{font-size:40px;line-height:1.35;color:#D5D8E4;max-width:860px}
+.slam{font-family:var(--display);text-transform:uppercase;font-weight:500;font-size:150px;line-height:1;letter-spacing:.03em}
+.pct{font-family:var(--display);font-weight:500;font-size:300px;line-height:1;letter-spacing:-.02em}
+.pill{display:inline-flex;align-items:center;gap:14px;padding:24px 46px;border-radius:999px;font-family:var(--display);text-transform:uppercase;letter-spacing:.14em;font-size:40px;color:var(--night)}
+.qcard{width:900px;padding:56px 60px;border-radius:44px;background:rgba(255,255,255,.06);border:2px solid rgba(255,255,255,.12)}
+.qcard p{font-size:48px;line-height:1.3;color:#fff}
+.stars{font-size:190px;letter-spacing:.06em;color:#4F576F;position:relative;display:inline-block;line-height:1}
+.stars i{position:absolute;left:-4%;right:-4%;top:50%;height:16px;border-radius:8px;background:var(--coral);transform:rotate(-6deg);transform-origin:left}
+.strike{position:relative;display:inline-block}
+.strike i{position:absolute;left:-3%;right:-3%;top:52%;height:14px;border-radius:7px;background:var(--coral);transform:rotate(-4deg);transform-origin:left}
+.nring{position:relative;width:560px;height:560px;border-radius:50%}
+.nring .fill{position:absolute;inset:0;border-radius:50%;background:conic-gradient(var(--coral),var(--orange),var(--yellow),var(--turq),var(--blue),var(--lilac),var(--coral));-webkit-mask:conic-gradient(#000 var(--p,0%),transparent 0);mask:conic-gradient(#000 var(--p,0%),transparent 0)}
+.nring .track{position:absolute;inset:0;border-radius:50%;background:rgba(255,255,255,.08)}
+.nring .hole{position:absolute;inset:70px;border-radius:50%;background:var(--night);display:flex;align-items:center;justify-content:center}
+.nring b{font-family:var(--display);font-weight:500;font-size:200px;line-height:1}
+.badge-big{padding:16px 34px;border-radius:18px;background:rgba(92,201,180,.2);color:var(--turq);font-family:var(--display);text-transform:uppercase;letter-spacing:.14em;font-size:40px}
+.bar{height:22px;border-radius:11px;background:rgba(255,255,255,.1);width:900px;overflow:hidden}
+.bar i{display:block;height:100%;border-radius:11px;transform-origin:left;transform:scaleX(0)}
+.brand{position:absolute;bottom:120px;left:0;right:0;display:flex;justify-content:center;align-items:center;gap:16px;font-family:var(--wordmark);font-weight:500;text-transform:uppercase;letter-spacing:.2em;font-size:30px;color:#C9CDDD}
+.brand b{font-weight:500;color:var(--yellow)}
+.mark{width:34px;height:34px;border-radius:50%;background:conic-gradient(from -90deg,var(--coral),var(--orange),var(--yellow),var(--turq),var(--blue),var(--lilac),var(--coral));position:relative;flex:none}
+.mark::after{content:"";position:absolute;inset:4px;border-radius:50%;background:var(--night2)}
+.mark::before{content:"";position:absolute;left:50%;top:50%;width:9px;height:9px;margin:-4.5px;border-radius:50%;background:#fff;z-index:1}
+.map{position:relative;width:900px;height:620px;border-radius:44px;background:#f4f1ea;overflow:hidden;border:2px solid rgba(255,255,255,.12)}
+.map .st{position:absolute;background:#fff}
+.map .pin{position:absolute;width:70px;height:70px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:var(--display);font-size:30px;color:var(--night);border:3px solid var(--night)}
+.map .ring{position:absolute;border-radius:50%;border:5px dashed rgba(244,115,111,.85);background:rgba(244,115,111,.16)}
+.map .dot{position:absolute;width:22px;height:22px;border-radius:50%;border:2px solid var(--night)}
+.lvl{display:flex;gap:26px}
+.lvl div{padding:30px 40px;border-radius:30px;text-align:center;width:420px}
+.lvl b{display:block;font-family:var(--display);text-transform:uppercase;letter-spacing:.12em;font-size:46px;font-weight:500;color:var(--night)}
+.lvl span{font-size:28px;color:var(--night)}
+.conf{position:absolute;width:18px;height:18px;border-radius:4px}
+.handle{display:flex;align-items:center;gap:26px;font-family:var(--wordmark);font-weight:500;letter-spacing:.12em;font-size:84px;line-height:1}
+</style>
+</head>
+<body><div id="stage">
+  <div class="halo h1"></div><div class="halo h2"></div><div class="grain"></div>
+  <!-- 0 gancho -->
+  <div class="scene" id="s0">
+    <div class="stars" id="st">★★★★★<i id="stl"></i></div>
+    <h1 class="disp c" id="h0" style="font-size:118px;margin-top:80px"><span class="w" style="font-weight:300">Estrelas</span> <span class="w" style="font-weight:300">não</span> <span class="w" style="font-weight:300">dizem</span><br><span class="w rainbow">nada pra gente.</span></h1>
+    <p class="body c" id="b0" style="margin-top:60px">Cinco estrelas dizem que a comida é boa. Não dizem como você foi tratade.</p>
+  </div>
+  <!-- 1 quatro perguntas -->
+  <div class="scene" id="s1">
+    <h1 class="disp c" id="h1" style="font-size:150px"><span class="w">Quatro</span><br><span class="w" style="color:var(--yellow)">perguntas.</span></h1>
+    <div class="rule" id="r1" style="width:520px;margin:60px 0"></div>
+    <p class="disp c" id="h1b" style="font-size:78px;font-weight:400"><span class="w">Quem</span> <span class="w">esteve</span> <span class="w">lá</span> <span class="w rainbow" style="font-weight:500">responde.</span></p>
+  </div>
+<div class="scene" id="s2"><div class="small c" style="color:var(--coral)" id="s2e">pergunta 1 de 4</div><div class="pct" id="s2p" style="color:var(--coral);margin-top:20px">0%</div><div class="disp c" id="s2t" style="font-size:130px;margin:0 0 60px"><span class="w">Atendimento</span></div><div class="bar" id="s2b"><i style="background:var(--coral)"></i></div><div class="qcard" id="s2q" style="margin-top:70px"><p class="c">A equipe te tratou bem? Sem constrangimento, sem olhar torto, sem insistir no “senhor”.</p></div></div>
+<div class="scene" id="s3"><div class="small c" style="color:var(--orange)" id="s3e">pergunta 2 de 4</div><div class="pct" id="s3p" style="color:var(--orange);margin-top:20px">0%</div><div class="disp c" id="s3t" style="font-size:130px;margin:0 0 60px"><span class="w">Afeto</span></div><div class="bar" id="s3b"><i style="background:var(--orange)"></i></div><div class="qcard" id="s3q" style="margin-top:70px"><p class="c">Dava para ficar à vontade com quem você ama? Mão dada, beijo, sem ninguém encarar.</p></div></div>
+<div class="scene" id="s4"><div class="small c" style="color:var(--yellow)" id="s4e">pergunta 3 de 4</div><div class="pct" id="s4p" style="color:var(--yellow);margin-top:20px">0%</div><div class="disp c" id="s4t" style="font-size:130px;margin:0 0 60px"><span class="w">Banheiro</span></div><div class="bar" id="s4b"><i style="background:var(--yellow)"></i></div><div class="qcard" id="s4q" style="margin-top:70px"><p class="c">E o banheiro? Deu para usar sem pergunta, sem barrar, sem ser questionade.</p></div></div>
+<div class="scene" id="s5"><div class="small c" style="color:var(--turq)" id="s5e">pergunta 4 de 4</div><div class="pct" id="s5p" style="color:var(--turq);margin-top:20px">0%</div><div class="disp c" id="s5t" style="font-size:130px;margin:0 0 60px"><span class="w">Clientela</span></div><div class="bar" id="s5b"><i style="background:var(--turq)"></i></div><div class="qcard" id="s5q" style="margin-top:70px"><p class="c">E as outras pessoas no ambiente? Quem frequenta também faz o lugar.</p></div></div>
+  <!-- 6 anel -->
+  <div class="scene" id="s6">
+    <p class="disp c" id="t6" style="font-size:88px;font-weight:400;margin-bottom:70px"><span class="w">Os</span> <span class="w">quatro</span> <span class="w">viram</span> <span class="w rainbow" style="font-weight:500">uma nota.</span></p>
+    <div class="nring" id="ring"><div class="track"></div><div class="fill"></div><div class="hole"><b id="nota">0.0</b></div></div>
+    <div class="badge-big" id="bb" style="margin-top:60px">Acolhedor</div>
+    <p class="body c" id="b6" style="margin-top:50px">Selo só depois de cinco pessoas. Uma opinião não faz média.</p>
+  </div>
+  <!-- 7 fecho -->
+  <div class="scene" id="s7">
+    <div id="confs"></div>
+    <div class="small c" id="e7">em fase de testes · Android</div>
+    <h1 class="disp c" id="t7" style="font-size:150px;margin-top:30px"><span class="w" style="font-weight:300">Quanta</span> <span class="w rainbow">cor</span><br><span class="w" style="font-weight:300">tem esse</span> <span class="w">lugar?</span></h1>
+    <p class="body c" id="b7" style="margin-top:60px">Irise o último lugar que te fez sentir bem-vinde.</p>
+    <span class="pill" id="cta" style="background:var(--coral);margin-top:70px;box-shadow:0 20px 60px -20px rgba(244,115,111,.8)">O link está na bio</span>
+    <div class="handle" id="handle" style="margin-top:80px"><span class="mark" style="width:70px;height:70px"></span><span>@irisapp</span></div>
+  </div>
+  <div class="brand" id="brand"><span class="mark"></span><span>Iris<b>a</b></span></div>
+</div>
+<script>
+const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
+const EO="cubic-bezier(.2,.7,.2,1)", BACK="cubic-bezier(.3,1.4,.4,1)";
+const Q=new URLSearchParams(location.search), K=Number(Q.get("k")||1);
+const A=(el,kf,start,dur,ease=EO,extra={})=>el&&el.animate(kf,Object.assign({delay:start*K,duration:dur,easing:ease,fill:"both"},extra));
+const IN_BLUR=[{opacity:0,transform:"translateY(40px)",filter:"blur(16px)"},{opacity:1,transform:"none",filter:"blur(0)"}];
+const POP=[{opacity:0,transform:"translateY(30px) scale(.85)"},{opacity:1,transform:"none"}];
+const SLAM=[{opacity:0,transform:"scale(1.6)",filter:"blur(18px)"},{opacity:1,transform:"scale(1)",filter:"blur(0)"}];
+const words=(sel,start,step=110,dur=800)=>$$(sel+" .w").forEach((w,i)=>A(w,IN_BLUR,start+i*step,dur));
+const scene=(id,a,b,ex=450)=>{const s=$(id);A(s,[{opacity:0},{opacity:1}],a,350,"linear");A(s,[{opacity:1,transform:"none",filter:"blur(0)"},{opacity:0,transform:"translateY(-60px) scale(.98)",filter:"blur(14px)"}],b-ex/K,ex,"ease-in")};
+const count=(sel,start,dur,to,fmt)=>ticks.push(t=>{const p=Math.max(0,Math.min(1,(t-start*K)/dur)),e=1-Math.pow(1-p,3);$(sel).textContent=fmt(e*to)});
+const ticks=[];
+A($(".h1"),[{transform:"translate(0,0) rotate(0)"},{transform:"translate(6%,-5%) rotate(10deg)"}],0,9000,"ease-in-out",{iterations:Infinity,direction:"alternate"});
+A($(".h2"),[{transform:"translate(0,0) rotate(0)"},{transform:"translate(-6%,4%) rotate(-8deg)"}],0,11000,"ease-in-out",{iterations:Infinity,direction:"alternate"});
+const confetti=(box,start)=>{let s=11;const r=()=>(s=s*17387%2147483647)/2147483647;const cs=["#F4736F","#F5A45D","#F0CA75","#5CC9B4","#6AA8EE","#AE96F2"];
+ for(let k=0;k<90;k++){const c=document.createElement("i");c.className="conf";c.style.background=cs[k%6];c.style.left=(540+(r()-.5)*300)+"px";c.style.top="800px";if(k%3===0)c.style.borderRadius="50%";box.appendChild(c);
+  const dx=(r()-.5)*1300,dy=-(300+r()*600),rot=(r()-.5)*900,d=2200+r()*1200;
+  A(c,[{opacity:0,transform:"translate(0,0) rotate(0)"},{opacity:1,transform:"translate("+dx*.5+"px,"+dy+"px) rotate("+rot/2+"deg)",offset:.35},{opacity:0,transform:"translate("+dx+"px,"+(dy+1500)+"px) rotate("+rot+"deg)"}],start+r()*400,d,"cubic-bezier(.2,.7,.3,1)")}};
+const TOTAL=40000;
+A($("#brand"),[{opacity:0},{opacity:1}],600,800,"linear");
+// 0 gancho 0–5.6
+scene("#s0",0,5600);
+A($("#st"),[{opacity:0,transform:"scale(1.4)",filter:"blur(12px)"},{opacity:1,transform:"none",filter:"blur(0)"}],150,700,"cubic-bezier(.2,.9,.3,1)");
+A($("#stl"),[{transform:"scaleX(0) rotate(-6deg)"},{transform:"scaleX(1) rotate(-6deg)"}],1100,500);
+words("#h0",1500,130,800);
+A($("#b0"),IN_BLUR,3000,800);
+// 1 quatro 5.6–9.6
+scene("#s1",5600,9600);
+words("#h1",5700,200,800);
+A($("#r1"),[{transform:"scaleX(0)"},{transform:"scaleX(1)"}],6500,700);
+words("#h1b",6900,130,800);
+// 2–5 perguntas
+[["#s2",9600,14600,30],["#s3",14600,19600,30],["#s4",19600,24000,25],["#s5",24000,28400,15]].forEach(([id,a,b,v])=>{
+  scene(id,a,b);
+  A($(id+"e"),IN_BLUR,a+100,600);
+  A($(id+"p"),SLAM,a+250,600,"cubic-bezier(.2,.9,.3,1)");
+  count(id+"p",a+300,1100,v,x=>Math.round(x)+"%");
+  words(id+"t",a+700,120,700);
+  A($(id+"b i"),[{transform:"scaleX(0)"},{transform:"scaleX("+v/30+")"}],a+900,900);
+  A($(id+"q"),POP,a+1500,700,BACK);
+});
+// 6 anel 28.4–34.4
+scene("#s6",28400,34400);
+words("#t6",28500,110,800);
+A($("#ring"),[{opacity:0,transform:"scale(.6) rotate(-90deg)"},{opacity:1,transform:"none"}],29200,900,BACK);
+ticks.push(t=>{const p=Math.max(0,Math.min(1,(t-29900*K)/1500)),e=1-Math.pow(1-p,3);$("#ring").style.setProperty("--p",(e*94)+"%");$("#nota").textContent=(e*4.7).toFixed(1)});
+A($("#bb"),[{opacity:0,transform:"scale(.3)"},{opacity:1,transform:"none"}],31500,600,BACK);
+A($("#b6"),IN_BLUR,32000,800);
+// 7 fecho 34.4–40
+scene("#s7",34400,TOTAL+1000);
+confetti($("#confs"),34600);
+A($("#e7"),IN_BLUR,34500,700);
+words("#t7",34700,150,900);
+A($("#b7"),IN_BLUR,36000,800);
+A($("#cta"),[{opacity:0,transform:"translateY(60px)"},{opacity:1,transform:"none"}],36600,800,BACK);
+A($("#cta"),[{transform:"scale(1)"},{transform:"scale(1.05)"}],37400,700,"ease-in-out",{iterations:Infinity,direction:"alternate"});
+A($("#handle"),[{opacity:0,transform:"translateY(50px)",filter:"blur(12px)"},{opacity:1,transform:"none",filter:"blur(0)"}],37200,800);
+A($("#brand"),[{opacity:1},{opacity:0}],34400,300,"linear");
+window.__setT=function(t){document.getAnimations().forEach(a=>{a.pause();a.currentTime=t});ticks.forEach(f=>f(t))};
+window.__TOTAL=TOTAL*K;
+const fit=()=>{const k=Math.min(innerWidth/1080,innerHeight/1920);$("#stage").style.transform="scale("+k+")"};
+if(Q.has("capture")){document.documentElement.classList.add("capture");window.__setT(0)}
+else{fit();addEventListener("resize",fit);let t0=performance.now();(function loop(now){const t=(now-t0)%(TOTAL*K);window.__setT(t);requestAnimationFrame(loop)})(t0)}
+</script>
+</body></html>

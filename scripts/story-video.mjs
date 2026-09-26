@@ -12,12 +12,16 @@ const FPS = Number(process.env.FPS ?? 30);
 const MODE = process.env.MODE ?? "story";
 const CFG = { story: { k: 1.2245, bio: false, out: "docs/Irisa-story.mp4" }, reels: { k: 1.592, bio: true, out: "docs/Irisa-reels.mp4" }, storybio: { k: 1.2245, bio: true, out: "docs/Irisa-story-bio.mp4" } }[MODE];
 if (!CFG) throw new Error("MODE deve ser story, reels ou storybio");
-const OUT = process.env.OUT ?? CFG.out;
+// Outra página: node scripts/story-video.mjs docs/reels-2.html [docs/Irisa-reels-2.mp4]  (k=1, sem fecho de bio)
+const SRC = process.argv[2] ?? "docs/story.html";
+const OUT = process.argv[3] ?? process.env.OUT ?? (process.argv[2] ? SRC.replace(/^docs\//, "docs/Irisa-").replace(/\.html$/, ".mp4") : CFG.out);
+const KQ = process.argv[2] ? (process.env.K ?? 1) : CFG.k;
+const BIO = process.argv[2] ? false : CFG.bio;
 const ffmpeg = process.env.FFMPEG ?? "ffmpeg";
 
 const b = await chromium.launch({ executablePath: process.env.PW_CHROMIUM ?? "/opt/pw-browsers/chromium", args: ["--ignore-certificate-errors"] });
 const pg = await b.newPage({ viewport: { width: 1080, height: 1920 }, deviceScaleFactor: 1 });
-await pg.goto("file://" + resolve("docs/story.html") + `?capture&k=${CFG.k}` + (CFG.bio ? "&bio" : ""), { waitUntil: "networkidle" });
+await pg.goto("file://" + resolve(SRC) + `?capture&k=${KQ}` + (BIO ? "&bio" : ""), { waitUntil: "networkidle" });
 await pg.evaluate(() => document.fonts.ready);
 const total = await pg.evaluate(() => window.__TOTAL);
 const frames = Math.round((total / 1000) * FPS);
