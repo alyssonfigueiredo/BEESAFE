@@ -1,0 +1,135 @@
+[
+ {
+  "id": "story-01",
+  "quando": "2026-09-26T12:00:00-03:00",
+  "tipo": "STORY",
+  "midias": ["https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/fervent-edison-4zkl0b/docs/stories-2/01.png"],
+  "legenda": "",
+  "primeiro_comentario": "",
+  "publicado": false
+ },
+ {
+  "id": "carrossel-3",
+  "quando": "2026-09-26T18:00:00-03:00",
+  "tipo": "POST",
+  "midias": [
+   "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/fervent-edison-4zkl0b/docs/carrossel-3/01.png",
+   "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/fervent-edison-4zkl0b/docs/carrossel-3/02.png",
+   "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/fervent-edison-4zkl0b/docs/carrossel-3/03.png",
+   "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/fervent-edison-4zkl0b/docs/carrossel-3/04.png",
+   "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/fervent-edison-4zkl0b/docs/carrossel-3/05.png",
+   "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/fervent-edison-4zkl0b/docs/carrossel-3/06.png",
+   "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/fervent-edison-4zkl0b/docs/carrossel-3/07.png",
+   "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/fervent-edison-4zkl0b/docs/carrossel-3/08.png"
+  ],
+  "legenda": "Quem registra tem medo de uma coisa: que alguém descubra que foi ela.\n\nPor isso a Irisa foi feita pra não saber quem você é.\n\nSem nome — seu relato aparece sem autor, pra quem lê, pro lugar, pra gente.\nSem perfil — não existe página de usuário, ninguém abre seu histórico.\nSem rastro — o ponto do relato de hoje sai deslocado, ninguém te acha pela localização.\n\nExcluir a conta apaga tudo, na hora, dentro do app. Anônimo de verdade não é promessa: é como o banco de dados foi construído.\n\nO que te faria registrar sem medo? Conta aqui embaixo. 🌈\n\nO link está na bio.\n\n#Irisa #LGBTQIA #Orgulho #AppLGBT #Curitiba #Recife #JoãoPessoa #Joinville #Natal #SãoPaulo #RioDeJaneiro #Anonimato",
+  "primeiro_comentario": "bit.ly/appirisa",
+  "publicado": false
+ },
+ {
+  "id": "story-02",
+  "quando": "2026-09-27T12:00:00-03:00",
+  "tipo": "STORY",
+  "midias": ["https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/fervent-edison-4zkl0b/docs/stories-2/02.png"],
+  "legenda": "",
+  "primeiro_comentario": "",
+  "publicado": false
+ },
+ {
+  "id": "post-bemvinde",
+  "quando": "2026-09-27T18:00:00-03:00",
+  "tipo": "POST",
+  "midias": ["https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/fervent-edison-4zkl0b/docs/post-bemvinde/01.png"],
+  "legenda": "Uma escolha de palavra: bem-vinde.\n\n\"Bem-vindo\" deixa gente de fora. O mapa é de todo mundo que entra pela porta — e a linguagem do app segue essa regra em tudo: identificade, questionade, recebide.\n\nQual foi a primeira vez que alguém usou uma palavra assim com você? 🌈\n\nO link está na bio.\n\n#Irisa #LGBTQIA #Orgulho #AppLGBT #BemVinde #Curitiba #Recife #JoãoPessoa #Joinville #Natal #SãoPaulo #RioDeJaneiro",
+  "primeiro_comentario": "bit.ly/appirisa",
+  "publicado": false
+ },
+ {
+  "id": "story-03",
+  "quando": "2026-09-28T12:00:00-03:00",
+  "tipo": "STORY",
+  "midias": ["https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/fervent-edison-4zkl0b/docs/stories-2/03.png"],
+  "legenda": "",
+  "primeiro_comentario": "",
+  "publicado": false
+ },
+ {
+  "id": "carrossel-4",
+  "quando": "2026-09-28T18:00:00-03:00",
+  "tipo": "POST",
+  "midias": [
+   "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/fervent-edison-4zkl0b/docs/carrossel-4/01.png",
+   "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/fervent-edison-4zkl0b/docs/carrossel-4/02.png",
+   "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/fervent-edison-4zkl0b/docs/carrossel-4/03.png",
+   "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/fervent-edison-4zkl0b/docs/carrossel-4/04.png",
+   "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/fervent-edison-4zkl0b/docs/carrossel-4/05.png",
+   "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/fervent-edison-4zkl0b/docs/carrossel-4/06.png",
+   "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/fervent-edison-4zkl0b/docs/carrossel-4/07.png",
+   "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/fervent-edison-4zkl0b/docs/carrossel-4/08.png"
+  ],
+  "legenda": "Aconteceu agora. Quatro números que valem em qualquer cidade do Brasil — salva este post.\n\n190 e 192: polícia e SAMU. 100: denúncia de LGBTIfobia, 24h, de graça. 188: CVV, pra quem precisa conversar, a qualquer hora.\n\nNo app é um botão na tela inicial: toca, escolhe o número, liga — sem cadastro, sem tela no meio.\n\nDepois da emergência, a aba Apoio tem endereço e contato de cada serviço em Curitiba, Recife, João Pessoa, Joinville, Natal, Rio e São Paulo. Conferimos os contatos a cada seis meses.\n\nQual desses números você já conhecia? 🚨\n\nO link está na bio.\n\n#Irisa #LGBTQIA #Orgulho #AppLGBT #Disque100 #Curitiba #Recife #JoãoPessoa #Joinville #Natal #SãoPaulo #RioDeJaneiro",
+  "primeiro_comentario": "bit.ly/appirisa",
+  "publicado": false
+ },
+ {
+  "id": "story-04",
+  "quando": "2026-09-29T12:00:00-03:00",
+  "tipo": "STORY",
+  "midias": ["https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/fervent-edison-4zkl0b/docs/stories-2/04.png"],
+  "legenda": "",
+  "primeiro_comentario": "",
+  "publicado": false
+ },
+ {
+  "id": "carrossel-5",
+  "quando": "2026-09-30T18:00:00-03:00",
+  "tipo": "POST",
+  "midias": [
+   "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/fervent-edison-4zkl0b/docs/carrossel-5/01.png",
+   "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/fervent-edison-4zkl0b/docs/carrossel-5/02.png",
+   "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/fervent-edison-4zkl0b/docs/carrossel-5/03.png",
+   "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/fervent-edison-4zkl0b/docs/carrossel-5/04.png",
+   "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/fervent-edison-4zkl0b/docs/carrossel-5/05.png",
+   "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/fervent-edison-4zkl0b/docs/carrossel-5/06.png",
+   "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/fervent-edison-4zkl0b/docs/carrossel-5/07.png"
+  ],
+  "legenda": "Uma dúvida que todo mundo tem: se rolou uma confusão perto de um bar, a culpa é do bar?\n\nNão. A violência acontece no beco, na praça, no ponto de ônibus — quem está perto não é culpado por ela.\n\nA regra da Irisa, em duas frases: o lugar recebe cor (quatro perguntas, respondidas por quem entrou — atendimento, afeto, banheiro, clientela) e a rua recebe aviso (relatos num raio de 100 m viram nível de atenção da região, visível no mapa e na ficha do bairro).\n\nA nota só cai quando o relato aponta o lugar. Fora disso, o bar aparece com o contexto da região — nunca com a punição. E sem relato não quer dizer sem violência: quer dizer que ninguém registrou ainda. Por isso a Irisa nunca diz \"aqui é tranquilo\".\n\nOs dois juntos fazem o mapa. Um sem o outro é metade da história.\n\nO link está na bio.\n\n#Irisa #LGBTQIA #Orgulho #AppLGBT #LGBTfobia #Curitiba #Recife #JoãoPessoa #Joinville #Natal #SãoPaulo #RioDeJaneiro",
+  "primeiro_comentario": "bit.ly/appirisa",
+  "publicado": false
+ },
+ {
+  "id": "carrossel-6",
+  "quando": "2026-10-02T18:00:00-03:00",
+  "tipo": "POST",
+  "midias": [
+   "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/fervent-edison-4zkl0b/docs/carrossel-6/01.png",
+   "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/fervent-edison-4zkl0b/docs/carrossel-6/02.png",
+   "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/fervent-edison-4zkl0b/docs/carrossel-6/03.png",
+   "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/fervent-edison-4zkl0b/docs/carrossel-6/04.png",
+   "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/fervent-edison-4zkl0b/docs/carrossel-6/05.png",
+   "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/fervent-edison-4zkl0b/docs/carrossel-6/06.png",
+   "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/fervent-edison-4zkl0b/docs/carrossel-6/07.png",
+   "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/fervent-edison-4zkl0b/docs/carrossel-6/08.png"
+  ],
+  "legenda": "O que perguntam no direct. Seis dúvidas sobre a Irisa, respondidas sem rodeio.\n\n\"Se eu registrar, o bar fica sabendo que fui eu.\" Mito. Ninguém vê quem registrou — nem o bar, nem outra pessoa, nem a gente.\n\n\"Preciso criar perfil, colocar foto, nome…\" Mito. Só um e-mail pra conta existir.\n\n\"Se um bairro não tem relato, ele é tranquilo.\" Mito. Sem relato quer dizer que ninguém registrou ainda — o app nunca diz \"região tranquila\", de propósito.\n\n\"Um lugar só ganha selo depois de cinco avaliações.\" Verdade. Antes disso ele mostra a nota que já tem, mas sem selo.\n\n\"Relato na esquina derruba a nota do bar.\" Mito. Na esquina, vira aviso da região.\n\n\"Ainda não tem no iPhone.\" Verdade. Android primeiro, em fase de testes.\n\nManda nos comentários: qual mito você também já acreditou? A próxima rodada sai daqui. 🌈\n\nO link está na bio · em fase de testes · Android.\n\n#Irisa #LGBTQIA #Orgulho #AppLGBT #MitoOuVerdade #Curitiba #Recife #JoãoPessoa #Joinville #Natal #SãoPaulo #RioDeJaneiro",
+  "primeiro_comentario": "bit.ly/appirisa",
+  "publicado": false
+ },
+ {
+  "id": "carrossel-7",
+  "quando": "2026-10-05T18:00:00-03:00",
+  "tipo": "POST",
+  "midias": [
+   "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/fervent-edison-4zkl0b/docs/carrossel-7/01.png",
+   "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/fervent-edison-4zkl0b/docs/carrossel-7/02.png",
+   "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/fervent-edison-4zkl0b/docs/carrossel-7/03.png",
+   "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/fervent-edison-4zkl0b/docs/carrossel-7/04.png",
+   "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/fervent-edison-4zkl0b/docs/carrossel-7/05.png",
+   "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/fervent-edison-4zkl0b/docs/carrossel-7/06.png",
+   "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/fervent-edison-4zkl0b/docs/carrossel-7/07.png"
+  ],
+  "legenda": "Dá pra saber como é um bairro antes de chegar?\n\nA ficha do bairro é onde os dois lados do mapa se encontram: os lugares avaliados pela comunidade e os relatos registrados na região, numa tela só.\n\nEla mostra o total de relatos (e quantos foram graves), o tipo, onde e quando aconteceram, e o nível de atenção da área — atenção ou alerta, pelo peso dos relatos nos últimos 180 dias. Os lugares que já têm nota de acolhimento aparecem primeiro.\n\nUma coisa que ela nunca diz: que um bairro sem relato é um bairro seguro. Sem relato quer dizer que ninguém registrou ainda — dizer o contrário seria a falha mais perigosa que o app poderia cometer.\n\nChega lá pelo ranking do Início ou pelo bairro na ficha de qualquer lugar.\n\nQual bairro você quer ver primeiro? Comenta aqui embaixo. 🌈\n\nO link está na bio · em fase de testes · Android.\n\n#Irisa #LGBTQIA #Orgulho #AppLGBT #Curitiba #Recife #JoãoPessoa #Joinville #Natal #SãoPaulo #RioDeJaneiro",
+  "primeiro_comentario": "bit.ly/appirisa",
+  "publicado": false
+ }
+]

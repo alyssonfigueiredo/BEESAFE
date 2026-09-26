@@ -1,0 +1,32 @@
+name: Publicar Instagram
+
+on:
+  schedule:
+    - cron: "*/30 * * * *"
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+jobs:
+  publicar:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Publica o que venceu
+        env:
+          META_IG_USER_ID: ${{ secrets.META_IG_USER_ID }}
+          META_ACCESS_TOKEN: ${{ secrets.META_ACCESS_TOKEN }}
+        run: node scripts/publicar-instagram.mjs
+      - name: Grava a fila atualizada
+        run: |
+          if ! git diff --quiet docs/legendas/fila.json; then
+            git config user.name "github-actions[bot]"
+            git config user.email "github-actions[bot]@users.noreply.github.com"
+            git add docs/legendas/fila.json
+            git commit -m "Fila do Instagram: atualiza status de publicação"
+            git push
+          fi
