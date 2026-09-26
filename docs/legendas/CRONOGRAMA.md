@@ -20,6 +20,8 @@ comentário no mesmo dia. Link nunca vai na legenda nem na arte, só no comentá
 
 | dia | hora | peça | legenda |
 |---|---|---|---|
+| sáb 26/09 | 18h | story `story-hoje.png` (radar + "e se a resposta já estivesse no mapa?") | sem legenda |
+| dom 27/09 | 12h | story `story-cidades.png` (sete cidades no ar) | sem legenda |
 | ter 29/09 | 19h | carrossel 3 — Sem nome. Sem perfil. Sem rastro. | `carrossel-3.txt` |
 | qua 30/09 | 19h | post-bemvinde | `post-bemvinde.txt` |
 | qui 01/10 | 19h | carrossel 4 — Emergência e apoio por cidade | `carrossel-4.txt` |
