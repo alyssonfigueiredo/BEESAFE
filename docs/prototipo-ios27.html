@@ -137,7 +137,31 @@
   .screen.fade{animation:fade .28s ease}
   @keyframes push{from{transform:translateX(100%)}to{transform:translateX(0)}}
   @keyframes fade{from{opacity:0;transform:scale(.985)}to{opacity:1;transform:none}}
-  @media (prefers-reduced-motion:reduce){ .screen.enter,.screen.fade,.sos::after,.lens{animation:none;transition:none} }
+  /* ---------- Movimento: o conceito do app é cinza virando cor ---------- */
+  .screens{animation:bloom 1.8s ease-out backwards}
+  @keyframes bloom{from{filter:grayscale(1)}to{filter:grayscale(0)}}
+  .place.in,.card.in,.stat.in{animation:rise .55s cubic-bezier(.2,.8,.2,1) both;animation-delay:calc(var(--i,0)*55ms)}
+  @keyframes rise{from{opacity:0;transform:translateY(10px)}}
+  .in .rb i::after,.in .strip i::after,.in .bar i::after{animation:grow .9s cubic-bezier(.2,.8,.2,1) both;animation-delay:calc(var(--i,0)*55ms + 160ms)}
+  @keyframes grow{from{width:0}}
+  .thumb{transition:filter .7s ease}
+  .thumb.gray{filter:grayscale(1) opacity(.75)}
+  .in .thumb:not(.gray){animation:colorin 1.2s ease both;animation-delay:calc(var(--i,0)*55ms + 120ms)}
+  @keyframes colorin{from{filter:grayscale(1) opacity(.75)}to{filter:grayscale(0) opacity(1)}}
+  .iris .seg{transform-box:view-box;transform-origin:center;animation:pop .5s cubic-bezier(.2,.9,.3,1.25) both}
+  @keyframes pop{from{transform:scale(.55);opacity:0}}
+  .sweep{transform-box:view-box;transform-origin:50px 50px;animation:radar 7s linear infinite}
+  @keyframes radar{to{transform:rotate(360deg)}}
+  .blip{animation:blink 2.4s ease-in-out infinite}
+  @keyframes blink{50%{opacity:.25}}
+  .pin{transform-box:fill-box;transform-origin:center;animation:drop .5s cubic-bezier(.2,.8,.2,1) both}
+  @keyframes drop{from{opacity:0;transform:translateY(-10px) scale(.6)}}
+  .halo{animation:breathe 4.5s ease-in-out infinite}
+  @keyframes breathe{50%{opacity:.10}}
+  .rbline{background-size:200% 100%;animation:shimmer 6s linear infinite}
+  .rbtext{background-size:200% 100%;animation:shimmer 6s linear infinite}
+  @keyframes shimmer{to{background-position:-200% 0}}
+  @media (prefers-reduced-motion:reduce){ *,*::before,*::after{animation:none!important;transition:none!important} }
 
   /* tipografia do app */
   .eyebrow{font:600 11px var(--body);letter-spacing:.08em;text-transform:uppercase;color:var(--dim)}
@@ -344,8 +368,8 @@
 
 <header class="top">
   <div>
-    <h1><span id="topmark"></span>Irisa · protótipo iOS 27 · v8</h1>
-    <p>Higienizado: uma escala de texto só (11–30), grade de 16/12, cartões largos sem borda, fundo aurora do story, fio arco-íris no cartão principal e a pergunta da marca em gradiente. Cores, fontes, estrutura e menus iguais. Nada aqui grava, liga ou envia.</p>
+    <h1><span id="topmark"></span>Irisa · protótipo iOS 27 · v9</h1>
+    <p>Movimento no conceito do app: tudo abre em cinza e ganha cor; lugar sem avaliação fica cinza; na ficha, cada pergunta respondida dá um quarto de cor à foto; o anel da nota enche gomo a gomo; o radar da marca gira. Nada aqui grava, liga ou envia.</p>
   </div>
   <div class="ctl">
     <div class="seg-sat" role="group" aria-label="Saturação">
@@ -550,7 +574,7 @@ function markSvg(size){
   let s="";for(let i=0;i<48;i++){s+=`<path d="${slice(48,35,i/48*2*Math.PI-Math.PI/2,(i+1)/48*2*Math.PI-Math.PI/2+.05)}" fill="${rc(i/48)}"/>`}
   const a0=-150*Math.PI/180,a1=-55*Math.PI/180,[sx,sy]=pt(33,a0),[ex,ey]=pt(33,a1);const id="sw"+Math.random().toString(36).slice(2,7);
   const sweep=desat("#5CC9B4"),coral=desat("#F4736F");
-  return `<svg viewBox="0 0 100 100" width="${size}" height="${size}" class="iris" aria-hidden="true"><defs><linearGradient id="${id}" gradientUnits="userSpaceOnUse" x1="${sx}" y1="${sy}" x2="${ex}" y2="${ey}"><stop offset="0" stop-color="${sweep}" stop-opacity="0"/><stop offset="1" stop-color="${sweep}" stop-opacity=".5"/></linearGradient></defs>${s}<path d="${slice(33,0,a0,a1)}" fill="url(#${id})"/><path d="M50 50L${ex} ${ey}" stroke="${sweep}" stroke-width="1.6" stroke-linecap="round" stroke-opacity=".75"/><circle cx="50" cy="50" r="25" fill="none" stroke="${sweep}" stroke-width=".8" stroke-opacity=".35"/><circle cx="66" cy="36" r="3.1" fill="${sweep}"/><circle cx="63" cy="62" r="2.4" fill="${coral}"/><circle cx="38" cy="34" r="1.9" fill="${sweep}"/><circle cx="50" cy="50" r="13" fill="#1b1e29"/><circle cx="46.1" cy="45.6" r="2.86" fill="#fff"/></svg>`;
+  return `<svg viewBox="0 0 100 100" width="${size}" height="${size}" class="iris" aria-hidden="true"><defs><linearGradient id="${id}" gradientUnits="userSpaceOnUse" x1="${sx}" y1="${sy}" x2="${ex}" y2="${ey}"><stop offset="0" stop-color="${sweep}" stop-opacity="0"/><stop offset="1" stop-color="${sweep}" stop-opacity=".5"/></linearGradient></defs>${s}<g class="sweep"><path d="${slice(33,0,a0,a1)}" fill="url(#${id})"/><path d="M50 50L${ex} ${ey}" stroke="${sweep}" stroke-width="1.6" stroke-linecap="round" stroke-opacity=".75"/></g><circle cx="50" cy="50" r="25" fill="none" stroke="${sweep}" stroke-width=".8" stroke-opacity=".35"/><circle class="blip" cx="66" cy="36" r="3.1" fill="${sweep}"/><circle class="blip" style="animation-delay:.8s" cx="63" cy="62" r="2.4" fill="${coral}"/><circle class="blip" style="animation-delay:1.6s" cx="38" cy="34" r="1.9" fill="${sweep}"/><circle cx="50" cy="50" r="13" fill="#1b1e29"/><circle cx="46.1" cy="45.6" r="2.86" fill="#fff"/></svg>`;
 }
 /* IrisScore: a escala do arco-íris curvada no anel, com pupila */
 function irisScore(val,size=54){
@@ -558,7 +582,7 @@ function irisScore(val,size=54){
   const pt=(r,d)=>{const a=(d-90)*Math.PI/180;return [c+r*Math.cos(a),c+r*Math.sin(a)]};
   const ann=(a0,a1)=>{const[o0x,o0y]=pt(ro,a0),[o1x,o1y]=pt(ro,a1),[i1x,i1y]=pt(ri,a1),[i0x,i0y]=pt(ri,a0);return `M${o0x} ${o0y}A${ro} ${ro} 0 0 1 ${o1x} ${o1y}L${i1x} ${i1y}A${ri} ${ri} 0 0 0 ${i0x} ${i0y}Z`};
   let s=`<circle cx="${c}" cy="${c}" r="${(ro+ri)/2}" fill="none" stroke="${v("--border")}" stroke-width="${ro-ri}"/>`;
-  SCALE.forEach((col,i)=>{const f=Math.max(0,Math.min(1,val-i));if(f>.01)s+=`<path d="${ann(i*72+.6,i*72+72*f)}" fill="${v(col)}"/>`});
+  SCALE.forEach((col,i)=>{const f=Math.max(0,Math.min(1,val-i));if(f>.01)s+=`<path class="seg" style="animation-delay:${220+i*110}ms" d="${ann(i*72+.6,i*72+72*f)}" fill="${v(col)}"/>`});
   s+=`<circle cx="${c}" cy="${c}" r="${pu}" fill="${v("--pupil")}"/><circle cx="${c-pu*.3}" cy="${c-pu*.32}" r="${pu*.22}" fill="#fff"/>`;
   return `<svg viewBox="0 0 ${size} ${size}" width="${size}" height="${size}" class="iris" aria-label="nota ${val}">${s}</svg>`;
 }
@@ -568,8 +592,8 @@ function placeCard(p,showDist=true){
   const onde=[p.nb,showDist?p.dist:null].filter(Boolean).join(" · ");
   const body=p.score==null
     ?`<div class="p" style="font-size:13.5px">Quanta cor tem esse lugar? Seja a primeira pessoa a dizer.</div><div class="small">${esc(onde)}</div>`
-    :`<div class="row">${rainbow(p.score,8)}<span class="score" style="color:${v(scoreColor(p.score))}">${p.score.toFixed(1)}</span>${p.badge?badge(p.badge):""}</div>${strip(p.ax)}<div class="small">${p.n} avaliaç${p.n===1?"ão":"ões"}${p.n<5?" de 5 necessárias":""} · ${esc(onde)}</div>`;
-  return `<div class="place" data-go="lugar" data-id="${p.id}"><div class="thumb ${p.cat}">${ICONS[p.cat]}</div><div class="body"><div class="between"><div class="pname">${esc(p.name)}${p.verified?ICONS.check:""}</div><span class="cat">${CATS[p.cat]}</span></div>${body}${p.area?areaSm(p.area):""}</div></div>`;
+    :`<div class="row">${rainbow(p.score,8)}<span class="score" style="color:${v(scoreColor(p.score))}" data-count="${p.score.toFixed(1)}">${p.score.toFixed(1)}</span>${p.badge?badge(p.badge):""}</div>${strip(p.ax)}<div class="small">${p.n} avaliaç${p.n===1?"ão":"ões"}${p.n<5?" de 5 necessárias":""} · ${esc(onde)}</div>`;
+  return `<div class="place" data-go="lugar" data-id="${p.id}"><div class="thumb ${p.cat}${p.score==null?" gray":""}">${ICONS[p.cat]}</div><div class="body"><div class="between"><div class="pname">${esc(p.name)}${p.verified?ICONS.check:""}</div><span class="cat">${CATS[p.cat]}</span></div>${body}${p.area?areaSm(p.area):""}</div></div>`;
 }
 function occCard(o){
   const t=T[o.type],s=SEV[o.sev];
@@ -597,11 +621,11 @@ function mapSvg(opts={}){
   s+=`<path d="M${w*.1} ${h*.9}Q${w*.5} ${h*.5} ${w*.95} ${h*.15}" stroke-width="12"/></g>`;
   s+=`<g stroke="#d9d6cf" stroke-width="1.2" fill="none">`;for(let i=0;i<9;i++){const y=h*(.06+i*.11);s+=`<path d="M0 ${y}C${w*.3} ${y+R()*40-20},${w*.6} ${y-R()*40+20},${w} ${y}" stroke-dasharray="0" opacity=".0"/>`}s+=`</g>`;
   // halos de área
-  if(halos)RANK.forEach(a=>{const[,c]=riskOf(a.total,a.high);s+=`<circle cx="${a.x*w}" cy="${a.y*h}" r="${a.r*w}" fill="${v(c)}" opacity=".22"/><circle cx="${a.x*w}" cy="${a.y*h}" r="${a.r*w}" fill="none" stroke="${v(c)}" stroke-width="1.5" opacity=".5"/>`});
+  if(halos)RANK.forEach(a=>{const[,c]=riskOf(a.total,a.high);s+=`<circle class="halo" cx="${a.x*w}" cy="${a.y*h}" r="${a.r*w}" fill="${v(c)}" opacity=".22"/><circle cx="${a.x*w}" cy="${a.y*h}" r="${a.r*w}" fill="none" stroke="${v(c)}" stroke-width="1.5" opacity=".5"/>`});
   // lugares
-  if(places)PLACES.forEach(p=>{const c=p.score==null?"--dim":scoreColor(p.score);s+=`<g class="pin" data-go="lugar" data-id="${p.id}"><circle cx="${p.x*w}" cy="${p.y*h}" r="14" fill="${v(c)}" opacity=".18"/><circle cx="${p.x*w}" cy="${p.y*h}" r="7" fill="${v(c)}" stroke="#fff" stroke-width="2.5"/></g>`});
+  if(places)PLACES.forEach((p,i)=>{const c=p.score==null?"--dim":scoreColor(p.score);s+=`<g class="pin" style="animation-delay:${i*45}ms" data-go="lugar" data-id="${p.id}"><circle cx="${p.x*w}" cy="${p.y*h}" r="14" fill="${v(c)}" opacity=".18"/><circle cx="${p.x*w}" cy="${p.y*h}" r="7" fill="${v(c)}" stroke="#fff" stroke-width="2.5"/></g>`});
   // relatos
-  if(occ)OCC.forEach(o=>{const c=SEV[o.sev].c;s+=`<g class="pin" data-occ="${o.id}"><circle cx="${o.x*w}" cy="${o.y*h}" r="11" fill="${v(c)}" stroke="#fff" stroke-width="2.5"/><path transform="translate(${o.x*w-5} ${o.y*h-5.5}) scale(.42)" d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0zM12 9v4M12 17h.01" fill="none" stroke="#1b1e29" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></g>`});
+  if(occ)OCC.forEach((o,i)=>{const c=SEV[o.sev].c;s+=`<g class="pin" style="animation-delay:${400+i*70}ms" data-occ="${o.id}"><circle cx="${o.x*w}" cy="${o.y*h}" r="11" fill="${v(c)}" stroke="#fff" stroke-width="2.5"/><path transform="translate(${o.x*w-5} ${o.y*h-5.5}) scale(.42)" d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0zM12 9v4M12 17h.01" fill="none" stroke="#1b1e29" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></g>`});
   if(pick){s+=`<g><circle cx="${pick[0]*w}" cy="${pick[1]*h}" r="26" fill="${v("--coral")}" opacity=".18"/><circle cx="${pick[0]*w}" cy="${pick[1]*h}" r="9" fill="${v("--coral")}" stroke="#fff" stroke-width="3"/></g>`}
   return s+`</svg>`;
 }
@@ -621,8 +645,8 @@ function renderInicio(){
     <div class="stack"><div class="h">Lugares mais acolhedores</div>${primeiros.map(p=>placeCard(p,false)).join("")}<div class="small">O selo aparece a partir de 5 avaliações. Some a sua.</div></div>
     <div class="stack" style="padding-top:6px"><div class="h">Segurança na cidade</div><div class="small">Relatos anônimos da comunidade. Ponto no mapa, nunca nome de quem escreveu.</div></div>
     <div class="stats">
-      <div class="stat"><div class="lbl">Relatos<span class="tile sm turq">${ICONS.file}</span></div><span class="v">142</span><span class="small">em 12 meses</span></div>
-      <div class="stat"><div class="lbl">Últimos 30 dias<span class="tile sm yellow">${ICONS.clock}</span></div><span class="v" style="color:var(--yellow-ink)">23</span><span class="small">4 graves</span></div>
+      <div class="stat"><div class="lbl">Relatos<span class="tile sm turq">${ICONS.file}</span></div><span class="v" data-count="142">142</span><span class="small">em 12 meses</span></div>
+      <div class="stat"><div class="lbl">Últimos 30 dias<span class="tile sm yellow">${ICONS.clock}</span></div><span class="v" style="color:var(--yellow-ink)" data-count="23">23</span><span class="small">4 graves</span></div>
       <div class="stat"><div class="lbl">Mais frequente<span class="tile sm orange">${ICONS.msg}</span></div><span class="v" style="font-size:20px;line-height:1.15">Agressão verbal</span><span class="small">61 relatos</span></div>
       <div class="stat"><div class="lbl">Área crítica<span class="tile sm coral">${ICONS.pinIcon}</span></div><span class="v" style="color:var(--coral-ink);font-size:24px">Centro</span><span class="small">14 relatos · 4 graves</span></div>
     </div>
@@ -697,7 +721,7 @@ function renderPerfil(){
     <button class="btn lilac" data-toast="Protótipo: fila de moderação fora do escopo">Fila de moderação</button>
     <button class="btn ghost" data-toast="Protótipo: sessão fictícia">Sair</button>
     <button class="link center pad-b" style="color:var(--coral-ink);justify-content:center;font-size:14px" data-toast="Protótipo: nada é excluído">Excluir minha conta</button>
-    <div class="small center pad-b">Protótipo v8 · 26/09/2026</div>`;
+    <div class="small center pad-b">Protótipo v9 · 26/09/2026</div>`;
 }
 function renderRegistrar(mode="relato"){
   const el=document.getElementById("s-registrar");
@@ -733,7 +757,7 @@ function renderLugar(id){
   const form=`<div class="card" style="gap:14px"><div class="h">${p.id===2?"Sua avaliação":"Como foi lá?"}</div>${AXES.map((a,i)=>`<div class="stack" style="gap:6px"><div style="font:500 14px var(--body)">${a[2]}</div><div class="small">${a[3]}</div>${rainbow(p.id===2?[5,4,5,4][i]:0,16,true,a[0])}</div>`).join("")}<textarea class="input" id="rc" placeholder="Quer contar como foi? (opcional, até 500 caracteres)"></textarea><button class="btn yellow" data-toast="Protótipo: avaliação não enviada">${p.id===2?"Atualizar":"Enviar avaliação"}</button></div>`;
   el.innerHTML=`
     <div class="card hero" style="gap:8px">
-      <div class="thumb banner ${p.cat}">${ICONS[p.cat]}</div>
+      <div class="thumb banner ${p.cat}${p.score==null?" gray":""}" id="banner">${ICONS[p.cat]}</div>
       <div class="row"><div class="title" style="flex:1">${esc(p.name)}</div>${p.verified?ICONS.check.replace("<svg",'<svg style="width:20px;height:20px;stroke:var(--turq-ink);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round"'):""}</div>
       <div class="sub">${CATS[p.cat]} · <button class="link" style="text-decoration:underline;text-underline-offset:3px;font-weight:400" data-go="bairro" data-id="${p.nbId}">${p.nb}</button> · Curitiba</div>
       <div class="p">${p.addr}</div>
@@ -742,7 +766,7 @@ function renderLugar(id){
       <div class="question">Quanta cor tem esse lugar?</div>
       ${p.score==null?`<div class="sub" style="font-size:15px">Ninguém avaliou ainda. Seja a primeira pessoa a dizer.</div>`:`
       <div class="stack" style="gap:12px;margin-top:4px">
-        <div class="row" style="gap:14px">${irisScore(p.score,58)}<div class="stack" style="gap:4px;flex:1"><div class="bigscore" style="color:${v(scoreColor(p.score))}">${p.score.toFixed(1)}</div>${p.badge?badge(p.badge,true):""}<div class="small">${p.n} avaliaç${p.n===1?"ão":"ões"} de quem frequenta</div></div></div>
+        <div class="row" style="gap:14px">${irisScore(p.score,58)}<div class="stack" style="gap:4px;flex:1"><div class="bigscore" style="color:${v(scoreColor(p.score))}" data-count="${p.score.toFixed(1)}">${p.score.toFixed(1)}</div>${p.badge?badge(p.badge,true):""}<div class="small">${p.n} avaliaç${p.n===1?"ão":"ões"} de quem frequenta</div></div></div>
         ${p.badge?`<div class="small" style="color:var(--muted)">${BADGES[p.badge].note}</div>`:""}
         ${axes(p.ax)}
       </div>`}
@@ -751,6 +775,9 @@ function renderLugar(id){
     ${p.score==null||p.id===2?form:`<button class="btn ghost" id="openform">Avaliar este lugar</button><div id="formslot"></div>`}
     ${p.reviews.length?`<div class="stack"><div class="h">Avaliações</div>${p.reviews.map(r=>{const m=r.ax.reduce((a,b)=>a+b,0)/4;return `<div class="card" style="gap:6px"><div class="between">${rainbow(m,7)}<span class="small">${r.nick}${r.nick==="Lua"?" (você)":""} · ${r.when}</span></div>${axes(r.ax,5)}<div class="p">${esc(r.txt)}</div>${r.nick!=="Lua"?`<button class="flag" style="align-self:flex-start" data-toast="Protótipo: denúncia não enviada">Denunciar</button>`:""}</div>`}).join("")}</div>`:""}
     <div class="pad-b"><button class="flag" data-toast="Protótipo: denúncia não enviada">Denunciar este lugar</button></div>`;
+  // A cada pergunta respondida a foto ganha um quarto da cor: é o app inteiro em um gesto.
+  const colorir=()=>{const picks=[...el.querySelectorAll(".rb.pick")];const n=picks.filter(r=>[...r.querySelectorAll("i")].some(i=>i.style.getPropertyValue("--f").trim()==="100%")).length;const b=el.querySelector("#banner");if(!b||!picks.length)return;b.classList.remove("gray");b.style.filter=`grayscale(${1-n/4}) opacity(${.75+.25*n/4})`;if(n===4)toast("Esse lugar ganhou cor")};
+  el.addEventListener("click",e=>{if(e.target.closest(".rb.pick"))setTimeout(colorir,0)});
   const ob=el.querySelector("#openform");if(ob)ob.addEventListener("click",()=>{ob.hidden=true;const s=el.querySelector("#formslot");s.outerHTML=form;bindAll(el)});
 }
 function renderBairro(id){
@@ -778,6 +805,21 @@ function show(s,anim){
   document.querySelectorAll(".tab").forEach(b=>b.setAttribute("aria-selected",b.dataset.tab===tab));
   lens.style.transform=`translateX(${TABS.indexOf(tab)*100}%)`;
   el.scrollTop=0;
+  animateIn(el);
+}
+function animateIn(el){
+  const items=el.querySelectorAll(".place,.card,.stat");
+  items.forEach((x,i)=>{x.classList.remove("in");x.style.setProperty("--i",Math.min(i,9))});
+  void el.offsetWidth;
+  items.forEach(x=>x.classList.add("in"));
+  el.querySelectorAll("[data-count]").forEach(countUp);
+}
+function countUp(n){
+  const target=parseFloat(n.dataset.count),dec=(n.dataset.count.split(".")[1]||"").length;
+  if(matchMedia("(prefers-reduced-motion:reduce)").matches){n.textContent=target.toFixed(dec);return}
+  const t0=performance.now(),dur=1000;
+  const step=t=>{const k=Math.min(1,(t-t0)/dur),e=1-Math.pow(1-k,3);n.textContent=(target*e).toFixed(dec);if(k<1)requestAnimationFrame(step)};
+  requestAnimationFrame(step);
 }
 function goTab(s){stack=[{s}];show(s,"fade")}
 function go(s,id,extra){
