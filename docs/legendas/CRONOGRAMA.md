@@ -25,6 +25,7 @@ comentário no mesmo dia. Link nunca vai na legenda nem na arte, só no comentá
 | ter 29/09 | 19h | carrossel 3 — Sem nome. Sem perfil. Sem rastro. | `carrossel-3.txt` |
 | qua 30/09 | 19h | post-bemvinde | `post-bemvinde.txt` |
 | qui 01/10 | 19h | carrossel 4 — Emergência e apoio por cidade | `carrossel-4.txt` |
+| qui 01/10 | 20h | **Reels** `Irisa-reels.mp4` (78 s, já renderizado em 24/09) | `reels-1.txt` |
 | sex 02/10 | 12h | story `stories-2/01` (quiz) | `stories-2.md` § 1 |
 | sáb 03/10 | 12h | story `stories-2/02` (caixa de pergunta) | `stories-2.md` § 2 |
 | dom 04/10 | 12h | story `stories-2/03` (enquete) | `stories-2.md` § 3 |
@@ -35,13 +36,17 @@ comentário no mesmo dia. Link nunca vai na legenda nem na arte, só no comentá
 
 Termina 08/10, dois dias antes do fim do teste fechado (10/10) — folga proposital.
 
-## Pendência real (não simulada)
+## Correção (26/09)
 
-**Falta um Reels novo.** É o único formato ainda sem peça pronta na fila, e os dados de 2026
-mostram alcance ~4x maior que imagem única — é o que mais falta pra alcançar gente que ainda
-não segue (a conta tem 9 seguidores). Construir isso é o próximo passo, não um placeholder:
-precisa de cenas novas em HTML/CSS animado (mesmo sistema do `story.html`), 45–60 s (faixa de
-melhor retenção pra conteúdo narrativo/educativo em 2026), sem repetir o roteiro já publicado.
+Eu tinha escrito aqui que faltava um Reels — errado. `docs/Irisa-reels.mp4` já existia,
+renderizado em 24/09 (commit `153d16f`) pelo mesmo pipeline HTML/CSS + Web Animations +
+Playwright/ffmpeg, só nunca tinha entrado na fila. Corrigido: entrou como `reels-1` em
+01/10 20h. É mais longo que o ideal de retenção 2026 (78 s vs. 45–60 s recomendado), mas é
+conteúdo real e ainda dentro da faixa aceitável para formato narrativo/educativo — não
+motivo pra descartar. Também há uma sequência de teaser pronta e não usada (`post-aviso`,
+`story-aviso`, `story-revelacao`, `post-chegada`, `story-quadrinho-marca`) com narrativa de
+"estamos lançando agora"; não entrou na fila porque os testadores já usam o app há dias e
+o teaser ficaria deslocado — fica reservado para a virada de teste fechado pra produção.
 
 Fontes: Buffer (9,6M posts), Metricool Instagram Study 2026, Later/Hootsuite guias de
 algoritmo 2026, Social Insider (6M reels).

@@ -29,12 +29,12 @@ async function chamar(path, params, method = "GET") {
   return j;
 }
 
-async function esperarPronto(containerId) {
-  for (let i = 0; i < 20; i++) {
+async function esperarPronto(containerId, tentativas = 20, intervaloMs = 3000) {
+  for (let i = 0; i < tentativas; i++) {
     const { status_code } = await chamar(containerId, { fields: "status_code" });
     if (status_code === "FINISHED") return;
     if (status_code === "ERROR") throw new Error(`container ${containerId} deu erro no processamento`);
-    await new Promise((r) => setTimeout(r, 3000));
+    await new Promise((r) => setTimeout(r, intervaloMs));
   }
   throw new Error(`container ${containerId} não ficou pronto a tempo`);
 }
@@ -70,6 +70,16 @@ async function publicarStory(item) {
   return pub.id;
 }
 
+async function publicarReels(item) {
+  const c = await chamar(`${IG}/media`, { video_url: item.midias[0], media_type: "REELS", caption: item.legenda || "" }, "POST");
+  await esperarPronto(c.id, 40, 5000); // vídeo demora mais pra processar que imagem
+  const pub = await chamar(`${IG}/media_publish`, { creation_id: c.id }, "POST");
+  if (item.primeiro_comentario) {
+    await chamar(`${pub.id}/comments`, { message: item.primeiro_comentario }, "POST");
+  }
+  return pub.id;
+}
+
 async function main() {
   const fila = JSON.parse(readFileSync(FILA, "utf8"));
   const agora = new Date();
@@ -80,7 +90,8 @@ async function main() {
     if (new Date(item.quando) > agora) continue;
     console.log(`publicando ${item.id} (${item.tipo})...`);
     try {
-      const mediaId = item.tipo === "STORY" ? await publicarStory(item) : await publicarPost(item);
+      const mediaId =
+        item.tipo === "STORY" ? await publicarStory(item) : item.tipo === "REELS" ? await publicarReels(item) : await publicarPost(item);
       item.publicado = true;
       item.publicado_em = agora.toISOString();
       item.media_id = mediaId;
