@@ -60,6 +60,8 @@ copyFileSync("docs/Irisa-reels.mp4", "site/Irisa-reels.mp4");
 copyFileSync("docs/Irisa-story-bio.mp4", "site/Irisa-story-bio.mp4");
 copyFileSync("docs/lojinha.html", "site/lojinha.html");
 copyFileSync("docs/Irisa-lojinha.pdf", "site/Irisa-lojinha.pdf");
+copyFileSync("docs/lojinha-interna.html", "site/lojinha-interna.html");
+copyFileSync("docs/Irisa-lojinha-interna.pdf", "site/Irisa-lojinha-interna.pdf");
 writeFileSync("site/privacidade.html", page("Política de Privacidade", md(readFileSync("docs/privacidade.md", "utf8"))));
 writeFileSync("site/termos.html", page("Termos de Uso", md(readFileSync("docs/termos.md", "utf8"))));
 writeFileSync("site/excluir-conta.html", page("Excluir sua conta", md(readFileSync("docs/excluir-conta.md", "utf8"))));

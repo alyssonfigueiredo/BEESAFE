@@ -1,0 +1,43 @@
+<div class="bar"></div><div class="dots"></div><div class="hint">role para ver · A liga o autoplay</div>
+<script>
+(()=>{
+const q=new URLSearchParams(location.search);
+if(q.has("static")||(navigator.webdriver&&!q.has("anim")))return;
+document.documentElement.classList.add("anim");
+const sls=[...document.querySelectorAll(".sl")];
+// embrulha cada lâmina numa página com snap
+sls.forEach(sl=>{const pg=document.createElement("div");pg.className="pg";sl.replaceWith(pg);pg.appendChild(sl)});
+// escala para caber na tela
+const fit=()=>{const s=Math.min(innerWidth/1140,innerHeight/1410);document.documentElement.style.setProperty("--s",s.toFixed(4))};
+fit();addEventListener("resize",fit);
+// letras do título
+sls.forEach(sl=>{const h=sl.querySelector(".disp");if(!h)return;const t=h.textContent;h.textContent="";let i=0;
+  for(const c of t){const sp=document.createElement("span");if(c===" "){sp.className="sp";sp.innerHTML="&nbsp;"}else{sp.className="ch";sp.textContent=c;sp.style.setProperty("--i",i++)}h.appendChild(sp)}
+  // itens da arte
+  const svg=sl.querySelector(".art svg");let k=0;
+  if(svg){[...svg.children].forEach(el=>{if(el.tagName==="defs")return;
+      const list=el.classList.contains("stagger")?[...el.children]:[el];
+      list.forEach(e=>{const w=document.createElementNS("http://www.w3.org/2000/svg","g");e.replaceWith(w);w.appendChild(e);
+        w.classList.add(e.tagName==="rect"&&e.getAttribute("fill")==="url(#rb)"?"rl":"it");w.style.setProperty("--i",k++)})})}
+  sl.querySelectorAll(".how > div").forEach((d,i)=>d.style.setProperty("--i",i));
+});
+// revelação
+const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add("on");marcar()}}),{threshold:.5});
+sls.forEach(sl=>io.observe(sl));
+// pontos + barra
+const dots=document.querySelector(".dots"),bar=document.querySelector(".bar"),hint=document.querySelector(".hint");
+sls.forEach((_,i)=>{const d=document.createElement("i");d.onclick=()=>ir(i);dots.appendChild(d)});
+const atual=()=>Math.round(scrollY/innerHeight);
+const ir=i=>{scrollTo({top:i*innerHeight,behavior:"smooth"})};
+function marcar(){const i=atual();[...dots.children].forEach((d,k)=>d.classList.toggle("on",k===i));bar.style.width=((i+1)/sls.length*100)+"%";hint.classList.toggle("off",i>0)}
+addEventListener("scroll",marcar,{passive:true});
+// teclado e autoplay: ?auto=6 ou tecla A
+let timer=null;const auto=seg=>{clearInterval(timer);timer=null;if(!seg)return;timer=setInterval(()=>{const i=atual();ir(i>=sls.length-1?0:i+1)},seg*1000)};
+addEventListener("keydown",e=>{if(["ArrowDown","ArrowRight","PageDown"," "].includes(e.key)){e.preventDefault();ir(Math.min(atual()+1,sls.length-1))}
+  else if(["ArrowUp","ArrowLeft","PageUp"].includes(e.key)){e.preventDefault();ir(Math.max(atual()-1,0))}
+  else if(e.key==="Home")ir(0);else if(e.key==="End")ir(sls.length-1);
+  else if(e.key.toLowerCase()==="a")auto(timer?0:(Number(q.get("auto"))||10))});
+if(q.has("auto"))auto(Number(q.get("auto"))||10);
+marcar();
+})();
+</script>
