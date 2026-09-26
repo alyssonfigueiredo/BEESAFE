@@ -1,13 +1,15 @@
 [
  {
   "id": "story-hoje",
-  "aprovado": false,
+  "aprovado": true,
   "quando": "2026-09-26T18:00:00-03:00",
   "tipo": "STORY",
   "midias": ["https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/story-hoje.png"],
   "legenda": "",
   "primeiro_comentario": "",
-  "publicado": false
+  "publicado": true,
+  "publicado_em": "2026-09-26T21:10:00.000Z",
+  "publicado_manual": "adesivo de link (bit.ly/appirisa), postado direto pelo app"
  },
  {
   "id": "story-cidades",
