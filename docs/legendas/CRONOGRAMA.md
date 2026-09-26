@@ -1,7 +1,10 @@
 # Cronograma — otimizado com dados de 2026 (Metricool, Buffer, estudos de algoritmo)
 
-Regra fixa em todo post: fixar o primeiro comentário com **bit.ly/appirisa**. Responder todo
-comentário no mesmo dia. Link nunca vai na legenda nem na arte, só no comentário fixado e na bio.
+Regra fixa em todo post: link nunca vai na legenda nem na arte, só na bio (e no adesivo de
+link, quando o formato aceita). Comentário fixado com URL foi removido do plano em 26/09:
+comentário no Instagram nunca é clicável, pinado ou não — só cria a falsa impressão de que
+funciona. Responder todo comentário no mesmo dia continua valendo, mas sem link — se alguém
+pedir, a resposta indica a bio.
 
 ## Por que esses horários e dias
 
