@@ -105,8 +105,8 @@ export default function ApoioScreen() {
         <Pressable
           disabled={post.isPending}
           onPress={submit}
-          className="items-center rounded-xl bg-turquoise py-3 active:opacity-80 disabled:opacity-50"
-          style={shadow.card}
+          className="items-center rounded-full bg-turquoise py-3 active:opacity-80 disabled:opacity-50"
+          style={shadow.turquoise}
         >
           <Text className="font-heading text-base uppercase tracking-widest text-night">
             {post.isPending ? "Enviando…" : "Publicar"}

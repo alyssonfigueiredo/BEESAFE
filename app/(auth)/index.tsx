@@ -105,8 +105,8 @@ export default function LoginScreen() {
           <Pressable
             disabled={busy}
             onPress={submitEmail}
-            className="items-center rounded-xl bg-coral py-3 active:opacity-80 disabled:opacity-50"
-            style={shadow.card}
+            className="items-center rounded-full bg-coral py-3 active:opacity-80 disabled:opacity-50"
+            style={shadow.coral}
           >
             <Text className="font-heading text-lg uppercase tracking-widest text-night">
               {mode === "login" ? "Entrar" : "Criar conta"}

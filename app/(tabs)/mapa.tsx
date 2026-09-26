@@ -62,7 +62,10 @@ export default function MapaScreen() {
           </Text>
         </View>
         <Link href="/registrar" asChild>
-          <Pressable className="rounded-xl bg-coral px-4 py-2 active:opacity-80">
+          <Pressable
+            className="rounded-full bg-coral px-4 py-2 active:opacity-80"
+            style={shadow.coral}
+          >
             <Text className="font-heading text-sm uppercase tracking-widest text-night">
               Registrar
             </Text>

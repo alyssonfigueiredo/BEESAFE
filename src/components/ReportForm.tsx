@@ -149,7 +149,7 @@ export function ReportForm({ onDone }: { onDone: () => void }) {
       >
         <Pressable
           onPress={useMyLocation}
-          className="flex-row items-center justify-center gap-2 rounded-xl border border-turquoise py-3 active:opacity-80"
+          className="flex-row items-center justify-center gap-2 rounded-full border border-turquoise py-3 active:opacity-80"
         >
           <Crosshair color={colors.turquoiseInk} size={18} />
           <Text className="font-heading text-sm uppercase tracking-widest text-turquoiseInk">
@@ -227,8 +227,8 @@ export function ReportForm({ onDone }: { onDone: () => void }) {
       <Pressable
         disabled={create.isPending}
         onPress={submit}
-        className="items-center rounded-xl bg-coral py-4 active:opacity-80 disabled:opacity-50"
-        style={shadow.card}
+        className="items-center rounded-full bg-coral py-4 active:opacity-80 disabled:opacity-50"
+        style={shadow.coral}
       >
         <Text className="font-heading text-lg uppercase tracking-widest text-night">
           {create.isPending ? "Enviando…" : "Registrar relato"}

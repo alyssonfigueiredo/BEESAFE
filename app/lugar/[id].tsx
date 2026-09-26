@@ -256,8 +256,8 @@ export default function PlaceScreen() {
             <Pressable
               disabled={rate.isPending}
               onPress={submit}
-              className="items-center rounded-xl bg-yellow py-3 active:opacity-80 disabled:opacity-50"
-              style={shadow.card}
+              className="items-center rounded-full bg-yellow py-3 active:opacity-80 disabled:opacity-50"
+              style={shadow.yellow}
             >
               <Text className="font-heading text-base uppercase tracking-widest text-night">
                 {rate.isPending ? "Enviando…" : mine ? "Atualizar" : "Enviar avaliação"}
@@ -267,8 +267,7 @@ export default function PlaceScreen() {
         ) : (
           <Pressable
             onPress={() => setAbrirForm(true)}
-            className="items-center rounded-xl border border-border bg-surface py-3 active:opacity-80"
-            style={shadow.card}
+            className="items-center rounded-full border border-border bg-surface py-3 active:opacity-80"
           >
             <Text className="font-heading text-base uppercase tracking-widest text-muted">
               Avaliar este lugar

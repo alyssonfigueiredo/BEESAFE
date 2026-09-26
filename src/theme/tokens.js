@@ -108,9 +108,15 @@ const glass = {
 
 // Profundidade: cartão e botão cheio descolam do papel. Sombra dupla (contato + ambiente) no
 // `boxShadow` nativo do RN 0.86, em `style` — o NativeWind não converte sombra dupla de className.
+// Botão cheio: chapado, em cápsula, com uma sombra suave da própria cor — sem brilho nem degradê.
+const tinted = (hex) => ({ boxShadow: `0 6px 18px ${hex}48` });
 const shadow = {
   card: { boxShadow: "0 1px 2px rgba(20,24,41,0.06), 0 8px 24px rgba(20,24,41,0.10)" },
   lift: { boxShadow: "0 2px 4px rgba(20,24,41,0.08), 0 14px 36px rgba(20,24,41,0.16)" },
+  turquoise: tinted(colors.turquoise),
+  coral: tinted(colors.coral),
+  yellow: tinted(colors.yellow),
+  lilac: tinted(colors.lilac),
 };
 
 const fonts = {

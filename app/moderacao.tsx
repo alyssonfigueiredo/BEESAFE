@@ -80,8 +80,8 @@ export default function ModeracaoScreen() {
             <View className="flex-row gap-2">
               <Pressable
                 onPress={() => act(item.target_type, item.target_id, "remove")}
-                className="flex-1 items-center rounded-xl bg-coral py-2 active:opacity-80"
-                style={shadow.card}
+                className="flex-1 items-center rounded-full bg-coral py-2 active:opacity-80"
+                style={shadow.coral}
               >
                 <Text className="font-heading text-sm uppercase tracking-widest text-night">
                   Remover

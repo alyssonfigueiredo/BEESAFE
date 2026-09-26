@@ -51,8 +51,8 @@ export default function HomeScreen() {
         <View className="flex-row gap-2">
           <Link href="/lugares" asChild>
             <Pressable
-              className="flex-1 items-center rounded-xl bg-turquoise py-3 active:opacity-80"
-              style={shadow.card}
+              className="flex-1 items-center rounded-full bg-turquoise py-3 active:opacity-80"
+              style={shadow.turquoise}
             >
               <Text className="font-heading text-sm uppercase tracking-widest text-night">
                 Avaliar um lugar
@@ -61,8 +61,8 @@ export default function HomeScreen() {
           </Link>
           <Link href="/registrar" asChild>
             <Pressable
-              className="flex-1 items-center rounded-xl bg-coral py-3 active:opacity-80"
-              style={shadow.card}
+              className="flex-1 items-center rounded-full bg-coral py-3 active:opacity-80"
+              style={shadow.coral}
             >
               <Text className="font-heading text-sm uppercase tracking-widest text-night">
                 Registrar relato
@@ -95,8 +95,8 @@ export default function HomeScreen() {
             </Text>
             <Link href="/lugares" asChild>
               <Pressable
-                className="items-center rounded-xl bg-turquoise py-3 active:opacity-80"
-                style={shadow.card}
+                className="items-center rounded-full bg-turquoise py-3 active:opacity-80"
+                style={shadow.turquoise}
               >
                 <Text className="font-heading text-sm uppercase tracking-widest text-night">
                   Começar por um lugar

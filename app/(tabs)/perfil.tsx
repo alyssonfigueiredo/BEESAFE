@@ -80,8 +80,8 @@ export default function PerfilScreen() {
         <Pressable
           disabled={update.isPending}
           onPress={save}
-          className="items-center rounded-xl bg-turquoise py-3 active:opacity-80 disabled:opacity-50"
-          style={shadow.card}
+          className="items-center rounded-full bg-turquoise py-3 active:opacity-80 disabled:opacity-50"
+          style={shadow.turquoise}
         >
           <Text className="font-heading text-base uppercase tracking-widest text-night">
             Salvar
@@ -102,8 +102,8 @@ export default function PerfilScreen() {
       {profile && profile.role !== "user" && (
         <Link href="/moderacao" asChild>
           <Pressable
-            className="items-center rounded-xl bg-lilac py-3 active:opacity-80"
-            style={shadow.card}
+            className="items-center rounded-full bg-lilac py-3 active:opacity-80"
+            style={shadow.lilac}
           >
             <Text className="font-heading text-base uppercase tracking-widest text-night">
               Fila de moderação
@@ -113,7 +113,7 @@ export default function PerfilScreen() {
       )}
       <Pressable
         onPress={() => supabase.auth.signOut()}
-        className="items-center rounded-xl border border-border py-3 active:opacity-80"
+        className="items-center rounded-full border border-border py-3 active:opacity-80"
       >
         <Text className="font-heading text-base uppercase tracking-widest text-muted">Sair</Text>
       </Pressable>

@@ -158,8 +158,8 @@ export function PlaceForm({ onDone }: { onDone: (placeId: string) => void }) {
       <Pressable
         disabled={create.isPending}
         onPress={submit}
-        className="items-center rounded-xl bg-turquoise py-4 active:opacity-80 disabled:opacity-50"
-        style={shadow.card}
+        className="items-center rounded-full bg-turquoise py-4 active:opacity-80 disabled:opacity-50"
+        style={shadow.turquoise}
       >
         <Text className="font-heading text-lg uppercase tracking-widest text-night">
           {create.isPending ? "Salvando…" : "Adicionar lugar"}
