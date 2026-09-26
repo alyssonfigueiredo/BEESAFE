@@ -4,7 +4,14 @@ import { Text, View } from "react-native";
 
 import { ReportButton } from "@/components/ReportButton";
 import type { PublicOccurrence } from "@/lib/types";
-import { DAY_PERIODS, OCCURRENCE_SETTINGS, OCCURRENCE_TYPES, onLight, SEVERITIES } from "@/theme/domain";
+import { shadow } from "@/theme/tokens";
+import {
+  DAY_PERIODS,
+  OCCURRENCE_SETTINGS,
+  OCCURRENCE_TYPES,
+  onLight,
+  SEVERITIES,
+} from "@/theme/domain";
 
 export function formatOccurrenceDate(iso: string) {
   return format(parseISO(iso), "d 'de' MMM 'de' yyyy", { locale: ptBR });
@@ -14,7 +21,7 @@ export function OccurrenceCard({ occurrence: o }: { occurrence: PublicOccurrence
   const type = OCCURRENCE_TYPES[o.type];
   const sev = SEVERITIES[o.severity];
   return (
-    <View className="gap-2 rounded-xl border border-border bg-surface p-4">
+    <View className="gap-2 rounded-xl border border-border bg-surface p-4" style={shadow.card}>
       <View className="flex-row items-center justify-between">
         <View className="rounded-full px-3 py-1" style={{ backgroundColor: type.color }}>
           <Text className="font-body-bold text-xs uppercase tracking-wider text-night">
@@ -31,7 +38,10 @@ export function OccurrenceCard({ occurrence: o }: { occurrence: PublicOccurrence
       {/* Onde e quando, quando a pessoa disse. “Na praça, à noite” muda a leitura do relato. */}
       {(o.setting || o.period) && (
         <Text className="font-body text-xs text-muted">
-          {[o.setting && OCCURRENCE_SETTINGS[o.setting].label, o.period && DAY_PERIODS[o.period].label]
+          {[
+            o.setting && OCCURRENCE_SETTINGS[o.setting].label,
+            o.period && DAY_PERIODS[o.period].label,
+          ]
             .filter(Boolean)
             .join(" · ")}
         </Text>

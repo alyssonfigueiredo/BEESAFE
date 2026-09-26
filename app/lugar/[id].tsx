@@ -27,7 +27,7 @@ import { usePlace, usePlaceRatings, useRatePlace } from "@/hooks/usePlaces";
 import { AXES, AXIS_KEYS, BADGES, PLACE_CATEGORIES, placeScoreColor } from "@/theme/domain";
 import type { Axis } from "@/theme/domain";
 import { Glass } from "@/components/Glass";
-import { colors } from "@/theme/tokens";
+import { colors, shadow } from "@/theme/tokens";
 
 type Draft = Record<Axis, number> & { key: string; comment: string };
 
@@ -121,7 +121,7 @@ export default function PlaceScreen() {
         contentContainerStyle={insets}
         keyboardShouldPersistTaps="handled"
       >
-        <View className="gap-2 rounded-2xl border border-border bg-surface p-5">
+        <View className="gap-2 rounded-2xl border border-border bg-surface p-5" style={shadow.card}>
           <PlacePhoto
             category={place.category}
             photoName={place.photo_name}
@@ -218,13 +218,17 @@ export default function PlaceScreen() {
         <Pressable
           onPress={comoChegar}
           className="flex-row items-center gap-2 rounded-xl border border-border bg-surface px-4 py-3 active:opacity-80"
+          style={shadow.card}
         >
           <Navigation color={colors.turquoiseInk} size={18} />
           <Text className="font-body-medium text-sm text-ink">Como chegar</Text>
         </Pressable>
 
         {formVisivel ? (
-          <View className="gap-4 rounded-xl border border-border bg-surface p-4">
+          <View
+            className="gap-4 rounded-xl border border-border bg-surface p-4"
+            style={shadow.card}
+          >
             <Text className="font-heading text-base uppercase tracking-widest text-ink">
               {mine ? "Sua avaliação" : "Como foi lá?"}
             </Text>
@@ -253,6 +257,7 @@ export default function PlaceScreen() {
               disabled={rate.isPending}
               onPress={submit}
               className="items-center rounded-xl bg-yellow py-3 active:opacity-80 disabled:opacity-50"
+              style={shadow.card}
             >
               <Text className="font-heading text-base uppercase tracking-widest text-night">
                 {rate.isPending ? "Enviando…" : mine ? "Atualizar" : "Enviar avaliação"}
@@ -263,6 +268,7 @@ export default function PlaceScreen() {
           <Pressable
             onPress={() => setAbrirForm(true)}
             className="items-center rounded-xl border border-border bg-surface py-3 active:opacity-80"
+            style={shadow.card}
           >
             <Text className="font-heading text-base uppercase tracking-widest text-muted">
               Avaliar este lugar
@@ -276,7 +282,11 @@ export default function PlaceScreen() {
               Avaliações
             </Text>
             {ratings.map((r) => (
-              <View key={r.id} className="gap-1 rounded-xl border border-border bg-surface p-4">
+              <View
+                key={r.id}
+                className="gap-1 rounded-xl border border-border bg-surface p-4"
+                style={shadow.card}
+              >
                 <View className="flex-row items-center justify-between">
                   <Rainbow value={Number(r.overall ?? r.stars ?? 0)} size={7} />
                   <Text className="font-body text-xs text-dim">

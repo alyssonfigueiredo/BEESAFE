@@ -7,7 +7,7 @@ import { useScreenInsets } from "@/hooks/useScreenInsets";
 import { useModerate, useModerationQueue } from "@/hooks/useModeration";
 import { useProfile } from "@/hooks/useProfile";
 import { Glass } from "@/components/Glass";
-import { colors } from "@/theme/tokens";
+import { colors, shadow } from "@/theme/tokens";
 
 const TYPE_LABEL = {
   occurrence: "Relato",
@@ -56,6 +56,7 @@ export default function ModeracaoScreen() {
           <View
             key={`${item.target_type}:${item.target_id}`}
             className="gap-2 rounded-xl border border-border bg-surface p-4"
+            style={shadow.card}
           >
             <View className="flex-row items-center justify-between">
               <Text className="font-heading text-sm uppercase tracking-widest text-lilacInk">
@@ -80,6 +81,7 @@ export default function ModeracaoScreen() {
               <Pressable
                 onPress={() => act(item.target_type, item.target_id, "remove")}
                 className="flex-1 items-center rounded-xl bg-coral py-2 active:opacity-80"
+                style={shadow.card}
               >
                 <Text className="font-heading text-sm uppercase tracking-widest text-night">
                   Remover

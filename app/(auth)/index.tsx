@@ -5,7 +5,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { Logo } from "@/components/Logo";
 import { isAppleSignInAvailable, signInWithApple, signInWithGoogle } from "@/lib/socialAuth";
 import { supabase } from "@/lib/supabase";
-import { colors } from "@/theme/tokens";
+import { colors, shadow } from "@/theme/tokens";
 
 export default function LoginScreen() {
   const [email, setEmail] = useState("");
@@ -85,6 +85,7 @@ export default function LoginScreen() {
         <View className="gap-3">
           <TextInput
             className="rounded-xl border border-border bg-surface px-4 py-3 font-body text-base text-ink"
+            style={shadow.card}
             placeholder="E-mail"
             placeholderTextColor={colors.dim}
             autoCapitalize="none"
@@ -94,6 +95,7 @@ export default function LoginScreen() {
           />
           <TextInput
             className="rounded-xl border border-border bg-surface px-4 py-3 font-body text-base text-ink"
+            style={shadow.card}
             placeholder="Senha"
             placeholderTextColor={colors.dim}
             secureTextEntry
@@ -104,6 +106,7 @@ export default function LoginScreen() {
             disabled={busy}
             onPress={submitEmail}
             className="items-center rounded-xl bg-coral py-3 active:opacity-80 disabled:opacity-50"
+            style={shadow.card}
           >
             <Text className="font-heading text-lg uppercase tracking-widest text-night">
               {mode === "login" ? "Entrar" : "Criar conta"}

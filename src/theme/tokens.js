@@ -1,12 +1,12 @@
 // Design system "Vibrant Alliance". Fonte única de cores e fontes: usado pelo Tailwind e pelo código.
 // Paleta clara: fundo papel, cartões brancos, o azul-noite vira cor de texto e do mapa.
 //
-// Os acentos são definidos na versão cheia (a identidade) e entram no app com a saturação HSL
-// reduzida a SATURATION (0.6 = 60 % da original), decisão de 26/09/2026 junto com o Liquid Glass:
-// cor mais contida por baixo do vidro, definição pelo contraste e não pela saturação. Mudar o
+// Os acentos são definidos na versão de referência (`accents`) e entram no app com a saturação
+// HSL multiplicada por SATURATION (1.35 = cor viva, com teto em 100 %), decisão de 26/09/2026 junto
+// com o Liquid Glass: cor cheia por baixo do vidro, tinta mais escura para definição. Mudar o
 // número aqui muda o app inteiro (pastilhas, mapa, anel da marca) — os tons escuros de texto
 // (`*Ink`) mantêm a luminosidade, então continuam passando no contraste AA.
-const SATURATION = 0.6;
+const SATURATION = 1.35;
 
 function hexToHsl(hex) {
   const r = parseInt(hex.slice(1, 3), 16) / 255;
@@ -68,11 +68,11 @@ const colors = {
   paper: "#FAF9F6", // fundo das telas
   surface: "#FFFFFF", // cartões, barra de abas, campos
   subtle: "#F1EDE7", // preenchimentos de apoio
-  border: "#DDD7CD", // um tom mais firme que antes: definição vem da linha, não da cor
-  night: "#1E2340", // cor escura: texto sobre cor, traços do mapa, fundo do mapa
-  ink: "#1E2340", // texto principal
-  muted: "#4A5168", // texto secundário
-  dim: "#858B9E", // texto de apoio e placeholders
+  border: "#D8D1C5", // um tom mais firme que antes: definição vem da linha
+  night: "#141829", // cor escura: texto sobre cor, traços do mapa, fundo do mapa
+  ink: "#141829", // texto principal, mais escuro que antes (definição)
+  muted: "#3D4560", // texto secundário
+  dim: "#7C8296", // texto de apoio e placeholders
   // acentos: versão clara para preenchimento
   coral: saturate(accents.coral),
   orange: saturate(accents.orange),
@@ -92,18 +92,25 @@ const colors = {
 const mark = {
   ring: ["#F4736F", "#F5A45D", "#F0CA75", "#5CC9B4", "#6AA8EE", "#AE96F2"].map((c) => saturate(c)),
   sweep: colors.turquoise,
-  pupil: "#161B2E",
+  pupil: "#0F1220",
 };
 
 // Vidro (Liquid Glass, iOS 26+; nos outros sistemas vira blur com véu branco): só nas camadas
 // que flutuam sobre o conteúdo — cabeçalho, barra de abas, folhas modais. Cartão e botão são opacos.
 const glass = {
-  tint: "rgba(255,255,255,0.58)", // véu sobre o blur
-  tintStrong: "rgba(255,255,255,0.80)", // folhas modais, onde se lê texto longo
-  edge: "rgba(255,255,255,0.85)", // fio de luz na borda
+  tint: "rgba(255,255,255,0.44)", // véu sobre o blur: fino, para o conteúdo aparecer por baixo
+  tintStrong: "rgba(255,255,255,0.72)", // folhas modais, onde se lê texto longo
+  edge: "rgba(255,255,255,0.90)", // fio de luz na borda
   tabBarHeight: 64,
   tabBarGap: 16, // distância da barra até a borda de baixo (além da área segura)
   radius: 32,
+};
+
+// Profundidade: cartão e botão cheio descolam do papel. Sombra dupla (contato + ambiente) no
+// `boxShadow` nativo do RN 0.86, em `style` — o NativeWind não converte sombra dupla de className.
+const shadow = {
+  card: { boxShadow: "0 1px 2px rgba(20,24,41,0.06), 0 8px 24px rgba(20,24,41,0.10)" },
+  lift: { boxShadow: "0 2px 4px rgba(20,24,41,0.08), 0 14px 36px rgba(20,24,41,0.16)" },
 };
 
 const fonts = {
@@ -115,4 +122,4 @@ const fonts = {
   bodyBold: "SpaceGrotesk_700Bold",
 };
 
-module.exports = { colors, fonts, mark, glass, accents, saturate, SATURATION };
+module.exports = { colors, fonts, mark, glass, shadow, accents, saturate, SATURATION };

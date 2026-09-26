@@ -6,7 +6,7 @@ import { FlatList, Modal, Pressable, Text, TextInput, View } from "react-native"
 import { supabase } from "@/lib/supabase";
 import type { City } from "@/lib/types";
 import { useCity } from "@/providers/CityProvider";
-import { colors } from "@/theme/tokens";
+import { colors, shadow } from "@/theme/tokens";
 
 export function CityPicker() {
   const { city, setCity } = useCity();
@@ -43,6 +43,7 @@ export function CityPicker() {
           <TextInput
             autoFocus
             className="rounded-xl border border-border bg-surface px-4 py-3 font-body text-base text-ink"
+            style={shadow.card}
             placeholder="Digite o nome da cidade"
             placeholderTextColor={colors.dim}
             value={q}

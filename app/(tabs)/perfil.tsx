@@ -8,7 +8,7 @@ import { useDeleteAccount, useProfile, useUpdateProfile } from "@/hooks/useProfi
 import { supabase } from "@/lib/supabase";
 import { useAuth } from "@/providers/AuthProvider";
 import { useCity } from "@/providers/CityProvider";
-import { colors } from "@/theme/tokens";
+import { colors, shadow } from "@/theme/tokens";
 
 export default function PerfilScreen() {
   const insets = useScreenInsets();
@@ -61,7 +61,7 @@ export default function PerfilScreen() {
         )}
       </View>
 
-      <View className="gap-3 rounded-xl border border-border bg-surface p-4">
+      <View className="gap-3 rounded-xl border border-border bg-surface p-4" style={shadow.card}>
         <Text className="font-heading text-sm uppercase tracking-widest text-muted">
           Apelido no mural e nas avaliações
         </Text>
@@ -81,6 +81,7 @@ export default function PerfilScreen() {
           disabled={update.isPending}
           onPress={save}
           className="items-center rounded-xl bg-turquoise py-3 active:opacity-80 disabled:opacity-50"
+          style={shadow.card}
         >
           <Text className="font-heading text-base uppercase tracking-widest text-night">
             Salvar
@@ -88,7 +89,7 @@ export default function PerfilScreen() {
         </Pressable>
       </View>
 
-      <View className="gap-2 rounded-xl border border-border bg-surface p-4">
+      <View className="gap-2 rounded-xl border border-border bg-surface p-4" style={shadow.card}>
         <Text className="font-heading text-sm uppercase tracking-widest text-muted">
           Privacidade
         </Text>
@@ -100,7 +101,10 @@ export default function PerfilScreen() {
 
       {profile && profile.role !== "user" && (
         <Link href="/moderacao" asChild>
-          <Pressable className="items-center rounded-xl bg-lilac py-3 active:opacity-80">
+          <Pressable
+            className="items-center rounded-xl bg-lilac py-3 active:opacity-80"
+            style={shadow.card}
+          >
             <Text className="font-heading text-base uppercase tracking-widest text-night">
               Fila de moderação
             </Text>

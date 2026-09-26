@@ -1,3 +1,5 @@
+import type { ViewStyle } from "react-native";
+
 export declare const colors: {
   paper: string;
   surface: string;
@@ -56,3 +58,4 @@ export declare const accents: Record<
 >;
 export declare const SATURATION: number;
 export declare function saturate(hex: string, k?: number): string;
+export declare const shadow: { card: ViewStyle; lift: ViewStyle };

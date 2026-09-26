@@ -188,14 +188,14 @@ Nome: **Irisa** (INPI livre; @irisapp livre). Bundle id `br.com.irisa.app`. Cont
   antes da nota, "Quanta cor tem esse lugar?" abrindo a seção do acolhimento, "Como chegar"
   (app de mapas do celular) no lugar do mini-mapa, formulário aberto só sem nota, denúncia no fim.
 
-- **Paleta a 60 % e Liquid Glass (26/09/2026, branch `claude/amazing-volta-0wnzed`):** os acentos de
+- **Paleta viva, profundidade e Liquid Glass (26/09/2026, branch `claude/amazing-volta-0wnzed`):** os acentos de
   `src/theme/tokens.js` são derivados da versão cheia (`accents`) com a saturação HSL multiplicada por
-  `SATURATION = 0.6` — um número só muda o app inteiro (pastilhas, mapa, anel da marca). Cabeçalho, barra
+  `SATURATION = 1.35` (cor viva, teto em 100 %) — um número só muda o app inteiro (pastilhas, mapa, anel da marca). Cabeçalho, barra
   de abas (cápsula flutuante) e folha de emergência usam `src/components/Glass.tsx`: Liquid Glass de
   verdade no iOS 26+ (`expo-glass-effect`), blur com véu branco (`expo-blur`) no Android e iOS antigo.
   O conteúdo rola por baixo: toda tela de aba (e a ficha do lugar / moderação) usa
-  `useScreenInsets()` no `contentContainerStyle` no lugar do `py-4`. Cartões, botões e campos seguem
-  opacos de propósito. Estrutura e navegação não mudaram. Os dois pacotes são nativos: precisa de
+  `useScreenInsets()` no `contentContainerStyle` no lugar do `py-4`. Cartões e botões cheios levam `style={shadow.card}` (`boxShadow` nativo em tokens.js; o NativeWind não converte sombra dupla de className) para descolar do papel; tinta
+  (`ink`) mais escura para definição. Cartões, botões e campos seguem opacos de propósito. Estrutura e navegação não mudaram. Os dois pacotes são nativos: precisa de
   `npx expo run:ios --device` de novo e de build EAS nova para o Android.
   Protótipo navegável que originou isso: `docs/prototipo-ios27.html` (não é publicado no site).
 

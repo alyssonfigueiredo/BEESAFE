@@ -9,7 +9,7 @@ import { usePlaces } from "@/hooks/usePlaces";
 import { distanceMeters } from "@/lib/geo";
 import { useCity } from "@/providers/CityProvider";
 import { PLACE_CATEGORIES, type PlaceCategory } from "@/theme/domain";
-import { colors } from "@/theme/tokens";
+import { colors, shadow } from "@/theme/tokens";
 
 // Busca sem acento e sem caixa: "cafe" acha "Café".
 const simplifica = (s: string) => s.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "");
@@ -91,7 +91,10 @@ export default function LugaresScreen() {
             </Text>
           </View>
 
-          <View className="flex-row items-center gap-2 rounded-xl border border-border bg-surface px-3">
+          <View
+            className="flex-row items-center gap-2 rounded-xl border border-border bg-surface px-3"
+            style={shadow.card}
+          >
             <Search color={colors.dim} size={18} />
             <TextInput
               className="flex-1 py-3 font-body text-base text-ink"

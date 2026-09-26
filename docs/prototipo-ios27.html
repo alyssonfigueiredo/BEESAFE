@@ -4,22 +4,25 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Irisa Liquid Glass</title>
-<meta name="description" content="Protótipo navegável da Irisa adaptado ao iOS 27 Liquid Glass, com a paleta a 60% de saturação. Não funcional: nada grava, nada liga.">
+<meta name="description" content="Protótipo navegável da Irisa adaptado ao iOS 27 Liquid Glass, com cores vivas e profundidade. Não funcional: nada grava, nada liga.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Urbanist:wght@500&family=Oswald:wght@500;700&family=Space+Grotesk:wght@400;500;700&display=swap">
 <style>
-  /* ---------- Paleta: tokens do app (src/theme/tokens.js) com a saturação HSL a 60% ---------- */
+  /* ---------- Paleta: tokens do app (src/theme/tokens.js) com a saturação HSL ×1.35 (viva) ---------- */
   :root{
-    --paper:#f9f9f7; --surface:#ffffff; --subtle:#efede9; --border:#e1ddd8;
-    --night:#252839; --ink:#252839; --muted:#555a69; --dim:#8f929d;
-    --coral:#d98c8a; --orange:#d7a67b; --yellow:#d7c18e; --turq:#72b3a7; --lilac:#b7a8e0; --blue:#84aad4;
-    --coral-ink:#9a5352; --orange-ink:#7e5d34; --yellow-ink:#725c2a; --turq-ink:#2e6760; --lilac-ink:#7c6abd;
-    --amber:#bc9852; --pupil:#1b1e29; --sweep:#72b3a7;
+    --paper:#FAF8F3; --surface:#FFFFFF; --subtle:#F1ECE3; --border:#D8D1C5;
+    --night:#141829; --ink:#141829; --muted:#3D4560; --dim:#7C8296;
+    --coral:#FF6964; --orange:#FFA353; --yellow:#FFD066; --turq:#49DCC0; --lilac:#A889FF; --blue:#59A7FF;
+    --coral-ink:#C72825; --orange-ink:#AB6207; --yellow-ink:#9C6C00; --turq-ink:#0A8B7A; --lilac-ink:#6037F0;
+    --amber:#FFAD0F; --pupil:#0F1220; --sweep:#49DCC0;
+    /* profundidade */
+    --shadow-card:0 1px 2px rgba(20,24,41,.06),0 10px 28px rgba(20,24,41,.10);
+    --shadow-lift:0 2px 4px rgba(20,24,41,.08),0 16px 40px rgba(20,24,41,.16);
     /* vidro */
-    --glass:rgba(255,255,255,.62); --glass-strong:rgba(255,255,255,.78); --glass-edge:rgba(255,255,255,.85);
-    --glass-shadow:0 10px 30px rgba(37,40,57,.12),0 1px 2px rgba(37,40,57,.06);
-    --glass-inset:inset 0 1px 0 rgba(255,255,255,.95),inset 0 -1px 0 rgba(37,40,57,.05);
+    --glass:rgba(255,255,255,.44); --glass-strong:rgba(255,255,255,.72); --glass-edge:rgba(255,255,255,.9);
+    --glass-shadow:0 18px 44px rgba(20,24,41,.20),0 2px 6px rgba(20,24,41,.08);
+    --glass-inset:inset 0 1px 0 rgba(255,255,255,1),inset 0 -1px 0 rgba(20,24,41,.06),inset 1px 0 0 rgba(255,255,255,.5),inset -1px 0 0 rgba(255,255,255,.5);
     --r-xl:28px; --r-lg:22px; --r-md:16px; --r-sm:12px;
     --wordmark:"Urbanist","Helvetica Neue",Arial,sans-serif;
     --display:"Oswald","Arial Narrow",Impact,sans-serif;
@@ -27,7 +30,7 @@
     --hdr:128px; --tabs:118px;
     color-scheme:light;
   }
-  /* comparação: a paleta original, sem redução */
+  /* comparação: a paleta atual do app, sem reforço */
   :root[data-sat="100"]{
     --paper:#FAF9F6; --subtle:#F1EDE7; --border:#E4DED5; --night:#1E2340; --ink:#1E2340; --muted:#4F576F; --dim:#8A90A2;
     --coral:#F4736F; --orange:#F5A45D; --yellow:#F0CA75; --turq:#5CC9B4; --lilac:#AE96F2; --blue:#6AA8EE;
@@ -39,7 +42,7 @@
   [hidden]{display:none!important}
   html,body{height:100%}
   body{
-    margin:0;background:#dcd9d3 radial-gradient(120% 90% at 50% 0%,#ecebe6 0%,#d4d1ca 60%,#c7c3bb 100%) fixed;
+    margin:0;background:#cfcabf radial-gradient(120% 90% at 50% 0%,#e6e2d9 0%,#cbc5b8 60%,#b6afa1 100%) fixed;
     color:var(--ink);font-family:var(--body);-webkit-font-smoothing:antialiased;text-rendering:geometricPrecision;
     display:grid;grid-template-rows:auto 1fr auto;gap:14px;padding:24px 16px 20px;min-height:100%;
   }
@@ -84,15 +87,17 @@
   /* ---------- Vidro (Liquid Glass) ---------- */
   .glass{
     position:relative;background:var(--glass);
-    -webkit-backdrop-filter:blur(28px) saturate(1.7);backdrop-filter:blur(28px) saturate(1.7);
+    -webkit-backdrop-filter:blur(34px) saturate(2.2) contrast(1.05);backdrop-filter:blur(34px) saturate(2.2) contrast(1.05);
     border:1px solid var(--glass-edge);box-shadow:var(--glass-shadow),var(--glass-inset);
   }
   .glass::before{
     content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;
     background:
-      radial-gradient(120% 80% at 12% 0%,rgba(255,255,255,.55),transparent 55%),
-      linear-gradient(180deg,rgba(255,255,255,.28),rgba(255,255,255,0) 40%,rgba(37,40,57,.03));
+      radial-gradient(120% 80% at 12% 0%,rgba(255,255,255,.75),transparent 55%),
+      linear-gradient(115deg,transparent 28%,rgba(255,255,255,.42) 44%,transparent 58%),
+      linear-gradient(180deg,rgba(255,255,255,.40),rgba(255,255,255,0) 45%,rgba(20,24,41,.05));
   }
+  .glass::after{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;box-shadow:inset 0 0 0 1px rgba(255,255,255,.35),inset 0 -6px 14px rgba(255,255,255,.35)}
   .glass>*{position:relative}
 
   /* cabeçalho flutuante */
@@ -104,14 +109,14 @@
   .hdr.detail{padding-left:6px}
   .backbtn{display:flex;align-items:center;gap:2px;border:0;background:transparent;font:500 15px var(--body);color:var(--ink);padding:8px 10px 8px 6px;border-radius:999px;cursor:pointer}
   .backbtn svg{width:20px;height:20px}
-  .sos{width:40px;height:40px;border-radius:50%;border:0;display:grid;place-items:center;cursor:pointer;position:relative;background:var(--coral);box-shadow:0 4px 12px rgba(217,140,138,.45),inset 0 1px 0 rgba(255,255,255,.55)}
+  .sos{width:40px;height:40px;border-radius:50%;border:0;display:grid;place-items:center;cursor:pointer;position:relative;background:linear-gradient(180deg,color-mix(in srgb,var(--coral) 80%,#fff),var(--coral) 55%,color-mix(in srgb,var(--coral) 88%,#000));box-shadow:0 8px 18px color-mix(in srgb,var(--coral) 55%,transparent),0 1px 2px rgba(20,24,41,.2),inset 0 1px 0 rgba(255,255,255,.7)}
   .sos svg{width:20px;height:20px;stroke:var(--night);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
   .sos::after{content:"";position:absolute;inset:0;border-radius:50%;border:2px solid var(--coral);animation:pulse 1.8s ease-out infinite}
   @keyframes pulse{0%{transform:scale(1);opacity:.6}100%{transform:scale(1.7);opacity:0}}
 
   /* barra de abas flutuante */
   .tabbar{position:absolute;left:14px;right:14px;bottom:34px;height:66px;border-radius:33px;z-index:30;display:grid;grid-template-columns:repeat(5,1fr);padding:5px}
-  .tabbar .lens{position:absolute;top:5px;bottom:5px;left:5px;width:calc((100% - 10px)/5);border-radius:28px;background:rgba(255,255,255,.85);box-shadow:0 2px 8px rgba(37,40,57,.14),inset 0 1px 0 #fff,inset 0 0 0 1px rgba(255,255,255,.6);transition:transform .38s cubic-bezier(.3,1.35,.5,1)}
+  .tabbar .lens{position:absolute;top:5px;bottom:5px;left:5px;width:calc((100% - 10px)/5);border-radius:28px;background:linear-gradient(180deg,#fff,rgba(255,255,255,.82));box-shadow:0 6px 16px rgba(20,24,41,.16),0 0 0 1px rgba(255,255,255,.9),0 4px 14px color-mix(in srgb,var(--coral) 28%,transparent),inset 0 1px 0 #fff;transition:transform .38s cubic-bezier(.3,1.35,.5,1)}
   .tab{position:relative;border:0;background:transparent;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;font:500 10.5px var(--body);color:var(--dim);cursor:pointer;border-radius:28px;transition:color .2s}
   .tab svg{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
   .tab[aria-selected="true"]{color:var(--coral-ink)}
@@ -145,28 +150,28 @@
   .row{display:flex;align-items:center;gap:8px}
 
   /* cartões: superfícies opacas ficam; o vidro é para o que flutua */
-  .card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-lg);padding:16px;display:flex;flex-direction:column;gap:10px;box-shadow:0 1px 2px rgba(37,40,57,.04)}
+  .card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-lg);padding:16px;display:flex;flex-direction:column;gap:10px;box-shadow:var(--shadow-card),inset 0 1px 0 #fff}
   .card.hero{padding:20px;border-radius:var(--r-xl);gap:12px}
   .card.tap{cursor:pointer;transition:transform .15s}
   .card.tap:active{transform:scale(.985)}
-  .btn{border:0;border-radius:var(--r-md);padding:13px 14px;font:500 13.5px var(--display);letter-spacing:.14em;text-transform:uppercase;color:var(--night);cursor:pointer;text-align:center;flex:1;transition:transform .12s,filter .12s;box-shadow:inset 0 1px 0 rgba(255,255,255,.45),0 1px 2px rgba(37,40,57,.08)}
+  .btn{border:0;border-radius:var(--r-md);padding:13px 14px;font:500 13.5px var(--display);letter-spacing:.14em;text-transform:uppercase;color:var(--night);cursor:pointer;text-align:center;flex:1;transition:transform .12s,filter .12s;background-image:linear-gradient(180deg,rgba(255,255,255,.34),rgba(255,255,255,0) 60%,rgba(20,24,41,.06));box-shadow:inset 0 1px 0 rgba(255,255,255,.6),0 1px 2px rgba(20,24,41,.12),0 8px 18px var(--glow,rgba(20,24,41,.12))}
   .btn:active{transform:scale(.97);filter:brightness(.97)}
-  .btn.turq{background:var(--turq)} .btn.coral{background:var(--coral)} .btn.yellow{background:var(--yellow)} .btn.lilac{background:var(--lilac)}
-  .btn.ghost{background:var(--surface);border:1px solid var(--border);color:var(--muted);box-shadow:none}
-  .btn.line{background:transparent;border:1px solid var(--turq);color:var(--turq-ink);box-shadow:none;display:flex;justify-content:center;gap:8px;align-items:center}
+  .btn.turq{background-color:var(--turq);--glow:color-mix(in srgb,var(--turq) 40%,transparent)} .btn.coral{background-color:var(--coral);--glow:color-mix(in srgb,var(--coral) 40%,transparent)} .btn.yellow{background-color:var(--yellow);--glow:color-mix(in srgb,var(--yellow) 45%,transparent)} .btn.lilac{background-color:var(--lilac);--glow:color-mix(in srgb,var(--lilac) 40%,transparent)}
+  .btn.ghost{background:var(--surface);background-image:none;border:1px solid var(--border);color:var(--muted);box-shadow:var(--shadow-card)}
+  .btn.line{background:transparent;background-image:none;border:1.5px solid var(--turq);color:var(--turq-ink);box-shadow:none;display:flex;justify-content:center;gap:8px;align-items:center}
   .btn.line svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
   .btns{display:flex;gap:8px}
 
   .stats{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-  .stat{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-md);padding:14px;display:flex;flex-direction:column;gap:4px;min-width:0}
+  .stat{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-md);padding:14px;display:flex;flex-direction:column;gap:4px;min-width:0;box-shadow:var(--shadow-card)}
   .stat .v{font:700 26px/1 var(--display);color:var(--ink);font-variant-numeric:tabular-nums;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 
   .chips{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;padding-bottom:2px;margin:0 -14px;padding-left:14px;padding-right:14px}
   .chips::-webkit-scrollbar{display:none}
   .chip{flex:none;border:1px solid var(--border);background:var(--surface);color:var(--muted);font:500 12px var(--body);padding:7px 12px;border-radius:999px;cursor:pointer;transition:background .15s,color .15s,border-color .15s}
-  .chip[aria-pressed="true"]{background:var(--ink);border-color:var(--ink);color:var(--paper)}
+  .chip[aria-pressed="true"]{background:var(--ink);border-color:var(--ink);color:var(--paper);box-shadow:0 4px 10px rgba(20,24,41,.22)}
   .chip.c{border-color:var(--c);color:var(--ci)}
-  .chip.c[aria-pressed="true"]{background:var(--c);color:var(--night);border-color:var(--c)}
+  .chip.c[aria-pressed="true"]{background:var(--c);color:var(--night);border-color:var(--c);box-shadow:0 4px 12px color-mix(in srgb,var(--c) 45%,transparent)}
   .chip.wrap{white-space:normal}
   .wrapchips{display:flex;flex-wrap:wrap;gap:8px}
   .wrapchips .chip{flex:none}
@@ -174,7 +179,7 @@
 
   .field{display:flex;flex-direction:column;gap:8px}
   .field .lbl{display:flex;justify-content:space-between;align-items:baseline}
-  .input{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-md);padding:12px 14px;font:400 15px var(--body);color:var(--ink);width:100%;outline:none}
+  .input{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-md);padding:12px 14px;font:400 15px var(--body);color:var(--ink);width:100%;outline:none;box-shadow:inset 0 1px 2px rgba(20,24,41,.05)}
   .input::placeholder{color:var(--dim)}
   .input:focus{border-color:var(--turq);box-shadow:0 0 0 3px rgba(114,179,167,.25)}
   textarea.input{min-height:92px;resize:none;font-family:var(--body)}
@@ -187,13 +192,15 @@
   .segc button[aria-pressed="true"].b{background:var(--turq);color:var(--night)}
 
   /* cartão de lugar */
-  .place{display:flex;gap:12px;background:var(--surface);border:1px solid var(--border);border-radius:var(--r-lg);padding:12px;cursor:pointer;transition:transform .15s}
+  .place{display:flex;gap:12px;background:var(--surface);border:1px solid var(--border);border-radius:var(--r-lg);padding:12px;cursor:pointer;transition:transform .15s,box-shadow .15s;box-shadow:var(--shadow-card),inset 0 1px 0 #fff}
+  .place:hover{box-shadow:var(--shadow-lift)}
   .place:active{transform:scale(.985)}
   .thumb{width:64px;height:64px;border-radius:14px;flex:none;display:grid;place-items:center;background:var(--subtle);overflow:hidden;position:relative}
   .thumb svg{width:28px;height:28px;stroke:var(--muted);fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
   .thumb.banner{width:100%;height:150px;border-radius:18px;margin-bottom:6px}
   .thumb.banner svg{width:44px;height:44px}
-  .thumb::after{content:"";position:absolute;inset:0;background:linear-gradient(160deg,rgba(255,255,255,.55),transparent 45%,rgba(37,40,57,.06))}
+  .thumb{background:linear-gradient(160deg,#fff,var(--subtle) 60%,#E3DCCF);box-shadow:inset 0 1px 0 #fff,inset 0 -1px 0 rgba(20,24,41,.06)}
+  .thumb::after{content:"";position:absolute;inset:0;background:linear-gradient(160deg,rgba(255,255,255,.6),transparent 45%,rgba(20,24,41,.05))}
   .place .body{min-width:0;flex:1;display:flex;flex-direction:column;gap:7px}
   .pname{font:500 15px/1.15 var(--display);letter-spacing:.06em;text-transform:uppercase;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:flex;align-items:center;gap:5px}
   .pname svg{width:15px;height:15px;stroke:var(--turq-ink);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex:none}
@@ -228,7 +235,7 @@
   .rank svg{width:16px;height:16px;stroke:var(--dim);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
 
   .occ{display:flex;flex-direction:column;gap:8px}
-  .pill{border-radius:999px;padding:4px 11px;font:700 11px var(--body);letter-spacing:.06em;text-transform:uppercase;color:var(--night)}
+  .pill{border-radius:999px;padding:4px 11px;font:700 11px var(--body);letter-spacing:.06em;text-transform:uppercase;color:var(--night);background-image:linear-gradient(180deg,rgba(255,255,255,.35),rgba(255,255,255,0));box-shadow:0 1px 2px rgba(20,24,41,.12),inset 0 1px 0 rgba(255,255,255,.5)}
   .sev{font:500 12px var(--body)}
   .occ .who{font:500 15px var(--display);letter-spacing:.06em;text-transform:uppercase;color:var(--ink)}
   .occ .who span{color:var(--dim)}
@@ -290,7 +297,7 @@
   .modal .grab{margin-bottom:2px}
   .xbtn{border:0;background:rgba(37,40,57,.08);width:32px;height:32px;border-radius:50%;cursor:pointer;display:grid;place-items:center}
   .xbtn svg{width:16px;height:16px;stroke:var(--muted);fill:none;stroke-width:2.2;stroke-linecap:round}
-  .emerg{display:flex;align-items:center;gap:14px;background:rgba(255,255,255,.7);border:1px solid var(--glass-edge);border-radius:var(--r-md);padding:12px 16px;cursor:pointer;box-shadow:inset 0 1px 0 #fff}
+  .emerg{display:flex;align-items:center;gap:14px;background:rgba(255,255,255,.78);border:1px solid var(--glass-edge);border-radius:var(--r-md);padding:12px 16px;cursor:pointer;box-shadow:inset 0 1px 0 #fff,0 4px 12px rgba(20,24,41,.08)}
   .emerg .num{font:700 30px/1 var(--display);color:var(--coral-ink);width:64px;font-variant-numeric:tabular-nums}
   .emerg .nm{font:700 15px var(--body);color:var(--ink)}
   .emerg .nt{font-size:13px;color:var(--dim)}
@@ -315,12 +322,12 @@
 <header class="top">
   <div>
     <h1><span id="topmark"></span>Irisa · protótipo iOS 27</h1>
-    <p>Liquid Glass: cabeçalho e barra de abas flutuam em vidro, o conteúdo passa por baixo. Paleta do app com a saturação a 60%. Nada aqui grava, liga ou envia.</p>
+    <p>Liquid Glass: cabeçalho e barra de abas flutuam em vidro com refração, o conteúdo passa por baixo. Cores da marca reforçadas (saturação ×1,35), profundidade por sombra e camada, tinta mais escura para definição. Nada aqui grava, liga ou envia.</p>
   </div>
   <div class="ctl">
     <div class="seg-sat" role="group" aria-label="Saturação">
-      <button id="sat60" aria-pressed="true">60%</button>
-      <button id="sat100" aria-pressed="false">100% (atual)</button>
+      <button id="sat60" aria-pressed="true">Viva (nova)</button>
+      <button id="sat100" aria-pressed="false">Atual</button>
     </div>
     <div class="jump" id="jump"></div>
   </div>
@@ -402,7 +409,7 @@
 </main>
 
 <footer class="foot">
-  <b>Como ler:</b> telas Início, Mapa, Lugares, Apoio, Perfil e Registrar pela barra; ficha do lugar e do bairro a partir dos cartões e do ranking. Botões de envio só mostram um aviso. Dados de exemplo em Curitiba, todos fictícios. A opção “100%” mostra a paleta atual do app, para comparar.
+  <b>Como ler:</b> telas Início, Mapa, Lugares, Apoio, Perfil e Registrar pela barra; ficha do lugar e do bairro a partir dos cartões e do ranking. Botões de envio só mostram um aviso. Dados de exemplo em Curitiba, todos fictícios. A opção “Atual” mostra a paleta que o app usa hoje, para comparar.
 </footer>
 
 <script>
@@ -507,8 +514,8 @@ const ICONS = {
 /* marca: anel de 48 fatias, varredura e pupila (mesma geometria de Mark.tsx) */
 function markSvg(size){
   const ring=["#F4736F","#F5A45D","#F0CA75","#5CC9B4","#6AA8EE","#AE96F2"];
-  const sat=document.documentElement.dataset.sat==="100"?1:.6;
-  const desat=h=>{let r=parseInt(h.slice(1,3),16)/255,g=parseInt(h.slice(3,5),16)/255,b=parseInt(h.slice(5,7),16)/255;const mx=Math.max(r,g,b),mn=Math.min(r,g,b),l=(mx+mn)/2;let hh=0,s=0;if(mx!==mn){const d=mx-mn;s=l>.5?d/(2-mx-mn):d/(mx+mn);hh=mx===r?(g-b)/d+(g<b?6:0):mx===g?(b-r)/d+2:(r-g)/d+4;hh/=6}s*=sat;const q=l<.5?l*(1+s):l+s-l*s,p=2*l-q,f=t=>{if(t<0)t+=1;if(t>1)t-=1;if(t<1/6)return p+(q-p)*6*t;if(t<1/2)return q;if(t<2/3)return p+(q-p)*(2/3-t)*6;return p};const hx=x=>Math.round(x*255).toString(16).padStart(2,"0");return s===0?h:"#"+hx(f(hh+1/3))+hx(f(hh))+hx(f(hh-1/3))};
+  const sat=document.documentElement.dataset.sat==="100"?1:1.35;
+  const desat=h=>{let r=parseInt(h.slice(1,3),16)/255,g=parseInt(h.slice(3,5),16)/255,b=parseInt(h.slice(5,7),16)/255;const mx=Math.max(r,g,b),mn=Math.min(r,g,b),l=(mx+mn)/2;let hh=0,s=0;if(mx!==mn){const d=mx-mn;s=l>.5?d/(2-mx-mn):d/(mx+mn);hh=mx===r?(g-b)/d+(g<b?6:0):mx===g?(b-r)/d+2:(r-g)/d+4;hh/=6}s=Math.min(1,s*sat);const q=l<.5?l*(1+s):l+s-l*s,p=2*l-q,f=t=>{if(t<0)t+=1;if(t>1)t-=1;if(t<1/6)return p+(q-p)*6*t;if(t<1/2)return q;if(t<2/3)return p+(q-p)*(2/3-t)*6;return p};const hx=x=>Math.round(x*255).toString(16).padStart(2,"0");return s===0?h:"#"+hx(f(hh+1/3))+hx(f(hh))+hx(f(hh-1/3))};
   const lerp=(a,b,t)=>{let o="#";for(let i=1;i<7;i+=2){const x=parseInt(a.slice(i,i+2),16),y=parseInt(b.slice(i,i+2),16);o+=Math.round(x+(y-x)*t).toString(16).padStart(2,"0")}return o};
   const rc=t=>{const p=t*ring.length,i=Math.floor(p)%ring.length;return desat(lerp(ring[i],ring[(i+1)%ring.length],p-Math.floor(p)))};
   const pt=(r,a)=>[50+r*Math.cos(a),50+r*Math.sin(a)];

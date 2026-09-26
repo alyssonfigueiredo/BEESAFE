@@ -5,7 +5,7 @@ import { Pressable, ScrollView, Text, View } from "react-native";
 import { useScreenInsets } from "@/hooks/useScreenInsets";
 import { PlaceForm } from "@/components/PlaceForm";
 import { ReportForm } from "@/components/ReportForm";
-import { colors } from "@/theme/tokens";
+import { colors, shadow } from "@/theme/tokens";
 
 export default function RegistrarScreen() {
   const insets = useScreenInsets();
@@ -38,7 +38,7 @@ export default function RegistrarScreen() {
         </Text>
       </View>
 
-      <View className="flex-row rounded-xl border border-border bg-surface p-1">
+      <View className="flex-row rounded-xl border border-border bg-surface p-1" style={shadow.card}>
         {(["relato", "lugar"] as const).map((m) => (
           <Pressable
             key={m}
@@ -65,7 +65,7 @@ export default function RegistrarScreen() {
         <PlaceForm onDone={(id) => router.replace({ pathname: "/lugar/[id]", params: { id } })} />
       )}
 
-      <View className="gap-3 rounded-xl border border-border bg-surface p-4">
+      <View className="gap-3 rounded-xl border border-border bg-surface p-4" style={shadow.card}>
         <Note
           title="100% anônimo"
           text="Seu nome e e-mail nunca aparecem. Nem moderadores veem quem registrou."

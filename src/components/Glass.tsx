@@ -45,7 +45,7 @@ export function Glass({ tint = "regular", style, children, ...rest }: Props) {
     <View style={[style, styles.clip]} {...rest}>
       <BlurView
         tint="light"
-        intensity={55}
+        intensity={70}
         experimentalBlurMethod="dimezisBlurView"
         style={StyleSheet.absoluteFill}
       />

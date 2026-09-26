@@ -11,7 +11,7 @@ import { usePlaces } from "@/hooks/usePlaces";
 import type { PublicOccurrence } from "@/lib/types";
 import { useCity } from "@/providers/CityProvider";
 import { OCCURRENCE_TYPES, onLight, SEVERITIES, type OccurrenceType } from "@/theme/domain";
-import { colors } from "@/theme/tokens";
+import { colors, shadow } from "@/theme/tokens";
 
 const TYPE_KEYS = Object.keys(OCCURRENCE_TYPES) as OccurrenceType[];
 
@@ -121,7 +121,7 @@ export default function MapaScreen() {
 
       <DangerRanking items={ranking} />
 
-      <View className="gap-2 rounded-xl border border-border bg-surface p-4">
+      <View className="gap-2 rounded-xl border border-border bg-surface p-4" style={shadow.card}>
         <Text className="font-heading text-base uppercase tracking-widest text-ink">Legenda</Text>
         <View className="flex-row flex-wrap gap-x-4 gap-y-1">
           {Object.values(SEVERITIES).map((s) => (
