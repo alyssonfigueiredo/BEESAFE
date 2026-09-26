@@ -30,19 +30,21 @@ App brasileiro para a comunidade LGBTQIA+. Duas coisas, e a regra que as separa:
 - **Proibido**: "seguro", "lugar seguro", "região tranquila", "selo de segurança"; número de testadores ou dias de teste; "me ajuda", "apoie o projeto" (a pegada é exclusividade: "ser das primeiras pessoas"); listar categorias como se fossem tudo ("bar, café e balada"); nome de bar real sem autorização; logo, frase ou trecho de artista/marca.
 - Emoji só na legenda, nunca na arte. Hashtags no fim da legenda: #Irisa #LGBTQIA #Orgulho #AppLGBT + cidades.
 
-## 3. Cores (fonte única: `base.css`, igual a `src/theme/tokens.js`)
+## 3. Cores (fonte única: `base.css`)
+
+Desde 26/09/2026 o material de divulgação usa os seis acentos com **+60% de saturação** (decisão dele). São os valores abaixo; o app usa os mesmos matizes mais contidos (`src/theme/tokens.js`, `SATURATION`). Os halos (`.halo`) continuam com os rgba antigos, mais suaves.
 
 | token | hex | uso |
 |---|---|---|
 | night | #1E2340 | fundo de toda lâmina de Instagram; texto sobre cor |
 | night2 | #161B2E | pupila do símbolo, fundo do mark |
 | paper | #FAF9F6 | fundo claro (site, catálogo); raro no Instagram |
-| coral | #F4736F | urgência, relato, CTA principal, "Mito" |
-| orange | #F5A45D | afeto |
-| yellow | #F0CA75 | o "a" do wordmark, banheiro, atenção |
-| turq | #5CC9B4 | avaliar, acolhimento, "Verdade", eyebrow |
-| blue | #6AA8EE | só dentro do arco-íris |
-| lilac | #AE96F2 | clientela, halo |
+| coral | #FD514B | urgência, relato, CTA principal, "Mito" |
+| orange | #FD953A | afeto |
+| yellow | #FDC74D | o "a" do wordmark, banheiro, atenção |
+| turq | #23E7C1 | avaliar, acolhimento, "Verdade", eyebrow |
+| blue | #4099FD | só dentro do arco-íris |
+| lilac | #9570FE | clientela, halo |
 | texto claro | #FFFFFF / #D5D8E4 / #C9CDDD / #8A90A2 | título / corpo / apoio / discreto |
 | Ink (escuros) | coralInk #B23C3A, turqInk #1B7A6E… | texto colorido sobre fundo claro (contraste AA) |
 
@@ -59,8 +61,8 @@ Eixos têm cor fixa: Atendimento coral, Afeto orange, Banheiro yellow, Clientela
 
 ## 5. Símbolo e marca
 
-- **Símbolo**: anel arco-íris (conic, 6 cores) com centro night e um ponto branco descentrado (olho/radar). Versão completa em `radar.svgfrag` (anel de 96 fatias, varredura turquesa, três pontos, pupila #161B2E). Versão mínima em CSS: `.mark`.
-- **Rodapé de toda lâmina**: canto inferior esquerdo `.brand` = mark 30 px + "IRIS" + "a" amarelo. Canto inferior direito `.swipe` = "arraste →" (não na última). Canto superior direito `.num` = "3/8".
+- **Símbolo**: o radar real, sempre. `radar.svgfrag` é um `<svg>` invisível com `<symbol id="radarmark">` (anel de 96 fatias, varredura turquesa, três pontos, pupila #161B2E com brilho branco): cola uma vez logo depois de `<body>` e usa `<svg class="mark" viewBox="0 0 100 100"><use href="#radarmark"/></svg>` onde o símbolo aparece. O círculo liso em CSS (`span.mark`) só serve abaixo de 24 px (ícone dentro do mockup de telefone); **nunca no rodapé nem no fecho** (erro corrigido em 26/09).
+- **Rodapé de toda lâmina**: canto inferior esquerdo `.brand` = radar 34 px + "IRIS" + "a" amarelo. Canto inferior direito `.swipe` = "arraste →" (não na última). Canto superior direito `.num` = "3/8".
 - **Assinatura em uma linha** (story, rodapé de peça): símbolo + IRISA + divisor + "Quanta **cor** tem esse lugar?" com "cor" em arco-íris.
 - A capa de carrossel nunca é a logo. É o gancho.
 

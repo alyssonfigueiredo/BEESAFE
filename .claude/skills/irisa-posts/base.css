@@ -2,7 +2,7 @@
 @import url("https://fonts.googleapis.com/css2?family=Urbanist:wght@500;600&family=Oswald:wght@300;400;500;700&family=Space+Grotesk:wght@400;500;700&display=swap");
 :root{
   --paper:#FAF9F6;--surface:#FFFFFF;--subtle:#F1EDE7;--border:#E4DED5;--night:#1E2340;--night2:#161B2E;--ink:#1E2340;--muted:#4F576F;--dim:#8A90A2;
-  --coral:#F4736F;--orange:#F5A45D;--yellow:#F0CA75;--turq:#5CC9B4;--lilac:#AE96F2;--blue:#6AA8EE;
+  --coral:#FD514B;--orange:#FD953A;--yellow:#FDC74D;--turq:#23E7C1;--lilac:#9570FE;--blue:#4099FD;
   --coralInk:#B23C3A;--orangeInk:#96601C;--yellowInk:#8A6512;--turqInk:#1B7A6E;--lilacInk:#6D4FD8;--amber:#E0A32E;
   --wordmark:"Urbanist","Helvetica Neue",Arial,sans-serif;--display:"Oswald",Impact,"Arial Narrow",sans-serif;--body:"Space Grotesk","Helvetica Neue",Arial,sans-serif;
   --rainbow:linear-gradient(90deg,var(--coral),var(--orange),var(--yellow),var(--turq),var(--blue),var(--lilac));
@@ -11,9 +11,10 @@
 *{box-sizing:border-box}
 body{margin:0;background:#2a2f4a;font-family:var(--body);display:flex;flex-direction:column;align-items:center;gap:40px;padding:40px 0}
 p{margin:0}
-.mark{width:30px;height:30px;border-radius:50%;background:conic-gradient(from -90deg,var(--coral),var(--orange),var(--yellow),var(--turq),var(--blue),var(--lilac),var(--coral));position:relative;flex:none}
-.mark::after{content:"";position:absolute;inset:4px;border-radius:50%;background:var(--night2)}
-.mark::before{content:"";position:absolute;left:50%;top:50%;width:8px;height:8px;margin:-4px;border-radius:50%;background:#fff;z-index:1}
+.mark{width:30px;height:30px;flex:none;display:block}
+span.mark{border-radius:50%;background:conic-gradient(from -90deg,var(--coral),var(--orange),var(--yellow),var(--turq),var(--blue),var(--lilac),var(--coral));position:relative;flex:none}
+span.mark::after{content:"";position:absolute;inset:4px;border-radius:50%;background:var(--night2)}
+span.mark::before{content:"";position:absolute;left:50%;top:50%;width:8px;height:8px;margin:-4px;border-radius:50%;background:#fff;z-index:1}
 .sl{position:relative;width:1080px;height:1350px;flex:none;overflow:hidden;background:var(--night);color:#fff;font-family:var(--body);display:flex;flex-direction:column;align-items:center}
 .halo{position:absolute;inset:-30%;pointer-events:none;filter:blur(60px)}
 .h1{background:radial-gradient(30% 22% at 20% 25%,rgba(92,201,180,.38),transparent 70%),radial-gradient(28% 20% at 82% 70%,rgba(174,150,242,.36),transparent 70%)}
@@ -53,7 +54,7 @@ p{margin:0}
 .swipe{position:absolute;bottom:56px;right:60px;display:flex;align-items:center;gap:14px;font-family:var(--display);text-transform:uppercase;letter-spacing:.2em;font-size:26px;color:#C9CDDD}
 .swipe svg{width:44px;height:44px}
 .brand{position:absolute;bottom:56px;left:60px;display:flex;align-items:center;gap:14px;font-family:var(--wordmark);font-weight:500;text-transform:uppercase;letter-spacing:.2em;font-size:26px;color:#C9CDDD}
-.brand .mark{width:30px;height:30px}
+.brand svg.mark{width:34px;height:34px}
 .crit{display:grid;grid-template-columns:1fr 1fr;gap:22px;width:860px}
 .crit div{padding:30px 34px;border-radius:30px;background:rgba(255,255,255,.06);border:2px solid rgba(255,255,255,.12)}
 .crit b{display:block;font-family:var(--display);text-transform:uppercase;letter-spacing:.12em;font-size:34px;margin-bottom:8px}
