@@ -117,16 +117,25 @@ def sticker(x, y, w, h, rx, fill, inner):
     return f'<g transform="translate({x} {y})" filter="url(#sh2)"><rect x="0" y="0" width="{w}" height="{h}" rx="{rx}" fill="#fff"/><rect x="10" y="10" width="{w-20}" height="{h-20}" rx="{max(rx-8,4)}" fill="{fill}"/>{inner}</g>'
 def pin(x, y, inner, fill=N):
     return f'<g transform="translate({x} {y})" filter="url(#sh)"><circle cx="120" cy="120" r="120" fill="#fff"/><circle cx="120" cy="120" r="110" fill="{fill}"/><circle cx="120" cy="120" r="110" fill="url(#gloss)"/>{inner}</g>'
-def fan(x, y, inner, scale=1):
-    # leque aberto: 12 varetas em arco-íris
-    cols = ["#F4736F","#F58A66","#F5A45D","#F2B769","#F0CA75","#A6C995","#5CC9B4","#61BFC6","#6AA8EE","#8C9FF0","#AE96F2","#C48BC9"]
-    segs = []
+def fan(x, y, inner, scale=1, kind="rainbow"):
     import math
-    for i, c in enumerate(cols):
+    rainbow = ["#F4736F","#F58A66","#F5A45D","#F2B769","#F0CA75","#A6C995","#5CC9B4","#61BFC6","#6AA8EE","#8C9FF0","#AE96F2","#C48BC9"]
+    pal = ["#F4736F","#F5A45D","#F0CA75","#5CC9B4","#6AA8EE","#AE96F2"]
+    segs = []; R = 330; ri = 70
+    for i in range(12):
         a0 = math.radians(200 + i * 140 / 12); a1 = math.radians(200 + (i + 1) * 140 / 12)
-        R = 330; ri = 70
-        segs.append(f'<path d="M{200+ri*math.cos(a0):.1f} {360+ri*math.sin(a0):.1f} L{200+R*math.cos(a0):.1f} {360+R*math.sin(a0):.1f} A{R} {R} 0 0 1 {200+R*math.cos(a1):.1f} {360+R*math.sin(a1):.1f} L{200+ri*math.cos(a1):.1f} {360+ri*math.sin(a1):.1f} Z" fill="{c}" stroke="#fff" stroke-opacity=".5" stroke-width="1.5"/>')
-    return f'<g transform="translate({x} {y}) scale({scale})" filter="url(#sh)">{"".join(segs)}<circle cx="200" cy="360" r="14" fill="{N}"/><circle cx="200" cy="360" r="5" fill="#fff"/>{inner}</g>'
+        if kind == "rainbow": c = rainbow[i]
+        elif kind == "night": c = N
+        elif kind == "paper": c = "#F3EEE4" if i % 2 else "#FFFFFF"
+        else: c = pal[i % 6] if i % 2 else N  # "paleta": alterna cor da marca e noite
+        edge = "#fff" if kind != "night" else "rgba(255,255,255,.18)"
+        segs.append(f'<path d="M{200+ri*math.cos(a0):.1f} {360+ri*math.sin(a0):.1f} L{200+R*math.cos(a0):.1f} {360+R*math.sin(a0):.1f} A{R} {R} 0 0 1 {200+R*math.cos(a1):.1f} {360+R*math.sin(a1):.1f} L{200+ri*math.cos(a1):.1f} {360+ri*math.sin(a1):.1f} Z" fill="{c}" stroke="{edge}" stroke-opacity=".6" stroke-width="1.5"/>')
+    if kind in ("night", "paper"):
+        # borda externa em arco-íris
+        a0 = math.radians(200); a1 = math.radians(340)
+        segs.append(f'<path d="M{200+(R-14)*math.cos(a0):.1f} {360+(R-14)*math.sin(a0):.1f} A{R-14} {R-14} 0 0 1 {200+(R-14)*math.cos(a1):.1f} {360+(R-14)*math.sin(a1):.1f}" fill="none" stroke="url(#rb)" stroke-width="10"/>')
+    pivot = N if kind != "night" else "#F0CA75"
+    return f'<g transform="translate({x} {y}) scale({scale})" filter="url(#sh)">{"".join(segs)}<circle cx="200" cy="360" r="14" fill="{pivot}"/><circle cx="200" cy="360" r="5" fill="#fff"/>{inner}</g>'
 def pen(x, y, fill, inner, scale=1):
     return f'''<g transform="translate({x} {y}) scale({scale}) rotate(-30 200 200)" filter="url(#sh)">
 <rect x="180" y="20" width="40" height="330" rx="12" fill="{fill}" stroke="#0F1226" stroke-width="1.5"/>
@@ -265,10 +274,12 @@ PUB.append(slide("Capinha", "O símbolo na mão o dia inteiro.", True, f'''<svg 
 </svg>''', "Item barato, alta rotação e o que mais aparece em foto."))
 
 PUB.append(slide("Leque", "O clássico da cena, aberto e fazendo barulho.", True, f'''<svg viewBox="0 0 960 900">
-{fan(80,40, lines(200,250,26,N,['QUANTA COR','TEM ESSE LUGAR?'],2,32))}
-{fan(560,180, d(200,258,40,N,'AQUENDA',4)+d(200,296,22,N,'ESSE LUGAR.',3),.7)}
-{lab(280,800,'Leque de tecido, 23 cm')}{lab(700,800,'Versão de bolso')}
-</svg>''', "Leque abre, estala e faz a pergunta. É o item que mais circula em parada e em pista."))
+{fan(96,10, lines(200,236,30,N,['QUANTA COR','TEM ESSE LUGAR?'],2,36),.72,"rainbow")}
+{fan(576,10, r(145,110,110)+wm(200,275,30,'#F0CA75',8),.72,"night")}
+{fan(96,410, wm(200,225,48,N,10)+d(200,270,20,'#4F576F','QUEM ESTEVE LÁ RESPONDE.',2),.72,"paper")}
+{fan(576,410, r(140,120,120),.72,"paleta")}
+{lab(240,330,'Arco-íris',size=24)}{lab(720,330,'Noite com logo',size=24)}{lab(240,730,'Papel com nome',size=24)}{lab(720,730,'Paleta da marca',size=24)}
+</svg>''', "Leque de tecido, 23 cm, quatro versões. Abre, estala e faz a pergunta. É o item que mais circula em parada e em pista."))
 
 PUB.append(slide("Caneta e cartão de mesa", "Para deixar no bar antes de ir embora.", False, f'''<svg viewBox="0 0 960 900">
 {pen(0,40,N, wm(200,140,16,'#F0CA75',5)+'<text transform="rotate(90 200 200)" x="200" y="120" class="sdisp" font-size="14" fill="#fff" text-anchor="middle" letter-spacing="2">QUANTA COR TEM ESSE LUGAR?</text>')}
@@ -359,35 +370,124 @@ PUB.append(slide("Placa de vitrine", "Para o lugar que topa ser avaliado.", Fals
 # ---------- lâminas só da versão interna ----------
 def how(title, cards, cap_="", dense=False):
     body = "".join(f"<div><b>{a}</b><p>{b}</p></div>" for a, b in cards)
-    return dict(t=title, sub="", dark=True, how=body, cap=cap_, dense=dense)
+    return dict(t=title, sub="", dark=True, how=body, cap=cap_, dense=dense or len(cards) >= 6)
+
+def capa_int():
+    return slide("Plano da lojinha", "Versão interna · não circular", True, f'''<svg viewBox="0 0 960 900">
+{r(330,60,300)}
+{lines(480,470,44,'#fff',['O QUE PRECISA EXISTIR','ANTES DA PRIMEIRA VENDA'],3,52)}
+{rule(330,560,300,12)}
+{d(480,650,26,'#8A90A2','MODELO · FISCAL · FORNECEDOR · PREÇO · ESTOQUE · CANAL',3)}
+{d(480,690,26,'#8A90A2','EVENTO · MARKETING · MARCA · CAIXA · RISCO · 90 DIAS',3)}
+</svg>''', "Escrito como se eu fosse abrir o negócio. Números são faixas de 2026 para conferir antes de decidir.")
 
 INT = [
-    how("Como produzir", [
-        ("Sob demanda, sem estoque", "Camiseta, oversized, moletom, ecobag, boné, capinha e caneca em estampa sob demanda (Montink, Lolja, Camiseteria). Sobe a arte, o site vende, eles produzem e enviam."),
-        ("Gráfica e brindes", "Adesivos, bottons, ímãs, cartões de mesa, leques, canetas, apitos, pulseiras, chaveiros, cordões e a placa saem de gráfica rápida ou fornecedor de brindes, tiragem de 50 a 200."),
-        ("Arte pronta", "Símbolo, nome e frases em vetor (SVG), sem perda em nenhum tamanho. Fundos: preto, off-white e cru."),
-        ("Para onde vai", "Cada venda paga servidor, cota de fotos e a próxima cidade no mapa."),
+    capa_int(),
+    how("1. Por que uma lojinha", [
+        ("O que ela paga", "Servidor Supabase quando sair do plano grátis (~US$ 25/mês), cota de fotos do Google acima do gratuito, Apple Developer (US$ 99/ano), domínio e o custo de registrar a marca."),
+        ("O que ela faz além de pagar", "Divulgação que anda pela rua. Uma camiseta com a pergunta é um anúncio que a pessoa escolheu vestir. Presença em parada e em festa sem alugar mídia."),
+        ("O que ela não é", "Não é o negócio. O app é. Se a loja tomar mais tempo que o app, está errado. Meta: cobrir os custos fixos do app e financiar a próxima cidade."),
+        ("Regra de ouro", "Nada em estoque que não tenha demanda provada. Primeiro sob demanda e pré-venda; brinde físico só em lote pequeno e com uso certo em evento."),
     ]),
-    how("Custo e preço", [
-        ("Camiseta", "custo R$ 45–60 · venda R$ 89–119"),
-        ("Oversized", "custo R$ 60–75 · venda R$ 129–149"),
-        ("Moletom", "custo R$ 110–140 · venda R$ 199–249"),
-        ("Ecobag", "custo R$ 18–25 · venda R$ 49–59"),
-        ("Boné bordado", "custo R$ 35–45 · venda R$ 79–89"),
-        ("Caneca", "custo R$ 25–30 · venda R$ 59–69"),
-        ("Capinha", "custo R$ 30–40 · venda R$ 79–89"),
-        ("Leque", "custo R$ 8–15 · venda R$ 35–45"),
-        ("Adesivos (4) / Bottons (5)", "custo R$ 5–12 · venda R$ 15–30"),
-        ("Cartão de mesa (50) / ímã / apito", "custo R$ 3–12 · venda R$ 15–29 ou brinde"),
-    ], "Estimativa de 2026 para sob demanda e brinde em tiragem pequena. Conferir na plataforma antes de publicar preço.", dense=True),
-    how("Canais e primeiros passos", [
-        ("1. Loja sob demanda", "Criar a loja na Montink com 4 peças (camiseta, oversized, ecobag, caneca). Link na bio do @irisapp ao lado do app."),
-        ("2. Kit parada", "Leque + botton + adesivo + apito + cartão de mesa numa sacolinha. Brinde para testador e para ONG parceira; venda a R$ 49 em evento."),
-        ("3. Bar parceiro", "Placa de vitrine + ímã de balcão + 50 cartões de mesa para o lugar que topa ser avaliado. Sem custo para o bar; vira a primeira lista de lugares com nota."),
-        ("4. Revenda por ONG", "Grupo Dignidade e Centro de Cidadania vendem com margem para eles. Irisa entra com a arte e a produção."),
-    ], "Começar pequeno: 4 peças sob demanda e um kit de brinde. O resto entra quando houver pedido."),
+    how("2. Modelo: três trilhos", [
+        ("A · Sob demanda (loja online)", "Camiseta, oversized, moletom, ecobag, boné, capinha, caneca. Plataforma produz, envia e emite nota. Zero estoque, zero risco, margem menor (30–45%). Começa aqui."),
+        ("B · Brindes em lote (evento)", "Leque, botton, adesivo, ímã, cartão de mesa, apito, pulseira. Compra de 50–200 unidades, margem maior (60–75%), mas é estoque em casa e venda presencial ou por Correios."),
+        ("C · Parceiros (sem venda)", "Bar parceiro recebe placa, ímã e cartões de mesa de graça. ONG recebe kit e pode revender com margem para ela. Aqui o produto é relação, não receita."),
+        ("Ordem", "A no mês 1. B no mês 2 com o primeiro lote pequeno. C começa junto com B, com três bares que já toparam."),
+    ]),
+    how("3. Jurídico e fiscal", [
+        ("MEI", "Vender exige CNPJ para emitir nota e receber de plataforma sem retenção. MEI: abertura grátis pelo gov.br, ~R$ 80/mês fixo (DAS), limite de R$ 81 mil/ano. CNAE comércio varejista de vestuário e acessórios (4781-4/00); pode somar brindes (4789-0/99)."),
+        ("Marca no INPI", "O nome Irisa está livre. Registrar nas classes 25 (roupas), 35 (comércio) e 9/42 (app). ~R$ 142 por classe no pedido com desconto de MEI, mais a taxa de concessão depois (~R$ 300). Processo leva 12–18 meses, mas o pedido já protege."),
+        ("Nota fiscal", "Sob demanda: a plataforma emite. Lote próprio: MEI emite NF-e avulsa pelo portal nacional, ou nota de venda ao consumidor. Guardar tudo numa pasta por mês."),
+        ("Conta e pagamento", "Conta PJ gratuita (Inter, Nubank PJ, C6). Pix da conta PJ. Maquininha só para evento (Ton, InfinitePay, Stone: sem mensalidade, taxa 1–3%)."),
+    ], "Sem MEI a plataforma paga como pessoa física com retenção e você fica sem nota para o comprador. Vale abrir antes de subir a loja."),
+    how("4. Fornecedores", [
+        ("Sob demanda", "Montink (mais usada por criadores, loja pronta, saque semanal), Lolja e Camiseteria. Testar as três com a mesma arte: pedir uma camiseta de cada e comparar malha, cor e prazo antes de escolher."),
+        ("Malha e estampa", "Camiseta 30.1 penteada, 100% algodão. Estampa DTF para poucas cores e detalhe fino (o símbolo); serigrafia só a partir de 30 peças iguais. Bordado para boné e bucket com bordadeira local."),
+        ("Brindes", "Bottons e adesivos em gráfica rápida local (Curitiba tem várias). Leque, apito, pulseira e ímã em fornecedor de brindes promocionais (pedir mínimo de 50). Ecobag serigrafada em confecção local a partir de 30."),
+        ("Critérios", "Sempre amostra antes do lote. Prazo escrito. Tolerância de cor: mandar Pantone do símbolo (coral 178 C, turquesa 3255 C, amarelo 141 C, lilás 2645 C) e foto da amostra à luz do dia."),
+    ]),
+    how("5. Precificação", [
+        ("Fórmula", "Preço = (custo do produto + embalagem + frete de entrada) × 2 a 2,5, arredondado para 9. Depois confere: taxa da plataforma ou da maquininha (5–8%), DAS fixo, e o que sobra é a margem real."),
+        ("Sob demanda (exemplo)", "Camiseta: base R$ 55 → venda R$ 99 → plataforma repassa ~R$ 40. Oversized: base R$ 70 → R$ 139 → ~R$ 60. Ecobag: base R$ 22 → R$ 55 → ~R$ 28. Caneca: base R$ 28 → R$ 65 → ~R$ 32."),
+        ("Lote próprio (exemplo)", "Leque a R$ 12 → R$ 39. Botton a R$ 1,80 → pack de 5 a R$ 25. Adesivo a R$ 0,90 → pack de 4 a R$ 15. Ímã a R$ 4 → R$ 19. Apito a R$ 6 → R$ 25."),
+        ("Kit parada", "Leque + botton + adesivo + apito + cartão numa sacolinha kraft: custo ~R$ 24 → venda R$ 59. É o item de evento: um só preço, sem troco complicado."),
+    ], "Preço não pode ser maior que o de uma camiseta de banda. R$ 99 é o teto psicológico para camiseta de causa."),
+    how("6. Estoque e logística", [
+        ("Primeiro lote (mínimo)", "50 leques · 100 bottons · 200 adesivos · 30 ímãs · 30 apitos · 50 pulseiras · 250 cartões de mesa (5 bares × 50) · 10 placas A5. Cabe numa caixa de 60 litros."),
+        ("Onde e como", "Uma caixa em casa, uma planilha com entrada e saída (a mesma que conta o caixa). Contagem toda vez que voltar de evento."),
+        ("Envio", "Correios pelo Melhor Envio ou Kangu (etiqueta com desconto, sem contrato). Envelope kraft 20×30 com adesivo do símbolo e um cartão de agradecimento com QR do app. Postar 2× por semana em dia fixo."),
+        ("Prazos que precisam ser ditos", "Sob demanda: 7–15 dias úteis. Lote próprio: 2–7 dias. Evento: na hora. Colocar isso escrito na loja e no story, porque a reclamação nº 1 de lojinha é prazo."),
+    ]),
+    how("7. Canais", [
+        ("Loja sob demanda", "Uma vitrine só (Montink) com 4 a 6 peças. Link na bio ao lado do app. Cada post de produto aponta para lá."),
+        ("Instagram", "Ativar Instagram Shopping com o catálogo da loja. Story com adesivo de link direto no produto. Enquete \"qual frase vira camiseta?\" decide a próxima peça."),
+        ("Evento", "Parada, festa, feira de coletivo. Banca pequena: kit parada, leque, botton, camiseta em 3 tamanhos para prova. Pix QR + maquininha."),
+        ("WhatsApp", "Catálogo do WhatsApp Business para os grupos e amigos que já pediram. É o canal que vende primeiro."),
+        ("ONG e bar", "ONG revende com 30–40% para ela. Bar parceiro não compra: recebe placa e cartões e vira o primeiro lugar avaliado da cidade."),
+        ("O que não fazer", "Marketplace (Shopee, Mercado Livre): taxa alta, briga de preço e sem contexto de causa. Fica de fora até ter volume."),
+    ]),
+    how("8. Calendário de eventos", [
+        ("Datas fixas", "29/01 Visibilidade Trans · 17/05 Dia contra a LGBTfobia · 28/06 Orgulho · 29/08 Visibilidade Lésbica · 23/09 Visibilidade Bi · 20/11 (parada de várias capitais no fim do ano)."),
+        ("Paradas", "São Paulo em junho (a maior do mundo), Curitiba, Recife, João Pessoa, Natal e Joinville têm data própria; confirmar com o coletivo organizador do ano. Pedir espaço de banca com antecedência de 60 dias."),
+        ("Kit de evento", "Mesa dobrável, banner 80×200 com a pergunta, caixa de troco, maquininha carregada, QR do Pix impresso, lista para cadastro de testador, camiseta em P/M/G para provar, 40 kits parada."),
+        ("Depois do evento", "Contagem de estoque, foto de quem comprou (com autorização) para repost, e-mails novos colados na Play Console no mesmo dia."),
+    ]),
+    how("9. Marketing", [
+        ("Lançamento por pré-venda", "Abre com 3 peças e 10 dias de pré-venda. Só produz o que vendeu. Comunica como exclusividade: \"as primeiras 50 camisetas\", não como pedido de ajuda."),
+        ("Drops por cidade", "Edição Curitiba, edição Recife: mesma peça com o nome da cidade na manga. Cria pertencimento e uma desculpa para postar de novo."),
+        ("Quem usa aparece", "Repost de foto de quem veste. A camiseta é a prova social do app. Pedir a foto no cartão de agradecimento que vai na embalagem."),
+        ("Cupom para testador", "Quem está na lista de teste fechado ganha 15% na primeira compra. Junta as duas listas."),
+        ("Conteúdo", "Story de bastidor (amostra chegando, bordado sendo feito), enquete de frase, antes e depois da placa no bar parceiro."),
+        ("Medida", "Cada post com link rastreável (bit.ly separado por post) para saber o que vende."),
+    ]),
+    how("10. Marca e curadoria", [
+        ("O que nunca entra", "A palavra \"seguro\" em qualquer peça. Selo, nota ou promessa de segurança de lugar. Nome de bar real em estampa sem autorização."),
+        ("Palavras da comunidade", "Bicha, sapatão, viado, mona, aquenda: entram só na coleção \"cena\", com a leitura de que é a nossa língua. Quem compra escolhe. Nada disso vai em material para ONG ou empresa."),
+        ("Frases de terceiros", "\"Ninguém solta a mão de ninguém\" e \"we're here, we're queer\" são de domínio comum. Não usar frase, logo ou trecho de artista, marca ou coletivo específico."),
+        ("Fontes e cores", "Urbanist, Oswald e Space Grotesk são de licença aberta (OFL), servem para estampa vendida. Paleta e símbolo em vetor no repositório; mandar sempre SVG, nunca PNG, para o fornecedor."),
+        ("Consistência", "Toda peça leva o símbolo ou o nome. A pergunta \"Quanta cor tem esse lugar?\" é a frase principal; as outras são apoio."),
+        ("Registro visual", "Foto de produto sempre em fundo cru ou preto, luz natural, com a pessoa. Sem mockup genérico de banco de imagem."),
+    ]),
+    how("11. Caixa e ponto de equilíbrio", [
+        ("Investimento inicial", "MEI R$ 0 · INPI 2 classes ~R$ 300 · amostras sob demanda ~R$ 250 · primeiro lote de brindes R$ 1.500–2.500 · embalagem e cartões ~R$ 250 · banner e mesa ~R$ 300. Total: R$ 2.600–3.600."),
+        ("Custo fixo mensal", "DAS ~R$ 80. Só. Plataforma e maquininha cobram por venda."),
+        ("Ponto de equilíbrio", "Margem média de R$ 35 por item vendido → 75 a 100 itens pagam o investimento. Em evento, um kit parada vale R$ 35 de margem sozinho."),
+        ("Meta do 1º trimestre", "100 itens vendidos, 3 bares com placa, 1 evento com banca. Se bater, segunda coleção. Se não, fica só sob demanda e o lote vira brinde de testador."),
+        ("Separação", "Conta PJ só da loja. Nada de misturar com conta pessoal ou com o dinheiro do app. Reinvestir 100% nos primeiros seis meses."),
+        ("Planilha", "Uma aba por mês: item, quantidade, custo, preço, canal, margem. Fechar todo dia 1."),
+    ]),
+    how("12. Riscos e como tratar", [
+        ("Estoque parado", "Lote pequeno, kit de evento e brinde de testador como saída. Nunca comprar 500 de nada."),
+        ("Qualidade da plataforma", "Amostra antes. Se a malha vier ruim, troca de plataforma antes de divulgar, não depois."),
+        ("Prazo e reclamação", "Prazo escrito em todo lugar. Responder DM em até 24 h. Reenvio sem discussão em caso de defeito."),
+        ("Repasse retido", "Plataforma sob demanda paga com atraso de 7–30 dias. Não contar com esse dinheiro para o lote."),
+        ("Cópia da marca", "Pedido no INPI protocolado antes da primeira venda. É a prova de anterioridade."),
+        ("Frase que ofende parte da comunidade", "Toda frase da coleção \"cena\" passa por 3 pessoas da comunidade antes de virar peça."),
+        ("Bar que não quer placa", "Placa é opt-in. Nunca colocar sem o dono pedir. O app avalia o lugar de qualquer forma; a placa é convite, não cobrança."),
+        ("Tempo", "Loja rouba o app. Bloco fixo: 2 h por semana para loja, o resto é app."),
+    ], dense=True),
+    how("13. Cronograma de 90 dias", [
+        ("Semana 1–2", "Abrir MEI · protocolar INPI (25 e 35) · conta PJ · criar loja na Montink com camiseta, oversized, ecobag, caneca · pedir 1 amostra de cada em 2 plataformas."),
+        ("Semana 3–4", "Amostras chegam: foto real, escolher plataforma · loja no ar · link na bio · pré-venda de 10 dias · cupom para testadores · catálogo no WhatsApp."),
+        ("Mês 2", "Primeiro lote de brindes (lista da lâmina 6) · 3 bares parceiros com placa, ímã e cartões · kit parada montado · Instagram Shopping ligado."),
+        ("Mês 3", "Primeiro evento com banca · contagem, caixa, margem real · decidir: segunda coleção (drops por cidade) ou só manter sob demanda."),
+    ]),
+    how("14. Métricas", [
+        ("Vendas", "Itens por mês, ticket médio, itens por pedido. Meta: 35 itens/mês no trimestre."),
+        ("Margem", "Margem real por item depois de taxa e frete. Corta item abaixo de R$ 15 de margem."),
+        ("Canal", "Que link vendeu (bit.ly por post). Evento × loja × WhatsApp."),
+        ("Ponte com o app", "E-mails novos na lista de testador por evento. Bares com placa que receberam a primeira avaliação."),
+        ("Marca", "Fotos de quem usa recebidas por mês. Menções ao @irisapp."),
+        ("Operação", "Prazo médio de envio. Reclamações. Estoque parado há mais de 60 dias."),
+    ]),
+    how("15. Checklist antes da primeira venda", [
+        ("Legal", "☐ MEI aberto · ☐ INPI 25 e 35 protocolado · ☐ conta PJ · ☐ Pix PJ · ☐ termos de troca escritos na loja"),
+        ("Produto", "☐ arte em SVG por peça · ☐ amostra aprovada · ☐ foto real de cada peça · ☐ tabela de preço com margem conferida"),
+        ("Canal", "☐ loja no ar · ☐ link na bio · ☐ catálogo WhatsApp · ☐ prazo de entrega escrito · ☐ cupom de testador"),
+        ("Operação", "☐ embalagem e cartão de agradecimento · ☐ planilha de caixa e estoque · ☐ dia fixo de postagem · ☐ 2 h por semana bloqueadas"),
+    ], "Quando os quatro blocos estiverem marcados, abre a pré-venda. Antes disso, não."),
 ]
-
 def render(slides, title, interna=False):
     body = ""
     n = 0
@@ -396,7 +496,7 @@ def render(slides, title, interna=False):
         dark = s["dark"]
         if "how" in s:
             body += f'''
-<section class="sl dark">
+<section class="sl dark int">
   <div class="halo h1"></div><div class="grain"></div>
   <header><span class="eb">Lojinha Irisa · {n:02d}</span><h2 class="disp">{s["t"]}</h2></header>
   <div class="how{' dense' if s.get('dense') else ''}">{s["how"]}</div>
@@ -438,5 +538,5 @@ def render(slides, title, interna=False):
 </body></html>'''
 
 open("docs/lojinha.html", "w").write(render(PUB, "Irisa · Lojinha"))
-open("docs/lojinha-interna.html", "w").write(render(PUB + INT, "Irisa · Lojinha (interna)", True))
-print(len(PUB), len(PUB) + len(INT))
+open("docs/lojinha-interna.html", "w").write(render(INT, "Irisa · Lojinha · plano interno", True))
+print(len(PUB), len(INT))
