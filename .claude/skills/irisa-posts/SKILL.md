@@ -96,8 +96,8 @@ Story (1080×1920, `.sl.story`): mesma gramática, mais ar, e uma **área tracej
 
 ## 8. Referências (o que já existe, para copiar o jeito)
 
-- `docs/carrossel.html` (estreia), `carrossel-2.html` (quatro perguntas), `carrossel-3.html` (anonimato), `carrossel-4.html` (emergência), `carrossel-5.html` (regra da rua), `carrossel-6.html` (mito ou verdade), `post-bemvinde.html`, `stories-2.html`.
-- `docs/story.html` (vídeo de 60 s, dez cenas), `docs/reels-2.html` (quatro perguntas, 40 s) e `docs/reels-3.html` (regra da rua, 34 s): reels são carrosséis convertidos em cenas de 4–6 s, uma ideia por cena, número contando (`count`), fecho com pílula + @irisapp. `docs/index.html` (landing), `docs/pitch.html` (apresentação).
+- `docs/carrossel.html` (estreia), `carrossel-2.html` (quatro perguntas), `carrossel-3.html` (anonimato), `carrossel-4.html` (emergência), `carrossel-5.html` (regra da rua), `carrossel-6.html` (mito ou verdade), `carrossel-7.html` (Dia de Sair do Armário, 11/10), `post-bemvinde.html`, `stories-2.html`.
+- `docs/story.html` (vídeo de 60 s, dez cenas), `docs/reels-2.html` (quatro perguntas, 40 s) e `docs/reels-3.html` (regra da rua, 34 s), `docs/reels-4.html` (anonimato, 32 s): reels são carrosséis convertidos em cenas de 4–6 s, uma ideia por cena, número contando (`count`), fecho com pílula + @irisapp. `docs/index.html` (landing), `docs/pitch.html` (apresentação).
 - `docs/lojinha.html` e `scripts/lojinha/build.py`: mockups de produto em SVG com o mesmo sistema (fundo claro `paper` aceito ali).
 - Legendas e cronogramas anteriores: pasta Irisa-lancamento e Irisa-semana2 (uma pasta por dia, `legenda.txt` no feed, `texto.txt` no story).
 
