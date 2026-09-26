@@ -43,10 +43,10 @@ renderizado em 24/09 (commit `153d16f`) pelo mesmo pipeline HTML/CSS + Web Anima
 Playwright/ffmpeg, só nunca tinha entrado na fila. Corrigido: entrou como `reels-1` em
 01/10 20h. É mais longo que o ideal de retenção 2026 (78 s vs. 45–60 s recomendado), mas é
 conteúdo real e ainda dentro da faixa aceitável para formato narrativo/educativo — não
-motivo pra descartar. Também há uma sequência de teaser pronta e não usada (`post-aviso`,
-`story-aviso`, `story-revelacao`, `post-chegada`, `story-quadrinho-marca`) com narrativa de
-"estamos lançando agora"; não entrou na fila porque os testadores já usam o app há dias e
-o teaser ficaria deslocado — fica reservado para a virada de teste fechado pra produção.
+motivo pra descartar. A sequência de teaser (`post-aviso`, `story-aviso`, `story-revelacao`,
+`post-chegada`, `story-quadrinho-marca`) **já foi postada** — não é backlog, é histórico. Eu
+errei ao supor que estava sem uso só por não achar onde tinha sido publicada; não voltou pra
+fila.
 
 Fontes: Buffer (9,6M posts), Metricool Instagram Study 2026, Later/Hootsuite guias de
 algoritmo 2026, Social Insider (6M reels).
