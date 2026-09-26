@@ -68,16 +68,6 @@
   "publicado": false
  },
  {
-  "id": "reels-1",
-  "aprovado": false,
-  "quando": "2026-10-01T20:00:00-03:00",
-  "tipo": "REELS",
-  "midias": ["https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/Irisa-reels.mp4"],
-  "legenda": "Aquele papo de grupo: \"esse bar novo é de boa pra gente?\"\n\nA resposta não devia depender de sorte nem de rede social de terceiro.\n\nA Irisa é o mapa que responde: nesse bar pode, nessa rua à noite, não — e quem responde é quem já passou por ali. Registro sem nome, sem perfil, sem rastro; o lugar recebe cor, a rua recebe aviso.\n\nJá está no ar em Curitiba, Recife, João Pessoa, Joinville, Natal, São Paulo e Rio.\n\nO link está na bio · em fase de testes · Android.\n\n#Irisa #LGBTQIA #Orgulho #AppLGBT #Curitiba #Recife #JoãoPessoa #Joinville #Natal #SãoPaulo #RioDeJaneiro",
-  "primeiro_comentario": "bit.ly/appirisa",
-  "publicado": false
- },
- {
   "id": "story-01",
   "aprovado": false,
   "quando": "2026-10-02T12:00:00-03:00",
