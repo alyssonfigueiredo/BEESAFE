@@ -73,4 +73,6 @@ const pubKey = process.env.SUPABASE_PUBLISHABLE_KEY ?? "";
 if (pubKey && !pubKey.startsWith("sb_publishable_")) throw new Error("SUPABASE_PUBLISHABLE_KEY precisa ser a chave sb_publishable_ (nunca a secreta)");
 writeFileSync("site/index.html", readFileSync("docs/index.html", "utf8").replace("__SUPABASE_PUBLISHABLE_KEY__", pubKey || "__SUPABASE_PUBLISHABLE_KEY__"));
 copyFileSync("docs/og.png", "site/og.png");
+// Domínio próprio (registro.br): appirisa.com.br, apontado por A/AAAA pro GitHub Pages.
+writeFileSync("site/CNAME", "appirisa.com.br\n");
 console.log("site/ gerado");
