@@ -6,9 +6,7 @@ Ela mostra o total de relatos (e quantos foram graves), o tipo, onde e quando ac
 
 Uma coisa que ela nunca diz: que um bairro sem relato é um bairro seguro. Sem relato quer dizer que ninguém registrou ainda — dizer o contrário seria a falha mais perigosa que o app poderia cometer.
 
-Chega lá pelo ranking do Início ou pelo bairro na ficha de qualquer lugar.
-
-Qual bairro você quer ver primeiro? Comenta aqui embaixo. 🌈
+Já testou a ficha do seu bairro? Abre o app, confere e comenta o que apareceu. 🌈
 
 O link está na bio · em fase de testes · Android.
 
