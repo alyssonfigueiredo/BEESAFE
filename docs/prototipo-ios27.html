@@ -60,7 +60,7 @@
   .foot b{color:#3a3d4c;font-weight:500}
 
   /* ---------- Aparelho ---------- */
-  .stage{display:grid;place-items:center;min-height:0}
+  .stage{display:flex;align-items:center;justify-content:center;min-height:0}
   .device{
     width:393px;height:852px;position:relative;border-radius:58px;background:#101219;
     padding:12px;box-shadow:0 40px 80px rgba(20,22,35,.45),0 0 0 2px #2a2d39,0 0 0 4px #5b5e6b,inset 0 0 0 1px rgba(255,255,255,.08);
@@ -106,7 +106,7 @@
   .hdr.detail{padding-left:6px}
   .backbtn{display:flex;align-items:center;gap:2px;border:0;background:transparent;font:500 15px var(--body);color:var(--ink);padding:8px 10px 8px 6px;border-radius:999px;cursor:pointer}
   .backbtn svg{width:20px;height:20px}
-  .sos{width:40px;height:40px;border-radius:50%;border:0;display:grid;place-items:center;cursor:pointer;position:relative;background:var(--coral);box-shadow:none}
+  .sos{width:40px;height:40px;border-radius:50%;border:0;display:flex;align-items:center;justify-content:center;cursor:pointer;position:relative;background:var(--coral);box-shadow:none}
   .sos svg{width:20px;height:20px;stroke:var(--night);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
   .sos::after{content:"";position:absolute;inset:0;border-radius:50%;border:1.5px solid var(--coral);animation:pulse 2.4s ease-out infinite}
   @keyframes pulse{0%{transform:scale(1);opacity:.35}100%{transform:scale(1.45);opacity:0}}
@@ -164,8 +164,8 @@
   .card.hero.dark .link{color:#fff}
   .rbline{height:4px;border-radius:2px;background:linear-gradient(90deg,var(--coral),var(--orange),var(--yellow),var(--turq),var(--blue),var(--lilac));width:72px}
   .rbtext{background:linear-gradient(90deg,var(--coral),var(--orange),var(--yellow),var(--turq),var(--blue),var(--lilac));-webkit-background-clip:text;background-clip:text;color:transparent;font-weight:600}
-  .tile{width:36px;height:36px;border-radius:12px;display:grid;place-items:center;flex:none;background:rgba(255,255,255,.10)}
-  .tile svg{width:22px;height:22px}
+  .tile{width:36px;height:36px;border-radius:12px;display:flex;align-items:center;justify-content:center;flex:none;background:rgba(255,255,255,.10)}
+  .tile svg{display:block;margin:auto;width:22px;height:22px}
   .tile.sm{width:32px;height:32px;border-radius:10px}
   .tile.sm svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
   .tile.turq{background:color-mix(in srgb,var(--turq) 18%,transparent);color:var(--turq-ink)}
@@ -217,9 +217,9 @@
   .place{display:flex;gap:12px;background:var(--surface);border:0;border-radius:var(--r-lg);padding:12px;cursor:pointer;transition:transform .15s,box-shadow .15s;box-shadow:var(--shadow-card)}
   .place:hover{box-shadow:var(--shadow-lift)}
   .place:active{transform:scale(.985)}
-  .thumb{width:60px;height:60px;border-radius:16px;flex:none;display:grid;place-items:center;background:var(--subtle);overflow:hidden;position:relative}
+  .thumb{width:60px;height:60px;border-radius:16px;flex:none;display:flex;align-items:center;justify-content:center;background:var(--subtle);overflow:hidden;position:relative}
   .thumb.bar{background:color-mix(in srgb,var(--coral) 16%,var(--surface));color:var(--coral-ink)} .thumb.cafe{background:color-mix(in srgb,var(--yellow) 24%,var(--surface));color:var(--yellow-ink)} .thumb.balada{background:color-mix(in srgb,var(--lilac) 18%,var(--surface));color:var(--lilac-ink)} .thumb.restaurante{background:color-mix(in srgb,var(--orange) 18%,var(--surface));color:var(--orange-ink)} .thumb.hotel{background:color-mix(in srgb,var(--turq) 18%,var(--surface));color:var(--turq-ink)}
-  .thumb svg{width:28px;height:28px;stroke:currentColor;fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+  .thumb svg{display:block;margin:auto;width:28px;height:28px;stroke:currentColor;fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
   .thumb.banner{width:100%;height:160px;border-radius:22px;margin-bottom:6px;display:flex;align-items:center;justify-content:center}
   .thumb.banner svg{width:44px;height:44px}
   .thumb{background:var(--subtle)}
@@ -305,7 +305,7 @@
   .sheet .inner::-webkit-scrollbar{display:none}
   .callout{position:absolute;z-index:6;left:14px;right:14px;border-radius:var(--r-lg);padding:12px 14px;display:none;flex-direction:column;gap:6px}
   .callout.on{display:flex;animation:fade .25s ease}
-  .callout .x{position:absolute;right:10px;top:10px;border:0;background:rgba(37,40,57,.08);width:26px;height:26px;border-radius:50%;cursor:pointer;display:grid;place-items:center}
+  .callout .x{position:absolute;right:10px;top:10px;border:0;background:rgba(37,40,57,.08);width:26px;height:26px;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center}
   .callout .x svg{width:14px;height:14px;stroke:var(--muted);fill:none;stroke-width:2.2;stroke-linecap:round}
   .pin{cursor:pointer}
   .minimap{height:220px;border-radius:var(--r-md);overflow:hidden;border:0;position:relative;background:#eeece7}
@@ -318,7 +318,7 @@
   .modal .pane::-webkit-scrollbar{display:none}
   @keyframes up{from{transform:translateY(40px);opacity:0}to{transform:none;opacity:1}}
   .modal .grab{margin-bottom:2px}
-  .xbtn{border:0;background:rgba(37,40,57,.08);width:32px;height:32px;border-radius:50%;cursor:pointer;display:grid;place-items:center}
+  .xbtn{border:0;background:rgba(37,40,57,.08);width:32px;height:32px;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center}
   .xbtn svg{width:16px;height:16px;stroke:var(--muted);fill:none;stroke-width:2.2;stroke-linecap:round}
   .emerg{display:flex;align-items:center;gap:14px;background:rgba(255,255,255,.85);border:0;border-radius:var(--r-md);padding:14px 16px;cursor:pointer}
   .emerg .num{font:700 24px/1 var(--display);color:var(--ink);width:64px;font-variant-numeric:tabular-nums}
@@ -344,7 +344,7 @@
 
 <header class="top">
   <div>
-    <h1><span id="topmark"></span>Irisa · protótipo iOS 27 · v7</h1>
+    <h1><span id="topmark"></span>Irisa · protótipo iOS 27 · v8</h1>
     <p>Higienizado: uma escala de texto só (11–30), grade de 16/12, cartões largos sem borda, fundo aurora do story, fio arco-íris no cartão principal e a pergunta da marca em gradiente. Cores, fontes, estrutura e menus iguais. Nada aqui grava, liga ou envia.</p>
   </div>
   <div class="ctl">
@@ -697,7 +697,7 @@ function renderPerfil(){
     <button class="btn lilac" data-toast="Protótipo: fila de moderação fora do escopo">Fila de moderação</button>
     <button class="btn ghost" data-toast="Protótipo: sessão fictícia">Sair</button>
     <button class="link center pad-b" style="color:var(--coral-ink);justify-content:center;font-size:14px" data-toast="Protótipo: nada é excluído">Excluir minha conta</button>
-    <div class="small center pad-b">Protótipo v7 · 26/09/2026</div>`;
+    <div class="small center pad-b">Protótipo v8 · 26/09/2026</div>`;
 }
 function renderRegistrar(mode="relato"){
   const el=document.getElementById("s-registrar");
