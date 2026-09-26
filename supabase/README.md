@@ -66,7 +66,25 @@ where n.city_id = p.city_id and p.neighborhood_id is null
 9. `migrations/00000000000007_relato_no_lugar.sql`
 10. `seed_services.sql` (depois do import de municípios: serviços nacionais, Curitiba e Porto Alegre)
 11. O seed fictício de Curitiba foi removido do repositório. Para apagar os dados de teste que ainda estejam no banco, rode `seed/limpar-curitiba-teste.sql` (apaga só os ids `11111111-`/`22222222-`/`33333333-` e recalcula os priors).
+12. `migrations/00000000000008_notificacoes_cadastro.sql`
 
 Tudo acima já está aplicado no projeto `ntjirpqulrnieeglpiei`.
 
 Para promover alguém a moderador: `update public.profiles set role = 'moderator' where id = '<uuid do usuário>';`
+
+## Aviso por e-mail de novo cadastro
+
+Cenários no Make (`Novo cadastro Irisa` e `Novo testador Irisa (site)`, workspace `Alysson's space`): recebem um
+webhook e mandam e-mail para appirisa@gmail.com/alysson.f.araujo@gmail.com, além de uma linha na planilha "Cadastros".
+
+- `on_auth_user_created_notify` (em `auth.users`, depois do insert): dispara a cada cadastro real no app.
+- `on_tester_signup_notify` (em `public.tester_signups`, depois do insert): dispara quando alguém topa testar.
+  A tabela não tem policy (só `postgres`/`service_role` inserem); para registrar um novo testador, cole no SQL
+  Editor:
+
+```sql
+insert into public.tester_signups (email, platform) values ('email-da-pessoa@exemplo.com', 'android');
+```
+
+Os dois triggers chamam `net.http_post` (pg_net) para a URL do webhook do respectivo cenário no Make.
+Trocar a URL de um cenário (recriar o webhook, por exemplo) exige atualizar a função correspondente com uma nova migration.

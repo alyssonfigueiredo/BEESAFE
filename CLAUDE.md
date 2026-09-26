@@ -19,8 +19,11 @@ Nome: **Irisa** (INPI livre; @irisapp livre). Bundle id `br.com.irisa.app`. Cont
 
 - Branch de trabalho: `claude/laughing-keller-my8t7c` (default do repo: `claude/ecstatic-darwin-cmf7sw`).
 - MVP completo e rodando no iPhone do usuário (Xcode, Apple ID gratuito, expira em 7 dias) e em APK Android (EAS preview).
-- Supabase projeto `ntjirpqulrnieeglpiei`, região São Paulo. Todas as 8 migrations + seeds aplicadas.
+- Supabase projeto `ntjirpqulrnieeglpiei`, região São Paulo. Todas as 9 migrations + seeds aplicadas.
   O seed fictício de Curitiba saiu do repositório; `supabase/seed/limpar-curitiba-teste.sql` apaga o que sobrou no banco.
+- Aviso por e-mail de novo cadastro instalado (migration 8 + 2 cenários no Make, workspace "Alysson's space"):
+  todo insert em `auth.users` e em `public.tester_signups` dispara e-mail pro Alysson e linha na planilha "Cadastros"
+  (detalhes em supabase/README.md). Testado e funcionando.
 - Chaves legadas desativadas: app usa `sb_publishable_...`, scripts usam `sb_secret_...` (só na máquina dele).
 - Dados geográficos: os 5.570 municípios das 27 UFs e os bairros das capitais importados. Sem bairros no OSM:
   Brasília, São Luís e Palmas (São Paulo só 9). `upsert_neighborhoods` agrupa nomes repetidos antes do upsert.

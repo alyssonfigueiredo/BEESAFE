@@ -2,9 +2,14 @@
 create schema auth;
 create schema extensions;
 alter database irisa set search_path = public, extensions;  -- igual ao Supabase
-create table auth.users (id uuid primary key default gen_random_uuid(), email text);
+create table auth.users (id uuid primary key default gen_random_uuid(), email text, created_at timestamptz not null default now());
 create function auth.uid() returns uuid language sql stable as $$ select nullif(current_setting('request.jwt.claim.sub', true), '')::uuid $$;
 create role anon nologin; create role authenticated nologin;
+
+-- pg_net não existe fora do Supabase: stub de net.http_post para as migrations que notificam o Make por webhook.
+create schema net;
+create function net.http_post(url text, headers jsonb default '{}'::jsonb, body jsonb default '{}'::jsonb, params jsonb default '{}'::jsonb, timeout_milliseconds int default 5000)
+  returns bigint language sql as $$ select 0::bigint $$;
 create schema realtime;
 create table realtime.messages (id bigserial primary key, topic text, event text, payload jsonb, private boolean, inserted_at timestamptz default now());
 create function realtime.send(payload jsonb, event text, topic text, private boolean default true) returns void language sql as $$ insert into realtime.messages (topic, event, payload, private) values (topic, event, payload, private) $$;
