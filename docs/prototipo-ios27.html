@@ -129,6 +129,8 @@
       radial-gradient(50% 30% at -6% 102%,color-mix(in srgb,var(--yellow) 32%,transparent),transparent 62%),
       var(--paper)}
   .screen::-webkit-scrollbar{display:none}
+  .screen>*{flex-shrink:0}
+  .stack>*,.card>*{flex-shrink:0}
   .screen.on{display:flex}
   .screen.bleed{padding:0}
   .screen.enter{animation:push .42s cubic-bezier(.2,.8,.2,1)}
@@ -342,7 +344,7 @@
 
 <header class="top">
   <div>
-    <h1><span id="topmark"></span>Irisa · protótipo iOS 27</h1>
+    <h1><span id="topmark"></span>Irisa · protótipo iOS 27 · v7</h1>
     <p>Higienizado: uma escala de texto só (11–30), grade de 16/12, cartões largos sem borda, fundo aurora do story, fio arco-íris no cartão principal e a pergunta da marca em gradiente. Cores, fontes, estrutura e menus iguais. Nada aqui grava, liga ou envia.</p>
   </div>
   <div class="ctl">
@@ -694,7 +696,8 @@ function renderPerfil(){
     <div class="card"><div class="h sm">Privacidade</div><div class="p">Relatos e mensagens nunca mostram seu nome ou e-mail. Só o apelido que você escolher aparece no mural e nas avaliações de lugares.</div></div>
     <button class="btn lilac" data-toast="Protótipo: fila de moderação fora do escopo">Fila de moderação</button>
     <button class="btn ghost" data-toast="Protótipo: sessão fictícia">Sair</button>
-    <button class="link center pad-b" style="color:var(--coral-ink);justify-content:center;font-size:14px" data-toast="Protótipo: nada é excluído">Excluir minha conta</button>`;
+    <button class="link center pad-b" style="color:var(--coral-ink);justify-content:center;font-size:14px" data-toast="Protótipo: nada é excluído">Excluir minha conta</button>
+    <div class="small center pad-b">Protótipo v7 · 26/09/2026</div>`;
 }
 function renderRegistrar(mode="relato"){
   const el=document.getElementById("s-registrar");
