@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="pt-BR"><head><meta charset="utf-8">
+<title>Irisa · Carrossel 7 · Ficha do bairro</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Urbanist:wght@500;600&family=Oswald:wght@300;400;500;700&family=Space+Grotesk:wght@400;500;700&display=swap">
+<style>
+:root{
+  --paper:#FAF9F6;--surface:#FFFFFF;--subtle:#F1EDE7;--border:#E4DED5;--night:#1E2340;--night2:#161B2E;--ink:#1E2340;--muted:#4F576F;--dim:#8A90A2;
+  --coral:#F4736F;--orange:#F5A45D;--yellow:#F0CA75;--turq:#5CC9B4;--lilac:#AE96F2;--blue:#6AA8EE;
+  --coralInk:#B23C3A;--orangeInk:#96601C;--yellowInk:#8A6512;--turqInk:#1B7A6E;--lilacInk:#6D4FD8;--amber:#E0A32E;
+  --wordmark:"Urbanist","Helvetica Neue",Arial,sans-serif;--display:"Oswald",Impact,"Arial Narrow",sans-serif;--body:"Space Grotesk","Helvetica Neue",Arial,sans-serif;
+  --rainbow:linear-gradient(90deg,var(--coral),var(--orange),var(--yellow),var(--turq),var(--blue),var(--lilac));
+}
+*{box-sizing:border-box}
+body{margin:0;background:#2a2f4a;font-family:var(--body);display:flex;flex-direction:column;align-items:center;gap:40px;padding:40px 0}
+p{margin:0}
+.mark{width:30px;height:30px;border-radius:50%;background:conic-gradient(from -90deg,var(--coral),var(--orange),var(--yellow),var(--turq),var(--blue),var(--lilac),var(--coral));position:relative;flex:none}
+.mark::after{content:"";position:absolute;inset:4px;border-radius:50%;background:var(--night2)}
+.mark::before{content:"";position:absolute;left:50%;top:50%;width:8px;height:8px;margin:-4px;border-radius:50%;background:#fff;z-index:1}
+.sl{position:relative;width:1080px;height:1350px;flex:none;overflow:hidden;background:var(--night);color:#fff;font-family:var(--body);display:flex;flex-direction:column;align-items:center}
+.halo{position:absolute;inset:-30%;pointer-events:none;filter:blur(60px)}
+.h1{background:radial-gradient(30% 22% at 20% 25%,rgba(92,201,180,.38),transparent 70%),radial-gradient(28% 20% at 82% 70%,rgba(174,150,242,.36),transparent 70%)}
+.h2{background:radial-gradient(24% 18% at 75% 18%,rgba(244,115,111,.30),transparent 70%),radial-gradient(24% 18% at 25% 85%,rgba(240,202,117,.24),transparent 70%)}
+.grain{position:absolute;inset:0;opacity:.07;background-image:radial-gradient(rgba(255,255,255,.8) 1px,transparent 1px);background-size:4px 4px;mix-blend-mode:overlay;pointer-events:none}
+.c{text-align:center}
+.rainbow{background:linear-gradient(90deg,var(--coral),var(--orange),var(--yellow),var(--turq),var(--blue),var(--lilac));-webkit-background-clip:text;background-clip:text;color:transparent}
+.small{font-family:var(--display);text-transform:uppercase;letter-spacing:.26em;font-size:28px;color:var(--turq)}
+.body{font-size:38px;line-height:1.35;color:#D5D8E4;max-width:860px}
+.pill{display:inline-flex;align-items:center;gap:14px;padding:18px 30px;border-radius:999px;font-family:var(--display);text-transform:uppercase;letter-spacing:.14em;font-size:30px;color:var(--night)}
+.num{position:absolute;top:44px;right:56px;font-family:var(--display);font-size:26px;letter-spacing:.2em;color:#8A90A2}
+.swipe{position:absolute;bottom:56px;right:60px;display:flex;align-items:center;gap:14px;font-family:var(--display);text-transform:uppercase;letter-spacing:.2em;font-size:26px;color:#C9CDDD}
+.swipe svg{width:44px;height:44px}
+.brand{position:absolute;bottom:56px;left:60px;display:flex;align-items:center;gap:14px;font-family:var(--wordmark);font-weight:500;text-transform:uppercase;letter-spacing:.2em;font-size:26px;color:#C9CDDD}
+.brand .mark{width:30px;height:30px}
+.slam{font-family:var(--display);text-transform:uppercase;font-weight:500;font-size:150px;line-height:1;letter-spacing:.03em}
+.big{font-family:var(--display);text-transform:uppercase;font-weight:500;letter-spacing:.03em;line-height:.95}
+.qcard{width:880px;padding:56px 60px;border-radius:44px;background:rgba(255,255,255,.06);border:2px solid rgba(255,255,255,.12)}
+.qcard p{margin:0;font-size:44px;line-height:1.35;color:#fff}
+.strike{position:relative;display:inline-block}
+.strike::after{content:"";position:absolute;left:-3%;right:-3%;top:52%;height:12px;border-radius:6px;background:var(--coral);transform:rotate(-4deg)}
+.list{display:flex;flex-direction:column;gap:20px;width:900px}
+.list div{padding:28px 36px;border-radius:28px;background:rgba(255,255,255,.06);border:2px solid rgba(255,255,255,.12);text-align:left}
+.list b{display:block;font-family:var(--display);text-transform:uppercase;letter-spacing:.08em;font-size:36px;font-weight:500;line-height:1.1}
+.list span{display:block;font-size:27px;line-height:1.3;color:#C9CDDD;margin-top:6px}
+</style>
+</head>
+<body>
+
+<!-- 1/7 CAPA -->
+<section class="sl" style="justify-content:center;gap:0">
+  <div class="halo h1"></div><div class="halo h2"></div><div class="grain"></div>
+  <div class="num">1/7</div>
+  <div class="brand"><span class="mark"></span><span>Iris<b style="color:var(--yellow);font-weight:500">a</b></span></div>
+  <div class="swipe">arraste <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m13 6 6 6-6 6"/></svg></div>
+  <div class="small c" style="color:var(--coral)">antes de entrar no bairro</div>
+  <p class="big c" style="font-size:104px;margin:30px 60px 40px"><span style="font-weight:300">Dá pra saber</span><br><span class="rainbow">antes de chegar?</span></p>
+  <p class="body c">A ficha do bairro reúne o que a comunidade já registrou ali.</p>
+</section>
+
+<!-- 2/7 O QUE É -->
+<section class="sl" style="justify-content:center;gap:0">
+  <div class="halo h1"></div><div class="halo h2"></div><div class="grain"></div>
+  <div class="num">2/7</div>
+  <div class="brand"><span class="mark"></span><span>Iris<b style="color:var(--yellow);font-weight:500">a</b></span></div>
+  <div class="swipe">arraste <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m13 6 6 6-6 6"/></svg></div>
+  <div class="small c">o que é</div>
+  <p class="slam c rainbow" style="font-size:104px;margin-top:30px">Onde os dois<br>lados se encontram.</p>
+  <p class="body c" style="max-width:860px;margin-top:40px">Numa tela só: os lugares avaliados pela comunidade e os relatos registrados na região.</p>
+</section>
+
+<!-- 3/7 RESUMO DA AREA -->
+<section class="sl" style="justify-content:center;gap:0">
+  <div class="halo h1"></div><div class="halo h2"></div><div class="grain"></div>
+  <div class="num">3/7</div>
+  <div class="brand"><span class="mark"></span><span>Iris<b style="color:var(--yellow);font-weight:500">a</b></span></div>
+  <div class="swipe">arraste <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m13 6 6 6-6 6"/></svg></div>
+  <div class="small c" style="color:var(--coral)">o resumo da área</div>
+  <p class="big c" style="font-size:70px;margin:26px 60px 40px">O que a ficha mostra</p>
+  <div class="list">
+    <div><b>Total de relatos</b><span>quantos, e quantos foram graves</span></div>
+    <div><b>Tipo, onde e quando</b><span>verbal, física, ameaça, discriminação · rua, transporte, dentro de um lugar · madrugada, manhã, tarde, noite</span></div>
+    <div><b>Nível de atenção</b><span>atenção (1 a 3) ou alerta (4+), pelo peso dos relatos nos últimos 180 dias</span></div>
+  </div>
+</section>
+
+<!-- 4/7 LUGARES DO BAIRRO -->
+<section class="sl" style="justify-content:center;gap:0">
+  <div class="halo h1"></div><div class="halo h2"></div><div class="grain"></div>
+  <div class="num">4/7</div>
+  <div class="brand"><span class="mark"></span><span>Iris<b style="color:var(--yellow);font-weight:500">a</b></span></div>
+  <div class="swipe">arraste <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m13 6 6 6-6 6"/></svg></div>
+  <div class="small c" style="color:var(--turq)">e os lugares</div>
+  <p class="big c" style="font-size:78px;margin:26px 40px 40px">Os avaliados aparecem primeiro</p>
+  <div class="qcard"><p>Quem já tem nota de acolhimento sobe na lista. Assim você vê o que a comunidade já testou, antes do que ninguém avaliou ainda.</p></div>
+</section>
+
+<!-- 5/7 O QUE ELA NUNCA DIZ -->
+<section class="sl" style="justify-content:center;gap:0">
+  <div class="halo h1"></div><div class="halo h2"></div><div class="grain"></div>
+  <div class="num">5/7</div>
+  <div class="brand"><span class="mark"></span><span>Iris<b style="color:var(--yellow);font-weight:500">a</b></span></div>
+  <div class="swipe">arraste <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m13 6 6 6-6 6"/></svg></div>
+  <div class="small c" style="color:var(--coral)">o que ela nunca diz</div>
+  <p class="big c" style="font-size:64px;margin:26px 50px 40px">
+    <span class="strike" style="display:inline-block">Bairro sem relato</span><br>
+    <span class="strike" style="display:inline-block">é bairro seguro.</span>
+  </p>
+  <p class="body c">Sem relato quer dizer que ninguém registrou ainda. Dizer isso seria a falha mais perigosa que o app poderia cometer.</p>
+</section>
+
+<!-- 6/7 COMO CHEGAR LA -->
+<section class="sl" style="justify-content:center;gap:0">
+  <div class="halo h1"></div><div class="halo h2"></div><div class="grain"></div>
+  <div class="num">6/7</div>
+  <div class="brand"><span class="mark"></span><span>Iris<b style="color:var(--yellow);font-weight:500">a</b></span></div>
+  <div class="swipe">arraste <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m13 6 6 6-6 6"/></svg></div>
+  <div class="small c" style="color:var(--turq)">como chegar</div>
+  <p class="big c" style="font-size:78px;margin:26px 40px 40px">Dois caminhos até a ficha</p>
+  <div class="list">
+    <div><b>Pelo Início</b><span>o ranking de bairros da sua cidade</span></div>
+    <div><b>Pela ficha do lugar</b><span>toca no nome do bairro onde o lugar fica</span></div>
+  </div>
+</section>
+
+<!-- 7/7 FECHO -->
+<section class="sl" style="justify-content:center;gap:0">
+  <div class="halo h1"></div><div class="halo h2"></div><div class="grain"></div>
+  <div class="num">7/7</div>
+  <div class="brand"><span class="mark"></span><span>Iris<b style="color:var(--yellow);font-weight:500">a</b></span></div>
+  <p class="big c" style="font-size:88px;margin:0 50px 50px"><span style="font-weight:300">Qual bairro você</span><br><span class="rainbow">quer ver primeiro?</span></p>
+  <p class="body c">Comenta o nome que a gente confere.</p>
+  <span class="pill" style="background:var(--coral);font-size:38px;padding:24px 46px;margin-top:60px;box-shadow:0 20px 60px -20px rgba(244,115,111,.8)">O link está na bio</span>
+  <div class="small c" style="margin-top:40px;color:#C9CDDD">em fase de testes · Android</div>
+</section>
+
+</body></html>
