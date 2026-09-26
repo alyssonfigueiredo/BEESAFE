@@ -97,7 +97,7 @@ Story (1080×1920, `.sl.story`): mesma gramática, mais ar, e uma **área tracej
 ## 8. Referências (o que já existe, para copiar o jeito)
 
 - `docs/carrossel.html` (estreia), `carrossel-2.html` (quatro perguntas), `carrossel-3.html` (anonimato), `carrossel-4.html` (emergência), `carrossel-5.html` (regra da rua), `carrossel-6.html` (mito ou verdade), `carrossel-7.html` (Dia de Sair do Armário, 11/10), `post-bemvinde.html`, `stories-2.html`.
-- `docs/story.html` (vídeo de 60 s, dez cenas), `docs/reels-2.html` (quatro perguntas, 40 s) e `docs/reels-3.html` (regra da rua, 34 s), `docs/reels-4.html` (anonimato, 32 s): reels são carrosséis convertidos em cenas de 4–6 s, uma ideia por cena, número contando (`count`), fecho com pílula + @irisapp. `docs/index.html` (landing), `docs/pitch.html` (apresentação).
+- `docs/story.html` (vídeo de 60 s, dez cenas), `docs/reels-3.html` (regra da rua, 34 s), `docs/reels-4.html` (anonimato, 32 s), `docs/reels-5.html` (ficha do bairro, 36 s): reels são carrosséis convertidos em cenas de 4–6 s, uma ideia por cena, número contando (`count`), fecho com pílula + @irisapp. `docs/index.html` (landing), `docs/pitch.html` (apresentação).
 - `docs/lojinha.html` e `scripts/lojinha/build.py`: mockups de produto em SVG com o mesmo sistema (fundo claro `paper` aceito ali).
 - Legendas e cronogramas anteriores: pasta Irisa-lancamento e Irisa-semana2 (uma pasta por dia, `legenda.txt` no feed, `texto.txt` no story).
 
@@ -106,7 +106,7 @@ Story (1080×1920, `.sl.story`): mesma gramática, mais ar, e uma **área tracej
 1. Copiar `template.html` para `docs/NOME.html`, trocar o `<link>` por `<style>` com o conteúdo de `base.css` (as fontes carregam do Google Fonts).
 2. Uma `<section class="sl">` por lâmina. Story: `class="sl story"`.
 3. Exportar: `node scripts/carrossel-png.mjs docs/NOME.html` → `docs/NOME/01.png…` (Playwright, Chromium em `/opt/pw-browsers/chromium`; `SCALE=2` para 4K).
-   Reels: `node scripts/story-video.mjs docs/NOME.html` → `docs/Irisa-NOME.mp4` (a página expõe `window.__setT(ms)` e `window.__TOTAL`; copiar o head e os helpers de `docs/reels-2.html`). Precisa de ffmpeg com libx264: no ambiente cloud não tem no PATH, use `pip download imageio-ffmpeg`, extraia o wheel e aponte `FFMPEG=` para o binário; no Mac `brew install ffmpeg`.
+   Reels: `node scripts/story-video.mjs docs/NOME.html` → `docs/Irisa-NOME.mp4` (a página expõe `window.__setT(ms)` e `window.__TOTAL`; copiar o head e os helpers de `docs/reels-5.html`). Precisa de ffmpeg com libx264: no ambiente cloud não tem no PATH, use `pip download imageio-ffmpeg`, extraia o wheel e aponte `FFMPEG=` para o binário; no Mac `brew install ffmpeg`.
 4. Conferir num contact sheet antes de entregar: texto vazando, cartão cortado, rodapé sobreposto.
 5. Entregar: pasta por dia com imagens numeradas + `legenda.txt` (feed) ou `texto.txt` (story, com o que vai em cada adesivo), zip por semana, e as fontes commitadas em `docs/`.
 

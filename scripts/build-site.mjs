@@ -58,7 +58,7 @@ copyFileSync("docs/story.html", "site/story.html");
 copyFileSync("docs/Irisa-story.mp4", "site/Irisa-story.mp4");
 copyFileSync("docs/Irisa-reels.mp4", "site/Irisa-reels.mp4");
 copyFileSync("docs/Irisa-story-bio.mp4", "site/Irisa-story-bio.mp4");
-for (const n of ["reels-2", "reels-3", "reels-4"]) { copyFileSync(`docs/${n}.html`, `site/${n}.html`); copyFileSync(`docs/Irisa-${n}.mp4`, `site/Irisa-${n}.mp4`); }
+for (const n of ["reels-3", "reels-4", "reels-5"]) { copyFileSync(`docs/${n}.html`, `site/${n}.html`); copyFileSync(`docs/Irisa-${n}.mp4`, `site/Irisa-${n}.mp4`); }
 copyFileSync("docs/lojinha.html", "site/lojinha.html");
 copyFileSync("docs/Irisa-lojinha.pdf", "site/Irisa-lojinha.pdf");
 copyFileSync("docs/lojinha-interna.html", "site/lojinha-interna.html");

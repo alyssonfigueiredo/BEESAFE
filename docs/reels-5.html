@@ -1,6 +1,6 @@
 <!doctype html>
 <html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Irisa · Reels 2 · quatro perguntas</title>
+<title>Irisa · Reels 5 · ficha do bairro</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Urbanist:wght@500;600&family=Oswald:wght@300;400;500;700&family=Space+Grotesk:wght@400;500;700&display=swap">
 <style>
 :root{--night:#1E2340;--night2:#161B2E;--dim:#8A90A2;--coral:#F4736F;--orange:#F5A45D;--yellow:#F0CA75;--turq:#5CC9B4;--lilac:#AE96F2;--blue:#6AA8EE;
@@ -42,8 +42,8 @@ body{display:flex;align-items:center;justify-content:center;height:100vh;font-fa
 .brand{position:absolute;bottom:120px;left:0;right:0;display:flex;justify-content:center;align-items:center;gap:16px;font-family:var(--wordmark);font-weight:500;text-transform:uppercase;letter-spacing:.2em;font-size:30px;color:#C9CDDD}
 .brand b{font-weight:500;color:var(--yellow)}
 .mark{width:34px;height:34px;border-radius:50%;background:conic-gradient(from -90deg,var(--coral),var(--orange),var(--yellow),var(--turq),var(--blue),var(--lilac),var(--coral));position:relative;flex:none}
-.mark::after{content:"";position:absolute;inset:4px;border-radius:50%;background:var(--night2)}
-.mark::before{content:"";position:absolute;left:50%;top:50%;width:9px;height:9px;margin:-4.5px;border-radius:50%;background:#fff;z-index:1}
+.mark::after{content:"";position:absolute;inset:13%;border-radius:50%;background:var(--night2)}
+.mark::before{content:"";position:absolute;left:50%;top:50%;width:27%;height:27%;transform:translate(-50%,-50%);border-radius:50%;background:#fff;z-index:1}
 .map{position:relative;width:900px;height:620px;border-radius:44px;background:#f4f1ea;overflow:hidden;border:2px solid rgba(255,255,255,.12)}
 .map .st{position:absolute;background:#fff}
 .map .pin{position:absolute;width:70px;height:70px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:var(--display);font-size:30px;color:var(--night);border:3px solid var(--night)}
@@ -59,35 +59,50 @@ body{display:flex;align-items:center;justify-content:center;height:100vh;font-fa
 </head>
 <body><div id="stage">
   <div class="halo h1"></div><div class="halo h2"></div><div class="grain"></div>
-  <!-- 0 gancho -->
   <div class="scene" id="s0">
-    <div class="stars" id="st">★★★★★<i id="stl"></i></div>
-    <h1 class="disp c" id="h0" style="font-size:118px;margin-top:80px"><span class="w" style="font-weight:300">Estrelas</span> <span class="w" style="font-weight:300">não</span> <span class="w" style="font-weight:300">dizem</span><br><span class="w rainbow">nada pra gente.</span></h1>
-    <p class="body c" id="b0" style="margin-top:60px">Cinco estrelas dizem que a comida é boa. Não dizem como você foi tratade.</p>
+    <div class="small c" id="e0" style="color:var(--coral)">pergunta rápida</div>
+    <h1 class="disp c" id="h0" style="font-size:130px;margin-top:40px"><span class="w" style="font-weight:300">Quantos</span> <span class="w" style="font-weight:300">relatos</span><br><span class="w" style="font-weight:300">tem o</span> <span class="w rainbow">seu bairro?</span></h1>
+    <p class="body c" id="b0" style="margin-top:70px">Você não sabe. Ninguém sabe. Isso é o problema.</p>
   </div>
-  <!-- 1 quatro perguntas -->
   <div class="scene" id="s1">
-    <h1 class="disp c" id="h1" style="font-size:150px"><span class="w">Quatro</span><br><span class="w" style="color:var(--yellow)">perguntas.</span></h1>
-    <div class="rule" id="r1" style="width:520px;margin:60px 0"></div>
-    <p class="disp c" id="h1b" style="font-size:78px;font-weight:400"><span class="w">Quem</span> <span class="w">esteve</span> <span class="w">lá</span> <span class="w rainbow" style="font-weight:500">responde.</span></p>
+    <div class="slam c" id="t1" style="font-size:200px;color:var(--coral)">Zero</div>
+    <p class="disp c" id="t1b" style="font-size:84px;font-weight:400;margin-top:30px"><span class="w">não</span> <span class="w">quer</span> <span class="w">dizer</span> <span class="w">bairro</span> <span class="w" style="color:var(--yellow)">tranquilo.</span></p>
+    <p class="body c" id="b1" style="margin-top:60px">Quer dizer que ninguém registrou. Por isso a Irisa nunca dá selo de “região tranquila”.</p>
   </div>
-<div class="scene" id="s2"><div class="small c" style="color:var(--coral)" id="s2e">pergunta 1 de 4</div><div class="pct" id="s2p" style="color:var(--coral);margin-top:20px">0%</div><div class="disp c" id="s2t" style="font-size:130px;margin:0 0 60px"><span class="w">Atendimento</span></div><div class="bar" id="s2b"><i style="background:var(--coral)"></i></div><div class="qcard" id="s2q" style="margin-top:70px"><p class="c">A equipe te tratou bem? Sem constrangimento, sem olhar torto, sem insistir no “senhor”.</p></div></div>
-<div class="scene" id="s3"><div class="small c" style="color:var(--orange)" id="s3e">pergunta 2 de 4</div><div class="pct" id="s3p" style="color:var(--orange);margin-top:20px">0%</div><div class="disp c" id="s3t" style="font-size:130px;margin:0 0 60px"><span class="w">Afeto</span></div><div class="bar" id="s3b"><i style="background:var(--orange)"></i></div><div class="qcard" id="s3q" style="margin-top:70px"><p class="c">Dava para ficar à vontade com quem você ama? Mão dada, beijo, sem ninguém encarar.</p></div></div>
-<div class="scene" id="s4"><div class="small c" style="color:var(--yellow)" id="s4e">pergunta 3 de 4</div><div class="pct" id="s4p" style="color:var(--yellow);margin-top:20px">0%</div><div class="disp c" id="s4t" style="font-size:130px;margin:0 0 60px"><span class="w">Banheiro</span></div><div class="bar" id="s4b"><i style="background:var(--yellow)"></i></div><div class="qcard" id="s4q" style="margin-top:70px"><p class="c">E o banheiro? Deu para usar sem pergunta, sem barrar, sem ser questionade.</p></div></div>
-<div class="scene" id="s5"><div class="small c" style="color:var(--turq)" id="s5e">pergunta 4 de 4</div><div class="pct" id="s5p" style="color:var(--turq);margin-top:20px">0%</div><div class="disp c" id="s5t" style="font-size:130px;margin:0 0 60px"><span class="w">Clientela</span></div><div class="bar" id="s5b"><i style="background:var(--turq)"></i></div><div class="qcard" id="s5q" style="margin-top:70px"><p class="c">E as outras pessoas no ambiente? Quem frequenta também faz o lugar.</p></div></div>
-  <!-- 6 anel -->
-  <div class="scene" id="s6">
-    <p class="disp c" id="t6" style="font-size:88px;font-weight:400;margin-bottom:70px"><span class="w">Os</span> <span class="w">quatro</span> <span class="w">viram</span> <span class="w rainbow" style="font-weight:500">uma nota.</span></p>
-    <div class="nring" id="ring"><div class="track"></div><div class="fill"></div><div class="hole"><b id="nota">0.0</b></div></div>
-    <div class="badge-big" id="bb" style="margin-top:60px">Acolhedor</div>
-    <p class="body c" id="b6" style="margin-top:50px">Selo só depois de cinco pessoas. Uma opinião não faz média.</p>
+  <div class="scene" id="s2">
+    <div class="small c" id="e2">a ficha do bairro</div>
+    <div class="disp c" id="t2" style="font-size:96px;margin:30px 0 50px"><span class="w">Centro</span></div>
+    <div style="display:flex;gap:24px" id="kp">
+      <div class="qcard" id="k1" style="width:438px;padding:36px 30px;text-align:center"><b class="disp" id="k1n" style="font-size:130px;color:var(--coral);display:block">0</b><span style="font-size:30px;color:#C9CDDD">relatos em 180 dias</span></div>
+      <div class="qcard" id="k2" style="width:438px;padding:36px 30px;text-align:center"><b class="disp" id="k2n" style="font-size:130px;color:var(--orange);display:block">0</b><span style="font-size:30px;color:#C9CDDD">graves</span></div>
+    </div>
+    <div class="qcard" id="k3" style="margin-top:24px;text-align:left">
+      <div style="display:flex;justify-content:space-between;font-size:32px;color:#D5D8E4"><span>Verbal</span><span>5</span></div><div class="bar" style="width:100%;margin:10px 0 24px"><i id="bv" style="background:var(--yellow)"></i></div>
+      <div style="display:flex;justify-content:space-between;font-size:32px;color:#D5D8E4"><span>Ameaça</span><span>3</span></div><div class="bar" style="width:100%;margin:10px 0 24px"><i id="ba" style="background:var(--orange)"></i></div>
+      <div style="display:flex;justify-content:space-between;font-size:32px;color:#D5D8E4"><span>Física</span><span>2</span></div><div class="bar" style="width:100%;margin-top:10px"><i id="bf" style="background:var(--coral)"></i></div>
+    </div>
+    <div class="qcard" id="k4" style="margin-top:24px;text-align:center"><p style="font-size:36px"><b style="color:var(--turq)">Quando:</b> 7 de noite · 3 de madrugada</p></div>
+    <p class="body c" id="b2" style="margin-top:44px;font-size:34px">Exemplo ilustrativo. A ficha real nasce dos relatos de quem mora e passa ali.</p>
   </div>
-  <!-- 7 fecho -->
-  <div class="scene" id="s7">
-    <div id="confs"></div>
-    <div class="small c" id="e7">em fase de testes · Android</div>
-    <h1 class="disp c" id="t7" style="font-size:150px;margin-top:30px"><span class="w" style="font-weight:300">Quanta</span> <span class="w rainbow">cor</span><br><span class="w" style="font-weight:300">tem esse</span> <span class="w">lugar?</span></h1>
-    <p class="body c" id="b7" style="margin-top:60px">Irise o último lugar que te fez sentir bem-vinde.</p>
+  <div class="scene" id="s3">
+    <div class="small c" id="e3">na mesma ficha</div>
+    <h1 class="disp c" id="t3" style="font-size:110px;margin-top:30px"><span class="w" style="font-weight:300">Os lugares</span><br><span class="w rainbow">do bairro.</span></h1>
+    <div id="pl" style="display:flex;flex-direction:column;gap:22px;width:900px;margin-top:60px">
+      <div class="qcard" id="pl1" style="width:100%;padding:30px 40px;display:flex;justify-content:space-between;align-items:center"><span style="font-size:38px">Café da esquina</span><span class="badge-big" style="font-size:30px;padding:12px 24px">4.7 · acolhedor</span></div>
+      <div class="qcard" id="pl2" style="width:100%;padding:30px 40px;display:flex;justify-content:space-between;align-items:center"><span style="font-size:38px">Bar da rua de cima</span><span class="badge-big" style="font-size:30px;padding:12px 24px;background:rgba(240,202,117,.2);color:var(--yellow)">4.2 · bem avaliado</span></div>
+      <div class="qcard" id="pl3" style="width:100%;padding:30px 40px;display:flex;justify-content:space-between;align-items:center"><span style="font-size:38px">Hotel da praça</span><span class="badge-big" style="font-size:30px;padding:12px 24px;background:rgba(255,255,255,.08);color:#C9CDDD">sem nota ainda</span></div>
+    </div>
+    <p class="body c" id="b3" style="margin-top:60px">Avaliados primeiro. Os sem nota esperam você irisar.</p>
+  </div>
+  <div class="scene" id="s4">
+    <h1 class="disp c" id="t4" style="font-size:120px"><span class="w" style="font-weight:300">Cada relato</span><br><span class="w" style="color:var(--coral)">é anônimo.</span></h1>
+    <div class="rule" id="r4" style="width:520px;margin:56px 0"></div>
+    <h1 class="disp c" id="t4b" style="font-size:120px"><span class="w" style="font-weight:300">Cada bairro</span><br><span class="w" style="color:var(--turq)">ganha uma ficha.</span></h1>
+  </div>
+  <div class="scene" id="s5">
+    <div class="small c" id="e5">em fase de testes · Android</div>
+    <h1 class="disp c" id="t5" style="font-size:140px;margin-top:30px"><span class="w" style="font-weight:300">Comece</span><br><span class="w rainbow">pelo seu bairro.</span></h1>
+    <p class="body c" id="b5" style="margin-top:60px">Um lugar irisado ou um relato. Um minuto. E a ficha deixa de ser zero.</p>
     <span class="pill" id="cta" style="background:var(--coral);margin-top:70px;box-shadow:0 20px 60px -20px rgba(244,115,111,.8)">O link está na bio</span>
     <div class="handle" id="handle" style="margin-top:80px"><span class="mark" style="width:70px;height:70px"></span><span>@irisapp</span></div>
   </div>
@@ -111,46 +126,42 @@ const confetti=(box,start)=>{let s=11;const r=()=>(s=s*17387%2147483647)/2147483
  for(let k=0;k<90;k++){const c=document.createElement("i");c.className="conf";c.style.background=cs[k%6];c.style.left=(540+(r()-.5)*300)+"px";c.style.top="800px";if(k%3===0)c.style.borderRadius="50%";box.appendChild(c);
   const dx=(r()-.5)*1300,dy=-(300+r()*600),rot=(r()-.5)*900,d=2200+r()*1200;
   A(c,[{opacity:0,transform:"translate(0,0) rotate(0)"},{opacity:1,transform:"translate("+dx*.5+"px,"+dy+"px) rotate("+rot/2+"deg)",offset:.35},{opacity:0,transform:"translate("+dx+"px,"+(dy+1500)+"px) rotate("+rot+"deg)"}],start+r()*400,d,"cubic-bezier(.2,.7,.3,1)")}};
-const TOTAL=40000;
+const TOTAL=36000;
 A($("#brand"),[{opacity:0},{opacity:1}],600,800,"linear");
-// 0 gancho 0–5.6
-scene("#s0",0,5600);
-A($("#st"),[{opacity:0,transform:"scale(1.4)",filter:"blur(12px)"},{opacity:1,transform:"none",filter:"blur(0)"}],150,700,"cubic-bezier(.2,.9,.3,1)");
-A($("#stl"),[{transform:"scaleX(0) rotate(-6deg)"},{transform:"scaleX(1) rotate(-6deg)"}],1100,500);
-words("#h0",1500,130,800);
-A($("#b0"),IN_BLUR,3000,800);
-// 1 quatro 5.6–9.6
-scene("#s1",5600,9600);
-words("#h1",5700,200,800);
-A($("#r1"),[{transform:"scaleX(0)"},{transform:"scaleX(1)"}],6500,700);
-words("#h1b",6900,130,800);
-// 2–5 perguntas
-[["#s2",9600,14600,30],["#s3",14600,19600,30],["#s4",19600,24000,25],["#s5",24000,28400,15]].forEach(([id,a,b,v])=>{
-  scene(id,a,b);
-  A($(id+"e"),IN_BLUR,a+100,600);
-  A($(id+"p"),SLAM,a+250,600,"cubic-bezier(.2,.9,.3,1)");
-  count(id+"p",a+300,1100,v,x=>Math.round(x)+"%");
-  words(id+"t",a+700,120,700);
-  A($(id+"b i"),[{transform:"scaleX(0)"},{transform:"scaleX("+v/30+")"}],a+900,900);
-  A($(id+"q"),POP,a+1500,700,BACK);
-});
-// 6 anel 28.4–34.4
-scene("#s6",28400,34400);
-words("#t6",28500,110,800);
-A($("#ring"),[{opacity:0,transform:"scale(.6) rotate(-90deg)"},{opacity:1,transform:"none"}],29200,900,BACK);
-ticks.push(t=>{const p=Math.max(0,Math.min(1,(t-29900*K)/1500)),e=1-Math.pow(1-p,3);$("#ring").style.setProperty("--p",(e*94)+"%");$("#nota").textContent=(e*4.7).toFixed(1)});
-A($("#bb"),[{opacity:0,transform:"scale(.3)"},{opacity:1,transform:"none"}],31500,600,BACK);
-A($("#b6"),IN_BLUR,32000,800);
-// 7 fecho 34.4–40
-scene("#s7",34400,TOTAL+1000);
-confetti($("#confs"),34600);
-A($("#e7"),IN_BLUR,34500,700);
-words("#t7",34700,150,900);
-A($("#b7"),IN_BLUR,36000,800);
-A($("#cta"),[{opacity:0,transform:"translateY(60px)"},{opacity:1,transform:"none"}],36600,800,BACK);
-A($("#cta"),[{transform:"scale(1)"},{transform:"scale(1.05)"}],37400,700,"ease-in-out",{iterations:Infinity,direction:"alternate"});
-A($("#handle"),[{opacity:0,transform:"translateY(50px)",filter:"blur(12px)"},{opacity:1,transform:"none",filter:"blur(0)"}],37200,800);
-A($("#brand"),[{opacity:1},{opacity:0}],34400,300,"linear");
+scene("#s0",0,5500);
+A($("#e0"),IN_BLUR,100,600);
+words("#h0",400,160,800);
+A($("#b0"),IN_BLUR,2400,800);
+scene("#s1",5500,11500);
+A($("#t1"),SLAM,5650,600,"cubic-bezier(.2,.9,.3,1)");
+words("#t1b",6400,140,700);
+A($("#b1"),IN_BLUR,8000,800);
+scene("#s2",11500,21000);
+A($("#e2"),IN_BLUR,11600,600);
+words("#t2",11800,100,700);
+A($("#k1"),POP,12300,600,BACK);A($("#k2"),POP,12500,600,BACK);
+count("#k1n",12500,1100,10,x=>Math.round(x));count("#k2n",12700,1100,2,x=>Math.round(x));
+A($("#k3"),POP,13500,700,BACK);
+[["#bv",.5],["#ba",.3],["#bf",.2]].forEach(([b,v],i)=>A($(b),[{transform:"scaleX(0)"},{transform:"scaleX("+v+")"}],14100+i*300,800));
+A($("#k4"),POP,15400,600,BACK);
+A($("#b2"),IN_BLUR,16400,800);
+scene("#s3",21000,27000);
+A($("#e3"),IN_BLUR,21100,600);
+words("#t3",21300,200,800);
+["#pl1","#pl2","#pl3"].forEach((q,i)=>A($(q),[{opacity:0,transform:"translateX(-80px)"},{opacity:1,transform:"none"}],22000+i*600,600,BACK));
+A($("#b3"),IN_BLUR,24200,800);
+scene("#s4",27000,31000);
+words("#t4",27100,180,800);
+A($("#r4"),[{transform:"scaleX(0)"},{transform:"scaleX(1)"}],27900,700);
+words("#t4b",28300,180,800);
+scene("#s5",31000,TOTAL+1000);
+A($("#e5"),IN_BLUR,31100,700);
+words("#t5",31300,220,900);
+A($("#b5"),IN_BLUR,32400,800);
+A($("#cta"),[{opacity:0,transform:"translateY(60px)"},{opacity:1,transform:"none"}],33000,800,BACK);
+A($("#cta"),[{transform:"scale(1)"},{transform:"scale(1.05)"}],33800,700,"ease-in-out",{iterations:Infinity,direction:"alternate"});
+A($("#handle"),[{opacity:0,transform:"translateY(50px)",filter:"blur(12px)"},{opacity:1,transform:"none",filter:"blur(0)"}],33600,800);
+A($("#brand"),[{opacity:1},{opacity:0}],31000,300,"linear");
 window.__setT=function(t){document.getAnimations().forEach(a=>{a.pause();a.currentTime=t});ticks.forEach(f=>f(t))};
 window.__TOTAL=TOTAL*K;
 const fit=()=>{const k=Math.min(innerWidth/1080,innerHeight/1920);$("#stage").style.transform="scale("+k+")"};
