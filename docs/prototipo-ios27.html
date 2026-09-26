@@ -30,13 +30,6 @@
     --hdr:128px; --tabs:118px;
     color-scheme:light;
   }
-  /* comparação: a paleta atual do app, sem reforço */
-  :root[data-sat="100"]{
-    --paper:#FAF9F6; --subtle:#F1EDE7; --border:#E4DED5; --night:#1E2340; --ink:#1E2340; --muted:#4F576F; --dim:#8A90A2;
-    --coral:#F4736F; --orange:#F5A45D; --yellow:#F0CA75; --turq:#5CC9B4; --lilac:#AE96F2; --blue:#6AA8EE;
-    --coral-ink:#B23C3A; --orange-ink:#96601C; --yellow-ink:#8A6512; --turq-ink:#1B7A6E; --lilac-ink:#6D4FD8;
-    --amber:#E0A32E; --pupil:#161B2E; --sweep:#5CC9B4;
-  }
 
   *{box-sizing:border-box}
   [hidden]{display:none!important}
@@ -53,6 +46,8 @@
   .seg-sat{display:inline-flex;background:rgba(255,255,255,.55);border:1px solid rgba(255,255,255,.8);border-radius:999px;padding:3px;box-shadow:0 1px 2px rgba(0,0,0,.06)}
   .seg-sat button{border:0;background:transparent;font:500 12px var(--body);color:#5b5e6b;padding:6px 12px;border-radius:999px;cursor:pointer}
   .seg-sat button[aria-pressed="true"]{background:#2b2e3d;color:#fff}
+  .act{border:0;background:#2b2e3d;color:#fff;font:600 13px var(--body);padding:9px 14px;border-radius:999px;cursor:pointer}
+  .act.sec{background:#fff;color:#2b2e3d;border:1px solid rgba(0,0,0,.12)}
   .jump{display:flex;gap:6px;flex-wrap:wrap}
   .jump button{border:1px solid rgba(255,255,255,.8);background:rgba(255,255,255,.45);font:500 12px var(--body);color:#3a3d4c;padding:6px 10px;border-radius:999px;cursor:pointer}
   .jump button:hover{background:#fff}
@@ -60,7 +55,10 @@
   .foot b{color:#3a3d4c;font-weight:500}
 
   /* ---------- Aparelho ---------- */
-  .stage{display:flex;align-items:center;justify-content:center;min-height:0}
+  .stage{display:flex;align-items:flex-start;justify-content:center;gap:28px;min-height:0}
+  .slot{display:flex;flex-direction:column;align-items:center;gap:0;width:calc(393px * var(--k,1))}
+  .cap{font:600 13px var(--body);color:#3a3d4c;margin-top:12px;text-align:center}
+  .cap small{display:block;font-weight:400;color:#6a6d79;font-size:12px}
   .device{
     width:393px;height:852px;position:relative;border-radius:58px;background:#101219;
     padding:12px;box-shadow:0 40px 80px rgba(20,22,35,.45),0 0 0 2px #2a2d39,0 0 0 4px #5b5e6b,inset 0 0 0 1px rgba(255,255,255,.08);
@@ -73,17 +71,7 @@
   .status .sig{display:flex;gap:6px;align-items:center}
   .status svg{height:12px;width:auto;display:block}
   .device{transform:scale(var(--k,1))}
-  .stage{height:calc(852px * var(--k,1))}
-  @media (max-width:430px){
-    body{padding:0;gap:0;display:block}
-    .top,.foot{display:none}
-    .stage{height:100dvh;display:block}
-    .device{width:100%;height:100%;border-radius:0;padding:0;box-shadow:none;transform:none}
-    .screen-wrap{inset:0;border-radius:0}
-    .island{top:calc(env(safe-area-inset-top,0px) + 8px)}
-    .status{top:calc(env(safe-area-inset-top,0px) + 14px)}
-    :root{--hdr:calc(128px + env(safe-area-inset-top,0px))}
-  }
+  .stage{height:calc(852px * var(--k,1) + 52px)}
 
   /* ---------- Vidro (Liquid Glass) ---------- */
   .glass{
@@ -117,7 +105,6 @@
   .tab{position:relative;border:0;background:transparent;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;font:500 11px var(--body);color:var(--dim);cursor:pointer;border-radius:28px;transition:color .2s}
   .tab svg{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
   .tab[aria-selected="true"]{color:var(--ink)}
-  @media (max-width:430px){ .tabbar{bottom:calc(env(safe-area-inset-bottom,0px) + 18px)} }
 
   /* telas */
   .screens{position:absolute;inset:0}
@@ -137,6 +124,80 @@
   .screen.fade{animation:fade .28s ease}
   @keyframes push{from{transform:translateX(100%)}to{transform:translateX(0)}}
   @keyframes fade{from{opacity:0;transform:scale(.985)}to{opacity:1;transform:none}}
+
+  /* ---------- Modo ATUAL: o app como está hoje (tokens e componentes de src/) ---------- */
+  .device[data-mode="atual"]{
+    --paper:#FAF9F6; --surface:#FFFFFF; --subtle:#F1EDE7; --border:#E4DED5;
+    --night:#1E2340; --ink:#1E2340; --muted:#4F576F; --dim:#8A90A2;
+    --coral:#F4736F; --orange:#F5A45D; --yellow:#F0CA75; --turq:#5CC9B4; --lilac:#AE96F2; --blue:#6AA8EE;
+    --coral-ink:#B23C3A; --orange-ink:#96601C; --yellow-ink:#8A6512; --turq-ink:#1B7A6E; --lilac-ink:#6D4FD8;
+    --amber:#E0A32E; --pupil:#161B2E; --sweep:#5CC9B4;
+  }
+  [data-mode="atual"] *,[data-mode="atual"] *::before,[data-mode="atual"] *::after{animation:none!important;transition:none!important}
+  [data-mode="atual"] .screen.enter{animation:push .42s cubic-bezier(.2,.8,.2,1)!important}
+  [data-mode="atual"] .screen.fade{animation:fade .28s ease!important}
+  [data-mode="atual"] .screen{background:var(--paper);gap:16px}
+  [data-mode="atual"] .screen.bleed{background:#eeece7}
+  [data-mode="atual"] .glass{background:var(--paper);-webkit-backdrop-filter:none;backdrop-filter:none;border:0;box-shadow:none}
+  [data-mode="atual"] .glass::before{display:none}
+  [data-mode="atual"] .hdr{left:0;right:0;top:0;height:112px;padding:52px 12px 0 16px;border-radius:0}
+  [data-mode="atual"] .tabbar{left:0;right:0;bottom:0;height:84px;border-radius:0;background:var(--surface);border-top:1px solid var(--border);padding:6px 6px 26px}
+  [data-mode="atual"] .lens{display:none}
+  [data-mode="atual"] .tab{border-radius:0}
+  [data-mode="atual"] .tab[aria-selected="true"]{color:var(--coral-ink)}
+  [data-mode="atual"] .sos{box-shadow:none}
+  [data-mode="atual"] .card,[data-mode="atual"] .place,[data-mode="atual"] .stat{border:1px solid var(--border);border-radius:12px;box-shadow:none;padding:16px}
+  [data-mode="atual"] .place{padding:12px}
+  [data-mode="atual"] .card.hero{border-radius:16px;padding:20px}
+  [data-mode="atual"] .card.hero.dark{background:var(--surface);color:var(--ink)}
+  [data-mode="atual"] .card.hero.dark .eyebrow{color:var(--dim)}
+  [data-mode="atual"] .card.hero.dark .display,[data-mode="atual"] .card.hero.dark .hero-t{color:var(--ink)}
+  [data-mode="atual"] .card.hero.dark .p{color:var(--muted)}
+  [data-mode="atual"] .card.hero.dark .link{color:var(--turq-ink)}
+  [data-mode="atual"] .card.hero.dark .hero-s{color:var(--dim)}
+  [data-mode="atual"] .card.hero.dark .hero-s2{color:var(--dim)}
+  [data-mode="atual"] .tile,[data-mode="atual"] .rbline{display:none}
+  [data-mode="atual"] .rbtext{background:none;-webkit-background-clip:initial;background-clip:initial;color:inherit;font-weight:400}
+  [data-mode="atual"] .eyebrow{font:400 11px var(--body);letter-spacing:.14em;text-transform:uppercase;color:var(--dim)}
+  [data-mode="atual"] .display{font:700 34px/1 var(--display);letter-spacing:.1em;text-transform:uppercase}
+  [data-mode="atual"] .title{font:700 28px/1.05 var(--display);letter-spacing:.1em;text-transform:uppercase}
+  [data-mode="atual"] .h{font:500 15px/1.2 var(--display);letter-spacing:.14em;text-transform:uppercase;color:var(--ink)}
+  [data-mode="atual"] .h.sm{font-size:13px;color:var(--muted)}
+  [data-mode="atual"] .link{color:var(--turq-ink)}
+  [data-mode="atual"] .pname{font:500 15px/1.15 var(--display);letter-spacing:.06em;text-transform:uppercase}
+  [data-mode="atual"] .occ .who{font:500 15px var(--display);letter-spacing:.06em;text-transform:uppercase}
+  [data-mode="atual"] .question{font:700 19px/1.2 var(--display);background:none;-webkit-background-clip:initial;background-clip:initial;color:var(--ink)}
+  [data-mode="atual"] .bigscore{font:700 40px/1 var(--display)}
+  [data-mode="atual"] .pill{font:700 11px var(--body);letter-spacing:.06em;text-transform:uppercase}
+  [data-mode="atual"] .badge{border-radius:6px}
+  [data-mode="atual"] .thumb{background:var(--subtle)!important;color:var(--muted)!important;filter:none!important;border-radius:12px}
+  [data-mode="atual"] .thumb.banner{border-radius:12px;height:150px}
+  [data-mode="atual"] .stat .lbl{font:400 11px var(--body);letter-spacing:.14em;text-transform:uppercase;color:var(--dim)}
+  [data-mode="atual"] .stat .v{font-size:24px;min-height:0}
+  [data-mode="atual"] .stat .small{display:none}
+  [data-mode="atual"] .btn{border-radius:12px;font:500 13.5px var(--display);letter-spacing:.14em;text-transform:uppercase;padding:13px 14px;box-shadow:none}
+  [data-mode="atual"] .btn.ghost{background:var(--surface);border:1px solid var(--border);color:var(--muted)}
+  [data-mode="atual"] .btn.line{background:transparent;border:1px solid var(--turq);color:var(--turq-ink)}
+  [data-mode="atual"] .chip{border:1px solid var(--border);background:var(--surface);color:var(--muted);font:500 12px var(--body);padding:7px 12px}
+  [data-mode="atual"] .chip[aria-pressed="true"]{background:var(--ink);border-color:var(--ink);color:var(--paper)}
+  [data-mode="atual"] .chip.c{background:transparent;border-color:var(--c);color:var(--ci)}
+  [data-mode="atual"] .chip.c[aria-pressed="true"]{background:var(--c);border-color:var(--c);color:var(--night)}
+  [data-mode="atual"] .map-top .chip{background:var(--surface);-webkit-backdrop-filter:none;backdrop-filter:none;box-shadow:none}
+  [data-mode="atual"] .map-top .chip.c[aria-pressed="true"]{background:var(--c)}
+  [data-mode="atual"] .map-top .chip[aria-pressed="true"]:not(.c){background:var(--ink)}
+  [data-mode="atual"] .input{background:var(--surface);border:1px solid var(--border);border-radius:12px}
+  [data-mode="atual"] .search{background:var(--surface);border:1px solid var(--border);border-radius:12px}
+  [data-mode="atual"] .segc{background:var(--surface);border:1px solid var(--border);border-radius:12px}
+  [data-mode="atual"] .segc button{border-radius:8px;font:500 13px var(--display);letter-spacing:.14em;text-transform:uppercase}
+  [data-mode="atual"] .sheet{left:0;right:0;bottom:84px;border-radius:22px 22px 0 0;background:var(--paper)}
+  [data-mode="atual"] .callout{background:var(--surface);border:1px solid var(--border)}
+  [data-mode="atual"] .modal .pane{background:var(--surface);border-top:1px solid var(--border);border-radius:24px 24px 0 0}
+  [data-mode="atual"] .emerg{background:var(--paper);border:1px solid var(--border)}
+  [data-mode="atual"] .emerg .num{color:var(--coral-ink)}
+  [data-mode="atual"] .service{border-bottom-color:var(--border)}
+  [data-mode="atual"] .minimap{border:1px solid var(--border);border-radius:12px}
+  [data-mode="atual"] .toast{background:var(--surface);border:1px solid var(--border)}
+  [data-mode="atual"] .splash{display:none}
   /* ---------- Loading: o radar pinta o anel ---------- */
   .splash{position:absolute;inset:0;z-index:70;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:22px;background:var(--paper);
     background-image:radial-gradient(60% 40% at 0% 0%,color-mix(in srgb,var(--turq) 22%,transparent),transparent 60%),radial-gradient(50% 35% at 100% 100%,color-mix(in srgb,var(--lilac) 22%,transparent),transparent 60%);}
@@ -207,6 +268,9 @@
   .card.hero.dark .display{color:#fff}
   .card.hero.dark .p{color:rgba(255,255,255,.72)}
   .card.hero.dark .link{color:#fff}
+  .card.hero.dark .hero-t{color:#fff}
+  .card.hero.dark .hero-s{color:rgba(255,255,255,.7)}
+  .card.hero.dark .hero-s2{color:rgba(255,255,255,.6)}
   .rbline{height:4px;border-radius:2px;background:linear-gradient(90deg,var(--coral),var(--orange),var(--yellow),var(--turq),var(--blue),var(--lilac));width:72px}
   .rbtext{background:linear-gradient(90deg,var(--coral),var(--orange),var(--yellow),var(--turq),var(--blue),var(--lilac));-webkit-background-clip:text;background-clip:text;color:transparent;font-weight:600}
   .tile{width:36px;height:36px;border-radius:12px;display:flex;align-items:center;justify-content:center;flex:none;background:rgba(255,255,255,.10)}
@@ -389,20 +453,18 @@
 
 <header class="top">
   <div>
-    <h1><span id="topmark"></span>Irisa · protótipo iOS 27 · v10</h1>
-    <p>Movimento no conceito do app: tudo abre em cinza e ganha cor; lugar sem avaliação fica cinza; na ficha, cada pergunta respondida dá um quarto de cor à foto; o anel da nota enche gomo a gomo; o radar da marca gira. Nada aqui grava, liga ou envia.</p>
+    <h1><span id="topmark"></span>Irisa · atual × proposta · v11</h1>
+    <p>Esquerda: o app como está hoje, sem mexer (tokens, cartões, barra e cabeçalho de agora). Direita: a proposta (Liquid Glass, cores vivas, fundo aurora, animações cinza → cor). Os botões agem nos dois ao mesmo tempo. Nada aqui grava, liga ou envia.</p>
   </div>
   <div class="ctl">
-    <div class="seg-sat" role="group" aria-label="Saturação">
-      <button id="sat60" aria-pressed="true">Viva (nova)</button>
-      <button id="sat100" aria-pressed="false">Atual</button>
-    </div>
+    <button class="act" id="restart">↻ Reiniciar animação</button>
+    <button class="act" id="tour">▶ Simular navegação</button>
     <div class="jump" id="jump"></div>
   </div>
 </header>
 
-<main class="stage">
-  <div class="device" id="device">
+<template id="phone-tpl">
+  <div class="device">
     <div class="screen-wrap">
       <div class="island"></div>
       <div class="status"><span>9:41</span>
@@ -475,10 +537,14 @@
       <div class="splash" id="splash" hidden></div>
     </div>
   </div>
+</template>
+<main class="stage">
+  <div class="slot"><div id="slot-atual"></div><div class="cap">Atual<small>como está no app hoje</small></div></div>
+  <div class="slot"><div id="slot-nova"></div><div class="cap">Proposta<small>Liquid Glass · cores vivas · animações</small></div></div>
 </main>
 
 <footer class="foot">
-  <b>Como ler:</b> telas Início, Mapa, Lugares, Apoio, Perfil e Registrar pela barra; ficha do lugar e do bairro a partir dos cartões e do ranking. Botões de envio só mostram um aviso. Dados de exemplo em Curitiba, todos fictícios. A opção “Atual” mostra a paleta que o app usa hoje, para comparar.
+  <b>Como ler:</b> telas Início, Mapa, Lugares, Apoio, Perfil e Registrar pela barra; ficha do lugar e do bairro a partir dos cartões e do ranking. Botões de envio só mostram um aviso. Dados de exemplo em Curitiba, todos fictícios. “Simular navegação” percorre as telas nos dois aparelhos de uma vez; “Reiniciar animação” volta ao Início e toca o loading da proposta.
 </footer>
 
 <script>
@@ -587,7 +653,7 @@ const ICONS = {
 /* marca: anel de 48 fatias, varredura e pupila (mesma geometria de Mark.tsx) */
 function markSvg(size){
   const ring=["#F4736F","#F5A45D","#F0CA75","#5CC9B4","#6AA8EE","#AE96F2"];
-  const sat=document.documentElement.dataset.sat==="100"?1:1.35;
+  const sat=CUR_SAT;
   const desat=h=>{let r=parseInt(h.slice(1,3),16)/255,g=parseInt(h.slice(3,5),16)/255,b=parseInt(h.slice(5,7),16)/255;const mx=Math.max(r,g,b),mn=Math.min(r,g,b),l=(mx+mn)/2;let hh=0,s=0;if(mx!==mn){const d=mx-mn;s=l>.5?d/(2-mx-mn):d/(mx+mn);hh=mx===r?(g-b)/d+(g<b?6:0):mx===g?(b-r)/d+2:(r-g)/d+4;hh/=6}s=Math.min(1,s*sat);const q=l<.5?l*(1+s):l+s-l*s,p=2*l-q,f=t=>{if(t<0)t+=1;if(t>1)t-=1;if(t<1/6)return p+(q-p)*6*t;if(t<1/2)return q;if(t<2/3)return p+(q-p)*(2/3-t)*6;return p};const hx=x=>Math.round(x*255).toString(16).padStart(2,"0");return s===0?h:"#"+hx(f(hh+1/3))+hx(f(hh))+hx(f(hh-1/3))};
   const lerp=(a,b,t)=>{let o="#";for(let i=1;i<7;i+=2){const x=parseInt(a.slice(i,i+2),16),y=parseInt(b.slice(i,i+2),16);o+=Math.round(x+(y-x)*t).toString(16).padStart(2,"0")}return o};
   const rc=t=>{const p=t*ring.length,i=Math.floor(p)%ring.length;return desat(lerp(ring[i],ring[(i+1)%ring.length],p-Math.floor(p)))};
@@ -598,10 +664,11 @@ function markSvg(size){
   const sweep=desat("#5CC9B4"),coral=desat("#F4736F");
   return `<svg viewBox="0 0 100 100" width="${size}" height="${size}" class="iris" aria-hidden="true"><defs><linearGradient id="${id}" gradientUnits="userSpaceOnUse" x1="${sx}" y1="${sy}" x2="${ex}" y2="${ey}"><stop offset="0" stop-color="${sweep}" stop-opacity="0"/><stop offset="1" stop-color="${sweep}" stop-opacity=".5"/></linearGradient></defs>${s}<g class="sweep"><path d="${slice(33,0,a0,a1)}" fill="url(#${id})"/><path d="M50 50L${ex} ${ey}" stroke="${sweep}" stroke-width="1.6" stroke-linecap="round" stroke-opacity=".75"/></g><circle cx="50" cy="50" r="25" fill="none" stroke="${sweep}" stroke-width=".8" stroke-opacity=".35"/><circle class="blip" cx="66" cy="36" r="3.1" fill="${sweep}"/><circle class="blip" style="animation-delay:.8s" cx="63" cy="62" r="2.4" fill="${coral}"/><circle class="blip" style="animation-delay:1.6s" cx="38" cy="34" r="1.9" fill="${sweep}"/><circle cx="50" cy="50" r="13" fill="#1b1e29"/><circle cx="46.1" cy="45.6" r="2.86" fill="#fff"/></svg>`;
 }
+let CUR_SAT=1.35;
 /* Splash: mesma geometria da marca; anel cinza por baixo, cada gomo acende quando a varredura passa */
 function splashSvg(){
   const ring=["#F4736F","#F5A45D","#F0CA75","#5CC9B4","#6AA8EE","#AE96F2"];
-  const sat=document.documentElement.dataset.sat==="100"?1:1.35;
+  const sat=CUR_SAT;
   const desat=h=>{let r=parseInt(h.slice(1,3),16)/255,g=parseInt(h.slice(3,5),16)/255,b=parseInt(h.slice(5,7),16)/255;const mx=Math.max(r,g,b),mn=Math.min(r,g,b),l=(mx+mn)/2;let hh=0,s=0;if(mx!==mn){const d=mx-mn;s=l>.5?d/(2-mx-mn):d/(mx+mn);hh=mx===r?(g-b)/d+(g<b?6:0):mx===g?(b-r)/d+2:(r-g)/d+4;hh/=6}s=Math.min(1,s*sat);const q=l<.5?l*(1+s):l+s-l*s,p=2*l-q,f=t=>{if(t<0)t+=1;if(t>1)t-=1;if(t<1/6)return p+(q-p)*6*t;if(t<1/2)return q;if(t<2/3)return p+(q-p)*(2/3-t)*6;return p};const hx=x=>Math.round(x*255).toString(16).padStart(2,"0");return s===0?h:"#"+hx(f(hh+1/3))+hx(f(hh))+hx(f(hh-1/3))};
   const lerp=(a,b,t)=>{let o="#";for(let i=1;i<7;i+=2){const x=parseInt(a.slice(i,i+2),16),y=parseInt(b.slice(i,i+2),16);o+=Math.round(x+(y-x)*t).toString(16).padStart(2,"0")}return o};
   const rc=t=>{const p=t*ring.length,i=Math.floor(p)%ring.length;return desat(lerp(ring[i],ring[(i+1)%ring.length],p-Math.floor(p)))};
@@ -612,16 +679,6 @@ function splashSvg(){
   const a0=-150*Math.PI/180,a1=-55*Math.PI/180,[sx,sy]=pt(33,a0),[ex,ey]=pt(33,a1);const id="ssw"+Math.random().toString(36).slice(2,7);
   const sweep=desat("#5CC9B4"),coral=desat("#F4736F");
   return `<svg viewBox="0 0 100 100" aria-hidden="true"><defs><linearGradient id="${id}" gradientUnits="userSpaceOnUse" x1="${sx}" y1="${sy}" x2="${ex}" y2="${ey}"><stop offset="0" stop-color="${sweep}" stop-opacity="0"/><stop offset="1" stop-color="${sweep}" stop-opacity=".55"/></linearGradient></defs>${s}<g class="sw"><path d="${slice(33,0,a0,a1)}" fill="url(#${id})"/><path d="M50 50L${ex} ${ey}" stroke="${sweep}" stroke-width="1.6" stroke-linecap="round" stroke-opacity=".8"/></g><circle cx="50" cy="50" r="25" fill="none" stroke="${sweep}" stroke-width=".8" stroke-opacity=".35"/><circle class="sblip" style="animation-delay:.9s,2.2s" cx="66" cy="36" r="3.1" fill="${sweep}"/><circle class="sblip" style="animation-delay:1.3s,3s" cx="63" cy="62" r="2.4" fill="${coral}"/><circle class="sblip" style="animation-delay:1.1s,3.8s" cx="38" cy="34" r="1.9" fill="${sweep}"/><g class="pupil"><circle cx="50" cy="50" r="13" fill="#0F1220"/><circle cx="46.1" cy="45.6" r="2.86" fill="#fff"/></g></svg>`;
-}
-let splashT=[];
-function playSplash(){
-  const sp=document.getElementById("splash");splashT.forEach(clearTimeout);splashT=[];
-  sp.className="splash";sp.hidden=false;
-  sp.innerHTML=`${splashSvg()}<div class="word">Iris<b>a</b></div><div class="tag">quanta cor tem aqui?</div><div class="bar"><i></i></div>`;
-  const scr=document.getElementById("screens");scr.style.animation="none";
-  const reduce=matchMedia("(prefers-reduced-motion:reduce)").matches;
-  splashT.push(setTimeout(()=>{sp.classList.add("out");scr.style.animation="";void scr.offsetWidth;scr.style.animation="bloom 1.8s ease-out backwards";const t=stack[stack.length-1];animateIn(document.getElementById("s-"+t.s))},reduce?300:2700));
-  splashT.push(setTimeout(()=>{sp.hidden=true;sp.innerHTML=""},reduce?700:3400));
 }
 /* IrisScore: a escala do arco-íris curvada no anel, com pupila */
 function irisScore(val,size=54){
@@ -677,10 +734,12 @@ function mapSvg(opts={}){
   return s+`</svg>`;
 }
 
+function createApp(root,mode){
+  const $=id=>root.querySelector("#"+id);
 /* ================= telas ================= */
 function renderInicio(){
   const primeiros=PLACES.filter(p=>p.n>0).sort((a,b)=>b.n-a.n).slice(0,5);
-  document.getElementById("s-inicio").innerHTML=`
+  $("s-inicio").innerHTML=`
     <div class="card hero dark">
       <div class="row" style="gap:12px"><span class="tile">${markSvg(26)}</span><span class="eyebrow">Sua cidade</span></div>
       <div class="display">Curitiba</div>
@@ -701,7 +760,7 @@ function renderInicio(){
     ${ranking("Bairros com mais relatos")}`;
 }
 function renderMapa(){
-  const el=document.getElementById("s-mapa");
+  const el=$("s-mapa");
   el.innerHTML=`
     <div class="mapwrap" id="mapsvg">${mapSvg()}</div>
     <div class="map-top">
@@ -734,7 +793,7 @@ function renderMapa(){
     el.querySelector("#mapsvg").innerHTML=mapSvg({occ:rel,places:lug});bindGo(el.querySelector("#mapsvg"));}));
 }
 function renderLugares(){
-  const el=document.getElementById("s-lugares");
+  const el=$("s-lugares");
   el.innerHTML=`
     <div><div class="title">Lugares</div><div class="sub">Curitiba · PR · 256 cadastrados</div></div>
     <div class="search glass">${ICONS.search}<input id="q" placeholder="Buscar por nome" autocomplete="off"></div>
@@ -749,7 +808,7 @@ function renderLugares(){
   });
 }
 function renderApoio(){
-  document.getElementById("s-apoio").innerHTML=`
+  $("s-apoio").innerHTML=`
     <div><div class="title">Apoio</div><div class="sub">Mural da comunidade e serviços de apoio</div></div>
     <div class="card"><div class="h">Deixe uma mensagem</div>
       <input class="input" id="nick" placeholder="Apelido (opcional, vira Anônimo)">
@@ -758,20 +817,20 @@ function renderApoio(){
       <button class="btn turq" data-toast="Protótipo: nada foi publicado">Publicar</button></div>
     <div class="stack">${MSGS.map(m=>`<div class="card"><div class="between"><span class="pill" style="background:${v(m.c)}">${SUPCAT[m.cat]}</span><span class="small">${m.when}</span></div><div style="font-size:15px;line-height:1.45">${esc(m.txt)}</div><div class="between"><span class="small" style="font-weight:500">${m.nick}</span><button class="flag" data-toast="Protótipo: denúncia não enviada">Denunciar</button><button class="heart" aria-pressed="false" data-likes="${m.likes}">${ICONS.heart}<span>${m.likes}</span></button></div></div>`).join("")}</div>
     <div class="card"><div class="h">Serviços de apoio · Curitiba</div>${SERVICES.map(s=>`<div class="service"><div class="between"><span class="nm">${s.name}</span><span class="kind">${s.kind}</span></div><div class="small" style="color:var(--muted)">${s.desc}</div><div class="row" style="gap:14px;margin-top:2px"><span class="tel" data-toast="Protótipo: não disca">${ICONS.phone}${s.tel}</span>${s.url?`<span class="site" data-toast="Protótipo: não abre o site">${ICONS.ext}Site</span>`:""}</div></div>`).join("")}</div>`;
-  document.querySelectorAll("#s-apoio .heart").forEach(b=>b.addEventListener("click",()=>{const on=b.getAttribute("aria-pressed")!=="true";b.setAttribute("aria-pressed",on);b.querySelector("span").textContent=+b.dataset.likes+(on?1:0)}));
+  root.querySelectorAll("#s-apoio .heart").forEach(b=>b.addEventListener("click",()=>{const on=b.getAttribute("aria-pressed")!=="true";b.setAttribute("aria-pressed",on);b.querySelector("span").textContent=+b.dataset.likes+(on?1:0)}));
 }
 function renderPerfil(){
-  document.getElementById("s-perfil").innerHTML=`
+  $("s-perfil").innerHTML=`
     <div><div class="title">Perfil</div><div class="sub">alguem@exemplo.com</div><div class="kicker">Moderação</div></div>
     <div class="card"><div class="h sm">Apelido no mural e nas avaliações</div><input class="input" id="apelido" placeholder="Vazio = Anônimo" value="Lua"><div class="h sm">Cidade padrão</div><button class="link" data-open="m-city">Curitiba · PR ${ICONS.down}</button><button class="btn turq" data-toast="Protótipo: nada foi salvo">Salvar</button></div>
     <div class="card"><div class="h sm">Privacidade</div><div class="p">Relatos e mensagens nunca mostram seu nome ou e-mail. Só o apelido que você escolher aparece no mural e nas avaliações de lugares.</div></div>
     <button class="btn lilac" data-toast="Protótipo: fila de moderação fora do escopo">Fila de moderação</button>
     <button class="btn ghost" data-toast="Protótipo: sessão fictícia">Sair</button>
     <button class="link center pad-b" style="color:var(--coral-ink);justify-content:center;font-size:14px" data-toast="Protótipo: nada é excluído">Excluir minha conta</button>
-    <div class="small center pad-b">Protótipo v10 · 26/09/2026</div>`;
+    <div class="small center pad-b">Protótipo v11 · 26/09/2026</div>`;
 }
 function renderRegistrar(mode="relato"){
-  const el=document.getElementById("s-registrar");
+  const el=$("s-registrar");
   const relato=`
     <div class="field"><div class="lbl"><span class="h sm">Tipo</span></div><div class="wrapchips" data-single>${Object.entries(T).map(([k,t],i)=>chip(t.label,{on:i===0,c:t.c,i:t.i})).join("")}</div></div>
     <div class="field"><div class="lbl"><span class="h sm">Data</span></div><div class="input" style="display:flex;justify-content:space-between;align-items:center"><span>26 de setembro de 2026</span><span style="color:var(--dim)">${ICONS.down.replace("<svg",'<svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"')}</span></div></div>
@@ -799,7 +858,7 @@ function renderRegistrar(mode="relato"){
   el.querySelectorAll(".segc button").forEach(b=>b.addEventListener("click",()=>{renderRegistrar(b.dataset.mode);bindAll(el);el.scrollTop=0}));
 }
 function renderLugar(id){
-  const p=PLACES.find(x=>x.id==id);const el=document.getElementById("s-lugar");
+  const p=PLACES.find(x=>x.id==id);const el=$("s-lugar");
   const onSite=p.id===1;
   const form=`<div class="card" style="gap:14px"><div class="h">${p.id===2?"Sua avaliação":"Como foi lá?"}</div>${AXES.map((a,i)=>`<div class="stack" style="gap:6px"><div style="font:500 14px var(--body)">${a[2]}</div><div class="small">${a[3]}</div>${rainbow(p.id===2?[5,4,5,4][i]:0,16,true,a[0])}</div>`).join("")}<textarea class="input" id="rc" placeholder="Quer contar como foi? (opcional, até 500 caracteres)"></textarea><button class="btn yellow" data-toast="Protótipo: avaliação não enviada">${p.id===2?"Atualizar":"Enviar avaliação"}</button></div>`;
   el.innerHTML=`
@@ -833,24 +892,24 @@ function renderBairro(id){
   const bars=(title,items,src)=>{const it=Object.entries(items).filter(([,x])=>x>0).sort((a,b)=>b[1]-a[1]);if(!it.length)return "";const mx=it[0][1];return `<div class="stack" style="gap:6px"><div class="eyebrow">${title}</div><div class="bars">${it.map(([k,x])=>`<div class="bar"><span>${src[k].label||src[k][0]}</span><i style="--col:${v(src[k].c||src[k][1])};--f:${Math.round(x/mx*100)}%"></i><b>${x}</b></div>`).join("")}</div></div>`};
   const byType={},bySet={},byPer={};rel.forEach(o=>{byType[o.type]=(byType[o.type]||0)+1;if(o.setting)bySet[o.setting]=(bySet[o.setting]||0)+1;if(o.period)byPer[o.period]=(byPer[o.period]||0)+1});
   if(id==3){Object.assign(byType,{verbal:7,fisica:4,discriminacao:2,ameaca:1});Object.assign(bySet,{rua:8,estabelecimento:3,transporte:1});Object.assign(byPer,{noite:7,madrugada:4,tarde:1})}
-  document.getElementById("s-bairro").innerHTML=`
-    <div class="card hero dark" style="gap:6px"><div class="eyebrow">Curitiba · PR</div><div class="title" style="color:#fff">${n.name}</div><div class="row"><span style="font:700 14px var(--body);color:${v(c)}">${l}</span><span class="sub" style="color:rgba(255,255,255,.7)">${rk.total} relato${rk.total===1?"":"s"} em 12 meses${rk.high?`, ${rk.high} grave${rk.high===1?"":"s"}`:""}</span></div><div class="small" style="color:rgba(255,255,255,.6)">${n.placesTotal} lugares cadastrados${n.rated?` · ${n.rated} já avaliado${n.rated===1?"":"s"}`:""}</div></div>
+  $("s-bairro").innerHTML=`
+    <div class="card hero dark" style="gap:6px"><div class="eyebrow">Curitiba · PR</div><div class="title hero-t">${n.name}</div><div class="row"><span style="font:700 14px var(--body);color:${v(c)}">${l}</span><span class="sub hero-s">${rk.total} relato${rk.total===1?"":"s"} em 12 meses${rk.high?`, ${rk.high} grave${rk.high===1?"":"s"}`:""}</span></div><div class="small hero-s2">${n.placesTotal} lugares cadastrados${n.rated?` · ${n.rated} já avaliado${n.rated===1?"":"s"}`:""}</div></div>
     ${rk.total?`<div class="card" style="gap:14px"><div class="h">O que foi relatado</div>${bars("Tipo",byType,T)}${bars("Onde",bySet,SETTINGS)}${bars("Quando",byPer,PERIODS)}</div>`:""}
     <div class="stack"><div class="h">Lugares deste bairro</div>${lug.length?lug.map(p=>placeCard(p,false)).join(""):`<div class="p">Nenhum lugar cadastrado aqui ainda.</div>`}</div>
     <div class="stack pad-b"><div class="h">Relatos deste bairro</div>${rel.length?rel.map(occCard).join(""):`<div class="p">Nenhum relato registrado aqui. Isso não quer dizer que a área seja segura — quer dizer que ninguém registrou.</div>`}</div>`;
 }
 
 /* ================= navegação ================= */
-const TABS=["inicio","mapa","lugares","apoio","perfil"];
+const TABS_=["inicio","mapa","lugares","apoio","perfil"];
 let stack=[{s:"inicio"}];
-const hdrTabs=document.getElementById("hdr-tabs"),hdrDetail=document.getElementById("hdr-detail"),tabbar=document.getElementById("tabbar"),lens=document.getElementById("lens");
+const hdrTabs=$("hdr-tabs"),hdrDetail=$("hdr-detail"),tabbar=$("tabbar"),lens=$("lens");
 function show(s,anim){
-  document.querySelectorAll(".screen").forEach(e=>{e.classList.remove("on","enter","fade")});
-  const el=document.getElementById("s-"+s);el.classList.add("on");if(anim)el.classList.add(anim);
-  const isTab=TABS.includes(s);hdrTabs.hidden=!isTab;hdrDetail.hidden=isTab;
-  const tab=isTab?s:(stack.find(x=>TABS.includes(x.s))||{s:"inicio"}).s;
-  document.querySelectorAll(".tab").forEach(b=>b.setAttribute("aria-selected",b.dataset.tab===tab));
-  lens.style.transform=`translateX(${TABS.indexOf(tab)*100}%)`;
+  root.querySelectorAll(".screen").forEach(e=>{e.classList.remove("on","enter","fade")});
+  const el=$("s-"+s);el.classList.add("on");if(anim)el.classList.add(anim);
+  const isTab=TABS_.includes(s);hdrTabs.hidden=!isTab;hdrDetail.hidden=isTab;
+  const tab=isTab?s:(stack.find(x=>TABS_.includes(x.s))||{s:"inicio"}).s;
+  root.querySelectorAll(".tab").forEach(b=>b.setAttribute("aria-selected",b.dataset.tab===tab));
+  lens.style.transform=`translateX(${TABS_.indexOf(tab)*100}%)`;
   el.scrollTop=0;
   animateIn(el);
 }
@@ -863,7 +922,7 @@ function animateIn(el){
 }
 function countUp(n){
   const target=parseFloat(n.dataset.count),dec=(n.dataset.count.split(".")[1]||"").length;
-  if(matchMedia("(prefers-reduced-motion:reduce)").matches){n.textContent=target.toFixed(dec);return}
+  if(mode==="atual"||matchMedia("(prefers-reduced-motion:reduce)").matches){n.textContent=target.toFixed(dec);return}
   const t0=performance.now(),dur=1000;
   const step=t=>{const k=Math.min(1,(t-t0)/dur),e=1-Math.pow(1-k,3);n.textContent=(target*e).toFixed(dec);if(k<1)requestAnimationFrame(step)};
   requestAnimationFrame(step);
@@ -871,17 +930,17 @@ function countUp(n){
 function goTab(s){stack=[{s}];show(s,"fade")}
 function go(s,id,extra){
   if(s==="lugar")renderLugar(id);if(s==="bairro")renderBairro(id);if(s==="registrar")renderRegistrar(extra||"relato");
-  bindAll(document.getElementById("s-"+s));stack.push({s,id});show(s,"enter");
+  bindAll($("s-"+s));stack.push({s,id});show(s,"enter");
 }
-function back(){if(stack.length>1)stack.pop();const t=stack[stack.length-1];if(t.s==="lugar")renderLugar(t.id);if(t.s==="bairro")renderBairro(t.id);bindAll(document.getElementById("s-"+t.s));show(t.s,"fade")}
-document.getElementById("back").addEventListener("click",back);
-document.querySelectorAll(".tab").forEach(b=>b.addEventListener("click",()=>goTab(b.dataset.tab)));
+function back(){if(stack.length>1)stack.pop();const t=stack[stack.length-1];if(t.s==="lugar")renderLugar(t.id);if(t.s==="bairro")renderBairro(t.id);bindAll($("s-"+t.s));show(t.s,"fade")}
+$("back").addEventListener("click",back);
+root.querySelectorAll(".tab").forEach(b=>b.addEventListener("click",()=>goTab(b.dataset.tab)));
 
-let toastT;function toast(msg){const t=document.getElementById("toast");t.textContent=msg;t.classList.add("on");clearTimeout(toastT);toastT=setTimeout(()=>t.classList.remove("on"),1800)}
-function openModal(id){document.getElementById(id).classList.add("on")}
-document.querySelectorAll("[data-close]").forEach(b=>b.addEventListener("click",()=>document.getElementById(b.dataset.close).classList.remove("on")));
-document.querySelectorAll(".modal").forEach(m=>m.addEventListener("click",e=>{if(e.target===m)m.classList.remove("on")}));
-["sos1","sos2"].forEach(i=>document.getElementById(i).addEventListener("click",()=>openModal("m-sos")));
+let toastT;function toast(msg){const t=$("toast");t.textContent=msg;t.classList.add("on");clearTimeout(toastT);toastT=setTimeout(()=>t.classList.remove("on"),1800)}
+function openModal(id){$(id).classList.add("on")}
+root.querySelectorAll("[data-close]").forEach(b=>b.addEventListener("click",()=>$(b.dataset.close).classList.remove("on")));
+root.querySelectorAll(".modal").forEach(m=>m.addEventListener("click",e=>{if(e.target===m)m.classList.remove("on")}));
+["sos1","sos2"].forEach(i=>$(i).addEventListener("click",()=>openModal("m-sos")));
 
 function bindGo(root){
   root.querySelectorAll("[data-go]").forEach(b=>{if(b.dataset.bound)return;b.dataset.bound=1;b.addEventListener("click",e=>{e.stopPropagation();go(b.dataset.go,b.dataset.id,b.dataset.mode)})});
@@ -894,25 +953,57 @@ function bindAll(root){
   root.querySelectorAll("[data-single]").forEach(g=>g.querySelectorAll(".chip").forEach(b=>{if(b.dataset.bound)return;b.dataset.bound=1;b.addEventListener("click",()=>{const on=b.getAttribute("aria-pressed")==="true";g.querySelectorAll(".chip").forEach(x=>x.setAttribute("aria-pressed","false"));b.setAttribute("aria-pressed",!(on&&g.hasAttribute("data-optional")))})}));
   root.querySelectorAll(".rb.pick").forEach(r=>{if(r.dataset.bound)return;r.dataset.bound=1;r.querySelectorAll("i").forEach(seg=>seg.addEventListener("click",()=>{const n=+seg.dataset.i;r.querySelectorAll("i").forEach((x,i)=>x.style.setProperty("--f",n>i?"100%":"0%"))}))});
 }
-document.querySelectorAll("[data-toast]").forEach(b=>b.addEventListener("click",()=>toast(b.dataset.toast)));
+root.querySelectorAll("[data-toast]").forEach(b=>b.addEventListener("click",()=>toast(b.dataset.toast)));
 
 /* ================= boot ================= */
-function paintMarks(){document.getElementById("logo-tabs").insertAdjacentHTML("afterbegin",markSvg(30));document.getElementById("topmark").innerHTML=markSvg(22)}
+function paintMarks(){$("logo-tabs").insertAdjacentHTML("afterbegin",markSvg(30))}
 function renderAll(){
-  document.getElementById("logo-tabs").querySelectorAll("svg").forEach(s=>s.remove());paintMarks();
+  CUR_SAT=mode==="atual"?1:1.35;
+  $("logo-tabs").querySelectorAll("svg").forEach(s=>s.remove());paintMarks();
   renderInicio();renderMapa();renderLugares();renderApoio();renderPerfil();renderRegistrar();
-  document.querySelectorAll(".screen").forEach(bindAll);
-  const t=stack[stack.length-1];if(t.s==="lugar"){renderLugar(t.id);bindAll(document.getElementById("s-lugar"))}if(t.s==="bairro"){renderBairro(t.id);bindAll(document.getElementById("s-bairro"))}
+  root.querySelectorAll(".screen").forEach(bindAll);
+  const t=stack[stack.length-1];if(t.s==="lugar"){renderLugar(t.id);bindAll($("s-lugar"))}if(t.s==="bairro"){renderBairro(t.id);bindAll($("s-bairro"))}
 }
-renderAll();show("inicio");playSplash();
-function fit(){const k=Math.min(1,Math.max(.5,(window.innerHeight-190)/852));document.documentElement.style.setProperty("--k",window.innerWidth<=430?1:k.toFixed(3))}
-fit();window.addEventListener("resize",fit);
+let splashT=[];
+function playSplash(){
+  if(mode==="atual")return;
+  CUR_SAT=1.35;
+  const sp=$("splash");splashT.forEach(clearTimeout);splashT=[];
+  sp.className="splash";sp.hidden=false;
+  sp.innerHTML=`${splashSvg()}<div class="word">Iris<b>a</b></div><div class="tag">quanta cor tem aqui?</div><div class="bar"><i></i></div>`;
+  const scr=$("screens");scr.style.animation="none";
+  const reduce=matchMedia("(prefers-reduced-motion:reduce)").matches;
+  splashT.push(setTimeout(()=>{sp.classList.add("out");scr.style.animation="";void scr.offsetWidth;scr.style.animation="bloom 1.8s ease-out backwards";const t=stack[stack.length-1];animateIn($("s-"+t.s))},reduce?300:2700));
+  splashT.push(setTimeout(()=>{sp.hidden=true;sp.innerHTML=""},reduce?700:3400));
+}
 
+  /* ---- API para a página (reinício e simulação) ---- */
+  const cur=()=>stack[stack.length-1].s;
+  function scroll(y){$("s-"+cur()).scrollTo({top:y,behavior:mode==="atual"?"auto":"smooth"})}
+  function rate(i){const picks=root.querySelectorAll("#s-lugar .rb.pick");const r=picks[i];if(r)r.querySelectorAll("i")[3].click()}
+  function closeModals(){root.querySelectorAll(".modal.on").forEach(m=>m.classList.remove("on"))}
+  function reset(){closeModals();splashT.forEach(clearTimeout);stack=[{s:"inicio"}];renderAll();show("inicio");playSplash()}
+  renderAll();show("inicio");playSplash();
+  return {go,goTab,back,openModal,closeModals,scroll,rate,reset,playSplash,cur};
+}
+
+/* ================= página: dois aparelhos, mesmos controles ================= */
+document.getElementById("topmark").innerHTML=markSvg(22);
+function mount(mode){const slot=document.getElementById("slot-"+mode);const node=document.getElementById("phone-tpl").content.firstElementChild.cloneNode(true);node.dataset.mode=mode;slot.replaceWith(node);return createApp(node,mode)}
+const APPS=[mount("atual"),mount("nova")];
+const both=f=>APPS.forEach(f);
+function fit(){const k=Math.min(1,Math.max(.3,Math.min((window.innerWidth-48-28)/(2*393),(window.innerHeight-230)/852)));document.documentElement.style.setProperty("--k",k.toFixed(3))}
+fit();window.addEventListener("resize",fit);
 const jump=document.getElementById("jump");
-[["Início",()=>goTab("inicio")],["Mapa",()=>goTab("mapa")],["Lugares",()=>goTab("lugares")],["Apoio",()=>goTab("apoio")],["Perfil",()=>goTab("perfil")],["Registrar",()=>go("registrar")],["Ficha do lugar",()=>go("lugar",1)],["Ficha do bairro",()=>go("bairro",3)],["Emergência",()=>openModal("m-sos")],["Loading",()=>playSplash()]].forEach(([l,f])=>{const b=document.createElement("button");b.textContent=l;b.addEventListener("click",f);jump.appendChild(b)});
-document.getElementById("sat60").addEventListener("click",()=>{delete document.documentElement.dataset.sat;setSat("60")});
-document.getElementById("sat100").addEventListener("click",()=>{document.documentElement.dataset.sat="100";setSat("100")});
-function setSat(x){document.getElementById("sat60").setAttribute("aria-pressed",x==="60");document.getElementById("sat100").setAttribute("aria-pressed",x==="100");const t=stack[stack.length-1];renderAll();show(t.s)}
+[["Início",a=>a.goTab("inicio")],["Mapa",a=>a.goTab("mapa")],["Lugares",a=>a.goTab("lugares")],["Apoio",a=>a.goTab("apoio")],["Perfil",a=>a.goTab("perfil")],["Registrar",a=>a.go("registrar")],["Ficha do lugar",a=>a.go("lugar",1)],["Lugar sem nota",a=>a.go("lugar",6)],["Ficha do bairro",a=>a.go("bairro",3)],["Emergência",a=>a.openModal("m-sos")]].forEach(([l,f])=>{const b=document.createElement("button");b.textContent=l;b.addEventListener("click",()=>{stopTour();both(f)});jump.appendChild(b)});
+document.getElementById("restart").addEventListener("click",()=>{stopTour();both(a=>a.reset())});
+// Roteiro: Início → Lugares → lugar sem nota (responde as quatro) → Mapa → bairro → Apoio → Perfil → emergência → Início
+const STEPS=[[a=>a.goTab("inicio"),1400],[a=>a.scroll(560),1500],[a=>a.scroll(1150),1500],[a=>a.goTab("lugares"),1500],[a=>a.scroll(420),1300],[a=>a.go("lugar",6),1600],[a=>a.scroll(560),1100],[a=>a.rate(0),800],[a=>a.rate(1),800],[a=>a.rate(2),800],[a=>a.rate(3),1600],[a=>a.back(),1300],[a=>a.goTab("mapa"),1700],[a=>a.go("bairro",3),1700],[a=>a.scroll(520),1300],[a=>a.back(),1100],[a=>a.goTab("apoio"),1500],[a=>a.scroll(620),1300],[a=>a.goTab("perfil"),1400],[a=>a.openModal("m-sos"),1700],[a=>a.closeModals(),700],[a=>a.goTab("inicio"),1200]];
+let tourT=null,tourI=0;const tourBtn=document.getElementById("tour");
+function stepTour(){if(tourI>=STEPS.length){stopTour();return}const[f,d]=STEPS[tourI++];both(f);tourT=setTimeout(stepTour,d)}
+function startTour(){stopTour();tourI=0;tourBtn.textContent="■ Parar";tourBtn.dataset.on="1";both(a=>{a.closeModals()});stepTour()}
+function stopTour(){clearTimeout(tourT);tourT=null;tourBtn.textContent="▶ Simular navegação";delete tourBtn.dataset.on}
+tourBtn.addEventListener("click",()=>tourBtn.dataset.on?stopTour():startTour());
 </script>
 </body>
 </html>
