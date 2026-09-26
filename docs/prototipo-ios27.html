@@ -17,13 +17,13 @@
     --coral-ink:#C72825; --orange-ink:#AB6207; --yellow-ink:#9C6C00; --turq-ink:#0A8B7A; --lilac-ink:#6037F0;
     --amber:#FFAD0F; --pupil:#0F1220; --sweep:#49DCC0;
     /* profundidade */
-    --shadow-card:0 1px 2px rgba(20,24,41,.04),0 6px 20px rgba(20,24,41,.05);
+    --shadow-card:0 2px 4px rgba(20,24,41,.03),0 12px 32px rgba(20,24,41,.06);
     --shadow-lift:0 2px 6px rgba(20,24,41,.06),0 14px 32px rgba(20,24,41,.10);
     /* vidro */
-    --glass:rgba(255,255,255,.62); --glass-strong:rgba(255,255,255,.8); --glass-edge:rgba(20,24,41,.06);
+    --glass:rgba(255,255,255,.66); --glass-strong:rgba(255,255,255,.82); --glass-edge:rgba(20,24,41,.06);
     --glass-shadow:0 8px 24px rgba(20,24,41,.08),0 1px 2px rgba(20,24,41,.04);
     --glass-inset:inset 0 0 0 1px rgba(255,255,255,.5);
-    --r-xl:28px; --r-lg:24px; --r-md:18px; --r-sm:12px;
+    --r-xl:32px; --r-lg:28px; --r-md:20px; --r-sm:14px;
     --wordmark:"Urbanist","Helvetica Neue",Arial,sans-serif;
     --display:"Oswald","Arial Narrow",Impact,sans-serif;
     --body:"Space Grotesk","Helvetica Neue",Arial,sans-serif;
@@ -67,6 +67,7 @@
     transform-origin:top center;
   }
   .screen-wrap{position:absolute;inset:12px;border-radius:47px;overflow:hidden;background:var(--paper);isolation:isolate}
+  .screen.bleed{background:#eeece7}
   .island{position:absolute;left:50%;top:11px;transform:translateX(-50%);width:126px;height:36px;border-radius:20px;background:#0b0c11;z-index:40}
   .status{position:absolute;top:18px;left:0;right:0;display:flex;justify-content:space-between;padding:0 30px;font:600 15px/1 -apple-system,"SF Pro Text",var(--body);color:var(--ink);z-index:39;pointer-events:none}
   .status .sig{display:flex;gap:6px;align-items:center}
@@ -120,7 +121,13 @@
 
   /* telas */
   .screens{position:absolute;inset:0}
-  .screen{position:absolute;inset:0;overflow-y:auto;overflow-x:hidden;padding:var(--hdr) 16px var(--tabs);display:none;flex-direction:column;gap:18px;scrollbar-width:none;background:var(--paper)}
+  .screen{position:absolute;inset:0;overflow-y:auto;overflow-x:hidden;padding:var(--hdr) 16px var(--tabs);display:none;flex-direction:column;gap:18px;scrollbar-width:none;
+    background:
+      radial-gradient(70% 38% at -8% -4%,color-mix(in srgb,var(--turq) 30%,transparent),transparent 62%),
+      radial-gradient(55% 32% at 108% 6%,color-mix(in srgb,var(--coral) 22%,transparent),transparent 62%),
+      radial-gradient(60% 36% at 106% 104%,color-mix(in srgb,var(--lilac) 28%,transparent),transparent 62%),
+      radial-gradient(50% 30% at -6% 102%,color-mix(in srgb,var(--yellow) 26%,transparent),transparent 62%),
+      var(--paper)}
   .screen::-webkit-scrollbar{display:none}
   .screen.on{display:flex}
   .screen.bleed{padding:0}
@@ -134,7 +141,7 @@
   .eyebrow{font:500 12px var(--body);letter-spacing:.06em;text-transform:uppercase;color:var(--dim)}
   .display{font:700 40px/1 var(--display);letter-spacing:.01em;text-transform:uppercase;color:var(--ink)}
   .title{font:700 30px/1.05 var(--display);letter-spacing:.01em;text-transform:uppercase;color:var(--ink)}
-  .h{font:700 17px/1.2 var(--body);letter-spacing:-.01em;color:var(--ink)}
+  .h{font:700 19px/1.2 var(--body);letter-spacing:-.02em;color:var(--ink)}
   .h.sm{font-size:13px;font-weight:500;color:var(--muted)}
   .p{font-size:14.5px;line-height:1.5;color:var(--muted)}
   .small{font-size:12px;color:var(--dim);line-height:1.4}
@@ -148,6 +155,20 @@
   /* cartões: superfícies opacas ficam; o vidro é para o que flutua */
   .card{background:var(--surface);border:0;border-radius:var(--r-lg);padding:18px;display:flex;flex-direction:column;gap:10px;box-shadow:var(--shadow-card)}
   .card.hero{padding:22px;border-radius:var(--r-xl);gap:12px}
+  .card.hero.dark{background:var(--night);color:#fff;box-shadow:0 18px 40px rgba(20,24,41,.22)}
+  .card.hero.dark .eyebrow{color:rgba(255,255,255,.62)}
+  .card.hero.dark .display{color:#fff}
+  .card.hero.dark .p{color:rgba(255,255,255,.72)}
+  .card.hero.dark .link{color:#fff}
+  .tile{width:44px;height:44px;border-radius:14px;display:grid;place-items:center;flex:none;background:rgba(255,255,255,.10)}
+  .tile svg{width:24px;height:24px}
+  .tile.sm{width:38px;height:38px;border-radius:12px}
+  .tile.sm svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+  .tile.turq{background:color-mix(in srgb,var(--turq) 18%,transparent);color:var(--turq-ink)}
+  .tile.coral{background:color-mix(in srgb,var(--coral) 18%,transparent);color:var(--coral-ink)}
+  .tile.yellow{background:color-mix(in srgb,var(--yellow) 26%,transparent);color:var(--yellow-ink)}
+  .tile.lilac{background:color-mix(in srgb,var(--lilac) 20%,transparent);color:var(--lilac-ink)}
+  .tile.orange{background:color-mix(in srgb,var(--orange) 20%,transparent);color:var(--orange-ink)}
   .card.tap{cursor:pointer;transition:transform .15s}
   .card.tap:active{transform:scale(.985)}
   .btn{border:0;border-radius:999px;padding:14px 16px;font:600 15px var(--body);letter-spacing:-.01em;color:var(--night);cursor:pointer;text-align:center;flex:1;transition:transform .12s,opacity .15s;box-shadow:none}
@@ -159,8 +180,9 @@
   .btns{display:flex;gap:10px}
 
   .stats{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-  .stat{background:var(--surface);border:0;border-radius:var(--r-md);padding:14px;display:flex;flex-direction:column;gap:4px;min-width:0;box-shadow:var(--shadow-card)}
-  .stat .v{font:700 26px/1 var(--display);color:var(--ink);font-variant-numeric:tabular-nums;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .stat{background:var(--surface);border:0;border-radius:var(--r-lg);padding:16px;display:flex;flex-direction:column;gap:6px;min-width:0;box-shadow:var(--shadow-card)}
+  .stat .lbl{display:flex;justify-content:space-between;align-items:flex-start;gap:8px;font:500 13.5px var(--body);color:var(--muted)}
+  .stat .v{font:700 34px/1.05 var(--display);color:var(--ink);font-variant-numeric:tabular-nums;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 
   .chips{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;padding-bottom:2px;margin:0 -14px;padding-left:14px;padding-right:14px}
   .chips::-webkit-scrollbar{display:none}
@@ -188,12 +210,13 @@
   .segc button[aria-pressed="true"].b{background:var(--turq);color:var(--night)}
 
   /* cartão de lugar */
-  .place{display:flex;gap:12px;background:var(--surface);border:0;border-radius:var(--r-lg);padding:12px;cursor:pointer;transition:transform .15s,box-shadow .15s;box-shadow:var(--shadow-card)}
+  .place{display:flex;gap:12px;background:var(--surface);border:0;border-radius:var(--r-lg);padding:14px;cursor:pointer;transition:transform .15s,box-shadow .15s;box-shadow:var(--shadow-card)}
   .place:hover{box-shadow:var(--shadow-lift)}
   .place:active{transform:scale(.985)}
-  .thumb{width:64px;height:64px;border-radius:14px;flex:none;display:grid;place-items:center;background:var(--subtle);overflow:hidden;position:relative}
-  .thumb svg{width:28px;height:28px;stroke:var(--muted);fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
-  .thumb.banner{width:100%;height:150px;border-radius:18px;margin-bottom:6px}
+  .thumb{width:64px;height:64px;border-radius:18px;flex:none;display:grid;place-items:center;background:var(--subtle);overflow:hidden;position:relative}
+  .thumb.bar{background:color-mix(in srgb,var(--coral) 16%,var(--surface));color:var(--coral-ink)} .thumb.cafe{background:color-mix(in srgb,var(--yellow) 24%,var(--surface));color:var(--yellow-ink)} .thumb.balada{background:color-mix(in srgb,var(--lilac) 18%,var(--surface));color:var(--lilac-ink)} .thumb.restaurante{background:color-mix(in srgb,var(--orange) 18%,var(--surface));color:var(--orange-ink)} .thumb.hotel{background:color-mix(in srgb,var(--turq) 18%,var(--surface));color:var(--turq-ink)}
+  .thumb svg{width:28px;height:28px;stroke:currentColor;fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+  .thumb.banner{width:100%;height:160px;border-radius:22px;margin-bottom:6px;display:flex;align-items:center;justify-content:center}
   .thumb.banner svg{width:44px;height:44px}
   .thumb{background:var(--subtle)}
   .thumb::after{display:none}
@@ -318,7 +341,7 @@
 <header class="top">
   <div>
     <h1><span id="topmark"></span>Irisa · protótipo iOS 27</h1>
-    <p>Passada 2026: caixa alta só nos títulos, cartões tonais sem borda, vidro fosco sem reflexo, cor viva só nas ações e nos dados. Cabeçalho e barra flutuam, o conteúdo passa por baixo. Nada aqui grava, liga ou envia.</p>
+    <p>Fundo com as manchas de cor do story, cartão principal escuro com a marca em azulejo, números grandes com ícone tonal, cartões largos e arredondados. Cores, fontes, estrutura e menus iguais. Nada aqui grava, liga ou envia.</p>
   </div>
   <div class="ctl">
     <div class="seg-sat" role="group" aria-label="Saturação">
@@ -504,6 +527,10 @@ const ICONS = {
   phone:`<svg viewBox="0 0 24 24"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3 19.5 19.5 0 0 1-6-6 19.8 19.8 0 0 1-3-8.7A2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.7a2 2 0 0 1-.5 2.1L8 9.8a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.7.7a2 2 0 0 1 1.7 2z"/></svg>`,
   ext:`<svg viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14 21 3"/></svg>`,
   cross:`<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3"/></svg>`,
+  file:`<svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M8 13h8M8 17h6"/></svg>`,
+  clock:`<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>`,
+  msg:`<svg viewBox="0 0 24 24"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1.1-4.3A8 8 0 1 1 21 12z"/></svg>`,
+  pinIcon:`<svg viewBox="0 0 24 24"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0z"/><circle cx="12" cy="10" r="3"/></svg>`,
   alert:`<svg viewBox="0 0 24 24"><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/><path d="M12 9v4M12 17h.01"/></svg>`,
 };
 
@@ -538,7 +565,7 @@ function placeCard(p,showDist=true){
   const body=p.score==null
     ?`<div class="p" style="font-size:13.5px">Quanta cor tem esse lugar? Seja a primeira pessoa a dizer.</div><div class="small">${esc(onde)}</div>`
     :`<div class="row">${rainbow(p.score,8)}<span class="score" style="color:${v(scoreColor(p.score))}">${p.score.toFixed(1)}</span>${p.badge?badge(p.badge):""}</div>${strip(p.ax)}<div class="small">${p.n} avaliaç${p.n===1?"ão":"ões"}${p.n<5?" de 5 necessárias":""} · ${esc(onde)}</div>`;
-  return `<div class="place" data-go="lugar" data-id="${p.id}"><div class="thumb">${ICONS[p.cat]}</div><div class="body"><div class="between"><div class="pname">${esc(p.name)}${p.verified?ICONS.check:""}</div><span class="cat">${CATS[p.cat]}</span></div>${body}${p.area?areaSm(p.area):""}</div></div>`;
+  return `<div class="place" data-go="lugar" data-id="${p.id}"><div class="thumb ${p.cat}">${ICONS[p.cat]}</div><div class="body"><div class="between"><div class="pname">${esc(p.name)}${p.verified?ICONS.check:""}</div><span class="cat">${CATS[p.cat]}</span></div>${body}${p.area?areaSm(p.area):""}</div></div>`;
 }
 function occCard(o){
   const t=T[o.type],s=SEV[o.sev];
@@ -579,8 +606,8 @@ function mapSvg(opts={}){
 function renderInicio(){
   const primeiros=PLACES.filter(p=>p.n>0).sort((a,b)=>b.n-a.n).slice(0,5);
   document.getElementById("s-inicio").innerHTML=`
-    <div class="card hero">
-      <div class="eyebrow">Sua cidade</div>
+    <div class="card hero dark">
+      <div class="row" style="gap:12px"><span class="tile">${markSvg(26)}</span><span class="eyebrow">Sua cidade</span></div>
       <div class="display">Curitiba</div>
       <button class="link" data-open="m-city">Curitiba · PR ${ICONS.down}</button>
       <div class="p">O mapa dos lugares onde a gente é bem-vinde, feito por nós. Diga quanta cor tem os lugares por onde você passa. E registre, sem se identificar, o que não deveria ter acontecido.</div>
@@ -589,10 +616,10 @@ function renderInicio(){
     <div class="stack"><div class="h">Lugares mais acolhedores</div>${primeiros.map(p=>placeCard(p,false)).join("")}<div class="small">O selo aparece a partir de 5 avaliações. Some a sua.</div></div>
     <div class="stack" style="padding-top:6px"><div class="h">Segurança na cidade</div><div class="small">Relatos anônimos da comunidade. Ponto no mapa, nunca nome de quem escreveu.</div></div>
     <div class="stats">
-      <div class="stat"><span class="eyebrow">Relatos</span><span class="v">142</span></div>
-      <div class="stat"><span class="eyebrow">Últimos 30 dias</span><span class="v" style="color:var(--yellow-ink)">23</span></div>
-      <div class="stat"><span class="eyebrow">Mais frequente</span><span class="v" style="color:var(--yellow-ink);font-size:19px">Agressão verbal</span></div>
-      <div class="stat"><span class="eyebrow">Área crítica</span><span class="v" style="color:var(--coral-ink);font-size:19px">Centro</span></div>
+      <div class="stat"><div class="lbl">Relatos<span class="tile sm turq">${ICONS.file}</span></div><span class="v">142</span><span class="small">em 12 meses</span></div>
+      <div class="stat"><div class="lbl">Últimos 30 dias<span class="tile sm yellow">${ICONS.clock}</span></div><span class="v" style="color:var(--yellow-ink)">23</span><span class="small">4 graves</span></div>
+      <div class="stat"><div class="lbl">Mais frequente<span class="tile sm orange">${ICONS.msg}</span></div><span class="v" style="font-size:20px;line-height:1.15">Agressão verbal</span><span class="small">61 relatos</span></div>
+      <div class="stat"><div class="lbl">Área crítica<span class="tile sm coral">${ICONS.pinIcon}</span></div><span class="v" style="color:var(--coral-ink);font-size:24px">Centro</span><span class="small">14 relatos · 4 graves</span></div>
     </div>
     <div class="stack"><div class="h">Relatos recentes</div>${OCC.slice(0,3).map(occCard).join("")}</div>
     ${ranking("Bairros com mais relatos")}`;
@@ -700,7 +727,7 @@ function renderLugar(id){
   const form=`<div class="card" style="gap:14px"><div class="h">${p.id===2?"Sua avaliação":"Como foi lá?"}</div>${AXES.map((a,i)=>`<div class="stack" style="gap:6px"><div style="font:500 14px var(--body)">${a[2]}</div><div class="small">${a[3]}</div>${rainbow(p.id===2?[5,4,5,4][i]:0,16,true,a[0])}</div>`).join("")}<textarea class="input" id="rc" placeholder="Quer contar como foi? (opcional, até 500 caracteres)"></textarea><button class="btn yellow" data-toast="Protótipo: avaliação não enviada">${p.id===2?"Atualizar":"Enviar avaliação"}</button></div>`;
   el.innerHTML=`
     <div class="card hero" style="gap:8px">
-      <div class="thumb banner">${ICONS[p.cat]}</div>
+      <div class="thumb banner ${p.cat}">${ICONS[p.cat]}</div>
       <div class="row"><div class="title" style="flex:1">${esc(p.name)}</div>${p.verified?ICONS.check.replace("<svg",'<svg style="width:20px;height:20px;stroke:var(--turq-ink);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round"'):""}</div>
       <div class="sub">${CATS[p.cat]} · <button class="link" style="text-decoration:underline;text-underline-offset:3px;font-weight:400" data-go="bairro" data-id="${p.nbId}">${p.nb}</button> · Curitiba</div>
       <div class="p">${p.addr}</div>
@@ -727,7 +754,7 @@ function renderBairro(id){
   const byType={},bySet={},byPer={};rel.forEach(o=>{byType[o.type]=(byType[o.type]||0)+1;if(o.setting)bySet[o.setting]=(bySet[o.setting]||0)+1;if(o.period)byPer[o.period]=(byPer[o.period]||0)+1});
   if(id==3){Object.assign(byType,{verbal:7,fisica:4,discriminacao:2,ameaca:1});Object.assign(bySet,{rua:8,estabelecimento:3,transporte:1});Object.assign(byPer,{noite:7,madrugada:4,tarde:1})}
   document.getElementById("s-bairro").innerHTML=`
-    <div class="card hero" style="gap:6px"><div class="eyebrow">Curitiba · PR</div><div class="title">${n.name}</div><div class="row"><span style="font:700 14px var(--body);color:${v(c)}">${l}</span><span class="sub">${rk.total} relato${rk.total===1?"":"s"} em 12 meses${rk.high?`, ${rk.high} grave${rk.high===1?"":"s"}`:""}</span></div><div class="small">${n.placesTotal} lugares cadastrados${n.rated?` · ${n.rated} já avaliado${n.rated===1?"":"s"}`:""}</div></div>
+    <div class="card hero dark" style="gap:6px"><div class="eyebrow">Curitiba · PR</div><div class="title" style="color:#fff">${n.name}</div><div class="row"><span style="font:700 14px var(--body);color:${v(c)}">${l}</span><span class="sub" style="color:rgba(255,255,255,.7)">${rk.total} relato${rk.total===1?"":"s"} em 12 meses${rk.high?`, ${rk.high} grave${rk.high===1?"":"s"}`:""}</span></div><div class="small" style="color:rgba(255,255,255,.6)">${n.placesTotal} lugares cadastrados${n.rated?` · ${n.rated} já avaliado${n.rated===1?"":"s"}`:""}</div></div>
     ${rk.total?`<div class="card" style="gap:14px"><div class="h">O que foi relatado</div>${bars("Tipo",byType,T)}${bars("Onde",bySet,SETTINGS)}${bars("Quando",byPer,PERIODS)}</div>`:""}
     <div class="stack"><div class="h">Lugares deste bairro</div>${lug.length?lug.map(p=>placeCard(p,false)).join(""):`<div class="p">Nenhum lugar cadastrado aqui ainda.</div>`}</div>
     <div class="stack pad-b"><div class="h">Relatos deste bairro</div>${rel.length?rel.map(occCard).join(""):`<div class="p">Nenhum relato registrado aqui. Isso não quer dizer que a área seja segura — quer dizer que ninguém registrou.</div>`}</div>`;
