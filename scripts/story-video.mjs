@@ -21,7 +21,7 @@ const ffmpeg = process.env.FFMPEG ?? "ffmpeg";
 
 const b = await chromium.launch({ executablePath: process.env.PW_CHROMIUM ?? "/opt/pw-browsers/chromium", args: ["--ignore-certificate-errors"] });
 const pg = await b.newPage({ viewport: { width: 1080, height: 1920 }, deviceScaleFactor: 1 });
-await pg.goto("file://" + resolve(SRC) + `?capture&k=${KQ}` + (BIO ? "&bio" : ""), { waitUntil: "networkidle" });
+await pg.goto("file://" + resolve(SRC) + `?capture&k=${KQ}` + (BIO ? "&bio" : "") + (process.env.EXTRA ? "&" + process.env.EXTRA : ""), { waitUntil: "networkidle" });
 await pg.evaluate(() => document.fonts.ready);
 const total = await pg.evaluate(() => window.__TOTAL);
 const frames = Math.round((total / 1000) * FPS);
