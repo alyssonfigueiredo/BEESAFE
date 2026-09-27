@@ -112,6 +112,23 @@
   .livecap small{display:block;font-weight:400;color:var(--dim);font-size:12px}
   .slide.dark .livecap{color:#fff}.slide.dark .livecap small{color:rgba(255,255,255,.55)}
   .slide.on .live{animation:rise .7s cubic-bezier(.2,.8,.2,1) both .2s}
+  /* abertura: coração arco-íris que se desenha, bate e revela o deck */
+  .intro{position:fixed;inset:0;z-index:200;display:grid;place-items:center;background:var(--paper);cursor:pointer;
+    background-image:radial-gradient(60% 34% at -6% 0%,color-mix(in srgb,var(--turq) 42%,transparent),transparent 62%),radial-gradient(50% 30% at 106% 8%,color-mix(in srgb,var(--coral) 34%,transparent),transparent 62%),radial-gradient(55% 32% at 104% 100%,color-mix(in srgb,var(--lilac) 40%,transparent),transparent 62%),radial-gradient(45% 28% at -4% 100%,color-mix(in srgb,var(--yellow) 38%,transparent),transparent 62%);
+    animation:introout .7s ease 3.5s forwards}
+  .intro.skip{animation:introout .4s ease forwards}
+  @keyframes introout{to{opacity:0;visibility:hidden}}
+  .intro .heart{width:min(46vw,260px);height:auto;overflow:visible;animation:beat .55s ease-in-out 1.7s 2,blowup 1s cubic-bezier(.7,0,.3,1) 2.9s forwards}
+  @keyframes beat{50%{transform:scale(1.12)}}
+  @keyframes blowup{to{transform:scale(28);opacity:0}}
+  .intro .outline{fill:none;stroke:url(#rbg);stroke-width:3;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:330;stroke-dashoffset:330;animation:draw 1.3s cubic-bezier(.4,0,.2,1) .2s forwards}
+  @keyframes draw{to{stroke-dashoffset:0}}
+  .intro .fillh{fill:url(#rbg);opacity:0;transform-origin:50px 55px;transform:scale(.6);animation:fillin .6s cubic-bezier(.2,.9,.3,1.3) 1.2s forwards}
+  @keyframes fillin{to{opacity:1;transform:none}}
+  .intro .shine{fill:#fff;opacity:0;animation:fillin .5s ease 1.6s forwards}
+  .intro .who{position:absolute;bottom:18%;left:0;right:0;text-align:center;font:500 15px var(--wordmark);letter-spacing:.3em;text-transform:uppercase;color:var(--ink);opacity:0;animation:rise .6s ease 1.9s both,introout .3s ease 2.9s forwards}
+  .intro .mini{position:absolute;width:18px;height:18px;fill:var(--c);opacity:0;animation:fly 1.6s ease-out var(--t) forwards}
+  @keyframes fly{0%{opacity:0;transform:translate(0,0) scale(.4)}20%{opacity:1}100%{opacity:0;transform:translate(var(--x),var(--y)) scale(1.1) rotate(var(--r))}}
   /* navegação */
   .nav{display:flex;align-items:center;justify-content:center;gap:14px;padding:10px 20px 16px}
   .nb{width:44px;height:44px;border-radius:50%;border:0;background:rgba(255,255,255,.7);box-shadow:0 4px 14px rgba(20,24,41,.10),inset 0 0 0 1px rgba(255,255,255,.8);cursor:pointer;display:grid;place-items:center;-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px)}
@@ -144,6 +161,14 @@
 </style>
 </head>
 <body>
+<div class="intro" id="intro" aria-hidden="true">
+  <svg class="heart" viewBox="0 0 100 100"><defs><linearGradient id="rbg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#FF6964"/><stop offset=".2" stop-color="#FFA353"/><stop offset=".4" stop-color="#FFD066"/><stop offset=".6" stop-color="#49DCC0"/><stop offset=".8" stop-color="#59A7FF"/><stop offset="1" stop-color="#A889FF"/></linearGradient></defs>
+    <path class="fillh" d="M50 88C20 65 5 45 5 28A20 20 0 0 1 50 20A20 20 0 0 1 95 28C95 45 80 65 50 88Z"/>
+    <path class="outline" d="M50 88C20 65 5 45 5 28A20 20 0 0 1 50 20A20 20 0 0 1 95 28C95 45 80 65 50 88Z"/>
+    <circle class="shine" cx="30" cy="34" r="4"/>
+  </svg>
+  <div class="who">para o Alysson</div>
+</div>
 <div class="deck">
   <div class="top">
     <div class="brand"><svg viewBox="0 0 100 100" aria-hidden="true"><defs><linearGradient id="g"><stop offset="0" stop-color="#FF6964"/><stop offset=".2" stop-color="#FFA353"/><stop offset=".4" stop-color="#FFD066"/><stop offset=".6" stop-color="#49DCC0"/><stop offset=".8" stop-color="#59A7FF"/><stop offset="1" stop-color="#A889FF"/></linearGradient></defs><circle cx="50" cy="50" r="41.5" fill="none" stroke="url(#g)" stroke-width="13"/><circle cx="50" cy="50" r="13" fill="#0F1220"/><circle cx="46.1" cy="45.6" r="2.9" fill="#fff"/></svg>Iris<b>a</b><small>uma intervenção não solicitada</small></div>
@@ -159,7 +184,7 @@
     <h1>Alysson,<br>não me <span class="rb">odeia</span>.</h1>
     <p data-a style="--d:3">Eu tava entediado ontem. Você sabe como é: tédio + laptop + uma pessoa com opinião demais = eu mexendo no projeto de todo mundo. O seu foi só mais um. <b>Desculpa. De nada.</b></p>
     <p class="note" data-a style="--d:5">Lê até o fim antes de me bloquear. Tem tour virtual no final, e eu fiz a parte chata: as fontes carregam, os ícones centralizam, o Safari não chora.</p>
-    <div class="aviso" data-a style="--d:6"><b>Aviso importante:</b> é só protótipo. <b>Nada foi aplicado no app.</b> Se você gostar, é só assumir este chat comigo que a gente aplica de verdade. Se não gostar, também tá tudo bem. (Vai gostar.)</div>
+    <div class="aviso" data-a style="--d:6"><b>Aviso importante:</b> é só protótipo. <b>Nada foi aplicado no app.</b> Se você gostar, é só assumir este chat comigo que a gente aplica de verdade. Se não gostar, também tá tudo bem.</div>
     <div class="hint" data-a style="--d:7">→ setas, espaço ou deslizar</div>
   </section>
 
@@ -1334,7 +1359,17 @@ let tx=null,ty=null;
 document.getElementById("stage").addEventListener("touchstart",e=>{tx=e.touches[0].clientX;ty=e.touches[0].clientY},{passive:true});
 document.getElementById("stage").addEventListener("touchend",e=>{if(tx==null)return;const dx=e.changedTouches[0].clientX-tx,dy=e.changedTouches[0].clientY-ty;if(Math.abs(dx)>50&&Math.abs(dx)>Math.abs(dy)*1.3)go(cur-Math.sign(dx));tx=ty=null});
 const h=parseInt((location.hash||"").replace("#",""),10);
-go(isNaN(h)?0:h-1);
+const intro=document.getElementById("intro"),reduce=matchMedia("(prefers-reduced-motion:reduce)").matches;
+if(reduce||(!isNaN(h)&&h>1)){intro.remove();go(isNaN(h)?0:h-1)}
+else{
+  const cols=["#FF6964","#FFA353","#FFD066","#49DCC0","#59A7FF","#A889FF"];
+  for(let i=0;i<14;i++){const a=(i/14)*Math.PI*2,d=120+Math.random()*160;const m=document.createElementNS("http://www.w3.org/2000/svg","svg");m.setAttribute("viewBox","0 0 100 100");m.classList.add("mini");
+    m.style.cssText=`left:calc(50% - 9px);top:calc(50% - 9px);--c:${cols[i%6]};--x:${Math.cos(a)*d}px;--y:${Math.sin(a)*d-60}px;--r:${(Math.random()*60-30).toFixed(0)}deg;--t:${(1.6+Math.random()*.6).toFixed(2)}s`;
+    m.innerHTML='<path d="M50 88C20 65 5 45 5 28A20 20 0 0 1 50 20A20 20 0 0 1 95 28C95 45 80 65 50 88Z"/>';intro.appendChild(m)}
+  let started=false;const start=()=>{if(started)return;started=true;go(0);setTimeout(()=>intro.remove(),800)};
+  setTimeout(start,3300);
+  intro.addEventListener("click",()=>{intro.classList.add("skip");start()});
+}
 </script>
 </body>
 </html>
