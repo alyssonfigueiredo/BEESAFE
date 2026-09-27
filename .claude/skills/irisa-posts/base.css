@@ -2,7 +2,7 @@
 @import url("https://fonts.googleapis.com/css2?family=Urbanist:wght@500;600&family=Oswald:wght@300;400;500;700&family=Space+Grotesk:wght@400;500;700&display=swap");
 :root{
   --paper:#FAF9F6;--surface:#FFFFFF;--subtle:#F1EDE7;--border:#E4DED5;--night:#1E2340;--night2:#161B2E;--ink:#1E2340;--muted:#4F576F;--dim:#8A90A2;
-  --coral:#FD514B;--orange:#FD953A;--yellow:#FDC74D;--turq:#23E7C1;--lilac:#9570FE;--blue:#4099FD;
+  --coral:#F4736F;--orange:#F5A45D;--yellow:#F0CA75;--turq:#5CC9B4;--lilac:#AE96F2;--blue:#6AA8EE;
   --coralInk:#B23C3A;--orangeInk:#96601C;--yellowInk:#8A6512;--turqInk:#1B7A6E;--lilacInk:#6D4FD8;--amber:#E0A32E;
   --wordmark:"Urbanist","Helvetica Neue",Arial,sans-serif;--display:"Oswald",Impact,"Arial Narrow",sans-serif;--body:"Space Grotesk","Helvetica Neue",Arial,sans-serif;
   --rainbow:linear-gradient(90deg,var(--coral),var(--orange),var(--yellow),var(--turq),var(--blue),var(--lilac));

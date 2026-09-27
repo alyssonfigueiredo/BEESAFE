@@ -39,12 +39,12 @@ Desde 26/09/2026 o material de divulgação usa os seis acentos com **+60% de sa
 | night | #1E2340 | fundo de toda lâmina de Instagram; texto sobre cor |
 | night2 | #161B2E | pupila do símbolo, fundo do mark |
 | paper | #FAF9F6 | fundo claro (site, catálogo); raro no Instagram |
-| coral | #FD514B | urgência, relato, CTA principal, "Mito" |
-| orange | #FD953A | afeto |
-| yellow | #FDC74D | o "a" do wordmark, banheiro, atenção |
-| turq | #23E7C1 | avaliar, acolhimento, "Verdade", eyebrow |
-| blue | #4099FD | só dentro do arco-íris |
-| lilac | #9570FE | clientela, halo |
+| coral | #F4736F | urgência, relato, CTA principal, "Mito" |
+| orange | #F5A45D | afeto |
+| yellow | #F0CA75 | o "a" do wordmark, banheiro, atenção |
+| turq | #5CC9B4 | avaliar, acolhimento, "Verdade", eyebrow |
+| blue | #6AA8EE | só dentro do arco-íris |
+| lilac | #AE96F2 | clientela, halo |
 | texto claro | #FFFFFF / #D5D8E4 / #C9CDDD / #8A90A2 | título / corpo / apoio / discreto |
 | Ink (escuros) | coralInk #B23C3A, turqInk #1B7A6E… | texto colorido sobre fundo claro (contraste AA) |
 
