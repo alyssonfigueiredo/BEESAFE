@@ -116,13 +116,16 @@ export function CityMap({
     fitted.current = true;
   }, [dataKey, occurrences, places]);
 
+  // O toque num pino também chega ao onPress do mapa (que limpa a seleção). Segura aqui.
   function handlePlacePress(e: NativeSyntheticEvent<PressEventWithFeatures>) {
+    e.stopPropagation();
     const id = e.nativeEvent.features[0]?.properties?.id as string | undefined;
     const place = places.find((p) => p.id === id);
     if (place) onSelectPlace?.(place);
   }
 
   function handlePointPress(e: NativeSyntheticEvent<PressEventWithFeatures>) {
+    e.stopPropagation();
     const id = e.nativeEvent.features[0]?.properties?.id as string | undefined;
     onSelect?.(occurrences.find((o) => o.id === id) ?? null);
   }
@@ -139,6 +142,8 @@ export function CityMap({
         touchPitch={false}
         touchRotate={false}
         onPress={(e) => {
+          // Toque que já veio de um pino (traz features) não é toque no fundo do mapa.
+          if ("features" in e.nativeEvent) return;
           if (pickMode) onPick?.({ lng: e.nativeEvent.lngLat[0], lat: e.nativeEvent.lngLat[1] });
           else onSelect?.(null);
         }}

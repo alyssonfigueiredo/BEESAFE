@@ -82,7 +82,13 @@ export default function TabsLayout() {
           tabBarActiveTintColor: tabColors.index,
           title: "Início",
           tabBarIcon: ({ color, focused }) => (
-            <TabIcon icon={Home} color={color} focused={focused} active={tabColors.index} />
+            <TabIcon
+              icon={Home}
+              color={color}
+              focused={focused}
+              active={tabColors.index}
+              name="index"
+            />
           ),
         }}
       />
@@ -92,7 +98,13 @@ export default function TabsLayout() {
           tabBarActiveTintColor: tabColors.mapa,
           title: "Mapa",
           tabBarIcon: ({ color, focused }) => (
-            <TabIcon icon={Map} color={color} focused={focused} active={tabColors.mapa} />
+            <TabIcon
+              icon={Map}
+              color={color}
+              focused={focused}
+              active={tabColors.mapa}
+              name="mapa"
+            />
           ),
         }}
       />
@@ -102,7 +114,13 @@ export default function TabsLayout() {
           tabBarActiveTintColor: tabColors.lugares,
           title: "Lugares",
           tabBarIcon: ({ color, focused }) => (
-            <TabIcon icon={Store} color={color} focused={focused} active={tabColors.lugares} />
+            <TabIcon
+              icon={Store}
+              color={color}
+              focused={focused}
+              active={tabColors.lugares}
+              name="lugares"
+            />
           ),
         }}
       />
@@ -115,7 +133,13 @@ export default function TabsLayout() {
           tabBarActiveTintColor: tabColors.apoio,
           title: "Apoio",
           tabBarIcon: ({ color, focused }) => (
-            <TabIcon icon={LifeBuoy} color={color} focused={focused} active={tabColors.apoio} />
+            <TabIcon
+              icon={LifeBuoy}
+              color={color}
+              focused={focused}
+              active={tabColors.apoio}
+              name="apoio"
+            />
           ),
         }}
       />
@@ -125,7 +149,13 @@ export default function TabsLayout() {
           tabBarActiveTintColor: tabColors.perfil,
           title: "Perfil",
           tabBarIcon: ({ color, focused }) => (
-            <TabIcon icon={User} color={color} focused={focused} active={tabColors.perfil} />
+            <TabIcon
+              icon={User}
+              color={color}
+              focused={focused}
+              active={tabColors.perfil}
+              name="perfil"
+            />
           ),
         }}
       />
