@@ -42,11 +42,15 @@ Nome: **Irisa** (INPI livre; @irisapp livre). Bundle id `br.com.irisa.app`. Cont
   EAS (`APP_ENV=preview|production`).
 - Site público (GitHub Pages, workflow `pages.yml`, fonte `docs/*.md` → `scripts/build-site.mjs` → `site/`):
   https://alyssonfigueiredo.github.io/BEESAFE/ com privacidade.html, termos.html, pitch.html, mockup.html.
-  Domínio próprio **appirisa.com.br** (registro.br) apontado por A/AAAA pro GitHub Pages (27/09/2026);
-  `site/CNAME` gerado por `scripts/build-site.mjs` (replicado nas branches `ecstatic-darwin-cmf7sw` e
-  `laughing-keller-my8t7c`, as duas que disparam o deploy do Pages). DNS propagado; certificado HTTPS
-  próprio do GitHub ainda em provisionamento — enquanto isso o domínio responde com o certificado
-  genérico `*.github.io` (esperado, checagem automática recorrente até confirmar o certificado certo).
+  Domínio próprio **appirisa.com.br** (registro.br) apontado por A/AAAA pro GitHub Pages, no ar desde
+  27/09/2026 com certificado próprio (Let's Encrypt). `site/CNAME` gerado por `scripts/build-site.mjs`
+  (replicado nas branches `ecstatic-darwin-cmf7sw` e `laughing-keller-my8t7c`, as duas que disparam o
+  deploy do Pages). **Pegadinha que travou o certificado por ~4h:** o DNS (A records) e o deploy com
+  `site/CNAME` não bastam — o domínio precisa ser digitado e salvo manualmente em GitHub → repositório
+  → Settings → Pages → campo "Custom domain", senão o GitHub devolve 404 "Site not found" pra sempre
+  e o certificado nunca provisiona, mesmo com tudo mais certo. Depois de salvar lá, levou só ~1 min.
+  Falta marcar **"Enforce HTTPS"** nessa mesma tela (ainda desmarcado). Aviso de
+  `www.appirisa.com.br` "improperly configurado" pode ignorar — não configuramos esse subdomínio.
   A raiz é uma landing escrita à mão em `docs/index.html` (23/09/2026): hero escuro com a pergunta,
   seções Irisar / Registrar / regra da rua / emergência / anonimato / cidades / testar / ONGs, com as
   telas copiadas da apresentação. Chamada principal é o e-mail para entrar no teste (mailto) — trocar
