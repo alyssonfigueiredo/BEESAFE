@@ -29,10 +29,10 @@ export function radar(id = "sw") {
     `<circle cx="66" cy="36" r="3.1" fill="${SWEEP}"/><circle cx="63" cy="62" r="2.4" fill="${CORAL}"/><circle cx="38" cy="34" r="1.9" fill="${SWEEP}"/>` +
     `<circle cx="50" cy="50" r="13" fill="${PUPIL}"/><circle cx="46.1" cy="45.6" r="2.86" fill="#fff"/>`;
 }
-// Redução (abaixo de 50 px): só o anel de gomos, a pupila maior e o brilho. Sem varredura, círculo-guia e pontos: somem nesse tamanho.
+// Redução (abaixo de 50 px): só o anel colorido de gomos, centro vazado. Sem pupila, varredura, guia e pontos (decisão dele, 27/09/2026).
 export function radarMin() {
-  let s = ""; for (let i = 0; i < 48; i++) s += `<path d="${slice(49, 33, i / 48 * 2 * Math.PI - Math.PI / 2, (i + 1) / 48 * 2 * Math.PI - Math.PI / 2 + .05)}" fill="${rc(i / 48)}"/>`;
-  return s + `<circle cx="50" cy="50" r="16" fill="${PUPIL}"/><circle cx="45.2" cy="44.6" r="3.6" fill="#fff"/>`;
+  let s = ""; for (let i = 0; i < 48; i++) s += `<path d="${slice(49, 31, i / 48 * 2 * Math.PI - Math.PI / 2, (i + 1) / 48 * 2 * Math.PI - Math.PI / 2 + .05)}" fill="${rc(i / 48)}"/>`;
+  return s;
 }
 const svg = (w, h, body) => `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${w} ${h}" width="${w}" height="${h}">${body}</svg>\n`;
 const word = (x, y, size, ink, anchor = "start", ls = .34) => `<text x="${x}" y="${y}" font-family="Urbanist, 'Helvetica Neue', Arial, sans-serif" font-weight="500" font-size="${size}" letter-spacing="${(size * ls).toFixed(2)}" fill="${ink}" text-anchor="${anchor}">IRIS<tspan fill="${YELLOW}">A</tspan></text>`;
