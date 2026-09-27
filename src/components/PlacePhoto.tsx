@@ -13,20 +13,22 @@ import { useState } from "react";
 import { Image, Linking, Pressable, Text, View } from "react-native";
 
 import { googlePhotoUrl } from "@/lib/googlePhoto";
-import type { PlaceCategory } from "@/theme/domain";
+import { onLight, type PlaceCategory } from "@/theme/domain";
 import { colors } from "@/theme/tokens";
 
 // Sem foto (ou sem chave, ou cota estourada), o quadrado vira o ícone da categoria numa cor
 // da paleta — o layout não muda, só o conteúdo.
+// Azulejo tonal: fundo na cor a 18 %, ícone na versão escura. Lugar sem nota fica cinza
+// (`muted`): é o conceito do app, cinza vira cor quando a comunidade responde.
 const ICONES: Record<PlaceCategory, { Icon: LucideIcon; cor: string }> = {
-  bar: { Icon: Beer, cor: colors.orange },
-  restaurante: { Icon: UtensilsCrossed, cor: colors.coral },
+  bar: { Icon: Beer, cor: colors.coral },
+  restaurante: { Icon: UtensilsCrossed, cor: colors.orange },
   balada: { Icon: Disc3, cor: colors.lilac },
   cafe: { Icon: Coffee, cor: colors.yellow },
   hotel: { Icon: BedDouble, cor: colors.turquoise },
-  servico: { Icon: Wrench, cor: colors.subtle },
+  servico: { Icon: Wrench, cor: colors.dim },
   praca: { Icon: Trees, cor: colors.turquoise },
-  outro: { Icon: MapPin, cor: colors.subtle },
+  outro: { Icon: MapPin, cor: colors.dim },
 };
 
 type Props = {
@@ -37,6 +39,8 @@ type Props = {
   /** "tile" é o quadrado do card; "banner" é a faixa larga da ficha, com o crédito por cima. */
   variant?: "tile" | "banner";
   size?: number;
+  /** Sem avaliação: o azulejo fica cinza até alguém dizer quanta cor tem. */
+  muted?: boolean;
 };
 
 export function PlacePhoto({
@@ -46,18 +50,23 @@ export function PlacePhoto({
   photoAuthorUri,
   variant = "tile",
   size = 64,
+  muted = false,
 }: Props) {
   const [falhou, setFalhou] = useState(false);
   const largura = variant === "banner" ? 800 : 200;
   const url = falhou ? null : googlePhotoUrl(photoName, largura);
   const { Icon, cor } = ICONES[category] ?? ICONES.outro;
+  const tom = muted ? colors.dim : cor;
 
   const fallback = (
     <View
       className="items-center justify-center"
-      style={{ backgroundColor: cor, width: "100%", height: "100%" }}
+      style={{ backgroundColor: tom + (muted ? "26" : "2E"), width: "100%", height: "100%" }}
     >
-      <Icon color={colors.night} size={variant === "banner" ? 40 : size * 0.45} />
+      <Icon
+        color={muted ? colors.dim : onLight(tom)}
+        size={variant === "banner" ? 40 : size * 0.45}
+      />
     </View>
   );
 
@@ -75,7 +84,7 @@ export function PlacePhoto({
 
   if (variant === "banner") {
     return (
-      <View className="overflow-hidden rounded-xl" style={{ height: 160 }}>
+      <View className="overflow-hidden rounded-3xl" style={{ height: 160 }}>
         {url ? (
           <Image
             source={{ uri: url }}
@@ -93,7 +102,7 @@ export function PlacePhoto({
   }
 
   return (
-    <View className="overflow-hidden rounded-lg" style={{ width: size, height: size }}>
+    <View className="overflow-hidden rounded-2xl" style={{ width: size, height: size }}>
       {url ? (
         <Image
           source={{ uri: url }}

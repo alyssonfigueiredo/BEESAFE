@@ -28,7 +28,7 @@ type Props = {
   onPick?: (point: LngLat) => void;
   picked?: LngLat | null;
   onSelect?: (occurrence: PublicOccurrence | null) => void;
-  style?: object;
+  style?: object | object[];
 };
 
 export function CityMap({
@@ -128,7 +128,7 @@ export function CityMap({
   }
 
   return (
-    <View style={[{ flex: 1, overflow: "hidden", borderRadius: 16 }, style]}>
+    <View style={[{ flex: 1, overflow: "hidden", borderRadius: 20 }, style]}>
       <Map
         style={{ flex: 1 }}
         mapStyle={mapStyle}

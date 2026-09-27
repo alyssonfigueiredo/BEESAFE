@@ -4,6 +4,7 @@ import { Crosshair } from "lucide-react-native";
 import { useState } from "react";
 import { Alert, Pressable, Text, TextInput, View } from "react-native";
 
+import { Chip } from "@/components/Chip";
 import { CityMap } from "@/components/CityMap";
 import { useCreatePlace, useSimilarPlaces } from "@/hooks/usePlaces";
 import { useCity } from "@/providers/CityProvider";
@@ -58,9 +59,9 @@ export function PlaceForm({ onDone }: { onDone: (placeId: string) => void }) {
   return (
     <View className="gap-5">
       <View className="gap-2">
-        <Text className="font-heading text-sm uppercase tracking-widest text-muted">Nome</Text>
+        <Text className="font-body-bold text-xs text-muted">Nome</Text>
         <TextInput
-          className="rounded-xl border border-border bg-surface px-4 py-3 font-body text-base text-ink"
+          className="rounded-2xl bg-subtle px-4 py-3 font-body text-base text-ink"
           style={shadow.card}
           placeholder="Ex.: Bar da Esquina"
           placeholderTextColor={colors.dim}
@@ -71,35 +72,23 @@ export function PlaceForm({ onDone }: { onDone: (placeId: string) => void }) {
       </View>
 
       <View className="gap-2">
-        <Text className="font-heading text-sm uppercase tracking-widest text-muted">Categoria</Text>
+        <Text className="font-body-bold text-xs text-muted">Categoria</Text>
         <View className="flex-row flex-wrap gap-2">
           {CATEGORY_KEYS.map((k) => (
-            <Pressable
+            <Chip
               key={k}
+              label={PLACE_CATEGORIES[k]}
+              active={category === k}
               onPress={() => setCategory(k)}
-              className="rounded-full border px-3 py-2"
-              style={{
-                borderColor: colors.turquoise,
-                backgroundColor: category === k ? colors.turquoise : "transparent",
-              }}
-            >
-              <Text
-                className="font-body-medium text-xs"
-                style={{ color: category === k ? colors.night : colors.turquoiseInk }}
-              >
-                {PLACE_CATEGORIES[k]}
-              </Text>
-            </Pressable>
+            />
           ))}
         </View>
       </View>
 
       <View className="gap-2">
-        <Text className="font-heading text-sm uppercase tracking-widest text-muted">
-          Endereço (opcional)
-        </Text>
+        <Text className="font-body-bold text-xs text-muted">Endereço (opcional)</Text>
         <TextInput
-          className="rounded-xl border border-border bg-surface px-4 py-3 font-body text-base text-ink"
+          className="rounded-2xl bg-subtle px-4 py-3 font-body text-base text-ink"
           style={shadow.card}
           placeholder="Rua e número"
           placeholderTextColor={colors.dim}
@@ -110,15 +99,13 @@ export function PlaceForm({ onDone }: { onDone: (placeId: string) => void }) {
       </View>
 
       <View className="gap-2">
-        <Text className="font-heading text-sm uppercase tracking-widest text-muted">Local</Text>
+        <Text className="font-body-bold text-xs text-muted">Local</Text>
         <Pressable
           onPress={useMyLocation}
-          className="flex-row items-center justify-center gap-2 rounded-xl border border-turquoise py-3 active:opacity-80"
+          className="flex-row items-center justify-center gap-2 rounded-full bg-turquoise/20 py-3 active:opacity-80"
         >
           <Crosshair color={colors.turquoiseInk} size={18} />
-          <Text className="font-heading text-sm uppercase tracking-widest text-turquoiseInk">
-            Estou no lugar agora
-          </Text>
+          <Text className="font-body-bold text-sm text-turquoiseInk">Estou no lugar agora</Text>
         </Pressable>
         <CityMap
           occurrences={[]}
@@ -131,8 +118,8 @@ export function PlaceForm({ onDone }: { onDone: (placeId: string) => void }) {
       </View>
 
       {jaExistem.length > 0 && (
-        <View className="gap-3 rounded-xl border border-amber bg-surface p-4">
-          <Text className="font-heading text-sm uppercase tracking-widest text-ink">
+        <View className="gap-3 rounded-3xl bg-surface p-4">
+          <Text className="font-body-bold text-sm text-ink">
             {jaExistem.length === 1 ? "Já existe um parecido" : "Já existem parecidos"}
           </Text>
           <Text className="font-body text-sm text-dim">
@@ -143,7 +130,7 @@ export function PlaceForm({ onDone }: { onDone: (placeId: string) => void }) {
             <Pressable
               key={p.id}
               onPress={() => router.push({ pathname: "/lugar/[id]", params: { id: p.id } })}
-              className="rounded-lg border border-border bg-paper px-3 py-2 active:opacity-70"
+              className="rounded-xl bg-subtle px-3 py-2 active:opacity-70"
             >
               <Text className="font-body-medium text-base text-ink">{p.name}</Text>
               <Text className="font-body text-xs text-dim">
@@ -161,7 +148,7 @@ export function PlaceForm({ onDone }: { onDone: (placeId: string) => void }) {
         className="items-center rounded-full bg-turquoise py-4 active:opacity-80 disabled:opacity-50"
         style={shadow.turquoise}
       >
-        <Text className="font-heading text-lg uppercase tracking-widest text-night">
+        <Text className="font-body-bold text-base text-night">
           {create.isPending ? "Salvando…" : "Adicionar lugar"}
         </Text>
       </Pressable>

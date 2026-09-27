@@ -1,7 +1,9 @@
 import { Pressable, View } from "react-native";
 
 import { SCALE } from "@/theme/domain";
-import { colors } from "@/theme/tokens";
+import { colors, mark } from "@/theme/tokens";
+
+const RING = mark.ring;
 
 // Marcador de nota da Irisa: o anel da marca desenrolado em cinco faixas, que preenchem da
 // esquerda com fração na última. O comprimento diz quanto; o juízo (bom/ruim) fica com o selo e
@@ -53,6 +55,17 @@ export function Rainbow({ value, size = 8, onChange }: Props) {
           <View key={i}>{segment}</View>
         );
       })}
+    </View>
+  );
+}
+
+/** Fio arco-íris: régua fina com as seis cores da marca. */
+export function RainbowLine({ width = 72, height = 4 }: { width?: number; height?: number }) {
+  return (
+    <View className="flex-row overflow-hidden" style={{ width, height, borderRadius: height / 2 }}>
+      {RING.map((c) => (
+        <View key={c} style={{ flex: 1, backgroundColor: c }} />
+      ))}
     </View>
   );
 }

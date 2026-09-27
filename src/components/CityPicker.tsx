@@ -8,7 +8,8 @@ import type { City } from "@/lib/types";
 import { useCity } from "@/providers/CityProvider";
 import { colors, shadow } from "@/theme/tokens";
 
-export function CityPicker() {
+export function CityPicker({ tone = "light" }: { tone?: "light" | "dark" } = {}) {
+  const cor = tone === "dark" ? colors.paper : colors.turquoiseInk;
   const { city, setCity } = useCity();
   const [open, setOpen] = useState(false);
   const [q, setQ] = useState("");
@@ -27,22 +28,22 @@ export function CityPicker() {
   return (
     <>
       <Pressable onPress={() => setOpen(true)} className="flex-row items-center gap-1 self-start">
-        <Text className="font-body-medium text-sm text-turquoiseInk">
+        <Text className="font-body-medium text-sm" style={{ color: cor }}>
           {city ? `${city.name} · ${city.state}` : "Escolher cidade"}
         </Text>
-        <ChevronDown color={colors.turquoiseInk} size={16} />
+        <ChevronDown color={cor} size={16} />
       </Pressable>
       <Modal visible={open} animationType="slide" onRequestClose={() => setOpen(false)}>
         <View className="flex-1 gap-4 bg-paper px-4 pt-14">
           <View className="flex-row items-center justify-between">
-            <Text className="font-display text-2xl uppercase tracking-widest text-ink">Cidade</Text>
+            <Text className="font-display text-2xl uppercase tracking-wide text-ink">Cidade</Text>
             <Pressable onPress={() => setOpen(false)} hitSlop={12}>
               <X color={colors.muted} size={24} />
             </Pressable>
           </View>
           <TextInput
             autoFocus
-            className="rounded-xl border border-border bg-surface px-4 py-3 font-body text-base text-ink"
+            className="rounded-2xl bg-subtle px-4 py-3 font-body text-base text-ink"
             style={shadow.card}
             placeholder="Digite o nome da cidade"
             placeholderTextColor={colors.dim}

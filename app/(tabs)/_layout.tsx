@@ -6,7 +6,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { EmergencyButton } from "@/components/EmergencyButton";
 import { Glass } from "@/components/Glass";
 import { Logo } from "@/components/Logo";
-import { colors, fonts, glass } from "@/theme/tokens";
+import { colors, fonts, glass, tabColors } from "@/theme/tokens";
 
 export default function TabsLayout() {
   const safe = useSafeAreaInsets();
@@ -45,23 +45,39 @@ export default function TabsLayout() {
         tabBarBackground: () => (
           <Glass style={[StyleSheet.absoluteFill, { borderRadius: glass.radius }]} />
         ),
-        tabBarItemStyle: { paddingVertical: 6, borderRadius: glass.radius - 5 },
-        tabBarActiveTintColor: colors.coralInk,
+        // Lente: a aba ativa ganha uma cápsula branca que desliza; a cor vem de cada aba.
+        tabBarItemStyle: {
+          paddingVertical: 6,
+          marginVertical: 5,
+          marginHorizontal: 4,
+          borderRadius: glass.radius - 5,
+        },
+        tabBarActiveBackgroundColor: colors.solid,
+        tabBarActiveTintColor: colors.ink,
         tabBarInactiveTintColor: colors.dim,
         tabBarLabelStyle: { fontFamily: fonts.bodyMedium, fontSize: 11 },
       }}
     >
       <Tabs.Screen
         name="index"
-        options={{ title: "Início", tabBarIcon: ({ color }) => <Home color={color} size={22} /> }}
+        options={{
+          tabBarActiveTintColor: tabColors.index,
+          title: "Início",
+          tabBarIcon: ({ color }) => <Home color={color} size={22} />,
+        }}
       />
       <Tabs.Screen
         name="mapa"
-        options={{ title: "Mapa", tabBarIcon: ({ color }) => <Map color={color} size={22} /> }}
+        options={{
+          tabBarActiveTintColor: tabColors.mapa,
+          title: "Mapa",
+          tabBarIcon: ({ color }) => <Map color={color} size={22} />,
+        }}
       />
       <Tabs.Screen
         name="lugares"
         options={{
+          tabBarActiveTintColor: tabColors.lugares,
           title: "Lugares",
           tabBarIcon: ({ color }) => <Store color={color} size={22} />,
         }}
@@ -72,13 +88,18 @@ export default function TabsLayout() {
       <Tabs.Screen
         name="apoio"
         options={{
+          tabBarActiveTintColor: tabColors.apoio,
           title: "Apoio",
           tabBarIcon: ({ color }) => <LifeBuoy color={color} size={22} />,
         }}
       />
       <Tabs.Screen
         name="perfil"
-        options={{ title: "Perfil", tabBarIcon: ({ color }) => <User color={color} size={22} /> }}
+        options={{
+          tabBarActiveTintColor: tabColors.perfil,
+          title: "Perfil",
+          tabBarIcon: ({ color }) => <User color={color} size={22} />,
+        }}
       />
     </Tabs>
   );

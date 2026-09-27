@@ -1,15 +1,16 @@
 import { Link } from "expo-router";
-import { Search } from "lucide-react-native";
 import { useMemo, useState } from "react";
-import { FlatList, Pressable, ScrollView, Text, TextInput, View } from "react-native";
+import { FlatList, Pressable, ScrollView, Text, View } from "react-native";
 
 import { useScreenInsets } from "@/hooks/useScreenInsets";
+import { Aurora } from "@/components/Aurora";
+import { Chip } from "@/components/Chip";
 import { PlaceCard } from "@/components/PlaceCard";
+import { SearchField } from "@/components/SearchField";
 import { usePlaces } from "@/hooks/usePlaces";
 import { distanceMeters } from "@/lib/geo";
 import { useCity } from "@/providers/CityProvider";
 import { PLACE_CATEGORIES, type PlaceCategory } from "@/theme/domain";
-import { colors, shadow } from "@/theme/tokens";
 
 // Busca sem acento e sem caixa: "cafe" acha "Café".
 const simplifica = (s: string) => s.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "");
@@ -73,111 +74,80 @@ export default function LugaresScreen() {
   }
 
   return (
-    <FlatList
-      className="flex-1 bg-paper"
-      contentContainerClassName="gap-3 px-4"
-      contentContainerStyle={insets}
-      data={lista}
-      keyExtractor={(item) => item.place.id}
-      keyboardShouldPersistTaps="handled"
-      ListHeaderComponent={
-        <View className="gap-3">
-          <View>
-            <Text className="font-display text-3xl uppercase tracking-widest text-ink">
-              Lugares
-            </Text>
-            <Text className="font-body text-sm text-dim">
-              {city.name} · {city.state} · {places.length} cadastrados
-            </Text>
-          </View>
+    <View className="flex-1">
+      <Aurora />
+      <FlatList
+        className="flex-1"
+        contentContainerClassName="gap-3 px-4"
+        contentContainerStyle={insets}
+        data={lista}
+        keyExtractor={(item) => item.place.id}
+        keyboardShouldPersistTaps="handled"
+        ListHeaderComponent={
+          <View className="gap-3">
+            <View>
+              <Text className="font-display text-3xl uppercase tracking-wide text-ink">
+                Lugares
+              </Text>
+              <Text className="font-body text-sm text-dim">
+                {city.name} · {city.state} · {places.length} cadastrados
+              </Text>
+            </View>
 
-          <View
-            className="flex-row items-center gap-2 rounded-xl border border-border bg-surface px-3"
-            style={shadow.card}
-          >
-            <Search color={colors.dim} size={18} />
-            <TextInput
-              className="flex-1 py-3 font-body text-base text-ink"
-              placeholder="Buscar por nome"
-              placeholderTextColor={colors.dim}
-              value={busca}
-              onChangeText={setBusca}
-              autoCorrect={false}
-              returnKeyType="search"
-            />
-          </View>
+            <SearchField placeholder="Buscar por nome" value={busca} onChangeText={setBusca} />
 
-          {avaliados > 0 && (
+            {avaliados > 0 && (
+              <ScrollView
+                horizontal
+                showsHorizontalScrollIndicator={false}
+                contentContainerClassName="gap-2"
+              >
+                <Chip label="Tudo" active={recorte === "tudo"} onPress={() => setRecorte("tudo")} />
+                <Chip
+                  label={`Já avaliados (${avaliados})`}
+                  active={recorte === "avaliados"}
+                  onPress={() => setRecorte("avaliados")}
+                />
+              </ScrollView>
+            )}
+
             <ScrollView
               horizontal
               showsHorizontalScrollIndicator={false}
               contentContainerClassName="gap-2"
             >
-              <Chip label="Tudo" active={recorte === "tudo"} onPress={() => setRecorte("tudo")} />
               <Chip
-                label={`Já avaliados (${avaliados})`}
-                active={recorte === "avaliados"}
-                onPress={() => setRecorte("avaliados")}
+                label={userLocation ? "Perto de você" : "Todos"}
+                active={categoria === "all"}
+                onPress={() => setCategoria("all")}
               />
+              {categorias.map((c) => (
+                <Chip
+                  key={c.key}
+                  label={`${c.label} (${c.total})`}
+                  active={categoria === c.key}
+                  onPress={() => setCategoria(c.key)}
+                />
+              ))}
             </ScrollView>
-          )}
-
-          <ScrollView
-            horizontal
-            showsHorizontalScrollIndicator={false}
-            contentContainerClassName="gap-2"
-          >
-            <Chip
-              label={userLocation ? "Perto de você" : "Todos"}
-              active={categoria === "all"}
-              onPress={() => setCategoria("all")}
-            />
-            {categorias.map((c) => (
-              <Chip
-                key={c.key}
-                label={`${c.label} (${c.total})`}
-                active={categoria === c.key}
-                onPress={() => setCategoria(c.key)}
-              />
-            ))}
-          </ScrollView>
-        </View>
-      }
-      renderItem={({ item }) => <PlaceCard place={item.place} distance={item.distance} />}
-      ListEmptyComponent={
-        <Text className="font-body text-sm text-dim">
-          {isLoading ? "Carregando…" : "Nada com esse nome por aqui."}
-        </Text>
-      }
-      ListFooterComponent={
-        <Link href={{ pathname: "/registrar", params: { modo: "lugar" } }} asChild>
-          <Pressable className="items-center py-3 active:opacity-70">
-            <Text className="font-body text-sm text-turquoiseInk underline">
-              Não achou? Cadastre um lugar
-            </Text>
-          </Pressable>
-        </Link>
-      }
-    />
-  );
-}
-
-function Chip({ label, active, onPress }: { label: string; active: boolean; onPress: () => void }) {
-  return (
-    <Pressable
-      onPress={onPress}
-      className="rounded-full border px-3 py-1.5"
-      style={{
-        borderColor: active ? colors.ink : colors.border,
-        backgroundColor: active ? colors.ink : colors.surface,
-      }}
-    >
-      <Text
-        className="font-body-medium text-xs"
-        style={{ color: active ? colors.paper : colors.muted }}
-      >
-        {label}
-      </Text>
-    </Pressable>
+          </View>
+        }
+        renderItem={({ item }) => <PlaceCard place={item.place} distance={item.distance} />}
+        ListEmptyComponent={
+          <Text className="font-body text-sm text-dim">
+            {isLoading ? "Carregando…" : "Nada com esse nome por aqui."}
+          </Text>
+        }
+        ListFooterComponent={
+          <Link href={{ pathname: "/registrar", params: { modo: "lugar" } }} asChild>
+            <Pressable className="items-center py-3 active:opacity-70">
+              <Text className="font-body text-sm text-turquoiseInk underline">
+                Não achou? Cadastre um lugar
+              </Text>
+            </Pressable>
+          </Link>
+        }
+      />
+    </View>
   );
 }

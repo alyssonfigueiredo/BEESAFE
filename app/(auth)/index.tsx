@@ -55,28 +55,24 @@ export default function LoginScreen() {
           <Pressable
             disabled={busy}
             onPress={() => run(signInWithGoogle)}
-            className="items-center rounded-xl bg-ink py-3 active:opacity-80 disabled:opacity-50"
+            className="items-center rounded-full bg-ink py-3 active:opacity-80 disabled:opacity-50"
           >
-            <Text className="font-heading text-base uppercase tracking-widest text-paper">
-              Entrar com Google
-            </Text>
+            <Text className="font-body-bold text-base text-paper">Entrar com Google</Text>
           </Pressable>
           {appleAvailable && Platform.OS === "ios" && (
             <Pressable
               disabled={busy}
               onPress={() => run(signInWithApple)}
-              className="items-center rounded-xl border border-ink py-3 active:opacity-80 disabled:opacity-50"
+              className="items-center rounded-full bg-subtle py-3 active:opacity-80 disabled:opacity-50"
             >
-              <Text className="font-heading text-base uppercase tracking-widest text-ink">
-                Entrar com Apple
-              </Text>
+              <Text className="font-body-bold text-base text-ink">Entrar com Apple</Text>
             </Pressable>
           )}
         </View>
 
         <View className="flex-row items-center gap-3">
           <View className="h-px flex-1 bg-border" />
-          <Text className="font-body text-xs uppercase tracking-widest text-dim">
+          <Text className="font-body-medium text-[11px] uppercase tracking-wider text-dim">
             ou com e-mail
           </Text>
           <View className="h-px flex-1 bg-border" />
@@ -84,7 +80,7 @@ export default function LoginScreen() {
 
         <View className="gap-3">
           <TextInput
-            className="rounded-xl border border-border bg-surface px-4 py-3 font-body text-base text-ink"
+            className="rounded-2xl bg-subtle px-4 py-3 font-body text-base text-ink"
             style={shadow.card}
             placeholder="E-mail"
             placeholderTextColor={colors.dim}
@@ -94,7 +90,7 @@ export default function LoginScreen() {
             onChangeText={setEmail}
           />
           <TextInput
-            className="rounded-xl border border-border bg-surface px-4 py-3 font-body text-base text-ink"
+            className="rounded-2xl bg-subtle px-4 py-3 font-body text-base text-ink"
             style={shadow.card}
             placeholder="Senha"
             placeholderTextColor={colors.dim}
@@ -108,7 +104,7 @@ export default function LoginScreen() {
             className="items-center rounded-full bg-coral py-3 active:opacity-80 disabled:opacity-50"
             style={shadow.coral}
           >
-            <Text className="font-heading text-lg uppercase tracking-widest text-night">
+            <Text className="font-body-bold text-base text-night">
               {mode === "login" ? "Entrar" : "Criar conta"}
             </Text>
           </Pressable>

@@ -2,6 +2,7 @@ import { Link } from "expo-router";
 import { useState } from "react";
 import { Alert, Pressable, ScrollView, Text, TextInput, View } from "react-native";
 
+import { Aurora } from "@/components/Aurora";
 import { useScreenInsets } from "@/hooks/useScreenInsets";
 import { CityPicker } from "@/components/CityPicker";
 import { useDeleteAccount, useProfile, useUpdateProfile } from "@/hooks/useProfile";
@@ -45,81 +46,76 @@ export default function PerfilScreen() {
   }
 
   return (
-    <ScrollView
-      className="flex-1 bg-paper"
-      contentContainerClassName="gap-4 px-4"
-      contentContainerStyle={insets}
-      keyboardShouldPersistTaps="handled"
-    >
-      <View>
-        <Text className="font-display text-3xl uppercase tracking-widest text-ink">Perfil</Text>
-        <Text className="font-body text-sm text-dim">{session?.user.email}</Text>
-        {profile?.role !== "user" && profile && (
-          <Text className="font-body-bold text-xs uppercase tracking-widest text-lilacInk">
-            {profile.role === "admin" ? "Administração" : "Moderação"}
-          </Text>
-        )}
-      </View>
-
-      <View className="gap-3 rounded-xl border border-border bg-surface p-4" style={shadow.card}>
-        <Text className="font-heading text-sm uppercase tracking-widest text-muted">
-          Apelido no mural e nas avaliações
-        </Text>
-        <TextInput
-          className="rounded-xl border border-border bg-paper px-4 py-3 font-body text-base text-ink"
-          placeholder="Vazio = Anônimo"
-          placeholderTextColor={colors.dim}
-          maxLength={40}
-          value={value}
-          onChangeText={setNickname}
-        />
-        <Text className="font-heading text-sm uppercase tracking-widest text-muted">
-          Cidade padrão
-        </Text>
-        <CityPicker />
-        <Pressable
-          disabled={update.isPending}
-          onPress={save}
-          className="items-center rounded-full bg-turquoise py-3 active:opacity-80 disabled:opacity-50"
-          style={shadow.turquoise}
-        >
-          <Text className="font-heading text-base uppercase tracking-widest text-night">
-            Salvar
-          </Text>
-        </Pressable>
-      </View>
-
-      <View className="gap-2 rounded-xl border border-border bg-surface p-4" style={shadow.card}>
-        <Text className="font-heading text-sm uppercase tracking-widest text-muted">
-          Privacidade
-        </Text>
-        <Text className="font-body text-sm text-muted">
-          Relatos e mensagens nunca mostram seu nome ou e-mail. Só o apelido que você escolher
-          aparece no mural e nas avaliações de lugares.
-        </Text>
-      </View>
-
-      {profile && profile.role !== "user" && (
-        <Link href="/moderacao" asChild>
-          <Pressable
-            className="items-center rounded-full bg-lilac py-3 active:opacity-80"
-            style={shadow.lilac}
-          >
-            <Text className="font-heading text-base uppercase tracking-widest text-night">
-              Fila de moderação
-            </Text>
-          </Pressable>
-        </Link>
-      )}
-      <Pressable
-        onPress={() => supabase.auth.signOut()}
-        className="items-center rounded-full border border-border py-3 active:opacity-80"
+    <View className="flex-1">
+      <Aurora />
+      <ScrollView
+        className="flex-1"
+        contentContainerClassName="gap-4 px-4"
+        contentContainerStyle={insets}
+        keyboardShouldPersistTaps="handled"
       >
-        <Text className="font-heading text-base uppercase tracking-widest text-muted">Sair</Text>
-      </Pressable>
-      <Pressable onPress={confirmDelete} className="items-center py-3 active:opacity-80">
-        <Text className="font-body text-sm text-coralInk">Excluir minha conta</Text>
-      </Pressable>
-    </ScrollView>
+        <View>
+          <Text className="font-display text-3xl uppercase tracking-wide text-ink">Perfil</Text>
+          <Text className="font-body text-sm text-dim">{session?.user.email}</Text>
+          {profile?.role !== "user" && profile && (
+            <Text className="font-body-bold text-xs uppercase tracking-widest text-lilacInk">
+              {profile.role === "admin" ? "Administração" : "Moderação"}
+            </Text>
+          )}
+        </View>
+
+        <View className="gap-3 rounded-3xl bg-surface p-4" style={shadow.card}>
+          <Text className="font-body-bold text-xs text-muted">
+            Apelido no mural e nas avaliações
+          </Text>
+          <TextInput
+            className="rounded-2xl bg-subtle px-4 py-3 font-body text-base text-ink"
+            placeholder="Vazio = Anônimo"
+            placeholderTextColor={colors.dim}
+            maxLength={40}
+            value={value}
+            onChangeText={setNickname}
+          />
+          <Text className="font-body-bold text-xs text-muted">Cidade padrão</Text>
+          <CityPicker />
+          <Pressable
+            disabled={update.isPending}
+            onPress={save}
+            className="items-center rounded-full bg-turquoise py-3 active:opacity-80 disabled:opacity-50"
+            style={shadow.turquoise}
+          >
+            <Text className="font-body-bold text-base text-night">Salvar</Text>
+          </Pressable>
+        </View>
+
+        <View className="gap-2 rounded-3xl bg-surface p-4" style={shadow.card}>
+          <Text className="font-body-bold text-xs text-muted">Privacidade</Text>
+          <Text className="font-body text-sm text-muted">
+            Relatos e mensagens nunca mostram seu nome ou e-mail. Só o apelido que você escolher
+            aparece no mural e nas avaliações de lugares.
+          </Text>
+        </View>
+
+        {profile && profile.role !== "user" && (
+          <Link href="/moderacao" asChild>
+            <Pressable
+              className="items-center rounded-full bg-lilac py-3 active:opacity-80"
+              style={shadow.lilac}
+            >
+              <Text className="font-body-bold text-base text-night">Fila de moderação</Text>
+            </Pressable>
+          </Link>
+        )}
+        <Pressable
+          onPress={() => supabase.auth.signOut()}
+          className="items-center rounded-full bg-subtle py-3 active:opacity-80"
+        >
+          <Text className="font-body-bold text-base text-ink">Sair</Text>
+        </Pressable>
+        <Pressable onPress={confirmDelete} className="items-center py-3 active:opacity-80">
+          <Text className="font-body text-sm text-coralInk">Excluir minha conta</Text>
+        </Pressable>
+      </ScrollView>
+    </View>
   );
 }

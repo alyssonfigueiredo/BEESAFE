@@ -197,7 +197,18 @@ Nome: **Irisa** (INPI livre; @irisapp livre). Bundle id `br.com.irisa.app`. Cont
   `useScreenInsets()` no `contentContainerStyle` no lugar do `py-4`. Cartões e botões cheios levam `style={shadow.card}` (`boxShadow` nativo em tokens.js; o NativeWind não converte sombra dupla de className) para descolar do papel; tinta
   (`ink`) mais escura para definição. Cartões, botões e campos seguem opacos de propósito. Estrutura e navegação não mudaram. Os dois pacotes são nativos: precisa de
   `npx expo run:ios --device` de novo e de build EAS nova para o Android.
-  Protótipo navegável que originou isso: `docs/prototipo-ios27.html` (não é publicado no site).
+  **Layout completo aplicado em 27/09/2026 (mesma branch, sem merge — esperando o ok dele):** fundo
+  aurora (`src/components/Aurora.tsx`, svg atrás de cada tela), cartões translúcidos sem borda
+  (`surface` virou rgba; `solid` é o branco opaco), chips e campos tonais (`src/components/Chip.tsx`,
+  `SearchField.tsx`), títulos em Oswald caixa alta mas seções/botões/rótulos em Space Grotesk caixa
+  normal, cartão escuro no Início e no resumo do bairro, busca + filtros no Início, estatísticas com
+  ícone tonal (`StatCard`), azulejo por categoria no `PlacePhoto` (cinza em lugar sem nota, `muted`),
+  Mapa em tela cheia com chips flutuantes e folha de vidro (`app/(tabs)/mapa.tsx`), pergunta da marca
+  em arco-íris (`RainbowText`), aba ativa com lente branca e cor própria (`tabColors`). Faltam as
+  animações do protótipo (splash do radar, cinza→cor, aba acendendo): são Reanimated, próxima etapa.
+  Protótipo navegável que originou isso: `docs/prototipo-ios27.html`; comparação atual × proposta,
+  apresentação para o Alysson em `docs/apresentacao-liquid.html`; plano de lançamento em
+  `docs/plano-lancamento.html` (nenhum deles é publicado no site).
 
 ## Stack
 

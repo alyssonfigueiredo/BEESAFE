@@ -63,7 +63,7 @@ export function EmergencyButton() {
           {/* Folha em vidro forte: texto longo em cima de blur precisa de véu mais fechado. */}
           <Glass tint="strong" style={styles.pane}>
             <View className="flex-row items-center justify-between">
-              <Text className="font-display text-2xl uppercase tracking-widest text-ink">
+              <Text className="font-display text-2xl uppercase tracking-wide text-ink">
                 Emergência
               </Text>
               <Pressable onPress={() => setOpen(false)} hitSlop={12}>
@@ -74,7 +74,7 @@ export function EmergencyButton() {
               <Pressable
                 key={c.number}
                 onPress={() => Linking.openURL(`tel:${c.number}`)}
-                className="flex-row items-center gap-4 rounded-xl border border-border bg-paper px-4 py-3 active:opacity-80"
+                className="flex-row items-center gap-4 rounded-2xl bg-subtle px-4 py-3 active:opacity-80"
               >
                 <Text className="font-display text-3xl text-coralInk">{c.number}</Text>
                 <View className="flex-1">
@@ -85,7 +85,7 @@ export function EmergencyButton() {
             ))}
             {local.length > 0 && (
               <View className="gap-2">
-                <Text className="font-heading text-sm uppercase tracking-widest text-turquoiseInk">
+                <Text className="font-body-bold text-sm text-turquoiseInk">
                   Apoio em {city?.name}
                 </Text>
                 {local.map((s) => (
@@ -93,7 +93,7 @@ export function EmergencyButton() {
                     key={s.id}
                     onPress={() => Linking.openURL(s.phone ? `tel:${s.phone}` : (s.url ?? ""))}
                     disabled={!s.phone && !s.url}
-                    className="rounded-xl border border-border bg-paper px-4 py-3 active:opacity-80"
+                    className="rounded-2xl bg-subtle px-4 py-3 active:opacity-80"
                   >
                     <Text className="font-body-bold text-sm text-ink">{s.name}</Text>
                     {!!s.description && (

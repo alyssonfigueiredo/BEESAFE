@@ -80,7 +80,7 @@ export function PlacePicker({
       {searching ? (
         <View className="flex-row items-center gap-2">
           <TextInput
-            className="flex-1 rounded-xl border border-border bg-surface px-4 py-3 font-body text-base text-ink"
+            className="flex-1 rounded-2xl bg-subtle px-4 py-3 font-body text-base text-ink"
             style={shadow.card}
             placeholder="Nome do lugar"
             placeholderTextColor={colors.dim}
@@ -104,7 +104,7 @@ export function PlacePicker({
         <Pressable
           key={p.id}
           onPress={() => onChange({ id: p.id, name: p.name })}
-          className="flex-row items-center gap-2 rounded-xl border border-border bg-surface px-4 py-3 active:opacity-80"
+          className="flex-row items-center gap-2 rounded-2xl bg-subtle px-4 py-3 active:opacity-80"
           style={shadow.card}
         >
           <MapPin color={colors.dim} size={16} />

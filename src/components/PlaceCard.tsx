@@ -36,7 +36,7 @@ export function PlaceCard({
   return (
     <Link href={{ pathname: "/lugar/[id]", params: { id: place.id } }} asChild>
       <Pressable
-        className="flex-row gap-3 rounded-xl border border-border bg-surface p-3 active:opacity-80"
+        className="flex-row gap-3 rounded-3xl bg-surface p-3 active:opacity-80"
         style={shadow.card}
       >
         <PlacePhoto
@@ -45,14 +45,12 @@ export function PlaceCard({
           photoAuthor={place.photo_author}
           photoAuthorUri={place.photo_author_uri}
           size={64}
+          muted={score == null}
         />
         <View className="min-w-0 flex-1 gap-2">
           <View className="flex-row items-center justify-between gap-2">
             <View className="min-w-0 flex-1 flex-row items-center gap-1">
-              <Text
-                className="font-heading text-base uppercase tracking-wide text-ink"
-                numberOfLines={1}
-              >
+              <Text className="font-body-bold text-base text-ink" numberOfLines={1}>
                 {place.name}
               </Text>
               {verified && <BadgeCheck color={colors.turquoiseInk} size={16} />}
