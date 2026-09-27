@@ -10,7 +10,7 @@ import {
   type LucideIcon,
 } from "lucide-react-native";
 import { useEffect, useState } from "react";
-import { Image, type ImageStyle, Linking, Pressable, Text, View } from "react-native";
+import { Image, Linking, Pressable, Text, View, type ViewStyle } from "react-native";
 import Animated, {
   Easing,
   interpolateColor,
@@ -93,7 +93,8 @@ export function PlacePhoto({
       style={[{ position: "absolute", inset: 0, backgroundColor: colors.subtle }, veilStyle]}
     />
   );
-  const cinza: ImageStyle | undefined =
+  // O `filter` do RN 0.86 vai no contêiner (o tipo de estilo da Image não o declara).
+  const cinza: ViewStyle | undefined =
     muted && progress === 0 ? { filter: [{ grayscale: 1 }] } : undefined;
 
   const credito = url && (
@@ -110,11 +111,11 @@ export function PlacePhoto({
 
   if (variant === "banner") {
     return (
-      <View className="overflow-hidden rounded-3xl" style={{ height: 160 }}>
+      <View className="overflow-hidden rounded-3xl" style={[{ height: 160 }, cinza]}>
         {url ? (
           <Image
             source={{ uri: url }}
-            style={[{ width: "100%", height: "100%" }, cinza]}
+            style={{ width: "100%", height: "100%" }}
             resizeMode="cover"
             onError={() => setFalhou(true)}
             accessibilityLabel="Foto do lugar"
@@ -129,11 +130,11 @@ export function PlacePhoto({
   }
 
   return (
-    <View className="overflow-hidden rounded-2xl" style={{ width: size, height: size }}>
+    <View className="overflow-hidden rounded-2xl" style={[{ width: size, height: size }, cinza]}>
       {url ? (
         <Image
           source={{ uri: url }}
-          style={[{ width: size, height: size }, cinza]}
+          style={{ width: size, height: size }}
           resizeMode="cover"
           onError={() => setFalhou(true)}
           accessibilityLabel="Foto do lugar"
