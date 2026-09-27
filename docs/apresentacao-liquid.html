@@ -1,0 +1,248 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Alysson, não me odeia</title>
+<meta name="description" content="Uma intervenção não solicitada na Irisa: Liquid Glass, cores vivas e animações, apresentadas com carinho e acidez.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Urbanist:wght@500&family=Oswald:wght@500;700&family=Space+Grotesk:wght@400;500;700&display=swap">
+<style>
+  :root{
+    --paper:#F5F4F1;--ink:#141829;--muted:#3D4560;--dim:#7C8296;--night:#141829;
+    --coral:#FF6964;--orange:#FFA353;--yellow:#FFD066;--turq:#49DCC0;--blue:#59A7FF;--lilac:#A889FF;
+    --coral-ink:#C72825;--turq-ink:#0A8B7A;--lilac-ink:#6037F0;--yellow-ink:#9C6C00;
+    --display:"Oswald","Arial Narrow",Impact,sans-serif;--body:"Space Grotesk","Helvetica Neue",Arial,sans-serif;--wordmark:"Urbanist","Helvetica Neue",Arial,sans-serif;
+    --rb:linear-gradient(90deg,var(--coral),var(--orange),var(--yellow),var(--turq),var(--blue),var(--lilac));
+    color-scheme:light;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;color:var(--ink);font-family:var(--body);-webkit-font-smoothing:antialiased;background:var(--paper);
+    background-image:
+      radial-gradient(60% 34% at -6% 0%,color-mix(in srgb,var(--turq) 40%,transparent),transparent 62%),
+      radial-gradient(50% 30% at 106% 8%,color-mix(in srgb,var(--coral) 32%,transparent),transparent 62%),
+      radial-gradient(55% 32% at 104% 100%,color-mix(in srgb,var(--lilac) 38%,transparent),transparent 62%),
+      radial-gradient(45% 28% at -4% 100%,color-mix(in srgb,var(--yellow) 36%,transparent),transparent 62%);
+    background-attachment:fixed;}
+  @media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
+
+  .wrap{max-width:1040px;margin:0 auto;padding:24px 16px 60px;display:flex;flex-direction:column;gap:28px}
+  .brand{display:flex;align-items:center;gap:10px;font:500 15px var(--wordmark);letter-spacing:.2em;text-transform:uppercase;color:var(--ink)}
+  .brand b{font-weight:500;color:var(--yellow-ink)}
+  .brand svg{width:26px;height:26px}
+  .brand small{font:400 12px var(--body);letter-spacing:0;text-transform:none;color:var(--dim);margin-left:6px}
+
+  .slide{position:relative;border-radius:32px;padding:32px 28px;background:rgba(255,255,255,.62);box-shadow:0 2px 4px rgba(20,24,41,.03),0 16px 40px rgba(20,24,41,.07),inset 0 1px 0 #fff,inset 0 0 0 1px rgba(255,255,255,.8);-webkit-backdrop-filter:blur(18px) saturate(1.4);backdrop-filter:blur(18px) saturate(1.4);display:grid;gap:22px;overflow:hidden}
+  .slide.dark{background:rgba(20,24,41,.9);color:#fff;box-shadow:0 22px 50px rgba(20,24,41,.25),inset 0 1px 0 rgba(255,255,255,.14),inset 0 0 0 1px rgba(255,255,255,.08)}
+  .slide.dark .eyebrow{color:rgba(255,255,255,.62)}
+  .slide.dark p{color:rgba(255,255,255,.78)}
+  .slide.two{grid-template-columns:1.1fr .9fr;align-items:center}
+  .slide.two.flip{grid-template-columns:.9fr 1.1fr}
+  .slide.two.flip>.txt{order:2}
+  @media (max-width:760px){.slide{padding:24px 18px;border-radius:26px}.slide.two,.slide.two.flip{grid-template-columns:1fr}.slide.two.flip>.txt{order:0}}
+  .eyebrow{font:600 11px var(--body);letter-spacing:.1em;text-transform:uppercase;color:var(--dim);display:flex;align-items:center;gap:8px}
+  .eyebrow i{width:26px;height:4px;border-radius:2px;background:var(--rb);display:inline-block}
+  h1{font:700 clamp(40px,8vw,84px)/.98 var(--display);letter-spacing:.01em;text-transform:uppercase;margin:0;text-wrap:balance}
+  h2{font:700 clamp(28px,4.6vw,44px)/1.02 var(--display);letter-spacing:.01em;text-transform:uppercase;margin:0;text-wrap:balance}
+  p{font-size:17px;line-height:1.55;color:var(--muted);margin:0;max-width:62ch}
+  p b{color:var(--ink);font-weight:700}
+  .slide.dark p b{color:#fff}
+  .rb{background:var(--rb);-webkit-background-clip:text;background-clip:text;color:transparent}
+  .rbline{height:5px;width:96px;border-radius:3px;background:var(--rb)}
+  .txt{display:grid;gap:14px;align-content:center}
+  .note{font-size:13.5px;color:var(--dim);line-height:1.5}
+  .slide.dark .note{color:rgba(255,255,255,.55)}
+
+  .phones{display:flex;gap:18px;justify-content:center;align-items:flex-start;flex-wrap:wrap}
+  .ph{display:grid;gap:8px;justify-items:center;flex:1 1 200px;max-width:300px}
+  .ph img{width:100%;height:auto;border-radius:34px;box-shadow:0 30px 60px rgba(20,24,41,.28);display:block}
+  .ph .cap{font:600 13px var(--body);color:var(--ink);text-align:center}
+  .ph .cap small{display:block;font-weight:400;color:var(--dim);font-size:12px}
+  .slide.dark .ph .cap{color:#fff}.slide.dark .ph .cap small{color:rgba(255,255,255,.55)}
+  .ph.sm{max-width:230px}
+  .strip{width:100%;max-width:560px;border-radius:24px;box-shadow:0 20px 50px rgba(20,24,41,.22);display:block;margin:0 auto}
+  .arrow{align-self:center;font:700 34px var(--display);color:var(--dim);padding:0 4px}
+  @media (max-width:760px){.arrow{display:none}}
+
+  .pal{display:grid;grid-template-columns:repeat(5,1fr);gap:10px}
+  .sw{display:grid;gap:6px;justify-items:center;font:600 11px var(--body);color:var(--muted)}
+  .sw i{width:100%;aspect-ratio:1;border-radius:16px;display:block;box-shadow:inset 0 1px 0 rgba(255,255,255,.5)}
+  .sw small{font-weight:400;color:var(--dim)}
+  .pal-title{font:600 12px var(--body);letter-spacing:.08em;text-transform:uppercase;color:var(--dim)}
+
+  ul.list{margin:0;padding:0;list-style:none;display:grid;gap:10px}
+  ul.list li{display:flex;gap:12px;align-items:flex-start;font-size:16px;line-height:1.45;color:var(--muted)}
+  ul.list li::before{content:"";flex:none;width:10px;height:10px;border-radius:50%;margin-top:8px;background:var(--rb)}
+  ul.list li b{color:var(--ink)}
+  .slide.dark ul.list li{color:rgba(255,255,255,.8)}.slide.dark ul.list li b{color:#fff}
+
+  .cta{display:inline-flex;align-items:center;gap:10px;justify-self:start;border-radius:999px;padding:16px 22px;font:700 17px var(--body);color:var(--night);background:var(--turq);text-decoration:none;box-shadow:0 10px 26px rgba(73,220,192,.35);transition:transform .15s}
+  .cta:hover{transform:translateY(-1px)}
+  .cta.coral{background:var(--coral);box-shadow:0 10px 26px rgba(255,105,100,.35)}
+  .cta svg{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+  .ctas{display:flex;gap:12px;flex-wrap:wrap}
+  .steps{display:grid;gap:8px;font-size:15px;color:var(--muted)}
+  .steps span{display:flex;gap:10px;align-items:baseline}
+  .steps b{font:700 13px var(--body);color:var(--night);background:var(--yellow);border-radius:999px;padding:2px 9px}
+  .sig{font:700 clamp(28px,5vw,44px)/1 var(--display);text-transform:uppercase;letter-spacing:.02em}
+  .kiss{font-size:15px;color:var(--dim)}
+  .pill{display:inline-block;font:600 12px var(--body);padding:5px 11px;border-radius:999px;background:rgba(20,24,41,.08);color:var(--ink)}
+  .slide.dark .pill{background:rgba(255,255,255,.14);color:#fff}
+  footer{font-size:12.5px;color:var(--dim);text-align:center;line-height:1.6}
+
+  /* entrada leve, a partir de estado visível */
+  .slide{animation:rise .7s cubic-bezier(.2,.8,.2,1) both}
+  .slide:nth-child(2){animation-delay:.05s}.slide:nth-child(3){animation-delay:.1s}
+  @keyframes rise{from{opacity:.001;transform:translateY(12px)}}
+  .rbline,.rb,.eyebrow i{background-size:200% 100%;animation:shimmer 7s linear infinite}
+  @keyframes shimmer{to{background-position:-200% 0}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="brand"><svg viewBox="0 0 100 100" aria-hidden="true"><defs><linearGradient id="g"><stop offset="0" stop-color="#FF6964"/><stop offset=".2" stop-color="#FFA353"/><stop offset=".4" stop-color="#FFD066"/><stop offset=".6" stop-color="#49DCC0"/><stop offset=".8" stop-color="#59A7FF"/><stop offset="1" stop-color="#A889FF"/></linearGradient></defs><circle cx="50" cy="50" r="41.5" fill="none" stroke="url(#g)" stroke-width="13"/><circle cx="50" cy="50" r="13" fill="#0F1220"/><circle cx="46.1" cy="45.6" r="2.9" fill="#fff"/></svg>Iris<b>a</b><small>uma intervenção não solicitada</small></div>
+
+  <!-- 1. capa -->
+  <section class="slide dark">
+    <div class="eyebrow"><i></i>De: Leandro · Para: Alysson · Assunto: calma</div>
+    <h1>Alysson,<br>não me <span class="rb">odeia</span>.</h1>
+    <p>Eu tava entediado ontem. Você sabe como é: tédio + laptop + uma bicha com opinião = eu saindo mexendo no projeto de todo mundo. O seu foi só mais um. <b>Desculpa. De nada.</b></p>
+    <p class="note">Lê até o fim antes de me bloquear. Tem tour virtual no final e eu fiz a parte chata (as fontes carregam, os ícones centralizam, o Safari não chora).</p>
+  </section>
+
+  <!-- 2. tava lindo -->
+  <section class="slide two">
+    <div class="txt">
+      <div class="eyebrow"><i></i>Antes de qualquer coisa</div>
+      <h2>O seu tava <span class="rb">lindo</span>.</h2>
+      <p>Sério. Não é elogio de amiga que odeia o seu namorado. <b>Tava lindo.</b> E eu não mudei nada. Nada mesmo. Zero. Só… detalhes. <b>De refinamento. Pensando em iOS.</b></p>
+      <p class="note">Foram dezesseis versões de detalhes, mas quem conta versão é recalcada. Estrutura, menus, textos, regras, banco: tudo exatamente onde você deixou.</p>
+    </div>
+    <div class="phones">
+      <div class="ph sm"><img src="apresentacao-liquid/atual-inicio.png" alt="Início do app como está hoje"><div class="cap">O seu<small>lindo, como combinado</small></div></div>
+      <div class="ph sm"><img src="apresentacao-liquid/nova-inicio.png" alt="Início da proposta com Liquid Glass"><div class="cap">O “detalhe”<small>a mesma tela, de vidro</small></div></div>
+    </div>
+  </section>
+
+  <!-- 3. liquid glass -->
+  <section class="slide two flip">
+    <div class="txt">
+      <div class="eyebrow"><i></i>iOS 27</div>
+      <h2>Liquid Glass, <span class="rb">amor</span>.</h2>
+      <p>O iOS chegou de vidro e barra opaca agora é sapatilha com meia: funciona, mas a gente sabe. Então o cabeçalho e a barra de abas viraram <b>cápsulas translúcidas flutuando</b>, e o conteúdo passa por baixo delas, como deve ser.</p>
+      <ul class="list">
+        <li><b>Barra em cápsula</b>, solta das bordas, com o fio de luz por dentro.</li>
+        <li><b>Cartões, chips e campos com textura</b> de vidro sobre o fundo com as manchas de cor do seu story. Sim, eu roubei o fundo do story. Tava ótimo.</li>
+        <li><b>Nada de reflexo diagonal.</b> Isso é iPod 2004 e a gente já sofreu o bastante.</li>
+      </ul>
+    </div>
+    <div class="phones"><div class="ph"><img src="apresentacao-liquid/nova-busca.png" alt="Início rolado mostrando a barra e o cabeçalho translúcidos"><div class="cap">Rolando por baixo do vidro<small>e olha a busca ali, ela volta já</small></div></div></div>
+  </section>
+
+  <!-- 4. cores -->
+  <section class="slide">
+    <div class="txt">
+      <div class="eyebrow"><i></i>Paleta</div>
+      <h2>Saturação a <span class="rb">135%</span>.</h2>
+      <p>As suas cores estavam a 86% de saturação. <b>Coral a 86%, Alysson?</b> A gente não é 86% de nada. Subi para o teto, que é o máximo que a física permite antes de virar letreiro de sauna. As mesmas seis cores, a mesma marca, só mais acordadas.</p>
+    </div>
+    <div>
+      <div class="pal-title">Antes · como está no app</div>
+      <div class="pal" style="margin:8px 0 18px"><div class="sw"><i style="background:#F4736F"></i>coral<small>86%</small></div><div class="sw"><i style="background:#F5A45D"></i>laranja<small>88%</small></div><div class="sw"><i style="background:#F0CA75"></i>amarelo<small>80%</small></div><div class="sw"><i style="background:#5CC9B4"></i>turquesa<small>50%</small></div><div class="sw"><i style="background:#AE96F2"></i>lilás<small>78%</small></div></div>
+      <div class="pal-title">Depois · proposta</div>
+      <div class="pal" style="margin-top:8px"><div class="sw"><i style="background:#FF6964"></i>coral<small>100%</small></div><div class="sw"><i style="background:#FFA353"></i>laranja<small>100%</small></div><div class="sw"><i style="background:#FFD066"></i>amarelo<small>100%</small></div><div class="sw"><i style="background:#49DCC0"></i>turquesa<small>68%</small></div><div class="sw"><i style="background:#A889FF"></i>lilás<small>100%</small></div></div>
+    </div>
+  </section>
+
+  <!-- 5. cinza → cor -->
+  <section class="slide dark">
+    <div class="txt">
+      <div class="eyebrow"><i></i>O conceito virou animação</div>
+      <h2>Cinza vira <span class="rb">cor</span>.</h2>
+      <p>Lugar sem avaliação fica <b>cinza</b>. Tipo hétero de camisa social no bloco: está ali, ninguém sabe o que ele é. Aí a comunidade responde as quatro perguntas e a foto vai ganhando cor. <b>Uma pergunta, um quarto de cor. Na quarta, ele sai do armário.</b></p>
+      <p class="note">É a sua regra, só desenhada: o lugar recebe cor, a rua recebe aviso. O app inteiro abre em preto e branco e floresce; a nota enche gomo a gomo; os números contam. Nada disso muda o que as telas fazem.</p>
+    </div>
+    <div class="phones">
+      <div class="ph sm"><img src="apresentacao-liquid/nova-cinza.png" alt="Ficha de lugar sem avaliação, foto em cinza"><div class="cap">Sem nota<small>cinza, coitado</small></div></div>
+      <div class="arrow">→</div>
+      <div class="ph sm"><img src="apresentacao-liquid/nova-meio.png" alt="Duas perguntas respondidas, foto meio colorida"><div class="cap">Duas respostas<small>já dá pra sentir</small></div></div>
+      <div class="arrow">→</div>
+      <div class="ph sm"><img src="apresentacao-liquid/nova-cor.png" alt="Quatro perguntas respondidas, foto colorida"><div class="cap">Quatro respostas<small>ganhou cor, amiga</small></div></div>
+    </div>
+  </section>
+
+  <!-- 6. loading -->
+  <section class="slide two flip">
+    <div class="txt">
+      <div class="eyebrow"><i></i>Loading</div>
+      <h2>O radar <span class="rb">pinta</span> o anel.</h2>
+      <p>A sua marca já era um radar. Eu só pedi para ela trabalhar: o anel nasce cinza, a varredura dá uma volta e <b>acende gomo a gomo</b>. Depois a pupila abre, o nome entra fechando o espaçamento e uma barrinha arco-íris marca o progresso.</p>
+      <p class="note">Dura 2,7 segundos: o tempo exato de uma bicha ler a sala ao entrar na festa.</p>
+    </div>
+    <div class="phones"><div class="ph"><img src="apresentacao-liquid/splash.png" alt="Tela de loading com o anel sendo pintado pela varredura"><div class="cap">1,1 s de 2,7<small>o anel ainda enchendo</small></div></div></div>
+  </section>
+
+  <!-- 7. aba -->
+  <section class="slide">
+    <div class="txt">
+      <div class="eyebrow"><i></i>Barra de abas</div>
+      <h2>A aba <span class="rb">acende</span>.</h2>
+      <p>Toca numa aba e o ícone sai do cinza, passa pelas seis cores e pousa numa só, a cor daquela aba. Início coral, Mapa turquesa, Lugares laranja, Apoio lilás. <b>Não é a Parada inteira, é um adesivo de bandeira no notebook.</b> Discreto. Ha.</p>
+    </div>
+    <img class="strip" src="apresentacao-liquid/nova-tab.png" alt="Barra de abas com a aba Lugares acesa em laranja">
+  </section>
+
+  <!-- 8. busca -->
+  <section class="slide two">
+    <div class="txt">
+      <div class="eyebrow"><i></i>Uma coisinha nova, confesso</div>
+      <h2>Busca e filtro <span class="rb">no Início</span>.</h2>
+      <p>Porque ninguém quer descer três telas para achar o bar. <b>A gente quer o bar.</b> Campo de busca e chips por categoria logo abaixo do cartão da cidade; a aba Lugares continua igual, só que agora os filtros dela filtram de verdade.</p>
+      <p class="note">Foi a única coisa que entrou de fato. Se você odiar, é um bloco só, some em cinco minutos e eu finjo que nunca aconteceu.</p>
+    </div>
+    <div class="phones"><div class="ph"><img src="apresentacao-liquid/nova-busca.png" alt="Início com campo de busca e chips de categoria"><div class="cap">Busca no Início<small>com os chips de vidro</small></div></div></div>
+  </section>
+
+  <!-- 9. o que não mexi -->
+  <section class="slide dark">
+    <div class="txt">
+      <div class="eyebrow"><i></i>Juro pela Pabllo</div>
+      <h2>O que eu <span class="rb">não</span> mexi.</h2>
+      <ul class="list">
+        <li><b>Estrutura e menus.</b> Cinco abas, as mesmas telas, na mesma ordem.</li>
+        <li><b>Textos.</b> “Bem-vinde” continua lá, agora em arco-íris, porque merecia.</li>
+        <li><b>Regras.</b> Relato é da rua, nota é do lugar, nunca existe “região tranquila”. Eu li o seu CLAUDE.md inteiro. Duas vezes. Tem coisa ali que eu quero bordar num pano de prato.</li>
+        <li><b>Banco, backend, Play Store.</b> Nem encostei. O app real está exatamente como você deixou.</li>
+        <li><b>Onde isso mora:</b> numa branch separada, <span class="pill">claude/amazing-volta-0wnzed</span>. Se odiar, é só fingir que não viu. Como a gente faz com ex em festa.</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- 10. tour -->
+  <section class="slide">
+    <div class="txt">
+      <div class="eyebrow"><i></i>Tour virtual</div>
+      <h2>Vai lá <span class="rb">brincar</span>.</h2>
+      <p>É um protótipo navegável com os dois aparelhos lado a lado: <b>o seu app como está hoje</b> e a proposta. Os botões mexem nos dois ao mesmo tempo, então você compara sem esforço, que é o meu esporte favorito.</p>
+      <div class="steps">
+        <span><b>1</b>Abre o link. O loading do radar toca sozinho no aparelho da direita.</span>
+        <span><b>2</b>Toca em <b>▶ Tour guiado</b>: 26 passos narrados percorrem tudo, inclusive um lugar ganhando cor.</span>
+        <span><b>3</b><b>↻ Reiniciar animação</b> volta ao Início e repete o loading. Os botões de tela abrem qualquer canto nos dois.</span>
+        <span><b>4</b>No celular fica pequeno para caber os dois; no Mac fica em tamanho real. Nada grava, liga ou envia.</span>
+      </div>
+      <div class="ctas">
+        <a class="cta" href="https://claude.ai/artifact/FNoK6zVdptMk9rcCjtHyZr" target="_blank" rel="noopener">Abrir o protótipo <svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+      </div>
+      <div class="rbline"></div>
+      <div class="sig">Beijo, <span class="rb">Leandro</span>.</div>
+      <div class="kiss">Não me odeia. O seu tava lindo. Eu só tava entediado. 💅</div>
+    </div>
+  </section>
+
+  <footer>Feito num surto de tédio em 26 e 27 de setembro de 2026 · dados de exemplo em Curitiba, todos fictícios · nada disso está no app publicado</footer>
+</div>
+</body>
+</html>

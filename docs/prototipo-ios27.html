@@ -49,6 +49,10 @@
   .seg-sat button[aria-pressed="true"]{background:#2b2e3d;color:#fff}
   .act{border:0;background:#2b2e3d;color:#fff;font:600 13px var(--body);padding:9px 14px;border-radius:999px;cursor:pointer}
   .act.sec{background:#fff;color:#2b2e3d;border:1px solid rgba(0,0,0,.12)}
+  .tourcap{position:fixed;left:50%;bottom:22px;transform:translateX(-50%);z-index:100;max-width:min(560px,calc(100vw - 32px));background:rgba(20,24,41,.88);color:#fff;border-radius:18px;padding:12px 16px 12px 14px;display:flex;gap:12px;align-items:center;box-shadow:0 14px 40px rgba(20,24,41,.28);font:400 14px/1.4 var(--body);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);animation:capin .35s ease}
+  .tourcap[hidden]{display:none}
+  .tourcap .n{flex:none;font:700 12px var(--body);color:#141829;background:linear-gradient(90deg,#FF6964,#FFA353,#FFD066,#49DCC0,#59A7FF,#A889FF);padding:4px 8px;border-radius:999px;min-width:44px;text-align:center}
+  @keyframes capin{from{opacity:0;transform:translateX(-50%) translateY(8px)}}
   .jump{display:flex;gap:6px;flex-wrap:wrap}
   .jump button{border:1px solid rgba(255,255,255,.8);background:rgba(255,255,255,.45);font:500 12px var(--body);color:#3a3d4c;padding:6px 10px;border-radius:999px;cursor:pointer}
   .jump button:hover{background:#fff}
@@ -468,12 +472,12 @@
 
 <header class="top">
   <div>
-    <h1><span id="topmark"></span>Irisa · atual × proposta · v15</h1>
+    <h1><span id="topmark"></span>Irisa · atual × proposta · v16</h1>
     <p>Esquerda: o app como está hoje, sem mexer (tokens, cartões, barra e cabeçalho de agora). Direita: a proposta (Liquid Glass, cores vivas, fundo aurora, animações cinza → cor). Os botões agem nos dois ao mesmo tempo. Nada aqui grava, liga ou envia.</p>
   </div>
   <div class="ctl">
     <button class="act" id="restart">↻ Reiniciar animação</button>
-    <button class="act" id="tour">▶ Simular navegação</button>
+    <button class="act" id="tour">▶ Tour guiado</button>
     <div class="jump" id="jump"></div>
   </div>
 </header>
@@ -553,6 +557,7 @@
     </div>
   </div>
 </template>
+<div class="tourcap" id="tourcap" hidden><span class="n" id="tourn">1/26</span><span id="tourtxt"></span></div>
 <main class="stage">
   <div class="slot"><div id="slot-atual"></div><div class="cap">Atual<small>como está no app hoje</small></div></div>
   <div class="slot"><div id="slot-nova"></div><div class="cap">Proposta<small>Liquid Glass · cores vivas · animações</small></div></div>
@@ -858,7 +863,7 @@ function renderPerfil(){
     <button class="btn lilac" data-toast="Protótipo: fila de moderação fora do escopo">Fila de moderação</button>
     <button class="btn ghost" data-toast="Protótipo: sessão fictícia">Sair</button>
     <button class="link center pad-b" style="color:var(--coral-ink);justify-content:center;font-size:14px" data-toast="Protótipo: nada é excluído">Excluir minha conta</button>
-    <div class="small center pad-b">Protótipo v15 · 27/09/2026</div>`;
+    <div class="small center pad-b">Protótipo v16 · 27/09/2026</div>`;
 }
 function renderRegistrar(mode="relato"){
   const el=$("s-registrar");
@@ -1031,11 +1036,34 @@ const jump=document.getElementById("jump");
 [["Início",a=>a.goTab("inicio")],["Mapa",a=>a.goTab("mapa")],["Lugares",a=>a.goTab("lugares")],["Apoio",a=>a.goTab("apoio")],["Perfil",a=>a.goTab("perfil")],["Registrar",a=>a.go("registrar")],["Ficha do lugar",a=>a.go("lugar",1)],["Lugar sem nota",a=>a.go("lugar",6)],["Ficha do bairro",a=>a.go("bairro",3)],["Emergência",a=>a.openModal("m-sos")]].forEach(([l,f])=>{const b=document.createElement("button");b.textContent=l;b.addEventListener("click",()=>{stopTour();both(f)});jump.appendChild(b)});
 document.getElementById("restart").addEventListener("click",()=>{stopTour();both(a=>a.reset())});
 // Roteiro: Início → Lugares → lugar sem nota (responde as quatro) → Mapa → bairro → Apoio → Perfil → emergência → Início
-const STEPS=[[a=>a.goTab("inicio"),1400],[a=>a.scroll(560),1500],[a=>a.scroll(1150),1500],[a=>a.goTab("lugares"),1500],[a=>a.type("q","caf"),1500],[a=>a.type("q",""),600],[a=>a.scroll(420),1300],[a=>a.go("lugar",6),1600],[a=>a.scroll(560),1100],[a=>a.rate(0),800],[a=>a.rate(1),800],[a=>a.rate(2),800],[a=>a.rate(3),1600],[a=>a.back(),1300],[a=>a.goTab("mapa"),1700],[a=>a.sheet(true),1600],[a=>a.sheet(false),600],[a=>a.go("bairro",3),1700],[a=>a.scroll(520),1300],[a=>a.back(),1100],[a=>a.goTab("apoio"),1500],[a=>a.scroll(620),1300],[a=>a.goTab("perfil"),1400],[a=>a.openModal("m-sos"),1700],[a=>a.closeModals(),700],[a=>a.goTab("inicio"),1200]];
+const STEPS=[
+ [a=>a.goTab("inicio"),2600,"Início. Cartão escuro com a marca em azulejo, cores vivas, vidro em tudo. À esquerda, o app como está hoje; à direita, a proposta. Mesma estrutura, mesmos menus."],
+ [a=>a.scroll(560),2600,"Busca e filtros já no Início (só na proposta). Estatísticas com ícone e número grande."],
+ [a=>a.scroll(1150),2200,"Relatos recentes e bairros com mais relatos. Nada saiu do lugar."],
+ [a=>a.goTab("lugares"),2000,"Lugares. Repare na aba acendendo: cinza, arco-íris, e pousa na cor da aba."],
+ [a=>a.type("q","caf"),1800,"A busca e os chips filtram de verdade."],
+ [a=>a.type("q",""),500,""],
+ [a=>a.scroll(420),1800,"Lugar sem avaliação fica cinza. É o conceito do app na cara."],
+ [a=>a.go("lugar",6),2200,"Ficha de um lugar sem nota: a foto está sem cor."],
+ [a=>a.scroll(560),1400,"Quatro perguntas. Cada resposta dá um quarto de cor à foto."],
+ [a=>a.rate(0),900,"Atendimento…"],[a=>a.rate(1),900,"Afeto…"],[a=>a.rate(2),900,"Banheiro…"],[a=>a.rate(3),2200,"Clientela. Esse lugar ganhou cor."],
+ [a=>a.back(),1200,""],
+ [a=>a.goTab("mapa"),2000,"Mapa em tela cheia, chips de vidro flutuando por cima."],
+ [a=>a.sheet(true),2400,"A folha sobe com as áreas de atenção e a legenda. Nada corta."],
+ [a=>a.sheet(false),500,""],
+ [a=>a.go("bairro",3),2200,"Ficha do bairro: o que foi relatado, onde e quando. Resumo em vidro escuro."],
+ [a=>a.scroll(520),1400,""],[a=>a.back(),900,""],
+ [a=>a.goTab("apoio"),2000,"Apoio: mural e serviços. Mesma tela, só com textura."],
+ [a=>a.scroll(620),1400,""],
+ [a=>a.goTab("perfil"),1800,"Perfil. Cápsulas, campos de vidro, e a versão do protótipo lá embaixo."],
+ [a=>a.openModal("m-sos"),2200,"Emergência em folha de vidro forte, para ler texto longo por cima do blur."],
+ [a=>a.closeModals(),600,""],
+ [a=>a.goTab("inicio"),2600,"Fim do tour. Toque em Reiniciar para ver o loading: o radar pintando o anel."]];
 let tourT=null,tourI=0;const tourBtn=document.getElementById("tour");
-function stepTour(){if(tourI>=STEPS.length){stopTour();return}const[f,d]=STEPS[tourI++];both(f);tourT=setTimeout(stepTour,d)}
-function startTour(){stopTour();tourI=0;tourBtn.textContent="■ Parar";tourBtn.dataset.on="1";both(a=>{a.closeModals()});stepTour()}
-function stopTour(){clearTimeout(tourT);tourT=null;tourBtn.textContent="▶ Simular navegação";delete tourBtn.dataset.on}
+const cap=document.getElementById("tourcap"),capN=document.getElementById("tourn"),capT=document.getElementById("tourtxt");
+function stepTour(){if(tourI>=STEPS.length){stopTour();return}const[f,d,txt]=STEPS[tourI++];both(f);if(txt){capT.textContent=txt;capN.textContent=`${tourI}/${STEPS.length}`;cap.hidden=false}tourT=setTimeout(stepTour,d)}
+function startTour(){stopTour();tourI=0;tourBtn.textContent="■ Parar o tour";tourBtn.dataset.on="1";both(a=>{a.closeModals()});stepTour()}
+function stopTour(){clearTimeout(tourT);tourT=null;tourBtn.textContent="▶ Tour guiado";delete tourBtn.dataset.on;cap.hidden=true}
 tourBtn.addEventListener("click",()=>tourBtn.dataset.on?stopTour():startTour());
 </script>
 </body>
