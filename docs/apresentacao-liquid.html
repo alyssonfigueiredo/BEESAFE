@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Alysson, não me odeia</title>
-<meta name="description" content="Uma intervenção não solicitada na Irisa: Liquid Glass, cores vivas e animações, apresentadas com carinho e acidez.">
+<meta name="description" content="Uma intervenção não solicitada na Irisa: Liquid Glass, cores vivas e animações, apresentadas com carinho e humor.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Urbanist:wght@500&family=Oswald:wght@500;700&family=Space+Grotesk:wght@400;500;700&display=swap">
@@ -18,53 +18,65 @@
     color-scheme:light;
   }
   *{box-sizing:border-box}
-  html{scroll-behavior:smooth}
-  body{margin:0;color:var(--ink);font-family:var(--body);-webkit-font-smoothing:antialiased;background:var(--paper);
+  html,body{height:100%}
+  body{margin:0;color:var(--ink);font-family:var(--body);-webkit-font-smoothing:antialiased;background:var(--paper);overflow:hidden;
     background-image:
-      radial-gradient(60% 34% at -6% 0%,color-mix(in srgb,var(--turq) 40%,transparent),transparent 62%),
-      radial-gradient(50% 30% at 106% 8%,color-mix(in srgb,var(--coral) 32%,transparent),transparent 62%),
-      radial-gradient(55% 32% at 104% 100%,color-mix(in srgb,var(--lilac) 38%,transparent),transparent 62%),
-      radial-gradient(45% 28% at -4% 100%,color-mix(in srgb,var(--yellow) 36%,transparent),transparent 62%);
-    background-attachment:fixed;}
+      radial-gradient(60% 34% at -6% 0%,color-mix(in srgb,var(--turq) 42%,transparent),transparent 62%),
+      radial-gradient(50% 30% at 106% 8%,color-mix(in srgb,var(--coral) 34%,transparent),transparent 62%),
+      radial-gradient(55% 32% at 104% 100%,color-mix(in srgb,var(--lilac) 40%,transparent),transparent 62%),
+      radial-gradient(45% 28% at -4% 100%,color-mix(in srgb,var(--yellow) 38%,transparent),transparent 62%);}
   @media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
 
-  .wrap{max-width:1040px;margin:0 auto;padding:24px 16px 60px;display:flex;flex-direction:column;gap:28px}
-  .brand{display:flex;align-items:center;gap:10px;font:500 15px var(--wordmark);letter-spacing:.2em;text-transform:uppercase;color:var(--ink)}
+  .deck{position:fixed;inset:0;display:grid;grid-template-rows:auto 1fr auto;padding:env(safe-area-inset-top,0px) 0 env(safe-area-inset-bottom,0px)}
+  .top{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:16px 20px 8px}
+  .brand{display:flex;align-items:center;gap:10px;font:500 14px var(--wordmark);letter-spacing:.2em;text-transform:uppercase;color:var(--ink)}
   .brand b{font-weight:500;color:var(--yellow-ink)}
-  .brand svg{width:26px;height:26px}
-  .brand small{font:400 12px var(--body);letter-spacing:0;text-transform:none;color:var(--dim);margin-left:6px}
+  .brand svg{width:24px;height:24px}
+  .brand small{font:400 12px var(--body);letter-spacing:0;text-transform:none;color:var(--dim);margin-left:4px}
+  @media (max-width:640px){.brand small{display:none}}
+  .count{font:600 12px var(--body);color:var(--dim);letter-spacing:.06em}
+  .progress{height:4px;margin:0 20px;border-radius:2px;background:rgba(20,24,41,.08);overflow:hidden}
+  .progress i{display:block;height:100%;width:0;border-radius:2px;background:var(--rb);background-size:200% 100%;transition:width .5s cubic-bezier(.2,.8,.2,1);animation:shimmer 7s linear infinite}
 
-  .slide{position:relative;border-radius:32px;padding:32px 28px;background:rgba(255,255,255,.62);box-shadow:0 2px 4px rgba(20,24,41,.03),0 16px 40px rgba(20,24,41,.07),inset 0 1px 0 #fff,inset 0 0 0 1px rgba(255,255,255,.8);-webkit-backdrop-filter:blur(18px) saturate(1.4);backdrop-filter:blur(18px) saturate(1.4);display:grid;gap:22px;overflow:hidden}
+  .stage{position:relative;min-height:0}
+  .slide{position:absolute;inset:12px 20px;overflow:auto;scrollbar-width:none;border-radius:32px;padding:34px 30px;
+    background:rgba(255,255,255,.62);box-shadow:0 2px 4px rgba(20,24,41,.03),0 16px 40px rgba(20,24,41,.07),inset 0 1px 0 #fff,inset 0 0 0 1px rgba(255,255,255,.8);
+    -webkit-backdrop-filter:blur(18px) saturate(1.4);backdrop-filter:blur(18px) saturate(1.4);
+    display:grid;gap:24px;align-content:center;opacity:0;pointer-events:none;transform:translateX(40px) scale(.98);transition:opacity .45s ease,transform .55s cubic-bezier(.2,.8,.2,1);visibility:hidden}
+  .slide::-webkit-scrollbar{display:none}
+  .slide.on{opacity:1;pointer-events:auto;transform:none;visibility:visible}
+  .slide.back{transform:translateX(-40px) scale(.98)}
   .slide.dark{background:rgba(20,24,41,.9);color:#fff;box-shadow:0 22px 50px rgba(20,24,41,.25),inset 0 1px 0 rgba(255,255,255,.14),inset 0 0 0 1px rgba(255,255,255,.08)}
   .slide.dark .eyebrow{color:rgba(255,255,255,.62)}
   .slide.dark p{color:rgba(255,255,255,.78)}
-  .slide.two{grid-template-columns:1.1fr .9fr;align-items:center}
+  .slide.two{grid-template-columns:1.1fr .9fr;align-items:center;column-gap:30px}
   .slide.two.flip{grid-template-columns:.9fr 1.1fr}
   .slide.two.flip>.txt{order:2}
-  @media (max-width:760px){.slide{padding:24px 18px;border-radius:26px}.slide.two,.slide.two.flip{grid-template-columns:1fr}.slide.two.flip>.txt{order:0}}
+  @media (max-width:760px){.slide{inset:8px 12px;padding:22px 18px;border-radius:26px;align-content:start;gap:18px}.slide.two,.slide.two.flip{grid-template-columns:1fr}.slide.two.flip>.txt{order:0}}
   .eyebrow{font:600 11px var(--body);letter-spacing:.1em;text-transform:uppercase;color:var(--dim);display:flex;align-items:center;gap:8px}
   .eyebrow i{width:26px;height:4px;border-radius:2px;background:var(--rb);display:inline-block}
-  h1{font:700 clamp(40px,8vw,84px)/.98 var(--display);letter-spacing:.01em;text-transform:uppercase;margin:0;text-wrap:balance}
-  h2{font:700 clamp(28px,4.6vw,44px)/1.02 var(--display);letter-spacing:.01em;text-transform:uppercase;margin:0;text-wrap:balance}
-  p{font-size:17px;line-height:1.55;color:var(--muted);margin:0;max-width:62ch}
+  h1{font:700 clamp(40px,7.5vw,84px)/.98 var(--display);letter-spacing:.01em;text-transform:uppercase;margin:0;text-wrap:balance}
+  h2{font:700 clamp(28px,4.4vw,46px)/1.02 var(--display);letter-spacing:.01em;text-transform:uppercase;margin:0;text-wrap:balance}
+  h1 .w,h2 .w{display:inline-block}
+  p{font-size:clamp(15px,1.6vw,17px);line-height:1.55;color:var(--muted);margin:0;max-width:60ch}
   p b{color:var(--ink);font-weight:700}
   .slide.dark p b{color:#fff}
-  .rb{background:var(--rb);-webkit-background-clip:text;background-clip:text;color:transparent}
-  .rbline{height:5px;width:96px;border-radius:3px;background:var(--rb)}
+  .rb{background:var(--rb);-webkit-background-clip:text;background-clip:text;color:transparent;background-size:200% 100%;animation:shimmer 7s linear infinite}
+  .rbline{height:5px;width:96px;border-radius:3px;background:var(--rb);background-size:200% 100%;animation:shimmer 7s linear infinite}
   .txt{display:grid;gap:14px;align-content:center}
   .note{font-size:13.5px;color:var(--dim);line-height:1.5}
   .slide.dark .note{color:rgba(255,255,255,.55)}
 
   .phones{display:flex;gap:18px;justify-content:center;align-items:flex-start;flex-wrap:wrap}
-  .ph{display:grid;gap:8px;justify-items:center;flex:1 1 200px;max-width:300px}
+  .ph{display:grid;gap:8px;justify-items:center;flex:1 1 180px;max-width:min(280px,38vh)}
   .ph img{width:100%;height:auto;border-radius:34px;box-shadow:0 30px 60px rgba(20,24,41,.28);display:block}
   .ph .cap{font:600 13px var(--body);color:var(--ink);text-align:center}
   .ph .cap small{display:block;font-weight:400;color:var(--dim);font-size:12px}
   .slide.dark .ph .cap{color:#fff}.slide.dark .ph .cap small{color:rgba(255,255,255,.55)}
-  .ph.sm{max-width:230px}
+  .ph.sm{max-width:min(220px,30vh)}
   .strip{width:100%;max-width:560px;border-radius:24px;box-shadow:0 20px 50px rgba(20,24,41,.22);display:block;margin:0 auto}
   .arrow{align-self:center;font:700 34px var(--display);color:var(--dim);padding:0 4px}
-  @media (max-width:760px){.arrow{display:none}}
+  @media (max-width:760px){.arrow{display:none}.ph{max-width:200px}.ph.sm{max-width:150px}}
 
   .pal{display:grid;grid-template-columns:repeat(5,1fr);gap:10px}
   .sw{display:grid;gap:6px;justify-items:center;font:600 11px var(--body);color:var(--muted)}
@@ -73,124 +85,151 @@
   .pal-title{font:600 12px var(--body);letter-spacing:.08em;text-transform:uppercase;color:var(--dim)}
 
   ul.list{margin:0;padding:0;list-style:none;display:grid;gap:10px}
-  ul.list li{display:flex;gap:12px;align-items:flex-start;font-size:16px;line-height:1.45;color:var(--muted)}
+  ul.list li{display:flex;gap:12px;align-items:flex-start;font-size:15.5px;line-height:1.45;color:var(--muted)}
   ul.list li::before{content:"";flex:none;width:10px;height:10px;border-radius:50%;margin-top:8px;background:var(--rb)}
   ul.list li b{color:var(--ink)}
   .slide.dark ul.list li{color:rgba(255,255,255,.8)}.slide.dark ul.list li b{color:#fff}
 
   .cta{display:inline-flex;align-items:center;gap:10px;justify-self:start;border-radius:999px;padding:16px 22px;font:700 17px var(--body);color:var(--night);background:var(--turq);text-decoration:none;box-shadow:0 10px 26px rgba(73,220,192,.35);transition:transform .15s}
   .cta:hover{transform:translateY(-1px)}
-  .cta.coral{background:var(--coral);box-shadow:0 10px 26px rgba(255,105,100,.35)}
   .cta svg{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
-  .ctas{display:flex;gap:12px;flex-wrap:wrap}
   .steps{display:grid;gap:8px;font-size:15px;color:var(--muted)}
   .steps span{display:flex;gap:10px;align-items:baseline}
-  .steps b{font:700 13px var(--body);color:var(--night);background:var(--yellow);border-radius:999px;padding:2px 9px}
+  .steps b{font:700 13px var(--body);color:var(--night);background:var(--yellow);border-radius:999px;padding:2px 9px;flex:none}
   .sig{font:700 clamp(28px,5vw,44px)/1 var(--display);text-transform:uppercase;letter-spacing:.02em}
   .kiss{font-size:15px;color:var(--dim)}
   .pill{display:inline-block;font:600 12px var(--body);padding:5px 11px;border-radius:999px;background:rgba(20,24,41,.08);color:var(--ink)}
   .slide.dark .pill{background:rgba(255,255,255,.14);color:#fff}
-  footer{font-size:12.5px;color:var(--dim);text-align:center;line-height:1.6}
+  .hint{font:500 13px var(--body);color:var(--dim)}
 
-  /* entrada leve, a partir de estado visível */
-  .slide{animation:rise .7s cubic-bezier(.2,.8,.2,1) both}
-  .slide:nth-child(2){animation-delay:.05s}.slide:nth-child(3){animation-delay:.1s}
-  @keyframes rise{from{opacity:.001;transform:translateY(12px)}}
-  .rbline,.rb,.eyebrow i{background-size:200% 100%;animation:shimmer 7s linear infinite}
+  /* navegação */
+  .nav{display:flex;align-items:center;justify-content:center;gap:14px;padding:10px 20px 16px}
+  .nb{width:44px;height:44px;border-radius:50%;border:0;background:rgba(255,255,255,.7);box-shadow:0 4px 14px rgba(20,24,41,.10),inset 0 0 0 1px rgba(255,255,255,.8);cursor:pointer;display:grid;place-items:center;-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px)}
+  .nb svg{width:20px;height:20px;stroke:var(--ink);fill:none;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+  .nb:disabled{opacity:.35;cursor:default}
+  .dots{display:flex;gap:6px}
+  .dots button{width:8px;height:8px;border-radius:50%;border:0;padding:0;background:rgba(20,24,41,.18);cursor:pointer;transition:transform .2s,background .2s}
+  .dots button.on{background:var(--ink);transform:scale(1.35)}
+
+  /* entradas: tudo visível em repouso; a animação parte do visível para o lugar */
+  .slide.on [data-a]{animation:rise .65s cubic-bezier(.2,.8,.2,1) both;animation-delay:calc(var(--d,0) * 80ms)}
+  @keyframes rise{from{opacity:0;transform:translateY(14px)}}
+  .slide.on h1 .w,.slide.on h2 .w{animation:word .6s cubic-bezier(.2,.8,.2,1) both;animation-delay:calc(var(--w,0) * 60ms + 120ms)}
+  @keyframes word{from{opacity:0;transform:translateY(.4em) rotate(2deg)}}
+  .slide.on .ph{animation:rise .7s cubic-bezier(.2,.8,.2,1) both;animation-delay:calc(var(--d,0) * 140ms + 200ms)}
+  .slide.on .ph img{animation:float 6s ease-in-out infinite;animation-delay:calc(var(--d,0) * .7s)}
+  @keyframes float{50%{transform:translateY(-8px)}}
+  .slide.on .sw{animation:pop .5s cubic-bezier(.2,.9,.3,1.3) both;animation-delay:calc(var(--d,0) * 70ms + 200ms)}
+  @keyframes pop{from{opacity:0;transform:scale(.6)}}
+  .slide.on .arrow{animation:rise .5s both;animation-delay:calc(var(--d,0) * 140ms + 320ms)}
+  .slide.on .strip{animation:slidein .8s cubic-bezier(.2,.8,.2,1) both;animation-delay:.3s}
+  @keyframes slidein{from{opacity:0;transform:translateX(-30px)}}
+  .slide.on .cta{animation:rise .6s both .5s,pulse 2.6s ease-in-out 1.4s infinite}
+  @keyframes pulse{50%{box-shadow:0 10px 26px rgba(73,220,192,.35),0 0 0 10px rgba(73,220,192,.14)}}
+  .slide.on ul.list li{animation:rise .55s both;animation-delay:calc(var(--d,0) * 90ms + 200ms)}
+  .slide.on .steps span{animation:rise .55s both;animation-delay:calc(var(--d,0) * 90ms + 200ms)}
   @keyframes shimmer{to{background-position:-200% 0}}
+  .slide.on .gray{animation:decolor 1.4s ease both .9s}
+  @keyframes decolor{from{filter:grayscale(1)}to{filter:grayscale(1)}}
 </style>
 </head>
 <body>
-<div class="wrap">
+<div class="deck">
+  <div class="top">
+    <div class="brand"><svg viewBox="0 0 100 100" aria-hidden="true"><defs><linearGradient id="g"><stop offset="0" stop-color="#FF6964"/><stop offset=".2" stop-color="#FFA353"/><stop offset=".4" stop-color="#FFD066"/><stop offset=".6" stop-color="#49DCC0"/><stop offset=".8" stop-color="#59A7FF"/><stop offset="1" stop-color="#A889FF"/></linearGradient></defs><circle cx="50" cy="50" r="41.5" fill="none" stroke="url(#g)" stroke-width="13"/><circle cx="50" cy="50" r="13" fill="#0F1220"/><circle cx="46.1" cy="45.6" r="2.9" fill="#fff"/></svg>Iris<b>a</b><small>uma intervenção não solicitada</small></div>
+    <div class="count" id="count">1 / 10</div>
+  </div>
+  <div class="progress"><i id="bar"></i></div>
 
-  <div class="brand"><svg viewBox="0 0 100 100" aria-hidden="true"><defs><linearGradient id="g"><stop offset="0" stop-color="#FF6964"/><stop offset=".2" stop-color="#FFA353"/><stop offset=".4" stop-color="#FFD066"/><stop offset=".6" stop-color="#49DCC0"/><stop offset=".8" stop-color="#59A7FF"/><stop offset="1" stop-color="#A889FF"/></linearGradient></defs><circle cx="50" cy="50" r="41.5" fill="none" stroke="url(#g)" stroke-width="13"/><circle cx="50" cy="50" r="13" fill="#0F1220"/><circle cx="46.1" cy="45.6" r="2.9" fill="#fff"/></svg>Iris<b>a</b><small>uma intervenção não solicitada</small></div>
+  <div class="stage" id="stage">
 
   <!-- 1. capa -->
   <section class="slide dark">
-    <div class="eyebrow"><i></i>De: Leandro · Para: Alysson · Assunto: calma</div>
+    <div class="eyebrow" data-a><i></i>De: Leandro · Para: Alysson · Assunto: calma</div>
     <h1>Alysson,<br>não me <span class="rb">odeia</span>.</h1>
-    <p>Eu tava entediado ontem. Você sabe como é: tédio + laptop + uma bicha com opinião = eu saindo mexendo no projeto de todo mundo. O seu foi só mais um. <b>Desculpa. De nada.</b></p>
-    <p class="note">Lê até o fim antes de me bloquear. Tem tour virtual no final e eu fiz a parte chata (as fontes carregam, os ícones centralizam, o Safari não chora).</p>
+    <p data-a style="--d:3">Eu tava entediado ontem. Você sabe como é: tédio + laptop + uma pessoa com opinião demais = eu mexendo no projeto de todo mundo. O seu foi só mais um. <b>Desculpa. De nada.</b></p>
+    <p class="note" data-a style="--d:5">Lê até o fim antes de me bloquear. Tem tour virtual no final, e eu fiz a parte chata: as fontes carregam, os ícones centralizam, o Safari não chora.</p>
+    <div class="hint" data-a style="--d:7">→ setas, espaço ou deslizar</div>
   </section>
 
   <!-- 2. tava lindo -->
   <section class="slide two">
     <div class="txt">
-      <div class="eyebrow"><i></i>Antes de qualquer coisa</div>
+      <div class="eyebrow" data-a><i></i>Antes de qualquer coisa</div>
       <h2>O seu tava <span class="rb">lindo</span>.</h2>
-      <p>Sério. Não é elogio de amiga que odeia o seu namorado. <b>Tava lindo.</b> E eu não mudei nada. Nada mesmo. Zero. Só… detalhes. <b>De refinamento. Pensando em iOS.</b></p>
-      <p class="note">Foram dezesseis versões de detalhes, mas quem conta versão é recalcada. Estrutura, menus, textos, regras, banco: tudo exatamente onde você deixou.</p>
+      <p data-a style="--d:3">Sério, sem ironia nenhuma. <b>Tava lindo.</b> E eu não mudei nada. Nada mesmo. Zero. Só… detalhes. <b>De refinamento. Pensando em iOS.</b></p>
+      <p class="note" data-a style="--d:5">Foram dezesseis versões de detalhes, mas quem conta versão não tinha nada melhor para fazer num sábado. Estrutura, menus, textos, regras, banco: tudo exatamente onde você deixou.</p>
     </div>
     <div class="phones">
-      <div class="ph sm"><img src="apresentacao-liquid/atual-inicio.png" alt="Início do app como está hoje"><div class="cap">O seu<small>lindo, como combinado</small></div></div>
-      <div class="ph sm"><img src="apresentacao-liquid/nova-inicio.png" alt="Início da proposta com Liquid Glass"><div class="cap">O “detalhe”<small>a mesma tela, de vidro</small></div></div>
+      <div class="ph sm" style="--d:0"><img src="apresentacao-liquid/atual-inicio.png" alt="Início do app como está hoje"><div class="cap">O seu<small>lindo, como combinado</small></div></div>
+      <div class="ph sm" style="--d:1"><img src="apresentacao-liquid/nova-inicio.png" alt="Início da proposta com Liquid Glass"><div class="cap">O “detalhe”<small>a mesma tela, de vidro</small></div></div>
     </div>
   </section>
 
   <!-- 3. liquid glass -->
   <section class="slide two flip">
     <div class="txt">
-      <div class="eyebrow"><i></i>iOS 27</div>
+      <div class="eyebrow" data-a><i></i>iOS 27</div>
       <h2>Liquid Glass, <span class="rb">amor</span>.</h2>
-      <p>O iOS chegou de vidro e barra opaca agora é sapatilha com meia: funciona, mas a gente sabe. Então o cabeçalho e a barra de abas viraram <b>cápsulas translúcidas flutuando</b>, e o conteúdo passa por baixo delas, como deve ser.</p>
+      <p data-a style="--d:3">O iOS chegou de vidro, e barra opaca agora é meia com sandália: funciona, mas a gente sabe. Então o cabeçalho e a barra de abas viraram <b>cápsulas translúcidas flutuando</b>, e o conteúdo passa por baixo delas, como deve ser.</p>
       <ul class="list">
-        <li><b>Barra em cápsula</b>, solta das bordas, com o fio de luz por dentro.</li>
-        <li><b>Cartões, chips e campos com textura</b> de vidro sobre o fundo com as manchas de cor do seu story. Sim, eu roubei o fundo do story. Tava ótimo.</li>
-        <li><b>Nada de reflexo diagonal.</b> Isso é iPod 2004 e a gente já sofreu o bastante.</li>
+        <li style="--d:0"><b>Barra em cápsula</b>, solta das bordas, com um fio de luz por dentro.</li>
+        <li style="--d:1"><b>Cartões, chips e campos com textura</b> de vidro sobre o fundo com as manchas de cor do seu story. Sim, eu roubei o fundo do story. Tava ótimo.</li>
+        <li style="--d:2"><b>Nada de reflexo diagonal.</b> Isso é iPod 2004 e a gente já sofreu o bastante.</li>
       </ul>
     </div>
-    <div class="phones"><div class="ph"><img src="apresentacao-liquid/nova-busca.png" alt="Início rolado mostrando a barra e o cabeçalho translúcidos"><div class="cap">Rolando por baixo do vidro<small>e olha a busca ali, ela volta já</small></div></div></div>
+    <div class="phones"><div class="ph" style="--d:0"><img src="apresentacao-liquid/nova-busca.png" alt="Início rolado mostrando a barra e o cabeçalho translúcidos"><div class="cap">Rolando por baixo do vidro<small>a busca ali em cima volta já</small></div></div></div>
   </section>
 
   <!-- 4. cores -->
   <section class="slide">
     <div class="txt">
-      <div class="eyebrow"><i></i>Paleta</div>
+      <div class="eyebrow" data-a><i></i>Paleta</div>
       <h2>Saturação a <span class="rb">135%</span>.</h2>
-      <p>As suas cores estavam a 86% de saturação. <b>Coral a 86%, Alysson?</b> A gente não é 86% de nada. Subi para o teto, que é o máximo que a física permite antes de virar letreiro de sauna. As mesmas seis cores, a mesma marca, só mais acordadas.</p>
+      <p data-a style="--d:3">As suas cores estavam a 86% de saturação. <b>Coral a 86%, Alysson?</b> A gente não é 86% de nada. Subi para o teto, que é o máximo que a física permite antes de virar letreiro de balada. As mesmas seis cores, a mesma marca, só mais acordadas.</p>
     </div>
     <div>
-      <div class="pal-title">Antes · como está no app</div>
-      <div class="pal" style="margin:8px 0 18px"><div class="sw"><i style="background:#F4736F"></i>coral<small>86%</small></div><div class="sw"><i style="background:#F5A45D"></i>laranja<small>88%</small></div><div class="sw"><i style="background:#F0CA75"></i>amarelo<small>80%</small></div><div class="sw"><i style="background:#5CC9B4"></i>turquesa<small>50%</small></div><div class="sw"><i style="background:#AE96F2"></i>lilás<small>78%</small></div></div>
-      <div class="pal-title">Depois · proposta</div>
-      <div class="pal" style="margin-top:8px"><div class="sw"><i style="background:#FF6964"></i>coral<small>100%</small></div><div class="sw"><i style="background:#FFA353"></i>laranja<small>100%</small></div><div class="sw"><i style="background:#FFD066"></i>amarelo<small>100%</small></div><div class="sw"><i style="background:#49DCC0"></i>turquesa<small>68%</small></div><div class="sw"><i style="background:#A889FF"></i>lilás<small>100%</small></div></div>
+      <div class="pal-title" data-a style="--d:2">Antes · como está no app</div>
+      <div class="pal" style="margin:8px 0 18px"><div class="sw" style="--d:0"><i style="background:#F4736F"></i>coral<small>86%</small></div><div class="sw" style="--d:1"><i style="background:#F5A45D"></i>laranja<small>88%</small></div><div class="sw" style="--d:2"><i style="background:#F0CA75"></i>amarelo<small>80%</small></div><div class="sw" style="--d:3"><i style="background:#5CC9B4"></i>turquesa<small>50%</small></div><div class="sw" style="--d:4"><i style="background:#AE96F2"></i>lilás<small>78%</small></div></div>
+      <div class="pal-title" data-a style="--d:6">Depois · proposta</div>
+      <div class="pal" style="margin-top:8px"><div class="sw" style="--d:6"><i style="background:#FF6964"></i>coral<small>100%</small></div><div class="sw" style="--d:7"><i style="background:#FFA353"></i>laranja<small>100%</small></div><div class="sw" style="--d:8"><i style="background:#FFD066"></i>amarelo<small>100%</small></div><div class="sw" style="--d:9"><i style="background:#49DCC0"></i>turquesa<small>68%</small></div><div class="sw" style="--d:10"><i style="background:#A889FF"></i>lilás<small>100%</small></div></div>
     </div>
   </section>
 
   <!-- 5. cinza → cor -->
   <section class="slide dark">
     <div class="txt">
-      <div class="eyebrow"><i></i>O conceito virou animação</div>
+      <div class="eyebrow" data-a><i></i>O conceito virou animação</div>
       <h2>Cinza vira <span class="rb">cor</span>.</h2>
-      <p>Lugar sem avaliação fica <b>cinza</b>. Tipo hétero de camisa social no bloco: está ali, ninguém sabe o que ele é. Aí a comunidade responde as quatro perguntas e a foto vai ganhando cor. <b>Uma pergunta, um quarto de cor. Na quarta, ele sai do armário.</b></p>
-      <p class="note">É a sua regra, só desenhada: o lugar recebe cor, a rua recebe aviso. O app inteiro abre em preto e branco e floresce; a nota enche gomo a gomo; os números contam. Nada disso muda o que as telas fazem.</p>
+      <p data-a style="--d:3">Lugar sem avaliação fica <b>cinza</b>: está ali, mas ninguém contou ainda como é. Aí a comunidade responde as quatro perguntas e a foto vai ganhando cor. <b>Uma pergunta, um quarto de cor. Na quarta, o lugar assume a cor dele.</b></p>
+      <p class="note" data-a style="--d:5">É a sua regra, só desenhada: o lugar recebe cor, a rua recebe aviso. O app inteiro abre em preto e branco e floresce; a nota enche gomo a gomo; os números contam. Nada disso muda o que as telas fazem.</p>
     </div>
     <div class="phones">
-      <div class="ph sm"><img src="apresentacao-liquid/nova-cinza.png" alt="Ficha de lugar sem avaliação, foto em cinza"><div class="cap">Sem nota<small>cinza, coitado</small></div></div>
-      <div class="arrow">→</div>
-      <div class="ph sm"><img src="apresentacao-liquid/nova-meio.png" alt="Duas perguntas respondidas, foto meio colorida"><div class="cap">Duas respostas<small>já dá pra sentir</small></div></div>
-      <div class="arrow">→</div>
-      <div class="ph sm"><img src="apresentacao-liquid/nova-cor.png" alt="Quatro perguntas respondidas, foto colorida"><div class="cap">Quatro respostas<small>ganhou cor, amiga</small></div></div>
+      <div class="ph sm" style="--d:0"><img src="apresentacao-liquid/nova-cinza.png" alt="Ficha de lugar sem avaliação, foto em cinza"><div class="cap">Sem nota<small>cinza, por enquanto</small></div></div>
+      <div class="arrow" style="--d:1">→</div>
+      <div class="ph sm" style="--d:2"><img src="apresentacao-liquid/nova-meio.png" alt="Duas perguntas respondidas, foto meio colorida"><div class="cap">Duas respostas<small>já dá para sentir</small></div></div>
+      <div class="arrow" style="--d:3">→</div>
+      <div class="ph sm" style="--d:4"><img src="apresentacao-liquid/nova-cor.png" alt="Quatro perguntas respondidas, foto colorida"><div class="cap">Quatro respostas<small>ganhou cor</small></div></div>
     </div>
   </section>
 
   <!-- 6. loading -->
   <section class="slide two flip">
     <div class="txt">
-      <div class="eyebrow"><i></i>Loading</div>
+      <div class="eyebrow" data-a><i></i>Loading</div>
       <h2>O radar <span class="rb">pinta</span> o anel.</h2>
-      <p>A sua marca já era um radar. Eu só pedi para ela trabalhar: o anel nasce cinza, a varredura dá uma volta e <b>acende gomo a gomo</b>. Depois a pupila abre, o nome entra fechando o espaçamento e uma barrinha arco-íris marca o progresso.</p>
-      <p class="note">Dura 2,7 segundos: o tempo exato de uma bicha ler a sala ao entrar na festa.</p>
+      <p data-a style="--d:3">A sua marca já era um radar. Eu só pedi para ela trabalhar: o anel nasce cinza, a varredura dá uma volta e <b>acende gomo a gomo</b>. Depois a pupila abre, o nome entra fechando o espaçamento e uma barrinha arco-íris marca o progresso.</p>
+      <p class="note" data-a style="--d:5">Dura 2,7 segundos: o tempo de ler a sala ao entrar na festa.</p>
     </div>
-    <div class="phones"><div class="ph"><img src="apresentacao-liquid/splash.png" alt="Tela de loading com o anel sendo pintado pela varredura"><div class="cap">1,1 s de 2,7<small>o anel ainda enchendo</small></div></div></div>
+    <div class="phones"><div class="ph" style="--d:0"><img src="apresentacao-liquid/splash.png" alt="Tela de loading com o anel sendo pintado pela varredura"><div class="cap">1,1 s de 2,7<small>o anel ainda enchendo</small></div></div></div>
   </section>
 
   <!-- 7. aba -->
   <section class="slide">
     <div class="txt">
-      <div class="eyebrow"><i></i>Barra de abas</div>
+      <div class="eyebrow" data-a><i></i>Barra de abas</div>
       <h2>A aba <span class="rb">acende</span>.</h2>
-      <p>Toca numa aba e o ícone sai do cinza, passa pelas seis cores e pousa numa só, a cor daquela aba. Início coral, Mapa turquesa, Lugares laranja, Apoio lilás. <b>Não é a Parada inteira, é um adesivo de bandeira no notebook.</b> Discreto. Ha.</p>
+      <p data-a style="--d:3">Toca numa aba e o ícone sai do cinza, passa pelas seis cores e pousa numa só, a cor daquela aba. Início coral, Mapa turquesa, Lugares laranja, Apoio lilás. <b>Não é a Parada inteira, é um adesivo de bandeira no notebook.</b> Discreto. Ha.</p>
     </div>
     <img class="strip" src="apresentacao-liquid/nova-tab.png" alt="Barra de abas com a aba Lugares acesa em laranja">
   </section>
@@ -198,25 +237,25 @@
   <!-- 8. busca -->
   <section class="slide two">
     <div class="txt">
-      <div class="eyebrow"><i></i>Uma coisinha nova, confesso</div>
+      <div class="eyebrow" data-a><i></i>Uma coisinha nova, confesso</div>
       <h2>Busca e filtro <span class="rb">no Início</span>.</h2>
-      <p>Porque ninguém quer descer três telas para achar o bar. <b>A gente quer o bar.</b> Campo de busca e chips por categoria logo abaixo do cartão da cidade; a aba Lugares continua igual, só que agora os filtros dela filtram de verdade.</p>
-      <p class="note">Foi a única coisa que entrou de fato. Se você odiar, é um bloco só, some em cinco minutos e eu finjo que nunca aconteceu.</p>
+      <p data-a style="--d:3">Porque ninguém quer descer três telas para achar o bar. <b>A gente quer o bar.</b> Campo de busca e chips por categoria logo abaixo do cartão da cidade; a aba Lugares continua igual, só que agora os filtros dela filtram de verdade.</p>
+      <p class="note" data-a style="--d:5">Foi a única coisa que entrou de fato. Se você odiar, é um bloco só, some em cinco minutos e eu finjo que nunca aconteceu.</p>
     </div>
-    <div class="phones"><div class="ph"><img src="apresentacao-liquid/nova-busca.png" alt="Início com campo de busca e chips de categoria"><div class="cap">Busca no Início<small>com os chips de vidro</small></div></div></div>
+    <div class="phones"><div class="ph" style="--d:0"><img src="apresentacao-liquid/nova-busca.png" alt="Início com campo de busca e chips de categoria"><div class="cap">Busca no Início<small>com os chips de vidro</small></div></div></div>
   </section>
 
   <!-- 9. o que não mexi -->
   <section class="slide dark">
     <div class="txt">
-      <div class="eyebrow"><i></i>Juro pela Pabllo</div>
+      <div class="eyebrow" data-a><i></i>Palavra de quem só refinou</div>
       <h2>O que eu <span class="rb">não</span> mexi.</h2>
       <ul class="list">
-        <li><b>Estrutura e menus.</b> Cinco abas, as mesmas telas, na mesma ordem.</li>
-        <li><b>Textos.</b> “Bem-vinde” continua lá, agora em arco-íris, porque merecia.</li>
-        <li><b>Regras.</b> Relato é da rua, nota é do lugar, nunca existe “região tranquila”. Eu li o seu CLAUDE.md inteiro. Duas vezes. Tem coisa ali que eu quero bordar num pano de prato.</li>
-        <li><b>Banco, backend, Play Store.</b> Nem encostei. O app real está exatamente como você deixou.</li>
-        <li><b>Onde isso mora:</b> numa branch separada, <span class="pill">claude/amazing-volta-0wnzed</span>. Se odiar, é só fingir que não viu. Como a gente faz com ex em festa.</li>
+        <li style="--d:0"><b>Estrutura e menus.</b> Cinco abas, as mesmas telas, na mesma ordem.</li>
+        <li style="--d:1"><b>Textos.</b> “Bem-vinde” continua lá, agora em arco-íris, porque merecia.</li>
+        <li style="--d:2"><b>Regras.</b> Relato é da rua, nota é do lugar, nunca existe “região tranquila”. Eu li o seu CLAUDE.md inteiro. Duas vezes. Tem frase ali que eu quero bordar num pano de prato.</li>
+        <li style="--d:3"><b>Banco, backend, Play Store.</b> Nem encostei. O app real está exatamente como você deixou.</li>
+        <li style="--d:4"><b>Onde isso mora:</b> numa branch separada, <span class="pill">claude/amazing-volta-0wnzed</span>. Se odiar, é só fingir que não viu. Como a gente faz com ex em festa.</li>
       </ul>
     </div>
   </section>
@@ -224,25 +263,55 @@
   <!-- 10. tour -->
   <section class="slide">
     <div class="txt">
-      <div class="eyebrow"><i></i>Tour virtual</div>
+      <div class="eyebrow" data-a><i></i>Tour virtual</div>
       <h2>Vai lá <span class="rb">brincar</span>.</h2>
-      <p>É um protótipo navegável com os dois aparelhos lado a lado: <b>o seu app como está hoje</b> e a proposta. Os botões mexem nos dois ao mesmo tempo, então você compara sem esforço, que é o meu esporte favorito.</p>
+      <p data-a style="--d:3">É um protótipo navegável com os dois aparelhos lado a lado: <b>o seu app como está hoje</b> e a proposta. Os botões mexem nos dois ao mesmo tempo, então você compara sem esforço, que é o meu esporte favorito.</p>
       <div class="steps">
-        <span><b>1</b>Abre o link. O loading do radar toca sozinho no aparelho da direita.</span>
-        <span><b>2</b>Toca em <b>▶ Tour guiado</b>: 26 passos narrados percorrem tudo, inclusive um lugar ganhando cor.</span>
-        <span><b>3</b><b>↻ Reiniciar animação</b> volta ao Início e repete o loading. Os botões de tela abrem qualquer canto nos dois.</span>
-        <span><b>4</b>No celular fica pequeno para caber os dois; no Mac fica em tamanho real. Nada grava, liga ou envia.</span>
+        <span style="--d:0"><b>1</b>Abre o link. O loading do radar toca sozinho no aparelho da direita.</span>
+        <span style="--d:1"><b>2</b>Toca em <b>▶ Tour guiado</b>: 26 passos narrados percorrem tudo, inclusive um lugar ganhando cor.</span>
+        <span style="--d:2"><b>3</b><b>↻ Reiniciar animação</b> volta ao Início e repete o loading. Os botões de tela abrem qualquer canto nos dois.</span>
+        <span style="--d:3"><b>4</b>No celular fica pequeno para caber os dois; no Mac fica em tamanho real. Nada grava, liga ou envia.</span>
       </div>
-      <div class="ctas">
-        <a class="cta" href="https://claude.ai/artifact/FNoK6zVdptMk9rcCjtHyZr" target="_blank" rel="noopener">Abrir o protótipo <svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
-      </div>
-      <div class="rbline"></div>
-      <div class="sig">Beijo, <span class="rb">Leandro</span>.</div>
-      <div class="kiss">Não me odeia. O seu tava lindo. Eu só tava entediado. 💅</div>
+      <a class="cta" href="https://claude.ai/artifact/FNoK6zVdptMk9rcCjtHyZr" target="_blank" rel="noopener">Abrir o protótipo <svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+      <div class="rbline" data-a style="--d:7"></div>
+      <div class="sig" data-a style="--d:8">Beijo, <span class="rb">Leandro</span>.</div>
+      <div class="kiss" data-a style="--d:9">Não me odeia. O seu tava lindo. Eu só tava entediado. 💅</div>
     </div>
   </section>
 
-  <footer>Feito num surto de tédio em 26 e 27 de setembro de 2026 · dados de exemplo em Curitiba, todos fictícios · nada disso está no app publicado</footer>
+  </div>
+
+  <nav class="nav" aria-label="Navegação">
+    <button class="nb" id="prev" aria-label="Anterior"><svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg></button>
+    <div class="dots" id="dots"></div>
+    <button class="nb" id="next" aria-label="Próximo"><svg viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg></button>
+  </nav>
 </div>
+
+<script>
+const slides=[...document.querySelectorAll(".slide")],N=slides.length;
+const dots=document.getElementById("dots"),bar=document.getElementById("bar"),count=document.getElementById("count"),prev=document.getElementById("prev"),next=document.getElementById("next");
+// palavras dos títulos entram uma a uma
+document.querySelectorAll("h1,h2").forEach(h=>{let i=0;h.innerHTML=h.innerHTML.replace(/(<span class="rb">[^<]*<\/span>|[^\s<>]+)/g,m=>`<span class="w" style="--w:${i++}">${m}</span>`)});
+slides.forEach((s,i)=>{const b=document.createElement("button");b.setAttribute("aria-label",`Cartão ${i+1}`);b.addEventListener("click",()=>go(i));dots.appendChild(b)});
+let cur=-1;
+function go(n){
+  n=Math.max(0,Math.min(N-1,n));if(n===cur)return;
+  const dir=n>cur?1:-1;
+  slides.forEach((s,i)=>{s.classList.remove("on","back");if(i<n)s.classList.add("back")});
+  const el=slides[n];void el.offsetWidth;el.classList.add("on");el.scrollTop=0;
+  cur=n;[...dots.children].forEach((d,i)=>d.classList.toggle("on",i===n));
+  bar.style.width=((n+1)/N*100)+"%";count.textContent=`${n+1} / ${N}`;
+  prev.disabled=n===0;next.disabled=n===N-1;
+  try{history.replaceState(null,"","#"+(n+1))}catch(e){}
+}
+prev.addEventListener("click",()=>go(cur-1));next.addEventListener("click",()=>go(cur+1));
+window.addEventListener("keydown",e=>{if(["ArrowRight"," ","PageDown"].includes(e.key)){e.preventDefault();go(cur+1)}if(["ArrowLeft","PageUp"].includes(e.key)){e.preventDefault();go(cur-1)}});
+let tx=null,ty=null;
+document.getElementById("stage").addEventListener("touchstart",e=>{tx=e.touches[0].clientX;ty=e.touches[0].clientY},{passive:true});
+document.getElementById("stage").addEventListener("touchend",e=>{if(tx==null)return;const dx=e.changedTouches[0].clientX-tx,dy=e.changedTouches[0].clientY-ty;if(Math.abs(dx)>50&&Math.abs(dx)>Math.abs(dy)*1.3)go(cur-Math.sign(dx));tx=ty=null});
+const h=parseInt((location.hash||"").replace("#",""),10);
+go(isNaN(h)?0:h-1);
+</script>
 </body>
 </html>
