@@ -58,6 +58,7 @@ copyFileSync("docs/story.html", "site/story.html");
 copyFileSync("docs/Irisa-story.mp4", "site/Irisa-story.mp4");
 copyFileSync("docs/Irisa-reels.mp4", "site/Irisa-reels.mp4");
 copyFileSync("docs/Irisa-story-bio.mp4", "site/Irisa-story-bio.mp4");
+for (const n of ["reels-3", "reels-4", "reels-5", "reels-6", "reels-7", "reels-8", "reels-9"]) { copyFileSync(`docs/${n}.html`, `site/${n}.html`); copyFileSync(`docs/Irisa-${n}.mp4`, `site/Irisa-${n}.mp4`); }
 copyFileSync("docs/lojinha.html", "site/lojinha.html");
 copyFileSync("docs/Irisa-lojinha.pdf", "site/Irisa-lojinha.pdf");
 copyFileSync("docs/lojinha-interna.html", "site/lojinha-interna.html");
@@ -73,4 +74,6 @@ const pubKey = process.env.SUPABASE_PUBLISHABLE_KEY ?? "";
 if (pubKey && !pubKey.startsWith("sb_publishable_")) throw new Error("SUPABASE_PUBLISHABLE_KEY precisa ser a chave sb_publishable_ (nunca a secreta)");
 writeFileSync("site/index.html", readFileSync("docs/index.html", "utf8").replace("__SUPABASE_PUBLISHABLE_KEY__", pubKey || "__SUPABASE_PUBLISHABLE_KEY__"));
 copyFileSync("docs/og.png", "site/og.png");
+// Domínio próprio (registro.br): appirisa.com.br, apontado por A/AAAA pro GitHub Pages.
+writeFileSync("site/CNAME", "appirisa.com.br\n");
 console.log("site/ gerado");
