@@ -112,10 +112,7 @@
   @keyframes ignite{0%{color:var(--dim)}14%{color:var(--coral)}28%{color:var(--orange)}42%{color:var(--yellow)}56%{color:var(--turq)}70%{color:var(--blue)}84%{color:var(--lilac)}100%{color:var(--tc)}}
   .tab[aria-selected="true"] svg{animation:tabpop .55s cubic-bezier(.2,.9,.3,1.4) both}
   @keyframes tabpop{0%{transform:scale(.8) translateY(2px)}60%{transform:scale(1.12) translateY(-2px)}100%{transform:none}}
-  .tabbar .lens::after{content:"";position:absolute;inset:0;border-radius:inherit;background:linear-gradient(90deg,var(--coral),var(--orange),var(--yellow),var(--turq),var(--blue),var(--lilac));opacity:0;pointer-events:none}
-  .tabbar .lens.flash::after{animation:lensflash .8s ease-out}
-  @keyframes lensflash{0%{opacity:0}25%{opacity:.35}100%{opacity:0}}
-  .tabbar .lens{box-shadow:0 2px 10px rgba(20,24,41,.10),0 0 0 1px color-mix(in srgb,var(--lc,transparent) 45%,transparent);transition:transform .38s cubic-bezier(.3,1.35,.5,1),box-shadow .5s}
+
 
   /* telas */
   .screens{position:absolute;inset:0}
@@ -465,7 +462,7 @@
 
 <header class="top">
   <div>
-    <h1><span id="topmark"></span>Irisa · atual × proposta · v13</h1>
+    <h1><span id="topmark"></span>Irisa · atual × proposta · v14</h1>
     <p>Esquerda: o app como está hoje, sem mexer (tokens, cartões, barra e cabeçalho de agora). Direita: a proposta (Liquid Glass, cores vivas, fundo aurora, animações cinza → cor). Os botões agem nos dois ao mesmo tempo. Nada aqui grava, liga ou envia.</p>
   </div>
   <div class="ctl">
@@ -855,7 +852,7 @@ function renderPerfil(){
     <button class="btn lilac" data-toast="Protótipo: fila de moderação fora do escopo">Fila de moderação</button>
     <button class="btn ghost" data-toast="Protótipo: sessão fictícia">Sair</button>
     <button class="link center pad-b" style="color:var(--coral-ink);justify-content:center;font-size:14px" data-toast="Protótipo: nada é excluído">Excluir minha conta</button>
-    <div class="small center pad-b">Protótipo v13 · 27/09/2026</div>`;
+    <div class="small center pad-b">Protótipo v14 · 27/09/2026</div>`;
 }
 function renderRegistrar(mode="relato"){
   const el=$("s-registrar");
@@ -938,8 +935,6 @@ function show(s,anim){
   const tab=isTab?s:(stack.find(x=>TABS_.includes(x.s))||{s:"inicio"}).s;
   root.querySelectorAll(".tab").forEach(b=>b.setAttribute("aria-selected",b.dataset.tab===tab));
   lens.style.transform=`translateX(${TABS_.indexOf(tab)*100}%)`;
-  lens.style.setProperty("--lc",getComputedStyle(root.querySelector(`.tab[data-tab="${tab}"]`)).getPropertyValue("--tc")||"transparent");
-  if(tab!==lens.dataset.tab){lens.dataset.tab=tab;lens.classList.remove("flash");void lens.offsetWidth;lens.classList.add("flash")}
   el.scrollTop=0;
   animateIn(el);
 }
