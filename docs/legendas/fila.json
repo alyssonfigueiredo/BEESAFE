@@ -15,7 +15,7 @@
  },
  {
   "id": "story-arcoiris",
-  "aprovado": false,
+  "aprovado": true,
   "quando": "2026-09-27T17:00:00-03:00",
   "tipo": "STORY",
   "midias": [
