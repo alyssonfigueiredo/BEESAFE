@@ -11,8 +11,8 @@
   Abrir no navegador já toca em loop. Para comparar as três versões lado a lado: docs/abertura-rever.html
   Parâmetros na URL:
     ?v=radar           só o radar (padrão, 4,2 s)
-    ?v=1               coração arco-íris → espiral enche a tela → círculo branco abre → radar (8 s)
-    ?v=2               radar → o anel se expande e a tela inteira fica arco-íris (5 s)
+    ?v=1               coração arco-íris → o radar varre a tela inteira pintando os gomos → círculo branco abre → radar (8 s)
+    ?v=2               radar → a varredura sai do anel e pinta a tela inteira, gomo a gomo (5 s)
     ?formato=story     1080×1920 (padrão)      ?formato=quadrado  1080×1080     ?formato=reels  = story
     ?bg=paper          fundo papel com aurora (padrão)
     ?bg=night          fundo escuro (#141829), texto claro
@@ -97,24 +97,22 @@
   .heart .fillh{fill:url(#rbg);opacity:0;transform-origin:50px 55px;transform:scale(.6);animation:fillin .6s cubic-bezier(.2,.9,.3,1.3) 1.2s forwards}
   @keyframes fillin{to{opacity:1;transform:none}}
   .heart .shine{fill:#fff;opacity:0;animation:fillin .5s ease 1.6s forwards}
-  .spiral{position:absolute;inset:0;width:100%;height:100%;display:block}
-  .spiral path{opacity:0;animation:paintin .22s ease-out forwards;animation-delay:var(--d)}
+  /* Varredura de tela cheia: o mesmo radar do anel, com os gomos indo até a borda da tela. */
+  .varre,.splash svg.varre{position:absolute;inset:0;width:100%;height:100%;display:block}
+  .varre .sec{opacity:0;animation:paintin .26s ease-out forwards;animation-delay:var(--d)}
+  .varre .bigsw{transform-box:view-box;transform-origin:var(--cx) var(--cy);animation:sweepOnce var(--dur) cubic-bezier(.3,.1,.3,1) var(--d0) forwards,paintout .3s ease calc(var(--d0) + var(--dur)) forwards}
   [data-v="1"] .splash{clip-path:circle(0 at 50% 50%);animation:wipe .8s cubic-bezier(.4,0,.2,1) var(--wipe) forwards}
   [data-v="1"] .splash.fim{animation:wipe .8s cubic-bezier(.4,0,.2,1) var(--wipe) forwards,lift .6s cubic-bezier(.4,0,.2,1) var(--fim) forwards}
   @keyframes wipe{to{clip-path:circle(80% at 50% 50%)}}
 
   /* ---------- Versão 2: o anel se expande e a tela inteira fica arco-íris ---------- */
   .logo{position:relative;width:132px;height:132px}
-  .flood{position:absolute;left:0;top:0;width:132px;height:132px;border-radius:50%;filter:blur(2.5px);
-    background:conic-gradient(from -90deg,var(--coral),var(--orange),var(--yellow),var(--turq),var(--blue),var(--lilac),var(--coral));
-    transform:scale(.78);animation:flood 1.3s cubic-bezier(.65,0,.25,1) var(--flood) forwards}
-  @keyframes flood{to{transform:scale(11) rotate(70deg)}}
-  .flood::after{content:"";position:absolute;inset:0;border-radius:50%;
-    background:radial-gradient(circle at 50% 50%,rgba(255,255,255,.6),rgba(255,255,255,.15) 40%,rgba(255,255,255,0) 62%)}
-  [data-v="2"] .splash svg{animation:paintout .35s ease calc(var(--flood) + .25s) forwards}
+  [data-v="2"] .logo{animation:paintout .35s ease calc(var(--flood) + .55s) forwards}
+  [data-v="2"] .varre{z-index:1}
   [data-v="2"] .tag,[data-v="2"] .bar{animation:paintout .3s ease var(--flood) forwards}
   @keyframes paintout{to{opacity:0}}
   [data-v="2"] .word{animation:wordIn .7s cubic-bezier(.2,.8,.2,1) 1.75s forwards,wordWhite .5s ease calc(var(--flood) + .35s) forwards;position:relative;z-index:2}
+  [data-v="2"] .tag,[data-v="2"] .bar{z-index:2}
   @keyframes wordWhite{to{color:#fff;text-shadow:0 2px 24px rgba(20,24,41,.18)}}
   [data-v="2"] .word b{animation:wordWhite .5s ease calc(var(--flood) + .35s) forwards}
 </style>
@@ -181,32 +179,37 @@ const HEART=`<svg class="heart" viewBox="0 0 100 100"><defs><linearGradient id="
   <path class="fillh" d="M50 88C20 65 5 45 5 28A20 20 0 0 1 50 20A20 20 0 0 1 95 28C95 45 80 65 50 88Z"/>
   <path class="outline" d="M50 88C20 65 5 45 5 28A20 20 0 0 1 50 20A20 20 0 0 1 95 28C95 45 80 65 50 88Z"/>
   <circle class="shine" cx="30" cy="34" r="4"/></svg>`;
-function spiralSvg(inicio,dur){
-  // Espiral de Arquimedes com passo igual à largura do traço: as voltas encostam e a tela fecha.
-  const cx=W/2,cy=H/2,w=30,a=w/(2*Math.PI),rmax=Math.hypot(cx,cy)+w;
-  const thMax=rmax/a,N=Math.ceil(thMax*12);
-  let out="",L=0;const seg=[];
-  for(let i=0;i<N;i++){const t0=i/N*thMax,t1=(i+1)/N*thMax+.07;
-    const p0=[cx+a*t0*Math.cos(t0),cy+a*t0*Math.sin(t0)],p1=[cx+a*t1*Math.cos(t1),cy+a*t1*Math.sin(t1)];
-    const len=Math.hypot(p1[0]-p0[0],p1[1]-p0[1]);seg.push({p0,p1,L,t0});L+=len}
-  for(const g of seg){const d=Math.round(inicio+Math.pow(g.L/L,.85)*dur);
-    out+=`<path style="--d:${d}ms" d="M${g.p0[0].toFixed(1)} ${g.p0[1].toFixed(1)}L${g.p1[0].toFixed(1)} ${g.p1[1].toFixed(1)}" stroke="${rc((g.t0/(2*Math.PI*1.35))%1)}" stroke-width="${w}"/>`}
-  return `<svg class="spiral" viewBox="0 0 ${W} ${H}" fill="none">${out}</svg>`;
+function varreSvg(inicio,dur,dy=0){
+  // 64 gomos do centro até fora da tela, cor pela posição no anel; a varredura (cunha + linha) dá
+  // uma volta e cada gomo acende quando a linha passa por ele — igual ao anel, em tela cheia.
+  const cx=W/2,cy=H/2+dy,R=Math.hypot(cx,H/2)+Math.abs(dy)+12,N=64;
+  const p=(r,a)=>[cx+r*Math.cos(a),cy+r*Math.sin(a)];
+  let out="";
+  for(let i=0;i<N;i++){const a0=i/N*2*Math.PI-Math.PI/2,a1=(i+1)/N*2*Math.PI-Math.PI/2+.03;
+    const[x0,y0]=p(R,a0),[x1,y1]=p(R,a1);const d=Math.round(inicio+i/N*dur);
+    out+=`<path class="sec" style="--d:${d}ms" d="M${cx} ${cy}L${x0.toFixed(1)} ${y0.toFixed(1)}A${R} ${R} 0 0 1 ${x1.toFixed(1)} ${y1.toFixed(1)}Z" fill="${rc(i/N)}"/>`}
+  const b0=-130*Math.PI/180,b1=-90*Math.PI/180,[sx,sy]=p(R*.8,b0),[ex,ey]=p(R,b1),sweep=sat("#5CC9B4");
+  return `<svg class="varre" viewBox="0 0 ${W} ${H}" style="--cx:${cx}px;--cy:${cy}px;--d0:${inicio}ms;--dur:${dur}ms">
+    <defs><linearGradient id="bsw" gradientUnits="userSpaceOnUse" x1="${sx}" y1="${sy}" x2="${ex}" y2="${ey}">
+      <stop offset="0" stop-color="${sweep}" stop-opacity="0"/><stop offset="1" stop-color="${sweep}" stop-opacity=".45"/></linearGradient></defs>
+    ${out}
+    <g class="bigsw"><path d="M${cx} ${cy}L${p(R,b0).map(v=>v.toFixed(1)).join(" ")}A${R} ${R} 0 0 1 ${ex.toFixed(1)} ${ey.toFixed(1)}Z" fill="url(#bsw)"/>
+    <path d="M${cx} ${cy}L${ex.toFixed(1)} ${ey.toFixed(1)}" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-opacity=".85"/></g></svg>`;
 }
 
 const stage=document.getElementById("stage");
 const sp=document.getElementById("splash");
 function montar(){
-  stage.querySelectorAll(".heart,.spiral").forEach(e=>e.remove());
-  if(V==="1") sp.insertAdjacentHTML("beforebegin",HEART+spiralSvg(2700,1500));
+  stage.querySelectorAll(".heart,.varre").forEach(e=>e.remove());
+  if(V==="1") sp.insertAdjacentHTML("beforebegin",HEART+varreSvg(2700,1500));
   sp.className="splash"+(SEMFIM||V==="2"?"":" fim");
   sp.style.setProperty("--fim",(CENA.fim*K)+"ms");
   sp.style.setProperty("--wipe",((CENA.wipe??0)*K)+"ms");
   sp.style.setProperty("--flood",((CENA.flood??0)*K)+"ms");
-  sp.innerHTML=`<div class="logo">${V==="2"?'<div class="flood"></div>':""}${radarSvg()}</div><div class="word">Iris<b>a</b></div><div class="tag">quanta cor tem aqui?</div><div class="bar"><i></i></div>`;
+  sp.innerHTML=`${V==="2"?varreSvg(CENA.flood,1600,-42):""}<div class="logo">${radarSvg()}</div><div class="word">Iris<b>a</b></div><div class="tag">quanta cor tem aqui?</div><div class="bar"><i></i></div>`;
   // k estica só os inícios (não a velocidade de cada entrada); na v1 o radar começa depois do círculo abrir
   for(const a of sp.getAnimations({subtree:true})){const t=a.effect.getTiming();const nome=a.animationName||"";
-    const off=["wipe","lift","flood","paintout","wordWhite"].includes(nome)?0:CENA.off;
+    const off=["wipe","lift","paintout","wordWhite"].includes(nome)?0:CENA.off;
     if(K!==1||off) a.effect.updateTiming({delay:(t.delay+off)*K})}
   if(K!==1) for(const a of stage.getAnimations({subtree:true})){if(sp.contains(a.effect.target))continue;const t=a.effect.getTiming();a.effect.updateTiming({delay:t.delay*K})}
 }
