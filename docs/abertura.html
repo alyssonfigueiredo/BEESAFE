@@ -111,7 +111,12 @@
   .marca{position:relative;display:flex;flex-direction:column;align-items:center;gap:22px;padding:20px 28px;margin:-20px -28px;border-radius:44px}
   .marca::before{content:"";position:absolute;inset:0;border-radius:inherit;background:#fff;opacity:0;z-index:-1}
   [data-v="2"] .marca{z-index:2}
-  [data-v="2"] .marca::before{animation:paintin .4s ease calc(var(--flood) + .35s) forwards;box-shadow:0 12px 40px rgba(20,24,41,.10)}
+  /* borda branca redonda em volta do olho (20 px) e o nome em branco: a versão negativa da marca */
+  [data-v="2"] .logo::before{content:"";position:absolute;inset:-20px;border-radius:50%;background:#fff;opacity:0;z-index:-1;
+    box-shadow:0 12px 40px rgba(20,24,41,.12);animation:paintin .4s ease calc(var(--flood) + .35s) forwards}
+  [data-v="2"] .word{animation:wordIn .7s cubic-bezier(.2,.8,.2,1) 1.75s forwards,wordWhite .5s ease calc(var(--flood) + .45s) forwards}
+  [data-v="2"] .word b{animation:wordWhite .5s ease calc(var(--flood) + .45s) forwards}
+  @keyframes wordWhite{to{color:#fff;text-shadow:0 2px 18px rgba(20,24,41,.18)}}
   [data-v="2"] .varre{z-index:1}
   [data-v="2"] .tag,[data-v="2"] .bar{animation:paintout .3s ease var(--flood) forwards}
   @keyframes paintout{to{opacity:0}}
@@ -210,7 +215,7 @@ function montar(){
   sp.innerHTML=`${V==="2"?varreSvg(CENA.flood,1600,-42):""}<div class="marca"><div class="logo">${radarSvg()}</div><div class="word">Iris<b>a</b></div></div><div class="tag">quanta cor tem aqui?</div><div class="bar"><i></i></div>`;
   // k estica só os inícios (não a velocidade de cada entrada); na v1 o radar começa depois do círculo abrir
   for(const a of sp.getAnimations({subtree:true})){const t=a.effect.getTiming();const nome=a.animationName||"";
-    const off=["wipe","lift","paintout"].includes(nome)?0:CENA.off;
+    const off=["wipe","lift","paintout","wordWhite"].includes(nome)?0:CENA.off;
     if(K!==1||off) a.effect.updateTiming({delay:(t.delay+off)*K})}
   if(K!==1) for(const a of stage.getAnimations({subtree:true})){if(sp.contains(a.effect.target))continue;const t=a.effect.getTiming();a.effect.updateTiming({delay:t.delay*K})}
 }
