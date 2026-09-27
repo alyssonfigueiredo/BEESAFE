@@ -79,7 +79,7 @@ Nome: **Irisa** (INPI livre; @irisapp livre). Bundle id `br.com.irisa.app`. Cont
   radar, 8 s), `?v=2` (radar → o anel se expande e a tela vira arco-íris com IRISA em branco e borda de 5 px no olho, as cores saem pela mesma varredura e termina no branco, 7,9 s).
   `?v=3` (teste pedido por ele: coração → varredura enche a tela → as cores saem
   pela varredura enquanto o radar da logo pinta o anel no mesmo passo, termina no branco, 7,9 s).
-  `docs/abertura-rever.html` mostra as três lado a lado com Reiniciar. Ele ainda vai escolher (27/09).
+  `docs/abertura-rever.html` mostra as versões lado a lado com Reiniciar. Escolhida para o app: v2 (27/09).
   **Carrossel de estreia:** `docs/carrossel.html` (8 lâminas 1080×1350, mesmo estilo) e
   `node scripts/carrossel-png.mjs` exporta `docs/carrossel/01..08.png`. Fecha com "O link está na bio".
   Segundo post: `docs/carrossel-2.html` ("Estrelas não dizem nada pra gente": as quatro perguntas com
@@ -213,7 +213,9 @@ Nome: **Irisa** (INPI livre; @irisapp livre). Bundle id `br.com.irisa.app`. Cont
   ícone tonal (`StatCard`), azulejo por categoria no `PlacePhoto` (cinza em lugar sem nota, `muted`),
   Mapa em tela cheia com chips flutuantes e folha de vidro (`app/(tabs)/mapa.tsx`), pergunta da marca
   em arco-íris (`RainbowText`), aba ativa com lente branca e cor própria (`tabColors`).
-  **Animações (Reanimated) aplicadas na sequência:** `Splash.tsx` (o radar pinta o anel, 2,7 s,
+  **Animações (Reanimated) aplicadas na sequência:** `Splash.tsx` (desde 27/09 é a v2 de `docs/abertura.html`, escolha dele:
+  o radar pinta o anel, a varredura pinta a tela toda até a borda, olho com borda branca de 5 px e
+  IRISA em branco, as cores saem pela mesma varredura e o app aparece, 7,25 s;
   montado em `app/_layout.tsx` por cima de tudo depois das fontes; 0,3 s com "reduzir movimento"),
   `TabIcon.tsx` (ícone da aba sai do cinza, passa pelo arco-íris e pousa na cor da aba, com pulinho),
   `PlacePhoto` com `muted`+`progress` (foto/azulejo cinza que ganha um quarto de cor por pergunta
