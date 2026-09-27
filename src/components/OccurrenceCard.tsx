@@ -1,6 +1,7 @@
 import { format, parseISO } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { Text, View } from "react-native";
+import Animated, { FadeInDown } from "react-native-reanimated";
 
 import { ReportButton } from "@/components/ReportButton";
 import type { PublicOccurrence } from "@/lib/types";
@@ -17,11 +18,21 @@ export function formatOccurrenceDate(iso: string) {
   return format(parseISO(iso), "d 'de' MMM 'de' yyyy", { locale: ptBR });
 }
 
-export function OccurrenceCard({ occurrence: o }: { occurrence: PublicOccurrence }) {
+export function OccurrenceCard({
+  occurrence: o,
+  index,
+}: {
+  occurrence: PublicOccurrence;
+  index?: number;
+}) {
   const type = OCCURRENCE_TYPES[o.type];
   const sev = SEVERITIES[o.severity];
   return (
-    <View className="gap-2 rounded-3xl bg-surface p-4" style={shadow.card}>
+    <Animated.View
+      entering={FadeInDown.duration(450).delay(Math.min(index ?? 0, 9) * 55)}
+      className="gap-2 rounded-3xl bg-surface p-4"
+      style={shadow.card}
+    >
       <View className="flex-row items-center justify-between">
         <View className="rounded-full px-3 py-1" style={{ backgroundColor: type.color }}>
           <Text className="font-body-bold text-xs uppercase tracking-wider text-night">
@@ -58,6 +69,6 @@ export function OccurrenceCard({ occurrence: o }: { occurrence: PublicOccurrence
         </Text>
         <ReportButton type="occurrence" id={o.id} compact />
       </View>
-    </View>
+    </Animated.View>
   );
 }

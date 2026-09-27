@@ -177,16 +177,16 @@ export default function HomeScreen() {
             resultado.length === 0 ? (
               <Text className="font-body text-sm text-dim">Nada com esse nome por aqui.</Text>
             ) : (
-              resultado.map((r) => (
-                <PlaceCard key={r.place.id} place={r.place} distance={r.distance} />
+              resultado.map((r, i) => (
+                <PlaceCard key={r.place.id} place={r.place} distance={r.distance} index={i} />
               ))
             )
           ) : welcoming.length > 0 ? (
-            welcoming.map((p) => <PlaceCard key={p.id} place={p} />)
+            welcoming.map((p, i) => <PlaceCard key={p.id} place={p} index={i} />)
           ) : primeiros.length > 0 ? (
             <>
-              {primeiros.map((p) => (
-                <PlaceCard key={p.id} place={p} />
+              {primeiros.map((p, i) => (
+                <PlaceCard key={p.id} place={p} index={i} />
               ))}
               <Text className="font-body text-xs text-dim">
                 O selo aparece a partir de {RATING_MIN} avaliações. Some a sua.
@@ -251,8 +251,8 @@ export default function HomeScreen() {
           {occurrences.length === 0 && (
             <Text className="font-body text-sm text-dim">Ainda não há relatos nesta cidade.</Text>
           )}
-          {occurrences.slice(0, 6).map((o) => (
-            <OccurrenceCard key={o.id} occurrence={o} />
+          {occurrences.slice(0, 6).map((o, i) => (
+            <OccurrenceCard key={o.id} occurrence={o} index={i} />
           ))}
         </View>
 

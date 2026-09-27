@@ -6,6 +6,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { EmergencyButton } from "@/components/EmergencyButton";
 import { Glass } from "@/components/Glass";
 import { Logo } from "@/components/Logo";
+import { TabIcon } from "@/components/TabIcon";
 import { colors, fonts, glass, tabColors } from "@/theme/tokens";
 
 export default function TabsLayout() {
@@ -63,7 +64,9 @@ export default function TabsLayout() {
         options={{
           tabBarActiveTintColor: tabColors.index,
           title: "Início",
-          tabBarIcon: ({ color }) => <Home color={color} size={22} />,
+          tabBarIcon: ({ color, focused }) => (
+            <TabIcon icon={Home} color={color} focused={focused} active={tabColors.index} />
+          ),
         }}
       />
       <Tabs.Screen
@@ -71,7 +74,9 @@ export default function TabsLayout() {
         options={{
           tabBarActiveTintColor: tabColors.mapa,
           title: "Mapa",
-          tabBarIcon: ({ color }) => <Map color={color} size={22} />,
+          tabBarIcon: ({ color, focused }) => (
+            <TabIcon icon={Map} color={color} focused={focused} active={tabColors.mapa} />
+          ),
         }}
       />
       <Tabs.Screen
@@ -79,7 +84,9 @@ export default function TabsLayout() {
         options={{
           tabBarActiveTintColor: tabColors.lugares,
           title: "Lugares",
-          tabBarIcon: ({ color }) => <Store color={color} size={22} />,
+          tabBarIcon: ({ color, focused }) => (
+            <TabIcon icon={Store} color={color} focused={focused} active={tabColors.lugares} />
+          ),
         }}
       />
       {/* Registrar saiu da barra: o botão vermelho no Início e no Mapa leva até aqui. A rota
@@ -90,7 +97,9 @@ export default function TabsLayout() {
         options={{
           tabBarActiveTintColor: tabColors.apoio,
           title: "Apoio",
-          tabBarIcon: ({ color }) => <LifeBuoy color={color} size={22} />,
+          tabBarIcon: ({ color, focused }) => (
+            <TabIcon icon={LifeBuoy} color={color} focused={focused} active={tabColors.apoio} />
+          ),
         }}
       />
       <Tabs.Screen
@@ -98,7 +107,9 @@ export default function TabsLayout() {
         options={{
           tabBarActiveTintColor: tabColors.perfil,
           title: "Perfil",
-          tabBarIcon: ({ color }) => <User color={color} size={22} />,
+          tabBarIcon: ({ color, focused }) => (
+            <TabIcon icon={User} color={color} focused={focused} active={tabColors.perfil} />
+          ),
         }}
       />
     </Tabs>

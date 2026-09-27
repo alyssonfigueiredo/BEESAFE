@@ -132,7 +132,9 @@ export default function LugaresScreen() {
             </ScrollView>
           </View>
         }
-        renderItem={({ item }) => <PlaceCard place={item.place} distance={item.distance} />}
+        renderItem={({ item, index }) => (
+          <PlaceCard place={item.place} distance={item.distance} index={index} />
+        )}
         ListEmptyComponent={
           <Text className="font-body text-sm text-dim">
             {isLoading ? "Carregando…" : "Nada com esse nome por aqui."}

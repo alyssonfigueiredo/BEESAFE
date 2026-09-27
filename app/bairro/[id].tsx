@@ -129,7 +129,7 @@ export default function BairroScreen() {
           {lugares.length === 0 ? (
             <Text className="font-body text-sm text-dim">Nenhum lugar cadastrado aqui ainda.</Text>
           ) : (
-            lugares.map((p) => <PlaceCard key={p.id} place={p} />)
+            lugares.map((p, i) => <PlaceCard key={p.id} place={p} index={i} />)
           )}
         </View>
 
@@ -141,7 +141,7 @@ export default function BairroScreen() {
               que ninguém registrou.
             </Text>
           ) : (
-            relatos.map((o) => <OccurrenceCard key={o.id} occurrence={o} />)
+            relatos.map((o, i) => <OccurrenceCard key={o.id} occurrence={o} index={i} />)
           )}
         </View>
       </ScrollView>

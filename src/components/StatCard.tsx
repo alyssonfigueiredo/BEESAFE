@@ -1,6 +1,8 @@
 import type { LucideIcon } from "lucide-react-native";
 import { Text, View } from "react-native";
 
+import { CountUp } from "@/components/CountUp";
+
 import { onLight } from "@/theme/domain";
 import { colors, shadow } from "@/theme/tokens";
 
@@ -34,14 +36,23 @@ export function StatCard({
           </View>
         )}
       </View>
-      <Text
-        className="font-display text-3xl text-ink"
-        style={color ? { color: onLight(color) } : undefined}
-        numberOfLines={1}
-        adjustsFontSizeToFit
-      >
-        {value}
-      </Text>
+      {typeof value === "number" ? (
+        <CountUp
+          value={value}
+          className="font-display text-3xl text-ink"
+          style={color ? { color: onLight(color) } : undefined}
+          numberOfLines={1}
+        />
+      ) : (
+        <Text
+          className="font-display text-3xl text-ink"
+          style={color ? { color: onLight(color) } : undefined}
+          numberOfLines={1}
+          adjustsFontSizeToFit
+        >
+          {value}
+        </Text>
+      )}
       {!!note && <Text className="font-body text-xs text-dim">{note}</Text>}
     </View>
   );

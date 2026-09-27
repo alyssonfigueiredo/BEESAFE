@@ -204,8 +204,14 @@ Nome: **Irisa** (INPI livre; @irisapp livre). Bundle id `br.com.irisa.app`. Cont
   normal, cartão escuro no Início e no resumo do bairro, busca + filtros no Início, estatísticas com
   ícone tonal (`StatCard`), azulejo por categoria no `PlacePhoto` (cinza em lugar sem nota, `muted`),
   Mapa em tela cheia com chips flutuantes e folha de vidro (`app/(tabs)/mapa.tsx`), pergunta da marca
-  em arco-íris (`RainbowText`), aba ativa com lente branca e cor própria (`tabColors`). Faltam as
-  animações do protótipo (splash do radar, cinza→cor, aba acendendo): são Reanimated, próxima etapa.
+  em arco-íris (`RainbowText`), aba ativa com lente branca e cor própria (`tabColors`).
+  **Animações (Reanimated) aplicadas na sequência:** `Splash.tsx` (o radar pinta o anel, 2,7 s,
+  montado em `app/_layout.tsx` por cima de tudo depois das fontes; 0,3 s com "reduzir movimento"),
+  `TabIcon.tsx` (ícone da aba sai do cinza, passa pelo arco-íris e pousa na cor da aba, com pulinho),
+  `PlacePhoto` com `muted`+`progress` (foto/azulejo cinza que ganha um quarto de cor por pergunta
+  respondida na ficha; foto real usa `filter: grayscale` do RN 0.86 a zero respostas e um véu que
+  some depois), `IrisScore` enchendo gomo a gomo, `CountUp.tsx` (nota e estatísticas contam),
+  `AxisStrip` crescendo, `PlaceCard`/`OccurrenceCard` entrando escalonados (`index`).
   Protótipo navegável que originou isso: `docs/prototipo-ios27.html`; comparação atual × proposta,
   apresentação para o Alysson em `docs/apresentacao-liquid.html`; plano de lançamento em
   `docs/plano-lancamento.html` (nenhum deles é publicado no site).

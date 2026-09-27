@@ -20,6 +20,7 @@ import { useScreenInsets } from "@/hooks/useScreenInsets";
 import { AreaLevel } from "@/components/AreaLevel";
 import { AxisBars } from "@/components/AxisBars";
 import { Badge } from "@/components/Badge";
+import { CountUp } from "@/components/CountUp";
 import { IrisScore } from "@/components/IrisScore";
 import { PlacePhoto } from "@/components/PlacePhoto";
 import { RainbowText } from "@/components/RainbowText";
@@ -56,6 +57,8 @@ export default function PlaceScreen() {
           comment: mine?.comment ?? "",
         };
   const missing = AXIS_KEYS.filter((k) => !current[k]);
+  // Lugar sem nota: cada pergunta respondida devolve um quarto da cor à foto.
+  const respondidas = AXIS_KEYS.length - missing.length;
 
   async function submit() {
     if (missing.length) return Alert.alert(`Falta responder: ${AXES[missing[0]].label}.`);
@@ -133,6 +136,7 @@ export default function PlaceScreen() {
               photoAuthorUri={place.photo_author_uri}
               variant="banner"
               muted={place.score == null}
+              progress={respondidas / AXIS_KEYS.length}
             />
             <View className="flex-row items-center gap-2">
               <Text className="flex-1 font-display text-3xl uppercase tracking-wide text-ink">
@@ -193,19 +197,21 @@ export default function PlaceScreen() {
 
             {score == null ? (
               <Text className="font-body text-base text-dim">
-                Ninguém avaliou ainda. Seja a primeira pessoa a dizer.
+                {respondidas === AXIS_KEYS.length
+                  ? "Esse lugar ganhou cor. Envie a avaliação para ela ficar."
+                  : "Ninguém avaliou ainda. Seja a primeira pessoa a dizer."}
               </Text>
             ) : (
               <View className="mt-2 gap-3">
                 <View className="flex-row items-center gap-3">
                   <IrisScore value={score} size={54} />
                   <View className="flex-1 gap-1">
-                    <Text
+                    <CountUp
+                      value={score}
+                      decimals={1}
                       className="font-display text-4xl"
                       style={{ color: placeScoreColor(score) }}
-                    >
-                      {score.toFixed(1)}
-                    </Text>
+                    />
                     {place.badge && <Badge badge={place.badge} size="lg" />}
                     <Text className="font-body text-xs text-dim">
                       {place.rating_count} avaliaç{place.rating_count === 1 ? "ão" : "ões"} de quem

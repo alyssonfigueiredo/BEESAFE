@@ -12,12 +12,13 @@ import { useFonts } from "expo-font";
 import { Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import { StatusBar } from "expo-status-bar";
-import { useEffect } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 
 import { queryClient } from "@/lib/query";
 import { AuthProvider, useAuth } from "@/providers/AuthProvider";
+import { Splash } from "@/components/Splash";
 import { CityProvider } from "@/providers/CityProvider";
 import { colors } from "@/theme/tokens";
 
@@ -55,6 +56,10 @@ export default function RootLayout() {
     if (fontsLoaded || fontError) SplashScreen.hideAsync();
   }, [fontsLoaded, fontError]);
 
+  // O splash nativo (estático) dá lugar ao radar animado assim que as fontes carregam.
+  const [abrindo, setAbrindo] = useState(true);
+  const fecharSplash = useCallback(() => setAbrindo(false), []);
+
   if (!fontsLoaded && !fontError) return null;
 
   return (
@@ -65,6 +70,7 @@ export default function RootLayout() {
             <CityProvider>
               <StatusBar style="dark" />
               <RootNavigator />
+              {abrindo && <Splash onDone={fecharSplash} />}
             </CityProvider>
           </AuthProvider>
         </QueryClientProvider>
