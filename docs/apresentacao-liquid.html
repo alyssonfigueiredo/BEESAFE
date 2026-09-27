@@ -1287,7 +1287,7 @@ function mountLive(host){
   sh.innerHTML=`<style>${PROTO_CSS}</style><div class="host" style="${host.classList.contains("crop")?"margin-top:calc(-612px * var(--k,.6))":""}"><div class="device" data-mode="nova">${PROTO_HTML}</div></div>`;
   const dev=sh.querySelector(".device");
   const app=createApp(dev,"nova");
-  const rec={app,timer:null,stop(){clearTimeout(rec.timer);rec.timer=null;app.closeModals()}};
+  const rec={app,host,timer:null,stop(){clearTimeout(rec.timer);rec.timer=null;app.closeModals()},noSplash(){const sp=host.shadowRoot.querySelector("#splash");sp.hidden=true;sp.innerHTML=""}};
   LIVE.set(host,rec);return rec;
 }
 function fitLive(host,slide){
@@ -1299,8 +1299,8 @@ function fitLive(host,slide){
 }
 const SCENES={
   splash(rec){const loop=()=>{rec.app.reset();rec.timer=setTimeout(loop,5600)};loop()},
-  tabs(rec){const tabs=["inicio","mapa","lugares","apoio","perfil"];let i=0;rec.app.goTab("inicio");const loop=()=>{i=(i+1)%tabs.length;rec.app.goTab(tabs[i]);rec.timer=setTimeout(loop,1400)};rec.timer=setTimeout(loop,1400)},
-  color(rec){const a=rec.app;const seq=[[()=>{a.goTab("lugares");a.go("lugar",6)},1200],[()=>a.rate(0),900],[()=>a.rate(1),900],[()=>a.rate(2),900],[()=>a.rate(3),1800],[()=>a.scroll(520),1800],[()=>a.back(),1200]];
+  tabs(rec){rec.noSplash();const tabs=["inicio","mapa","lugares","apoio","perfil"];let i=0;rec.app.goTab("inicio");const loop=()=>{i=(i+1)%tabs.length;rec.app.goTab(tabs[i]);rec.timer=setTimeout(loop,1400)};rec.timer=setTimeout(loop,1400)},
+  color(rec){rec.noSplash();const a=rec.app;const seq=[[()=>{a.goTab("lugares");a.go("lugar",6)},1200],[()=>a.rate(0),900],[()=>a.rate(1),900],[()=>a.rate(2),900],[()=>a.rate(3),1800],[()=>a.scroll(520),1800],[()=>a.back(),1200]];
     let i=0;const step=()=>{const[f,d]=seq[i];f();i=(i+1)%seq.length;rec.timer=setTimeout(step,d)};step()}
 };
 function startLive(slide){slide.querySelectorAll(".live").forEach(host=>{const rec=mountLive(host);fitLive(host,slide);rec.stop();SCENES[host.dataset.scene](rec)})}
