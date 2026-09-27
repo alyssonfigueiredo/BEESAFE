@@ -72,6 +72,9 @@ Nome: **Irisa** (INPI livre; @irisapp livre). Bundle id `br.com.irisa.app`. Cont
   `MODE=story` (k 1.2245 → 60 s, máximo de um story sem cortar), `MODE=storybio` (60 s, fecho "O link
   está na bio" + @irisapp + cidades, `docs/Irisa-story-bio.mp4`) e `MODE=reels` (k 1.592 → 78 s, mesmo
   fecho, `docs/Irisa-reels.mp4`; Reels não aceita adesivo nem link na legenda). `?bio` na URL liga o fecho. Link camuflado: bit.ly/appirisa (conta dele) apontando para o site.
+  **Abertura para vídeo (27/09/2026):** `docs/abertura.html` é o radar do splash sozinho, em HTML+CSS
+  (360×640 escalado ×3), com `?formato=story|quadrado`, `?bg=paper|night|verde` (chroma) e `?semfim`;
+  `node scripts/abertura-video.mjs` grava em MP4 (`FORMATO=`, `BG=`). 4,2 s, sai de cena no fim.
   **Carrossel de estreia:** `docs/carrossel.html` (8 lâminas 1080×1350, mesmo estilo) e
   `node scripts/carrossel-png.mjs` exporta `docs/carrossel/01..08.png`. Fecha com "O link está na bio".
   Segundo post: `docs/carrossel-2.html` ("Estrelas não dizem nada pra gente": as quatro perguntas com
