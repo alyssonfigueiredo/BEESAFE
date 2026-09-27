@@ -12,6 +12,7 @@
   Parâmetros na URL:
     ?v=radar           só o radar (padrão, 4,2 s)
     ?v=1               coração arco-íris → o radar varre a tela inteira pintando os gomos → círculo branco abre → radar (8 s)
+    ?v=3               teste: coração → varredura enche a tela → as cores saem acompanhando o radar, que pinta a logo (7,9 s)
     ?v=2               radar → a varredura sai do anel e pinta a tela inteira, gomo a gomo; as cores saem do mesmo jeito e termina no branco (7,9 s)
     ?formato=story     1080×1920 (padrão)      ?formato=quadrado  1080×1080     ?formato=reels  = story
     ?bg=paper          fundo papel com aurora (padrão)
@@ -83,7 +84,7 @@
 
   /* ---------- Versão 1: coração → espiral → círculo branco → radar ---------- */
   .stage{background:var(--paper)}
-  [data-v="1"] .stage{background-image:
+  [data-v="1"] .stage,[data-v="3"] .stage{background-image:
     radial-gradient(60% 34% at -6% 0%,color-mix(in srgb,var(--turq) 42%,transparent),transparent 62%),
     radial-gradient(50% 30% at 106% 8%,color-mix(in srgb,var(--coral) 34%,transparent),transparent 62%),
     radial-gradient(55% 32% at 104% 100%,color-mix(in srgb,var(--lilac) 40%,transparent),transparent 62%),
@@ -106,6 +107,18 @@
   [data-v="1"] .splash{clip-path:circle(0 at 50% 50%);animation:wipe .8s cubic-bezier(.4,0,.2,1) var(--wipe) forwards}
   [data-v="1"] .splash.fim{animation:wipe .8s cubic-bezier(.4,0,.2,1) var(--wipe) forwards,lift .6s cubic-bezier(.4,0,.2,1) var(--fim) forwards}
   @keyframes wipe{to{clip-path:circle(80% at 50% 50%)}}
+
+  /* ---------- Versão 3 (teste): as cores saem com o radar da logo ---------- */
+  [data-v="3"] .splash{background:none}
+  [data-v="3"] .varre{z-index:1}
+  [data-v="3"] .marca{z-index:2}
+  [data-v="3"] .tag,[data-v="3"] .bar{z-index:2}
+  [data-v="3"] .logo,[data-v="3"] .bar{opacity:0;animation:logoIn .25s ease var(--saida) forwards}
+  /* as duas linhas giram em velocidade constante, no mesmo passo dos gomos que acendem e apagam */
+  [data-v="3"] .varre .bigsw{animation-timing-function:ease,linear,ease}
+  [data-v="3"] .sw{animation:sweepOnce 1.6s linear forwards,radar 7s linear 1.6s infinite}
+  [data-v="3"] .logo::before{content:"";position:absolute;inset:0;border-radius:50%;background:var(--paper);z-index:-1}
+  @keyframes logoIn{to{opacity:1}}
 
   /* ---------- Versão 2: o anel se expande e a tela inteira fica arco-íris ---------- */
   .logo{position:relative;width:132px;height:132px}
@@ -139,9 +152,9 @@ const formato=q.get("formato")==="quadrado"?"quadrado":"story";
 const bg=["night","verde"].includes(q.get("bg"))?q.get("bg"):"paper";
 const K=Math.max(.5,Number(q.get("k"))||1);
 const SEMFIM=q.has("semfim");
-const V=["1","2"].includes(q.get("v"))?q.get("v"):"radar";
+const V=["1","2","3"].includes(q.get("v"))?q.get("v"):"radar";
 // Linha do tempo base de cada versão (ms) e quando o radar começa dentro dela.
-const CENA={radar:{total:4200,off:0,fim:3500},1:{total:7800,off:4600,fim:7400,wipe:4400},2:{total:7900,off:0,flood:3000,saida:5500}}[V];
+const CENA={radar:{total:4200,off:0,fim:3500},1:{total:7800,off:4600,fim:7400,wipe:4400},2:{total:7900,off:0,flood:3000,saida:5500},3:{total:7900,off:4736,saida:4700}}[V];
 const TOTAL=CENA.total;
 document.documentElement.dataset.v=V;
 document.documentElement.dataset.formato=formato;
@@ -217,15 +230,17 @@ const sp=document.getElementById("splash");
 function montar(){
   stage.querySelectorAll(".heart,.varre").forEach(e=>e.remove());
   if(V==="1") sp.insertAdjacentHTML("beforebegin",HEART+varreSvg(2700,1500));
+  if(V==="3") sp.insertAdjacentHTML("beforebegin",HEART);
   sp.className="splash"+(SEMFIM||V!=="radar"?"":" fim");
   sp.style.setProperty("--fim",(CENA.fim*K)+"ms");
   sp.style.setProperty("--wipe",((CENA.wipe??0)*K)+"ms");
   sp.style.setProperty("--flood",((CENA.flood??0)*K)+"ms");
   sp.style.setProperty("--saida",((CENA.saida??0)*K)+"ms");
-  sp.innerHTML=`${V==="2"?varreSvg(CENA.flood,1600,-42,CENA.saida):""}<div class="marca"><div class="logo">${radarSvg()}</div><div class="word">Iris<b>a</b></div></div><div class="tag">quanta cor tem aqui?</div><div class="bar"><i></i></div>`;
+  sp.innerHTML=`${V==="2"?varreSvg(CENA.flood,1600,-42,CENA.saida):V==="3"?varreSvg(2700,1600,-42,CENA.saida):""}<div class="marca"><div class="logo">${radarSvg()}</div><div class="word">Iris<b>a</b></div></div><div class="tag">quanta cor tem aqui?</div><div class="bar"><i></i></div>`;
   // k estica só os inícios (não a velocidade de cada entrada); na v1 o radar começa depois do círculo abrir
   for(const a of sp.getAnimations({subtree:true})){const t=a.effect.getTiming();const nome=a.animationName||"";
-    const off=["wipe","lift","paintout","wordWhite","borda","bordaVolta","wordInk","bYellow"].includes(nome)?0:CENA.off;
+    const naVarredura=a.effect.target?.closest?.(".varre");
+    const off=naVarredura||["wipe","lift","paintout","wordWhite","borda","bordaVolta","wordInk","bYellow","logoIn"].includes(nome)?0:CENA.off;
     if(K!==1||off) a.effect.updateTiming({delay:(t.delay+off)*K})}
   if(K!==1) for(const a of stage.getAnimations({subtree:true})){if(sp.contains(a.effect.target))continue;const t=a.effect.getTiming();a.effect.updateTiming({delay:t.delay*K})}
 }

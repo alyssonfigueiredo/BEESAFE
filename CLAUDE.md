@@ -77,6 +77,8 @@ Nome: **Irisa** (INPI livre; @irisapp livre). Bundle id `br.com.irisa.app`. Cont
   `node scripts/abertura-video.mjs` grava em MP4 (`V=`, `FORMATO=`, `BG=`). `?v=radar` (4,2 s, o que
   está no app), `?v=1` (coração da apresentação → espiral arco-íris enche a tela → círculo branco abre →
   radar, 8 s), `?v=2` (radar → o anel se expande e a tela vira arco-íris com IRISA em branco e borda de 5 px no olho, as cores saem pela mesma varredura e termina no branco, 7,9 s).
+  `?v=3` (teste pedido por ele: coração → varredura enche a tela → as cores saem
+  pela varredura enquanto o radar da logo pinta o anel no mesmo passo, termina no branco, 7,9 s).
   `docs/abertura-rever.html` mostra as três lado a lado com Reiniciar. Ele ainda vai escolher (27/09).
   **Carrossel de estreia:** `docs/carrossel.html` (8 lâminas 1080×1350, mesmo estilo) e
   `node scripts/carrossel-png.mjs` exporta `docs/carrossel/01..08.png`. Fecha com "O link está na bio".
