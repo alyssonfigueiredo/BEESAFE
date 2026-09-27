@@ -2,14 +2,16 @@ import { Link } from "expo-router";
 import { useState } from "react";
 import { Alert, Pressable, ScrollView, Text, TextInput, View } from "react-native";
 
+import { useScreenInsets } from "@/hooks/useScreenInsets";
 import { CityPicker } from "@/components/CityPicker";
 import { useDeleteAccount, useProfile, useUpdateProfile } from "@/hooks/useProfile";
 import { supabase } from "@/lib/supabase";
 import { useAuth } from "@/providers/AuthProvider";
 import { useCity } from "@/providers/CityProvider";
-import { colors } from "@/theme/tokens";
+import { colors, shadow } from "@/theme/tokens";
 
 export default function PerfilScreen() {
+  const insets = useScreenInsets();
   const { session } = useAuth();
   const { city } = useCity();
   const { data: profile } = useProfile();
@@ -45,7 +47,8 @@ export default function PerfilScreen() {
   return (
     <ScrollView
       className="flex-1 bg-paper"
-      contentContainerClassName="gap-4 px-4 py-4"
+      contentContainerClassName="gap-4 px-4"
+      contentContainerStyle={insets}
       keyboardShouldPersistTaps="handled"
     >
       <View>
@@ -58,7 +61,7 @@ export default function PerfilScreen() {
         )}
       </View>
 
-      <View className="gap-3 rounded-xl border border-border bg-surface p-4">
+      <View className="gap-3 rounded-xl border border-border bg-surface p-4" style={shadow.card}>
         <Text className="font-heading text-sm uppercase tracking-widest text-muted">
           Apelido no mural e nas avaliações
         </Text>
@@ -77,7 +80,8 @@ export default function PerfilScreen() {
         <Pressable
           disabled={update.isPending}
           onPress={save}
-          className="items-center rounded-xl bg-turquoise py-3 active:opacity-80 disabled:opacity-50"
+          className="items-center rounded-full bg-turquoise py-3 active:opacity-80 disabled:opacity-50"
+          style={shadow.turquoise}
         >
           <Text className="font-heading text-base uppercase tracking-widest text-night">
             Salvar
@@ -85,7 +89,7 @@ export default function PerfilScreen() {
         </Pressable>
       </View>
 
-      <View className="gap-2 rounded-xl border border-border bg-surface p-4">
+      <View className="gap-2 rounded-xl border border-border bg-surface p-4" style={shadow.card}>
         <Text className="font-heading text-sm uppercase tracking-widest text-muted">
           Privacidade
         </Text>
@@ -97,7 +101,10 @@ export default function PerfilScreen() {
 
       {profile && profile.role !== "user" && (
         <Link href="/moderacao" asChild>
-          <Pressable className="items-center rounded-xl bg-lilac py-3 active:opacity-80">
+          <Pressable
+            className="items-center rounded-full bg-lilac py-3 active:opacity-80"
+            style={shadow.lilac}
+          >
             <Text className="font-heading text-base uppercase tracking-widest text-night">
               Fila de moderação
             </Text>
@@ -106,7 +113,7 @@ export default function PerfilScreen() {
       )}
       <Pressable
         onPress={() => supabase.auth.signOut()}
-        className="items-center rounded-xl border border-border py-3 active:opacity-80"
+        className="items-center rounded-full border border-border py-3 active:opacity-80"
       >
         <Text className="font-heading text-base uppercase tracking-widest text-muted">Sair</Text>
       </Pressable>

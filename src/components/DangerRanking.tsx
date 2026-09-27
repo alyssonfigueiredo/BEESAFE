@@ -4,7 +4,7 @@ import { Pressable, Text, View } from "react-native";
 
 import type { AreaRisk } from "@/lib/types";
 import { riskLevel } from "@/theme/domain";
-import { colors } from "@/theme/tokens";
+import { colors, shadow } from "@/theme/tokens";
 
 export function DangerRanking({
   items,
@@ -14,7 +14,7 @@ export function DangerRanking({
   title?: string;
 }) {
   return (
-    <View className="gap-3 rounded-xl border border-border bg-surface p-4">
+    <View className="gap-3 rounded-xl border border-border bg-surface p-4" style={shadow.card}>
       <Text className="font-heading text-base uppercase tracking-widest text-ink">{title}</Text>
       {items.length === 0 && (
         <Text className="font-body text-sm text-dim">

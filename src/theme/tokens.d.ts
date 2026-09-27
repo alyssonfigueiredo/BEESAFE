@@ -1,3 +1,5 @@
+import type { ViewStyle } from "react-native";
+
 export declare const colors: {
   paper: string;
   surface: string;
@@ -31,4 +33,36 @@ export declare const fonts: {
   body: string;
   bodyMedium: string;
   bodyBold: string;
+};
+export declare const glass: {
+  tint: string;
+  tintStrong: string;
+  edge: string;
+  tabBarHeight: number;
+  tabBarGap: number;
+  radius: number;
+};
+export declare const accents: Record<
+  | "coral"
+  | "orange"
+  | "yellow"
+  | "turquoise"
+  | "lilac"
+  | "coralInk"
+  | "orangeInk"
+  | "yellowInk"
+  | "turquoiseInk"
+  | "lilacInk"
+  | "amber",
+  string
+>;
+export declare const SATURATION: number;
+export declare function saturate(hex: string, k?: number): string;
+export declare const shadow: {
+  card: ViewStyle;
+  lift: ViewStyle;
+  turquoise: ViewStyle;
+  coral: ViewStyle;
+  yellow: ViewStyle;
+  lilac: ViewStyle;
 };

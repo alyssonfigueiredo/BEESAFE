@@ -3,8 +3,19 @@ import { ptBR } from "date-fns/locale";
 import { Link, Stack, useLocalSearchParams } from "expo-router";
 import { AlertTriangle, BadgeCheck, Navigation } from "lucide-react-native";
 import { useState } from "react";
-import { Alert, Linking, Platform, Pressable, ScrollView, Text, TextInput, View } from "react-native";
+import {
+  Alert,
+  Linking,
+  Platform,
+  Pressable,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TextInput,
+  View,
+} from "react-native";
 
+import { useScreenInsets } from "@/hooks/useScreenInsets";
 import { AreaLevel } from "@/components/AreaLevel";
 import { AxisBars } from "@/components/AxisBars";
 import { Badge } from "@/components/Badge";
@@ -15,11 +26,13 @@ import { ReportButton } from "@/components/ReportButton";
 import { usePlace, usePlaceRatings, useRatePlace } from "@/hooks/usePlaces";
 import { AXES, AXIS_KEYS, BADGES, PLACE_CATEGORIES, placeScoreColor } from "@/theme/domain";
 import type { Axis } from "@/theme/domain";
-import { colors } from "@/theme/tokens";
+import { Glass } from "@/components/Glass";
+import { colors, shadow } from "@/theme/tokens";
 
 type Draft = Record<Axis, number> & { key: string; comment: string };
 
 export default function PlaceScreen() {
+  const insets = useScreenInsets({ tabs: false });
   const { id } = useLocalSearchParams<{ id: string }>();
   const { data: place, isLoading } = usePlace(id);
   const { data: ratings = [] } = usePlaceRatings(id);
@@ -95,17 +108,20 @@ export default function PlaceScreen() {
           headerBackTitle: "Voltar",
           // O nome já é o título do cartão; repetir no header era ruído.
           title: "",
-          headerStyle: { backgroundColor: colors.paper },
+          headerTransparent: true,
+          headerStyle: { backgroundColor: "transparent" },
+          headerBackground: () => <Glass style={StyleSheet.absoluteFill} />,
           headerTintColor: colors.ink,
           headerShadowVisible: false,
         }}
       />
       <ScrollView
         className="flex-1 bg-paper"
-        contentContainerClassName="gap-4 px-4 py-4"
+        contentContainerClassName="gap-4 px-4"
+        contentContainerStyle={insets}
         keyboardShouldPersistTaps="handled"
       >
-        <View className="gap-2 rounded-2xl border border-border bg-surface p-5">
+        <View className="gap-2 rounded-2xl border border-border bg-surface p-5" style={shadow.card}>
           <PlacePhoto
             category={place.category}
             photoName={place.photo_name}
@@ -202,13 +218,17 @@ export default function PlaceScreen() {
         <Pressable
           onPress={comoChegar}
           className="flex-row items-center gap-2 rounded-xl border border-border bg-surface px-4 py-3 active:opacity-80"
+          style={shadow.card}
         >
           <Navigation color={colors.turquoiseInk} size={18} />
           <Text className="font-body-medium text-sm text-ink">Como chegar</Text>
         </Pressable>
 
         {formVisivel ? (
-          <View className="gap-4 rounded-xl border border-border bg-surface p-4">
+          <View
+            className="gap-4 rounded-xl border border-border bg-surface p-4"
+            style={shadow.card}
+          >
             <Text className="font-heading text-base uppercase tracking-widest text-ink">
               {mine ? "Sua avaliação" : "Como foi lá?"}
             </Text>
@@ -236,7 +256,8 @@ export default function PlaceScreen() {
             <Pressable
               disabled={rate.isPending}
               onPress={submit}
-              className="items-center rounded-xl bg-yellow py-3 active:opacity-80 disabled:opacity-50"
+              className="items-center rounded-full bg-yellow py-3 active:opacity-80 disabled:opacity-50"
+              style={shadow.yellow}
             >
               <Text className="font-heading text-base uppercase tracking-widest text-night">
                 {rate.isPending ? "Enviando…" : mine ? "Atualizar" : "Enviar avaliação"}
@@ -246,7 +267,7 @@ export default function PlaceScreen() {
         ) : (
           <Pressable
             onPress={() => setAbrirForm(true)}
-            className="items-center rounded-xl border border-border bg-surface py-3 active:opacity-80"
+            className="items-center rounded-full border border-border bg-surface py-3 active:opacity-80"
           >
             <Text className="font-heading text-base uppercase tracking-widest text-muted">
               Avaliar este lugar
@@ -260,7 +281,11 @@ export default function PlaceScreen() {
               Avaliações
             </Text>
             {ratings.map((r) => (
-              <View key={r.id} className="gap-1 rounded-xl border border-border bg-surface p-4">
+              <View
+                key={r.id}
+                className="gap-1 rounded-xl border border-border bg-surface p-4"
+                style={shadow.card}
+              >
                 <View className="flex-row items-center justify-between">
                   <Rainbow value={Number(r.overall ?? r.stars ?? 0)} size={7} />
                   <Text className="font-body text-xs text-dim">

@@ -17,7 +17,7 @@ import {
   type OccurrenceSetting,
   type OccurrenceType,
 } from "@/theme/domain";
-import { colors } from "@/theme/tokens";
+import { colors, shadow } from "@/theme/tokens";
 
 /**
  * A tela onde os dois lados do app se encontram: o que aconteceu nesta área e onde a comunidade
@@ -50,7 +50,7 @@ export default function BairroScreen() {
     <ScrollView className="flex-1 bg-paper" contentContainerClassName="gap-4 px-4 py-4">
       <Stack.Screen options={{ title: resumo.neighborhood }} />
 
-      <View className="gap-2 rounded-2xl border border-border bg-surface p-5">
+      <View className="gap-2 rounded-2xl border border-border bg-surface p-5" style={shadow.card}>
         <Text className="font-body text-xs uppercase tracking-widest text-dim">
           {resumo.city} · {resumo.state}
         </Text>
@@ -63,7 +63,9 @@ export default function BairroScreen() {
           </Text>
           <Text className="font-body text-sm text-dim">
             {resumo.total} relato{Number(resumo.total) === 1 ? "" : "s"} em 12 meses
-            {Number(resumo.high) > 0 ? `, ${resumo.high} grave${Number(resumo.high) === 1 ? "" : "s"}` : ""}
+            {Number(resumo.high) > 0
+              ? `, ${resumo.high} grave${Number(resumo.high) === 1 ? "" : "s"}`
+              : ""}
           </Text>
         </View>
         <Text className="font-body text-xs text-dim">
@@ -76,7 +78,7 @@ export default function BairroScreen() {
       {/* O que a área concentra. Só aparece o que a comunidade informou — campo em branco fica de
           fora em vez de virar "não informado" ocupando espaço. */}
       {Number(resumo.total) > 0 && (
-        <View className="gap-4 rounded-xl border border-border bg-surface p-4">
+        <View className="gap-4 rounded-xl border border-border bg-surface p-4" style={shadow.card}>
           <Text className="font-heading text-base uppercase tracking-widest text-ink">
             O que foi relatado
           </Text>
@@ -156,7 +158,10 @@ function Contagem({
           <Text className="w-32 font-body text-xs text-muted" numberOfLines={1}>
             {rotulo(i.k)}
           </Text>
-          <View className="h-2 flex-1 overflow-hidden rounded-full" style={{ backgroundColor: colors.subtle }}>
+          <View
+            className="h-2 flex-1 overflow-hidden rounded-full"
+            style={{ backgroundColor: colors.subtle }}
+          >
             <View
               style={{
                 width: `${Math.round((i.v / maior) * 100)}%`,

@@ -4,6 +4,7 @@ import { ExternalLink, Heart, Phone } from "lucide-react-native";
 import { useState } from "react";
 import { Alert, Linking, Pressable, ScrollView, Text, TextInput, View } from "react-native";
 
+import { useScreenInsets } from "@/hooks/useScreenInsets";
 import { ReportButton } from "@/components/ReportButton";
 import {
   usePostSupportMessage,
@@ -13,7 +14,7 @@ import {
 } from "@/hooks/useSupport";
 import { useCity } from "@/providers/CityProvider";
 import { onLight, SUPPORT_CATEGORIES, type SupportCategory } from "@/theme/domain";
-import { colors } from "@/theme/tokens";
+import { colors, shadow } from "@/theme/tokens";
 
 const CATEGORY_KEYS = Object.keys(SUPPORT_CATEGORIES) as SupportCategory[];
 const KIND_LABEL: Record<string, string> = {
@@ -26,6 +27,7 @@ const KIND_LABEL: Record<string, string> = {
 };
 
 export default function ApoioScreen() {
+  const insets = useScreenInsets();
   const { city } = useCity();
   const { data: messages = [] } = useSupportMessages();
   const { data: services = [] } = useSupportServices(city?.id);
@@ -48,7 +50,8 @@ export default function ApoioScreen() {
   return (
     <ScrollView
       className="flex-1 bg-paper"
-      contentContainerClassName="gap-4 px-4 py-4"
+      contentContainerClassName="gap-4 px-4"
+      contentContainerStyle={insets}
       keyboardShouldPersistTaps="handled"
     >
       <View>
@@ -56,7 +59,7 @@ export default function ApoioScreen() {
         <Text className="font-body text-sm text-dim">Mural da comunidade e serviços de apoio</Text>
       </View>
 
-      <View className="gap-3 rounded-xl border border-border bg-surface p-4">
+      <View className="gap-3 rounded-xl border border-border bg-surface p-4" style={shadow.card}>
         <Text className="font-heading text-base uppercase tracking-widest text-ink">
           Deixe uma mensagem
         </Text>
@@ -102,7 +105,8 @@ export default function ApoioScreen() {
         <Pressable
           disabled={post.isPending}
           onPress={submit}
-          className="items-center rounded-xl bg-turquoise py-3 active:opacity-80 disabled:opacity-50"
+          className="items-center rounded-full bg-turquoise py-3 active:opacity-80 disabled:opacity-50"
+          style={shadow.turquoise}
         >
           <Text className="font-heading text-base uppercase tracking-widest text-night">
             {post.isPending ? "Enviando…" : "Publicar"}
@@ -114,7 +118,11 @@ export default function ApoioScreen() {
         {messages.map((m) => {
           const c = SUPPORT_CATEGORIES[m.category];
           return (
-            <View key={m.id} className="gap-2 rounded-xl border border-border bg-surface p-4">
+            <View
+              key={m.id}
+              className="gap-2 rounded-xl border border-border bg-surface p-4"
+              style={shadow.card}
+            >
               <View className="flex-row items-center justify-between">
                 <View className="rounded-full px-3 py-1" style={{ backgroundColor: c.color }}>
                   <Text className="font-body-bold text-xs uppercase tracking-wider text-night">
@@ -147,7 +155,7 @@ export default function ApoioScreen() {
         })}
       </View>
 
-      <View className="gap-3 rounded-xl border border-border bg-surface p-4">
+      <View className="gap-3 rounded-xl border border-border bg-surface p-4" style={shadow.card}>
         <Text className="font-heading text-base uppercase tracking-widest text-ink">
           Serviços de apoio{city ? ` · ${city.name}` : ""}
         </Text>

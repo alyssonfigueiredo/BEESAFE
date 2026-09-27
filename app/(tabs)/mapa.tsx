@@ -2,6 +2,7 @@ import { Link, useRouter } from "expo-router";
 import { useMemo, useState } from "react";
 import { Pressable, ScrollView, Text, View } from "react-native";
 
+import { useScreenInsets } from "@/hooks/useScreenInsets";
 import { CityMap } from "@/components/CityMap";
 import { DangerRanking } from "@/components/DangerRanking";
 import { OccurrenceCard } from "@/components/OccurrenceCard";
@@ -10,11 +11,12 @@ import { usePlaces } from "@/hooks/usePlaces";
 import type { PublicOccurrence } from "@/lib/types";
 import { useCity } from "@/providers/CityProvider";
 import { OCCURRENCE_TYPES, onLight, SEVERITIES, type OccurrenceType } from "@/theme/domain";
-import { colors } from "@/theme/tokens";
+import { colors, shadow } from "@/theme/tokens";
 
 const TYPE_KEYS = Object.keys(OCCURRENCE_TYPES) as OccurrenceType[];
 
 export default function MapaScreen() {
+  const insets = useScreenInsets();
   const { city, loading } = useCity();
   const { data: occurrences = [], isLoading } = useOccurrences(city?.id);
   const { data: ranking = [] } = useAreaRisk(city?.id, 6);
@@ -47,7 +49,11 @@ export default function MapaScreen() {
   }
 
   return (
-    <ScrollView className="flex-1 bg-paper" contentContainerClassName="gap-4 px-4 py-4">
+    <ScrollView
+      className="flex-1 bg-paper"
+      contentContainerClassName="gap-4 px-4"
+      contentContainerStyle={insets}
+    >
       <View className="flex-row items-end justify-between">
         <View>
           <Text className="font-display text-3xl uppercase tracking-widest text-ink">Mapa</Text>
@@ -56,7 +62,10 @@ export default function MapaScreen() {
           </Text>
         </View>
         <Link href="/registrar" asChild>
-          <Pressable className="rounded-xl bg-coral px-4 py-2 active:opacity-80">
+          <Pressable
+            className="rounded-full bg-coral px-4 py-2 active:opacity-80"
+            style={shadow.coral}
+          >
             <Text className="font-heading text-sm uppercase tracking-widest text-night">
               Registrar
             </Text>
@@ -115,7 +124,7 @@ export default function MapaScreen() {
 
       <DangerRanking items={ranking} />
 
-      <View className="gap-2 rounded-xl border border-border bg-surface p-4">
+      <View className="gap-2 rounded-xl border border-border bg-surface p-4" style={shadow.card}>
         <Text className="font-heading text-base uppercase tracking-widest text-ink">Legenda</Text>
         <View className="flex-row flex-wrap gap-x-4 gap-y-1">
           {Object.values(SEVERITIES).map((s) => (

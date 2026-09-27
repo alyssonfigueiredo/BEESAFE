@@ -14,7 +14,7 @@ const config: ExpoConfig = {
   icon: "./assets/icon.png",
   userInterfaceStyle: "light",
   backgroundColor: "#FAF9F6",
-  primaryColor: "#F4736F",
+  primaryColor: "#D98C8A", // coral com a saturação a 60 % (src/theme/tokens.js)
   ios: {
     bundleIdentifier: "br.com.irisa.app",
     supportsTablet: false,

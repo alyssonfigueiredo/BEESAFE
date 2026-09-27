@@ -1,6 +1,7 @@
 import { Link } from "expo-router";
 import { Pressable, ScrollView, Text, View } from "react-native";
 
+import { useScreenInsets } from "@/hooks/useScreenInsets";
 import { CityPicker } from "@/components/CityPicker";
 import { DangerRanking } from "@/components/DangerRanking";
 import { OccurrenceCard } from "@/components/OccurrenceCard";
@@ -11,9 +12,10 @@ import { usePlaces, useWelcoming } from "@/hooks/usePlaces";
 import { PlaceCard } from "@/components/PlaceCard";
 import { useCity } from "@/providers/CityProvider";
 import { OCCURRENCE_TYPES, RATING_MIN } from "@/theme/domain";
-import { colors } from "@/theme/tokens";
+import { colors, shadow } from "@/theme/tokens";
 
 export default function HomeScreen() {
+  const insets = useScreenInsets();
   const { city, loading } = useCity();
   const { data: stats } = useCityStats(city?.id);
   const { data: occurrences = [] } = useOccurrences(city?.id);
@@ -29,32 +31,39 @@ export default function HomeScreen() {
     .slice(0, 5);
 
   return (
-    <ScrollView className="flex-1 bg-paper" contentContainerClassName="gap-4 px-4 py-4">
-      <View className="gap-3 rounded-2xl border border-border bg-surface p-5">
-        <Text className="font-body text-xs uppercase tracking-widest text-dim">
-          Sua cidade
-        </Text>
+    <ScrollView
+      className="flex-1 bg-paper"
+      contentContainerClassName="gap-4 px-4"
+      contentContainerStyle={insets}
+    >
+      <View className="gap-3 rounded-2xl border border-border bg-surface p-5" style={shadow.card}>
+        <Text className="font-body text-xs uppercase tracking-widest text-dim">Sua cidade</Text>
         <Text className="font-display text-4xl uppercase tracking-widest text-ink">
           {loading ? "Localizando…" : (city?.name ?? "Sem cidade")}
         </Text>
         <CityPicker />
         <Text className="font-body text-sm text-muted">
-          O mapa dos lugares onde a gente é bem-vinde, feito por nós. Diga quanta cor tem os
-          lugares por onde você passa. E registre, sem se identificar, o que não deveria ter
-          acontecido.
+          O mapa dos lugares onde a gente é bem-vinde, feito por nós. Diga quanta cor tem os lugares
+          por onde você passa. E registre, sem se identificar, o que não deveria ter acontecido.
         </Text>
         {/* Dois botões do mesmo tamanho: avaliar é o uso de toda semana, registrar é o uso que
             ninguém quer precisar — e nenhum dos dois pode parecer secundário. */}
         <View className="flex-row gap-2">
           <Link href="/lugares" asChild>
-            <Pressable className="flex-1 items-center rounded-xl bg-turquoise py-3 active:opacity-80">
+            <Pressable
+              className="flex-1 items-center rounded-full bg-turquoise py-3 active:opacity-80"
+              style={shadow.turquoise}
+            >
               <Text className="font-heading text-sm uppercase tracking-widest text-night">
                 Avaliar um lugar
               </Text>
             </Pressable>
           </Link>
           <Link href="/registrar" asChild>
-            <Pressable className="flex-1 items-center rounded-xl bg-coral py-3 active:opacity-80">
+            <Pressable
+              className="flex-1 items-center rounded-full bg-coral py-3 active:opacity-80"
+              style={shadow.coral}
+            >
               <Text className="font-heading text-sm uppercase tracking-widest text-night">
                 Registrar relato
               </Text>
@@ -85,7 +94,10 @@ export default function HomeScreen() {
               avaliações são as que fazem o mapa existir.
             </Text>
             <Link href="/lugares" asChild>
-              <Pressable className="items-center rounded-xl bg-turquoise py-3 active:opacity-80">
+              <Pressable
+                className="items-center rounded-full bg-turquoise py-3 active:opacity-80"
+                style={shadow.turquoise}
+              >
                 <Text className="font-heading text-sm uppercase tracking-widest text-night">
                   Começar por um lugar
                 </Text>
