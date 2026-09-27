@@ -292,7 +292,7 @@
 const slides=[...document.querySelectorAll(".slide")],N=slides.length;
 const dots=document.getElementById("dots"),bar=document.getElementById("bar"),count=document.getElementById("count"),prev=document.getElementById("prev"),next=document.getElementById("next");
 // palavras dos títulos entram uma a uma
-document.querySelectorAll("h1,h2").forEach(h=>{let i=0;h.innerHTML=h.innerHTML.replace(/(<span class="rb">[^<]*<\/span>|[^\s<>]+)/g,m=>`<span class="w" style="--w:${i++}">${m}</span>`)});
+document.querySelectorAll("h1,h2").forEach(h=>{let i=0;h.innerHTML=h.innerHTML.replace(/(<br\s*\/?>|<span class="rb">[^<]*<\/span>|[^\s<>]+)/g,m=>/^<br/i.test(m)?m:`<span class="w" style="--w:${i++}">${m}</span>`)});
 slides.forEach((s,i)=>{const b=document.createElement("button");b.setAttribute("aria-label",`Cartão ${i+1}`);b.addEventListener("click",()=>go(i));dots.appendChild(b)});
 let cur=-1;
 function go(n){
