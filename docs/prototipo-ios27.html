@@ -20,9 +20,10 @@
     --shadow-card:0 2px 4px rgba(20,24,41,.03),0 12px 32px rgba(20,24,41,.06);
     --shadow-lift:0 2px 6px rgba(20,24,41,.06),0 14px 32px rgba(20,24,41,.10);
     /* vidro */
-    --glass:rgba(255,255,255,.66); --glass-strong:rgba(255,255,255,.82); --glass-edge:rgba(20,24,41,.06);
-    --glass-shadow:0 8px 24px rgba(20,24,41,.08),0 1px 2px rgba(20,24,41,.04);
-    --glass-inset:inset 0 0 0 1px rgba(255,255,255,.5);
+    --glass:rgba(255,255,255,.38); --glass-strong:rgba(255,255,255,.72); --glass-edge:rgba(255,255,255,.55);
+    --glass-shadow:0 10px 30px rgba(20,24,41,.10),0 1px 2px rgba(20,24,41,.05);
+    --glass-inset:inset 0 1px 0 rgba(255,255,255,.85),inset 0 0 0 1px rgba(255,255,255,.35),inset 0 -1px 0 rgba(20,24,41,.04);
+    --pane:rgba(255,255,255,.58); --pane-edge:rgba(255,255,255,.75);
     --r-xl:28px; --r-lg:24px; --r-md:18px; --r-sm:14px;
     --wordmark:"Urbanist","Helvetica Neue",Arial,sans-serif;
     --display:"Oswald","Arial Narrow",Impact,sans-serif;
@@ -78,12 +79,12 @@
   /* ---------- Vidro (Liquid Glass) ---------- */
   .glass{
     position:relative;background:var(--glass);
-    -webkit-backdrop-filter:blur(24px) saturate(1.5);backdrop-filter:blur(24px) saturate(1.5);
+    -webkit-backdrop-filter:blur(22px) saturate(1.6);backdrop-filter:blur(22px) saturate(1.6);
     border:1px solid var(--glass-edge);box-shadow:var(--glass-shadow),var(--glass-inset);
   }
   .glass::before{
     content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;
-    background:linear-gradient(180deg,rgba(255,255,255,.18),rgba(255,255,255,0));
+    background:radial-gradient(90% 60% at 18% 0%,rgba(255,255,255,.34),transparent 60%),linear-gradient(180deg,rgba(255,255,255,.22),rgba(255,255,255,0) 55%);
   }
   .glass>*{position:relative}
 
@@ -118,10 +119,10 @@
   .screens{position:absolute;inset:0}
   .screen{position:absolute;inset:0;overflow-y:auto;overflow-x:hidden;padding:var(--hdr) 16px var(--tabs);display:none;flex-direction:column;gap:14px;scrollbar-width:none;
     background:
-      radial-gradient(70% 38% at -8% -4%,color-mix(in srgb,var(--turq) 36%,transparent),transparent 62%),
-      radial-gradient(55% 32% at 108% 6%,color-mix(in srgb,var(--coral) 28%,transparent),transparent 62%),
-      radial-gradient(60% 36% at 106% 104%,color-mix(in srgb,var(--lilac) 34%,transparent),transparent 62%),
-      radial-gradient(50% 30% at -6% 102%,color-mix(in srgb,var(--yellow) 32%,transparent),transparent 62%),
+      radial-gradient(70% 38% at -8% -4%,color-mix(in srgb,var(--turq) 42%,transparent),transparent 62%),
+      radial-gradient(55% 32% at 108% 6%,color-mix(in srgb,var(--coral) 34%,transparent),transparent 62%),
+      radial-gradient(60% 36% at 106% 104%,color-mix(in srgb,var(--lilac) 40%,transparent),transparent 62%),
+      radial-gradient(50% 30% at -6% 102%,color-mix(in srgb,var(--yellow) 38%,transparent),transparent 62%),
       var(--paper)}
   .screen::-webkit-scrollbar{display:none}
   .screen>*{flex-shrink:0}
@@ -146,7 +147,12 @@
   [data-mode="atual"] .screen.fade{animation:fade .28s ease!important}
   [data-mode="atual"] .screen{background:var(--paper);gap:16px}
   [data-mode="atual"] .screen.bleed{background:#eeece7}
-  [data-mode="atual"] .glass{background:var(--paper);-webkit-backdrop-filter:none;backdrop-filter:none;border:0;box-shadow:none}
+  [data-mode="atual"] *{-webkit-backdrop-filter:none!important;backdrop-filter:none!important}
+  [data-mode="atual"] .glass{background:var(--paper);border:0;box-shadow:none}
+  [data-mode="atual"] .card,[data-mode="atual"] .place,[data-mode="atual"] .stat,[data-mode="atual"] .segc,[data-mode="atual"] .btn.ghost{background:var(--surface)}
+  [data-mode="atual"] .chip{box-shadow:none}
+  [data-mode="atual"] .segc{box-shadow:none}
+  [data-mode="atual"] .btn.ghost{box-shadow:none}
   [data-mode="atual"] .glass::before{display:none}
   [data-mode="atual"] .hdr{left:0;right:0;top:0;height:112px;padding:52px 12px 0 16px;border-radius:0}
   [data-mode="atual"] .tabbar{left:0;right:0;bottom:0;height:84px;border-radius:0;background:var(--surface);border-top:1px solid var(--border);padding:6px 6px 26px}
@@ -270,9 +276,9 @@
   .row{display:flex;align-items:center;gap:8px}
 
   /* cartões: superfícies opacas ficam; o vidro é para o que flutua */
-  .card{background:var(--surface);border:0;border-radius:var(--r-lg);padding:16px;display:flex;flex-direction:column;gap:10px;box-shadow:var(--shadow-card)}
+  .card{background:var(--pane);border:0;border-radius:var(--r-lg);padding:16px;display:flex;flex-direction:column;gap:10px;box-shadow:var(--shadow-card),inset 0 1px 0 rgba(255,255,255,.9),inset 0 0 0 1px var(--pane-edge);-webkit-backdrop-filter:blur(18px) saturate(1.4);backdrop-filter:blur(18px) saturate(1.4)}
   .card.hero{padding:20px;border-radius:var(--r-xl);gap:10px}
-  .card.hero.dark{background:var(--night);color:#fff;box-shadow:0 18px 40px rgba(20,24,41,.22)}
+  .card.hero.dark{background:rgba(20,24,41,.86);color:#fff;box-shadow:0 18px 40px rgba(20,24,41,.22),inset 0 1px 0 rgba(255,255,255,.14),inset 0 0 0 1px rgba(255,255,255,.08)}
   .card.hero.dark .eyebrow{color:rgba(255,255,255,.62)}
   .card.hero.dark .display{color:#fff}
   .card.hero.dark .p{color:rgba(255,255,255,.72)}
@@ -296,21 +302,21 @@
   .btn{border:0;border-radius:999px;padding:12px 14px;font:600 14px var(--body);letter-spacing:0;color:var(--night);cursor:pointer;text-align:center;flex:1;transition:transform .12s,opacity .15s;box-shadow:none}
   .btn:active{transform:scale(.98);opacity:.85}
   .btn.turq{background:var(--turq)} .btn.coral{background:var(--coral)} .btn.yellow{background:var(--yellow)} .btn.lilac{background:var(--lilac)}
-  .btn.ghost{background:var(--subtle);color:var(--ink)}
+  .btn.ghost{background:rgba(255,255,255,.5);box-shadow:inset 0 0 0 1px rgba(255,255,255,.7);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);color:var(--ink)}
   .btn.line{background:color-mix(in srgb,var(--turq) 16%,var(--surface));color:var(--turq-ink);display:flex;justify-content:center;gap:8px;align-items:center}
   .btn.line svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
   .btns{display:flex;gap:10px;margin-top:4px}
 
   .stats{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-  .stat{background:var(--surface);border:0;border-radius:var(--r-md);padding:14px;display:flex;flex-direction:column;gap:8px;min-width:0;box-shadow:var(--shadow-card)}
+  .stat{background:var(--pane);border:0;border-radius:var(--r-md);padding:14px;display:flex;flex-direction:column;gap:8px;min-width:0;box-shadow:var(--shadow-card),inset 0 1px 0 rgba(255,255,255,.9),inset 0 0 0 1px var(--pane-edge);-webkit-backdrop-filter:blur(18px) saturate(1.4);backdrop-filter:blur(18px) saturate(1.4)}
   .stat .lbl{display:flex;justify-content:space-between;align-items:center;gap:8px;font:500 13px var(--body);color:var(--muted)}
   .stat .v{font:700 28px/1 var(--display);min-height:28px;display:flex;align-items:flex-end;color:var(--ink);font-variant-numeric:tabular-nums;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 
   .chips{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;padding-bottom:2px;margin:0 -14px;padding-left:14px;padding-right:14px}
   .chips::-webkit-scrollbar{display:none}
-  .chip{flex:none;border:0;background:var(--subtle);color:var(--muted);font:500 12.5px var(--body);padding:7px 12px;border-radius:999px;cursor:pointer;transition:background .15s,color .15s,border-color .15s}
+  .chip{flex:none;border:0;background:rgba(255,255,255,.5);box-shadow:inset 0 0 0 1px rgba(255,255,255,.7),0 1px 3px rgba(20,24,41,.05);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);color:var(--muted);font:500 12.5px var(--body);padding:7px 12px;border-radius:999px;cursor:pointer;transition:background .15s,color .15s,border-color .15s}
   .chip[aria-pressed="true"]{background:var(--ink);color:#fff}
-  .chip.c{background:color-mix(in srgb,var(--c) 14%,var(--surface));color:var(--ci)}
+  .chip.c{background:color-mix(in srgb,var(--c) 18%,rgba(255,255,255,.55));color:var(--ci)}
   .chip.c[aria-pressed="true"]{background:var(--c);color:var(--night)}
   .chip.wrap{white-space:normal}
   .wrapchips{display:flex;flex-wrap:wrap;gap:8px}
@@ -319,20 +325,20 @@
 
   .field{display:flex;flex-direction:column;gap:8px}
   .field .lbl{display:flex;justify-content:space-between;align-items:baseline}
-  .input{background:var(--subtle);border:1px solid transparent;border-radius:var(--r-sm);padding:12px 14px;font:400 14px var(--body);color:var(--ink);width:100%;outline:none}
+  .input{background:rgba(255,255,255,.5);border:1px solid rgba(255,255,255,.7);border-radius:var(--r-sm);padding:12px 14px;font:400 14px var(--body);color:var(--ink);width:100%;outline:none;-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px)}
   .input::placeholder{color:var(--dim)}
-  .input:focus{background:var(--surface);border-color:var(--ink)}
+  .input:focus{background:rgba(255,255,255,.85);border-color:var(--ink)}
   textarea.input{min-height:92px;resize:none;font-family:var(--body)}
   .search{display:flex;align-items:center;gap:10px;padding:0 14px;border-radius:999px}
   .search svg{width:18px;height:18px;stroke:var(--dim);fill:none;stroke-width:2;stroke-linecap:round}
   .search input{flex:1;border:0;background:transparent;padding:12px 0;font:400 14px var(--body);color:var(--ink);outline:none;min-width:0}
-  .segc{display:flex;padding:4px;border-radius:999px;background:var(--subtle)}
+  .segc{display:flex;padding:4px;border-radius:999px;background:rgba(255,255,255,.45);box-shadow:inset 0 0 0 1px rgba(255,255,255,.7);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px)}
   .segc button{flex:1;border:0;background:transparent;border-radius:999px;padding:9px;font:600 13.5px var(--body);color:var(--muted);cursor:pointer;transition:background .2s,color .2s}
   .segc button[aria-pressed="true"].a{background:var(--coral);color:var(--night)}
   .segc button[aria-pressed="true"].b{background:var(--turq);color:var(--night)}
 
   /* cartão de lugar */
-  .place{display:flex;gap:12px;background:var(--surface);border:0;border-radius:var(--r-lg);padding:12px;cursor:pointer;transition:transform .15s,box-shadow .15s;box-shadow:var(--shadow-card)}
+  .place{display:flex;gap:12px;background:var(--pane);border:0;border-radius:var(--r-lg);padding:12px;cursor:pointer;transition:transform .15s,box-shadow .15s;box-shadow:var(--shadow-card),inset 0 1px 0 rgba(255,255,255,.9),inset 0 0 0 1px var(--pane-edge);-webkit-backdrop-filter:blur(18px) saturate(1.4);backdrop-filter:blur(18px) saturate(1.4)}
   .place:hover{box-shadow:var(--shadow-lift)}
   .place:active{transform:scale(.985)}
   .thumb{width:60px;height:60px;border-radius:16px;flex:none;display:flex;align-items:center;justify-content:center;background:var(--subtle);overflow:hidden;position:relative}
@@ -438,7 +444,7 @@
   .modal .grab{margin-bottom:2px}
   .xbtn{border:0;background:rgba(37,40,57,.08);width:32px;height:32px;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center}
   .xbtn svg{width:16px;height:16px;stroke:var(--muted);fill:none;stroke-width:2.2;stroke-linecap:round}
-  .emerg{display:flex;align-items:center;gap:14px;background:rgba(255,255,255,.85);border:0;border-radius:var(--r-md);padding:14px 16px;cursor:pointer}
+  .emerg{display:flex;align-items:center;gap:14px;background:rgba(255,255,255,.55);box-shadow:inset 0 1px 0 #fff,inset 0 0 0 1px rgba(255,255,255,.7);border:0;border-radius:var(--r-md);padding:14px 16px;cursor:pointer}
   .emerg .num{font:700 24px/1 var(--display);color:var(--ink);width:64px;font-variant-numeric:tabular-nums}
   .emerg .nm{font:700 14px var(--body);color:var(--ink)}
   .emerg .nt{font-size:12.5px;color:var(--dim)}
@@ -462,7 +468,7 @@
 
 <header class="top">
   <div>
-    <h1><span id="topmark"></span>Irisa · atual × proposta · v14</h1>
+    <h1><span id="topmark"></span>Irisa · atual × proposta · v15</h1>
     <p>Esquerda: o app como está hoje, sem mexer (tokens, cartões, barra e cabeçalho de agora). Direita: a proposta (Liquid Glass, cores vivas, fundo aurora, animações cinza → cor). Os botões agem nos dois ao mesmo tempo. Nada aqui grava, liga ou envia.</p>
   </div>
   <div class="ctl">
@@ -852,7 +858,7 @@ function renderPerfil(){
     <button class="btn lilac" data-toast="Protótipo: fila de moderação fora do escopo">Fila de moderação</button>
     <button class="btn ghost" data-toast="Protótipo: sessão fictícia">Sair</button>
     <button class="link center pad-b" style="color:var(--coral-ink);justify-content:center;font-size:14px" data-toast="Protótipo: nada é excluído">Excluir minha conta</button>
-    <div class="small center pad-b">Protótipo v14 · 27/09/2026</div>`;
+    <div class="small center pad-b">Protótipo v15 · 27/09/2026</div>`;
 }
 function renderRegistrar(mode="relato"){
   const el=$("s-registrar");
