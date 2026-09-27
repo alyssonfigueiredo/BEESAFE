@@ -206,7 +206,8 @@ Nome: **Irisa** (INPI livre; @irisapp livre). Bundle id `br.com.irisa.app`. Cont
   `useScreenInsets()` no `contentContainerStyle` no lugar do `py-4`. Cartões e botões cheios levam `style={shadow.card}` (`boxShadow` nativo em tokens.js; o NativeWind não converte sombra dupla de className) para descolar do papel; tinta
   (`ink`) mais escura para definição. Cartões, botões e campos seguem opacos de propósito. Estrutura e navegação não mudaram. Os dois pacotes são nativos: precisa de
   `npx expo run:ios --device` de novo e de build EAS nova para o Android.
-  **Layout completo aplicado em 27/09/2026 (mesma branch, sem merge — esperando o ok dele):** fundo
+  **Layout completo aplicado em 27/09/2026 (mesclado em `claude/laughing-keller-my8t7c` no mesmo dia, com o ok dele,
+  junto com tudo da branch padrão; tag `backup/amazing-volta-antes-do-merge` guarda a branch antes do merge):** fundo
   aurora (`src/components/Aurora.tsx`, svg atrás de cada tela), cartões translúcidos sem borda
   (`surface` virou rgba; `solid` é o branco opaco), chips e campos tonais (`src/components/Chip.tsx`,
   `SearchField.tsx`), títulos em Oswald caixa alta mas seções/botões/rótulos em Space Grotesk caixa
