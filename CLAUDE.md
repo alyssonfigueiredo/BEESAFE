@@ -319,3 +319,10 @@ Checks antes de commitar: `npm run lint && npm run typecheck`. Migrations testá
 - As variáveis do EAS são por ambiente: `env:push preview` não vale para `production`. Se o build não
   imprimir `EXPO_PUBLIC_SUPABASE_ANON_KEY, EXPO_PUBLIC_SUPABASE_URL` carregadas, o app sai sem backend.
   Antes do primeiro build de produção: `npx eas-cli env:push production --path .env`.
+- **Cota de build Android do plano Free do EAS estourou em 27/09/2026** (16 builds só em setembro,
+  vários em sequência no mesmo dia ajustando coisa pequena — reseta mensalmente, virou em 01/10).
+  Regra pra não repetir: só rodar `eas-cli build` quando mudar código nativo (lib nativa, ícone,
+  permissão, `app.config.ts`); mudança de JS/tela/lógica é só `npx expo start --dev-client` + tecla
+  `r`, sem build nenhum. Testar em `--profile preview` (APK) antes de gastar cota em `production`.
+  `npx eas-cli build:list --platform android --limit 15` mostra o histórico e as datas se precisar
+  conferir de novo quantos builds já foram usados no mês.
