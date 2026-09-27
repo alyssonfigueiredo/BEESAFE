@@ -34,6 +34,8 @@ Nome: **Irisa** (INPI livre; @irisapp livre). Bundle id `br.com.irisa.app`. Cont
   **Apple com bundle `br.com.irisa.ios`:** o token da Apple vem com esse bundle como audiência; na
   Supabase (Authentication → Sign In / Providers → Apple → Client IDs) têm que estar os dois,
   `br.com.irisa.ios,br.com.irisa.app`, senão dá "Unacceptable audience in id_token".
+  Passo a passo de publicação no iPhone para o Alysson: `PUBLICAR-IOS.md` na raiz (fora de `docs/`
+  de propósito, para não ir para o site).
 - Chaves legadas desativadas: app usa `sb_publishable_...`, scripts usam `sb_secret_...` (só na máquina dele).
 - Dados geográficos: os 5.570 municípios das 27 UFs e os bairros de 24 capitais importados do OSM.
   São Paulo saiu com 96 pelo nível 9 (`--nivel 9`, que lá são os distritos). Seguem sem bairro:
