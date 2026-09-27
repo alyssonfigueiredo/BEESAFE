@@ -126,6 +126,19 @@ Nome: **Irisa** (INPI livre; @irisapp livre). Bundle id `br.com.irisa.app`. Cont
   **Fila de fotos, um comando por dia** (cada um para sozinho quando a cota acaba e continua no dia seguinte).
   Depois dos imports de 24/09 há ~1.100 lugares sem foto (uma semana e meia de cota): 25/09 `2507507` e
   `4106902`; 26/09 `4106902` de novo; 27/09 `2611606`; 28/09 `4209102`; depois `2408102`, `3550308`, `3304557`.
+  **Esse plano ficou obsoleto em 27/09/2026**: em algum momento entre 24 e 27/09 rodou um import nacional do
+  Overture sem filtrar por cidade (confiança padrão 0.5, sem `--limite`) — o banco foi de ~1.865 para
+  **138.377 lugares ativos em 30 cidades** (só 528 já tentaram foto). `--todas` ficou inútil (150/dia
+  divididos por 30 cidades = 5-6 cada). Decisão: fotos só nas cidades de lançamento, **Joinville tirada da
+  cota** (já está em bom estado, 114/180) — roda com IBGEs explícitos, não `--todas`:
+  `node scripts/google-place-photos.mjs 4106902 2611606 2507507 2408102 3550308 3304557`
+  (Curitiba, Recife, João Pessoa, Natal, São Paulo, Rio). As outras 23 cidades ficam no banco (não apagadas)
+  mas fora da fila de fotos. São Paulo (43.835 pendentes) e Rio (19.908) também vieram desse import e são
+  bem maiores que as outras cidades de lançamento; `prominence` já filtra por confiança dentro de cada
+  cidade (maior primeiro), mas em escala diferente: São Paulo tem quase tudo com prominence ≥60 (não corta
+  quase nada), Rio tem tudo abaixo de 30 (import de lote com menos sinal de confiança/site/redes/telefone).
+  **Pendência para revisitar depois:** decidir se vale podar (apagar) o excesso de baixa confiança em
+  Rio/São Paulo ou só aceitar que vai demorar meses/anos nesse ritmo de cota.
 - Cidades de lançamento: Curitiba, Recife, João Pessoa e Joinville (onde ele tem gente para avaliar os
   primeiros lugares). Em 24/09/2026 ele decidiu somar Natal, São Paulo e Rio (lugares com `--limite 200`,
   fotos na fila, serviços no seed). As outras semeadas ficam prontas para quando chegar usuário.
