@@ -66,6 +66,8 @@
   }
   .screen-wrap{position:absolute;inset:12px;border-radius:47px;overflow:hidden;background:var(--paper);isolation:isolate}
   .screen.bleed{background:#eeece7}
+  .screen-wrap::before{content:"";position:absolute;left:0;right:0;top:0;height:64px;z-index:35;pointer-events:none;background:linear-gradient(180deg,var(--paper) 30%,transparent)}
+  [data-mode="atual"] .screen-wrap::before{display:none}
   .island{position:absolute;left:50%;top:11px;transform:translateX(-50%);width:126px;height:36px;border-radius:20px;background:#0b0c11;z-index:40}
   .status{position:absolute;top:18px;left:0;right:0;display:flex;justify-content:space-between;padding:0 30px;font:600 15px/1 -apple-system,"SF Pro Text",var(--body);color:var(--ink);z-index:39;pointer-events:none}
   .status .sig{display:flex;gap:6px;align-items:center}
@@ -198,6 +200,7 @@
   [data-mode="atual"] .minimap{border:1px solid var(--border);border-radius:12px}
   [data-mode="atual"] .toast{background:var(--surface);border:1px solid var(--border)}
   [data-mode="atual"] .splash{display:none}
+  [data-mode="atual"] .nova-only{display:none}
   /* ---------- Loading: o radar pinta o anel ---------- */
   .splash{position:absolute;inset:0;z-index:70;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:22px;background:var(--paper);
     background-image:radial-gradient(60% 40% at 0% 0%,color-mix(in srgb,var(--turq) 22%,transparent),transparent 60%),radial-gradient(50% 35% at 100% 100%,color-mix(in srgb,var(--lilac) 22%,transparent),transparent 60%);}
@@ -408,7 +411,7 @@
   .map-top .chip.c[aria-pressed="true"]{background:var(--c)}
   .map-top .chip[aria-pressed="true"]:not(.c){background:var(--ink)}
   .sheet{position:absolute;left:14px;right:14px;bottom:calc(var(--tabs) - 8px);z-index:6;border-radius:var(--r-xl);padding:8px 16px 14px;display:flex;flex-direction:column;gap:10px;max-height:46%;overflow:hidden;transition:max-height .35s cubic-bezier(.2,.8,.2,1)}
-  .sheet.short{max-height:118px}
+  .sheet.short .inner{display:none}
   .grab{width:38px;height:5px;border-radius:3px;background:rgba(37,40,57,.22);align-self:center;cursor:pointer;flex:none}
   .sheet .inner{overflow-y:auto;scrollbar-width:none;display:flex;flex-direction:column;gap:12px}
   .sheet .inner::-webkit-scrollbar{display:none}
@@ -453,7 +456,7 @@
 
 <header class="top">
   <div>
-    <h1><span id="topmark"></span>Irisa · atual × proposta · v11</h1>
+    <h1><span id="topmark"></span>Irisa · atual × proposta · v12</h1>
     <p>Esquerda: o app como está hoje, sem mexer (tokens, cartões, barra e cabeçalho de agora). Direita: a proposta (Liquid Glass, cores vivas, fundo aurora, animações cinza → cor). Os botões agem nos dois ao mesmo tempo. Nada aqui grava, liga ou envia.</p>
   </div>
   <div class="ctl">
@@ -707,7 +710,9 @@ function occCard(o){
 function ranking(title="Áreas de atenção",items=RANK){
   return `<div class="card"><div class="h">${title}</div>${items.map((a,i)=>{const[l,c]=riskOf(a.total,a.high);return `<div class="rank" data-go="bairro" data-id="${a.id}"><span class="n">${i+1}</span><div style="flex:1"><div style="font:500 14px var(--body)">${a.name}</div><div class="small">${a.total} relato${a.total===1?"":"s"} · ${a.high} grave${a.high===1?"":"s"}</div></div><span class="lvl" style="color:${v(c)}">${l}</span>${ICONS.chev}</div>`}).join("")}</div>`;
 }
-function chip(label,opts={}){const {on=false,c=null,i=null,grow=false}=opts;return `<button class="chip${c?" c":""}${grow?" grow":""}" aria-pressed="${on}" data-group="${opts.group||""}" ${c?`style="--c:${v(c)};--ci:${v(i)}"`:""}>${label}</button>`}
+function chip(label,opts={}){const {on=false,c=null,i=null,grow=false,cat=null}=opts;return `<button class="chip${c?" c":""}${grow?" grow":""}" aria-pressed="${on}" data-group="${opts.group||""}" ${cat?`data-cat="${cat}"`:""} ${c?`style="--c:${v(c)};--ci:${v(i)}"`:""}>${label}</button>`}
+const simp=t=>String(t).toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"");
+function filtrar(q,cat,rated){const t=simp(q.trim());return PLACES.filter(p=>(cat==="all"||p.cat===cat)&&(!rated||p.score!=null)&&(!t||simp(p.name).includes(t)))}
 
 /* ================= mapa (SVG gerado) ================= */
 function mapSvg(opts={}){
@@ -748,7 +753,11 @@ function renderInicio(){
       <div class="p">O mapa dos lugares onde a gente é <span class="rbtext">bem-vinde</span>, feito por nós. Diga quanta cor tem os lugares por onde você passa. E registre, sem se identificar, o que não deveria ter acontecido.</div>
       <div class="btns"><button class="btn turq" data-tab-go="lugares">Avaliar um lugar</button><button class="btn coral" data-go="registrar">Registrar relato</button></div>
     </div>
-    <div class="stack"><div class="h">Lugares mais acolhedores</div>${primeiros.map(p=>placeCard(p,false)).join("")}<div class="small">O selo aparece a partir de 5 avaliações. Some a sua.</div></div>
+    <div class="nova-only stack" style="gap:10px">
+      <div class="search glass">${ICONS.search}<input id="hq" placeholder="Buscar um lugar em Curitiba" autocomplete="off"></div>
+      <div class="chips" data-single id="hchips">${chip("Perto de você",{on:true,cat:"all"})}${chip("Já avaliados",{cat:"rated"})}${chip("Bar",{cat:"bar"})}${chip("Restaurante",{cat:"restaurante"})}${chip("Café",{cat:"cafe"})}${chip("Balada",{cat:"balada"})}${chip("Hotel",{cat:"hotel"})}</div>
+    </div>
+    <div class="stack"><div class="h" id="htitle">Lugares mais acolhedores</div><div class="stack" id="hlist">${primeiros.map(p=>placeCard(p,false)).join("")}</div><div class="small" id="hnote">O selo aparece a partir de 5 avaliações. Some a sua.</div></div>
     <div class="stack" style="padding-top:6px"><div class="h">Segurança na cidade</div><div class="small">Relatos anônimos da comunidade. Ponto no mapa, nunca nome de quem escreveu.</div></div>
     <div class="stats">
       <div class="stat"><div class="lbl">Relatos<span class="tile sm turq">${ICONS.file}</span></div><span class="v" data-count="142">142</span><span class="small">em 12 meses</span></div>
@@ -758,6 +767,15 @@ function renderInicio(){
     </div>
     <div class="stack"><div class="h">Relatos recentes</div>${OCC.slice(0,3).map(occCard).join("")}</div>
     ${ranking("Bairros com mais relatos")}`;
+  // busca e filtro do Início: sem termo e sem filtro, mostra os mais acolhedores; com, mostra o resultado
+  const el=$("s-inicio");
+  const upd=()=>{const q=el.querySelector("#hq").value;const c=el.querySelector("#hchips .chip[aria-pressed='true']");const cat=c?c.dataset.cat:"all";
+    const padrao=!q.trim()&&cat==="all";const list=padrao?primeiros:filtrar(q,cat==="rated"?"all":cat,cat==="rated");
+    el.querySelector("#htitle").textContent=padrao?"Lugares mais acolhedores":`${list.length} lugar${list.length===1?"":"es"}`;
+    el.querySelector("#hnote").hidden=!padrao;
+    const box=el.querySelector("#hlist");box.innerHTML=list.length?list.map(p=>placeCard(p,!padrao)).join(""):`<div class="p">Nada com esse nome por aqui.</div>`;bindAll(box);animateIn(box)};
+  el.querySelector("#hq").addEventListener("input",upd);
+  el.querySelector("#hchips").addEventListener("click",()=>setTimeout(upd,0));
 }
 function renderMapa(){
   const el=$("s-mapa");
@@ -797,15 +815,16 @@ function renderLugares(){
   el.innerHTML=`
     <div><div class="title">Lugares</div><div class="sub">Curitiba · PR · 256 cadastrados</div></div>
     <div class="search glass">${ICONS.search}<input id="q" placeholder="Buscar por nome" autocomplete="off"></div>
-    <div class="chips" data-single>${chip("Tudo",{on:true})}${chip("Já avaliados (5)")}</div>
-    <div class="chips" data-single>${chip("Perto de você",{on:true})}${chip("Bar (61)")}${chip("Restaurante (98)")}${chip("Café (44)")}${chip("Balada (17)")}${chip("Hotel (36)")}</div>
+    <div class="chips" data-single id="lrec">${chip("Tudo",{on:true,cat:"all"})}${chip("Já avaliados (5)",{cat:"rated"})}</div>
+    <div class="chips" data-single id="lcat">${chip("Perto de você",{on:true,cat:"all"})}${chip("Bar (61)",{cat:"bar"})}${chip("Restaurante (98)",{cat:"restaurante"})}${chip("Café (44)",{cat:"cafe"})}${chip("Balada (17)",{cat:"balada"})}${chip("Hotel (36)",{cat:"hotel"})}</div>
     <div class="stack" id="plist">${PLACES.map(p=>placeCard(p)).join("")}</div>
     <div class="center pad-b"><button class="link" style="text-decoration:underline;text-underline-offset:3px" data-go="registrar" data-mode="lugar">Não achou? Cadastre um lugar</button></div>`;
-  el.querySelector("#q").addEventListener("input",e=>{
-    const t=e.target.value.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g,"");
-    const list=PLACES.filter(p=>p.name.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g,"").includes(t));
-    const box=el.querySelector("#plist");box.innerHTML=list.length?list.map(p=>placeCard(p)).join(""):`<div class="p">Nada com esse nome por aqui.</div>`;bindGo(box);
-  });
+  const upd=()=>{const q=el.querySelector("#q").value;const rec=el.querySelector("#lrec .chip[aria-pressed='true']");const cat=el.querySelector("#lcat .chip[aria-pressed='true']");
+    const list=filtrar(q,cat?cat.dataset.cat:"all",rec&&rec.dataset.cat==="rated");
+    const box=el.querySelector("#plist");box.innerHTML=list.length?list.map(p=>placeCard(p)).join(""):`<div class="p">Nada com esse nome por aqui.</div>`;bindAll(box);animateIn(box)};
+  el.querySelector("#q").addEventListener("input",upd);
+  el.querySelector("#lrec").addEventListener("click",()=>setTimeout(upd,0));
+  el.querySelector("#lcat").addEventListener("click",()=>setTimeout(upd,0));
 }
 function renderApoio(){
   $("s-apoio").innerHTML=`
@@ -827,7 +846,7 @@ function renderPerfil(){
     <button class="btn lilac" data-toast="Protótipo: fila de moderação fora do escopo">Fila de moderação</button>
     <button class="btn ghost" data-toast="Protótipo: sessão fictícia">Sair</button>
     <button class="link center pad-b" style="color:var(--coral-ink);justify-content:center;font-size:14px" data-toast="Protótipo: nada é excluído">Excluir minha conta</button>
-    <div class="small center pad-b">Protótipo v11 · 26/09/2026</div>`;
+    <div class="small center pad-b">Protótipo v12 · 27/09/2026</div>`;
 }
 function renderRegistrar(mode="relato"){
   const el=$("s-registrar");
@@ -982,9 +1001,11 @@ function playSplash(){
   function scroll(y){$("s-"+cur()).scrollTo({top:y,behavior:mode==="atual"?"auto":"smooth"})}
   function rate(i){const picks=root.querySelectorAll("#s-lugar .rb.pick");const r=picks[i];if(r)r.querySelectorAll("i")[3].click()}
   function closeModals(){root.querySelectorAll(".modal.on").forEach(m=>m.classList.remove("on"))}
+  function sheet(open){const sh=root.querySelector("#sheet");if(sh)sh.classList.toggle("short",!open)}
+  function type(id,txt){const i=root.querySelector("#"+id);if(!i)return;i.value=txt;i.dispatchEvent(new Event("input"))}
   function reset(){closeModals();splashT.forEach(clearTimeout);stack=[{s:"inicio"}];renderAll();show("inicio");playSplash()}
   renderAll();show("inicio");playSplash();
-  return {go,goTab,back,openModal,closeModals,scroll,rate,reset,playSplash,cur};
+  return {go,goTab,back,openModal,closeModals,scroll,rate,reset,playSplash,cur,sheet,type};
 }
 
 /* ================= página: dois aparelhos, mesmos controles ================= */
@@ -998,7 +1019,7 @@ const jump=document.getElementById("jump");
 [["Início",a=>a.goTab("inicio")],["Mapa",a=>a.goTab("mapa")],["Lugares",a=>a.goTab("lugares")],["Apoio",a=>a.goTab("apoio")],["Perfil",a=>a.goTab("perfil")],["Registrar",a=>a.go("registrar")],["Ficha do lugar",a=>a.go("lugar",1)],["Lugar sem nota",a=>a.go("lugar",6)],["Ficha do bairro",a=>a.go("bairro",3)],["Emergência",a=>a.openModal("m-sos")]].forEach(([l,f])=>{const b=document.createElement("button");b.textContent=l;b.addEventListener("click",()=>{stopTour();both(f)});jump.appendChild(b)});
 document.getElementById("restart").addEventListener("click",()=>{stopTour();both(a=>a.reset())});
 // Roteiro: Início → Lugares → lugar sem nota (responde as quatro) → Mapa → bairro → Apoio → Perfil → emergência → Início
-const STEPS=[[a=>a.goTab("inicio"),1400],[a=>a.scroll(560),1500],[a=>a.scroll(1150),1500],[a=>a.goTab("lugares"),1500],[a=>a.scroll(420),1300],[a=>a.go("lugar",6),1600],[a=>a.scroll(560),1100],[a=>a.rate(0),800],[a=>a.rate(1),800],[a=>a.rate(2),800],[a=>a.rate(3),1600],[a=>a.back(),1300],[a=>a.goTab("mapa"),1700],[a=>a.go("bairro",3),1700],[a=>a.scroll(520),1300],[a=>a.back(),1100],[a=>a.goTab("apoio"),1500],[a=>a.scroll(620),1300],[a=>a.goTab("perfil"),1400],[a=>a.openModal("m-sos"),1700],[a=>a.closeModals(),700],[a=>a.goTab("inicio"),1200]];
+const STEPS=[[a=>a.goTab("inicio"),1400],[a=>a.scroll(560),1500],[a=>a.scroll(1150),1500],[a=>a.goTab("lugares"),1500],[a=>a.type("q","caf"),1500],[a=>a.type("q",""),600],[a=>a.scroll(420),1300],[a=>a.go("lugar",6),1600],[a=>a.scroll(560),1100],[a=>a.rate(0),800],[a=>a.rate(1),800],[a=>a.rate(2),800],[a=>a.rate(3),1600],[a=>a.back(),1300],[a=>a.goTab("mapa"),1700],[a=>a.sheet(true),1600],[a=>a.sheet(false),600],[a=>a.go("bairro",3),1700],[a=>a.scroll(520),1300],[a=>a.back(),1100],[a=>a.goTab("apoio"),1500],[a=>a.scroll(620),1300],[a=>a.goTab("perfil"),1400],[a=>a.openModal("m-sos"),1700],[a=>a.closeModals(),700],[a=>a.goTab("inicio"),1200]];
 let tourT=null,tourI=0;const tourBtn=document.getElementById("tour");
 function stepTour(){if(tourI>=STEPS.length){stopTour();return}const[f,d]=STEPS[tourI++];both(f);tourT=setTimeout(stepTour,d)}
 function startTour(){stopTour();tourI=0;tourBtn.textContent="■ Parar";tourBtn.dataset.on="1";both(a=>{a.closeModals()});stepTour()}
