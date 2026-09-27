@@ -86,6 +86,10 @@ Padrões de lâmina (escolher um por lâmina, nunca misturar dois):
 
 Story (1080×1920, `.sl.story`): mesma gramática, mais ar, e uma **área tracejada** (`.zone`) onde entra o adesivo do Instagram (quiz, enquete, caixa de pergunta, link). O link nunca é escrito na arte.
 
+## 7a. Perfil zero (decisão de 27/09/2026)
+
+Para quem não segue a conta, conteúdo que explica o app não segura 3 segundos. A sequência de ataque começa por reels curtos de reconhecimento (uma cena da vida de quem assiste, sem dizer "Irisa" na abertura), cada um pedindo um sinal só (compartilhar por DM, replay, comentar "eu" ou a cidade), e só depois entram os reels e carrosséis que apresentam o produto. Regras: gancho legível em 1 s sem contexto, sem pausa morta (cena nova a cada 4–6 s), texto grande porque a maioria assiste sem som, @irisapp só no fecho. Nunca prometer alcance nem correr atrás de trend sem relação com o tema.
+
 ## 7. Como raciocinar um carrossel
 
 1. **Uma tese por carrossel**, dita na capa como pergunta ou choque ("Aconteceu na esquina do bar. A culpa é do bar?").
@@ -99,7 +103,7 @@ Story (1080×1920, `.sl.story`): mesma gramática, mais ar, e uma **área tracej
 ## 8. Referências (o que já existe, para copiar o jeito)
 
 - `docs/carrossel.html` (estreia), `carrossel-2.html` (quatro perguntas), `carrossel-3.html` (anonimato), `carrossel-4.html` (emergência), `carrossel-5.html` (regra da rua), `carrossel-6.html` (mito ou verdade), `carrossel-8.html` (Dia de Sair do Armário, 11/10), `post-bemvinde.html`, `stories-2.html`.
-- `docs/story.html` (vídeo de 60 s, dez cenas), `docs/reels-3.html` (regra da rua, 34 s), `docs/reels-4.html` (anonimato, 32 s), `docs/reels-5.html` (ficha do bairro, 36 s): reels são carrosséis convertidos em cenas de 4–6 s, uma ideia por cena, número contando (`count`), fecho com pílula + @irisapp. `docs/index.html` (landing), `docs/pitch.html` (apresentação).
+- `docs/story.html` (vídeo de 60 s, dez cenas), `docs/reels-3.html` (regra da rua, 34 s), `docs/reels-4.html` (anonimato, 32 s), `docs/reels-5.html` (ficha do bairro, 36 s): carrosséis convertidos em cenas de 4–6 s, uma ideia por cena, número contando (`count`), fecho com pílula + @irisapp. `reels-6` a `reels-9` (15–20 s): **reels para quem não conhece o perfil**, gancho de reconhecimento sem jargão ("Você já soltou a mão em público?", "Mudei de calçada 4 vezes hoje", "A bandeira na porta não diz nada", "Sua cidade está no mapa?"), o app só aparece na última cena, e cada um pede um sinal (compartilhar, replay, comentar). `carrossel-8.html` (Dia de Sair do Armário), `carrossel-9.html` (viajar em casal, feito para salvar). `docs/index.html` (landing), `docs/pitch.html` (apresentação).
 - `docs/lojinha.html` e `scripts/lojinha/build.py`: mockups de produto em SVG com o mesmo sistema (fundo claro `paper` aceito ali).
 - Legendas e cronogramas anteriores: pasta Irisa-lancamento e Irisa-semana2 (uma pasta por dia, `legenda.txt` no feed, `texto.txt` no story).
 

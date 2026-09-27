@@ -16,48 +16,34 @@ comentário no mesmo dia. Link nunca vai na legenda nem na arte, só no comentá
   que comentário simples no ranking de 2026; ajustado o fecho do carrossel 3 pra pedir "salva"
   além de comentar.
 
-## Calendário
+## Calendário (reordenado em 27/09: sequência de ataque para perfil zero)
 
-| dia | hora | peça | legenda |
-|---|---|---|---|
-| sáb 26/09 | 18h | story `story-hoje.png` (radar + "e se a resposta já estivesse no mapa?") | sem legenda |
-| dom 27/09 | 12h | story `story-cidades.png` (sete cidades no ar) | sem legenda |
-| ter 29/09 | 19h | **reels 4** — Sem nome. Sem perfil. Sem rastro. (32 s, `Irisa-reels-4.mp4`) | `reels-4.txt` |
-| qua 30/09 | 19h | post-bemvinde | `post-bemvinde.txt` |
-| qui 01/10 | 19h | carrossel 4 — Emergência e apoio por cidade | `carrossel-4.txt` |
-| sex 02/10 | 12h | story `stories-2/01` (quiz) | `stories-2.md` § 1 |
-| sáb 03/10 | 12h | story `stories-2/02` (caixa de pergunta) | `stories-2.md` § 2 |
-| dom 04/10 | 12h | story `stories-2/03` (enquete) | `stories-2.md` § 3 |
-| seg 05/10 | 12h | story `stories-2/04` (três coisas que o app não pede) | `stories-2.md` § 4 |
-| ter 06/10 | 19h | **reels 3** — A culpa é do bar? O lugar recebe cor, a rua recebe aviso. (34 s, `Irisa-reels-3.mp4`) | `reels-3.txt` |
-| qua 07/10 | 19h | carrossel 6 — Mito ou verdade | `carrossel-6.txt` |
-| qui 08/10 | 19h | **reels 5** — Quantos relatos tem o seu bairro? (ficha do bairro, 36 s, `Irisa-reels-5.mp4`) | `reels-5.txt` |
-| dom 11/10 | 12h | carrossel 8 — Fora do armário. Dentro do mapa. (Dia de Sair do Armário) | `carrossel-8.txt` |
+Ordem nova: primeiro os reels que fazem sentido para quem nunca viu o perfil (reconhecimento,
+sem jargão, sem explicar o app), depois os que apresentam o produto. Cada peça pede um sinal
+diferente: compartilhar, replay, comentar, salvar.
 
-Termina 08/10, dois dias antes do fim do teste fechado (10/10) — folga proposital. O carrossel 8 é
-o único depois disso, porque é preso à data (11/10, Dia de Sair do Armário).
+| dia | hora | peça | sinal que pede | legenda |
+|---|---|---|---|---|
+| sáb 26/09 | 18h | story `story-hoje.png` | — | sem legenda |
+| dom 27/09 | 12h | story `story-cidades.png` | — | sem legenda |
+| ter 29/09 | 19h | **reels 6** — Você já soltou a mão em público? (16 s) | compartilhar por DM, comentar "eu" | `reels-6.txt` |
+| qua 30/09 | 19h | **reels 7** — Mudei de calçada 4 vezes hoje (18 s) | replay, identificação | `reels-7.txt` |
+| qui 01/10 | 19h | **reels 8** — A bandeira na porta não diz nada (20 s) | comentário (concorda/discorda) | `reels-8.txt` |
+| sex 02/10 | 12h | story `stories-2/01` (quiz) | quiz | `stories-2.md` § 1 |
+| sáb 03/10 | 19h | **reels 9** — Sua cidade está no mapa? (16 s) | comentário simples em massa | `reels-9.txt` |
+| sáb 03/10 | 12h | story `stories-2/02` (caixa de pergunta) | caixa | `stories-2.md` § 2 |
+| dom 04/10 | 12h | story `stories-2/03` (enquete) | enquete | `stories-2.md` § 3 |
+| seg 05/10 | 12h | story `stories-2/04` (três coisas que o app não pede) | — | `stories-2.md` § 4 |
+| ter 06/10 | 19h | **reels 5** — Quantos relatos tem o seu bairro? (36 s) | salvar | `reels-5.txt` |
+| qua 07/10 | 19h | **carrossel 9** — 3 coisas que ninguém te conta sobre viajar em casal | salvar, mandar para o par | `carrossel-9.txt` |
+| qui 08/10 | 19h | **reels 3** — A culpa é do bar? (34 s) | comentário | `reels-3.txt` |
+| dom 11/10 | 12h | carrossel 8 — Fora do armário. Dentro do mapa. (Dia de Sair do Armário) | comentário, compartilhar | `carrossel-8.txt` |
+| ter 13/10 | 19h | **reels 4** — Sem nome. Sem perfil. Sem rastro. (32 s) | salvar | `reels-4.txt` |
+| qua 14/10 | 19h | post-bemvinde | comentário | `post-bemvinde.txt` |
+| qui 15/10 | 19h | carrossel 4 — Emergência e apoio por cidade | salvar | `carrossel-4.txt` |
+| ter 20/10 | 19h | carrossel 6 — Mito ou verdade | comentário | `carrossel-6.txt` |
 
-## Reels (26/09, sessão dos reels)
-
-Decisão dele: reels engaja mais, então os temas viram reels **no lugar** do carrossel do mesmo
-tema, não depois dele (um reels repetindo um carrossel já postado não faz sentido). Os
-carrosséis 3, 5 e 7 continuam renderizados em `docs/` como reserva; as lâminas isoladas servem
-de story (por exemplo a lâmina dos quatro números do carrossel 4).
-
-- `reels-3` regra da rua (34 s) ← carrossel 5 · `reels-4` anonimato (32 s) ← carrossel 3 ·
-  `reels-5` ficha do bairro (36 s) ← carrossel 7. Todos 1080×1920, H.264, sem áudio (música
-  entra no Instagram, instrumental, sem voz, para o texto ser lido).
-- Capa do reels: escolher no Instagram o quadro do gancho ("Ser identificade." / "Não." / "Zero").
-- Reels não aceita adesivo nem link na legenda: fecho "O link está na bio" + @irisapp na arte.
-- No dia seguinte, republicar o reels no story com adesivo de link.
-- Fonte: `docs/reels-N.html` (cenas com Web Animations presas a `window.__setT`), render com
-  `node scripts/story-video.mjs docs/reels-N.html` (ffmpeg com libx264; ver SKILL.md).
-
-Ideias mapeadas para os próximos reels (não feitas): "como chegar" da ficha do lugar; bastidores
-do mapa (10 mil lugares da base aberta Overture, sem nota até alguém irisar); mural de apoio e
-aba Apoio por cidade; uma cidade por reels (7 reels de 15 s, "Curitiba já está no mapa").
-Datas: 26/10 Dia da Visibilidade Intersexo; última semana de outubro, Visibilidade Assexual;
-29/01 Visibilidade Trans e Travesti.
+Carrosséis 3, 5 e 7 ficam de reserva (os temas saíram como reels).
 
 ## Correções (26/09)
 
