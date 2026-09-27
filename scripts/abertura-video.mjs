@@ -1,5 +1,6 @@
 // Grava docs/abertura.html (radar da Irisa) em MP4, quadro a quadro.
 // Roda: node scripts/abertura-video.mjs
+//   V=radar (padrão) | 1 (coração → espiral → radar) | 2 (radar → tela arco-íris)
 //   FORMATO=story (1080×1920, padrão) | quadrado (1080×1080)
 //   BG=paper (padrão) | night | verde (chroma para recortar no editor)
 //   SEMFIM=1 segura no final em vez de sair de cena · K=1.5 estica a linha do tempo · OUT=arquivo.mp4
@@ -12,13 +13,14 @@ const FPS = Number(process.env.FPS ?? 30);
 const FORMATO = process.env.FORMATO === "quadrado" ? "quadrado" : "story";
 const BG = ["night", "verde"].includes(process.env.BG) ? process.env.BG : "paper";
 const K = Number(process.env.K ?? 1);
-const OUT = process.env.OUT ?? `docs/Irisa-abertura${FORMATO === "quadrado" ? "-quadrado" : ""}${BG === "paper" ? "" : "-" + BG}.mp4`;
+const V = ["1", "2"].includes(process.env.V) ? process.env.V : "radar";
+const OUT = process.env.OUT ?? `docs/Irisa-abertura${V === "radar" ? "" : "-v" + V}${FORMATO === "quadrado" ? "-quadrado" : ""}${BG === "paper" ? "" : "-" + BG}.mp4`;
 const ffmpeg = process.env.FFMPEG ?? "ffmpeg";
 const size = FORMATO === "quadrado" ? { width: 1080, height: 1080 } : { width: 1080, height: 1920 };
 
 const b = await chromium.launch({ executablePath: process.env.PW_CHROMIUM ?? "/opt/pw-browsers/chromium", args: ["--ignore-certificate-errors"] });
 const pg = await b.newPage({ viewport: size, deviceScaleFactor: 1 });
-const url = "file://" + resolve("docs/abertura.html") + `?capture&formato=${FORMATO}&bg=${BG}&k=${K}` + (process.env.SEMFIM ? "&semfim" : "");
+const url = "file://" + resolve("docs/abertura.html") + `?capture&v=${V}&formato=${FORMATO}&bg=${BG}&k=${K}` + (process.env.SEMFIM ? "&semfim" : "");
 await pg.goto(url, { waitUntil: "networkidle" });
 await pg.evaluate(() => document.fonts.ready);
 const total = await pg.evaluate(() => window.__TOTAL);

@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Irisa — abertura: três versões</title>
+<!-- Compara as versões da abertura (docs/abertura.html) lado a lado. Botão Reiniciar recomeça as três juntas. -->
+<style>
+  :root{--paper:#F5F4F1;--night:#141829;--ink:#141829;--muted:#3D4560;--body:"Space Grotesk","Helvetica Neue",Arial,sans-serif}
+  html,body{margin:0;min-height:100%;background:var(--night);color:#fff;font-family:var(--body);-webkit-font-smoothing:antialiased}
+  header{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:18px 24px;flex-wrap:wrap}
+  h1{margin:0;font:500 18px var(--body);letter-spacing:.01em}
+  h1 small{display:block;font-size:13px;color:rgba(255,255,255,.6);margin-top:4px}
+  button{border:0;border-radius:999px;padding:12px 20px;font:500 14px var(--body);color:var(--night);background:#fff;cursor:pointer}
+  button:hover{background:#FFD066}
+  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:24px;padding:0 24px 32px}
+  .col h2{margin:0 0 4px;font:500 15px var(--body)}
+  .col p{margin:0 0 12px;font-size:13px;line-height:1.45;color:rgba(255,255,255,.65);min-height:57px}
+  .phone{width:300px;height:533px;border-radius:32px;overflow:hidden;background:var(--paper);box-shadow:0 20px 60px rgba(0,0,0,.45);margin:0 auto}
+  iframe{width:360px;height:640px;border:0;transform:scale(.8333);transform-origin:top left;display:block}
+</style>
+</head>
+<body>
+<header>
+  <h1>Abertura da Irisa <small>três versões, tocando em loop · toque em Reiniciar para ver as três do zero, juntas</small></h1>
+  <button id="re">Reiniciar</button>
+</header>
+<div class="grid">
+  <div class="col"><h2>Atual: só o radar</h2><p>O radar pinta o anel, a pupila abre, IRISA entra. 4,2 s. É o que está no app hoje.</p>
+    <div class="phone"><iframe data-src="abertura.html?v=radar"></iframe></div></div>
+  <div class="col"><h2>Versão 1: coração → espiral → radar</h2><p>O coração arco-íris se desenha e bate; dele sai uma espiral de cor que enche a tela; um círculo branco abre no meio e o radar entra. 8 s.</p>
+    <div class="phone"><iframe data-src="abertura.html?v=1"></iframe></div></div>
+  <div class="col"><h2>Versão 2: radar → tela arco-íris</h2><p>O radar toca inteiro e, no fim, o anel se expande e leva as cores para a tela toda; IRISA fica em branco por cima. 5 s.</p>
+    <div class="phone"><iframe data-src="abertura.html?v=2"></iframe></div></div>
+</div>
+<script>
+  const fr=[...document.querySelectorAll("iframe")];
+  function go(){fr.forEach(f=>{f.src=f.dataset.src+"&t="+Date.now()})}
+  document.getElementById("re").addEventListener("click",go);go();
+</script>
+</body>
+</html>
