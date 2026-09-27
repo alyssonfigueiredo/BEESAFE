@@ -38,7 +38,8 @@ Nome: **Irisa** (INPI livre; @irisapp livre). Bundle id `br.com.irisa.app`. Cont
 - Decidido lançar primeiro no Android. iOS fica para depois do primeiro retorno da Play Store.
 - Layout do Início decidido: painel (opção A do mockup).
 - Ficha das lojas pronta em docs/lojas.md.
-- Conta no Google Play Console criada, app em teste fechado (closed testing) no Google Play.
+- Conta no Google Play Console criada, app em teste fechado (closed testing) no Google Play,
+  com os 12 testadores exigidos já ativos usando a versão atual.
 
 ## Stack
 
@@ -68,8 +69,8 @@ Checks antes de commitar: `npm run lint && npm run typecheck`. Migrations testá
 
 ## Próximos passos (em ordem)
 
-1. Acompanhar o teste fechado no Google Play (12 testadores por 14 dias corridos); ao fim do prazo,
-   solicitar liberação para produção no Play Console.
+1. Contar os 14 dias corridos de teste fechado no Google Play (os 12 testadores já estão ativos);
+   ao fim do prazo, solicitar liberação para produção no Play Console.
 2. SHA-1 da keystore EAS (`npx eas-cli credentials -p android`) no Google Cloud para login Google no Android.
 3. Fonte alternativa de bairros para Brasília, São Luís, Palmas e São Paulo (OSM não cobre).
 4. Implementar ocultar autor (bloqueio por usuário). Hoje não existe: no IARC está declarado **Não**,
