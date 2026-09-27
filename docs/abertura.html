@@ -12,7 +12,7 @@
   Parâmetros na URL:
     ?v=radar           só o radar (padrão, 4,2 s)
     ?v=1               coração arco-íris → o radar varre a tela inteira pintando os gomos → círculo branco abre → radar (8 s)
-    ?v=2               radar → a varredura sai do anel e pinta a tela inteira, gomo a gomo (5 s)
+    ?v=2               radar → a varredura sai do anel e pinta a tela inteira, gomo a gomo, e segura 1,5 s colorida (6,5 s)
     ?formato=story     1080×1920 (padrão)      ?formato=quadrado  1080×1080     ?formato=reels  = story
     ?bg=paper          fundo papel com aurora (padrão)
     ?bg=night          fundo escuro (#141829), texto claro
@@ -137,7 +137,7 @@ const K=Math.max(.5,Number(q.get("k"))||1);
 const SEMFIM=q.has("semfim");
 const V=["1","2"].includes(q.get("v"))?q.get("v"):"radar";
 // Linha do tempo base de cada versão (ms) e quando o radar começa dentro dela.
-const CENA={radar:{total:4200,off:0,fim:3500},1:{total:7800,off:4600,fim:7400,wipe:4400},2:{total:5000,off:0,flood:3000}}[V];
+const CENA={radar:{total:4200,off:0,fim:3500},1:{total:7800,off:4600,fim:7400,wipe:4400},2:{total:6500,off:0,flood:3000}}[V];
 const TOTAL=CENA.total;
 document.documentElement.dataset.v=V;
 document.documentElement.dataset.formato=formato;
