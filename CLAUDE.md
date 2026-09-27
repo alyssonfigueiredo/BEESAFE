@@ -118,7 +118,12 @@ Nome: **Irisa** (INPI livre; @irisapp livre). Bundle id `br.com.irisa.app` (Andr
   `--todas --listar` mostra os 150 do dia sem gastar cota. A coluna não aparece no app nem entra em nota.
   Popularidade real (nº de avaliações do Google) é campo Enterprise e não pode ser guardado. Decidido não exibir rótulo LGBTQIA+ na ficha
   (lista pública vira alvo); o selo vem dos quatro eixos de acolhimento.
-- Decidido lançar primeiro no Android. iOS fica para depois do primeiro retorno da Play Store.
+- ~~Decidido lançar primeiro no Android, iOS fica para depois~~ — **acelerado em 27/09/2026.** Apple
+  Developer Program contratado, `ios.bundleIdentifier` corrigido pra `br.com.irisa.ios` (ver Armadilhas),
+  primeiro build de produção (`eas build -p ios --profile production`) gerado e enviado
+  (`eas submit -p ios --latest`) no mesmo dia. App criado no App Store Connect (id 6816761128),
+  processando no TestFlight. Falta: adicionar testador interno, preencher ficha da loja (docs/lojas.md
+  já tem o conteúdo) e screenshots (`bash scripts/screenshots.sh`) antes de mandar pra revisão pública.
 - Play Console: versão 8 (0.1.0) enviada para revisão na faixa de teste fechado em 22/09/2026, com a
   ficha da loja, os prints e o gráfico de recursos. Falta a lista de testadores completar 12 pessoas
   por 14 dias seguidos antes de pedir produção. Apps da categoria Social exigem a declaração de
