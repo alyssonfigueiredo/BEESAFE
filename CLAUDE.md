@@ -271,8 +271,9 @@ Checks antes de commitar: `npm run lint && npm run typecheck`. Migrations testá
    organizada em quadras, não bairros — o nome do "bairro" ali pode ser a quadra).
 3. Implementar ocultar autor (bloqueio por usuário). Hoje não existe: no IARC está declarado **Não**,
    e a Apple exige pela regra 1.2. Ao implementar, atualizar a resposta do questionário na mesma versão.
-4. Apple Developer (US$99/ano) quando decidir publicar no iOS; ou via ONG parceira (Apple isenta ONGs).
-   Denúncia, moderação e excluir conta já existem.
+4. ~~Apple Developer (US$99/ano)~~ — **contratado em 27/09/2026.** Selecionar a conta paga no Xcode
+   (Signing & Capabilities → Team) e conferir builds locais e no EAS com ela. Denúncia, moderação e
+   excluir conta já existem.
 5. Fase 6+: notificações por área, rotas seguras, versão web.
 
 ## Armadilhas já resolvidas (não repetir)
@@ -301,6 +302,11 @@ Checks antes de commitar: `npm run lint && npm run typecheck`. Migrations testá
 - Bairro é atribuído no insert do relato; após importar bairros, rodar o UPDATE de reprocessamento (supabase/README.md).
 - Xcode: nunca aplicar "Update to recommended settings"; Personal Team some após `prebuild --clean`; erro
   "Missing package product MapLibre" no Xcode GUI, mas `expo run:ios --device` no terminal compila.
+- **27/09/2026: "Failed Registering Bundle Identifier... not available" com Personal Team grátis.**
+  Nem sign-out/sign-in do Apple ID nem `prebuild --clean` resolveram — provável limite de 10 App IDs
+  a cada 7 dias da conta grátis (portal developer.apple.com fica bloqueado sem Developer Program,
+  então não dá pra confirmar/gerenciar pela web). Resolvido contratando o Apple Developer Program
+  (US$99/ano); depois disso, selecionar a conta paga no Team do Xcode antes de rodar de novo.
 - MapLibre usa LngLat como `[lng, lat]`. Câmera enquadra dados só no primeiro carregamento (`CityMap.tsx`).
 - ESLint proíbe setState em effect: usar estado derivado ou useQuery.
 - SQL Editor do Supabase mostra "No rows returned" em UPDATE bem-sucedido; confirmar com SELECT.
