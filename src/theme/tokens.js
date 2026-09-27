@@ -105,7 +105,6 @@ const glass = {
   side: 16, // margem lateral das cápsulas (cabeçalho e barra)
   headerHeight: 52,
   tabBarHeight: 66,
-  tabBarGap: 18, // distância da barra até a borda de baixo (além da área segura)
   radius: 33,
 };
 

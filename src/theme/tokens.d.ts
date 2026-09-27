@@ -42,7 +42,6 @@ export declare const glass: {
   side: number;
   headerHeight: number;
   tabBarHeight: number;
-  tabBarGap: number;
   radius: number;
 };
 export declare const accents: Record<

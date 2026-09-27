@@ -7,6 +7,7 @@ import { EmergencyButton } from "@/components/EmergencyButton";
 import { Glass } from "@/components/Glass";
 import { Logo } from "@/components/Logo";
 import { TabIcon } from "@/components/TabIcon";
+import { tabBarBottom } from "@/hooks/useScreenInsets";
 import { colors, fonts, glass, tabColors } from "@/theme/tokens";
 
 export default function TabsLayout() {
@@ -47,7 +48,7 @@ export default function TabsLayout() {
           position: "absolute",
           left: glass.side,
           right: glass.side,
-          bottom: safe.bottom + glass.tabBarGap,
+          bottom: tabBarBottom(safe.bottom),
           height: glass.tabBarHeight,
           borderRadius: glass.radius,
           backgroundColor: "transparent",

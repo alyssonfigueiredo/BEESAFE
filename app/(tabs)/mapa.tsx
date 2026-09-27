@@ -12,7 +12,7 @@ import { OccurrenceCard } from "@/components/OccurrenceCard";
 import { PlaceCard } from "@/components/PlaceCard";
 import { useAreaRisk, useOccurrences } from "@/hooks/useOccurrences";
 import { usePlaces } from "@/hooks/usePlaces";
-import { useScreenInsets } from "@/hooks/useScreenInsets";
+import { tabBarBottom, useScreenInsets } from "@/hooks/useScreenInsets";
 import { distanceMeters } from "@/lib/geo";
 import type { PublicOccurrence, PublicPlace } from "@/lib/types";
 import { useCity } from "@/providers/CityProvider";
@@ -80,7 +80,7 @@ export default function MapaScreen() {
     );
   }
 
-  const bottom = glass.tabBarHeight + glass.tabBarGap + safe.bottom + 8;
+  const bottom = glass.tabBarHeight + tabBarBottom(safe.bottom) + 8;
 
   return (
     <View className="flex-1 bg-paper">
