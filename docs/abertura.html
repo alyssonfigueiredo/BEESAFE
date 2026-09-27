@@ -12,7 +12,7 @@
   Parâmetros na URL:
     ?v=radar           só o radar (padrão, 4,2 s)
     ?v=1               coração arco-íris → o radar varre a tela inteira pintando os gomos → círculo branco abre → radar (8 s)
-    ?v=2               radar → a varredura sai do anel e pinta a tela inteira, gomo a gomo, e segura 1,5 s colorida (6,5 s)
+    ?v=2               radar → a varredura sai do anel e pinta a tela inteira, gomo a gomo; as cores saem do mesmo jeito e termina no branco (7,9 s)
     ?formato=story     1080×1920 (padrão)      ?formato=quadrado  1080×1080     ?formato=reels  = story
     ?bg=paper          fundo papel com aurora (padrão)
     ?bg=night          fundo escuro (#141829), texto claro
@@ -99,7 +99,8 @@
   .heart .shine{fill:#fff;opacity:0;animation:fillin .5s ease 1.6s forwards}
   /* Varredura de tela cheia: o mesmo radar do anel, com os gomos indo até a borda da tela. */
   .varre,.splash svg.varre{position:absolute;inset:0;width:100%;height:100%;display:block}
-  .varre .sec{opacity:0;animation:paintin .26s ease-out forwards;animation-delay:var(--d)}
+  .varre .sec{opacity:0;animation:paintin .26s ease-out var(--d) forwards}
+  .varre.volta .sec{animation:paintin .26s ease-out var(--d) forwards,paintout .26s ease-out var(--o) forwards}
   .varre .bigsw{opacity:0;transform-box:view-box;transform-origin:var(--cx) var(--cy);
     animation:paintin .15s ease var(--d0) forwards,sweepOnce var(--dur) cubic-bezier(.3,.1,.3,1) var(--d0) forwards,paintout .3s ease calc(var(--d0) + var(--dur)) forwards}
   [data-v="1"] .splash{clip-path:circle(0 at 50% 50%);animation:wipe .8s cubic-bezier(.4,0,.2,1) var(--wipe) forwards}
@@ -116,10 +117,13 @@
      varredura chega, cresce 5 px além do anel e vira a borda branca, devagar. */
   [data-v="2"] .logo::before{content:"";position:absolute;inset:-2.4px; /* anel vai até 63,4 px do centro: +5 px = 68,4 */border-radius:50%;z-index:-1;
     background:var(--paper);transform:scale(.927);
-    animation:borda 1.1s cubic-bezier(.4,0,.2,1) calc(var(--flood) + .2s) forwards}
+    animation:borda 1.1s cubic-bezier(.4,0,.2,1) calc(var(--flood) + .2s) forwards,bordaVolta 1.1s cubic-bezier(.4,0,.2,1) calc(var(--saida) + .6s) forwards}
   @keyframes borda{to{transform:none;background:#fff;box-shadow:0 6px 22px rgba(20,24,41,.10)}}
-  [data-v="2"] .word{animation:wordIn .7s cubic-bezier(.2,.8,.2,1) 1.75s forwards,wordWhite .5s ease calc(var(--flood) + .45s) forwards}
-  [data-v="2"] .word b{animation:wordWhite .5s ease calc(var(--flood) + .45s) forwards}
+  @keyframes bordaVolta{from{transform:none;background:#fff;box-shadow:0 6px 22px rgba(20,24,41,.10)}to{transform:scale(.927);background:var(--paper);box-shadow:none}}
+  [data-v="2"] .word{animation:wordIn .7s cubic-bezier(.2,.8,.2,1) 1.75s forwards,wordWhite .5s ease calc(var(--flood) + .45s) forwards,wordInk .5s ease calc(var(--saida) + 1.1s) forwards}
+  [data-v="2"] .word b{animation:wordWhite .5s ease calc(var(--flood) + .45s) forwards,bYellow .5s ease calc(var(--saida) + 1.1s) forwards}
+  @keyframes wordInk{from{color:#fff;text-shadow:0 2px 18px rgba(20,24,41,.18)}to{color:var(--ink);text-shadow:none}}
+  @keyframes bYellow{from{color:#fff;text-shadow:0 2px 18px rgba(20,24,41,.18)}to{color:var(--yellow);text-shadow:none}}
   @keyframes wordWhite{to{color:#fff;text-shadow:0 2px 18px rgba(20,24,41,.18)}}
   [data-v="2"] .varre{z-index:1}
   [data-v="2"] .tag,[data-v="2"] .bar{animation:paintout .3s ease var(--flood) forwards}
@@ -137,7 +141,7 @@ const K=Math.max(.5,Number(q.get("k"))||1);
 const SEMFIM=q.has("semfim");
 const V=["1","2"].includes(q.get("v"))?q.get("v"):"radar";
 // Linha do tempo base de cada versão (ms) e quando o radar começa dentro dela.
-const CENA={radar:{total:4200,off:0,fim:3500},1:{total:7800,off:4600,fim:7400,wipe:4400},2:{total:6500,off:0,flood:3000}}[V];
+const CENA={radar:{total:4200,off:0,fim:3500},1:{total:7800,off:4600,fim:7400,wipe:4400},2:{total:7900,off:0,flood:3000,saida:5500}}[V];
 const TOTAL=CENA.total;
 document.documentElement.dataset.v=V;
 document.documentElement.dataset.formato=formato;
@@ -189,7 +193,7 @@ const HEART=`<svg class="heart" viewBox="0 0 100 100"><defs><linearGradient id="
   <path class="fillh" d="M50 88C20 65 5 45 5 28A20 20 0 0 1 50 20A20 20 0 0 1 95 28C95 45 80 65 50 88Z"/>
   <path class="outline" d="M50 88C20 65 5 45 5 28A20 20 0 0 1 50 20A20 20 0 0 1 95 28C95 45 80 65 50 88Z"/>
   <circle class="shine" cx="30" cy="34" r="4"/></svg>`;
-function varreSvg(inicio,dur,dy=0){
+function varreSvg(inicio,dur,dy=0,saida=null){
   // 64 gomos do centro até fora da tela, cor pela posição no anel; a varredura (cunha + linha) dá
   // uma volta e cada gomo acende quando a linha passa por ele — igual ao anel, em tela cheia.
   const cx=W/2,cy=H/2+dy,R=Math.hypot(cx,H/2)+Math.abs(dy)+12,N=64;
@@ -197,14 +201,15 @@ function varreSvg(inicio,dur,dy=0){
   let out="";
   for(let i=0;i<N;i++){const a0=i/N*2*Math.PI-Math.PI/2,a1=(i+1)/N*2*Math.PI-Math.PI/2+.03;
     const[x0,y0]=p(R,a0),[x1,y1]=p(R,a1);const d=Math.round(inicio+i/N*dur);
-    out+=`<path class="sec" style="--d:${d}ms" d="M${cx} ${cy}L${x0.toFixed(1)} ${y0.toFixed(1)}A${R} ${R} 0 0 1 ${x1.toFixed(1)} ${y1.toFixed(1)}Z" fill="${rc(i/N)}"/>`}
+    const o=saida==null?0:Math.round(saida+i/N*dur);
+    out+=`<path class="sec" style="--d:${d}ms;--o:${o}ms" d="M${cx} ${cy}L${x0.toFixed(1)} ${y0.toFixed(1)}A${R} ${R} 0 0 1 ${x1.toFixed(1)} ${y1.toFixed(1)}Z" fill="${rc(i/N)}"/>`}
   const b0=-130*Math.PI/180,b1=-90*Math.PI/180,[sx,sy]=p(R*.8,b0),[ex,ey]=p(R,b1),sweep=sat("#5CC9B4");
-  return `<svg class="varre" viewBox="0 0 ${W} ${H}" style="--cx:${cx}px;--cy:${cy}px;--d0:${inicio}ms;--dur:${dur}ms">
+  return `<svg class="varre${saida==null?"":" volta"}" viewBox="0 0 ${W} ${H}" style="--cx:${cx}px;--cy:${cy}px;--d0:${inicio}ms;--dur:${dur}ms">
     <defs><linearGradient id="bsw" gradientUnits="userSpaceOnUse" x1="${sx}" y1="${sy}" x2="${ex}" y2="${ey}">
       <stop offset="0" stop-color="${sweep}" stop-opacity="0"/><stop offset="1" stop-color="${sweep}" stop-opacity=".45"/></linearGradient></defs>
     ${out}
-    <g class="bigsw"><path d="M${cx} ${cy}L${p(R,b0).map(v=>v.toFixed(1)).join(" ")}A${R} ${R} 0 0 1 ${ex.toFixed(1)} ${ey.toFixed(1)}Z" fill="url(#bsw)"/>
-    <path d="M${cx} ${cy}L${ex.toFixed(1)} ${ey.toFixed(1)}" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-opacity=".85"/></g></svg>`;
+    ${[inicio,saida].filter(t=>t!=null).map(t=>`<g class="bigsw" style="--d0:${t}ms"><path d="M${cx} ${cy}L${p(R,b0).map(v=>v.toFixed(1)).join(" ")}A${R} ${R} 0 0 1 ${ex.toFixed(1)} ${ey.toFixed(1)}Z" fill="url(#bsw)"/>
+    <path d="M${cx} ${cy}L${ex.toFixed(1)} ${ey.toFixed(1)}" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-opacity=".85"/></g>`).join("")}</svg>`;
 }
 
 const stage=document.getElementById("stage");
@@ -216,10 +221,11 @@ function montar(){
   sp.style.setProperty("--fim",(CENA.fim*K)+"ms");
   sp.style.setProperty("--wipe",((CENA.wipe??0)*K)+"ms");
   sp.style.setProperty("--flood",((CENA.flood??0)*K)+"ms");
-  sp.innerHTML=`${V==="2"?varreSvg(CENA.flood,1600,-42):""}<div class="marca"><div class="logo">${radarSvg()}</div><div class="word">Iris<b>a</b></div></div><div class="tag">quanta cor tem aqui?</div><div class="bar"><i></i></div>`;
+  sp.style.setProperty("--saida",((CENA.saida??0)*K)+"ms");
+  sp.innerHTML=`${V==="2"?varreSvg(CENA.flood,1600,-42,CENA.saida):""}<div class="marca"><div class="logo">${radarSvg()}</div><div class="word">Iris<b>a</b></div></div><div class="tag">quanta cor tem aqui?</div><div class="bar"><i></i></div>`;
   // k estica só os inícios (não a velocidade de cada entrada); na v1 o radar começa depois do círculo abrir
   for(const a of sp.getAnimations({subtree:true})){const t=a.effect.getTiming();const nome=a.animationName||"";
-    const off=["wipe","lift","paintout","wordWhite","borda"].includes(nome)?0:CENA.off;
+    const off=["wipe","lift","paintout","wordWhite","borda","bordaVolta","wordInk","bYellow"].includes(nome)?0:CENA.off;
     if(K!==1||off) a.effect.updateTiming({delay:(t.delay+off)*K})}
   if(K!==1) for(const a of stage.getAnimations({subtree:true})){if(sp.contains(a.effect.target))continue;const t=a.effect.getTiming();a.effect.updateTiming({delay:t.delay*K})}
 }
