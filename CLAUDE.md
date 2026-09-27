@@ -13,7 +13,8 @@ do Mac e SQL pronto para colar no SQL Editor do Supabase. Nunca peça nem aceite
 App nacional (Brasil) para a comunidade LGBTQIA+: relatos anônimos de LGBTIfobia, mapa de áreas de atenção,
 lugares avaliados em quatro eixos de acolhimento (atendimento, afeto, banheiro, clientela), mural de apoio,
 botão de emergência. Cidade de referência: Curitiba (parceiros-alvo: Grupo Dignidade, Centro de Cidadania LGBTQIA+).
-Nome: **Irisa** (INPI livre; @irisapp livre). Bundle id `br.com.irisa.app`. Contato: appirisa@gmail.com.
+Nome: **Irisa** (INPI livre; @irisapp livre). Bundle id `br.com.irisa.app` (Android) e `br.com.irisa.ios`
+(iOS — o `.app` original está preso em outra conta Apple, ver Armadilhas de 27/09/2026). Contato: appirisa@gmail.com.
 
 ## Estado atual (2026-09-14)
 
@@ -306,11 +307,18 @@ Checks antes de commitar: `npm run lint && npm run typecheck`. Migrations testá
 - Bairro é atribuído no insert do relato; após importar bairros, rodar o UPDATE de reprocessamento (supabase/README.md).
 - Xcode: nunca aplicar "Update to recommended settings"; Personal Team some após `prebuild --clean`; erro
   "Missing package product MapLibre" no Xcode GUI, mas `expo run:ios --device` no terminal compila.
-- **27/09/2026: "Failed Registering Bundle Identifier... not available" com Personal Team grátis.**
-  Nem sign-out/sign-in do Apple ID nem `prebuild --clean` resolveram — provável limite de 10 App IDs
-  a cada 7 dias da conta grátis (portal developer.apple.com fica bloqueado sem Developer Program,
-  então não dá pra confirmar/gerenciar pela web). Resolvido contratando o Apple Developer Program
-  (US$99/ano); depois disso, selecionar a conta paga no Team do Xcode antes de rodar de novo.
+- **27/09/2026: `br.com.irisa.app` não é registrável no iOS — está preso em outra conta Apple.**
+  "Failed Registering Bundle Identifier... not available" persistia mesmo depois de contratar o Apple
+  Developer Program (US$99/ano) e resolver o bug separado do EAS ("iTunes service key is empty", que
+  era só o eas-cli desatualizado — `npm install -g eas-cli` resolveu esse). Com a conta paga, o portal
+  developer.apple.com/account/resources/identifiers/list (bloqueado sem Developer Program, por isso não
+  dava pra checar antes) mostrou a lista **vazia** — ou seja, esse identificador nunca foi nosso de
+  verdade: o Personal Team grátis usa um registro provisório mais solto que não passa pela checagem
+  global de unicidade, e por semanas isso escondeu que a string já estava tomada por outra conta Apple
+  (sem jeito de recuperar). **Resolvido trocando só `ios.bundleIdentifier` pra `br.com.irisa.ios`** em
+  `app.config.ts` — o `android.package` continua `br.com.irisa.app` (Play Store e testadores não são
+  afetados; os dois namespaces são independentes). Precisa criar o app de novo no App Store Connect com
+  o identifier novo.
 - MapLibre usa LngLat como `[lng, lat]`. Câmera enquadra dados só no primeiro carregamento (`CityMap.tsx`).
 - ESLint proíbe setState em effect: usar estado derivado ou useQuery.
 - SQL Editor do Supabase mostra "No rows returned" em UPDATE bem-sucedido; confirmar com SELECT.
