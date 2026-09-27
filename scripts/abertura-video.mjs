@@ -22,6 +22,11 @@ const b = await chromium.launch({ executablePath: process.env.PW_CHROMIUM ?? "/o
 const pg = await b.newPage({ viewport: size, deviceScaleFactor: 1 });
 const url = "file://" + resolve("docs/abertura.html") + `?capture&v=${V}&formato=${FORMATO}&bg=${BG}&k=${K}` + (process.env.SEMFIM ? "&semfim" : "");
 await pg.goto(url, { waitUntil: "networkidle" });
+// Sem internet (ou com o Google Fonts bloqueado), usa as fontes do próprio app.
+const fontes = resolve("node_modules/@expo-google-fonts");
+await pg.addStyleTag({ content: `
+  @font-face{font-family:"Urbanist";font-weight:500;src:url("file://${fontes}/urbanist/500Medium/Urbanist_500Medium.ttf")}
+  @font-face{font-family:"Space Grotesk";font-weight:400;src:url("file://${fontes}/space-grotesk/400Regular/SpaceGrotesk_400Regular.ttf")}` });
 await pg.evaluate(() => document.fonts.ready);
 const total = await pg.evaluate(() => window.__TOTAL);
 const frames = Math.round((total / 1000) * FPS);
