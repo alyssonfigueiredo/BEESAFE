@@ -32,59 +32,67 @@ App brasileiro para a comunidade LGBTQIA+. Duas coisas, e a regra que as separa:
 
 ## 3. Cores (fonte única: `base.css`)
 
-Desde 26/09/2026 o material de divulgação usa os seis acentos com **+60% de saturação** (decisão dele). São os valores abaixo; o app usa os mesmos matizes mais contidos (`src/theme/tokens.js`, `SATURATION`). Os halos (`.halo`) continuam com os rgba antigos, mais suaves.
+Padrão desde 27/09/2026 (mesmo do app, `src/theme/tokens.js` com `SATURATION = 1.35`): **fundo papel claro**, seis acentos com saturação ×1.35, tinta escura. O fundo night escuro dos carrosséis 1–7 é o padrão antigo: não copiar.
 
 | token | hex | uso |
 |---|---|---|
-| night | #1E2340 | fundo de toda lâmina de Instagram; texto sobre cor |
-| night2 | #161B2E | pupila do símbolo, fundo do mark |
-| paper | #FAF9F6 | fundo claro (site, catálogo); raro no Instagram |
-| coral | #F4736F | urgência, relato, CTA principal, "Mito" |
-| orange | #F5A45D | afeto |
-| yellow | #F0CA75 | o "a" do wordmark, banheiro, atenção |
-| turq | #5CC9B4 | avaliar, acolhimento, "Verdade", eyebrow |
-| blue | #6AA8EE | só dentro do arco-íris |
-| lilac | #AE96F2 | clientela, halo |
-| texto claro | #FFFFFF / #D5D8E4 / #C9CDDD / #8A90A2 | título / corpo / apoio / discreto |
-| Ink (escuros) | coralInk #B23C3A, turqInk #1B7A6E… | texto colorido sobre fundo claro (contraste AA) |
+| paper | #F5F4F1 | fundo de toda lâmina |
+| surface / subtle / border | #FFFFFF / #ECEAE5 / #E6E3DD | painéis opacos, mapa, divisórias |
+| ink (night) | #141829 | título, texto principal, texto sobre cor |
+| muted / dim | #3D4560 / #7C8296 | corpo / eyebrow, numeração, "arraste" |
+| pupil | #0F1220 | pupila do símbolo |
+| coral | #FF6964 | urgência, relato, CTA principal, "Mito" |
+| orange | #FFA353 | afeto |
+| yellow | #FFD066 | o "a" do wordmark (≥20 px), banheiro, atenção |
+| turq | #49DCC0 | avaliar, acolhimento, "Verdade" |
+| blue | #59A7FF | só dentro do arco-íris |
+| lilac | #A889FF | clientela, halo |
+| amber | #FFAD0F | o "a" do wordmark abaixo de 20 px |
+| Ink (escuros) | coralInk #C72825, orangeInk #AB6207, yellowInk #9C6C00, turqInk #0A8B7A, lilacInk #6037F0 | **texto colorido sobre papel** (contraste AA). Cor cheia só em fundo de cápsula/pílula, nunca em texto pequeno |
 
-**Arco-íris da marca** (sempre nesta ordem, 6 paradas, sem vermelho puro nem verde puro): coral → orange → yellow → turq → blue → lilac. `linear-gradient(90deg, …)` em texto (`.rainbow`) e réguas (`.rule`); `conic-gradient(from -90deg, …, coral)` no anel.
+**Arco-íris da marca** (sempre nesta ordem, 6 paradas): coral → orange → yellow → turq → blue → lilac. `--rb` em texto (`.rainbow`) e réguas (`.rule`); `conic-gradient` no anel de nota.
 
 Eixos têm cor fixa: Atendimento coral, Afeto orange, Banheiro yellow, Clientela turq.
 
+**Liquid Glass**: cartão = `.pane` (branco a 62 %, `--shadow-card` dupla, borda de luz `--glass-inset`, blur 18 px saturate 1.4), raios 28/24/18 (`--r-xl/lg/md`), botões em cápsula (`.btn`, `.ct`, `.tag`). Variante escura `.dark` (night a 90 %) só para um cartão de contraste, nunca a lâmina inteira. Cartões e botões opacos de propósito.
+
 ## 4. Tipografia
 
-- **Oswald 500** (`--display`), caixa alta, `letter-spacing .03–.06em`, `line-height .95`: títulos, números grandes, eyebrow. Peso 300 para a parte "leve" da frase, 500 para a parte que importa.
-- **Space Grotesk 400** (`--body`): corpo, 32–40 px em lâmina de 1080. Nunca caixa alta.
-- **Urbanist 500** (`--wordmark`), caixa alta, `letter-spacing .2em`: só a palavra IRISA. O "a" final em yellow.
-- Tamanhos de referência (lâmina 1080×1350): eyebrow 28 · título 92–120 · palavra-impacto (`.slam`) 150–230 · corpo 36–40 · apoio 30–34 · rodapé 26.
+- **Oswald 700** (`--display`), caixa alta, `letter-spacing .01em`, `line-height .98`: títulos, números grandes. `.lt` (peso 400) para a parte "leve" da frase, 700 para a parte que importa.
+- **Space Grotesk** (`--body`): corpo 400, 36–40 px em lâmina de 1080; eyebrow, numeração, botões e chips em 600. Nunca caixa alta no corpo; eyebrow em caixa alta com `.14em`.
+- **Urbanist 500** (`--wordmark`), caixa alta, `letter-spacing .2em`: só a palavra IRISA. O "a" final em amber (rodapé) ou yellow (grande).
+- Tamanhos de referência (lâmina 1080×1350): eyebrow 28 · título 92–120 · palavra-impacto (`.slam`) 150 · corpo 36–40 · apoio 30–34 · rodapé 28.
 
-## 5. Símbolo e marca
+## 5. Símbolo e marca (reset de 27/09/2026, `docs/marca.html` e `docs/marca-pack/LEIA-ME.txt`)
 
-- **Símbolo**: o radar real, sempre. `radar.svgfrag` é um `<svg>` invisível com `<symbol id="radarmark">` (anel de 96 fatias, varredura turquesa, três pontos, pupila #161B2E com brilho branco): cola uma vez logo depois de `<body>` e usa `<svg class="mark" viewBox="0 0 100 100"><use href="#radarmark"/></svg>` onde o símbolo aparece. O círculo liso em CSS (`span.mark`) só serve abaixo de 24 px (ícone dentro do mockup de telefone); **nunca no rodapé nem no fecho** (erro corrigido em 26/09).
-- **Rodapé de toda lâmina**: canto inferior esquerdo `.brand` = radar 34 px + "IRIS" + "a" amarelo. Canto inferior direito `.swipe` = "arraste →" (não na última). Canto superior direito `.num` = "3/8".
-- **Assinatura em uma linha** (story, rodapé de peça): símbolo + IRISA + divisor + "Quanta **cor** tem esse lugar?" com "cor" em arco-íris.
+`radar.svgfrag` é o conteúdo de um `<defs>` com dois símbolos; cola uma vez logo depois de `<body>` dentro de `<svg style="position:absolute;width:0;height:0"><defs>…</defs></svg>`:
+- **`#radarmark`** = símbolo completo (anel de 48 gomos, varredura turquesa, três pontos, pupila #0F1220 com brilho). Só a partir de **50 px**: marca vertical, horizontal, fecho de reels (`.handle` com @irisapp a 78 px), capa de story.
+- **`#radarmin`** = **redução**: só o anel colorido, centro vazio, sem pupila. É a **assinatura de post**: rodapé de toda lâmina e de todo reels, ícone ao lado de @irisapp abaixo de 50 px. Mínimo 20 px.
+- Nunca: círculo liso em CSS, cor única, preto e branco, esticar, girar, sombra, `filter:saturate` por cima (o fragmento já vem na paleta ×1.35).
+- **Rodapé de toda lâmina**: canto inferior esquerdo `.brand` = `#radarmin` 36 px + "IRIS" + "a" amber. Canto inferior direito `.swipe` = "arraste →" (não na última). Canto superior direito `.num` = "3/8". No reels e no story o `.brand` fica centralizado a 120 px do fundo.
 - A capa de carrossel nunca é a logo. É o gancho.
+- Vinheta em vídeo: `docs/abertura.html` (4,2 s, `?formato=quadrado|story&bg=paper|night`), MP4 prontos em `docs/marca-pack/video/`.
 
 ## 6. Composição de uma lâmina
 
-Fundo night. Sobre ele, nesta ordem:
-1. `.halo.h1` e `.halo.h2`: manchas radiais turquesa/lilás e coral/amarelo, `blur(60px)`, opacidade baixa. Dão profundidade sem virar gradiente.
-2. `.grain`: pontilhado branco a 7% em `mix-blend-mode: overlay`. Tira o aspecto "flat de slide".
-3. Conteúdo centralizado (`justify-content:center`), largura máxima 860–900 px, margens laterais 60 px.
-4. Rodapé fixo (`.brand`, `.swipe`, `.num`).
+Fundo papel. Sobre ele, nesta ordem:
+1. `.bg`: quatro manchas radiais nos cantos (turq, coral, lilás, amarelo em `color-mix`), sem blur. Dão cor sem virar gradiente.
+2. Conteúdo centralizado (`justify-content:center`), largura máxima 860–900 px, padding lateral 80 px.
+3. Rodapé fixo (`.brand`, `.swipe`, `.num`).
 
 Padrões de lâmina (escolher um por lâmina, nunca misturar dois):
-- **Gancho**: eyebrow colorido + `.big` em duas partes (300 leve / 500 forte com `.rainbow`) + `.body` de uma frase.
-- **Palavra-impacto**: `.slam` (uma ou duas palavras, 150–230 px, em `.rainbow` ou coral) + `.body`.
-- **Pergunta e resposta**: `.qcard` com a frase entre aspas curvas + `.slam` "Mito." coral ou "Verdade." turquesa + `.body`.
-- **Lista**: `.list` (3–4 cartões com `b` em Oswald + `span` em corpo) ou `.grid2` para números (190/192/100/188).
-- **Dois lados**: `.two` (dois cartões com borda turq/coral) para "lugar × rua".
-- **Riscado**: `.strike` para negar uma ideia ("~~derruba~~", "~~região tranquila~~").
-- **Nota**: `.nring` (anel conic com 4.7 no centro) + `.badge-big` "Acolhedor".
-- **Fecho**: pergunta para comentário + `.pill` coral "O link está na bio" + `.small` "em fase de testes · Android".
+- **Gancho**: eyebrow em cor Ink + `.big` em duas partes (`.lt` leve / 700 forte com `.rainbow` ou cor Ink) + `.body` de uma frase.
+- **Palavra-impacto**: `.slam` (uma ou duas palavras, 150 px, em `.rainbow` ou coralInk) + `.body`.
+- **Pergunta e resposta**: `.qcard` com a frase entre aspas curvas + `.slam` "Mito." coralInk ou "Verdade." turqInk + `.body`.
+- **Lista**: `.list` (2–4 painéis de vidro com `b` em Oswald na cor Ink + `span` em corpo) ou `.grid2` para números (190/192/100/188).
+- **Riscado**: `.strike` para negar uma ideia ("~~região tranquila~~").
+- **Nota**: `.nring` (anel conic com 4.7 no centro branco) + `.badge-big` "Acolhedor".
+- **Cidades**: `.pills` com `.ct` (cápsulas em cor cheia, texto night).
+- **Fecho**: pergunta para comentário + `.btn` coral "O link está na bio" + eyebrow "em fase de testes · Android".
 
-Story (1080×1920, `.sl.story`): mesma gramática, mais ar, e uma **área tracejada** (`.zone`) onde entra o adesivo do Instagram (quiz, enquete, caixa de pergunta, link). O link nunca é escrito na arte.
+Story (1080×1920, `.sl.story`): mesma gramática, mais ar, marca centralizada no rodapé e uma **área tracejada** (`.zone`) onde entra o adesivo do Instagram (quiz, enquete, caixa de pergunta, link). O link nunca é escrito na arte.
+
+Reels (`docs/reels-3..9.html` como referência): mesmo CSS dentro de `#stage` 1080×1920, cenas em Web Animations presas a `window.__setT`, eyebrow com o nome da série na cena 0, assinatura "cinza vira cor" (`grayscale` no `#col` até o momento da virada), fecho `.handle` com `#radarmark` 78 px + @irisapp e `.brand` com `#radarmin`. Render: `FFMPEG=… node scripts/story-video.mjs docs/reels-N.html docs/Irisa-reels-N.mp4`. Sempre mostrar quadros estáticos antes de renderizar.
 
 ## 7a. Perfil zero (decisão de 27/09/2026)
 
@@ -102,7 +110,7 @@ Para quem não segue a conta, conteúdo que explica o app não segura 3 segundos
 
 ## 8. Referências (o que já existe, para copiar o jeito)
 
-- `docs/carrossel.html` (estreia), `carrossel-2.html` (quatro perguntas), `carrossel-3.html` (anonimato), `carrossel-4.html` (emergência), `carrossel-5.html` (regra da rua), `carrossel-6.html` (mito ou verdade), `carrossel-8.html` (Dia de Sair do Armário, 11/10), `post-bemvinde.html`, `stories-2.html`.
+- **Padrão novo (papel + Liquid Glass): `docs/carrossel-8.html` (fora do armário) e `carrossel-9.html` (viajar em casal)** e os reels 3–9. Padrão antigo (night), só para o texto: `docs/carrossel.html` (estreia), `carrossel-2.html` (quatro perguntas), `carrossel-3.html` (anonimato), `carrossel-4.html` (emergência), `carrossel-5.html` (regra da rua), `carrossel-6.html` (mito ou verdade), `carrossel-8.html` (Dia de Sair do Armário, 11/10), `post-bemvinde.html`, `stories-2.html`.
 - `docs/story.html` (vídeo de 60 s, dez cenas), `docs/reels-3.html` (regra da rua, 34 s), `docs/reels-4.html` (anonimato, 32 s), `docs/reels-5.html` (ficha do bairro, 36 s): carrosséis convertidos em cenas de 4–6 s, uma ideia por cena, número contando (`count`), fecho com pílula + @irisapp. `reels-6` a `reels-9` (15–20 s): **reels para quem não conhece o perfil**, gancho de reconhecimento sem jargão ("Você já soltou a mão em público?", "Mudei de calçada 4 vezes hoje", "A bandeira na porta não diz nada", "Sua cidade está no mapa?"), o app só aparece na última cena, e cada um pede um sinal (compartilhar, replay, comentar). `carrossel-8.html` (Dia de Sair do Armário), `carrossel-9.html` (viajar em casal, feito para salvar). `docs/index.html` (landing), `docs/pitch.html` (apresentação).
 - `docs/lojinha.html` e `scripts/lojinha/build.py`: mockups de produto em SVG com o mesmo sistema (fundo claro `paper` aceito ali).
 - Legendas e cronogramas anteriores: pasta Irisa-lancamento e Irisa-semana2 (uma pasta por dia, `legenda.txt` no feed, `texto.txt` no story).
