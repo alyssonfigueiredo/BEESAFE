@@ -15,7 +15,7 @@ lugares avaliados em quatro eixos de acolhimento (atendimento, afeto, banheiro, 
 botão de emergência. Cidade de referência: Curitiba (parceiros-alvo: Grupo Dignidade, Centro de Cidadania LGBTQIA+).
 Nome: **Irisa** (INPI livre; @irisapp livre). Bundle id `br.com.irisa.app`. Contato: appirisa@gmail.com.
 
-## Estado atual (2026-09-14)
+## Estado atual (2026-09-27)
 
 - Branch de trabalho: `claude/laughing-keller-my8t7c` (default do repo: `claude/ecstatic-darwin-cmf7sw`).
 - MVP completo e rodando no iPhone do usuário (Xcode, Apple ID gratuito, expira em 7 dias) e em APK Android (EAS preview).
@@ -38,6 +38,7 @@ Nome: **Irisa** (INPI livre; @irisapp livre). Bundle id `br.com.irisa.app`. Cont
 - Decidido lançar primeiro no Android. iOS fica para depois do primeiro retorno da Play Store.
 - Layout do Início decidido: painel (opção A do mockup).
 - Ficha das lojas pronta em docs/lojas.md.
+- Conta no Google Play Console criada, app em teste fechado (closed testing) no Google Play.
 
 ## Stack
 
@@ -67,8 +68,8 @@ Checks antes de commitar: `npm run lint && npm run typecheck`. Migrations testá
 
 ## Próximos passos (em ordem)
 
-1. Conta no Google Play Console (US$25, pode ser a conta pessoal dele; adicionar appirisa@gmail.com como admin).
-   Preencher com docs/lojas.md. Teste fechado: 12 testadores por 14 dias, depois produção.
+1. Acompanhar o teste fechado no Google Play (12 testadores por 14 dias corridos); ao fim do prazo,
+   solicitar liberação para produção no Play Console.
 2. SHA-1 da keystore EAS (`npx eas-cli credentials -p android`) no Google Cloud para login Google no Android.
 3. Fonte alternativa de bairros para Brasília, São Luís, Palmas e São Paulo (OSM não cobre).
 4. Implementar ocultar autor (bloqueio por usuário). Hoje não existe: no IARC está declarado **Não**,
