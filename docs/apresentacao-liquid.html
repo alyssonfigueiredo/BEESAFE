@@ -101,6 +101,8 @@
   .pill{display:inline-block;font:600 12px var(--body);padding:5px 11px;border-radius:999px;background:rgba(20,24,41,.08);color:var(--ink)}
   .slide.dark .pill{background:rgba(255,255,255,.14);color:#fff}
   .hint{font:500 13px var(--body);color:var(--dim)}
+  .aviso{justify-self:start;font-size:14.5px;line-height:1.5;color:var(--night);background:var(--yellow);border-radius:18px;padding:12px 16px;max-width:60ch}
+  .aviso b{color:var(--night)}
 
   /* protótipo vivo dentro do cartão (Shadow DOM) */
   .live{position:relative;display:block;margin:0 auto;border-radius:34px;overflow:hidden;box-shadow:0 30px 60px rgba(20,24,41,.28);width:calc(393px * var(--k,.6));height:calc(852px * var(--k,.6));flex:none}
@@ -157,6 +159,7 @@
     <h1>Alysson,<br>não me <span class="rb">odeia</span>.</h1>
     <p data-a style="--d:3">Eu tava entediado ontem. Você sabe como é: tédio + laptop + uma pessoa com opinião demais = eu mexendo no projeto de todo mundo. O seu foi só mais um. <b>Desculpa. De nada.</b></p>
     <p class="note" data-a style="--d:5">Lê até o fim antes de me bloquear. Tem tour virtual no final, e eu fiz a parte chata: as fontes carregam, os ícones centralizam, o Safari não chora.</p>
+    <div class="aviso" data-a style="--d:6"><b>Aviso importante:</b> é só protótipo. <b>Nada foi aplicado no app.</b> Se você gostar, é só assumir este chat comigo que a gente aplica de verdade. Se não gostar, também tá tudo bem. (Vai gostar.)</div>
     <div class="hint" data-a style="--d:7">→ setas, espaço ou deslizar</div>
   </section>
 
@@ -257,7 +260,8 @@
         <li style="--d:1"><b>Textos.</b> “Bem-vinde” continua lá, agora em arco-íris, porque merecia.</li>
         <li style="--d:2"><b>Regras.</b> Relato é da rua, nota é do lugar, nunca existe “região tranquila”. Eu li o seu CLAUDE.md inteiro. Duas vezes. Tem frase ali que eu quero bordar num pano de prato.</li>
         <li style="--d:3"><b>Banco, backend, Play Store.</b> Nem encostei. O app real está exatamente como você deixou.</li>
-        <li style="--d:4"><b>Onde isso mora:</b> numa branch separada, <span class="pill">claude/amazing-volta-0wnzed</span>. Se odiar, é só fingir que não viu. Como a gente faz com ex em festa.</li>
+        <li style="--d:4"><b>Nada disso está aplicado.</b> É protótipo em HTML. O que existe de código fica numa branch separada, <span class="pill">claude/amazing-volta-0wnzed</span>, sem encostar na sua. Se odiar, é só fingir que não viu. Como a gente faz com ex em festa.</li>
+        <li style="--d:5"><b>Se gostar:</b> assume este chat comigo e a gente aplica no app de verdade, tela por tela, você mandando.</li>
       </ul>
     </div>
   </section>
@@ -278,6 +282,7 @@
       <div class="rbline" data-a style="--d:7"></div>
       <div class="sig" data-a style="--d:8">Beijo, <span class="rb">Leandro</span>.</div>
       <div class="kiss" data-a style="--d:9">Não me odeia. O seu tava lindo. Eu só tava entediado. 💅</div>
+      <div class="aviso" data-a style="--d:10">Lembrando: <b>é só protótipo, nada foi aplicado.</b> Quer no app? É só assumir este chat que a gente faz.</div>
     </div>
   </section>
 
