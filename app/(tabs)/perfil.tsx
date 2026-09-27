@@ -6,6 +6,7 @@ import { Aurora } from "@/components/Aurora";
 import { useScreenInsets } from "@/hooks/useScreenInsets";
 import { CityPicker } from "@/components/CityPicker";
 import { useDeleteAccount, useProfile, useUpdateProfile } from "@/hooks/useProfile";
+import { authMessage } from "@/lib/authErrors";
 import { supabase } from "@/lib/supabase";
 import { useAuth } from "@/providers/AuthProvider";
 import { useCity } from "@/providers/CityProvider";
@@ -24,9 +25,13 @@ export default function PerfilScreen() {
   async function save() {
     try {
       await update.mutateAsync({ nickname: value, defaultCityId: city?.id ?? null });
-      Alert.alert("Salvo");
+      setNickname(null); // volta a mostrar o que está gravado
+      Alert.alert(
+        "Salvo",
+        value.trim() ? `Seu apelido agora é “${value.trim()}”.` : "Você aparece como Anônimo.",
+      );
     } catch (e) {
-      Alert.alert("Não deu certo", e instanceof Error ? e.message : "Tente de novo.");
+      Alert.alert("Não deu certo", authMessage(e) ?? "Tente de novo.");
     }
   }
 
@@ -39,7 +44,10 @@ export default function PerfilScreen() {
         {
           text: "Excluir",
           style: "destructive",
-          onPress: () => del.mutateAsync().catch((e) => Alert.alert("Não deu certo", e.message)),
+          onPress: () =>
+            del
+              .mutateAsync()
+              .catch((e) => Alert.alert("Não deu certo", authMessage(e) ?? "Tente de novo.")),
         },
       ],
     );
@@ -56,7 +64,11 @@ export default function PerfilScreen() {
       >
         <View>
           <Text className="font-display text-2xl uppercase tracking-wide text-ink">Perfil</Text>
-          <Text className="font-body text-sm text-dim">{session?.user.email}</Text>
+          <Text className="font-body text-sm text-dim">
+            {session?.user.email?.endsWith("privaterelay.appleid.com")
+              ? "Conta Apple (e-mail oculto)"
+              : session?.user.email}
+          </Text>
           {profile?.role !== "user" && profile && (
             <Text className="font-body-bold text-xs uppercase tracking-widest text-lilacInk">
               {profile.role === "admin" ? "Administração" : "Moderação"}

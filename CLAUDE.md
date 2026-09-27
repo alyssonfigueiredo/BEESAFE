@@ -26,6 +26,14 @@ Nome: **Irisa** (INPI livre; @irisapp livre). Bundle id `br.com.irisa.app`. Cont
   no EAS em 23/09/2026 com o cartão anti-duplicata, onde/quando, ficha do bairro e o Início novo;
   subir na mesma faixa de teste fechado, sem mexer na lista de testadores.
   O seed fictício de Curitiba saiu do repositório; `supabase/seed/limpar-curitiba-teste.sql` apaga o que sobrou no banco.
+- **Migration 18 (perfil robusto, 27/09/2026, achado no TestFlight):** `update_my_profile` virou
+  `security definer`, cria a linha de `profiles` se faltar (antes só fazia UPDATE e, sem linha, não
+  salvava nem dava erro), valida apelido ≤ 40 e cidade; `ensure_my_profile()` é o que o app usa para
+  ler o perfil. O app confere depois de salvar se o apelido gravou mesmo, e o mural já vem com o
+  apelido do Perfil. Erros de login/cadastro em português em `src/lib/authErrors.ts`.
+  **Apple com bundle `br.com.irisa.ios`:** o token da Apple vem com esse bundle como audiência; na
+  Supabase (Authentication → Sign In / Providers → Apple → Client IDs) têm que estar os dois,
+  `br.com.irisa.ios,br.com.irisa.app`, senão dá "Unacceptable audience in id_token".
 - Chaves legadas desativadas: app usa `sb_publishable_...`, scripts usam `sb_secret_...` (só na máquina dele).
 - Dados geográficos: os 5.570 municípios das 27 UFs e os bairros de 24 capitais importados do OSM.
   São Paulo saiu com 96 pelo nível 9 (`--nivel 9`, que lá são os distritos). Seguem sem bairro:

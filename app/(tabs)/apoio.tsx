@@ -5,7 +5,9 @@ import { useState } from "react";
 import { Alert, Linking, Pressable, ScrollView, Text, TextInput, View } from "react-native";
 
 import { Aurora } from "@/components/Aurora";
+import { useProfile } from "@/hooks/useProfile";
 import { useScreenInsets } from "@/hooks/useScreenInsets";
+import { authMessage } from "@/lib/authErrors";
 import { Chip } from "@/components/Chip";
 import { ReportButton } from "@/components/ReportButton";
 import {
@@ -35,7 +37,11 @@ export default function ApoioScreen() {
   const { data: services = [] } = useSupportServices(city?.id);
   const post = usePostSupportMessage();
   const toggle = useToggleLike();
-  const [nickname, setNickname] = useState("");
+  // O apelido do mural começa com o do Perfil; a pessoa pode trocar só para esta mensagem.
+  const { data: profile } = useProfile();
+  const [typed, setTyped] = useState<string | null>(null);
+  const nickname = typed ?? profile?.nickname ?? "";
+  const setNickname = setTyped;
   const [category, setCategory] = useState<SupportCategory>("acolhimento");
   const [content, setContent] = useState("");
 
@@ -45,7 +51,7 @@ export default function ApoioScreen() {
       await post.mutateAsync({ nickname, category, content, cityId: city?.id });
       setContent("");
     } catch (e) {
-      Alert.alert("Não deu certo", e instanceof Error ? e.message : "Tente de novo.");
+      Alert.alert("Não deu certo", authMessage(e) ?? "Tente de novo.");
     }
   }
 

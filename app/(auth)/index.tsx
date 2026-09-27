@@ -3,6 +3,7 @@ import { Alert, Platform, Pressable, Text, TextInput, View } from "react-native"
 import { SafeAreaView } from "react-native-safe-area-context";
 
 import { Logo } from "@/components/Logo";
+import { authMessage } from "@/lib/authErrors";
 import { isAppleSignInAvailable, signInWithApple, signInWithGoogle } from "@/lib/socialAuth";
 import { supabase } from "@/lib/supabase";
 import { colors, shadow } from "@/theme/tokens";
@@ -23,23 +24,37 @@ export default function LoginScreen() {
     try {
       await fn();
     } catch (e) {
-      const msg = e instanceof Error ? e.message : String(e);
-      if (!/cancel/i.test(msg)) Alert.alert("Não deu certo", msg);
+      const msg = authMessage(e);
+      if (msg) Alert.alert("Não deu certo", msg);
     } finally {
       setBusy(false);
     }
   }
 
   async function submitEmail() {
-    if (!email || !password) return Alert.alert("Preencha e-mail e senha.");
+    const mail = email.trim().toLowerCase();
+    if (!mail || !password) return Alert.alert("Preencha e-mail e senha.");
+    if (mode === "signup" && password.length < 6)
+      return Alert.alert("Senha curta", "A senha precisa ter pelo menos 6 caracteres.");
     await run(async () => {
-      const { error } =
-        mode === "login"
-          ? await supabase.auth.signInWithPassword({ email, password })
-          : await supabase.auth.signUp({ email, password });
+      if (mode === "login") {
+        const { error } = await supabase.auth.signInWithPassword({ email: mail, password });
+        if (error) throw error;
+        return;
+      }
+      const { data, error } = await supabase.auth.signUp({ email: mail, password });
       if (error) throw error;
-      if (mode === "signup")
-        Alert.alert("Cadastro criado", "Se pedirmos confirmação, confira seu e-mail.");
+      // Com confirmação ligada, a Supabase devolve usuário sem sessão; com e-mail já usado,
+      // devolve usuário sem identidades (para não revelar quem tem conta).
+      if (data.user && data.user.identities?.length === 0)
+        throw new Error("User already registered");
+      if (!data.session) {
+        Alert.alert(
+          "Confira seu e-mail",
+          "Mandamos um link para confirmar a conta. Depois de abrir o link, volte aqui e entre.",
+        );
+        setMode("login");
+      }
     });
   }
 
@@ -85,6 +100,9 @@ export default function LoginScreen() {
             placeholder="E-mail"
             placeholderTextColor={colors.dim}
             autoCapitalize="none"
+            autoCorrect={false}
+            autoComplete="email"
+            textContentType="emailAddress"
             keyboardType="email-address"
             value={email}
             onChangeText={setEmail}
@@ -95,6 +113,8 @@ export default function LoginScreen() {
             placeholder="Senha"
             placeholderTextColor={colors.dim}
             secureTextEntry
+            autoComplete={mode === "login" ? "current-password" : "new-password"}
+            textContentType={mode === "login" ? "password" : "newPassword"}
             value={password}
             onChangeText={setPassword}
           />
