@@ -292,7 +292,9 @@ Checks antes de commitar: `npm run lint && npm run typecheck`. Migrations testá
   têm `00000000000008_borda_municipio.sql`; a branch `claude/jolly-planck-spcml2` reconstituiu no repo
   uma migration já aplicada manualmente no banco como `00000000000008_notificacoes_cadastro.sql`. As duas
   foram coladas direto no SQL Editor sem conflito real (tabelas/funções diferentes), mas ao mesclar as
-  branches renumerar `notificacoes_cadastro` para depois da 17 (vira 18) antes de reaplicar em ambiente novo.
+  branches renumerar `notificacoes_cadastro` para depois da 18 (vira 19) antes de reaplicar em ambiente
+  novo — a 18 já foi ocupada em 27/09/2026 por `00000000000018_perfil_robusto.sql` (correção de apelido)
+  na branch `claude/laughing-keller-my8t7c`.
 - O aviso "Security Definer View" do linter da Supabase nas views `public_*` é proposital, não bug:
   as tabelas-base não têm policy de leitura para usuário comum, e a view é o único caminho — ela
   esconde `created_by`, filtra `status = 'active'` e arredonda coordenada recente. Não converter
