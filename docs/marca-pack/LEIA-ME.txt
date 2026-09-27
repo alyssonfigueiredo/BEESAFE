@@ -1,0 +1,23 @@
+Irisa · pack da marca (27/09/2026)
+
+Símbolo: o radar da abertura do app (anel de 48 gomos nas seis cores da marca com saturação ×1.35, varredura turquesa,
+três pontos, pupila #0F1220 com brilho). Nome: IRISA em Urbanist 500, caixa alta, A em #FFD066.
+
+Versões
+1. Vertical   irisa-vertical-*.svg/png      símbolo sobre o nome (.34em) + tagline opcional. Mínimo: símbolo 96 px.
+2. Horizontal irisa-horizontal-*.svg/png    símbolo à esquerda, nome .24em. Mínimo: símbolo 32 px.
+3. Redução    irisa-reducao-*.svg/png       só o anel colorido (sem pupila) + nome .2em. Abaixo de 50 px. Mínimo 20 px.
+
+Arquivos
+- svg/                 vetores (paper e night; texto em Urbanist, instale a fonte ou use os PNG)
+- png/transparente/    símbolo 2048 e 512, redução 1024 e 256, lockups com nome escuro (-ink) e claro (-white)
+- png/fundo/           lockups sobre papel e night (1080/1180 px), folha da marca
+- perfil/              foto de perfil do Instagram 1080×1080 (paper e night), ícone 1024, favicon 64 e 32
+- video/               abertura animada 4,2 s: story 1080×1920 (paper, night, verde chroma) e quadrado 1080×1080
+- Irisa-marca-folha.pdf
+
+Cores  coral #FF6964 · laranja #FFA353 · amarelo #FFD066 · turquesa #49DCC0 · azul #59A7FF · lilás #A889FF
+       papel #F5F4F1 · night #141829 · pupila #0F1220 · texto #141829 · apoio #3D4560
+Regras área de respiro = raio da pupila (13% do símbolo). Nunca uma cor só, nunca P&B, nunca esticado, girado ou com sombra.
+       Nome sempre com o A amarelo (âmbar #FFAD0F abaixo de 20 px). Redução sem pupila; completo só a partir de 50 px.
+Fontes Urbanist 500 (nome), Space Grotesk 400 (tagline), Oswald 500/700 (títulos das peças). Google Fonts.
