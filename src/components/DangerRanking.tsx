@@ -15,7 +15,7 @@ export function DangerRanking({
 }) {
   return (
     <View className="gap-3 rounded-3xl bg-surface p-4" style={shadow.card}>
-      <Text className="font-body-bold text-lg text-ink">{title}</Text>
+      <Text className="font-body-bold text-base text-ink">{title}</Text>
       {items.length === 0 && (
         <Text className="font-body text-sm text-dim">
           Sem relatos com bairro nos últimos 12 meses.

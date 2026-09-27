@@ -39,6 +39,8 @@ export declare const glass: {
   tint: string;
   tintStrong: string;
   edge: string;
+  side: number;
+  headerHeight: number;
   tabBarHeight: number;
   tabBarGap: number;
   radius: number;

@@ -74,9 +74,10 @@ export function EmergencyButton() {
               <Pressable
                 key={c.number}
                 onPress={() => Linking.openURL(`tel:${c.number}`)}
-                className="flex-row items-center gap-4 rounded-2xl bg-subtle px-4 py-3 active:opacity-80"
+                className="flex-row items-center gap-4 rounded-2xl px-4 py-3 active:opacity-80"
+                style={styles.row}
               >
-                <Text className="font-display text-3xl text-coralInk">{c.number}</Text>
+                <Text className="w-16 font-display text-3xl text-ink">{c.number}</Text>
                 <View className="flex-1">
                   <Text className="font-body-bold text-base text-ink">{c.name}</Text>
                   <Text className="font-body text-sm text-dim">{c.note}</Text>
@@ -93,7 +94,8 @@ export function EmergencyButton() {
                     key={s.id}
                     onPress={() => Linking.openURL(s.phone ? `tel:${s.phone}` : (s.url ?? ""))}
                     disabled={!s.phone && !s.url}
-                    className="rounded-2xl bg-subtle px-4 py-3 active:opacity-80"
+                    className="rounded-2xl px-4 py-3 active:opacity-80"
+                    style={styles.row}
                   >
                     <Text className="font-body-bold text-sm text-ink">{s.name}</Text>
                     {!!s.description && (
@@ -114,6 +116,7 @@ export function EmergencyButton() {
 }
 
 const styles = StyleSheet.create({
+  row: { backgroundColor: "rgba(255,255,255,0.55)" },
   pane: {
     gap: 16,
     borderTopLeftRadius: 32,

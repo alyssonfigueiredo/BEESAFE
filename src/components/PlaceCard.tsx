@@ -55,7 +55,7 @@ export function PlaceCard({
           <View className="min-w-0 flex-1 gap-2">
             <View className="flex-row items-center justify-between gap-2">
               <View className="min-w-0 flex-1 flex-row items-center gap-1">
-                <Text className="font-body-bold text-base text-ink" numberOfLines={1}>
+                <Text className="font-body-bold text-[15px] text-ink" numberOfLines={1}>
                   {place.name}
                 </Text>
                 {verified && <BadgeCheck color={colors.turquoiseInk} size={16} />}

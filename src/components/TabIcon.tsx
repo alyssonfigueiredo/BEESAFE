@@ -1,24 +1,50 @@
 import type { LucideIcon } from "lucide-react-native";
-import type { ColorValue } from "react-native";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
+import { StyleSheet, View, type ColorValue } from "react-native";
 import Animated, {
   Easing,
-  interpolateColor,
-  runOnJS,
-  useAnimatedReaction,
   useAnimatedStyle,
   useReducedMotion,
   useSharedValue,
   withSequence,
   withTiming,
+  type SharedValue,
 } from "react-native-reanimated";
 
-import { colors, mark } from "@/theme/tokens";
+import { mark } from "@/theme/tokens";
 
 // Ícone da aba: ao ser selecionado sai do cinza, passa pelas seis cores da marca e pousa na
-// cor da aba, com um pulinho. O ícone do Lucide não é animável por props nativas, então a cor
-// vem de um estado atualizado a cada quadro durante os 750 ms — barato e só na troca de aba.
-const STOPS = [0, 0.14, 0.28, 0.42, 0.56, 0.7, 0.84, 1];
+// cor da aba, com um pulinho. São sete cópias do ícone empilhadas (cinza, seis cores e a cor
+// final) e só a opacidade anima — tudo na thread de animação, sem ponte para o React.
+const STEP = 0.14;
+
+function Layer({
+  icon: Icon,
+  color,
+  at,
+  t,
+  last,
+}: {
+  icon: LucideIcon;
+  color: string;
+  at: number;
+  t: SharedValue<number>;
+  last?: boolean;
+}) {
+  const style = useAnimatedStyle(() => {
+    const d = t.value - at;
+    // cada cor acende num triângulo em volta do seu ponto; a última fica acesa depois dele
+    const o = last
+      ? Math.max(0, Math.min(1, (d + STEP) / STEP))
+      : Math.max(0, 1 - Math.abs(d) / STEP);
+    return { opacity: o };
+  });
+  return (
+    <Animated.View style={[StyleSheet.absoluteFill, style]}>
+      <Icon color={color} size={22} />
+    </Animated.View>
+  );
+}
 
 export function TabIcon({
   icon: Icon,
@@ -35,15 +61,10 @@ export function TabIcon({
   const reduce = useReducedMotion();
   const t = useSharedValue(focused ? 1 : 0);
   const pop = useSharedValue(1);
-  const [tint, setTint] = useState(focused ? active : colors.dim);
 
   useEffect(() => {
-    if (!focused) {
-      t.value = 0;
-      return;
-    }
-    if (reduce) {
-      t.value = 1;
+    if (!focused || reduce) {
+      t.value = focused ? 1 : 0;
       return;
     }
     t.value = 0;
@@ -55,19 +76,19 @@ export function TabIcon({
     );
   }, [focused, reduce, t, pop]);
 
-  useAnimatedReaction(
-    () => interpolateColor(t.value, STOPS, [colors.dim, ...mark.ring, active]),
-    (c, prev) => {
-      if (c !== prev) runOnJS(setTint)(c as string);
-    },
-    [active],
-  );
+  const wrap = useAnimatedStyle(() => ({ transform: [{ scale: pop.value }] }));
 
-  const style = useAnimatedStyle(() => ({ transform: [{ scale: pop.value }] }));
+  if (!focused) return <Icon color={color} size={22} />;
 
   return (
-    <Animated.View style={style}>
-      <Icon color={focused ? tint : color} size={22} />
+    <Animated.View style={[{ width: 22, height: 22 }, wrap]}>
+      <View style={StyleSheet.absoluteFill}>
+        <Icon color={String(color)} size={22} />
+      </View>
+      {mark.ring.map((c, i) => (
+        <Layer key={c} icon={Icon} color={c} at={(i + 1) * STEP} t={t} />
+      ))}
+      <Layer icon={Icon} color={active} at={1} t={t} last />
     </Animated.View>
   );
 }

@@ -100,7 +100,7 @@ export default function HomeScreen() {
               Sua cidade
             </Text>
           </View>
-          <Text className="font-display text-4xl uppercase tracking-wide text-paper">
+          <Text className="font-display text-3xl uppercase tracking-wide text-paper">
             {loading ? "Localizando…" : (city?.name ?? "Sem cidade")}
           </Text>
           <CityPicker tone="dark" />
@@ -166,7 +166,7 @@ export default function HomeScreen() {
         </View>
 
         <View className="gap-2">
-          <Text className="font-body-bold text-lg text-ink">
+          <Text className="font-body-bold text-base text-ink">
             {filtrando
               ? `${resultado.length} lugar${resultado.length === 1 ? "" : "es"}`
               : welcoming.length > 0
@@ -211,19 +211,14 @@ export default function HomeScreen() {
         </View>
 
         <View className="gap-1 pt-2">
-          <Text className="font-body-bold text-lg text-ink">Segurança na cidade</Text>
+          <Text className="font-body-bold text-base text-ink">Segurança na cidade</Text>
           <Text className="font-body text-xs text-dim">
             Relatos anônimos da comunidade. Ponto no mapa, nunca nome de quem escreveu.
           </Text>
         </View>
 
         <View className="flex-row gap-2">
-          <StatCard
-            label="Relatos"
-            value={stats?.total ?? "–"}
-            icon={FileText}
-            note="em 12 meses"
-          />
+          <StatCard label="Relatos" value={stats?.total ?? "–"} icon={FileText} />
           <StatCard
             label="Últimos 30 dias"
             value={stats?.last_30_days ?? "–"}
@@ -247,7 +242,7 @@ export default function HomeScreen() {
         </View>
 
         <View className="gap-2">
-          <Text className="font-body-bold text-lg text-ink">Relatos recentes</Text>
+          <Text className="font-body-bold text-base text-ink">Relatos recentes</Text>
           {occurrences.length === 0 && (
             <Text className="font-body text-sm text-dim">Ainda não há relatos nesta cidade.</Text>
           )}

@@ -33,7 +33,7 @@ export default function RegistrarScreen() {
         keyboardShouldPersistTaps="handled"
       >
         <View>
-          <Text className="font-display text-3xl uppercase tracking-wide text-ink">Registrar</Text>
+          <Text className="font-display text-2xl uppercase tracking-wide text-ink">Registrar</Text>
           <Text className="font-body text-sm text-dim">
             {mode === "relato"
               ? "Relato anônimo de LGBTIfobia"

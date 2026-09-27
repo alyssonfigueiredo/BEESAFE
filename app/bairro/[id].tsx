@@ -1,8 +1,7 @@
 import { Stack, useLocalSearchParams } from "expo-router";
-import { ScrollView, StyleSheet, Text, View } from "react-native";
+import { ScrollView, Text, View } from "react-native";
 
 import { Aurora } from "@/components/Aurora";
-import { Glass } from "@/components/Glass";
 import { OccurrenceCard } from "@/components/OccurrenceCard";
 import { PlaceCard } from "@/components/PlaceCard";
 import {
@@ -35,7 +34,7 @@ export default function BairroScreen() {
     headerBackTitle: "Voltar",
     headerTransparent: true,
     headerStyle: { backgroundColor: "transparent" },
-    headerBackground: () => <Glass style={StyleSheet.absoluteFill} />,
+    headerBlurEffect: "systemUltraThinMaterial",
     headerTintColor: colors.ink,
     headerShadowVisible: false,
   } as const;
@@ -77,7 +76,7 @@ export default function BairroScreen() {
           <Text className="font-body-medium text-[11px] uppercase tracking-wider text-paper/60">
             {resumo.city} · {resumo.state}
           </Text>
-          <Text className="font-display text-3xl uppercase tracking-wide text-paper">
+          <Text className="font-display text-2xl uppercase tracking-wide text-paper">
             {resumo.neighborhood}
           </Text>
           <View className="flex-row items-center gap-2">
@@ -102,7 +101,7 @@ export default function BairroScreen() {
           fora em vez de virar "não informado" ocupando espaço. */}
         {Number(resumo.total) > 0 && (
           <View className="gap-4 rounded-3xl bg-surface p-4" style={shadow.card}>
-            <Text className="font-body-bold text-lg text-ink">O que foi relatado</Text>
+            <Text className="font-body-bold text-base text-ink">O que foi relatado</Text>
             <Contagem
               titulo="Tipo"
               dados={resumo.by_type}
@@ -125,7 +124,7 @@ export default function BairroScreen() {
         )}
 
         <View className="gap-2">
-          <Text className="font-body-bold text-lg text-ink">Lugares deste bairro</Text>
+          <Text className="font-body-bold text-base text-ink">Lugares deste bairro</Text>
           {lugares.length === 0 ? (
             <Text className="font-body text-sm text-dim">Nenhum lugar cadastrado aqui ainda.</Text>
           ) : (
@@ -134,7 +133,7 @@ export default function BairroScreen() {
         </View>
 
         <View className="gap-2">
-          <Text className="font-body-bold text-lg text-ink">Relatos deste bairro</Text>
+          <Text className="font-body-bold text-base text-ink">Relatos deste bairro</Text>
           {relatos.length === 0 ? (
             <Text className="font-body text-sm text-dim">
               Nenhum relato registrado aqui. Isso não quer dizer que a área seja segura — quer dizer

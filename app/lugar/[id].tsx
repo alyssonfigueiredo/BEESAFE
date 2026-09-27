@@ -9,7 +9,6 @@ import {
   Platform,
   Pressable,
   ScrollView,
-  StyleSheet,
   Text,
   TextInput,
   View,
@@ -29,7 +28,6 @@ import { ReportButton } from "@/components/ReportButton";
 import { usePlace, usePlaceRatings, useRatePlace } from "@/hooks/usePlaces";
 import { AXES, AXIS_KEYS, BADGES, PLACE_CATEGORIES, placeScoreColor } from "@/theme/domain";
 import type { Axis } from "@/theme/domain";
-import { Glass } from "@/components/Glass";
 import { colors, shadow } from "@/theme/tokens";
 
 type Draft = Record<Axis, number> & { key: string; comment: string };
@@ -115,7 +113,7 @@ export default function PlaceScreen() {
           title: "",
           headerTransparent: true,
           headerStyle: { backgroundColor: "transparent" },
-          headerBackground: () => <Glass style={StyleSheet.absoluteFill} />,
+          headerBlurEffect: "systemUltraThinMaterial",
           headerTintColor: colors.ink,
           headerShadowVisible: false,
         }}
@@ -139,7 +137,7 @@ export default function PlaceScreen() {
               progress={respondidas / AXIS_KEYS.length}
             />
             <View className="flex-row items-center gap-2">
-              <Text className="flex-1 font-display text-3xl uppercase tracking-wide text-ink">
+              <Text className="flex-1 font-display text-2xl uppercase tracking-wide text-ink">
                 {place.name}
               </Text>
               {place.verified && <BadgeCheck color={colors.turquoiseInk} size={20} />}
@@ -245,7 +243,7 @@ export default function PlaceScreen() {
 
           {formVisivel ? (
             <View className="gap-4 rounded-3xl bg-surface p-4" style={shadow.card}>
-              <Text className="font-body-bold text-lg text-ink">
+              <Text className="font-body-bold text-base text-ink">
                 {mine ? "Sua avaliação" : "Como foi lá?"}
               </Text>
               {AXIS_KEYS.map((k) => (
@@ -291,7 +289,7 @@ export default function PlaceScreen() {
 
           {ratings.length > 0 && (
             <View className="gap-2">
-              <Text className="font-body-bold text-lg text-ink">Avaliações</Text>
+              <Text className="font-body-bold text-base text-ink">Avaliações</Text>
               {ratings.map((r) => (
                 <View key={r.id} className="gap-1 rounded-3xl bg-surface p-4" style={shadow.card}>
                   <View className="flex-row items-center justify-between">

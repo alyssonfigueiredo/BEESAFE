@@ -99,12 +99,14 @@ const mark = {
 // Vidro (Liquid Glass, iOS 26+; nos outros sistemas vira blur com véu branco): só nas camadas
 // que flutuam sobre o conteúdo — cabeçalho, barra de abas, folhas modais. Cartão e botão são opacos.
 const glass = {
-  tint: "rgba(255,255,255,0.44)", // véu sobre o blur: fino, para o conteúdo aparecer por baixo
-  tintStrong: "rgba(255,255,255,0.72)", // folhas modais, onde se lê texto longo
+  tint: "rgba(255,255,255,0.56)", // véu sobre o blur (o vidro do iOS 26 puxa cor do que está atrás)
+  tintStrong: "rgba(255,255,255,0.78)", // folhas modais, onde se lê texto longo
   edge: "rgba(255,255,255,0.90)", // fio de luz na borda
-  tabBarHeight: 64,
-  tabBarGap: 16, // distância da barra até a borda de baixo (além da área segura)
-  radius: 32,
+  side: 16, // margem lateral das cápsulas (cabeçalho e barra)
+  headerHeight: 52,
+  tabBarHeight: 66,
+  tabBarGap: 18, // distância da barra até a borda de baixo (além da área segura)
+  radius: 33,
 };
 
 // Profundidade: cartão e botão cheio descolam do papel. Sombra dupla (contato + ambiente) no

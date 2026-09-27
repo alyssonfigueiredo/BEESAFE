@@ -59,14 +59,14 @@ export default function ApoioScreen() {
         keyboardShouldPersistTaps="handled"
       >
         <View>
-          <Text className="font-display text-3xl uppercase tracking-wide text-ink">Apoio</Text>
+          <Text className="font-display text-2xl uppercase tracking-wide text-ink">Apoio</Text>
           <Text className="font-body text-sm text-dim">
             Mural da comunidade e serviços de apoio
           </Text>
         </View>
 
         <View className="gap-3 rounded-3xl bg-surface p-4" style={shadow.card}>
-          <Text className="font-body-bold text-lg text-ink">Deixe uma mensagem</Text>
+          <Text className="font-body-bold text-base text-ink">Deixe uma mensagem</Text>
           <TextInput
             className="rounded-2xl bg-subtle px-4 py-3 font-body text-base text-ink"
             placeholder="Apelido (opcional, vira Anônimo)"
@@ -150,7 +150,7 @@ export default function ApoioScreen() {
         </View>
 
         <View className="gap-3 rounded-3xl bg-surface p-4" style={shadow.card}>
-          <Text className="font-body-bold text-lg text-ink">
+          <Text className="font-body-bold text-base text-ink">
             Serviços de apoio{city ? ` · ${city.name}` : ""}
           </Text>
           {services.map((s) => (

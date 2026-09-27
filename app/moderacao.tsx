@@ -1,13 +1,12 @@
 import { formatDistanceToNow, parseISO } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { Stack } from "expo-router";
-import { Alert, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
+import { Alert, Pressable, ScrollView, Text, View } from "react-native";
 
 import { Aurora } from "@/components/Aurora";
 import { useScreenInsets } from "@/hooks/useScreenInsets";
 import { useModerate, useModerationQueue } from "@/hooks/useModeration";
 import { useProfile } from "@/hooks/useProfile";
-import { Glass } from "@/components/Glass";
 import { colors, shadow } from "@/theme/tokens";
 
 const TYPE_LABEL = {
@@ -39,7 +38,7 @@ export default function ModeracaoScreen() {
           title: "Moderação",
           headerTransparent: true,
           headerStyle: { backgroundColor: "transparent" },
-          headerBackground: () => <Glass style={StyleSheet.absoluteFill} />,
+          headerBlurEffect: "systemUltraThinMaterial",
           headerTintColor: colors.ink,
         }}
       />

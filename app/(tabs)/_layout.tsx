@@ -16,11 +16,28 @@ export default function TabsLayout() {
     <Tabs
       screenOptions={{
         // Cabeçalho e barra em vidro: o conteúdo passa por baixo (cada tela usa useScreenInsets).
+        // Cabeçalho em cápsula de vidro solta das bordas, como a barra de abas.
         headerTransparent: true,
-        headerStyle: { backgroundColor: "transparent" },
-        headerBackground: () => <Glass style={StyleSheet.absoluteFill} />,
+        headerStyle: {
+          backgroundColor: "transparent",
+          height: safe.top + 8 + glass.headerHeight + 8,
+        },
+        headerBackground: () => (
+          <Glass
+            style={{
+              position: "absolute",
+              left: glass.side,
+              right: glass.side,
+              top: safe.top + 8,
+              height: glass.headerHeight,
+              borderRadius: glass.headerHeight / 2,
+            }}
+          />
+        ),
         headerTitle: () => <Logo size="sm" />,
         headerTitleAlign: "left",
+        headerTitleContainerStyle: { marginLeft: glass.side + 16 },
+        headerRightContainerStyle: { paddingRight: glass.side - 8 },
         headerRight: () => <EmergencyButton />,
         headerShadowVisible: false,
         sceneStyle: { backgroundColor: colors.paper },
@@ -28,8 +45,8 @@ export default function TabsLayout() {
         // (paddingBottom 0 anula a área segura que a barra somaria por conta própria.)
         tabBarStyle: {
           position: "absolute",
-          left: 14,
-          right: 14,
+          left: glass.side,
+          right: glass.side,
           bottom: safe.bottom + glass.tabBarGap,
           height: glass.tabBarHeight,
           borderRadius: glass.radius,

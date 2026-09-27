@@ -31,9 +31,9 @@ function Segment({
   v: SharedValue<number>;
 }) {
   const props = useAnimatedProps(() => {
-    const fill = Math.max(0, Math.min(1, v.value - i));
+    const fill = Math.max(0.002, Math.min(1, v.value - i));
     return {
-      d: fill <= 0.01 ? "" : annulus(c, ro, ri, i * 72 + 0.6, i * 72 + 72 * fill),
+      d: annulus(c, ro, ri, i * 72 + 0.6, i * 72 + 72 * fill),
       opacity: fill <= 0.01 ? 0 : 1,
     };
   });
@@ -44,11 +44,13 @@ function Segment({
 // Só em tamanho grande (ficha do lugar): abaixo de ~40 px o miolo vira borrão.
 
 function point(cx: number, r: number, deg: number) {
+  "worklet";
   const a = ((deg - 90) * Math.PI) / 180;
   return { x: cx + r * Math.cos(a), y: cx + r * Math.sin(a) };
 }
 
 function annulus(cx: number, ro: number, ri: number, a0: number, a1: number) {
+  "worklet";
   const o0 = point(cx, ro, a0),
     o1 = point(cx, ro, a1),
     i1 = point(cx, ri, a1),
