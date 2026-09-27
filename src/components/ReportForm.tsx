@@ -21,7 +21,7 @@ import {
   type OccurrenceType,
   type Severity,
 } from "@/theme/domain";
-import { colors } from "@/theme/tokens";
+import { colors, shadow } from "@/theme/tokens";
 
 const TYPE_KEYS = Object.keys(OCCURRENCE_TYPES) as OccurrenceType[];
 const SEV_KEYS = Object.keys(SEVERITIES) as Severity[];
@@ -106,6 +106,7 @@ export function ReportForm({ onDone }: { onDone: () => void }) {
           <Pressable
             onPress={() => setShowPicker(true)}
             className="rounded-xl border border-border bg-surface px-4 py-3"
+            style={shadow.card}
           >
             <Text className="font-body text-base text-ink">
               {format(date, "d 'de' MMMM 'de' yyyy", { locale: ptBR })}
@@ -148,7 +149,7 @@ export function ReportForm({ onDone }: { onDone: () => void }) {
       >
         <Pressable
           onPress={useMyLocation}
-          className="flex-row items-center justify-center gap-2 rounded-xl border border-turquoise py-3 active:opacity-80"
+          className="flex-row items-center justify-center gap-2 rounded-full border border-turquoise py-3 active:opacity-80"
         >
           <Crosshair color={colors.turquoiseInk} size={18} />
           <Text className="font-heading text-sm uppercase tracking-widest text-turquoiseInk">
@@ -212,6 +213,7 @@ export function ReportForm({ onDone }: { onDone: () => void }) {
       <Field label="Descrição (opcional)" hint={`${description.length}/2000`}>
         <TextInput
           className="min-h-28 rounded-xl border border-border bg-surface px-4 py-3 font-body text-base text-ink"
+          style={shadow.card}
           placeholder="O que aconteceu? Não inclua seu nome nem dados que identifiquem você ou outras pessoas."
           placeholderTextColor={colors.dim}
           multiline
@@ -225,7 +227,8 @@ export function ReportForm({ onDone }: { onDone: () => void }) {
       <Pressable
         disabled={create.isPending}
         onPress={submit}
-        className="items-center rounded-xl bg-coral py-4 active:opacity-80 disabled:opacity-50"
+        className="items-center rounded-full bg-coral py-4 active:opacity-80 disabled:opacity-50"
+        style={shadow.coral}
       >
         <Text className="font-heading text-lg uppercase tracking-widest text-night">
           {create.isPending ? "Enviando…" : "Registrar relato"}

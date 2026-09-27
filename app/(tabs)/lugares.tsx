@@ -3,21 +3,19 @@ import { Search } from "lucide-react-native";
 import { useMemo, useState } from "react";
 import { FlatList, Pressable, ScrollView, Text, TextInput, View } from "react-native";
 
+import { useScreenInsets } from "@/hooks/useScreenInsets";
 import { PlaceCard } from "@/components/PlaceCard";
 import { usePlaces } from "@/hooks/usePlaces";
 import { distanceMeters } from "@/lib/geo";
 import { useCity } from "@/providers/CityProvider";
 import { PLACE_CATEGORIES, type PlaceCategory } from "@/theme/domain";
-import { colors } from "@/theme/tokens";
+import { colors, shadow } from "@/theme/tokens";
 
 // Busca sem acento e sem caixa: "cafe" acha "Café".
-const simplifica = (s: string) =>
-  s
-    .toLowerCase()
-    .normalize("NFD")
-    .replace(/[̀-ͯ]/g, "");
+const simplifica = (s: string) => s.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "");
 
 export default function LugaresScreen() {
+  const insets = useScreenInsets();
   const { city, loading, userLocation } = useCity();
   const { data: places = [], isLoading } = usePlaces(city?.id);
   const [busca, setBusca] = useState("");
@@ -34,11 +32,13 @@ export default function LugaresScreen() {
   const categorias = useMemo(() => {
     const n: Partial<Record<PlaceCategory, number>> = {};
     for (const p of places) n[p.category] = (n[p.category] ?? 0) + 1;
-    return (Object.keys(PLACE_CATEGORIES) as PlaceCategory[]).filter((c) => n[c]).map((c) => ({
-      key: c,
-      label: PLACE_CATEGORIES[c],
-      total: n[c]!,
-    }));
+    return (Object.keys(PLACE_CATEGORIES) as PlaceCategory[])
+      .filter((c) => n[c])
+      .map((c) => ({
+        key: c,
+        label: PLACE_CATEGORIES[c],
+        total: n[c]!,
+      }));
   }, [places]);
 
   // Perto de você primeiro; sem localização, por nome. Quem já tem nota não sobe por isso —
@@ -75,7 +75,8 @@ export default function LugaresScreen() {
   return (
     <FlatList
       className="flex-1 bg-paper"
-      contentContainerClassName="gap-3 px-4 py-4"
+      contentContainerClassName="gap-3 px-4"
+      contentContainerStyle={insets}
       data={lista}
       keyExtractor={(item) => item.place.id}
       keyboardShouldPersistTaps="handled"
@@ -90,7 +91,10 @@ export default function LugaresScreen() {
             </Text>
           </View>
 
-          <View className="flex-row items-center gap-2 rounded-xl border border-border bg-surface px-3">
+          <View
+            className="flex-row items-center gap-2 rounded-xl border border-border bg-surface px-3"
+            style={shadow.card}
+          >
             <Search color={colors.dim} size={18} />
             <TextInput
               className="flex-1 py-3 font-body text-base text-ink"

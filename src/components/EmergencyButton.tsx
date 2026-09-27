@@ -1,6 +1,6 @@
 import { Siren, X } from "lucide-react-native";
 import { useEffect, useState } from "react";
-import { Linking, Modal, Pressable, Text, View } from "react-native";
+import { Linking, Modal, Pressable, StyleSheet, Text, View } from "react-native";
 import Animated, {
   Easing,
   useAnimatedStyle,
@@ -12,6 +12,7 @@ import Animated, {
 import { useSupportServices } from "@/hooks/useSupport";
 import { useCity } from "@/providers/CityProvider";
 import { EMERGENCY_CONTACTS } from "@/theme/domain";
+import { Glass } from "@/components/Glass";
 import { colors } from "@/theme/tokens";
 
 export function EmergencyButton() {
@@ -58,8 +59,9 @@ export function EmergencyButton() {
       </Pressable>
 
       <Modal visible={open} animationType="slide" transparent onRequestClose={() => setOpen(false)}>
-        <View className="flex-1 justify-end bg-black/60">
-          <View className="gap-4 rounded-t-3xl border-t border-border bg-surface px-6 pb-10 pt-6">
+        <View className="flex-1 justify-end bg-night/40">
+          {/* Folha em vidro forte: texto longo em cima de blur precisa de véu mais fechado. */}
+          <Glass tint="strong" style={styles.pane}>
             <View className="flex-row items-center justify-between">
               <Text className="font-display text-2xl uppercase tracking-widest text-ink">
                 Emergência
@@ -104,9 +106,20 @@ export function EmergencyButton() {
                 ))}
               </View>
             )}
-          </View>
+          </Glass>
         </View>
       </Modal>
     </>
   );
 }
+
+const styles = StyleSheet.create({
+  pane: {
+    gap: 16,
+    borderTopLeftRadius: 32,
+    borderTopRightRadius: 32,
+    paddingHorizontal: 24,
+    paddingTop: 20,
+    paddingBottom: 44,
+  },
+});

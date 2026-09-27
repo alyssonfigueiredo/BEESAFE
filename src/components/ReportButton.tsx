@@ -3,7 +3,7 @@ import { useState } from "react";
 import { Alert, Modal, Pressable, Text, TextInput, View } from "react-native";
 
 import { useReportContent, type ReportTarget } from "@/hooks/useModeration";
-import { colors } from "@/theme/tokens";
+import { colors, shadow } from "@/theme/tokens";
 
 const REASONS = [
   "Conteúdo falso",
@@ -87,7 +87,8 @@ export function ReportButton({
             <Pressable
               disabled={report.isPending}
               onPress={submit}
-              className="items-center rounded-xl bg-coral py-3 active:opacity-80 disabled:opacity-50"
+              className="items-center rounded-full bg-coral py-3 active:opacity-80 disabled:opacity-50"
+              style={shadow.coral}
             >
               <Text className="font-heading text-base uppercase tracking-widest text-night">
                 Enviar denúncia

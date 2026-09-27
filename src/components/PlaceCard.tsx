@@ -10,7 +10,7 @@ import { Rainbow } from "@/components/Rainbow";
 import { formatDistance } from "@/lib/geo";
 import type { WelcomingPlace } from "@/lib/types";
 import { PLACE_CATEGORIES, RATING_MIN, placeScoreColor } from "@/theme/domain";
-import { colors } from "@/theme/tokens";
+import { colors, shadow } from "@/theme/tokens";
 
 export function PlaceCard({
   place,
@@ -35,7 +35,10 @@ export function PlaceCard({
 
   return (
     <Link href={{ pathname: "/lugar/[id]", params: { id: place.id } }} asChild>
-      <Pressable className="flex-row gap-3 rounded-xl border border-border bg-surface p-3 active:opacity-80">
+      <Pressable
+        className="flex-row gap-3 rounded-xl border border-border bg-surface p-3 active:opacity-80"
+        style={shadow.card}
+      >
         <PlacePhoto
           category={place.category}
           photoName={place.photo_name}

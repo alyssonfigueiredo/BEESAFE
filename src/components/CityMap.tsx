@@ -105,7 +105,12 @@ export function CityMap({
     const lats = pts.map((p) => p[1]);
     const pad = 0.006; // ~600 m, evita bounds degenerado com 1 ponto
     cameraRef.current?.fitBounds(
-      [Math.min(...lngs) - pad, Math.min(...lats) - pad, Math.max(...lngs) + pad, Math.max(...lats) + pad],
+      [
+        Math.min(...lngs) - pad,
+        Math.min(...lats) - pad,
+        Math.max(...lngs) + pad,
+        Math.max(...lats) + pad,
+      ],
       { padding: { top: 24, right: 24, bottom: 24, left: 24 }, duration: 0 },
     );
     fitted.current = true;

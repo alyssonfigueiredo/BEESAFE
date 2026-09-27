@@ -8,7 +8,7 @@ import { CityMap } from "@/components/CityMap";
 import { useCreatePlace, useSimilarPlaces } from "@/hooks/usePlaces";
 import { useCity } from "@/providers/CityProvider";
 import { PLACE_CATEGORIES, type PlaceCategory } from "@/theme/domain";
-import { colors } from "@/theme/tokens";
+import { colors, shadow } from "@/theme/tokens";
 
 const CATEGORY_KEYS = Object.keys(PLACE_CATEGORIES) as PlaceCategory[];
 
@@ -61,6 +61,7 @@ export function PlaceForm({ onDone }: { onDone: (placeId: string) => void }) {
         <Text className="font-heading text-sm uppercase tracking-widest text-muted">Nome</Text>
         <TextInput
           className="rounded-xl border border-border bg-surface px-4 py-3 font-body text-base text-ink"
+          style={shadow.card}
           placeholder="Ex.: Bar da Esquina"
           placeholderTextColor={colors.dim}
           maxLength={80}
@@ -99,6 +100,7 @@ export function PlaceForm({ onDone }: { onDone: (placeId: string) => void }) {
         </Text>
         <TextInput
           className="rounded-xl border border-border bg-surface px-4 py-3 font-body text-base text-ink"
+          style={shadow.card}
           placeholder="Rua e número"
           placeholderTextColor={colors.dim}
           maxLength={200}
@@ -134,8 +136,8 @@ export function PlaceForm({ onDone }: { onDone: (placeId: string) => void }) {
             {jaExistem.length === 1 ? "Já existe um parecido" : "Já existem parecidos"}
           </Text>
           <Text className="font-body text-sm text-dim">
-            Se for o mesmo lugar, abra e avalie — a nota da comunidade some quando o mesmo bar
-            vira duas fichas.
+            Se for o mesmo lugar, abra e avalie — a nota da comunidade some quando o mesmo bar vira
+            duas fichas.
           </Text>
           {jaExistem.map((p) => (
             <Pressable
@@ -156,7 +158,8 @@ export function PlaceForm({ onDone }: { onDone: (placeId: string) => void }) {
       <Pressable
         disabled={create.isPending}
         onPress={submit}
-        className="items-center rounded-xl bg-turquoise py-4 active:opacity-80 disabled:opacity-50"
+        className="items-center rounded-full bg-turquoise py-4 active:opacity-80 disabled:opacity-50"
+        style={shadow.turquoise}
       >
         <Text className="font-heading text-lg uppercase tracking-widest text-night">
           {create.isPending ? "Salvando…" : "Adicionar lugar"}
