@@ -1,0 +1,390 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Irisa · Plano de lançamento</title>
+<meta name="description" content="Três meses de identidade, padrões de posts e estratégia de lançamento da Irisa no Instagram e nas lojas.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Urbanist:wght@500&family=Oswald:wght@300;500;700&family=Space+Grotesk:wght@400;500;700&display=swap">
+<style>
+  :root{
+    --night:#1E2340;--night2:#161B2E;--paper:#FAF9F6;
+    --coral:#F4736F;--orange:#F5A45D;--yellow:#F0CA75;--turq:#5CC9B4;--blue:#6AA8EE;--lilac:#AE96F2;
+    --t1:#FFFFFF;--t2:#D5D8E4;--t3:#C9CDDD;--t4:#8A90A2;
+    --display:"Oswald","Arial Narrow",Impact,sans-serif;--body:"Space Grotesk","Helvetica Neue",Arial,sans-serif;--wordmark:"Urbanist","Helvetica Neue",Arial,sans-serif;
+    --rb:linear-gradient(90deg,var(--coral),var(--orange),var(--yellow),var(--turq),var(--blue),var(--lilac));
+    color-scheme:dark;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;background:var(--night);color:var(--t2);font:400 16px/1.55 var(--body);-webkit-font-smoothing:antialiased;position:relative;overflow-x:hidden}
+  .halo{position:fixed;border-radius:50%;filter:blur(70px);pointer-events:none;z-index:0;opacity:.32}
+  .h1{width:60vw;height:60vw;left:-20vw;top:-20vw;background:radial-gradient(circle,var(--turq),var(--lilac) 60%,transparent 70%)}
+  .h2{width:55vw;height:55vw;right:-18vw;bottom:-18vw;background:radial-gradient(circle,var(--coral),var(--yellow) 60%,transparent 70%)}
+  .grain{position:fixed;inset:0;pointer-events:none;z-index:0;opacity:.07;mix-blend-mode:overlay;background-image:radial-gradient(#fff 0.6px,transparent 0.7px);background-size:3px 3px}
+  .wrap{position:relative;z-index:1;max-width:1040px;margin:0 auto;padding:28px 20px 80px;display:grid;gap:56px}
+  @media (max-width:640px){.wrap{gap:40px;padding:20px 16px 60px}}
+
+  .brand{display:flex;align-items:center;gap:10px;font:500 15px var(--wordmark);letter-spacing:.2em;text-transform:uppercase;color:#fff}
+  .brand b{font-weight:500;color:var(--yellow)}
+  .brand .mark{width:26px;height:26px;border-radius:50%;background:conic-gradient(from -90deg,var(--coral),var(--orange),var(--yellow),var(--turq),var(--blue),var(--lilac),var(--coral));position:relative;flex:none}
+  .brand .mark::after{content:"";position:absolute;inset:6px;border-radius:50%;background:var(--night2)}
+  .brand .mark::before{content:"";position:absolute;width:4px;height:4px;border-radius:50%;background:#fff;left:9px;top:9px;z-index:1}
+  .brand small{font:400 12px var(--body);letter-spacing:0;text-transform:none;color:var(--t4);margin-left:6px}
+  nav.toc{display:flex;gap:8px;flex-wrap:wrap}
+  nav.toc a{font:500 12.5px var(--body);color:var(--t3);text-decoration:none;padding:7px 12px;border-radius:999px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.04)}
+  nav.toc a:hover{border-color:var(--turq);color:#fff}
+
+  .eyebrow{font:500 13px var(--display);letter-spacing:.14em;text-transform:uppercase;color:var(--turq);display:flex;align-items:center;gap:10px}
+  .eyebrow::before{content:"";width:28px;height:4px;border-radius:2px;background:var(--rb)}
+  h1{font:500 clamp(44px,8vw,110px)/.95 var(--display);letter-spacing:.03em;text-transform:uppercase;color:#fff;margin:0;text-wrap:balance}
+  h1 .l{font-weight:300}
+  h2{font:500 clamp(30px,4.6vw,56px)/1 var(--display);letter-spacing:.03em;text-transform:uppercase;color:#fff;margin:0;text-wrap:balance}
+  h3{font:500 20px/1.15 var(--display);letter-spacing:.05em;text-transform:uppercase;color:#fff;margin:0}
+  .rb{background:var(--rb);-webkit-background-clip:text;background-clip:text;color:transparent}
+  p{margin:0;max-width:66ch}
+  p b,li b{color:#fff;font-weight:700}
+  .lead{font-size:18px;color:var(--t2)}
+  .small{font-size:13.5px;color:var(--t4)}
+  section{display:grid;gap:18px}
+  .rule{height:4px;border-radius:2px;background:var(--rb);width:120px}
+
+  .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px}
+  .card{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.10);border-radius:20px;padding:18px;display:grid;gap:8px;align-content:start}
+  .card.turq{border-color:rgba(92,201,180,.6)} .card.coral{border-color:rgba(244,115,111,.6)} .card.yellow{border-color:rgba(240,202,117,.6)} .card.lilac{border-color:rgba(174,150,242,.6)} .card.orange{border-color:rgba(245,164,93,.6)}
+  .card .k{font:500 12px var(--display);letter-spacing:.14em;text-transform:uppercase;color:var(--t4)}
+  .card .v{font:500 30px/1 var(--display);color:#fff}
+  .card p,.card li{font-size:14.5px;color:var(--t3)}
+  ul{margin:0;padding-left:18px;display:grid;gap:6px}
+  ul.clean{list-style:none;padding:0}
+  ul.clean li{display:flex;gap:10px;align-items:flex-start}
+  ul.clean li::before{content:"";flex:none;width:8px;height:8px;border-radius:50%;background:var(--rb);margin-top:9px}
+
+  .pillar{display:grid;grid-template-columns:auto 1fr;gap:16px;align-items:start;background:rgba(255,255,255,.04);border-radius:20px;padding:16px 18px;border-left:4px solid var(--c,var(--turq))}
+  .pillar .n{font:500 36px/1 var(--display);color:var(--c,var(--turq));min-width:44px}
+  .pillar h3{color:#fff}
+  .pillar .meta{font-size:13px;color:var(--t4);margin-top:2px}
+  .pillar p{font-size:14.5px;color:var(--t3);margin-top:6px}
+  .tag{display:inline-block;font:500 11.5px var(--body);padding:3px 9px;border-radius:999px;background:rgba(255,255,255,.08);color:var(--t2);margin:6px 6px 0 0}
+  .tag.c{background:color-mix(in srgb,var(--c,var(--turq)) 22%,transparent);color:#fff}
+
+  .week{display:grid;grid-template-columns:repeat(7,1fr);gap:6px}
+  .day{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:10px 8px;min-height:96px;display:grid;gap:4px;align-content:start}
+  .day .d{font:500 12px var(--display);letter-spacing:.1em;text-transform:uppercase;color:var(--t4)}
+  .day .f{font:700 13px var(--body);color:#fff}
+  .day .w{font-size:12px;color:var(--t3);line-height:1.3}
+  .day.off{opacity:.5}
+  @media (max-width:760px){.week{grid-template-columns:repeat(2,1fr)}}
+
+  .phase{border-radius:24px;padding:22px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.10);display:grid;gap:14px}
+  .phase.p1{box-shadow:inset 6px 0 0 var(--turq)} .phase.p2{box-shadow:inset 6px 0 0 var(--coral)} .phase.p3{box-shadow:inset 6px 0 0 var(--lilac)}
+  .phase .top{display:flex;flex-wrap:wrap;gap:10px 18px;align-items:baseline}
+  .phase .when{font:500 13px var(--display);letter-spacing:.14em;text-transform:uppercase;color:var(--t4)}
+  .phase .goal{font-size:15px;color:var(--t2)}
+  .phase .goal b{color:#fff}
+  table{width:100%;border-collapse:collapse;font-size:14px}
+  th,td{text-align:left;padding:9px 10px;border-bottom:1px solid rgba(255,255,255,.08);vertical-align:top}
+  th{font:500 12px var(--display);letter-spacing:.12em;text-transform:uppercase;color:var(--t4)}
+  td b{color:#fff}
+  .tbl{overflow-x:auto;border-radius:16px;background:rgba(255,255,255,.03)}
+  td .pill{display:inline-block;font:600 11px var(--body);padding:2px 8px;border-radius:999px;color:var(--night);background:var(--turq)}
+  td .pill.c{background:var(--coral)} td .pill.y{background:var(--yellow)} td .pill.l{background:var(--lilac)} td .pill.o{background:var(--orange)} td .pill.g{background:var(--t4);color:#fff}
+
+  .kpi{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px}
+  .kpi .card .v{font-size:34px}
+  .no{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  @media (max-width:640px){.no{grid-template-columns:1fr}}
+  .strike{text-decoration:line-through;text-decoration-color:var(--coral);text-decoration-thickness:3px;color:var(--t4)}
+  .quote{font:300 clamp(22px,3vw,32px)/1.2 var(--display);letter-spacing:.02em;text-transform:uppercase;color:#fff;border-left:4px solid var(--coral);padding-left:16px}
+  .quote b{font-weight:500}
+  footer{font-size:12.5px;color:var(--t4);text-align:center;line-height:1.6}
+  .bio{background:rgba(255,255,255,.05);border-radius:18px;padding:16px;font-size:14.5px;line-height:1.5;color:var(--t2);white-space:pre-line;border:1px solid rgba(255,255,255,.1)}
+</style>
+</head>
+<body>
+<div class="halo h1"></div><div class="halo h2"></div><div class="grain"></div>
+<div class="wrap">
+
+  <header style="display:grid;gap:18px">
+    <div class="brand"><span class="mark"></span>Iris<b>a</b><small>plano de lançamento · out–dez 2026</small></div>
+    <div class="eyebrow">Três meses, uma tese</div>
+    <h1><span class="l">Quanta cor tem</span><br>a <span class="rb">sua cidade</span>?</h1>
+    <p class="lead">Do teste fechado até o app na loja e nas mãos de quem avalia. Identidade que já existe, padrões de post fixos por dia da semana, e uma estratégia que trata o lançamento como o que ele é: <b>abrir um mapa que só existe se a comunidade pintar.</b></p>
+    <nav class="toc">
+      <a href="#onde">Onde estamos</a><a href="#referencia">Referência</a><a href="#identidade">Identidade</a><a href="#padroes">Padrões de post</a><a href="#semana">Semana-tipo</a><a href="#fases">As três fases</a><a href="#calendario">Calendário</a><a href="#lancamento">Semana do lançamento</a><a href="#parcerias">Parcerias</a><a href="#metas">Metas</a><a href="#regras">Regras</a>
+    </nav>
+  </header>
+
+  <!-- ONDE ESTAMOS -->
+  <section id="onde">
+    <div class="eyebrow">Onde estamos</div>
+    <h2>O que já foi feito <span class="rb">funciona</span>. Falta volume e Reels.</h2>
+    <div class="cards">
+      <div class="card turq"><div class="k">Publicado</div><div class="v">7</div><p>carrosséis de tese: estreia, quatro perguntas, anonimato, emergência, regra da rua, mito ou verdade, ficha do bairro. Mais o teaser de aviso, o post “bem-vinde”, um reels e a série de stories com adesivos.</p></div>
+      <div class="card coral"><div class="k">O buraco</div><div class="v">0</div><p>Reels novos prontos. É o formato que mais alcança quem ainda não segue. Nada do que existe pode ser reaproveitado: já foi ao ar.</p></div>
+      <div class="card yellow"><div class="k">Produto</div><div class="v">7</div><p>cidades com lugares no mapa. Teste fechado no Android; falta manter 12 testadores por 14 dias e pedir produção. iOS depois.</p></div>
+      <div class="card lilac"><div class="k">Ativos</div><div class="v">∞</div><p>landing, apresentação para ONGs, story de 60 s, lojinha, sistema de lâminas em HTML. A fábrica está montada: o custo de cada peça nova é baixo.</p></div>
+    </div>
+    <p class="small">O diagnóstico do @appirisa vem do que está no repositório: tudo que foi publicado passa por aqui. O @vibracomigo entra como referência de formato e ritmo, não de assunto.</p>
+  </section>
+
+  <!-- REFERÊNCIA -->
+  <section id="referencia">
+    <div class="eyebrow">Referência · @vibracomigo</div>
+    <h2>O que trazer. <span class="rb">O que deixar lá.</span></h2>
+    <p>É uma conta de 43 mil seguidores que cresce com pouquíssimo custo por post: fundo chapado, um card branco com uma frase de alguém, uma afirmação em letra grande, o rosto de quem faz. O assunto dela não é o nosso. <b>A Irisa é sobre a comunidade se sentir abraçada, nunca sexualizada.</b> Então a gente pega a mecânica e troca o conteúdo: afeto, pertencimento, cuidado, direito de existir no espaço.</p>
+    <div class="no">
+      <div class="card turq">
+        <h3>Trazer</h3>
+        <ul class="clean">
+          <li><b>Card de citação.</b> Uma frase real de alguém da comunidade (tweet, comentário, resposta de story, com consentimento) num card branco sobre night. Barato, humano, muito compartilhado. Vira a série <b>Falou</b>.</li>
+          <li><b>Afirmação em duas cores.</b> Fundo night ou uma cor da marca, frase grande em Oswald: “Que a gente jamais duvide que merece entrar em qualquer lugar.” Vira a série <b>Bem-vinde</b> ampliada: não só a palavra, a frase.</li>
+          <li><b>Palavra + definição.</b> Ele faz “tricofilia”; a gente faz o dicionário do mapa e da comunidade: <b>irisar</b>, <b>aquendar</b>, <b>selo</b>, <b>atenção</b>, <b>bem-vinde</b>, <b>chosen family</b>. Vira a série <b>Dicionário</b>.</li>
+          <li><b>Lista “coisas que…”.</b> “Coisas não sexuais que dão tesão” vira <b>“Coisas que fazem a gente se sentir bem-vinde”</b>: alguém perguntar o pronome, o banheiro sem placa de gênero, a mesa ao lado nem olhar quando você segura a mão.</li>
+          <li><b>Rosto de quem faz.</b> Reels com a cara de quem constrói o app, falando simples. Nos Bastidores, se o Alysson topar; senão, embaixadores.</li>
+          <li><b>Grid com ritmo.</b> Alternar card de citação, afirmação e Reels dá ao perfil cara de revista. As cores da Irisa já fazem isso sozinhas.</li>
+        </ul>
+      </div>
+      <div class="card coral">
+        <h3>Deixar lá</h3>
+        <ul class="clean">
+          <li>Qualquer conteúdo sobre sexo, prazer ou corpo como gancho. Nem em piada.</li>
+          <li>Humor que depende de duplo sentido. O nosso humor é de identificação (a recepção do hotel, a placa unissex que não é), nunca de insinuação.</li>
+          <li>Venda: ele vende produto. A Irisa não vende nada, então o pedido no fim é sempre <b>irisar um lugar</b> ou <b>responder a pergunta</b>.</li>
+          <li>Termos que a comunidade usa entre si mas que uma marca não deve usar. “Aquenda” e “mona” estão aprovados no tom da Irisa; o resto passa por revisão de alguém da comunidade antes.</li>
+        </ul>
+      </div>
+    </div>
+    <div class="quote">Abraçade, <b>não sexualizade</b>. Essa é a régua de toda peça.</div>
+  </section>
+
+  <!-- IDENTIDADE -->
+  <section id="identidade">
+    <div class="eyebrow">Identidade</div>
+    <h2>Não muda. <span class="rb">Ganha movimento.</span></h2>
+    <p>A linguagem visual está fechada e é boa: fundo night, Oswald em caixa alta, Space Grotesk no corpo, arco-íris de seis paradas sempre na mesma ordem, símbolo do radar, “cor” pintada quando a frase oficial aparece. O plano não redesenha nada. Acrescenta três coisas para o Instagram render mais.</p>
+    <div class="cards">
+      <div class="card turq"><h3>1 · Assinatura de movimento</h3><p><b>Cinza vira cor.</b> Todo Reels abre dessaturado e ganha cor no momento da virada. É o conceito do produto (lugar sem avaliação é cinza) e vira reconhecível em 1 segundo no feed. Já existe no protótipo do app; passa a existir nos vídeos.</p></div>
+      <div class="card coral"><h3>2 · Capas de Reels padronizadas</h3><p>Fundo night, uma frase em Oswald, eyebrow com o nome da série. O grid fica legível como catálogo: quem chega pelo Reels vê o perfil e entende em três capas o que o app faz.</p></div>
+      <div class="card yellow"><h3>3 · Destaques organizados</h3><p>Quatro destaques com capa própria (símbolo sobre night): <b>Como funciona</b> · <b>Cidades</b> · <b>Apoio</b> (190/192/100/188 e serviços) · <b>Baixar</b>. É o “site” de quem não sai do Instagram.</p></div>
+    </div>
+    <h3>Bio proposta</h3>
+    <div class="bio">Irisa 🌈 O mapa dos lugares onde a gente é bem-vinde, feito por nós.
+Avalie um lugar. Registre um relato. Ninguém sabe que foi você.
+Curitiba · Recife · João Pessoa · Joinville · Natal · SP · Rio
+📍 em fase de testes · Android
+👇 entrar</div>
+    <p class="small">O link da bio continua bit.ly/appirisa. Nunca escrito na arte, sempre no comentário fixado.</p>
+  </section>
+
+  <!-- PADRÕES -->
+  <section id="padroes">
+    <div class="eyebrow">Padrões de post</div>
+    <h2>Dez séries. Cada uma com <span class="rb">um jeito</span> só.</h2>
+    <p>Série nomeada é o que faz a conta ter cara de programa e não de improviso. Cada uma tem formato fixo, gancho fixo e pedido fixo no fim. Quem segue aprende a esperar.</p>
+
+    <div class="pillar" style="--c:var(--coral)"><div class="n">01</div><div><h3>Conversa</h3><div class="meta">Reels · 20–35 s · 1×/semana · o formato principal de alcance</div><p>A tela de WhatsApp do story de 60 s vira série. Duas pessoas, uma pergunta real (“aquele bar novo é de boa pra gente?”, “vou de mão dada ou não?”, “o hotel do réveillon, alguém já foi?”). Corta para o app respondendo. Abre em cinza, ganha cor na resposta. Legenda repete a pergunta e pede a versão de quem lê.</p><span class="tag c">alcance</span><span class="tag">gancho cotidiano</span><span class="tag">cinza → cor</span></div></div>
+
+    <div class="pillar" style="--c:var(--turq)"><div class="n">02</div><div><h3>Quanta cor tem?</h3><div class="meta">Reels ou carrossel · 1×/semana · com autorização do lugar</div><p>A ficha real de um lugar avaliado: anel enchendo até a nota, os quatro eixos, o selo. Um lugar por semana, cidade alternando. É a prova de que o mapa está vivo e o convite para o próximo. Só lugar que autorizou por escrito, e só depois de 5 avaliações.</p><span class="tag c">prova social</span><span class="tag">cidade da semana</span></div></div>
+
+    <div class="pillar" style="--c:var(--yellow)"><div class="n">03</div><div><h3>Mito ou verdade</h3><div class="meta">Carrossel 7–8 lâminas · quinzenal · já testado</div><p>Uma frase entre aspas, “Mito.” coral ou “Verdade.” turquesa, explicação. Estoque de temas: “sem relato = lugar tranquilo” (mito, o mais importante), “o bar fica sabendo que fui eu”, “só quem tem Android usa”, “avaliação precisa de foto”, “relato precisa de boletim de ocorrência”.</p><span class="tag c">educação</span><span class="tag">salvamento</span></div></div>
+
+    <div class="pillar" style="--c:var(--orange)"><div class="n">04</div><div><h3>Bem-vinde</h3><div class="meta">Post único · quinzenal · a palavra da semana</div><p>Uma palavra em linguagem neutra por post, com a frase que a explica: bem-vinde, identificade, questionade, recebide, todes. Post curto, muito salvo e muito compartilhado por DM. Legenda pede: “quem usou essa palavra com você pela primeira vez?”.</p><span class="tag c">compartilhamento</span><span class="tag">marca</span></div></div>
+
+    <div class="pillar" style="--c:var(--lilac)"><div class="n">05</div><div><h3>Mapa acendendo</h3><div class="meta">Story + post · a cada cidade · mês 2 e 3</div><p>Uma cidade por vez ganha a sua semana: story com o mapa da cidade, os primeiros lugares com cor, os serviços de apoio locais, um coletivo parceiro. Começa por Curitiba, Recife, João Pessoa e Joinville (onde há gente avaliando), depois Natal, SP e Rio.</p><span class="tag c">local</span><span class="tag">parceria</span></div></div>
+
+    <div class="pillar" style="--c:var(--coral)"><div class="n">06</div><div><h3>Aconteceu na esquina</h3><div class="meta">Carrossel ou Reels curto · mensal · a regra da rua</div><p>O conteúdo mais delicado e mais necessário: relato é da rua, nota é do lugar; atenção e alerta; 100 metros; 180 dias; nunca “região tranquila”. Sempre com o botão de emergência no fecho. Tom sóbrio, sem humor.</p><span class="tag c">regra</span><span class="tag">segurança</span></div></div>
+
+    <div class="pillar" style="--c:var(--turq)"><div class="n">07</div><div><h3>Quem esteve lá responde</h3><div class="meta">Stories · 3×/semana · adesivos</div><p>Quiz, enquete, caixa de pergunta. “Quanta cor tem o seu bairro?”, “já deixou de ir a algum lugar por medo?”, “o que faz um banheiro ser tranquilo de usar?”. As respostas viram banco para os Reels e para a série 02. Repost de quem marcar o app, sempre com consentimento.</p><span class="tag c">conversa</span><span class="tag">UGC</span></div></div>
+
+    <div class="pillar" style="--c:var(--yellow)"><div class="n">08</div><div><h3>Bastidores</h3><div class="meta">Reels ou post · quinzenal · “feito por nós”</div><p>Por que o app não tem perfil de usuário. Por que hotel é a categoria que mais importa. Como a nota é calculada (cinco avaliações, meia-vida de seis meses). Decisão de produto vira conteúdo e mostra que tem gente por trás. Sem número de testadores, sem “apoie o projeto”.</p><span class="tag c">confiança</span><span class="tag">produto</span></div></div>
+
+    <div class="pillar" style="--c:var(--lilac)"><div class="n">09</div><div><h3>Falou</h3><div class="meta">Post único · 2×/semana · card de citação · vindo do @vibracomigo</div><p>Card branco sobre night com uma frase de alguém da comunidade: resposta de story, comentário, tweet público. Sempre com consentimento e crédito (ou anônimo, se a pessoa preferir). Temas: a primeira vez que se sentiu bem-vinde, o lugar que virou casa, o que muda quando alguém pergunta o pronome. É o post mais barato e o mais humano da conta.</p><span class="tag c">comunidade</span><span class="tag">compartilhamento</span><span class="tag">custo zero</span></div></div>
+
+    <div class="pillar" style="--c:var(--orange)"><div class="n">10</div><div><h3>Dicionário</h3><div class="meta">Post único ou Reels de 10 s · semanal · palavra + definição</div><p>Uma palavra grande em Oswald e a definição em duas linhas. Do mapa: irisar, selo, atenção, alerta, a regra da rua. Da comunidade: aquendar, chosen family, bem-vinde, todes. Ensina o app e a língua ao mesmo tempo, e cada post vira um card que se salva.</p><span class="tag c">educação</span><span class="tag">salvamento</span></div></div>
+
+    <div class="no">
+      <div class="card"><h3>Humor, sim</h3><p>Leve, de identificação, no tom do @vibracomigo: a situação que todo mundo já viveu (o olhar na recepção do hotel, a placa “banheiro unissex” que na prática não é). O humor está na situação, nunca em cima de quem a vive.</p></div>
+      <div class="card coral"><h3>Humor, não</h3><p>Nunca em post da série 06, nunca sobre relato, nunca com termo que a comunidade usa entre si mas que pode ferir vindo de uma marca. Em dúvida, corta.</p></div>
+    </div>
+  </section>
+
+  <!-- SEMANA-TIPO -->
+  <section id="semana">
+    <div class="eyebrow">Semana-tipo</div>
+    <h2>Feed 4×, Reels 2×, stories <span class="rb">todo dia</span>.</h2>
+    <p>Horários vindos do cronograma atual (19h feed, 12h stories). Reels às 12h de quarta e sábado, quando a distribuição para não seguidores é maior. A semana fecha no domingo com o mapa da semana.</p>
+    <div class="week">
+      <div class="day"><div class="d">Seg</div><div class="f">Falou + story</div><div class="w">Card de citação às 12h (série 09) e enquete no story.</div></div>
+      <div class="day"><div class="d">Ter · 19h</div><div class="f">Carrossel</div><div class="w">Mito ou verdade, Aconteceu na esquina ou Bastidores, alternando.</div></div>
+      <div class="day"><div class="d">Qua · 12h</div><div class="f">Reels · Conversa</div><div class="w">Série 01. Cinza vira cor.</div></div>
+      <div class="day"><div class="d">Qui · 19h</div><div class="f">Post único</div><div class="w">Bem-vinde, Dicionário ou ficha de lugar, alternando.</div></div>
+      <div class="day"><div class="d">Sex · 12h</div><div class="f">Story · cidade</div><div class="w">Mapa acendendo ou caixa de pergunta.</div></div>
+      <div class="day"><div class="d">Sáb · 12h</div><div class="f">Reels · leve</div><div class="w">Humor de identificação ou Quanta cor tem? em vídeo.</div></div>
+      <div class="day off"><div class="d">Dom</div><div class="f">Story · mapa da semana</div><div class="w">Quantos lugares ganharam cor. Repost de quem marcou.</div></div>
+    </div>
+    <p class="small">Regra fixa: primeiro comentário com bit.ly/appirisa; responder todo comentário no mesmo dia; toda legenda fecha com uma pergunta concreta e “O link está na bio”.</p>
+  </section>
+
+  <!-- FASES -->
+  <section id="fases">
+    <div class="eyebrow">As três fases</div>
+    <h2>Testar. <span class="rb">Lançar.</span> Espalhar.</h2>
+
+    <div class="phase p1">
+      <div class="top"><h3>Fase 1 · Outubro</h3><span class="when">06/10 → 02/11</span></div>
+      <div class="goal"><b>Objetivo:</b> sair do teste fechado com produção aprovada e com o mapa já pintado nas quatro cidades de partida. O lançamento não pode abrir um mapa vazio.</div>
+      <ul class="clean">
+        <li><b>Primeiras pessoas.</b> Grupo de WhatsApp com quem está testando (meta 20 a 25). Missão da semana para o grupo: avaliar 3 lugares que você conhece. Quem cumpre ganha o adesivo da lojinha. Isso gera os primeiros lugares com selo antes do lançamento.</li>
+        <li><b>Embaixadores por cidade.</b> Uma pessoa em Curitiba, Recife, João Pessoa e Joinville. Não é influencer: é quem topa avaliar 10 lugares e apresentar o app a um coletivo local. Aparecem nos Bastidores se quiserem, nunca obrigatoriamente.</li>
+        <li><b>Reels do zero.</b> Produzir 6 Reels da série Conversa neste mês (dois por semana, um extra de reserva). Roteiros no fim deste plano.</li>
+        <li><b>Solicitar produção</b> na Play Console assim que os 14 dias fecharem. Enquanto o Google revisa, gravar o Reels “já está no ar” com a data em aberto.</li>
+        <li><b>Primeiro contato com ONGs</b> (Grupo Dignidade e Centro de Cidadania LGBTQIA+ em Curitiba) com a apresentação já pronta: proposta de serem citadas na aba Apoio e de coassinar a semana de lançamento.</li>
+      </ul>
+    </div>
+
+    <div class="phase p2">
+      <div class="top"><h3>Fase 2 · Novembro</h3><span class="when">03/11 → 30/11</span></div>
+      <div class="goal"><b>Objetivo:</b> app na Play Store, semana de lançamento com parceiros, e cada cidade de partida com pelo menos 5 lugares com selo.</div>
+      <ul class="clean">
+        <li><b>Semana L</b> (detalhada abaixo). Data alvo: terça 10/11, com folga para a revisão do Google. Se atrasar, a semana inteira desliza: nada é publicado com data fixa antes da aprovação.</li>
+        <li><b>Mapa acendendo</b> passa a rodar: uma cidade por semana, começando por Curitiba na própria semana L.</li>
+        <li><b>20/11.</b> Dia da Consciência Negra: conteúdo sobre LGBTIfobia e racismo se somando na rua, com a regra da rua como pano de fundo. Feito com alguém da comunidade negra LGBTQIA+ falando, não a marca falando por.</li>
+        <li><b>Imprensa e coletivos.</b> Um release de duas linhas, o link, três prints e a apresentação. Mira: portais e perfis LGBTQIA+ das sete cidades, coletivos universitários, páginas de bairro.</li>
+        <li><b>Lugares parceiros.</b> Adesivo “Irise esse lugar” para o bar ou café que pedir, sem custo, sem rótulo de “LGBT-friendly”: o adesivo convida a avaliar, não certifica. O selo continua vindo só das avaliações.</li>
+      </ul>
+    </div>
+
+    <div class="phase p3">
+      <div class="top"><h3>Fase 3 · Dezembro</h3><span class="when">01/12 → 31/12</span></div>
+      <div class="goal"><b>Objetivo:</b> usar a temporada de viagens (hotel é a categoria que mais importa) para levar o app às três cidades restantes e fechar o ano com números para mostrar.</div>
+      <ul class="clean">
+        <li><b>Réveillon e viagem.</b> Série Conversa vira “o hotel do réveillon, alguém já foi?”. Mapa acendendo em Rio, São Paulo e Natal, onde a comunidade viaja. Story pedindo: “irise o hotel antes de sair de lá”.</li>
+        <li><b>Festas de fim de ano.</b> Aconteceu na esquina em versão festa: saída de balada, madrugada, transporte. Botão de emergência em destaque fixo de dezembro.</li>
+        <li><b>Retrospectiva</b> na última semana: quantos lugares ganharam cor, em quantas cidades, quantos relatos viraram aviso. Nunca ranking de bairro “perigoso”; sempre “onde a comunidade já falou”.</li>
+        <li><b>Preparar 2027:</b> 29/01 é o Dia da Visibilidade Trans. O primeiro conteúdo grande do ano seguinte já sai planejado em dezembro, junto com a decisão do iOS.</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- CALENDÁRIO -->
+  <section id="calendario">
+    <div class="eyebrow">Calendário</div>
+    <h2>Treze semanas, <span class="rb">um tema</span> por semana.</h2>
+    <div class="tbl"><table>
+      <thead><tr><th>Sem.</th><th>Datas</th><th>Tema da semana</th><th>Carrossel (ter)</th><th>Reels (qua · sáb)</th><th>Post único (qui)</th><th>Stories</th></tr></thead>
+      <tbody>
+        <tr><td><b>1</b></td><td>06–12/10</td><td><span class="pill">Fase 1</span> O que o app não pede</td><td>Regra da rua (já pronto, carrossel 5)</td><td>Conversa #1 “é de boa pra gente?” · Humor: a recepção do hotel</td><td>Bem-vinde: “identificade”</td><td>Enquete “já deixou de ir por medo?” · Mapa da semana</td></tr>
+        <tr><td><b>2</b></td><td>13–19/10</td><td>Cinco avaliações</td><td>Mito ou verdade (carrossel 6)</td><td>Conversa #2 “vou de mão dada?” · Quanta cor tem? lugar 1 (Curitiba)</td><td>Bastidores: por que 5 avaliações</td><td>Quiz “o selo aparece com quantas?” · Caixa: seu bairro</td></tr>
+        <tr><td><b>3</b></td><td>20–26/10</td><td>Ficha do bairro</td><td>Ficha do bairro (carrossel 7)</td><td>Conversa #3 “esse bairro à noite” · Humor: placa unissex</td><td>Bem-vinde: “questionade”</td><td>Enquete “atenção ou alerta?” · Mapa da semana</td></tr>
+        <tr><td><b>4</b></td><td>27/10–02/11</td><td>Emergência</td><td>Aconteceu na esquina #1 (novo)</td><td>Conversa #4 “aconteceu, e agora?” · Quanta cor tem? lugar 2 (Recife)</td><td>190 · 192 · 100 · 188 (post único)</td><td>Caixa: “o que te faria registrar?” · Contagem: produção solicitada</td></tr>
+        <tr><td><b>5</b></td><td>03–09/11</td><td><span class="pill c">Pré-L</span> Está chegando</td><td>Bastidores: como o mapa foi feito</td><td>Teaser “já está no ar” (data aberta) · Conversa #5</td><td>Bem-vinde: “recebide”</td><td>Contagem regressiva D-7 a D-1 · Quiz das cidades</td></tr>
+        <tr><td><b>6</b></td><td>10–16/11</td><td><span class="pill c">Semana L</span> Lançamento</td><td>Estreia na loja (novo, coassinado por parceiros)</td><td>Reels “já está no ar” · Primeiras cores (lugares com selo)</td><td>Quanta cor tem? lugar 3 (Curitiba, com parceiro)</td><td>Blitz de stories, reposts, link em todos · Mapa acendendo: Curitiba</td></tr>
+        <tr><td><b>7</b></td><td>17–23/11</td><td>Consciência Negra</td><td>Aconteceu na esquina #2: racismo e LGBTIfobia na mesma rua (com convidade)</td><td>Conversa #6 · Quanta cor tem? lugar 4 (Recife)</td><td>Bem-vinde: “todes”</td><td>Mapa acendendo: Recife · Enquete</td></tr>
+        <tr><td><b>8</b></td><td>24–30/11</td><td>João Pessoa e Joinville</td><td>Mito ou verdade #2 (“só quem tem Android”)</td><td>Conversa #7 · Humor: “bandeira na porta não basta”</td><td>Quanta cor tem? lugar 5 (JP)</td><td>Mapa acendendo: JP e Joinville · Caixa</td></tr>
+        <tr><td><b>9</b></td><td>01–07/12</td><td><span class="pill l">Fase 3</span> Viagem</td><td>Bastidores: por que hotel importa mais</td><td>Conversa #8 “o hotel do réveillon” · Quanta cor tem? hotel 1</td><td>Bem-vinde: “bem-vinde” (o post-mãe, republicado com dados)</td><td>Mapa acendendo: Rio · Enquete “vai viajar?”</td></tr>
+        <tr><td><b>10</b></td><td>08–14/12</td><td>São Paulo</td><td>Aconteceu na esquina #3: festa, madrugada, transporte</td><td>Conversa #9 · Quanta cor tem? lugar SP</td><td>Ficha de lugar SP</td><td>Mapa acendendo: SP · Quiz</td></tr>
+        <tr><td><b>11</b></td><td>15–21/12</td><td>Natal e festas</td><td>Mito ou verdade #3 (“sem relato é tranquilo”, o mais importante)</td><td>Conversa #10 “ceia com a família ou com a gente?” · Humor leve</td><td>Emergência de fim de ano (post fixado)</td><td>Mapa acendendo: Natal · Caixa</td></tr>
+        <tr><td><b>12</b></td><td>22–28/12</td><td>Retrospectiva</td><td>Retrospectiva do ano (números do mapa)</td><td>Reels retrospectiva: cinza vira cor cidade a cidade</td><td>Agradecimento “feito por nós” (sem número de testadores)</td><td>Melhores respostas do ano · Mapa da semana</td></tr>
+        <tr><td><b>13</b></td><td>29/12–04/01</td><td>Réveillon</td><td>pausa</td><td>Conversa #11 “irise o hotel antes de sair” · pausa</td><td>pausa</td><td>Story fixo de emergência · Contagem para 2027 e a Visibilidade Trans</td></tr>
+      </tbody>
+    </table></div>
+    <p class="small">Fora da tabela, toda segunda tem um card Falou e toda semana alterna Dicionário com o post de quinta. Carrosséis 5, 6 e 7 já existem e entram nas semanas 1 a 3; o resto é produção nova. Tudo que tem data de lançamento só é agendado depois da aprovação do Google.</p>
+  </section>
+
+  <!-- SEMANA L -->
+  <section id="lancamento">
+    <div class="eyebrow">Semana do lançamento</div>
+    <h2>Sete dias, <span class="rb">um gesto</span>: irise o primeiro lugar.</h2>
+    <div class="week">
+      <div class="day"><div class="d">D-7 → D-1</div><div class="f">Contagem</div><div class="w">Um story por dia, cada um com um motivo para entrar: anonimato, quatro perguntas, emergência, cidades, feito por nós, bem-vinde, amanhã.</div></div>
+      <div class="day"><div class="d">D · ter 12h</div><div class="f">Reels “já está no ar”</div><div class="w">Cinza vira cor. Link em story fixado. Parceiros repostam na mesma hora.</div></div>
+      <div class="day"><div class="d">D · 19h</div><div class="f">Carrossel de estreia</div><div class="w">Coassinado pelas ONGs. Fecho: “irise o primeiro lugar hoje”.</div></div>
+      <div class="day"><div class="d">D+1</div><div class="f">Primeiras cores</div><div class="w">Story com os lugares que ganharam selo nas primeiras 24 h.</div></div>
+      <div class="day"><div class="d">D+2</div><div class="f">Conversa ao vivo</div><div class="w">Live curta com parceiro (Grupo Dignidade), perguntas da caixa do dia anterior.</div></div>
+      <div class="day"><div class="d">D+4</div><div class="f">Mapa acendendo</div><div class="w">Curitiba inteira: lugares, apoio, coletivo.</div></div>
+      <div class="day"><div class="d">D+6</div><div class="f">Balanço</div><div class="w">Story com o que aconteceu na semana, em números do mapa. Agradecimento sem “ajuda”.</div></div>
+    </div>
+    <div class="quote">Se o mapa abrir <b>vazio</b>, a semana foi em vão. Por isso a fase 1 existe.</div>
+  </section>
+
+  <!-- PARCERIAS -->
+  <section id="parcerias">
+    <div class="eyebrow">Parcerias e distribuição</div>
+    <h2>Quem <span class="rb">espalha</span></h2>
+    <div class="cards">
+      <div class="card turq"><h3>ONGs e centros</h3><p>Grupo Dignidade e Centro de Cidadania LGBTQIA+ (Curitiba) primeiro; depois um por cidade, começando pelos que já estão na aba Apoio. Oferta: aparecer no app, coassinar o lançamento, receber os relatos agregados da cidade. Pedido: repost e uma live.</p></div>
+      <div class="card coral"><h3>Embaixadores</h3><p>Uma pessoa por cidade, da comunidade, com 10 avaliações feitas e um coletivo apresentado. Reconhecimento na lojinha e nos Bastidores, se quiser aparecer. Sem cachê, sem contrato: vínculo de comunidade.</p></div>
+      <div class="card yellow"><h3>Lugares</h3><p>Adesivo “Irise esse lugar” e a ficha para quem pedir. O lugar não paga, não escolhe nota e não ganha rótulo. Quando um lugar bem avaliado compartilha a própria ficha, a série 02 ganha o melhor conteúdo possível.</p></div>
+      <div class="card lilac"><h3>Imprensa e páginas</h3><p>Portais e perfis LGBTQIA+, páginas de bairro e coletivos universitários das sete cidades. Kit: release de duas linhas, três prints, a apresentação, o link. Contato appirisa@gmail.com.</p></div>
+    </div>
+  </section>
+
+  <!-- METAS -->
+  <section id="metas">
+    <div class="eyebrow">Metas</div>
+    <h2>Medir o <span class="rb">mapa</span>, não só o perfil.</h2>
+    <div class="kpi">
+      <div class="card"><div class="k">Fim de outubro</div><div class="v">20+</div><p>testadores ativos · produção solicitada · 15 lugares com selo em 4 cidades</p></div>
+      <div class="card coral"><div class="k">Fim de novembro</div><div class="v">500</div><p>instalações · 40 lugares com selo · 5 cidades com mapa aceso · 3 parceiros publicando</p></div>
+      <div class="card lilac"><div class="k">Fim de dezembro</div><div class="v">1.500</div><p>instalações · 100 lugares com selo · 7 cidades · 1 hotel com selo por cidade de viagem</p></div>
+      <div class="card yellow"><div class="k">Toda semana</div><div class="v">≥ 4</div><p>Reels e carrosséis com salvamento e compartilhamento acima de curtida; cliques no bit.ly por post</p></div>
+    </div>
+    <p class="small">Metas são chute educado para uma conta pequena com zero mídia paga. Rever no fim de cada fase. O número que importa de verdade é lugares com selo: é ele que faz o app valer a pena abrir.</p>
+  </section>
+
+  <!-- REGRAS -->
+  <section id="regras">
+    <div class="eyebrow">Regras que não mudam</div>
+    <h2>O que <span class="rb">nunca</span> sai.</h2>
+    <div class="no">
+      <div class="card coral">
+        <h3>Proibido</h3>
+        <ul class="clean">
+          <li><span class="strike">“lugar seguro”, “região tranquila”, “selo de segurança”</span></li>
+          <li><span class="strike">número de testadores, dias de teste, “me ajuda”, “apoie o projeto”</span></li>
+          <li><span class="strike">nome de bar real sem autorização; rótulo “LGBT-friendly” na ficha</span></li>
+          <li><span class="strike">ranking de bairro “perigoso”; humor sobre relato; termos que ferem vindo de marca</span></li>
+          <li><span class="strike">link escrito na arte; emoji na arte; data de lançamento antes da aprovação</span></li>
+          <li><span class="strike">sexo, prazer ou corpo como gancho; duplo sentido; humor que insinua</span></li>
+        </ul>
+      </div>
+      <div class="card turq">
+        <h3>Sempre</h3>
+        <ul class="clean">
+          <li><b>abraçade, não sexualizade:</b> a régua de toda peça</li>
+          <li><b>bem-vinde</b> e linguagem neutra em todo texto</li>
+          <li><b>“cor”</b> em arco-íris quando a frase oficial aparece</li>
+          <li><b>o lugar recebe cor, a rua recebe aviso</b> em todo conteúdo de relato</li>
+          <li><b>190 · 192 · 100 · 188</b> no fecho de qualquer post sobre violência</li>
+          <li><b>resposta a comentário no mesmo dia</b>; comentário fixado com o link</li>
+          <li><b>plano de crise pronto:</b> relato falso, lugar reclamando da nota, print vazado. Resposta padrão: como o app funciona, o que ele não faz, e-mail de contato. Sem discussão pública.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ROTEIROS -->
+  <section>
+    <div class="eyebrow">Para começar segunda</div>
+    <h2>Seis Reels da série <span class="rb">Conversa</span></h2>
+    <div class="tbl"><table>
+      <thead><tr><th>#</th><th>Gancho (tela de conversa)</th><th>Virada (o app responde)</th><th>Pedido na legenda</th></tr></thead>
+      <tbody>
+        <tr><td>1</td><td>“aquele bar novo é de boa pra gente?”</td><td>Ficha: 4.7, Acolhedor, quem esteve lá respondeu</td><td>Qual lugar você queria que já estivesse no mapa?</td></tr>
+        <tr><td>2</td><td>“vou de mão dada ou não?”</td><td>Eixo Afeto em destaque: “dava pra ficar à vontade?”</td><td>Onde foi a última vez que você soltou a mão?</td></tr>
+        <tr><td>3</td><td>“esse bairro à noite, como é?”</td><td>Ficha do bairro: atenção, o que foi relatado, onde, quando</td><td>Quanta cor tem o seu bairro?</td></tr>
+        <tr><td>4</td><td>“aconteceu comigo agora, e aí?”</td><td>Botão de emergência, depois o relato em um minuto, sem nome</td><td>Salva pra quando alguém precisar.</td></tr>
+        <tr><td>5</td><td>“o hotel é tranquilo pra dois caras?”</td><td>Ficha de hotel: Atendimento e Clientela; “Irise antes de sair”</td><td>Qual hotel te tratou bem?</td></tr>
+        <tr><td>6</td><td>“ninguém sabe que fui eu?”</td><td>Sem nome. Sem perfil. Sem rastro. Excluir apaga tudo.</td><td>O que te faria registrar sem medo?</td></tr>
+      </tbody>
+    </table></div>
+    <p class="small">Todos abrem em cinza e ganham cor na virada. 20 a 35 segundos. Legenda curta, pergunta, “O link está na bio · em fase de testes · Android”, hashtags de sempre.</p>
+  </section>
+
+  <footer>Irisa · plano de lançamento out–dez 2026 · feito por nós · appirisa@gmail.com</footer>
+</div>
+</body>
+</html>
