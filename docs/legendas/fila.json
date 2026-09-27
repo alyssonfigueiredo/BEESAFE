@@ -14,9 +14,21 @@
   "publicado_manual": "adesivo de link (bit.ly/appirisa), postado direto pelo app"
  },
  {
+  "id": "story-arcoiris",
+  "aprovado": false,
+  "quando": "2026-09-27T17:00:00-03:00",
+  "tipo": "STORY",
+  "midias": [
+   "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/story-arcoiris.png"
+  ],
+  "legenda": "",
+  "primeiro_comentario": "",
+  "publicado": false
+ },
+ {
   "id": "story-cidades",
   "aprovado": false,
-  "quando": "2026-09-27T12:00:00-03:00",
+  "quando": "2026-09-28T12:00:00-03:00",
   "tipo": "STORY",
   "midias": [
    "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/story-cidades.png"
