@@ -15,7 +15,7 @@
  },
  {
   "id": "story-arcoiris",
-  "aprovado": true,
+  "aprovado": false,
   "quando": "2026-09-27T17:00:00-03:00",
   "tipo": "STORY",
   "midias": [
@@ -23,7 +23,8 @@
   ],
   "legenda": "",
   "primeiro_comentario": "",
-  "publicado": false
+  "publicado": false,
+  "nota": "Aprovado pelo Alysson, mas tem adesivo (caixa de pergunta) — precisa ir manual pelo app, igual story-hoje. Não deixar o script publicar sozinho."
  },
  {
   "id": "story-cidades",
