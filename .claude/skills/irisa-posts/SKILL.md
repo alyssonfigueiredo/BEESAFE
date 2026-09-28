@@ -32,15 +32,17 @@ App brasileiro para a comunidade LGBTQIA+. Duas coisas, e a regra que as separa:
 
 ## 3. Cores (fonte única: `base.css`)
 
-Padrão desde 28/09/2026: **posts, carrosséis, stories e reels em fundo night (#141829)**, seis acentos com saturação ×1.35 (mesmo do app, `src/theme/tokens.js` com `SATURATION = 1.35`), cartões de vidro escuro. Decisão dele em 28/09: fundo claro (papel) é só para páginas e documentos (plano, apresentação), nunca para post. O `base.css` define os tokens claros e, no fim, um bloco que os troca pelos escuros: não apagar esse bloco.
+Padrão desde 27/09/2026 (mesmo do app, `src/theme/tokens.js` com `SATURATION = 1.35`): **fundo papel claro**, seis acentos com saturação ×1.35, tinta escura. O fundo night escuro dos carrosséis 1–7 é o padrão antigo: não copiar.
+
+**Mesclado (decisão dele, 28/09/2026):** o post é claro com um cartão principal escuro, igual ao cartão "Sua cidade" do Início do app. Nunca a lâmina inteira escura, nunca tudo claro sem contraste. Na prática: capa e lâminas de lista em papel com vidro claro; lâminas de frase forte e o fecho dentro de `.darkcard` (night a 88 %, raio 40, régua arco-íris no meio, cores cheias no texto, `.btn` coral dentro); em lista, o item que responde ("Agora") vira `.list div.dk`. Alternar mais ou menos uma lâmina escura para cada clara. Reels seguem igual (cenas com `.qcard.dark`). Referência: `docs/carrossel-8.html` e `carrossel-9.html`.
+
+**Mesclado (decisão dele, 28/09/2026):** o post é claro com um cartão principal escuro, igual ao cartão "Sua cidade" do Início do app. Nunca a lâmina inteira escura, nunca tudo claro sem contraste. Na prática: capa e lâminas de lista em papel com vidro claro; lâminas de frase forte e o fecho dentro de `.darkcard` (night a 88 %, raio 40, régua arco-íris no meio, cores cheias no texto, `.btn` coral dentro); em lista, o item que responde ("Agora") vira `.list div.dk`. Alternar: mais ou menos uma lâmina escura para cada clara. Reels seguem igual (cenas com `.qcard.dark`). Referência: `docs/carrossel-8.html` e `carrossel-9.html`.
 
 | token | hex | uso |
 |---|---|---|
-| night | #141829 | fundo de toda lâmina (no base.css o token `--paper` recebe esse valor no bloco escuro) |
-| paper | #F5F4F1 | só páginas e documentos, nunca post |
+| paper | #F5F4F1 | fundo de toda lâmina |
 | surface / subtle / border | #FFFFFF / #ECEAE5 / #E6E3DD | painéis opacos, mapa, divisórias |
-| texto | #FFFFFF / #D5D8E4 / #9AA0B4 | título / corpo / eyebrow e numeração |
-| night | #141829 | texto sobre cor (botão, cápsula) |
+| ink (night) | #141829 | título, texto principal, texto sobre cor |
 | muted / dim | #3D4560 / #7C8296 | corpo / eyebrow, numeração, "arraste" |
 | pupil | #0F1220 | pupila do símbolo |
 | coral | #FF6964 | urgência, relato, CTA principal, "Mito" |
@@ -50,13 +52,13 @@ Padrão desde 28/09/2026: **posts, carrosséis, stories e reels em fundo night (
 | blue | #59A7FF | só dentro do arco-íris |
 | lilac | #A889FF | clientela, halo |
 | amber | #FFAD0F | o "a" do wordmark abaixo de 20 px |
-| Ink (escuros) | coralInk #C72825, orangeInk #AB6207, yellowInk #9C6C00, turqInk #0A8B7A, lilacInk #6037F0 | só em material de fundo claro. No post escuro os tokens `*Ink` apontam para a cor cheia |
+| Ink (escuros) | coralInk #C72825, orangeInk #AB6207, yellowInk #9C6C00, turqInk #0A8B7A, lilacInk #6037F0 | **texto colorido sobre papel** (contraste AA). Cor cheia só em fundo de cápsula/pílula, nunca em texto pequeno |
 
 **Arco-íris da marca** (sempre nesta ordem, 6 paradas): coral → orange → yellow → turq → blue → lilac. `--rb` em texto (`.rainbow`) e réguas (`.rule`); `conic-gradient` no anel de nota.
 
 Eixos têm cor fixa: Atendimento coral, Afeto orange, Banheiro yellow, Clientela turq.
 
-**Liquid Glass**: cartão = `.pane` (no post: branco a 7 % sobre night; na página clara: branco a 62 %, `--shadow-card` dupla, borda de luz `--glass-inset`, blur 18 px saturate 1.4), raios 28/24/18 (`--r-xl/lg/md`), botões em cápsula (`.btn`, `.ct`, `.tag`).  Cartões e botões opacos de propósito.
+**Liquid Glass**: cartão = `.pane` (branco a 62 %, `--shadow-card` dupla, borda de luz `--glass-inset`, blur 18 px saturate 1.4), raios 28/24/18 (`--r-xl/lg/md`), botões em cápsula (`.btn`, `.ct`, `.tag`). Variante escura: `.darkcard` (cartão principal) e `.dark` (cartão de cena no reels), nunca a lâmina inteira. Cartões e botões opacos de propósito.
 
 ## 4. Tipografia
 
@@ -77,8 +79,8 @@ Eixos têm cor fixa: Atendimento coral, Afeto orange, Banheiro yellow, Clientela
 
 ## 6. Composição de uma lâmina
 
-Fundo night. Sobre ele, nesta ordem:
-1. `.bg`: quatro manchas radiais nos cantos (turq, coral, lilás, amarelo em `color-mix`), a 55 % no escuro. Dão cor sem virar gradiente.
+Fundo papel. Sobre ele, nesta ordem:
+1. `.bg`: quatro manchas radiais nos cantos (turq, coral, lilás, amarelo em `color-mix`), sem blur. Dão cor sem virar gradiente.
 2. Conteúdo centralizado (`justify-content:center`), largura máxima 860–900 px, padding lateral 80 px.
 3. Rodapé fixo (`.brand`, `.swipe`, `.num`).
 
@@ -112,7 +114,7 @@ Para quem não segue a conta, conteúdo que explica o app não segura 3 segundos
 
 ## 8. Referências (o que já existe, para copiar o jeito)
 
-- **Padrão novo (night + vidro + paleta ×1.35): `docs/carrossel-8.html` (fora do armário) e `carrossel-9.html` (viajar em casal)** e os reels 3–9. Padrão antigo (night), só para o texto: `docs/carrossel.html` (estreia), `carrossel-2.html` (quatro perguntas), `carrossel-3.html` (anonimato), `carrossel-4.html` (emergência), `carrossel-5.html` (regra da rua), `carrossel-6.html` (mito ou verdade), `carrossel-8.html` (Dia de Sair do Armário, 11/10), `post-bemvinde.html`, `stories-2.html`.
+- **Padrão novo (papel + Liquid Glass): `docs/carrossel-8.html` (fora do armário) e `carrossel-9.html` (viajar em casal)** e os reels 3–9. Padrão antigo (night), só para o texto: `docs/carrossel.html` (estreia), `carrossel-2.html` (quatro perguntas), `carrossel-3.html` (anonimato), `carrossel-4.html` (emergência), `carrossel-5.html` (regra da rua), `carrossel-6.html` (mito ou verdade), `carrossel-8.html` (Dia de Sair do Armário, 11/10), `post-bemvinde.html`, `stories-2.html`.
 - `docs/story.html` (vídeo de 60 s, dez cenas), `docs/reels-3.html` (regra da rua, 34 s), `docs/reels-4.html` (anonimato, 32 s), `docs/reels-5.html` (ficha do bairro, 36 s): carrosséis convertidos em cenas de 4–6 s, uma ideia por cena, número contando (`count`), fecho com pílula + @irisapp. `reels-6` a `reels-9` (15–20 s): **reels para quem não conhece o perfil**, gancho de reconhecimento sem jargão ("Você já soltou a mão em público?", "Mudei de calçada 4 vezes hoje", "A bandeira na porta não diz nada", "Sua cidade está no mapa?"), o app só aparece na última cena, e cada um pede um sinal (compartilhar, replay, comentar). `carrossel-8.html` (Dia de Sair do Armário), `carrossel-9.html` (viajar em casal, feito para salvar). `docs/index.html` (landing), `docs/pitch.html` (apresentação).
 - `docs/lojinha.html` e `scripts/lojinha/build.py`: mockups de produto em SVG com o mesmo sistema (fundo claro `paper` aceito ali).
 - Legendas e cronogramas anteriores: pasta Irisa-lancamento e Irisa-semana2 (uma pasta por dia, `legenda.txt` no feed, `texto.txt` no story).
