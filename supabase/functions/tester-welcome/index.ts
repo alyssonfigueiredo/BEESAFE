@@ -28,7 +28,7 @@ function androidEmail() {
       "Deixe o app instalado durante o teste e conte o que achou respondendo este e-mail.",
       "",
       "Irisa · o mapa dos lugares onde a gente é bem-vinde, feito por nós",
-      "@irisapp",
+      "@appirisa",
     ].join("\n"),
   };
 }
@@ -47,7 +47,7 @@ function iosEmail(url: string) {
       "Conte o que achou respondendo este e-mail.",
       "",
       "Irisa · o mapa dos lugares onde a gente é bem-vinde, feito por nós",
-      "@irisapp",
+      "@appirisa",
     ].join("\n"),
   };
 }
