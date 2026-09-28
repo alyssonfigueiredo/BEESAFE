@@ -111,7 +111,7 @@ formulário de avaliação; tela Moderação mostra a fila de fotos com Liberar/
 npx eas-cli build -p android --profile preview
 ```
 
-### 2.3 Build de produção
+### 2.3 Build de produção Android
 
 ```bash
 npx eas-cli build -p android --profile production
@@ -120,21 +120,53 @@ npx eas-cli build -p android --profile production
 Envie na mesma faixa de teste fechado. **Nesta versão, mudar a resposta do IARC** sobre bloquear
 ou ocultar outros usuários para **Sim** — o botão de bloquear entra agora.
 
-### 2.4 Depois desta build, correção de tela não precisa mais de build
+### 2.4 iOS (TestFlight)
+
+O iOS anda junto desde 28/09: bloqueio de usuário e revogação do Sign in with Apple já foram
+testados no iPhone. Nesta rodada entram as fotos e o EAS Update.
+
+```bash
+npx eas-cli build -p ios --profile production
+npx eas-cli submit -p ios --latest
+```
+
+No App Store Connect (app 6816761128), a versão aparece no TestFlight. As notas de revisão já
+estão escritas — é só enviar para análise.
+
+**Sobre foto enviada por usuário, a Apple é mais exigente que o Google.** A regra 1.2 (conteúdo
+gerado por usuário) pede quatro coisas, e as quatro já existem: filtro do conteúdo antes de
+publicar (o robô do Cloud Vision + a fila humana), denúncia, bloqueio de usuário e um contato de
+suporte (appirisa@gmail.com). Vale dizer isso nas notas de revisão, em uma linha: *"Fotos enviadas
+por usuários passam por análise automática de conteúdo impróprio e por revisão humana antes de
+aparecer. O app tem denúncia, bloqueio e exclusão de conta."* Sem essa frase a revisão costuma
+voltar com pedido de esclarecimento.
+
+No iPhone dele, para testar sem gastar build: `npx expo run:ios --device` (precisa refazer a cada
+7 dias, é limitação do Apple ID gratuito).
+
+### 2.5 Depois desta build, correção de tela não precisa mais de build
 
 ```bash
 npx eas-cli update --branch production --message "o que mudou"
 ```
 
-Chega em quem já tem o app na próxima abertura. Só mudança de código nativo (lib nova, ícone,
-permissão) continua exigindo build.
+Chega em quem já tem o app na próxima abertura, **nos dois sistemas de uma vez**: o mesmo update
+vale para Android e iOS, desde que as duas builds tenham saído com o EAS Update ligado. Só mudança
+de código nativo (lib nova, ícone, permissão) continua exigindo build.
+
+Atenção ao iOS: a Apple permite update de conteúdo e correção, mas **não** mudar o propósito do
+app por esse caminho. Recurso novo de verdade vai por build e revisão, como sempre.
 
 ---
 
-## O que entra nesta build
+## O que entra nesta build (Android e iOS)
 
-- Bloqueio por usuário (migration 20, já no banco) — e a resposta do IARC muda junto.
+- Bloqueio por usuário (migration 20, já no banco) — no Android, a resposta do IARC muda junto;
+  no iOS, é o que atende a regra 1.2 da App Store.
 - Foto do Mapillary aparecendo na ficha e nos cartões.
 - Botão de enviar foto do lugar ao avaliar.
 - Fila de moderação de imagem na tela Moderação.
-- EAS Update ligado, para as próximas correções não custarem build.
+- EAS Update ligado nos dois sistemas, para as próximas correções não custarem build.
+
+A cota do plano Free do EAS conta build de Android e de iOS no mesmo balde. Duas builds de
+produção nesta rodada, uma de cada, e o resto do mês sai por update.
