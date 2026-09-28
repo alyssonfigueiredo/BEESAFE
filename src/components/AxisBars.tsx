@@ -1,4 +1,5 @@
 import { Text, View } from "react-native";
+import Animated, { FadeInRight } from "react-native-reanimated";
 
 import { Rainbow } from "@/components/Rainbow";
 import { AXES, AXIS_KEYS, SCALE, type Axis } from "@/theme/domain";
@@ -39,7 +40,8 @@ export function AxisStrip({ scores }: { scores: AxisScores }) {
           style={{ backgroundColor: colors.border }}
           accessibilityLabel={`${AXES[k].label} ${Number(scores[k]).toFixed(1)} de 5`}
         >
-          <View
+          <Animated.View
+            entering={FadeInRight.duration(700).delay(120 + i * 60)}
             className="h-full rounded-sm"
             style={{
               width: `${Math.max(6, (Number(scores[k]) / 5) * 100)}%`,

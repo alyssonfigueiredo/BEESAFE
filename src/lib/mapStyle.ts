@@ -2,10 +2,17 @@ import type { StyleSpecification } from "@maplibre/maplibre-react-native";
 
 import { colors } from "@/theme/tokens";
 
-// Tiles da Esri (Canvas Light Gray): gratuitos, sem chave, combinam com a paleta clara.
+// Mapa base vetorial do OpenFreeMap (estilo Positron: cinza claro, sem chave, sem limite),
+// desenhado no aparelho: nítido em qualquer densidade de tela e em qualquer zoom.
+// Dados © OpenStreetMap / OpenMapTiles; a atribuição vem no próprio estilo.
+export const mapStyle = "https://tiles.openfreemap.org/styles/positron";
+
+// Reserva: tiles em imagem da Esri (Canvas Light Gray). Ficam borrados em tela Retina, por
+// serem imagens de 256 px, mas funcionam se o OpenFreeMap sair do ar: trocar o export acima
+// por `mapStyleEsri`.
 const ESRI = "https://server.arcgisonline.com/ArcGIS/rest/services/Canvas";
 
-export const mapStyle: StyleSpecification = {
+export const mapStyleEsri: StyleSpecification = {
   version: 8,
   sources: {
     "esri-base": {

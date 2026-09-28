@@ -9,24 +9,25 @@ import {
   Platform,
   Pressable,
   ScrollView,
-  StyleSheet,
   Text,
   TextInput,
   View,
 } from "react-native";
 
+import { Aurora } from "@/components/Aurora";
 import { useScreenInsets } from "@/hooks/useScreenInsets";
 import { AreaLevel } from "@/components/AreaLevel";
 import { AxisBars } from "@/components/AxisBars";
 import { Badge } from "@/components/Badge";
+import { CountUp } from "@/components/CountUp";
 import { IrisScore } from "@/components/IrisScore";
 import { PlacePhoto } from "@/components/PlacePhoto";
+import { RainbowText } from "@/components/RainbowText";
 import { Rainbow } from "@/components/Rainbow";
 import { ReportButton } from "@/components/ReportButton";
 import { usePlace, usePlaceRatings, useRatePlace } from "@/hooks/usePlaces";
 import { AXES, AXIS_KEYS, BADGES, PLACE_CATEGORIES, placeScoreColor } from "@/theme/domain";
 import type { Axis } from "@/theme/domain";
-import { Glass } from "@/components/Glass";
 import { colors, shadow } from "@/theme/tokens";
 
 type Draft = Record<Axis, number> & { key: string; comment: string };
@@ -54,6 +55,8 @@ export default function PlaceScreen() {
           comment: mine?.comment ?? "",
         };
   const missing = AXIS_KEYS.filter((k) => !current[k]);
+  // Lugar sem nota: cada pergunta respondida devolve um quarto da cor à foto.
+  const respondidas = AXIS_KEYS.length - missing.length;
 
   async function submit() {
     if (missing.length) return Alert.alert(`Falta responder: ${AXES[missing[0]].label}.`);
@@ -110,211 +113,218 @@ export default function PlaceScreen() {
           title: "",
           headerTransparent: true,
           headerStyle: { backgroundColor: "transparent" },
-          headerBackground: () => <Glass style={StyleSheet.absoluteFill} />,
+          headerBlurEffect: "systemUltraThinMaterial",
           headerTintColor: colors.ink,
           headerShadowVisible: false,
         }}
       />
-      <ScrollView
-        className="flex-1 bg-paper"
-        contentContainerClassName="gap-4 px-4"
-        contentContainerStyle={insets}
-        keyboardShouldPersistTaps="handled"
-      >
-        <View className="gap-2 rounded-2xl border border-border bg-surface p-5" style={shadow.card}>
-          <PlacePhoto
-            category={place.category}
-            photoName={place.photo_name}
-            photoAuthor={place.photo_author}
-            photoAuthorUri={place.photo_author_uri}
-            variant="banner"
-          />
-          <View className="flex-row items-center gap-2">
-            <Text className="flex-1 font-display text-3xl uppercase tracking-widest text-ink">
-              {place.name}
+      <View className="flex-1">
+        <Aurora />
+        <ScrollView
+          className="flex-1"
+          contentContainerClassName="gap-4 px-4"
+          contentContainerStyle={insets}
+          keyboardShouldPersistTaps="handled"
+        >
+          <View className="gap-2 rounded-[28px] bg-surface p-5" style={shadow.card}>
+            <PlacePhoto
+              category={place.category}
+              photoName={place.photo_name}
+              photoAuthor={place.photo_author}
+              photoAuthorUri={place.photo_author_uri}
+              variant="banner"
+              muted={place.score == null}
+              progress={respondidas / AXIS_KEYS.length}
+            />
+            <View className="flex-row items-center gap-2">
+              <Text className="flex-1 font-display text-2xl uppercase tracking-wide text-ink">
+                {place.name}
+              </Text>
+              {place.verified && <BadgeCheck color={colors.turquoiseInk} size={20} />}
+            </View>
+            {/* O bairro leva para a ficha da área: quem olha um bar quer saber da rua em volta. */}
+            <Text className="font-body text-sm text-dim">
+              {PLACE_CATEGORIES[place.category]}
+              {place.neighborhood && place.neighborhood_id ? (
+                <>
+                  {" · "}
+                  <Link
+                    href={{
+                      pathname: "/bairro/[id]",
+                      params: { id: String(place.neighborhood_id) },
+                    }}
+                    style={{ color: colors.turquoiseInk, textDecorationLine: "underline" }}
+                  >
+                    {place.neighborhood}
+                  </Link>
+                </>
+              ) : (
+                ""
+              )}{" "}
+              · {place.city}
             </Text>
-            {place.verified && <BadgeCheck color={colors.turquoiseInk} size={20} />}
-          </View>
-          {/* O bairro leva para a ficha da área: quem olha um bar quer saber da rua em volta. */}
-          <Text className="font-body text-sm text-dim">
-            {PLACE_CATEGORIES[place.category]}
-            {place.neighborhood && place.neighborhood_id ? (
-              <>
-                {" · "}
-                <Link
-                  href={{
-                    pathname: "/bairro/[id]",
-                    params: { id: String(place.neighborhood_id) },
-                  }}
-                  style={{ color: colors.turquoiseInk, textDecorationLine: "underline" }}
-                >
-                  {place.neighborhood}
-                </Link>
-              </>
-            ) : (
-              ""
-            )}{" "}
-            · {place.city}
-          </Text>
-          {!!place.address && <Text className="font-body text-sm text-muted">{place.address}</Text>}
+            {!!place.address && (
+              <Text className="font-body text-sm text-muted">{place.address}</Text>
+            )}
 
-          {/* Segurança antes da nota: quem abre a ficha decidindo se vai precisa disto primeiro.
+            {/* Segurança antes da nota: quem abre a ficha decidindo se vai precisa disto primeiro.
               Dois avisos distintos e nessa ordem: a região (sobre a rua) e, só se existir, o relato
               que aponta este lugar (sobre o lugar, e aí sim desconta da nota). */}
-          {place.area_level && <AreaLevel level={place.area_level} size="lg" />}
+            {place.area_level && <AreaLevel level={place.area_level} size="lg" />}
 
-          {place.recent_on_site > 0 && (
-            <View className="mt-1 flex-row items-start gap-2 rounded-xl border border-coral/60 bg-paper p-3">
-              <AlertTriangle color={colors.coralInk} size={18} />
-              <Text className="flex-1 font-body text-sm text-muted">
-                {place.recent_on_site} relato{place.recent_on_site === 1 ? "" : "s"} apontando este
-                lugar nos últimos 6 meses
-                {place.recent_high_occurrences > 0
-                  ? `, ${place.recent_high_occurrences} grave${place.recent_high_occurrences === 1 ? "" : "s"}`
-                  : ""}
-                .{place.recent_high_occurrences > 0 ? " A nota desconta isso." : ""}
-              </Text>
-            </View>
-          )}
+            {place.recent_on_site > 0 && (
+              <View className="mt-1 flex-row items-start gap-2 rounded-2xl bg-coral/15 p-3">
+                <AlertTriangle color={colors.coralInk} size={18} />
+                <Text className="flex-1 font-body text-sm text-muted">
+                  {place.recent_on_site} relato{place.recent_on_site === 1 ? "" : "s"} apontando
+                  este lugar nos últimos 6 meses
+                  {place.recent_high_occurrences > 0
+                    ? `, ${place.recent_high_occurrences} grave${place.recent_high_occurrences === 1 ? "" : "s"}`
+                    : ""}
+                  .{place.recent_high_occurrences > 0 ? " A nota desconta isso." : ""}
+                </Text>
+              </View>
+            )}
 
-          {/* A pergunta abre a seção do acolhimento nos dois casos: com nota ela nomeia o que os
+            {/* A pergunta abre a seção do acolhimento nos dois casos: com nota ela nomeia o que os
               quatro eixos respondem; sem nota, é o convite para alguém responder primeiro. */}
-          <Text className="mt-3 font-display text-lg text-ink">Quanta cor tem esse lugar?</Text>
-
-          {score == null ? (
-            <Text className="font-body text-base text-dim">
-              Ninguém avaliou ainda. Seja a primeira pessoa a dizer.
-            </Text>
-          ) : (
-            <View className="mt-2 gap-3">
-              <View className="flex-row items-center gap-3">
-                <IrisScore value={score} size={54} />
-                <View className="flex-1 gap-1">
-                  <Text className="font-display text-4xl" style={{ color: placeScoreColor(score) }}>
-                    {score.toFixed(1)}
-                  </Text>
-                  {place.badge && <Badge badge={place.badge} size="lg" />}
-                  <Text className="font-body text-xs text-dim">
-                    {place.rating_count} avaliaç{place.rating_count === 1 ? "ão" : "ões"} de quem
-                    frequenta
-                  </Text>
-                </View>
-              </View>
-              {place.badge && (
-                <Text className="font-body text-xs text-muted">{BADGES[place.badge].note}</Text>
-              )}
-              <AxisBars
-                scores={{
-                  welcome: place.score_welcome,
-                  affection: place.score_affection,
-                  restroom: place.score_restroom,
-                  crowd: place.score_crowd,
-                }}
-              />
+            {/* A pergunta da marca, pintada com o arco-íris. */}
+            <View className="mt-3">
+              <RainbowText size={20}>Quanta cor tem esse lugar?</RainbowText>
             </View>
-          )}
-        </View>
 
-        <Pressable
-          onPress={comoChegar}
-          className="flex-row items-center gap-2 rounded-xl border border-border bg-surface px-4 py-3 active:opacity-80"
-          style={shadow.card}
-        >
-          <Navigation color={colors.turquoiseInk} size={18} />
-          <Text className="font-body-medium text-sm text-ink">Como chegar</Text>
-        </Pressable>
-
-        {formVisivel ? (
-          <View
-            className="gap-4 rounded-xl border border-border bg-surface p-4"
-            style={shadow.card}
-          >
-            <Text className="font-heading text-base uppercase tracking-widest text-ink">
-              {mine ? "Sua avaliação" : "Como foi lá?"}
-            </Text>
-            {AXIS_KEYS.map((k) => (
-              <View key={k} className="gap-2">
-                <Text className="font-body-medium text-sm text-ink">{AXES[k].question}</Text>
-                <Text className="font-body text-xs text-dim">{AXES[k].hint}</Text>
-                <Rainbow
-                  value={current[k]}
-                  size={16}
-                  onChange={(v) => setDraft({ ...current, [k]: v })}
-                />
-              </View>
-            ))}
-            <TextInput
-              className="min-h-20 rounded-xl border border-border bg-paper px-4 py-3 font-body text-base text-ink"
-              placeholder="Quer contar como foi? (opcional, até 500 caracteres)"
-              placeholderTextColor={colors.dim}
-              multiline
-              textAlignVertical="top"
-              maxLength={500}
-              value={current.comment}
-              onChangeText={(v) => setDraft({ ...current, comment: v })}
-            />
-            <Pressable
-              disabled={rate.isPending}
-              onPress={submit}
-              className="items-center rounded-full bg-yellow py-3 active:opacity-80 disabled:opacity-50"
-              style={shadow.yellow}
-            >
-              <Text className="font-heading text-base uppercase tracking-widest text-night">
-                {rate.isPending ? "Enviando…" : mine ? "Atualizar" : "Enviar avaliação"}
+            {score == null ? (
+              <Text className="font-body text-base text-dim">
+                {respondidas === AXIS_KEYS.length
+                  ? "Esse lugar ganhou cor. Envie a avaliação para ela ficar."
+                  : "Ninguém avaliou ainda. Seja a primeira pessoa a dizer."}
               </Text>
-            </Pressable>
-          </View>
-        ) : (
-          <Pressable
-            onPress={() => setAbrirForm(true)}
-            className="items-center rounded-full border border-border bg-surface py-3 active:opacity-80"
-          >
-            <Text className="font-heading text-base uppercase tracking-widest text-muted">
-              Avaliar este lugar
-            </Text>
-          </Pressable>
-        )}
-
-        {ratings.length > 0 && (
-          <View className="gap-2">
-            <Text className="font-heading text-base uppercase tracking-widest text-ink">
-              Avaliações
-            </Text>
-            {ratings.map((r) => (
-              <View
-                key={r.id}
-                className="gap-1 rounded-xl border border-border bg-surface p-4"
-                style={shadow.card}
-              >
-                <View className="flex-row items-center justify-between">
-                  <Rainbow value={Number(r.overall ?? r.stars ?? 0)} size={7} />
-                  <Text className="font-body text-xs text-dim">
-                    {r.nickname}
-                    {r.is_mine ? " (você)" : ""} ·{" "}
-                    {formatDistanceToNow(parseISO(r.updated_at), { locale: ptBR, addSuffix: true })}
-                  </Text>
+            ) : (
+              <View className="mt-2 gap-3">
+                <View className="flex-row items-center gap-3">
+                  <IrisScore value={score} size={54} />
+                  <View className="flex-1 gap-1">
+                    <CountUp
+                      value={score}
+                      decimals={1}
+                      className="font-display text-4xl"
+                      style={{ color: placeScoreColor(score) }}
+                    />
+                    {place.badge && <Badge badge={place.badge} size="lg" />}
+                    <Text className="font-body text-xs text-dim">
+                      {place.rating_count} avaliaç{place.rating_count === 1 ? "ão" : "ões"} de quem
+                      frequenta
+                    </Text>
+                  </View>
                 </View>
+                {place.badge && (
+                  <Text className="font-body text-xs text-muted">{BADGES[place.badge].note}</Text>
+                )}
                 <AxisBars
                   scores={{
-                    welcome: r.welcome,
-                    affection: r.affection,
-                    restroom: r.restroom,
-                    crowd: r.crowd,
+                    welcome: place.score_welcome,
+                    affection: place.score_affection,
+                    restroom: place.score_restroom,
+                    crowd: place.score_crowd,
                   }}
-                  size={5}
                 />
-                {!!r.comment && <Text className="font-body text-sm text-muted">{r.comment}</Text>}
-                {!r.is_mine && <ReportButton type="rating" id={r.id} compact />}
               </View>
-            ))}
+            )}
           </View>
-        )}
 
-        {/* Denúncia do lugar fica no fim: ação rara, não precisa de lugar nobre. */}
-        <View className="items-start pb-4">
-          <ReportButton type="place" id={place.id} />
-        </View>
-      </ScrollView>
+          <Pressable
+            onPress={comoChegar}
+            className="flex-row items-center gap-2 rounded-2xl bg-subtle px-4 py-3 active:opacity-80"
+            style={shadow.card}
+          >
+            <Navigation color={colors.turquoiseInk} size={18} />
+            <Text className="font-body-medium text-sm text-ink">Como chegar</Text>
+          </Pressable>
+
+          {formVisivel ? (
+            <View className="gap-4 rounded-3xl bg-surface p-4" style={shadow.card}>
+              <Text className="font-body-bold text-base text-ink">
+                {mine ? "Sua avaliação" : "Como foi lá?"}
+              </Text>
+              {AXIS_KEYS.map((k) => (
+                <View key={k} className="gap-2">
+                  <Text className="font-body-medium text-sm text-ink">{AXES[k].question}</Text>
+                  <Text className="font-body text-xs text-dim">{AXES[k].hint}</Text>
+                  <Rainbow
+                    value={current[k]}
+                    size={16}
+                    onChange={(v) => setDraft({ ...current, [k]: v })}
+                  />
+                </View>
+              ))}
+              <TextInput
+                className="min-h-20 rounded-2xl bg-subtle px-4 py-3 font-body text-base text-ink"
+                placeholder="Quer contar como foi? (opcional, até 500 caracteres)"
+                placeholderTextColor={colors.dim}
+                multiline
+                textAlignVertical="top"
+                maxLength={500}
+                value={current.comment}
+                onChangeText={(v) => setDraft({ ...current, comment: v })}
+              />
+              <Pressable
+                disabled={rate.isPending}
+                onPress={submit}
+                className="items-center rounded-full bg-yellow py-3 active:opacity-80 disabled:opacity-50"
+                style={shadow.yellow}
+              >
+                <Text className="font-body-bold text-base text-night">
+                  {rate.isPending ? "Enviando…" : mine ? "Atualizar" : "Enviar avaliação"}
+                </Text>
+              </Pressable>
+            </View>
+          ) : (
+            <Pressable
+              onPress={() => setAbrirForm(true)}
+              className="items-center rounded-full bg-subtle py-3 active:opacity-80"
+            >
+              <Text className="font-body-bold text-base text-ink">Avaliar este lugar</Text>
+            </Pressable>
+          )}
+
+          {ratings.length > 0 && (
+            <View className="gap-2">
+              <Text className="font-body-bold text-base text-ink">Avaliações</Text>
+              {ratings.map((r) => (
+                <View key={r.id} className="gap-1 rounded-3xl bg-surface p-4" style={shadow.card}>
+                  <View className="flex-row items-center justify-between">
+                    <Rainbow value={Number(r.overall ?? r.stars ?? 0)} size={7} />
+                    <Text className="font-body text-xs text-dim">
+                      {r.nickname}
+                      {r.is_mine ? " (você)" : ""} ·{" "}
+                      {formatDistanceToNow(parseISO(r.updated_at), {
+                        locale: ptBR,
+                        addSuffix: true,
+                      })}
+                    </Text>
+                  </View>
+                  <AxisBars
+                    scores={{
+                      welcome: r.welcome,
+                      affection: r.affection,
+                      restroom: r.restroom,
+                      crowd: r.crowd,
+                    }}
+                    size={5}
+                  />
+                  {!!r.comment && <Text className="font-body text-sm text-muted">{r.comment}</Text>}
+                  {!r.is_mine && <ReportButton type="rating" id={r.id} compact />}
+                </View>
+              ))}
+            </View>
+          )}
+
+          {/* Denúncia do lugar fica no fim: ação rara, não precisa de lugar nobre. */}
+          <View className="items-start pb-4">
+            <ReportButton type="place" id={place.id} />
+          </View>
+        </ScrollView>
+      </View>
     </>
   );
 }

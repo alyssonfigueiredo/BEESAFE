@@ -11,7 +11,9 @@
   "primeiro_comentario": "",
   "publicado": true,
   "publicado_em": "2026-09-26T21:10:00.000Z",
-  "publicado_manual": "adesivo de link (bit.ly/appirisa), postado direto pelo app"
+  "publicado_manual": "adesivo de link (bit.ly/appirisa), postado direto pelo app",
+  "confirmado": false,
+  "confirmado_erro": "undefined: Unsupported get request. Object with ID 'undefined' does not exist, cannot be loaded due to missing permissions, or does not support this operation. Please read the Graph API documentation at https://developers.facebook.com/docs/graph-api"
  },
  {
   "id": "story-arcoiris",
@@ -48,7 +50,19 @@
   ],
   "legenda": "",
   "primeiro_comentario": "",
-  "publicado": false
+  "publicado": true,
+  "ultimo_erro": "EAAXApo4zB6cBSvgZCMXQzoZAZANCIk3anGnkh0aWaqiRieA1AFZCIjApIniRZCisCRwmEDdSPAaymIUzlqxPJ5bgEXJNUMa31kSzPGlVhuJOCFuZCLZBcwGZBy4Qtw1ySzkSSqoli7l1081Jhw7g5T7lejXdKRHon8caTkC3SnH4pomlz5wc0bNHMkfM1Nq3maP5ZCJooVQ4ZD/media: Unsupported post request. Object with ID 'EAAXApo4zB6cBSvgZCMXQzoZAZANCIk3anGnkh0aWaqiRieA1AFZCIjApIniRZCisCRwmEDdSPAaymIUzlqxPJ5bgEXJNUMa31kSzPGlVhuJOCFuZCLZBcwGZBy4Qtw1ySzkSSqoli7l1081Jhw7g5T7lejXdKRHon8caTkC3SnH4pomlz5wc0bNHMkfM1Nq3maP5ZCJooVQ4ZD' does not exist, cannot be loaded due to missing permissions, or does not support this operation. Please read the Graph API documentation at https://developers.facebook.com/docs/graph-api",
+  "publicado_em": "2026-09-28T18:23:46.921Z",
+  "media_id": "18108605300334854",
+  "confirmacao": {
+   "id": "18108605300334854",
+   "media_type": "IMAGE",
+   "permalink": "https://www.instagram.com/stories/appirisa/3996331237149509729",
+   "timestamp": "2026-09-28T18:23:53+0000",
+   "na_lista_de_stories_ativos": true
+  },
+  "confirmado": true,
+  "confirmado_em": "2026-09-28T18:30:26.642Z"
  },
  {
   "id": "carrossel-3",

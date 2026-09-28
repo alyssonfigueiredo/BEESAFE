@@ -3,6 +3,7 @@ import { Alert, Platform, Pressable, Text, TextInput, View } from "react-native"
 import { SafeAreaView } from "react-native-safe-area-context";
 
 import { Logo } from "@/components/Logo";
+import { authMessage } from "@/lib/authErrors";
 import { isAppleSignInAvailable, signInWithApple, signInWithGoogle } from "@/lib/socialAuth";
 import { supabase } from "@/lib/supabase";
 import { colors, shadow } from "@/theme/tokens";
@@ -23,23 +24,37 @@ export default function LoginScreen() {
     try {
       await fn();
     } catch (e) {
-      const msg = e instanceof Error ? e.message : String(e);
-      if (!/cancel/i.test(msg)) Alert.alert("Não deu certo", msg);
+      const msg = authMessage(e);
+      if (msg) Alert.alert("Não deu certo", msg);
     } finally {
       setBusy(false);
     }
   }
 
   async function submitEmail() {
-    if (!email || !password) return Alert.alert("Preencha e-mail e senha.");
+    const mail = email.trim().toLowerCase();
+    if (!mail || !password) return Alert.alert("Preencha e-mail e senha.");
+    if (mode === "signup" && password.length < 6)
+      return Alert.alert("Senha curta", "A senha precisa ter pelo menos 6 caracteres.");
     await run(async () => {
-      const { error } =
-        mode === "login"
-          ? await supabase.auth.signInWithPassword({ email, password })
-          : await supabase.auth.signUp({ email, password });
+      if (mode === "login") {
+        const { error } = await supabase.auth.signInWithPassword({ email: mail, password });
+        if (error) throw error;
+        return;
+      }
+      const { data, error } = await supabase.auth.signUp({ email: mail, password });
       if (error) throw error;
-      if (mode === "signup")
-        Alert.alert("Cadastro criado", "Se pedirmos confirmação, confira seu e-mail.");
+      // Com confirmação ligada, a Supabase devolve usuário sem sessão; com e-mail já usado,
+      // devolve usuário sem identidades (para não revelar quem tem conta).
+      if (data.user && data.user.identities?.length === 0)
+        throw new Error("User already registered");
+      if (!data.session) {
+        Alert.alert(
+          "Confira seu e-mail",
+          "Mandamos um link para confirmar a conta. Depois de abrir o link, volte aqui e entre.",
+        );
+        setMode("login");
+      }
     });
   }
 
@@ -55,28 +70,24 @@ export default function LoginScreen() {
           <Pressable
             disabled={busy}
             onPress={() => run(signInWithGoogle)}
-            className="items-center rounded-xl bg-ink py-3 active:opacity-80 disabled:opacity-50"
+            className="items-center rounded-full bg-ink py-3 active:opacity-80 disabled:opacity-50"
           >
-            <Text className="font-heading text-base uppercase tracking-widest text-paper">
-              Entrar com Google
-            </Text>
+            <Text className="font-body-bold text-base text-paper">Entrar com Google</Text>
           </Pressable>
           {appleAvailable && Platform.OS === "ios" && (
             <Pressable
               disabled={busy}
               onPress={() => run(signInWithApple)}
-              className="items-center rounded-xl border border-ink py-3 active:opacity-80 disabled:opacity-50"
+              className="items-center rounded-full bg-subtle py-3 active:opacity-80 disabled:opacity-50"
             >
-              <Text className="font-heading text-base uppercase tracking-widest text-ink">
-                Entrar com Apple
-              </Text>
+              <Text className="font-body-bold text-base text-ink">Entrar com Apple</Text>
             </Pressable>
           )}
         </View>
 
         <View className="flex-row items-center gap-3">
           <View className="h-px flex-1 bg-border" />
-          <Text className="font-body text-xs uppercase tracking-widest text-dim">
+          <Text className="font-body-medium text-[11px] uppercase tracking-wider text-dim">
             ou com e-mail
           </Text>
           <View className="h-px flex-1 bg-border" />
@@ -84,21 +95,26 @@ export default function LoginScreen() {
 
         <View className="gap-3">
           <TextInput
-            className="rounded-xl border border-border bg-surface px-4 py-3 font-body text-base text-ink"
+            className="rounded-2xl bg-subtle px-4 py-3 font-body text-base text-ink"
             style={shadow.card}
             placeholder="E-mail"
             placeholderTextColor={colors.dim}
             autoCapitalize="none"
+            autoCorrect={false}
+            autoComplete="email"
+            textContentType="emailAddress"
             keyboardType="email-address"
             value={email}
             onChangeText={setEmail}
           />
           <TextInput
-            className="rounded-xl border border-border bg-surface px-4 py-3 font-body text-base text-ink"
+            className="rounded-2xl bg-subtle px-4 py-3 font-body text-base text-ink"
             style={shadow.card}
             placeholder="Senha"
             placeholderTextColor={colors.dim}
             secureTextEntry
+            autoComplete={mode === "login" ? "current-password" : "new-password"}
+            textContentType={mode === "login" ? "password" : "newPassword"}
             value={password}
             onChangeText={setPassword}
           />
@@ -108,7 +124,7 @@ export default function LoginScreen() {
             className="items-center rounded-full bg-coral py-3 active:opacity-80 disabled:opacity-50"
             style={shadow.coral}
           >
-            <Text className="font-heading text-lg uppercase tracking-widest text-night">
+            <Text className="font-body-bold text-base text-night">
               {mode === "login" ? "Entrar" : "Criar conta"}
             </Text>
           </Pressable>

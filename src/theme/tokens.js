@@ -65,10 +65,11 @@ const accents = {
 };
 
 const colors = {
-  paper: "#FAF9F6", // fundo das telas
-  surface: "#FFFFFF", // cartões, barra de abas, campos
-  subtle: "#F1EDE7", // preenchimentos de apoio
-  border: "#D8D1C5", // um tom mais firme que antes: definição vem da linha
+  paper: "#F5F4F1", // fundo das telas (por baixo da aurora)
+  surface: "rgba(255,255,255,0.66)", // cartões: translúcidos, a aurora passa de leve por baixo
+  solid: "#FFFFFF", // onde precisa ser opaco (lente da aba, balão do mapa)
+  subtle: "#ECEAE5", // campos, chips e botões fantasma (tonais, sem borda)
+  border: "#E6E3DD", // linhas divisórias; cartão não tem borda
   night: "#141829", // cor escura: texto sobre cor, traços do mapa, fundo do mapa
   ink: "#141829", // texto principal, mais escuro que antes (definição)
   muted: "#3D4560", // texto secundário
@@ -98,12 +99,13 @@ const mark = {
 // Vidro (Liquid Glass, iOS 26+; nos outros sistemas vira blur com véu branco): só nas camadas
 // que flutuam sobre o conteúdo — cabeçalho, barra de abas, folhas modais. Cartão e botão são opacos.
 const glass = {
-  tint: "rgba(255,255,255,0.44)", // véu sobre o blur: fino, para o conteúdo aparecer por baixo
-  tintStrong: "rgba(255,255,255,0.72)", // folhas modais, onde se lê texto longo
+  tint: "rgba(255,255,255,0.56)", // véu sobre o blur (o vidro do iOS 26 puxa cor do que está atrás)
+  tintStrong: "rgba(255,255,255,0.78)", // folhas modais, onde se lê texto longo
   edge: "rgba(255,255,255,0.90)", // fio de luz na borda
-  tabBarHeight: 64,
-  tabBarGap: 16, // distância da barra até a borda de baixo (além da área segura)
-  radius: 32,
+  side: 16, // margem lateral das cápsulas (cabeçalho e barra)
+  headerHeight: 52,
+  tabBarHeight: 66,
+  radius: 33,
 };
 
 // Profundidade: cartão e botão cheio descolam do papel. Sombra dupla (contato + ambiente) no
@@ -111,12 +113,29 @@ const glass = {
 // Botão cheio: chapado, em cápsula, com uma sombra suave da própria cor — sem brilho nem degradê.
 const tinted = (hex) => ({ boxShadow: `0 6px 18px ${hex}48` });
 const shadow = {
-  card: { boxShadow: "0 1px 2px rgba(20,24,41,0.06), 0 8px 24px rgba(20,24,41,0.10)" },
+  card: { boxShadow: "0 2px 4px rgba(20,24,41,0.03), 0 12px 32px rgba(20,24,41,0.06)" },
   lift: { boxShadow: "0 2px 4px rgba(20,24,41,0.08), 0 14px 36px rgba(20,24,41,0.16)" },
   turquoise: tinted(colors.turquoise),
   coral: tinted(colors.coral),
   yellow: tinted(colors.yellow),
   lilac: tinted(colors.lilac),
+};
+
+// Fundo aurora: as manchas de cor do story, paradas atrás do conteúdo (componente Aurora).
+const aurora = [
+  { x: -0.08, y: -0.04, r: 0.7, color: colors.turquoise, alpha: 0.42 },
+  { x: 1.08, y: 0.06, r: 0.55, color: colors.coral, alpha: 0.34 },
+  { x: 1.06, y: 1.04, r: 0.6, color: colors.lilac, alpha: 0.4 },
+  { x: -0.06, y: 1.02, r: 0.5, color: colors.yellow, alpha: 0.38 },
+];
+
+// Cor de cada aba quando acesa (o ícone pousa nela depois de passar pelo arco-íris).
+const tabColors = {
+  index: colors.coralInk,
+  mapa: colors.turquoiseInk,
+  lugares: colors.orangeInk,
+  apoio: colors.lilacInk,
+  perfil: colors.ink,
 };
 
 const fonts = {
@@ -128,4 +147,15 @@ const fonts = {
   bodyBold: "SpaceGrotesk_700Bold",
 };
 
-module.exports = { colors, fonts, mark, glass, shadow, accents, saturate, SATURATION };
+module.exports = {
+  colors,
+  fonts,
+  mark,
+  glass,
+  shadow,
+  aurora,
+  tabColors,
+  accents,
+  saturate,
+  SATURATION,
+};

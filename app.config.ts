@@ -16,7 +16,7 @@ const config: ExpoConfig = {
   backgroundColor: "#FAF9F6",
   primaryColor: "#D98C8A", // coral com a saturação a 60 % (src/theme/tokens.js)
   ios: {
-    bundleIdentifier: "br.com.irisa.app",
+    bundleIdentifier: "br.com.irisa.ios",
     supportsTablet: false,
     usesAppleSignIn: appleSignIn,
     infoPlist: {
@@ -53,7 +53,9 @@ const config: ExpoConfig = {
     ],
     [
       "expo-splash-screen",
-      { backgroundColor: "#FAF9F6", image: "./assets/splash-icon.png", imageWidth: 160 },
+      // Só a cor do papel: o radar animado (src/components/Splash.tsx) é a abertura de verdade,
+      // e uma logo estática antes dele parecia duas aberturas.
+      { backgroundColor: "#F5F4F1" },
     ],
   ],
   experiments: { typedRoutes: true },

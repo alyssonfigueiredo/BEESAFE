@@ -8,7 +8,7 @@ export function Badge({ badge, size = "sm" }: { badge: BadgeKey; size?: "sm" | "
   const lg = size === "lg";
   return (
     <View
-      className="self-start rounded-md"
+      className="self-start rounded-full"
       style={{
         backgroundColor: color + (badge === "poucas" ? "" : "2E"),
         paddingHorizontal: lg ? 10 : 8,

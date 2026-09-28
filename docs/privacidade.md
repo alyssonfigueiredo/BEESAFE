@@ -34,7 +34,7 @@ Não vendemos nem compartilhamos dados pessoais, salvo por ordem judicial ou req
 ## 6. Provedores
 
 - Supabase (banco de dados e autenticação), servidores na região de São Paulo.
-- Esri (mapas base), que recebe requisições de imagens de mapa sem identificação da sua conta.
+- OpenFreeMap (mapas base, dados do OpenStreetMap), que recebe requisições de blocos de mapa sem identificação da sua conta.
 - Google e Apple, apenas se você optar por entrar com essas contas.
 
 ## 7. Retenção e exclusão

@@ -26,6 +26,16 @@ Nome: **Irisa** (INPI livre; @irisapp livre). Bundle id `br.com.irisa.app`. Cont
   no EAS em 23/09/2026 com o cartão anti-duplicata, onde/quando, ficha do bairro e o Início novo;
   subir na mesma faixa de teste fechado, sem mexer na lista de testadores.
   O seed fictício de Curitiba saiu do repositório; `supabase/seed/limpar-curitiba-teste.sql` apaga o que sobrou no banco.
+- **Migration 18 (perfil robusto, 27/09/2026, achado no TestFlight):** `update_my_profile` virou
+  `security definer`, cria a linha de `profiles` se faltar (antes só fazia UPDATE e, sem linha, não
+  salvava nem dava erro), valida apelido ≤ 40 e cidade; `ensure_my_profile()` é o que o app usa para
+  ler o perfil. O app confere depois de salvar se o apelido gravou mesmo, e o mural já vem com o
+  apelido do Perfil. Erros de login/cadastro em português em `src/lib/authErrors.ts`.
+  **Apple com bundle `br.com.irisa.ios`:** o token da Apple vem com esse bundle como audiência; na
+  Supabase (Authentication → Sign In / Providers → Apple → Client IDs) têm que estar os dois,
+  `br.com.irisa.ios,br.com.irisa.app`, senão dá "Unacceptable audience in id_token".
+  Passo a passo de publicação no iPhone para o Alysson: `PUBLICAR-IOS.md` na raiz (fora de `docs/`
+  de propósito, para não ir para o site).
 - Chaves legadas desativadas: app usa `sb_publishable_...`, scripts usam `sb_secret_...` (só na máquina dele).
 - Dados geográficos: os 5.570 municípios das 27 UFs e os bairros de 24 capitais importados do OSM.
   São Paulo saiu com 96 pelo nível 9 (`--nivel 9`, que lá são os distritos). Seguem sem bairro:
@@ -72,6 +82,15 @@ Nome: **Irisa** (INPI livre; @irisapp livre). Bundle id `br.com.irisa.app`. Cont
   `MODE=story` (k 1.2245 → 60 s, máximo de um story sem cortar), `MODE=storybio` (60 s, fecho "O link
   está na bio" + @irisapp + cidades, `docs/Irisa-story-bio.mp4`) e `MODE=reels` (k 1.592 → 78 s, mesmo
   fecho, `docs/Irisa-reels.mp4`; Reels não aceita adesivo nem link na legenda). `?bio` na URL liga o fecho. Link camuflado: bit.ly/appirisa (conta dele) apontando para o site.
+  **Abertura para vídeo (27/09/2026):** `docs/abertura.html` é o radar do splash sozinho, em HTML+CSS
+  (360×640 escalado ×3), com `?formato=story|quadrado`, `?bg=paper|night|verde` (chroma) e `?semfim`;
+  `node scripts/abertura-video.mjs` grava em MP4 (`V=`, `FORMATO=`, `BG=`). `?v=radar` (4,2 s, o que
+  está no app), `?v=1` (coração da apresentação → espiral arco-íris enche a tela → círculo branco abre →
+  radar, 8 s), `?v=2` (radar → o anel se expande e a tela vira arco-íris com IRISA em branco e borda de 5 px no olho, as cores saem pela mesma varredura e termina no branco, 7,9 s).
+  `?v=3` (teste pedido por ele: coração → varredura enche a tela → as cores saem
+  pela varredura enquanto o radar da logo pinta o anel no mesmo passo, termina no branco, 7,9 s).
+  `docs/abertura-rever.html` mostra as versões lado a lado com Reiniciar. Escolhida para o app: v2 (27/09), também
+  aplicada no protótipo (`docs/prototipo-ios27.html`, aparelho da proposta) antes do tour.
   **Carrossel de estreia:** `docs/carrossel.html` (8 lâminas 1080×1350, mesmo estilo) e
   `node scripts/carrossel-png.mjs` exporta `docs/carrossel/01..08.png`. Fecha com "O link está na bio".
   Segundo post: `docs/carrossel-2.html` ("Estrelas não dizem nada pra gente": as quatro perguntas com
@@ -197,7 +216,27 @@ Nome: **Irisa** (INPI livre; @irisapp livre). Bundle id `br.com.irisa.app`. Cont
   `useScreenInsets()` no `contentContainerStyle` no lugar do `py-4`. Cartões e botões cheios levam `style={shadow.card}` (`boxShadow` nativo em tokens.js; o NativeWind não converte sombra dupla de className) para descolar do papel; tinta
   (`ink`) mais escura para definição. Cartões, botões e campos seguem opacos de propósito. Estrutura e navegação não mudaram. Os dois pacotes são nativos: precisa de
   `npx expo run:ios --device` de novo e de build EAS nova para o Android.
-  Protótipo navegável que originou isso: `docs/prototipo-ios27.html` (não é publicado no site).
+  **Layout completo aplicado em 27/09/2026 (mesclado em `claude/laughing-keller-my8t7c` no mesmo dia, com o ok dele,
+  junto com tudo da branch padrão; a branch antes do merge é o commit `674f9aa`):** fundo
+  aurora (`src/components/Aurora.tsx`, svg atrás de cada tela), cartões translúcidos sem borda
+  (`surface` virou rgba; `solid` é o branco opaco), chips e campos tonais (`src/components/Chip.tsx`,
+  `SearchField.tsx`), títulos em Oswald caixa alta mas seções/botões/rótulos em Space Grotesk caixa
+  normal, cartão escuro no Início e no resumo do bairro, busca + filtros no Início, estatísticas com
+  ícone tonal (`StatCard`), azulejo por categoria no `PlacePhoto` (cinza em lugar sem nota, `muted`),
+  Mapa em tela cheia com chips flutuantes e folha de vidro (`app/(tabs)/mapa.tsx`), pergunta da marca
+  em arco-íris (`RainbowText`), aba ativa com lente branca e cor própria (`tabColors`).
+  **Animações (Reanimated) aplicadas na sequência:** `Splash.tsx` (desde 27/09 é a v2 de `docs/abertura.html`, escolha dele:
+  o radar pinta o anel, a varredura pinta a tela toda até a borda, olho com borda branca de 5 px e
+  IRISA em branco, as cores saem pela mesma varredura e o app aparece, 7,25 s;
+  montado em `app/_layout.tsx` por cima de tudo depois das fontes; 0,3 s com "reduzir movimento"),
+  `TabIcon.tsx` (ícone da aba sai do cinza, passa pelo arco-íris e pousa na cor da aba, com pulinho),
+  `PlacePhoto` com `muted`+`progress` (foto/azulejo cinza que ganha um quarto de cor por pergunta
+  respondida na ficha; foto real usa `filter: grayscale` do RN 0.86 a zero respostas e um véu que
+  some depois), `IrisScore` enchendo gomo a gomo, `CountUp.tsx` (nota e estatísticas contam),
+  `AxisStrip` crescendo, `PlaceCard`/`OccurrenceCard` entrando escalonados (`index`).
+  Protótipo navegável que originou isso: `docs/prototipo-ios27.html`; comparação atual × proposta,
+  apresentação para o Alysson em `docs/apresentacao-liquid.html`; plano de lançamento em
+  `docs/plano-lancamento.html` (nenhum deles é publicado no site).
 
 ## Stack
 
