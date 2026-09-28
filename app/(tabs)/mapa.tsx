@@ -96,6 +96,10 @@ export default function MapaScreen() {
           setPlaceSel(null);
           setSelected(o);
         }}
+        onPressEmpty={() => {
+          setPlaceSel(null);
+          setSelected(null);
+        }}
         style={[StyleSheet.absoluteFill, { borderRadius: 0 }]}
       />
 

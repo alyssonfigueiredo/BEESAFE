@@ -14,7 +14,7 @@ import Animated, {
   withSequence,
   withTiming,
 } from "react-native-reanimated";
-import Svg, { Circle, Defs, G, LinearGradient, Path, Stop } from "react-native-svg";
+import Svg, { Circle, Defs, LinearGradient, Path, Stop } from "react-native-svg";
 
 import { Aurora } from "@/components/Aurora";
 import { colors, fonts, mark } from "@/theme/tokens";
@@ -26,7 +26,6 @@ import { colors, fonts, mark } from "@/theme/tokens";
 // normal e o splash some, revelando o app. Com "reduzir movimento", dura 0,3 s.
 
 const AP = Animated.createAnimatedComponent(Path);
-const AG = Animated.createAnimatedComponent(G);
 const AC = Animated.createAnimatedComponent(Circle);
 
 const SLICES = 48;
@@ -190,9 +189,10 @@ export function Splash({ onDone }: { onDone: () => void }) {
     if (gone) onDone();
   }, [gone, onDone]);
 
-  const sweepProps = useAnimatedProps(() => ({
-    rotation: sweep.value % 360,
-    origin: "50, 50" as const,
+  // Giro da varredura: por estilo de View, em volta do centro dela. `rotation`/`origin` de um G do
+  // react-native-svg viram matriz no JS e não chegam ao nativo quando o Reanimated anima direto.
+  const sweepStyle = useAnimatedStyle(() => ({
+    transform: [{ rotate: `${sweep.value % 360}deg` }],
   }));
   const pupilProps = useAnimatedProps(() => ({ r: 13 * pupil.value }));
   const shineProps = useAnimatedProps(() => ({ r: 2.86 * pupil.value }));
@@ -224,12 +224,12 @@ export function Splash({ onDone }: { onDone: () => void }) {
     opacity: border.value,
     transform: [{ scale: (2 * RING_R) / DISC + (1 - (2 * RING_R) / DISC) * border.value }],
   }));
-  const bigLine = useAnimatedProps(() => {
+  const bigLine = useAnimatedStyle(() => {
     const saindo = fout.value > 0;
     const t = saindo ? fout.value : fin.value;
     return {
-      rotation: t * 360,
       opacity: t > 0 && t < 1 ? 1 : 0,
+      transform: [{ rotate: `${t * 360}deg` }],
     };
   });
 
@@ -250,9 +250,8 @@ export function Splash({ onDone }: { onDone: () => void }) {
         at: i / BIG,
       };
     });
-    // Linha e cunha desenhadas a partir de (0, 0) e levadas ao centro do olho por um G fixo: assim
-    // a rotação animada gira em volta da origem, sem depender de `origin`.
-    const rel = (r: number, a: number) => [r * Math.cos(a), r * Math.sin(a)];
+    // Linha e cunha numa caixa 2R × 2R com o centro do olho no meio: a caixa gira em volta dela mesma.
+    const rel = (r: number, a: number) => [R + r * Math.cos(a), R + r * Math.sin(a)];
     const b0 = (-130 * Math.PI) / 180;
     const b1 = -Math.PI / 2;
     const [wx, wy] = rel(R, b0);
@@ -261,9 +260,10 @@ export function Splash({ onDone }: { onDone: () => void }) {
     return {
       cx,
       cy,
+      R,
       sectors,
-      wedge: `M 0 0 L ${wx} ${wy} A ${R} ${R} 0 0 1 ${ex} ${ey} Z`,
-      line: `M 0 0 L ${ex} ${ey}`,
+      wedge: `M ${R} ${R} L ${wx} ${wy} A ${R} ${R} 0 0 1 ${ex} ${ey} Z`,
+      line: `M ${R} ${R} L ${ex} ${ey}`,
       grad: { x1: gx, y1: gy, x2: ex, y2: ey },
     };
   }, [center, win.width, win.height]);
@@ -279,28 +279,42 @@ export function Splash({ onDone }: { onDone: () => void }) {
       <Aurora />
       {big && (
         <Svg style={StyleSheet.absoluteFill} width={win.width} height={win.height}>
-          <Defs>
-            <LinearGradient id="bigsw" gradientUnits="userSpaceOnUse" {...big.grad}>
-              <Stop offset="0" stopColor={mark.sweep} stopOpacity={0} />
-              <Stop offset="1" stopColor={mark.sweep} stopOpacity={0.45} />
-            </LinearGradient>
-          </Defs>
           {big.sectors.map((g) => (
             <BigSlice key={g.at} d={g.d} fill={g.fill} at={g.at} fin={fin} fout={fout} />
           ))}
-          <G x={big.cx} y={big.cy}>
-            <AG animatedProps={bigLine}>
-              <Path d={big.wedge} fill="url(#bigsw)" />
-              <Path
-                d={big.line}
-                stroke="#FFFFFF"
-                strokeWidth={2}
-                strokeLinecap="round"
-                strokeOpacity={0.85}
-              />
-            </AG>
-          </G>
         </Svg>
+      )}
+      {big && (
+        <Animated.View
+          pointerEvents="none"
+          style={[
+            {
+              position: "absolute",
+              left: big.cx - big.R,
+              top: big.cy - big.R,
+              width: 2 * big.R,
+              height: 2 * big.R,
+            },
+            bigLine,
+          ]}
+        >
+          <Svg width={2 * big.R} height={2 * big.R}>
+            <Defs>
+              <LinearGradient id="bigsw" gradientUnits="userSpaceOnUse" {...big.grad}>
+                <Stop offset="0" stopColor={mark.sweep} stopOpacity={0} />
+                <Stop offset="1" stopColor={mark.sweep} stopOpacity={0.45} />
+              </LinearGradient>
+            </Defs>
+            <Path d={big.wedge} fill="url(#bigsw)" />
+            <Path
+              d={big.line}
+              stroke="#FFFFFF"
+              strokeWidth={2}
+              strokeLinecap="round"
+              strokeOpacity={0.85}
+            />
+          </Svg>
+        </Animated.View>
       )}
       <View
         style={styles.logo}
@@ -316,7 +330,9 @@ export function Splash({ onDone }: { onDone: () => void }) {
           {slices.map((s) => (
             <Slice key={s.d} d={s.d} fill={s.fill} theta={s.theta} sweep={sweep} />
           ))}
-          <AG animatedProps={sweepProps}>
+        </Svg>
+        <Animated.View pointerEvents="none" style={[StyleSheet.absoluteFill, sweepStyle]}>
+          <Svg width={LOGO} height={LOGO} viewBox="0 0 100 100">
             <Path
               d={slicePath(33, 0, SWEEP_START, SWEEP_END)}
               fill={mark.sweep}
@@ -329,7 +345,9 @@ export function Splash({ onDone }: { onDone: () => void }) {
               strokeLinecap="round"
               strokeOpacity={0.8}
             />
-          </AG>
+          </Svg>
+        </Animated.View>
+        <Svg width={LOGO} height={LOGO} viewBox="0 0 100 100" style={StyleSheet.absoluteFill}>
           <Circle
             cx={50}
             cy={50}

@@ -28,6 +28,8 @@ type Props = {
   onPick?: (point: LngLat) => void;
   picked?: LngLat | null;
   onSelect?: (occurrence: PublicOccurrence | null) => void;
+  /** Toque no mapa fora de qualquer pino (fecha balões abertos). */
+  onPressEmpty?: () => void;
   style?: object | object[];
 };
 
@@ -40,6 +42,7 @@ export function CityMap({
   onPick,
   picked,
   onSelect,
+  onPressEmpty,
   style,
 }: Props) {
   const pickMode = !!onPick;
@@ -116,9 +119,12 @@ export function CityMap({
     fitted.current = true;
   }, [dataKey, occurrences, places]);
 
-  // O toque num pino também chega ao onPress do mapa (que limpa a seleção). Segura aqui.
+  // O toque num pino também chega ao onPress do mapa, que limpa a seleção. O pino marca a hora do
+  // toque e o mapa ignora o que chegar logo em seguida; toque no mapa vazio fecha o balão.
+  const pinAt = useRef(0);
   function handlePlacePress(e: NativeSyntheticEvent<PressEventWithFeatures>) {
     e.stopPropagation();
+    pinAt.current = Date.now();
     const id = e.nativeEvent.features[0]?.properties?.id as string | undefined;
     const place = places.find((p) => p.id === id);
     if (place) onSelectPlace?.(place);
@@ -126,6 +132,7 @@ export function CityMap({
 
   function handlePointPress(e: NativeSyntheticEvent<PressEventWithFeatures>) {
     e.stopPropagation();
+    pinAt.current = Date.now();
     const id = e.nativeEvent.features[0]?.properties?.id as string | undefined;
     onSelect?.(occurrences.find((o) => o.id === id) ?? null);
   }
@@ -142,10 +149,14 @@ export function CityMap({
         touchPitch={false}
         touchRotate={false}
         onPress={(e) => {
-          // Toque que já veio de um pino (traz features) não é toque no fundo do mapa.
-          if ("features" in e.nativeEvent) return;
+          // Toque que veio de um pino (traz features, ou chegou junto com ele) não é toque no fundo.
+          const f = (e.nativeEvent as { features?: unknown[] }).features;
+          if ((f && f.length > 0) || Date.now() - pinAt.current < 400) return;
           if (pickMode) onPick?.({ lng: e.nativeEvent.lngLat[0], lat: e.nativeEvent.lngLat[1] });
-          else onSelect?.(null);
+          else {
+            onSelect?.(null);
+            onPressEmpty?.();
+          }
         }}
       >
         <Camera ref={cameraRef} initialViewState={{ center: [center.lng, center.lat], zoom }} />
