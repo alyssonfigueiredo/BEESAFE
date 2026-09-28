@@ -175,9 +175,11 @@ O que falta na sua mão:
    npx eas-cli build -p ios --profile production
    ```
    Só grave o vídeo nessa build.
-2. **Mudar a resposta do IARC** sobre bloquear/ocultar outros usuários de **Não** para **Sim** — só
-   agora, com o botão publicado.
-3. Testar num iPhone físico com o iOS mais novo (a Apple revisa em aparelho real) e conferir que as
+
+   (O questionário IARC é só do Google Play, não da Apple. Na App Store o bloqueio não é
+   declaração: é o vídeo e as Notes. No Play Console, a resposta "Sim" para bloquear outros
+   usuários só vale com a build que tem o botão publicada na faixa — versionCode 10 ou mais.)
+2. Testar num iPhone físico com o iOS mais novo (a Apple revisa em aparelho real) e conferir que as
    capturas da App Store mostram o app em uso, não a abertura nem o login.
 
 ## 5. Sobre a tela "versão rejeitada"
