@@ -1,4 +1,5 @@
 import * as AppleAuthentication from "expo-apple-authentication";
+import Constants from "expo-constants";
 import * as Crypto from "expo-crypto";
 import * as Linking from "expo-linking";
 import * as WebBrowser from "expo-web-browser";
@@ -49,6 +50,24 @@ export async function signInWithApple(): Promise<void> {
     nonce: rawNonce,
   });
   if (error) throw error;
+
+  // Guarda o refresh token da Apple no servidor para poder revogar o vínculo quando a pessoa
+  // excluir a conta (regra 5.1.1 da App Store). O código vale 5 minutos e só serve uma vez.
+  // Falha aqui não pode barrar o login: a exclusão segue funcionando, só sem revogar.
+  if (credential.authorizationCode) {
+    supabase.functions
+      .invoke("apple-token", {
+        method: "POST",
+        body: {
+          code: credential.authorizationCode,
+          clientId: Constants.expoConfig?.ios?.bundleIdentifier,
+        },
+      })
+      .then(({ error: fnError }) => {
+        if (fnError) console.warn("apple-token:", fnError.message);
+      })
+      .catch((e) => console.warn("apple-token:", e));
+  }
 }
 
 export async function isAppleSignInAvailable(): Promise<boolean> {

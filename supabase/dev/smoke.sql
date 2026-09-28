@@ -78,6 +78,22 @@ select count(*) as services_total from public.support_services_for((select id fr
 select public.update_my_profile('  Cacau ', (select id from public.cities limit 1));
 select nickname, default_city_id is not null as has_city from public.profiles where id = auth.uid();
 select nickname from public.public_place_ratings where is_mine; -- deve ser Cacau
+-- ---------- bloqueio (migration 18) ----------
+-- usuário 3 bloqueia o autor da mensagem de Lu (usuário 2): mensagem e avaliação dele somem só para o 3
+select public.block_author('message', (select id from public.public_support_messages where nickname = 'Lu'));
+select count(*) as msgs_after_block_0 from public.public_support_messages;  -- as duas são do usuário 2
+select count(*) as ratings_after_block_1 from public.public_place_ratings;  -- só a minha (Cacau)
+select count(*) as my_blocks_1 from public.blocked_users;
+do $$ begin
+  perform public.block_author('rating', (select id from public.public_place_ratings where is_mine));
+  raise exception 'NAO DEVERIA';
+exception when sqlstate 'P0021' then raise notice 'auto-bloqueio rejeitado ok'; end $$;
+set request.jwt.claim.sub = '22222222-2222-2222-2222-222222222222';
+select count(*) as other_unaffected_2 from public.public_support_messages;
+select count(*) as other_blocks_0 from public.blocked_users;
+set request.jwt.claim.sub = '33333333-3333-3333-3333-333333333333';
+select public.unblock_user((select blocked_id from public.blocked_users));
+select count(*) as msgs_after_unblock_2 from public.public_support_messages;
 select public.delete_my_account();
 reset role;
 select count(*) as users_left from auth.users;

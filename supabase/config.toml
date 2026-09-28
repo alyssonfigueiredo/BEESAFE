@@ -1,0 +1,8 @@
+# Só o necessário para `supabase functions deploy`. As migrations continuam sendo coladas no SQL Editor.
+project_id = "ntjirpqulrnieeglpiei"
+
+[functions.apple-token]
+verify_jwt = true
+
+[functions.delete-account]
+verify_jwt = true

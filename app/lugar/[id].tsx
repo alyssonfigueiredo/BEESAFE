@@ -19,6 +19,7 @@ import { useScreenInsets } from "@/hooks/useScreenInsets";
 import { AreaLevel } from "@/components/AreaLevel";
 import { AxisBars } from "@/components/AxisBars";
 import { Badge } from "@/components/Badge";
+import { BlockButton } from "@/components/BlockButton";
 import { CountUp } from "@/components/CountUp";
 import { IrisScore } from "@/components/IrisScore";
 import { PlacePhoto } from "@/components/PlacePhoto";
@@ -313,7 +314,12 @@ export default function PlaceScreen() {
                     size={5}
                   />
                   {!!r.comment && <Text className="font-body text-sm text-muted">{r.comment}</Text>}
-                  {!r.is_mine && <ReportButton type="rating" id={r.id} compact />}
+                  {!r.is_mine && (
+                    <View className="flex-row items-center gap-3">
+                      <ReportButton type="rating" id={r.id} compact />
+                      <BlockButton type="rating" id={r.id} compact />
+                    </View>
+                  )}
                 </View>
               ))}
             </View>

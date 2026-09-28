@@ -8,6 +8,7 @@ import { Aurora } from "@/components/Aurora";
 import { useProfile } from "@/hooks/useProfile";
 import { useScreenInsets } from "@/hooks/useScreenInsets";
 import { authMessage } from "@/lib/authErrors";
+import { BlockButton } from "@/components/BlockButton";
 import { Chip } from "@/components/Chip";
 import { ReportButton } from "@/components/ReportButton";
 import {
@@ -135,8 +136,16 @@ export default function ApoioScreen() {
                 </View>
                 <Text className="font-body text-base text-ink">{m.content}</Text>
                 <View className="flex-row items-center justify-between">
-                  <Text className="font-body-medium text-xs text-dim">{m.nickname}</Text>
-                  <ReportButton type="message" id={m.id} compact />
+                  <Text className="font-body-medium text-xs text-dim">
+                    {m.nickname}
+                    {m.is_mine ? " (você)" : ""}
+                  </Text>
+                  {!m.is_mine && (
+                    <View className="flex-row items-center gap-3">
+                      <ReportButton type="message" id={m.id} compact />
+                      <BlockButton type="message" id={m.id} compact />
+                    </View>
+                  )}
                   <Pressable
                     onPress={() => toggle.mutate({ id: m.id, liked: m.liked })}
                     className="flex-row items-center gap-1"
