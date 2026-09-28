@@ -75,12 +75,13 @@ where n.city_id = p.city_id and p.neighborhood_id is null
 18. `migrations/00000000000015_ficha_do_bairro.sql`
 19. `migrations/00000000000016_testadores.sql`
 20. `migrations/00000000000017_prominence.sql`
-21. `migrations/00000000000018_bloqueio.sql` (bloqueio por usuário: tabela, RPCs e views filtradas)
-22. `migrations/00000000000019_apple_token.sql` (refresh token da Apple para revogar ao excluir a conta)
+21. `migrations/00000000000020_bloqueio.sql` (bloqueio por usuário: tabela, RPCs e views filtradas)
+22. `migrations/00000000000021_apple_token.sql` (refresh token da Apple para revogar ao excluir a conta)
 15. O seed fictício de Curitiba foi removido do repositório. Para apagar os dados de teste que ainda estejam no banco, rode `seed/limpar-curitiba-teste.sql` (apaga só os ids `11111111-`/`22222222-`/`33333333-` e recalcula os priors).
 
 Aplicado até a 17 (10 a 16 em 23/09/2026, 17 em 25/09/2026; leitura dos testadores em `testadores.sql`).
-**18 e 19 ainda não aplicadas** (escritas em 28/09/2026): colar as duas no SQL Editor, nessa ordem.
+A 18 (perfil robusto) em 27/09/2026; 20 e 21 (bloqueio e token da Apple, `colar-20-21.sql`) em 28/09/2026.
+(Não existe 19: o número ficou vago na renumeração.)
 
 Para promover alguém a moderador: `update public.profiles set role = 'moderator' where id = '<uuid do usuário>';`
 
@@ -127,7 +128,7 @@ npx supabase secrets set --project-ref ntjirpqulrnieeglpiei \
 `SUPABASE_SERVICE_ROLE_KEY` que a Supabase injeta sozinha não serve). `APPLE_CLIENT_ID` é opcional: sem ele
 a função usa o bundle id que o app informa (`ios.bundleIdentifier` do `app.config.ts`, `br.com.irisa.ios`).
 
-4. Migration 19 colada no SQL Editor (a tabela `apple_refresh_tokens`).
+4. Migration 21 colada no SQL Editor (a tabela `apple_refresh_tokens`).
 
 ### Como testar de ponta a ponta
 

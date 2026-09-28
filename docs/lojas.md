@@ -141,7 +141,7 @@ App Privacy: Email Address (Account management, linked); Precise Location (App f
 ## Conteúdo gerado por usuário (exigências das lojas)
 
 - Denúncia de conteúdo: sim (botão Denunciar em todo conteúdo).
-- Bloqueio pelo usuário: **existe desde a migration 18** (botão Bloquear em toda mensagem do mural e em
+- Bloqueio pelo usuário: **existe desde a migration 20** (botão Bloquear em toda mensagem do mural e em
   toda avaliação; lista e desbloqueio em Perfil). Quem bloqueia deixa de ver o que a conta publica; a
   pessoa bloqueada não é avisada. Relatos não entram porque não têm autoria visível.
   **Play Console → Classificação de conteúdo (IARC)**: na pergunta "Os usuários podem bloquear outros

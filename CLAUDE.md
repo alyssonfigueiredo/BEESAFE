@@ -178,14 +178,14 @@ Nome: **Irisa** (INPI livre; @irisapp livre). Bundle id Android `br.com.irisa.ap
   também em lugar sem nota, que é o caso mais comum); no Mapa aparece como área. **Não criar filtro
   de lugares por alerta**: faria a violência parecer atributo do bar e puniria quem só está perto.
 - Ficha das lojas pronta em docs/lojas.md.
-- **Bloqueio por usuário (migration 18, 28/09/2026):** tabela `blocked_users` (RLS: cada um vê e apaga só os
+- **Bloqueio por usuário (migration 20, 28/09/2026, aplicada no banco no mesmo dia):** tabela `blocked_users` (RLS: cada um vê e apaga só os
   seus), RPCs `block_user`/`unblock_user`/`block_author(type, id)`. O app nunca recebe o id do autor
   (`created_by` não sai do banco), então bloqueia pelo id da mensagem/avaliação e o banco resolve.
   As views `public_support_messages` (ganhou `is_mine`) e `public_place_ratings` filtram o que vem de quem
   eu bloqueei. Relatos não entram: não têm autoria visível. `BlockButton` ao lado de Denunciar no mural e
   nas avaliações; lista "Pessoas bloqueadas" com Desbloquear em Perfil. Ao publicar a build com o botão,
   mudar a resposta do IARC (bloquear/ocultar outros usuários) para **Sim** — nunca antes.
-- **Revogação do Sign in with Apple (migration 19 + Edge Functions, 28/09/2026):** `socialAuth.ts` manda o
+- **Revogação do Sign in with Apple (migration 21 + Edge Functions, 28/09/2026; migration aplicada e funções publicadas no mesmo dia):** `socialAuth.ts` manda o
   `authorizationCode` do login para a função `apple-token`, que troca por refresh token e guarda em
   `apple_refresh_tokens` (só chave de serviço). Excluir conta chama a função `delete-account`: revoga na
   Apple e só então apaga o usuário; conta Apple nunca cai no fallback da RPC `delete_my_account`. Secrets:
@@ -298,10 +298,10 @@ Checks antes de commitar: `npm run lint && npm run typecheck`. Migrations testá
    administrativas; (c) dados abertos das prefeituras de São Luís e Palmas (em Palmas a cidade é
    organizada em quadras, não bairros — o nome do "bairro" ali pode ser a quadra).
 3. Bloqueio por usuário e revogação Apple **implementados em 28/09/2026** (branch
-   `claude/app-store-compliance-block-revoke-bpztvp`): falta colar as migrations 18 e 19, publicar as
-   Edge Functions e os secrets da Apple (`supabase/README.md` → Edge Functions), gerar build (o botão
-   Bloquear é só JS, mas a resposta do IARC muda para **Sim** só na versão que leva o botão) e testar
-   a exclusão de uma conta Apple de ponta a ponta.
+   mesclada na `laughing-keller`): migrations 20 e 21 aplicadas e Edge Functions publicadas em 28/09.
+   Falta: secrets da Apple (`supabase/README.md` → Edge Functions), build iOS nova para o TestFlight
+   (bundle `br.com.irisa.ios`), testar a exclusão de uma conta Apple de ponta a ponta, e no Android a
+   build 10 com a resposta do IARC (bloquear outros usuários) mudando para **Sim** na mesma versão.
 4. Apple Developer (US$99/ano) quando decidir publicar no iOS; ou via ONG parceira (Apple isenta ONGs).
    Denúncia, moderação e excluir conta já existem.
 5. Fase 6+: notificações por área, rotas seguras, versão web.
