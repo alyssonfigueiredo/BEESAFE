@@ -75,8 +75,9 @@ where n.city_id = p.city_id and p.neighborhood_id is null
 18. `migrations/00000000000015_ficha_do_bairro.sql`
 19. `migrations/00000000000016_testadores.sql`
 20. `migrations/00000000000017_prominence.sql`
-21. `migrations/00000000000020_bloqueio.sql` (bloqueio por usuário: tabela, RPCs e views filtradas)
-22. `migrations/00000000000021_apple_token.sql` (refresh token da Apple para revogar ao excluir a conta)
+21. `migrations/00000000000018_perfil_robusto.sql` (perfil: update_my_profile definer, ensure_my_profile)
+22. `migrations/00000000000020_bloqueio.sql` (bloqueio por usuário: tabela, RPCs e views filtradas)
+23. `migrations/00000000000021_apple_token.sql` (refresh token da Apple para revogar ao excluir a conta)
 15. O seed fictício de Curitiba foi removido do repositório. Para apagar os dados de teste que ainda estejam no banco, rode `seed/limpar-curitiba-teste.sql` (apaga só os ids `11111111-`/`22222222-`/`33333333-` e recalcula os priors).
 
 Aplicado até a 17 (10 a 16 em 23/09/2026, 17 em 25/09/2026; leitura dos testadores em `testadores.sql`).
