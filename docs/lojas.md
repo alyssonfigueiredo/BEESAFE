@@ -6,11 +6,11 @@ Irisa — a cidade vista por você
 
 ## Descrição curta (80 caracteres)
 
-O mapa dos lugares onde a gente é bem-vinde, feito por nós.
+Quanta cor tem aqui? O mapa dos lugares onde a gente é bem-vinde.
 
 ## Descrição completa
 
-O mapa dos lugares onde a gente é bem-vinde, feito por nós. Avalie bares, restaurantes, baladas, cafés e serviços em quatro eixos — atendimento, afeto, banheiro e clientela — e descubra os lugares mais acolhedores perto de você.
+Quanta cor tem aqui? A Irisa é o mapa dos lugares onde a gente é bem-vinde, feito por nós. Avalie bares, restaurantes, baladas, cafés e serviços em quatro eixos — atendimento, afeto, banheiro e clientela — e descubra os lugares mais acolhedores perto de você.
 
 - Lugares avaliados pela comunidade, com selo de acolhimento.
 - Mapa com zonas de atenção e ranking de bairros, atualizado em tempo real.
