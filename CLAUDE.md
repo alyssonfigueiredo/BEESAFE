@@ -141,6 +141,11 @@ Nome: **Irisa** (INPI livre; @irisapp livre). Bundle id Android `br.com.irisa.ap
   põe a mais recente ativa em `places.photo_url` com `photo_source='usuario'` e volta para a foto
   anterior quando a moderação esconde. Denúncia de foto entra no fluxo existente (`report_target`
   ganhou `photo`). No app: botão dentro do formulário de avaliação (`src/hooks/usePlacePhoto.ts`).
+  **Nenhuma foto entra no ar sozinha:** nasce `review='pendente'`; a Edge Function `photo-check`
+  (pg_cron 5 em 5 min) passa pelo SafeSearch do Cloud Vision (1.000/mês grátis) e marca aprovada /
+  recusada / `humano`; a fila humana fica na tela Moderação (`fotos_para_moderar` + `moderar_foto`,
+  sem mostrar quem mandou). Sem `VISION_API_KEY` nada é aprovado sozinho — o padrão é não publicar.
+  Secrets: `PHOTO_CHECK_SECRET` (Vault: `photo_check_secret`), `VISION_API_KEY`.
   **`expo-image-picker` é nativo: precisa de `npx expo run:ios --device` e de build EAS nova.**
   Ordem final da foto: quem avaliou → Mapillary → Google → azulejo da categoria.
   Popularidade real (nº de avaliações do Google) é campo Enterprise e não pode ser guardado. Decidido não exibir rótulo LGBTQIA+ na ficha

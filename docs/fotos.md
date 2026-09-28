@@ -141,6 +141,27 @@ lugar como ele é hoje, é da comunidade — e não depende de cota nem de licen
 - Limite de 10 fotos por pessoa em 24 h (mesmo rate limit das avaliações) e 5 MB por arquivo.
 - Denúncia de foto entra no mesmo fluxo de moderação das avaliações e do mural (`report_target`
   ganhou `photo`).
+
+## Moderação da imagem (nenhuma foto entra no ar sozinha)
+
+Texto ofensivo incomoda; imagem imprópria numa ficha pública é outro patamar — e a Play Store
+exige moderação do que o usuário envia. Toda foto nasce `review = 'pendente'` e passa por:
+
+1. **Robô** — a Edge Function `photo-check` (pg_cron, de 5 em 5 min, só quando há foto pendente)
+   manda a imagem para o **SafeSearch do Google Cloud Vision** (1.000 análises/mês grátis).
+   Limpa → `aprovada`, entra no ar. `LIKELY` ou acima em adulto/violência/sensual → `recusada`.
+   `POSSIBLE`, resposta estranha ou erro → `humano`, vai para a fila. ("medical" fica de fora de
+   propósito: farmácia e serviço de saúde caem nele.)
+2. **Fila humana** — tela **Moderação** do app mostra a foto, o lugar e o que o robô achou, com
+   **Liberar** / **Recusar**. Quem modera não vê quem mandou.
+3. **Denúncia** — depois de no ar, a foto segue denunciável como qualquer conteúdo, e três
+   denúncias de pessoas diferentes escondem na hora, igual ao resto.
+
+**Sem `VISION_API_KEY` nada é aprovado automaticamente**: tudo espera a fila humana. Falha do
+robô nunca publica — o padrão é não publicar.
+
+Secrets da função: `PHOTO_CHECK_SECRET` (o mesmo no Vault como `photo_check_secret`),
+`SB_SECRET_KEY`, `VISION_API_KEY` (chave do Google Cloud com a **Cloud Vision API** ativada).
 - No app: botão **Adicionar uma foto do lugar** dentro do formulário de avaliação
   (`app/lugar/[id].tsx` + `src/hooks/usePlacePhoto.ts`). Recorte 16:9 e qualidade 0.7 no envio,
   para a faixa da ficha e para não subir arquivo gigante.
