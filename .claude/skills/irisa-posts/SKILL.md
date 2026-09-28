@@ -18,7 +18,7 @@ App brasileiro para a comunidade LGBTQIA+. Duas coisas, e a regra que as separa:
 - Anonimato por construção: sem autor na base pública, sem página de perfil, ponto deslocado ~100 m em relato de hoje/ontem, só e-mail para entrar, excluir conta apaga tudo.
 - Botão de emergência: 190, 192, 100, 188. Aba Apoio com serviços por cidade.
 - Sete cidades com lugares no mapa: Curitiba, Recife, João Pessoa, Joinville, Natal, São Paulo, Rio. Em fase de testes, Android primeiro.
-- Link: bit.ly/appirisa (vai na bio e no adesivo de story, nunca escrito na arte). Instagram @irisapp.
+- Link: bit.ly/appirisa (vai na bio e no adesivo de story, nunca escrito na arte). Instagram @appirisa.
 
 ## 2. Tom de voz
 
@@ -66,8 +66,8 @@ Eixos têm cor fixa: Atendimento coral, Afeto orange, Banheiro yellow, Clientela
 ## 5. Símbolo e marca (reset de 27/09/2026, `docs/marca.html` e `docs/marca-pack/LEIA-ME.txt`)
 
 `radar.svgfrag` é o conteúdo de um `<defs>` com dois símbolos; cola uma vez logo depois de `<body>` dentro de `<svg style="position:absolute;width:0;height:0"><defs>…</defs></svg>`:
-- **`#radarmark`** = símbolo completo (anel de 48 gomos, varredura turquesa, três pontos, pupila #0F1220 com brilho). Só a partir de **50 px**: marca vertical, horizontal, fecho de reels (`.handle` com @irisapp a 78 px), capa de story.
-- **`#radarmin`** = **redução**: só o anel colorido, centro vazio, sem pupila. É a **assinatura de post**: rodapé de toda lâmina e de todo reels, ícone ao lado de @irisapp abaixo de 50 px. Mínimo 20 px.
+- **`#radarmark`** = símbolo completo (anel de 48 gomos, varredura turquesa, três pontos, pupila #0F1220 com brilho). Só a partir de **50 px**: marca vertical, horizontal, fecho de reels (`.handle` com @appirisa a 78 px), capa de story.
+- **`#radarmin`** = **redução**: só o anel colorido, centro vazio, sem pupila. É a **assinatura de post**: rodapé de toda lâmina e de todo reels, ícone ao lado de @appirisa abaixo de 50 px. Mínimo 20 px.
 - Nunca: círculo liso em CSS, cor única, preto e branco, esticar, girar, sombra, `filter:saturate` por cima (o fragmento já vem na paleta ×1.35).
 - **Rodapé de toda lâmina**: canto inferior esquerdo `.brand` = `#radarmin` 36 px + "IRIS" + "a" amber. Canto inferior direito `.swipe` = "arraste →" (não na última). Canto superior direito `.num` = "3/8". No reels e no story o `.brand` fica centralizado a 120 px do fundo.
 - A capa de carrossel nunca é a logo. É o gancho.
@@ -92,11 +92,11 @@ Padrões de lâmina (escolher um por lâmina, nunca misturar dois):
 
 Story (1080×1920, `.sl.story`): mesma gramática, mais ar, marca centralizada no rodapé e uma **área tracejada** (`.zone`) onde entra o adesivo do Instagram (quiz, enquete, caixa de pergunta, link). O link nunca é escrito na arte.
 
-Reels (`docs/reels-3..9.html` como referência): mesmo CSS dentro de `#stage` 1080×1920, cenas em Web Animations presas a `window.__setT`, eyebrow com o nome da série na cena 0, assinatura "cinza vira cor" (`grayscale` no `#col` até o momento da virada), fecho `.handle` com `#radarmark` 78 px + @irisapp e `.brand` com `#radarmin`. Render: `FFMPEG=… node scripts/story-video.mjs docs/reels-N.html docs/Irisa-reels-N.mp4`. Sempre mostrar quadros estáticos antes de renderizar.
+Reels (`docs/reels-3..9.html` como referência): mesmo CSS dentro de `#stage` 1080×1920, cenas em Web Animations presas a `window.__setT`, eyebrow com o nome da série na cena 0, assinatura "cinza vira cor" (`grayscale` no `#col` até o momento da virada), fecho `.handle` com `#radarmark` 78 px + @appirisa e `.brand` com `#radarmin`. Render: `FFMPEG=… node scripts/story-video.mjs docs/reels-N.html docs/Irisa-reels-N.mp4`. Sempre mostrar quadros estáticos antes de renderizar.
 
 ## 7a. Perfil zero (decisão de 27/09/2026)
 
-Para quem não segue a conta, conteúdo que explica o app não segura 3 segundos. A sequência de ataque começa por reels curtos de reconhecimento (uma cena da vida de quem assiste, sem dizer "Irisa" na abertura), cada um pedindo um sinal só (compartilhar por DM, replay, comentar "eu" ou a cidade), e só depois entram os reels e carrosséis que apresentam o produto. Regras: gancho legível em 1 s sem contexto, sem pausa morta (cena nova a cada 4–6 s), texto grande porque a maioria assiste sem som, @irisapp só no fecho. Nunca prometer alcance nem correr atrás de trend sem relação com o tema.
+Para quem não segue a conta, conteúdo que explica o app não segura 3 segundos. A sequência de ataque começa por reels curtos de reconhecimento (uma cena da vida de quem assiste, sem dizer "Irisa" na abertura), cada um pedindo um sinal só (compartilhar por DM, replay, comentar "eu" ou a cidade), e só depois entram os reels e carrosséis que apresentam o produto. Regras: gancho legível em 1 s sem contexto, sem pausa morta (cena nova a cada 4–6 s), texto grande porque a maioria assiste sem som, @appirisa só no fecho. Nunca prometer alcance nem correr atrás de trend sem relação com o tema.
 
 ## 7. Como raciocinar um carrossel
 
@@ -111,7 +111,7 @@ Para quem não segue a conta, conteúdo que explica o app não segura 3 segundos
 ## 8. Referências (o que já existe, para copiar o jeito)
 
 - **Padrão novo (papel + Liquid Glass): `docs/carrossel-8.html` (fora do armário) e `carrossel-9.html` (viajar em casal)** e os reels 3–9. Padrão antigo (night), só para o texto: `docs/carrossel.html` (estreia), `carrossel-2.html` (quatro perguntas), `carrossel-3.html` (anonimato), `carrossel-4.html` (emergência), `carrossel-5.html` (regra da rua), `carrossel-6.html` (mito ou verdade), `carrossel-8.html` (Dia de Sair do Armário, 11/10), `post-bemvinde.html`, `stories-2.html`.
-- `docs/story.html` (vídeo de 60 s, dez cenas), `docs/reels-3.html` (regra da rua, 34 s), `docs/reels-4.html` (anonimato, 32 s), `docs/reels-5.html` (ficha do bairro, 36 s): carrosséis convertidos em cenas de 4–6 s, uma ideia por cena, número contando (`count`), fecho com pílula + @irisapp. `reels-6` a `reels-9` (15–20 s): **reels para quem não conhece o perfil**, gancho de reconhecimento sem jargão ("Você já soltou a mão em público?", "Mudei de calçada 4 vezes hoje", "A bandeira na porta não diz nada", "Sua cidade está no mapa?"), o app só aparece na última cena, e cada um pede um sinal (compartilhar, replay, comentar). `carrossel-8.html` (Dia de Sair do Armário), `carrossel-9.html` (viajar em casal, feito para salvar). `docs/index.html` (landing), `docs/pitch.html` (apresentação).
+- `docs/story.html` (vídeo de 60 s, dez cenas), `docs/reels-3.html` (regra da rua, 34 s), `docs/reels-4.html` (anonimato, 32 s), `docs/reels-5.html` (ficha do bairro, 36 s): carrosséis convertidos em cenas de 4–6 s, uma ideia por cena, número contando (`count`), fecho com pílula + @appirisa. `reels-6` a `reels-9` (15–20 s): **reels para quem não conhece o perfil**, gancho de reconhecimento sem jargão ("Você já soltou a mão em público?", "Mudei de calçada 4 vezes hoje", "A bandeira na porta não diz nada", "Sua cidade está no mapa?"), o app só aparece na última cena, e cada um pede um sinal (compartilhar, replay, comentar). `carrossel-8.html` (Dia de Sair do Armário), `carrossel-9.html` (viajar em casal, feito para salvar). `docs/index.html` (landing), `docs/pitch.html` (apresentação).
 - `docs/lojinha.html` e `scripts/lojinha/build.py`: mockups de produto em SVG com o mesmo sistema (fundo claro `paper` aceito ali).
 - Legendas e cronogramas anteriores: pasta Irisa-lancamento e Irisa-semana2 (uma pasta por dia, `legenda.txt` no feed, `texto.txt` no story).
 

@@ -13,7 +13,7 @@ do Mac e SQL pronto para colar no SQL Editor do Supabase. Nunca peça nem aceite
 App nacional (Brasil) para a comunidade LGBTQIA+: relatos anônimos de LGBTIfobia, mapa de áreas de atenção,
 lugares avaliados em quatro eixos de acolhimento (atendimento, afeto, banheiro, clientela), mural de apoio,
 botão de emergência. Cidade de referência: Curitiba (parceiros-alvo: Grupo Dignidade, Centro de Cidadania LGBTQIA+).
-Nome: **Irisa** (INPI livre; @irisapp livre). Bundle id `br.com.irisa.app`. Contato: appirisa@gmail.com.
+Nome: **Irisa** (INPI livre; @appirisa livre). Bundle id `br.com.irisa.app`. Contato: appirisa@gmail.com.
 
 ## Estado atual (2026-09-14)
 
@@ -80,7 +80,7 @@ Nome: **Irisa** (INPI livre; @irisapp livre). Bundle id `br.com.irisa.app`. Cont
   Instagram. Publicado em /story.html e /Irisa-story.mp4. A linha do tempo base tem 49 s e `?k=`
   estica só os inícios (não a velocidade das entradas): ele achou o texto rápido demais, então
   `MODE=story` (k 1.2245 → 60 s, máximo de um story sem cortar), `MODE=storybio` (60 s, fecho "O link
-  está na bio" + @irisapp + cidades, `docs/Irisa-story-bio.mp4`) e `MODE=reels` (k 1.592 → 78 s, mesmo
+  está na bio" + @appirisa + cidades, `docs/Irisa-story-bio.mp4`) e `MODE=reels` (k 1.592 → 78 s, mesmo
   fecho, `docs/Irisa-reels.mp4`; Reels não aceita adesivo nem link na legenda). `?bio` na URL liga o fecho. Link camuflado: bit.ly/appirisa (conta dele) apontando para o site.
   **Abertura para vídeo (27/09/2026):** `docs/abertura.html` é o radar do splash sozinho, em HTML+CSS
   (360×640 escalado ×3), com `?formato=story|quadrado`, `?bg=paper|night|verde` (chroma) e `?semfim`;

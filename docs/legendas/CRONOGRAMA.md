@@ -82,4 +82,4 @@ caixa de pergunta, enquete e adesivo de link) — mas a publicação virou autom
 `scripts/publicar-instagram.mjs` (Graph API), que só publica a imagem: não existe endpoint
 que cole adesivo depois. Redesenhados pra funcionar sozinhos, sem depender de colar nada à
 mão (detalhe de cada um em `stories-2.md`); a lâmina 04 trocou o placeholder de adesivo de
-link pelo fecho de bio ("O link está na bio" + @irisapp) já usado no resto da campanha.
+link pelo fecho de bio ("O link está na bio" + @appirisa) já usado no resto da campanha.

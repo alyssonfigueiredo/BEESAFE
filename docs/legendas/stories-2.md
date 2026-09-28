@@ -27,5 +27,5 @@ implícita (quase todo mundo já deixou), então sustenta sozinha sem precisar d
 Título: "Três coisas que o app não pede" (foto, nome, CPF/telefone). Fecha com "Sem nome. Sem
 perfil. Sem rastro." Antes fechava com adesivo de link (dashed box "adesivo de link aqui");
 trocado pelo fecho de bio já usado no restante da campanha — "toque no link" / "O link está
-na bio" / @irisapp — que é texto fixo na própria arte, não depende de colar nada depois de
+na bio" / @appirisa — que é texto fixo na própria arte, não depende de colar nada depois de
 publicar.
