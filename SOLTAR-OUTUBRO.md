@@ -30,12 +30,26 @@ Cole e rode também.
 
 ### 1.2 Contas do Mapillary e do Cloudflare
 
-Passo a passo completo em `docs/fotos.md`, seção "Foto própria". Resumo:
+Passo a passo completo em `docs/fotos.md`, seção "Foto própria".
 
-- **Mapillary** — https://www.mapillary.com → Dashboard → Developers → Register application →
-  copiar o token `MLY|...`. Grátis, sem cartão.
-- **Cloudflare R2** — https://dash.cloudflare.com → R2 → criar bucket `irisa-fotos` → Settings →
-  Public access → ligar o domínio `r2.dev` → Manage API tokens → Object Read & Write.
+**Cloudflare — conta própria da Irisa, criada em 28/09/2026 com appirisa@gmail.com.** Ficou
+separada da conta do SOAPerando de propósito: a Irisa já tem identidade nesse e-mail (Play
+Console, App Store, Supabase, Gmail dos convites), a cobrança não se mistura, os 10 GB grátis são
+só dela, e se um dia o projeto virar ONG ou passar para outra pessoa, basta entregar o e-mail.
+
+Logado como appirisa@gmail.com em https://dash.cloudflare.com:
+
+1. **R2** no menu da esquerda → ativar (pede cartão; 10 GB e o tráfego de saída são gratuitos).
+2. **Create bucket**, nome `irisa-fotos`, região automática.
+3. No bucket → **Settings** → **Public access** → ligar o domínio `r2.dev`. O endereço que
+   aparecer é o `R2_PUBLIC_URL`.
+4. **R2 → Manage API tokens → Create API token**: permissão **Object Read & Write**. Copie o
+   `Access Key ID` e o `Secret Access Key` — o secret só aparece uma vez.
+5. O **Account ID** está na página inicial do R2, na coluna da direita.
+
+**Mapillary** — https://www.mapillary.com → criar conta (use appirisa@gmail.com também, pelo mesmo
+motivo) → Dashboard → Developers → Register application → copiar o token `MLY|...`. Grátis, sem
+cartão.
 
 Guarde tudo em `.env.scripts` (`open -e .env.scripts`):
 

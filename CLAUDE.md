@@ -132,7 +132,10 @@ Nome: **Irisa** (INPI livre; @irisapp livre). Bundle id Android `br.com.irisa.ap
   baixar, guardar e mostrar com crédito. O script pega a imagem a até 60 m com a câmera apontada para o
   lugar (desvio ≤ 55°), sobe para o Cloudflare R2 (10 GB grátis, sem custo de saída) e grava `photo_url`.
   Sem cota: roda tudo de uma vez. Precedência no app: foto própria → Google → azulejo da categoria.
-  Chaves em `.env.scripts` (`MAPILLARY_TOKEN`, `R2_*`), passo a passo em docs/fotos.md. **Nunca raspar
+  Chaves em `.env.scripts` (`MAPILLARY_TOKEN`, `R2_*`), passo a passo em docs/fotos.md. **Conta do
+  Cloudflare é só da Irisa** (appirisa@gmail.com, criada em 28/09/2026): separada da conta pessoal
+  dele para não dividir cota nem cobrança com outro projeto, e para o dia em que a Irisa mudar de
+  mãos bastar entregar o e-mail. Mesma regra vale para o Mapillary. **Nunca raspar
   foto do Google Maps para guardar**: é proibido nos termos, as fotos são de quem as tirou, e denúncia
   derruba o app da loja.
   **Foto de quem avalia (migration 24, 28/09/2026, ainda não aplicada):** bucket público

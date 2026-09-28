@@ -77,8 +77,10 @@ Precedência no app: foto própria → foto do Google → azulejo da categoria. 
 **Mapillary** — https://www.mapillary.com → criar conta → Dashboard → Developers →
 Register application → copiar o token (`MLY|...`). É grátis e não pede cartão.
 
-**Cloudflare R2** — https://dash.cloudflare.com → R2 → ativar (pede cartão, mas 10 GB/mês são
-gratuitos e o tráfego de saída não é cobrado).
+**Cloudflare R2** — conta própria da Irisa (appirisa@gmail.com, criada em 28/09/2026; separada da
+conta pessoal de propósito: cobrança, cota e entrega do projeto ficam limpas).
+https://dash.cloudflare.com → R2 → ativar (pede cartão, mas 10 GB/mês são gratuitos e o tráfego de
+saída não é cobrado).
 1. **Create bucket**, nome `irisa-fotos`, região automática.
 2. No bucket → **Settings** → **Public access** → **Connect domain** (ou "Allow access" pelo
    domínio `r2.dev` para testar). Guarde o endereço público, é o `R2_PUBLIC_URL`.
