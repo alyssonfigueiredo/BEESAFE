@@ -34,10 +34,6 @@ App brasileiro para a comunidade LGBTQIA+. Duas coisas, e a regra que as separa:
 
 Padrão desde 27/09/2026 (mesmo do app, `src/theme/tokens.js` com `SATURATION = 1.35`): **fundo papel claro**, seis acentos com saturação ×1.35, tinta escura. O fundo night escuro dos carrosséis 1–7 é o padrão antigo: não copiar.
 
-**Mesclado (decisão dele, 28/09/2026):** o post é claro com um cartão principal escuro, igual ao cartão "Sua cidade" do Início do app. Nunca a lâmina inteira escura, nunca tudo claro sem contraste. Na prática: capa e lâminas de lista em papel com vidro claro; lâminas de frase forte e o fecho dentro de `.darkcard` (night a 88 %, raio 40, régua arco-íris no meio, cores cheias no texto, `.btn` coral dentro); em lista, o item que responde ("Agora") vira `.list div.dk`. Alternar mais ou menos uma lâmina escura para cada clara. Reels seguem igual (cenas com `.qcard.dark`). Referência: `docs/carrossel-8.html` e `carrossel-9.html`.
-
-**Mesclado (decisão dele, 28/09/2026):** o post é claro com um cartão principal escuro, igual ao cartão "Sua cidade" do Início do app. Nunca a lâmina inteira escura, nunca tudo claro sem contraste. Na prática: capa e lâminas de lista em papel com vidro claro; lâminas de frase forte e o fecho dentro de `.darkcard` (night a 88 %, raio 40, régua arco-íris no meio, cores cheias no texto, `.btn` coral dentro); em lista, o item que responde ("Agora") vira `.list div.dk`. Alternar: mais ou menos uma lâmina escura para cada clara. Reels seguem igual (cenas com `.qcard.dark`). Referência: `docs/carrossel-8.html` e `carrossel-9.html`.
-
 | token | hex | uso |
 |---|---|---|
 | paper | #F5F4F1 | fundo de toda lâmina |
@@ -58,7 +54,7 @@ Padrão desde 27/09/2026 (mesmo do app, `src/theme/tokens.js` com `SATURATION = 
 
 Eixos têm cor fixa: Atendimento coral, Afeto orange, Banheiro yellow, Clientela turq.
 
-**Liquid Glass**: cartão = `.pane` (branco a 62 %, `--shadow-card` dupla, borda de luz `--glass-inset`, blur 18 px saturate 1.4), raios 28/24/18 (`--r-xl/lg/md`), botões em cápsula (`.btn`, `.ct`, `.tag`). Variante escura: `.darkcard` (cartão principal) e `.dark` (cartão de cena no reels), nunca a lâmina inteira. Cartões e botões opacos de propósito.
+**Liquid Glass**: cartão = `.pane` (branco a 62 %, `--shadow-card` dupla, borda de luz `--glass-inset`, blur 18 px saturate 1.4), raios 28/24/18 (`--r-xl/lg/md`), botões em cápsula (`.btn`, `.ct`, `.tag`). Variante escura `.dark` (night a 90 %) só para um cartão de contraste, nunca a lâmina inteira. Cartões e botões opacos de propósito.
 
 ## 4. Tipografia
 

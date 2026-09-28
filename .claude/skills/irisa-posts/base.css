@@ -65,11 +65,3 @@ body{font-family:var(--body);color:var(--ink);display:flex;flex-direction:column
 .map .st{position:absolute;background:#fff}
 .map .pin{position:absolute;width:64px;height:64px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:var(--display);font-weight:700;font-size:28px;color:var(--night)}
 .map .ring{position:absolute;border-radius:50%;border:4px dashed color-mix(in srgb,var(--coral) 80%,transparent);background:color-mix(in srgb,var(--coral) 14%,transparent)}
-/* mesclado: fundo claro + cartão principal escuro (igual ao "Sua cidade" do app) */
-.darkcard{position:relative;width:920px;padding:64px 64px 60px;border-radius:40px;background:rgba(20,24,41,.88);box-shadow:0 30px 70px rgba(20,24,41,.22),inset 0 1px 0 rgba(255,255,255,.14),inset 0 0 0 1px rgba(255,255,255,.06);display:flex;flex-direction:column;align-items:center;text-align:center;-webkit-backdrop-filter:blur(22px) saturate(1.6);backdrop-filter:blur(22px) saturate(1.6)}
-.darkcard .big{color:#fff}
-.darkcard .body{color:#D5D8E4}
-.darkcard .eyebrow{color:#9AA0B4}
-.darkcard .rule{width:180px;height:10px;border-radius:5px;background:var(--rb);margin:34px 0}
-.list div.dk{background:rgba(20,24,41,.88);box-shadow:0 18px 40px rgba(20,24,41,.2),inset 0 1px 0 rgba(255,255,255,.14)}
-.list div.dk span{color:#D5D8E4}
