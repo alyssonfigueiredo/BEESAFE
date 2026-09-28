@@ -131,6 +131,9 @@ export default function PlaceScreen() {
             <PlacePhoto
               category={place.category}
               photoName={place.photo_name}
+              photoUrl={place.photo_url}
+              photoCredit={place.photo_credit}
+              photoCreditUri={place.photo_credit_uri}
               photoAuthor={place.photo_author}
               photoAuthorUri={place.photo_author_uri}
               variant="banner"

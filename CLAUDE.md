@@ -126,6 +126,15 @@ Nome: **Irisa** (INPI livre; @irisapp livre). Bundle id Android `br.com.irisa.ap
   `import-places-overture.mjs <ibge> --atualizar` (só preenche quem já está no banco). O script de fotos
   ordena avaliados primeiro, depois prominence, revezando as cidades (o 1º de cada, depois o 2º…);
   `--todas --listar` mostra os 150 do dia sem gastar cota. A coluna não aparece no app nem entra em nota.
+  **Foto própria pelo Mapillary (migration 23 + `scripts/mapillary-photos.mjs`, 28/09/2026, ainda não
+  aplicada no banco):** a foto do Google não pode ser baixada, vence em 30 dias e gasta cota (150/dia no
+  projeto inteiro), então uma capital leva meses. O Mapillary publica as imagens em CC BY-SA 4.0: dá para
+  baixar, guardar e mostrar com crédito. O script pega a imagem a até 60 m com a câmera apontada para o
+  lugar (desvio ≤ 55°), sobe para o Cloudflare R2 (10 GB grátis, sem custo de saída) e grava `photo_url`.
+  Sem cota: roda tudo de uma vez. Precedência no app: foto própria → Google → azulejo da categoria.
+  Chaves em `.env.scripts` (`MAPILLARY_TOKEN`, `R2_*`), passo a passo em docs/fotos.md. **Nunca raspar
+  foto do Google Maps para guardar**: é proibido nos termos, as fotos são de quem as tirou, e denúncia
+  derruba o app da loja.
   Popularidade real (nº de avaliações do Google) é campo Enterprise e não pode ser guardado. Decidido não exibir rótulo LGBTQIA+ na ficha
   (lista pública vira alvo); o selo vem dos quatro eixos de acolhimento.
 - Decidido lançar primeiro no Android. iOS fica para depois do primeiro retorno da Play Store.

@@ -59,3 +59,68 @@ não encontrados (nome ou distância não bateram; tenta de novo em 25 dias), j�
 
 Um lugar do Google só é aceito se estiver a até 250 m do nosso ponto **e** alguma palavra do
 nosso nome aparecer no nome dele. Foto errada é pior que nenhuma.
+
+---
+
+# Foto própria: Mapillary + Cloudflare R2 (sem cota, sem vencimento)
+
+A foto do Google resolve pouco: não pode ser baixada, a referência vence em 30 dias e a cota é
+de 150 buscas por dia no projeto inteiro — uma capital leva meses. O **Mapillary** (fotos de rua
+colaborativas) publica as imagens em **CC BY-SA 4.0**: dá para baixar, guardar e mostrar, desde
+que o crédito de quem fotografou apareça. A imagem passa a ser nossa, fica no **Cloudflare R2**
+(10 GB grátis, sem custo de tráfego) e nunca mais depende de cota.
+
+Precedência no app: foto própria → foto do Google → azulejo da categoria. Nada quebra se faltar.
+
+## Contas (uma vez)
+
+**Mapillary** — https://www.mapillary.com → criar conta → Dashboard → Developers →
+Register application → copiar o token (`MLY|...`). É grátis e não pede cartão.
+
+**Cloudflare R2** — https://dash.cloudflare.com → R2 → ativar (pede cartão, mas 10 GB/mês são
+gratuitos e o tráfego de saída não é cobrado).
+1. **Create bucket**, nome `irisa-fotos`, região automática.
+2. No bucket → **Settings** → **Public access** → **Connect domain** (ou "Allow access" pelo
+   domínio `r2.dev` para testar). Guarde o endereço público, é o `R2_PUBLIC_URL`.
+3. **R2 → Manage API tokens → Create API token**: permissão **Object Read & Write**, só nesse
+   bucket. Copie `Access Key ID` e `Secret Access Key` — o secret só aparece uma vez.
+4. O **Account ID** está na página inicial do R2, na barra da direita.
+
+## Chaves em `.env.scripts` (na máquina dele, nunca no git)
+
+```
+MAPILLARY_TOKEN=MLY|...
+R2_ACCOUNT_ID=...
+R2_ACCESS_KEY_ID=...
+R2_SECRET_ACCESS_KEY=...
+R2_BUCKET=irisa-fotos
+R2_PUBLIC_URL=https://...
+```
+
+## Rodar
+
+```bash
+cd ~/BEESAFE && set -a && source .env.scripts && set +a
+node scripts/mapillary-photos.mjs --todas --simular    # só conta quantos teriam foto
+node scripts/mapillary-photos.mjs --todas              # baixa e sobe para o R2
+node scripts/mapillary-photos.mjs 4106902 --limite 50  # só Curitiba, 50 lugares
+```
+
+Sem cota diária: dá para rodar tudo de uma vez. Uma imagem de 1024 px pesa ~150 KB, então os
+~1.100 lugares sem foto ocupam menos de 200 MB dos 10 GB.
+
+## Critério de escolha
+
+Só entra imagem a até **60 m** do nosso ponto **e** com a câmera apontada para o lugar (desvio
+de até **55°**, calculado pelo rumo entre a posição da foto e a do lugar). Entre as que passam,
+ganha a mais perto, mais bem apontada e mais recente. Sem candidata, o lugar fica marcado em
+`photo_tried_at` e só volta à fila depois de 90 dias — o acervo do Mapillary cresce devagar.
+
+Cobertura real varia: no centro das capitais é boa, em bairro residencial é fraca. O que não
+casar continua no azulejo da categoria até alguém enviar foto pelo app.
+
+## O que NÃO fazer
+
+Não raspar foto do Google Maps para guardar. É proibido pelos termos, as fotos pertencem a quem
+as tirou, e uma denúncia derruba o app da loja. A cota gratuita do Google continua valendo como
+reserva; o que muda é que ela deixa de ser a única fonte.
