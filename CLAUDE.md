@@ -298,10 +298,12 @@ Checks antes de commitar: `npm run lint && npm run typecheck`. Migrations testá
    administrativas; (c) dados abertos das prefeituras de São Luís e Palmas (em Palmas a cidade é
    organizada em quadras, não bairros — o nome do "bairro" ali pode ser a quadra).
 3. Bloqueio por usuário e revogação Apple **implementados em 28/09/2026** (branch
-   mesclada na `laughing-keller`): migrations 20 e 21 aplicadas e Edge Functions publicadas em 28/09.
-   Falta: secrets da Apple (`supabase/README.md` → Edge Functions), build iOS nova para o TestFlight
-   (bundle `br.com.irisa.ios`), testar a exclusão de uma conta Apple de ponta a ponta, e no Android a
-   build 10 com a resposta do IARC (bloquear outros usuários) mudando para **Sim** na mesma versão.
+   mesclada na `laughing-keller`): migrations 20 e 21 aplicadas, Edge Functions publicadas, secrets
+   da Apple gravados e build iOS no TestFlight em 28/09. **Testado por ele no iPhone em 28/09:** excluir
+   conta Apple tira a Irisa de Ajustes → Iniciar sessão com a Apple (revogação real), e bloquear/
+   desbloquear esconde e devolve a mensagem. Falta: enviar a versão iOS para revisão (Notes já
+   escritas) e, no Android, a build 10 com a resposta do IARC (bloquear outros usuários) mudando para
+   **Sim** na mesma versão (cota do EAS vira em 01/10).
 4. Apple Developer (US$99/ano) quando decidir publicar no iOS; ou via ONG parceira (Apple isenta ONGs).
    Denúncia, moderação e excluir conta já existem.
 5. Fase 6+: notificações por área, rotas seguras, versão web.
