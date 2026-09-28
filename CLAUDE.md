@@ -64,6 +64,11 @@ Nome: **Irisa** (INPI livre; @irisapp livre). Bundle id Android `br.com.irisa.ap
   `SUPABASE_PUBLISHABLE_KEY` (Settings → Secrets and variables → Actions → aba Variables); o build
   recusa qualquer chave que não comece com `sb_publishable_`. Sem a variável, o botão cai no e-mail.
   Variável criada e formulário testado de ponta a ponta em 24/09/2026 (e-mail gravou).
+  **E-mail automático de boas-vindas (migration 22 + Edge Function `tester-welcome`, 28/09/2026):** a cada 10 min
+  o pg_cron chama a função, que manda pelo Gmail da Irisa (SMTP 465, senha de app) o link de participação +
+  o da loja para quem tem `added_at` e ainda não tem `welcomed_at`. Só marcar `added_at` DEPOIS que a lista
+  foi aprovada na Play Console. iPhone só recebe quando existir o secret `TESTFLIGHT_URL` (link público).
+  Secrets: `TESTER_WELCOME_SECRET` (o mesmo no Vault como `tester_welcome_secret`), `GMAIL_USER`, `GMAIL_APP_PASSWORD`.
   As telas, o radar e o desenho do mapa foram copiados do `pitch.html` para dentro do
   `docs/index.html`; mudanças na landing se fazem direto nesse arquivo.
   `docs/og.png` é a prévia de link (WhatsApp/Instagram), 1200×630, tirada do próprio hero.
