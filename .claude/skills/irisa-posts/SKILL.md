@@ -69,7 +69,7 @@ Eixos têm cor fixa: Atendimento coral, Afeto orange, Banheiro yellow, Clientela
 - **`#radarmark`** = símbolo completo (anel de 48 gomos, varredura turquesa, três pontos, pupila #0F1220 com brilho). Só a partir de **50 px**: marca vertical, horizontal, fecho de reels (`.handle` com @irisapp a 78 px), capa de story.
 - **`#radarmin`** = **redução**: só o anel colorido, centro vazio, sem pupila. É a **assinatura de post**: rodapé de toda lâmina e de todo reels, ícone ao lado de @irisapp abaixo de 50 px. Mínimo 20 px.
 - Nunca: círculo liso em CSS, cor única, preto e branco, esticar, girar, sombra, `filter:saturate` por cima (o fragmento já vem na paleta ×1.35).
-- **Rodapé de toda lâmina**: canto inferior esquerdo `.brand` = `#radarmin` 36 px + "IRIS" + "a" amber. Canto inferior direito `.swipe` = "arraste →" (não na última). Canto superior direito `.num` = "3/8". No reels e no story o `.brand` fica centralizado a 120 px do fundo.
+- **Rodapé de toda lâmina**: canto inferior esquerdo `.brand` = `#radarmin` 36 px + "IRIS" + "a" amber. Canto inferior direito `.swipe` = "arraste →" (não na última). Canto superior direito `.num` = "3/8". No story o `.brand` fica centralizado a 120 px do fundo. No reels fica a 440 px do fundo (acima da legenda e do @ que o Instagram sobrepõe) e as cenas usam `padding:220px 80px 540px` para o conteúdo não encostar nele.
 - A capa de carrossel nunca é a logo. É o gancho.
 - Vinheta em vídeo: `docs/abertura.html` (4,2 s, `?formato=quadrado|story&bg=paper|night`), MP4 prontos em `docs/marca-pack/video/`.
 
