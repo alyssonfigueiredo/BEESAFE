@@ -1,4 +1,4 @@
-/* Irisa · base das lâminas (1080×1350 feed, 1080×1920 story). Padrão 27/09/2026: papel + Liquid Glass + paleta ×1.35. Fonte única de cores e fontes. */
+/* Irisa · base das lâminas (1080×1350 feed, 1080×1920 story). Padrão 28/09/2026: fundo night + vidro escuro + paleta ×1.35 (o bloco do fim troca os tokens claros pelos escuros). */
 @import url("https://fonts.googleapis.com/css2?family=Urbanist:wght@500;600&family=Oswald:wght@400;700&family=Space+Grotesk:wght@400;500;600;700&display=swap");
 :root{--paper:#F5F4F1;--surface:#FFFFFF;--subtle:#ECEAE5;--border:#E6E3DD;--night:#141829;--ink:#141829;--muted:#3D4560;--dim:#7C8296;
   --coral:#FF6964;--orange:#FFA353;--yellow:#FFD066;--turq:#49DCC0;--lilac:#A889FF;--blue:#59A7FF;--amber:#FFAD0F;
@@ -65,3 +65,13 @@ body{font-family:var(--body);color:var(--ink);display:flex;flex-direction:column
 .map .st{position:absolute;background:#fff}
 .map .pin{position:absolute;width:64px;height:64px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:var(--display);font-weight:700;font-size:28px;color:var(--night)}
 .map .ring{position:absolute;border-radius:50%;border:4px dashed color-mix(in srgb,var(--coral) 80%,transparent);background:color-mix(in srgb,var(--coral) 14%,transparent)}
+/* posts em fundo night (padrão do Instagram), paleta ×1.35 */
+:root{--paper:#141829;--surface:#1D2338;--subtle:#232A42;--border:rgba(255,255,255,.12);
+  --ink:#FFFFFF;--muted:#D5D8E4;--dim:#9AA0B4;
+  --coralInk:var(--coral);--orangeInk:var(--orange);--yellowInk:var(--yellow);--turqInk:var(--turq);--lilacInk:var(--lilac);
+  --pane:rgba(255,255,255,.07);--pane-edge:rgba(255,255,255,.10);
+  --shadow-card:0 2px 4px rgba(0,0,0,.15),0 18px 44px rgba(0,0,0,.28);
+  --glass-inset:inset 0 1px 0 rgba(255,255,255,.14),inset 0 0 0 1px rgba(255,255,255,.08)}
+.bg{opacity:.55}
+.nring .track,.bar{background:rgba(255,255,255,.1)}
+.stars{color:#4B5370}
