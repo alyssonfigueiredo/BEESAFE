@@ -66,8 +66,8 @@
  },
  {
   "id": "carrossel-3",
-  "aprovado": false,
-  "quando": "2026-09-29T19:00:00-03:00",
+  "aprovado": true,
+  "quando": "2026-09-28T09:00:00-03:00",
   "tipo": "POST",
   "midias": [
    "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/carrossel-3/01.png",
