@@ -28,7 +28,7 @@ App brasileiro para a comunidade LGBTQIA+. Duas coisas, e a regra que as separa:
 - **Frase oficial: "Quanta cor tem esse lugar?"** Sempre com "cor" em arco-íris quando destacada.
 - Frases de apoio já aprovadas: Bem-vinde aqui · O lugar recebe cor. A rua recebe aviso · Estrelas não dizem nada pra gente · Quem esteve lá responde · Sem nome. Sem perfil. Sem rastro · Irise você também · Já irisei esse lugar · Cor é medida · Feito por nós · Fora do armário. Dentro do mapa · Aquenda esse lugar · Mona, avalia · Estamos aqui. E no mapa · Não é fase. É endereço · Bandeira na porta não basta · A rua também é nossa · Silêncio não é nota · Ninguém solta a mão de ninguém.
 - **Proibido**: "seguro", "lugar seguro", "região tranquila", "selo de segurança"; número de testadores ou dias de teste; "me ajuda", "apoie o projeto" (a pegada é exclusividade: "ser das primeiras pessoas"); listar categorias como se fossem tudo ("bar, café e balada"); nome de bar real sem autorização; logo, frase ou trecho de artista/marca.
-- Emoji só na legenda, nunca na arte. Hashtags no fim da legenda: #Irisa #LGBTQIA #Orgulho #AppLGBT + cidades.
+- Emoji só na legenda, nunca na arte. Hashtags no fim da legenda: **exatamente 5** (regra do Instagram — o app só deixa 5), priorizando marca/tema sobre cidade redundante. Base fixa: #Irisa #LGBTQIA #Orgulho #AppLGBT + 1 hashtag do tema específico da peça (ex.: #Anonimato, #BemVinde, #Disque100, #LGBTfobia, #MitoOuVerdade, #CasalLGBT). Nunca empilhar várias cidades.
 
 ## 3. Cores (fonte única: `base.css`)
 
