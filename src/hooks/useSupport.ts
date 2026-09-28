@@ -12,6 +12,7 @@ export type SupportMessage = {
   created_at: string;
   likes: number;
   liked: boolean;
+  is_mine: boolean;
 };
 
 export type SupportService = {
