@@ -74,8 +74,69 @@ where n.city_id = p.city_id and p.neighborhood_id is null
 17. `migrations/00000000000014_onde_e_quando.sql`
 18. `migrations/00000000000015_ficha_do_bairro.sql`
 19. `migrations/00000000000016_testadores.sql`
+20. `migrations/00000000000017_prominence.sql`
+21. `migrations/00000000000018_bloqueio.sql` (bloqueio por usuário: tabela, RPCs e views filtradas)
+22. `migrations/00000000000019_apple_token.sql` (refresh token da Apple para revogar ao excluir a conta)
 15. O seed fictício de Curitiba foi removido do repositório. Para apagar os dados de teste que ainda estejam no banco, rode `seed/limpar-curitiba-teste.sql` (apaga só os ids `11111111-`/`22222222-`/`33333333-` e recalcula os priors).
 
-Aplicado até a 16 (10 a 16 em 23/09/2026; leitura dos testadores em `testadores.sql`).
+Aplicado até a 17 (10 a 16 em 23/09/2026, 17 em 25/09/2026; leitura dos testadores em `testadores.sql`).
+**18 e 19 ainda não aplicadas** (escritas em 28/09/2026): colar as duas no SQL Editor, nessa ordem.
 
 Para promover alguém a moderador: `update public.profiles set role = 'moderator' where id = '<uuid do usuário>';`
+
+## Edge Functions (`functions/`)
+
+Duas funções em Deno, para o que a Apple exige na regra 5.1.1 (revogar o "Entrar com a Apple" ao excluir a conta):
+
+- `apple-token`: o app chama logo depois do login com a Apple, com o `authorizationCode` (vale 5 minutos).
+  A função troca o código pelo refresh token na Apple e grava em `public.apple_refresh_tokens`
+  (tabela sem policy nenhuma: só a chave de serviço lê).
+- `delete-account`: o app chama em Perfil → Excluir minha conta. Se a conta entrou com a Apple e há token
+  guardado, revoga na Apple **antes** de apagar o usuário; se a Apple recusar, não apaga e devolve erro
+  (o app mostra "tente de novo"). Conta sem Apple: apaga direto. Se a função não estiver publicada, o app
+  cai na RPC `delete_my_account` só para contas que não são da Apple.
+
+Código compartilhado em `functions/_shared/` (JWT ES256 do `client_secret` assinado com a chave .p8, sem
+dependência externa).
+
+### Setup, uma vez (no Mac, pasta BEESAFE)
+
+1. Chave da Apple: developer.apple.com → Certificates, Identifiers & Profiles → **Keys** → **+** →
+   nome "Irisa Sign in with Apple", marcar **Sign in with Apple** → Configure → Primary App ID = o App ID
+   do app iOS → Save → Continue → Register → **Download** (arquivo `AuthKey_XXXXXXXXXX.p8`, só baixa uma
+   vez; guardar fora do repositório). Anotar o **Key ID** (os 10 caracteres do nome do arquivo) e o
+   **Team ID** (canto superior direito da página, ou Membership).
+2. Login na CLI e publicação das funções:
+
+```bash
+npx supabase login
+npx supabase functions deploy apple-token delete-account --project-ref ntjirpqulrnieeglpiei
+```
+
+3. Secrets (trocar os valores; a chave .p8 entra inteira, com as linhas BEGIN/END):
+
+```bash
+npx supabase secrets set --project-ref ntjirpqulrnieeglpiei \
+  APPLE_TEAM_ID=SEU_TEAM_ID \
+  APPLE_KEY_ID=SEU_KEY_ID \
+  APPLE_PRIVATE_KEY="$(cat ~/Downloads/AuthKey_SEU_KEY_ID.p8)" \
+  SB_SECRET_KEY=sb_secret_...
+```
+
+`SB_SECRET_KEY` é a mesma `sb_secret_` dos scripts (as chaves legadas estão desativadas, então a
+`SUPABASE_SERVICE_ROLE_KEY` que a Supabase injeta sozinha não serve). `APPLE_CLIENT_ID` é opcional: sem ele
+a função usa o bundle id que o app informa (`ios.bundleIdentifier` do `app.config.ts`); se o App ID do
+login for outro (por exemplo `br.com.irisa.ios`), definir `APPLE_CLIENT_ID=br.com.irisa.ios`.
+
+4. Migration 19 colada no SQL Editor (a tabela `apple_refresh_tokens`).
+
+### Como testar de ponta a ponta
+
+1. Build EAS de iOS (Sign in with Apple só entra com `APP_ENV=preview|production`), entrar com a Apple.
+2. No SQL Editor: `select user_id, client_id, created_at from public.apple_refresh_tokens;` — tem que ter a linha.
+   Se não tiver, olhar Supabase → Edge Functions → apple-token → Logs (erro da troca do código ou secret faltando).
+3. No iPhone: Ajustes → [seu nome] → Iniciar sessão com a Apple → **Irisa** aparece na lista.
+4. No app: Perfil → Excluir minha conta.
+5. De volta em Ajustes → Iniciar sessão com a Apple: **Irisa sumiu da lista**. É isso que prova a revogação do
+   lado da Apple. Se ainda estiver lá, a revogação não aconteceu: Logs da `delete-account`.
+6. `select count(*) from auth.users where id = '<uuid>'` = 0 e a linha de `apple_refresh_tokens` também foi (cascade).

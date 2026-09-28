@@ -159,6 +159,20 @@ Nome: **Irisa** (INPI livre; @irisapp livre). Bundle id `br.com.irisa.app`. Cont
   também em lugar sem nota, que é o caso mais comum); no Mapa aparece como área. **Não criar filtro
   de lugares por alerta**: faria a violência parecer atributo do bar e puniria quem só está perto.
 - Ficha das lojas pronta em docs/lojas.md.
+- **Bloqueio por usuário (migration 18, 28/09/2026):** tabela `blocked_users` (RLS: cada um vê e apaga só os
+  seus), RPCs `block_user`/`unblock_user`/`block_author(type, id)`. O app nunca recebe o id do autor
+  (`created_by` não sai do banco), então bloqueia pelo id da mensagem/avaliação e o banco resolve.
+  As views `public_support_messages` (ganhou `is_mine`) e `public_place_ratings` filtram o que vem de quem
+  eu bloqueei. Relatos não entram: não têm autoria visível. `BlockButton` ao lado de Denunciar no mural e
+  nas avaliações; lista "Pessoas bloqueadas" com Desbloquear em Perfil. Ao publicar a build com o botão,
+  mudar a resposta do IARC (bloquear/ocultar outros usuários) para **Sim** — nunca antes.
+- **Revogação do Sign in with Apple (migration 19 + Edge Functions, 28/09/2026):** `socialAuth.ts` manda o
+  `authorizationCode` do login para a função `apple-token`, que troca por refresh token e guarda em
+  `apple_refresh_tokens` (só chave de serviço). Excluir conta chama a função `delete-account`: revoga na
+  Apple e só então apaga o usuário; conta Apple nunca cai no fallback da RPC `delete_my_account`. Secrets:
+  `APPLE_TEAM_ID`, `APPLE_KEY_ID`, `APPLE_PRIVATE_KEY` (.p8), `SB_SECRET_KEY`, opcional `APPLE_CLIENT_ID`.
+  Atenção: `app.config.ts` usa `br.com.irisa.app` no iOS, mas o App Store Connect (ID 6816761128) foi
+  criado como `br.com.irisa.ios` — alinhar antes da build iOS, senão o client_id da revogação não bate.
 - Serviços de apoio por cidade em `supabase/seed_services.sql`, já no banco: nacionais + Curitiba,
   Porto Alegre e, desde 23/09/2026, Recife, João Pessoa e Joinville; em 24/09/2026 entraram São Paulo (5 Centros
   de Cidadania LGBTI, um por região), Rio (Disque Cidadania LGBT 0800 023 4567 + Centro Capital I) e Natal
@@ -244,8 +258,11 @@ Checks antes de commitar: `npm run lint && npm run typecheck`. Migrations testá
    nome de bairro por setor e dá para dissolver por nome; (b) GeoPortal da Seduh/DF para as regiões
    administrativas; (c) dados abertos das prefeituras de São Luís e Palmas (em Palmas a cidade é
    organizada em quadras, não bairros — o nome do "bairro" ali pode ser a quadra).
-3. Implementar ocultar autor (bloqueio por usuário). Hoje não existe: no IARC está declarado **Não**,
-   e a Apple exige pela regra 1.2. Ao implementar, atualizar a resposta do questionário na mesma versão.
+3. Bloqueio por usuário e revogação Apple **implementados em 28/09/2026** (branch
+   `claude/app-store-compliance-block-revoke-bpztvp`): falta colar as migrations 18 e 19, publicar as
+   Edge Functions e os secrets da Apple (`supabase/README.md` → Edge Functions), gerar build (o botão
+   Bloquear é só JS, mas a resposta do IARC muda para **Sim** só na versão que leva o botão) e testar
+   a exclusão de uma conta Apple de ponta a ponta.
 4. Apple Developer (US$99/ano) quando decidir publicar no iOS; ou via ONG parceira (Apple isenta ONGs).
    Denúncia, moderação e excluir conta já existem.
 5. Fase 6+: notificações por área, rotas seguras, versão web.

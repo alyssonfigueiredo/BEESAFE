@@ -141,7 +141,17 @@ App Privacy: Email Address (Account management, linked); Precise Location (App f
 ## Conteúdo gerado por usuário (exigências das lojas)
 
 - Denúncia de conteúdo: sim (botão Denunciar em todo conteúdo).
-- Bloqueio pelo usuário: **não existe**. No questionário IARC a resposta é **Não** — declarar Sim sem ter a
-  funcionalidade derruba o app. Quando o ocultar autor entrar, atualizar a resposta junto com a versão.
+- Bloqueio pelo usuário: **existe desde a migration 18** (botão Bloquear em toda mensagem do mural e em
+  toda avaliação; lista e desbloqueio em Perfil). Quem bloqueia deixa de ver o que a conta publica; a
+  pessoa bloqueada não é avisada. Relatos não entram porque não têm autoria visível.
+  **Play Console → Classificação de conteúdo (IARC)**: na pergunta "Os usuários podem bloquear outros
+  usuários?" (ou "ocultar/ignorar conteúdo de outros usuários"), a resposta passa a ser **Sim** — só na
+  versão que já leva a build com o botão (versionCode 10+), nunca antes. Declarar Sim sem a
+  funcionalidade no app derruba a análise.
+  **App Store (regra 1.2)**: nas Notes da revisão, dizer onde fica o bloqueio (mural → ícone ao lado de
+  Denunciar; Perfil → Pessoas bloqueadas).
+- Entrar com a Apple (regra 5.1.1): ao excluir a conta, o app revoga o token na Apple pela Edge Function
+  `delete-account` antes de apagar o usuário (setup em `supabase/README.md`, seção Edge Functions).
+  Sem os secrets da Apple configurados, a exclusão de conta Apple falha com aviso — não apaga sem revogar.
 - Ocultação automática: 3 denúncias de pessoas diferentes ocultam até revisão; moderação remove.
 - Moderação com tempo de resposta: 72 h, declarado no item 5 dos Termos de Uso.

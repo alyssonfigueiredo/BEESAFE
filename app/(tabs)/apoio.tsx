@@ -5,6 +5,7 @@ import { useState } from "react";
 import { Alert, Linking, Pressable, ScrollView, Text, TextInput, View } from "react-native";
 
 import { useScreenInsets } from "@/hooks/useScreenInsets";
+import { BlockButton } from "@/components/BlockButton";
 import { ReportButton } from "@/components/ReportButton";
 import {
   usePostSupportMessage,
@@ -135,8 +136,16 @@ export default function ApoioScreen() {
               </View>
               <Text className="font-body text-base text-ink">{m.content}</Text>
               <View className="flex-row items-center justify-between">
-                <Text className="font-body-medium text-xs text-dim">{m.nickname}</Text>
-                <ReportButton type="message" id={m.id} compact />
+                <Text className="font-body-medium text-xs text-dim">
+                  {m.nickname}
+                  {m.is_mine ? " (você)" : ""}
+                </Text>
+                {!m.is_mine && (
+                  <View className="flex-row items-center gap-3">
+                    <ReportButton type="message" id={m.id} compact />
+                    <BlockButton type="message" id={m.id} compact />
+                  </View>
+                )}
                 <Pressable
                   onPress={() => toggle.mutate({ id: m.id, liked: m.liked })}
                   className="flex-row items-center gap-1"

@@ -1,6 +1,6 @@
 # Padrões de segurança infantil — Irisa
 
-Última atualização: 22 de setembro de 2026.
+Última atualização: 28 de setembro de 2026.
 
 Esta política descreve como a Irisa previne, detecta e responde a material de abuso sexual infantil (CSAM) e a
 qualquer forma de abuso e exploração sexual infantil (CSAE), conforme a Política de padrões de segurança infantil
@@ -25,6 +25,9 @@ publicado é texto, categoria e um ponto no mapa.
 
 - **Dentro do app**: todo relato, lugar, avaliação e mensagem do mural tem o botão **Denunciar**. Três denúncias
   de pessoas diferentes ocultam o conteúdo automaticamente até a revisão humana.
+- **Bloquear pessoa**: toda mensagem do mural e toda avaliação tem também o botão **Bloquear**. Quem bloqueia
+  deixa de ver imediatamente tudo o que aquela conta publicar, sem depender da moderação. A lista de
+  pessoas bloqueadas fica em Perfil e pode ser desfeita a qualquer momento.
 - **Por e-mail**: appirisa@gmail.com, com o assunto "Segurança infantil". Esse canal é monitorado e tem
   prioridade sobre qualquer outra fila de moderação.
 

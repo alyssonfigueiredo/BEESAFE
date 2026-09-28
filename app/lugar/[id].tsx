@@ -22,6 +22,7 @@ import { Badge } from "@/components/Badge";
 import { IrisScore } from "@/components/IrisScore";
 import { PlacePhoto } from "@/components/PlacePhoto";
 import { Rainbow } from "@/components/Rainbow";
+import { BlockButton } from "@/components/BlockButton";
 import { ReportButton } from "@/components/ReportButton";
 import { usePlace, usePlaceRatings, useRatePlace } from "@/hooks/usePlaces";
 import { AXES, AXIS_KEYS, BADGES, PLACE_CATEGORIES, placeScoreColor } from "@/theme/domain";
@@ -304,7 +305,12 @@ export default function PlaceScreen() {
                   size={5}
                 />
                 {!!r.comment && <Text className="font-body text-sm text-muted">{r.comment}</Text>}
-                {!r.is_mine && <ReportButton type="rating" id={r.id} compact />}
+                {!r.is_mine && (
+                  <View className="flex-row items-center gap-3">
+                    <ReportButton type="rating" id={r.id} compact />
+                    <BlockButton type="rating" id={r.id} compact />
+                  </View>
+                )}
               </View>
             ))}
           </View>
