@@ -82,8 +82,13 @@ conta pessoal de propósito: cobrança, cota e entrega do projeto ficam limpas).
 https://dash.cloudflare.com → R2 → ativar (pede cartão, mas 10 GB/mês são gratuitos e o tráfego de
 saída não é cobrado).
 1. **Create bucket**, nome `irisa-fotos`, região automática.
-2. No bucket → **Settings** → **Public access** → **Connect domain** (ou "Allow access" pelo
-   domínio `r2.dev` para testar). Guarde o endereço público, é o `R2_PUBLIC_URL`.
+2. No bucket → **Settings** → **Public access** → ligar a **Public Development URL** (o domínio
+   `r2.dev`). Ela deixa qualquer pessoa **ler** os arquivos pelo link — que é o que o app precisa
+   para abrir a foto; escrever e apagar continua só com a chave. Em uso desde 28/09/2026:
+   `https://pub-70bc82c84169407ea7e964b1d73cbdc5.r2.dev` (é o `R2_PUBLIC_URL`).
+   O `r2.dev` é gratuito mas tem a velocidade limitada pela Cloudflare e não é recomendado para
+   uso pesado: quando o app tiver movimento, ligar um domínio próprio em **Connect domain**,
+   trocar essa linha do `.env.scripts` e rodar o script de novo para regravar o `photo_url`.
 3. **R2 → Manage API tokens → Create API token**: permissão **Object Read & Write**, só nesse
    bucket. Copie `Access Key ID` e `Secret Access Key` — o secret só aparece uma vez.
 4. O **Account ID** está na página inicial do R2, na barra da direita.

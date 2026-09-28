@@ -41,8 +41,8 @@ Logado como appirisa@gmail.com em https://dash.cloudflare.com:
 
 1. **R2** no menu da esquerda → ativar (pede cartão; 10 GB e o tráfego de saída são gratuitos).
 2. **Create bucket**, nome `irisa-fotos`, região automática.
-3. No bucket → **Settings** → **Public access** → ligar o domínio `r2.dev`. O endereço que
-   aparecer é o `R2_PUBLIC_URL`.
+3. No bucket → **Settings** → **Public access** → ligar a **Public Development URL** (`r2.dev`).
+   Feito em 28/09/2026: `https://pub-70bc82c84169407ea7e964b1d73cbdc5.r2.dev` — é o `R2_PUBLIC_URL`.
 4. **R2 → Manage API tokens → Create API token**: permissão **Object Read & Write**. Copie o
    `Access Key ID` e o `Secret Access Key` — o secret só aparece uma vez.
 5. O **Account ID** está na página inicial do R2, na coluna da direita.

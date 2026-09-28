@@ -135,7 +135,10 @@ Nome: **Irisa** (INPI livre; @appirisa livre). Bundle id Android `br.com.irisa.a
   Chaves em `.env.scripts` (`MAPILLARY_TOKEN`, `R2_*`), passo a passo em docs/fotos.md. **Conta do
   Cloudflare é só da Irisa** (appirisa@gmail.com, criada em 28/09/2026): separada da conta pessoal
   dele para não dividir cota nem cobrança com outro projeto, e para o dia em que a Irisa mudar de
-  mãos bastar entregar o e-mail. Mesma regra vale para o Mapillary. **Nunca raspar
+  mãos bastar entregar o e-mail. Mesma regra vale para o Mapillary.
+  Bucket `irisa-fotos`, leitura pública pela Public Development URL `https://pub-70bc82c84169407ea7e964b1d73cbdc5.r2.dev`
+  (o `r2.dev` é grátis mas tem velocidade limitada; trocar por domínio próprio quando o app
+  tiver movimento). **Nunca raspar
   foto do Google Maps para guardar**: é proibido nos termos, as fotos são de quem as tirou, e denúncia
   derruba o app da loja.
   **Foto de quem avalia (migration 24, 28/09/2026, ainda não aplicada):** bucket público
