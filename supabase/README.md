@@ -125,8 +125,7 @@ npx supabase secrets set --project-ref ntjirpqulrnieeglpiei \
 
 `SB_SECRET_KEY` é a mesma `sb_secret_` dos scripts (as chaves legadas estão desativadas, então a
 `SUPABASE_SERVICE_ROLE_KEY` que a Supabase injeta sozinha não serve). `APPLE_CLIENT_ID` é opcional: sem ele
-a função usa o bundle id que o app informa (`ios.bundleIdentifier` do `app.config.ts`); se o App ID do
-login for outro (por exemplo `br.com.irisa.ios`), definir `APPLE_CLIENT_ID=br.com.irisa.ios`.
+a função usa o bundle id que o app informa (`ios.bundleIdentifier` do `app.config.ts`, `br.com.irisa.ios`).
 
 4. Migration 19 colada no SQL Editor (a tabela `apple_refresh_tokens`).
 

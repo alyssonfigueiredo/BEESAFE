@@ -13,7 +13,7 @@ do Mac e SQL pronto para colar no SQL Editor do Supabase. Nunca peça nem aceite
 App nacional (Brasil) para a comunidade LGBTQIA+: relatos anônimos de LGBTIfobia, mapa de áreas de atenção,
 lugares avaliados em quatro eixos de acolhimento (atendimento, afeto, banheiro, clientela), mural de apoio,
 botão de emergência. Cidade de referência: Curitiba (parceiros-alvo: Grupo Dignidade, Centro de Cidadania LGBTQIA+).
-Nome: **Irisa** (INPI livre; @irisapp livre). Bundle id `br.com.irisa.app`. Contato: appirisa@gmail.com.
+Nome: **Irisa** (INPI livre; @irisapp livre). Bundle id Android `br.com.irisa.app`, iOS `br.com.irisa.ios` (App Store Connect 6816761128). Contato: appirisa@gmail.com.
 
 ## Estado atual (2026-09-14)
 
@@ -171,8 +171,8 @@ Nome: **Irisa** (INPI livre; @irisapp livre). Bundle id `br.com.irisa.app`. Cont
   `apple_refresh_tokens` (só chave de serviço). Excluir conta chama a função `delete-account`: revoga na
   Apple e só então apaga o usuário; conta Apple nunca cai no fallback da RPC `delete_my_account`. Secrets:
   `APPLE_TEAM_ID`, `APPLE_KEY_ID`, `APPLE_PRIVATE_KEY` (.p8), `SB_SECRET_KEY`, opcional `APPLE_CLIENT_ID`.
-  Atenção: `app.config.ts` usa `br.com.irisa.app` no iOS, mas o App Store Connect (ID 6816761128) foi
-  criado como `br.com.irisa.ios` — alinhar antes da build iOS, senão o client_id da revogação não bate.
+  `app.config.ts` usa `br.com.irisa.ios` no iOS desde 28/09/2026 (igual ao App Store Connect, ID 6816761128);
+  esse é o client_id da revogação. O provider Apple na Supabase precisa desse id em "Client IDs".
 - Serviços de apoio por cidade em `supabase/seed_services.sql`, já no banco: nacionais + Curitiba,
   Porto Alegre e, desde 23/09/2026, Recife, João Pessoa e Joinville; em 24/09/2026 entraram São Paulo (5 Centros
   de Cidadania LGBTI, um por região), Rio (Disque Cidadania LGBT 0800 023 4567 + Centro Capital I) e Natal

@@ -4,7 +4,7 @@
 import { appleConfigFromEnv, exchangeCode } from "../_shared/apple.ts";
 import { adminClient, hasAppleIdentity, json, userFromRequest } from "../_shared/supabase.ts";
 
-const DEFAULT_CLIENT_ID = "br.com.irisa.app";
+const DEFAULT_CLIENT_ID = "br.com.irisa.ios";
 
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") return json(204, {});
