@@ -2,6 +2,7 @@ import { useLocalSearchParams, useRouter } from "expo-router";
 import { useState } from "react";
 import { Pressable, ScrollView, Text, View } from "react-native";
 
+import { Aurora } from "@/components/Aurora";
 import { useScreenInsets } from "@/hooks/useScreenInsets";
 import { PlaceForm } from "@/components/PlaceForm";
 import { ReportForm } from "@/components/ReportForm";
@@ -23,64 +24,67 @@ export default function RegistrarScreen() {
   }
 
   return (
-    <ScrollView
-      className="flex-1 bg-paper"
-      contentContainerClassName="gap-5 px-4"
-      contentContainerStyle={insets}
-      keyboardShouldPersistTaps="handled"
-    >
-      <View>
-        <Text className="font-display text-3xl uppercase tracking-widest text-ink">Registrar</Text>
-        <Text className="font-body text-sm text-dim">
-          {mode === "relato"
-            ? "Relato anônimo de LGBTIfobia"
-            : "Um lugar para a comunidade avaliar"}
-        </Text>
-      </View>
+    <View className="flex-1">
+      <Aurora />
+      <ScrollView
+        className="flex-1"
+        contentContainerClassName="gap-5 px-4"
+        contentContainerStyle={insets}
+        keyboardShouldPersistTaps="handled"
+      >
+        <View>
+          <Text className="font-display text-2xl uppercase tracking-wide text-ink">Registrar</Text>
+          <Text className="font-body text-sm text-dim">
+            {mode === "relato"
+              ? "Relato anônimo de LGBTIfobia"
+              : "Um lugar para a comunidade avaliar"}
+          </Text>
+        </View>
 
-      <View className="flex-row rounded-xl border border-border bg-surface p-1" style={shadow.card}>
-        {(["relato", "lugar"] as const).map((m) => (
-          <Pressable
-            key={m}
-            onPress={() => setMode(m)}
-            className="flex-1 items-center rounded-lg py-2"
-            style={{
-              backgroundColor:
-                mode === m ? (m === "relato" ? colors.coral : colors.turquoise) : "transparent",
-            }}
-          >
-            <Text
-              className="font-heading text-sm uppercase tracking-widest"
-              style={{ color: mode === m ? colors.night : colors.muted }}
+        <View className="flex-row rounded-full bg-subtle p-1" style={shadow.card}>
+          {(["relato", "lugar"] as const).map((m) => (
+            <Pressable
+              key={m}
+              onPress={() => setMode(m)}
+              className="flex-1 items-center rounded-full py-2"
+              style={{
+                backgroundColor:
+                  mode === m ? (m === "relato" ? colors.coral : colors.turquoise) : "transparent",
+              }}
             >
-              {m === "relato" ? "Relato" : "Lugar"}
-            </Text>
-          </Pressable>
-        ))}
-      </View>
+              <Text
+                className="font-body-bold text-sm"
+                style={{ color: mode === m ? colors.night : colors.muted }}
+              >
+                {m === "relato" ? "Relato" : "Lugar"}
+              </Text>
+            </Pressable>
+          ))}
+        </View>
 
-      {mode === "relato" ? (
-        <ReportForm onDone={() => router.replace("/mapa")} />
-      ) : (
-        <PlaceForm onDone={(id) => router.replace({ pathname: "/lugar/[id]", params: { id } })} />
-      )}
+        {mode === "relato" ? (
+          <ReportForm onDone={() => router.replace("/mapa")} />
+        ) : (
+          <PlaceForm onDone={(id) => router.replace({ pathname: "/lugar/[id]", params: { id } })} />
+        )}
 
-      <View className="gap-3 rounded-xl border border-border bg-surface p-4" style={shadow.card}>
-        <Note
-          title="100% anônimo"
-          text="Seu nome e e-mail nunca aparecem. Nem moderadores veem quem registrou."
-        />
-        <Note
-          title="Por que preciso estar logado?"
-          text="Para evitar spam e relatos falsos. A identidade fica só no banco e nunca é exibida."
-        />
-        <Note
-          title="Em risco agora?"
-          text="Use o botão de emergência no topo. Polícia 190, Disque 100."
-          color="coral"
-        />
-      </View>
-    </ScrollView>
+        <View className="gap-3 rounded-3xl bg-surface p-4" style={shadow.card}>
+          <Note
+            title="100% anônimo"
+            text="Seu nome e e-mail nunca aparecem. Nem moderadores veem quem registrou."
+          />
+          <Note
+            title="Por que preciso estar logado?"
+            text="Para evitar spam e relatos falsos. A identidade fica só no banco e nunca é exibida."
+          />
+          <Note
+            title="Em risco agora?"
+            text="Use o botão de emergência no topo. Polícia 190, Disque 100."
+            color="coral"
+          />
+        </View>
+      </ScrollView>
+    </View>
   );
 }
 

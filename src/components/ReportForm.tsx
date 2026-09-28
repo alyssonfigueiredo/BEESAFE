@@ -6,6 +6,7 @@ import { Crosshair } from "lucide-react-native";
 import { useState } from "react";
 import { Alert, Platform, Pressable, Text, TextInput, View } from "react-native";
 
+import { Chip } from "@/components/Chip";
 import { CityMap } from "@/components/CityMap";
 import { PlacePicker, type PickedPlace } from "@/components/PlacePicker";
 import { useCreateOccurrence } from "@/hooks/useCreateOccurrence";
@@ -14,7 +15,6 @@ import {
   DAY_PERIODS,
   OCCURRENCE_SETTINGS,
   OCCURRENCE_TYPES,
-  onLight,
   SEVERITIES,
   type DayPeriod,
   type OccurrenceSetting,
@@ -90,7 +90,7 @@ export function ReportForm({ onDone }: { onDone: () => void }) {
       <Field label="Tipo">
         <View className="flex-row flex-wrap gap-2">
           {TYPE_KEYS.map((k) => (
-            <Choice
+            <Chip
               key={k}
               label={OCCURRENCE_TYPES[k].label}
               color={OCCURRENCE_TYPES[k].color}
@@ -105,7 +105,7 @@ export function ReportForm({ onDone }: { onDone: () => void }) {
         {Platform.OS === "android" && (
           <Pressable
             onPress={() => setShowPicker(true)}
-            className="rounded-xl border border-border bg-surface px-4 py-3"
+            className="rounded-2xl bg-subtle px-4 py-3"
             style={shadow.card}
           >
             <Text className="font-body text-base text-ink">
@@ -131,7 +131,7 @@ export function ReportForm({ onDone }: { onDone: () => void }) {
       <Field label="Gravidade">
         <View className="flex-row gap-2">
           {SEV_KEYS.map((k) => (
-            <Choice
+            <Chip
               key={k}
               label={SEVERITIES[k].label}
               color={SEVERITIES[k].color}
@@ -149,12 +149,10 @@ export function ReportForm({ onDone }: { onDone: () => void }) {
       >
         <Pressable
           onPress={useMyLocation}
-          className="flex-row items-center justify-center gap-2 rounded-full border border-turquoise py-3 active:opacity-80"
+          className="flex-row items-center justify-center gap-2 rounded-full bg-turquoise/20 py-3 active:opacity-80"
         >
           <Crosshair color={colors.turquoiseInk} size={18} />
-          <Text className="font-heading text-sm uppercase tracking-widest text-turquoiseInk">
-            Usar minha localização
-          </Text>
+          <Text className="font-body-bold text-sm text-turquoiseInk">Usar minha localização</Text>
         </Pressable>
         <CityMap
           occurrences={[]}
@@ -178,7 +176,7 @@ export function ReportForm({ onDone }: { onDone: () => void }) {
       >
         <View className="flex-row flex-wrap gap-2">
           {SETTING_KEYS.map((k) => (
-            <Choice
+            <Chip
               key={k}
               label={OCCURRENCE_SETTINGS[k].label}
               color={OCCURRENCE_SETTINGS[k].color}
@@ -192,7 +190,7 @@ export function ReportForm({ onDone }: { onDone: () => void }) {
       <Field label="Quando foi" hint="opcional — muita violência tem hora">
         <View className="flex-row gap-2">
           {PERIOD_KEYS.map((k) => (
-            <Choice
+            <Chip
               key={k}
               label={DAY_PERIODS[k].label}
               color={DAY_PERIODS[k].color}
@@ -212,7 +210,7 @@ export function ReportForm({ onDone }: { onDone: () => void }) {
 
       <Field label="Descrição (opcional)" hint={`${description.length}/2000`}>
         <TextInput
-          className="min-h-28 rounded-xl border border-border bg-surface px-4 py-3 font-body text-base text-ink"
+          className="min-h-28 rounded-2xl bg-subtle px-4 py-3 font-body text-base text-ink"
           style={shadow.card}
           placeholder="O que aconteceu? Não inclua seu nome nem dados que identifiquem você ou outras pessoas."
           placeholderTextColor={colors.dim}
@@ -230,7 +228,7 @@ export function ReportForm({ onDone }: { onDone: () => void }) {
         className="items-center rounded-full bg-coral py-4 active:opacity-80 disabled:opacity-50"
         style={shadow.coral}
       >
-        <Text className="font-heading text-lg uppercase tracking-widest text-night">
+        <Text className="font-body-bold text-base text-night">
           {create.isPending ? "Enviando…" : "Registrar relato"}
         </Text>
       </Pressable>
@@ -250,39 +248,10 @@ function Field({
   return (
     <View className="gap-2">
       <View className="flex-row items-baseline justify-between">
-        <Text className="font-heading text-sm uppercase tracking-widest text-muted">{label}</Text>
+        <Text className="font-body-bold text-xs text-muted">{label}</Text>
         {hint && <Text className="font-body text-xs text-dim">{hint}</Text>}
       </View>
       {children}
     </View>
-  );
-}
-
-function Choice({
-  label,
-  color,
-  active,
-  onPress,
-  grow,
-}: {
-  label: string;
-  color: string;
-  active: boolean;
-  onPress: () => void;
-  grow?: boolean;
-}) {
-  return (
-    <Pressable
-      onPress={onPress}
-      className={`items-center rounded-full border px-3 py-2 ${grow ? "flex-1" : ""}`}
-      style={{ borderColor: color, backgroundColor: active ? color : "transparent" }}
-    >
-      <Text
-        className="font-body-medium text-xs"
-        style={{ color: active ? colors.night : onLight(color) }}
-      >
-        {label}
-      </Text>
-    </Pressable>
   );
 }

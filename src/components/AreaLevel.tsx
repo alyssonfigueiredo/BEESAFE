@@ -47,7 +47,7 @@ export function AreaLevel({ level, size = "sm" }: { level: AreaLevelKey; size?: 
     >
       <View className="flex-row items-center gap-2">
         <AlertTriangle color={n.ink} size={18} />
-        <Text className="font-heading text-sm uppercase tracking-widest" style={{ color: n.ink }}>
+        <Text className="font-body-bold text-sm" style={{ color: n.ink }}>
           Atenção na região
         </Text>
       </View>

@@ -4,6 +4,7 @@ export declare const colors: {
   paper: string;
   surface: string;
   subtle: string;
+  solid: string;
   border: string;
   night: string;
   ink: string;
@@ -38,8 +39,9 @@ export declare const glass: {
   tint: string;
   tintStrong: string;
   edge: string;
+  side: number;
+  headerHeight: number;
   tabBarHeight: number;
-  tabBarGap: number;
   radius: number;
 };
 export declare const accents: Record<
@@ -66,3 +68,5 @@ export declare const shadow: {
   yellow: ViewStyle;
   lilac: ViewStyle;
 };
+export declare const aurora: { x: number; y: number; r: number; color: string; alpha: number }[];
+export declare const tabColors: Record<"index" | "mapa" | "lugares" | "apoio" | "perfil", string>;

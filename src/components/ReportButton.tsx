@@ -53,7 +53,7 @@ export function ReportButton({
             className="gap-3 rounded-t-3xl border-t border-border bg-surface px-6 pb-10 pt-6"
             onPress={() => {}}
           >
-            <Text className="font-display text-2xl uppercase tracking-widest text-ink">
+            <Text className="font-display text-2xl uppercase tracking-wide text-ink">
               Denunciar
             </Text>
             <View className="flex-row flex-wrap gap-2">
@@ -77,7 +77,7 @@ export function ReportButton({
               ))}
             </View>
             <TextInput
-              className="rounded-xl border border-border bg-paper px-4 py-3 font-body text-base text-ink"
+              className="rounded-2xl bg-subtle px-4 py-3 font-body text-base text-ink"
               placeholder="Detalhe se quiser (até 500 caracteres)"
               placeholderTextColor={colors.dim}
               maxLength={500}
@@ -90,9 +90,7 @@ export function ReportButton({
               className="items-center rounded-full bg-coral py-3 active:opacity-80 disabled:opacity-50"
               style={shadow.coral}
             >
-              <Text className="font-heading text-base uppercase tracking-widest text-night">
-                Enviar denúncia
-              </Text>
+              <Text className="font-body-bold text-base text-night">Enviar denúncia</Text>
             </Pressable>
           </Pressable>
         </Pressable>
