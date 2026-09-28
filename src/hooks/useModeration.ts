@@ -59,3 +59,51 @@ export function useModerate() {
     },
   });
 }
+
+export type BlockedPerson = { blocked_id: string; nickname: string; created_at: string };
+
+const BLOCK_MESSAGES: Record<string, string> = {
+  P0004: "Este conteúdo não tem mais autor: não há quem bloquear.",
+  P0005: "Este conteúdo é seu.",
+};
+
+export function useBlockAuthor() {
+  const client = useQueryClient();
+  return useMutation({
+    mutationFn: async (input: { type: ReportTarget; id: string }) => {
+      const { data, error } = await supabase.rpc("block_content_author", {
+        p_type: input.type,
+        p_id: input.id,
+      });
+      if (error) throw new Error(BLOCK_MESSAGES[error.code ?? ""] ?? error.message);
+      return (data as string) ?? "Anônimo";
+    },
+    onSuccess: () => {
+      client.invalidateQueries();
+    },
+  });
+}
+
+export function useBlocks() {
+  return useQuery({
+    queryKey: ["my-blocks"],
+    queryFn: async () => {
+      const { data, error } = await supabase.rpc("my_blocks");
+      if (error) throw error;
+      return data as BlockedPerson[];
+    },
+  });
+}
+
+export function useUnblock() {
+  const client = useQueryClient();
+  return useMutation({
+    mutationFn: async (blockedId: string) => {
+      const { error } = await supabase.rpc("unblock_user", { p_blocked: blockedId });
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      client.invalidateQueries();
+    },
+  });
+}

@@ -6,8 +6,8 @@ Isto é para colar na Apple. Duas coisas:
    ("Review notes") inteiro. Ele fica salvo para as próximas submissões.
 2. No **Resolution Center**, responda a mensagem colando o mesmo bloco e anexando o vídeo.
 
-Antes de responder, leia a seção **O que falta no app** no fim deste arquivo: tem um item que a
-Apple pede no vídeo e que hoje o app não tem.
+Antes de responder, leia a seção **Antes de responder**: precisa colar a migration 19 no Supabase,
+gerar build nova e mudar uma resposta do IARC.
 
 ---
 
@@ -145,21 +145,34 @@ Contact: appirisa@gmail.com
 
 ---
 
-## 4. O que falta no app antes de responder
+## 4. Antes de responder
 
-A Apple pede, no vídeo, "the required content reporting **and blocking** mechanisms".
+A Apple pede, no vídeo, "the required content reporting **and blocking** mechanisms". Os dois
+existem agora:
 
-- **Denunciar conteúdo: já existe** (bandeira em relato, avaliação, lugar e mensagem; 3 denúncias
-  escondem o conteúdo até a revisão).
-- **Bloquear pessoa: não existe ainda.** Está na lista de próximos passos do projeto e é exigência
-  da regra 1.2 da Apple para app com conteúdo de usuário. Sem isso, responder a 2.1 provavelmente
-  troca a rejeição atual por uma rejeição de 1.2.
-- No questionário de classificação (IARC) a resposta sobre ocultar autor está como **Não**; ao
-  implementar o bloqueio, mudar essa resposta na mesma versão.
+- **Denunciar conteúdo:** bandeira em relato, avaliação, lugar e mensagem; 3 denúncias escondem o
+  conteúdo até a revisão.
+- **Bloquear pessoa (novo, migration 19):** dentro da folha de "Denunciar" tem "Bloquear esta
+  pessoa". Quem você bloqueia some dos relatos, das avaliações e do mural. A lista fica em
+  Perfil → Pessoas bloqueadas, com Desbloquear.
 
-Ou seja: implementar o bloqueio, gerar build nova, e só então gravar o vídeo e responder. O passo 10
-do roteiro já está escrito contando com o bloqueio.
+Faltam três coisas na sua mão:
+
+1. **Colar a migration 19 no Supabase** (SQL Editor → New query):
+   ```bash
+   pbcopy < supabase/migrations/00000000000019_bloquear_pessoa.sql
+   ```
+   Sem isso o botão de bloquear dá erro.
+2. **Gerar uma build nova de iOS** e enviar ao TestFlight/App Store (o bloqueio é código do app).
+3. **Mudar a resposta do IARC:** a pergunta sobre ocultar/bloquear autor está como **Não** e agora é
+   **Sim**. Mude na mesma versão antes de reenviar.
 
 Também antes de responder: testar a build num iPhone físico com o iOS mais novo (a Apple avisa que
 revisa em aparelho real), e confirmar que as capturas da App Store mostram o app em uso — não a
 abertura, nem a tela de login.
+
+## 5. Sobre a tela "versão rejeitada"
+
+A rejeição não apaga nada: a versão 0.1.0 continua lá, editável. O caminho é responder no Resolution
+Center, subir a build nova (o número de build sobe, a versão pode seguir 0.1.0) e clicar em
+**Enviar para análise** de novo. Não precisa criar outra versão nem outro app.

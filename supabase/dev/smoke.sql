@@ -126,3 +126,26 @@ select count(*) as open_reports_0 from public.content_reports where status = 'op
 select public.verify_place('aaaaaaaa-0000-0000-0000-000000000001', true);
 select verified from public.public_places;
 reset role;
+
+-- ---------- bloquear pessoa (migration 19) ----------
+set role authenticated;
+set request.jwt.claim.sub = '55555555-5555-5555-5555-555555555555';
+select count(*) as msg_visivel_1 from public.public_support_messages where id = :'msg';
+select public.block_content_author('message', :'msg') as bloqueado;
+select count(*) as msg_invisivel_0 from public.public_support_messages where id = :'msg';
+select count(*) as bloqueados_1 from public.my_blocks();
+-- quem não bloqueou continua vendo
+set request.jwt.claim.sub = '66666666-6666-6666-6666-666666666666';
+select count(*) as msg_visivel_pra_outro_1 from public.public_support_messages where id = :'msg';
+-- desbloquear devolve o conteúdo
+set request.jwt.claim.sub = '55555555-5555-5555-5555-555555555555';
+select public.unblock_user((select blocked_id from public.my_blocks()));
+select count(*) as msg_de_volta_1 from public.public_support_messages where id = :'msg';
+-- não dá para bloquear a si mesmo
+insert into public.support_messages (nickname, category, content, city_id)
+  values ('Eu', 'acolhimento', 'mensagem minha para testar o bloqueio', (select id from public.cities limit 1));
+do $$ begin
+  perform public.block_content_author('message', (select id from public.public_support_messages where nickname = 'Eu'));
+  raise exception 'NAO DEVERIA';
+exception when sqlstate 'P0005' then raise notice 'auto-bloqueio barrado ok'; end $$;
+reset role;

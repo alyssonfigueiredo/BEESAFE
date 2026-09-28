@@ -1,8 +1,8 @@
-import { Flag } from "lucide-react-native";
+import { Ban, Flag } from "lucide-react-native";
 import { useState } from "react";
 import { Alert, Modal, Pressable, Text, TextInput, View } from "react-native";
 
-import { useReportContent, type ReportTarget } from "@/hooks/useModeration";
+import { useBlockAuthor, useReportContent, type ReportTarget } from "@/hooks/useModeration";
 import { colors, shadow } from "@/theme/tokens";
 
 const REASONS = [
@@ -25,6 +25,32 @@ export function ReportButton({
   const [open, setOpen] = useState(false);
   const [reason, setReason] = useState("");
   const report = useReportContent();
+  const block = useBlockAuthor();
+  // Lugar é estabelecimento: bloquear pessoa só faz sentido no que uma pessoa escreveu.
+  const canBlock = type !== "place";
+
+  function confirmBlock() {
+    Alert.alert(
+      "Bloquear esta pessoa?",
+      "Você deixa de ver os relatos, as avaliações e as mensagens dela. Dá para desfazer no Perfil.",
+      [
+        { text: "Cancelar", style: "cancel" },
+        {
+          text: "Bloquear",
+          style: "destructive",
+          onPress: async () => {
+            try {
+              const nickname = await block.mutateAsync({ type, id });
+              setOpen(false);
+              Alert.alert("Pessoa bloqueada", `Você não vê mais o conteúdo de ${nickname}.`);
+            } catch (e) {
+              Alert.alert("Não deu certo", e instanceof Error ? e.message : "Tente de novo.");
+            }
+          },
+        },
+      ],
+    );
+  }
 
   async function submit() {
     if (reason.trim().length < 3) return Alert.alert("Escolha ou escreva um motivo.");
@@ -92,6 +118,17 @@ export function ReportButton({
             >
               <Text className="font-body-bold text-base text-night">Enviar denúncia</Text>
             </Pressable>
+            {canBlock && (
+              <Pressable
+                disabled={block.isPending}
+                onPress={confirmBlock}
+                className="flex-row items-center justify-center gap-2 rounded-full border py-3 active:opacity-80 disabled:opacity-50"
+                style={{ borderColor: colors.border }}
+              >
+                <Ban size={16} color={colors.coralInk} />
+                <Text className="font-body-medium text-base text-coralInk">Bloquear esta pessoa</Text>
+              </Pressable>
+            )}
           </Pressable>
         </Pressable>
       </Modal>

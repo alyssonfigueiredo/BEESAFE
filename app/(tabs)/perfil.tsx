@@ -1,4 +1,5 @@
 import { Link } from "expo-router";
+import { ChevronRight } from "lucide-react-native";
 import { useState } from "react";
 import { Alert, Pressable, ScrollView, Text, TextInput, View } from "react-native";
 
@@ -107,6 +108,21 @@ export default function PerfilScreen() {
             aparece no mural e nas avaliações de lugares.
           </Text>
         </View>
+
+        <Link href="/bloqueados" asChild>
+          <Pressable
+            className="flex-row items-center justify-between rounded-3xl bg-surface p-4 active:opacity-80"
+            style={shadow.card}
+          >
+            <View className="gap-1">
+              <Text className="font-body-bold text-base text-ink">Pessoas bloqueadas</Text>
+              <Text className="font-body text-sm text-muted">
+                Você não vê o conteúdo de quem bloqueou. Dá para desfazer aqui.
+              </Text>
+            </View>
+            <ChevronRight size={20} color={colors.muted} />
+          </Pressable>
+        </Link>
 
         {profile && profile.role !== "user" && (
           <Link href="/moderacao" asChild>

@@ -274,6 +274,12 @@ roda bairros, lugares e fotos com as chaves guardadas nos Secrets do repositóri
 
 Checks antes de commitar: `npm run lint && npm run typecheck`. Migrations testáveis localmente com `scripts/db-smoke.sh`.
 
+- **Rejeição da Apple 2.1 (28/09/2026), versão 0.1.0 (3):** pediram vídeo de tela em aparelho real,
+  descrição do app, instruções de acesso, serviços externos, diferenças por região e material de
+  terceiros. Resposta pronta em `APPLE-REVISAO.md` na raiz (notas em inglês para o App Store Connect,
+  roteiro da gravação, conta de teste `appirisa+review@gmail.com`). O vídeo precisa mostrar denúncia
+  **e** bloqueio — por isso o bloqueio entrou agora.
+
 ## Próximos passos (em ordem)
 
 1. Teste fechado no Google Play: manter 12 testadores opted-in por 14 dias seguidos e depois
@@ -283,8 +289,12 @@ Checks antes de commitar: `npm run lint && npm run typecheck`. Migrations testá
    nome de bairro por setor e dá para dissolver por nome; (b) GeoPortal da Seduh/DF para as regiões
    administrativas; (c) dados abertos das prefeituras de São Luís e Palmas (em Palmas a cidade é
    organizada em quadras, não bairros — o nome do "bairro" ali pode ser a quadra).
-3. Implementar ocultar autor (bloqueio por usuário). Hoje não existe: no IARC está declarado **Não**,
-   e a Apple exige pela regra 1.2. Ao implementar, atualizar a resposta do questionário na mesma versão.
+3. ~~Implementar ocultar autor~~ **feito em 28/09/2026 (migration 19)**: `user_blocks`,
+   `block_content_author` (o app pede pelo conteúdo, nunca aprende o uuid do autor), `my_blocks`,
+   `unblock_user`, e as views `public_occurrences`/`public_place_ratings`/`public_support_messages`
+   escondendo quem foi bloqueado (lugar não, é estabelecimento). Botão dentro da folha de Denunciar
+   e tela `app/bloqueados.tsx` em Perfil → Pessoas bloqueadas. Falta: colar a migration no Supabase,
+   build nova e mudar a resposta do IARC sobre ocultar autor de **Não** para **Sim**.
 4. Apple Developer (US$99/ano) quando decidir publicar no iOS; ou via ONG parceira (Apple isenta ONGs).
    Denúncia, moderação e excluir conta já existem.
 5. Fase 6+: notificações por área, rotas seguras, versão web.
