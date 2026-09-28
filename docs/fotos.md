@@ -124,3 +124,34 @@ casar continua no azulejo da categoria até alguém enviar foto pelo app.
 Não raspar foto do Google Maps para guardar. É proibido pelos termos, as fotos pertencem a quem
 as tirou, e uma denúncia derruba o app da loja. A cota gratuita do Google continua valendo como
 reserva; o que muda é que ela deixa de ser a única fonte.
+
+---
+
+# Foto de quem avalia (migration 24)
+
+A melhor fonte de todas: quem está no lugar manda a foto junto com a avaliação. É atual, é o
+lugar como ele é hoje, é da comunidade — e não depende de cota nem de licença de terceiro.
+
+- Arquivo vai para o **Supabase Storage**, bucket público `fotos-lugares`, caminho
+  `<place_id>/<user_id>/foto.jpg`. O `user_id` na pasta é o que impede uma pessoa de sobrescrever
+  a foto de outra; ele nunca sai do banco para o app.
+- A linha vai para `place_photos`, e um trigger põe a mais recente **ativa** em `places.photo_url`
+  com `photo_source = 'usuario'`. Escondida pela moderação, o lugar volta sozinho para a foto de
+  antes (Mapillary, Google) ou para o azulejo da categoria.
+- Limite de 10 fotos por pessoa em 24 h (mesmo rate limit das avaliações) e 5 MB por arquivo.
+- Denúncia de foto entra no mesmo fluxo de moderação das avaliações e do mural (`report_target`
+  ganhou `photo`).
+- No app: botão **Adicionar uma foto do lugar** dentro do formulário de avaliação
+  (`app/lugar/[id].tsx` + `src/hooks/usePlacePhoto.ts`). Recorte 16:9 e qualidade 0.7 no envio,
+  para a faixa da ficha e para não subir arquivo gigante.
+
+**Precisa de build nova:** `expo-image-picker` é módulo nativo. Depois do `npm install`, rodar
+`npx expo run:ios --device` de novo e gerar build EAS nova para o Android — não basta recarregar
+o Metro.
+
+## Ordem final no app
+
+1. Foto de quem avaliou (nossa, sem cota, sempre atual).
+2. Mapillary (nossa, CC BY-SA, com crédito).
+3. Google (alugada, vence em 30 dias, gasta cota até para exibir).
+4. Azulejo da categoria.

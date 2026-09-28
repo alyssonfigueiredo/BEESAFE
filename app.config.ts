@@ -45,6 +45,13 @@ const config: ExpoConfig = {
     ...(appleSignIn ? ["expo-apple-authentication"] : ["./plugins/withoutAppleSignIn"]),
     "@maplibre/maplibre-react-native",
     [
+      "expo-image-picker",
+      {
+        photosPermission:
+          "A Irisa abre suas fotos para você escolher a imagem do lugar que está avaliando.",
+      },
+    ],
+    [
       "expo-location",
       {
         locationWhenInUsePermission:

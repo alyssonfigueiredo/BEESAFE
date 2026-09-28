@@ -135,6 +135,14 @@ Nome: **Irisa** (INPI livre; @irisapp livre). Bundle id Android `br.com.irisa.ap
   Chaves em `.env.scripts` (`MAPILLARY_TOKEN`, `R2_*`), passo a passo em docs/fotos.md. **Nunca raspar
   foto do Google Maps para guardar**: é proibido nos termos, as fotos são de quem as tirou, e denúncia
   derruba o app da loja.
+  **Foto de quem avalia (migration 24, 28/09/2026, ainda não aplicada):** bucket público
+  `fotos-lugares` no Storage (`<place_id>/<user_id>/foto.jpg`, o uid na pasta impede sobrescrever a
+  foto alheia e nunca sai do banco), tabela `place_photos` com RLS e rate limit de 10/dia, trigger que
+  põe a mais recente ativa em `places.photo_url` com `photo_source='usuario'` e volta para a foto
+  anterior quando a moderação esconde. Denúncia de foto entra no fluxo existente (`report_target`
+  ganhou `photo`). No app: botão dentro do formulário de avaliação (`src/hooks/usePlacePhoto.ts`).
+  **`expo-image-picker` é nativo: precisa de `npx expo run:ios --device` e de build EAS nova.**
+  Ordem final da foto: quem avaliou → Mapillary → Google → azulejo da categoria.
   Popularidade real (nº de avaliações do Google) é campo Enterprise e não pode ser guardado. Decidido não exibir rótulo LGBTQIA+ na ficha
   (lista pública vira alvo); o selo vem dos quatro eixos de acolhimento.
 - Decidido lançar primeiro no Android. iOS fica para depois do primeiro retorno da Play Store.

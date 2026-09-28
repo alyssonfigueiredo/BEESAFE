@@ -26,6 +26,7 @@ import { PlacePhoto } from "@/components/PlacePhoto";
 import { RainbowText } from "@/components/RainbowText";
 import { Rainbow } from "@/components/Rainbow";
 import { ReportButton } from "@/components/ReportButton";
+import { useEnviarFotoDoLugar } from "@/hooks/usePlacePhoto";
 import { usePlace, usePlaceRatings, useRatePlace } from "@/hooks/usePlaces";
 import { AXES, AXIS_KEYS, BADGES, PLACE_CATEGORIES, placeScoreColor } from "@/theme/domain";
 import type { Axis } from "@/theme/domain";
@@ -39,6 +40,7 @@ export default function PlaceScreen() {
   const { data: place, isLoading } = usePlace(id);
   const { data: ratings = [] } = usePlaceRatings(id);
   const rate = useRatePlace(id);
+  const enviarFoto = useEnviarFotoDoLugar(id);
   const mine = ratings.find((r) => r.is_mine);
   const [draft, setDraft] = useState<Draft | null>(null);
   const [abrirForm, setAbrirForm] = useState(false);
@@ -73,6 +75,15 @@ export default function PlaceScreen() {
         mine ? "Avaliação atualizada" : "Avaliação registrada",
         "Obrigado por ajudar a comunidade.",
       );
+    } catch (e) {
+      Alert.alert("Não deu certo", e instanceof Error ? e.message : "Tente de novo.");
+    }
+  }
+
+  async function mandarFoto() {
+    try {
+      const url = await enviarFoto.mutateAsync();
+      if (url) Alert.alert("Foto enviada", "Obrigado! Ela já aparece na ficha do lugar.");
     } catch (e) {
       Alert.alert("Não deu certo", e instanceof Error ? e.message : "Tente de novo.");
     }
@@ -271,6 +282,19 @@ export default function PlaceScreen() {
                 value={current.comment}
                 onChangeText={(v) => setDraft({ ...current, comment: v })}
               />
+              <Pressable
+                disabled={enviarFoto.isPending}
+                onPress={mandarFoto}
+                className="items-center rounded-full bg-subtle py-3 active:opacity-80 disabled:opacity-50"
+              >
+                <Text className="font-body-bold text-base text-ink">
+                  {enviarFoto.isPending
+                    ? "Enviando foto…"
+                    : place.photo_source === "usuario"
+                      ? "Trocar a foto do lugar"
+                      : "Adicionar uma foto do lugar"}
+                </Text>
+              </Pressable>
               <Pressable
                 disabled={rate.isPending}
                 onPress={submit}
