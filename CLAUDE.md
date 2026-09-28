@@ -324,6 +324,13 @@ Checks antes de commitar: `npm run lint && npm run typecheck`. Migrations testá
    nome de bairro por setor e dá para dissolver por nome; (b) GeoPortal da Seduh/DF para as regiões
    administrativas; (c) dados abertos das prefeituras de São Luís e Palmas (em Palmas a cidade é
    organizada em quadras, não bairros — o nome do "bairro" ali pode ser a quadra).
+0. **`SOLTAR-OUTUBRO.md` na raiz é o roteiro da próxima build** (28/09/2026, decisão dele de não
+   gastar build à toa): parte 1 sem build (migrations 23 e 24, contas Mapillary/Cloudflare, script
+   de fotos, Cloud Vision) pode ser feita já; parte 2 é a build única a partir de 01/10 com bloqueio
+   de usuário + IARC, foto do Mapillary, envio de foto, fila de moderação e **EAS Update ligado**
+   (`updates.url` + `runtimeVersion: appVersion` no app.config.ts, `channel` por perfil no eas.json,
+   `expo-updates` nas dependências). Depois dessa build, mudança de JS/tela sai por
+   `npx eas-cli update --branch production` e não custa build.
 3. Bloqueio por usuário e revogação Apple **implementados em 28/09/2026** (branch
    mesclada na `laughing-keller`): migrations 20 e 21 aplicadas, Edge Functions publicadas, secrets
    da Apple gravados e build iOS no TestFlight em 28/09. **Testado por ele no iPhone em 28/09:** excluir

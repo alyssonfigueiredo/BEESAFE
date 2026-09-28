@@ -66,6 +66,12 @@ const config: ExpoConfig = {
     ],
   ],
   experiments: { typedRoutes: true },
+  // EAS Update: mudança de tela, texto ou lógica chega em quem já tem o app, sem build nova.
+  // Só código nativo (lib nova, ícone, permissão) continua exigindo build — e a cota do plano
+  // Free do EAS é de build, não de update. `runtimeVersion` pela policy `appVersion`: um update
+  // só alcança quem está na mesma versão do app, então build velha nunca recebe código novo.
+  updates: { url: "https://u.expo.dev/38a09fd2-63cc-4a90-912d-0f73022944ff" },
+  runtimeVersion: { policy: "appVersion" },
   extra: {
     eas: { projectId: "38a09fd2-63cc-4a90-912d-0f73022944ff" },
   },

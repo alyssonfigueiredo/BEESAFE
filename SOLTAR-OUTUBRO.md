@@ -1,0 +1,172 @@
+# O que soltar em outubro (uma build só)
+
+Escrito em 28/09/2026. A cota de build Android do EAS vira em **01/10**, então tudo que precisa
+de build espera e sai junto. O que não precisa de build pode ser feito antes — está separado
+abaixo. Cada passo é um comando para colar; nada aqui pede conhecimento de programação.
+
+> Enquanto estes passos não forem feitos, o app dos testadores continua exatamente como está hoje.
+
+---
+
+## Parte 1 — dá para fazer agora, sem gastar build
+
+### 1.1 Migrations 23 e 24 (fotos)
+
+No Terminal, na pasta BEESAFE:
+
+```bash
+git pull
+pbcopy < supabase/migrations/00000000000023_foto_propria.sql
+```
+
+Cole no SQL Editor (https://supabase.com/dashboard/project/ntjirpqulrnieeglpiei/sql/new) e
+clique em **Run**. Depois:
+
+```bash
+pbcopy < supabase/migrations/00000000000024_foto_do_usuario.sql
+```
+
+Cole e rode também.
+
+### 1.2 Contas do Mapillary e do Cloudflare
+
+Passo a passo completo em `docs/fotos.md`, seção "Foto própria". Resumo:
+
+- **Mapillary** — https://www.mapillary.com → Dashboard → Developers → Register application →
+  copiar o token `MLY|...`. Grátis, sem cartão.
+- **Cloudflare R2** — https://dash.cloudflare.com → R2 → criar bucket `irisa-fotos` → Settings →
+  Public access → ligar o domínio `r2.dev` → Manage API tokens → Object Read & Write.
+
+Guarde tudo em `.env.scripts` (`open -e .env.scripts`):
+
+```
+MAPILLARY_TOKEN=MLY|...
+R2_ACCOUNT_ID=...
+R2_ACCESS_KEY_ID=...
+R2_SECRET_ACCESS_KEY=...
+R2_BUCKET=irisa-fotos
+R2_PUBLIC_URL=https://...
+```
+
+### 1.3 Testar a cobertura antes de rodar tudo
+
+```bash
+cd ~/BEESAFE && set -a && source .env.scripts && set +a
+node scripts/mapillary-photos.mjs 4106902 --limite 30 --simular
+```
+
+Não baixa nada, só conta quantos lugares de Curitiba teriam foto. Se a cobertura for boa:
+
+```bash
+node scripts/mapillary-photos.mjs --todas
+```
+
+As fotos ficam guardadas esperando a build — no app elas só aparecem depois.
+
+### 1.4 Robô que olha a foto enviada pelos usuários
+
+Google Cloud (mesmo projeto das outras chaves), https://console.cloud.google.com:
+
+1. **APIs e serviços → Biblioteca** → ativar **Cloud Vision API**.
+2. **Credenciais → Criar credencial → Chave de API**, restrição de API = só Cloud Vision.
+
+No Terminal:
+
+```bash
+SECRET=$(openssl rand -hex 24)
+read -s -p "Chave da Cloud Vision: " V; echo
+npx supabase secrets set PHOTO_CHECK_SECRET=$SECRET VISION_API_KEY="$V" --project-ref ntjirpqulrnieeglpiei
+npx supabase functions deploy photo-check --project-ref ntjirpqulrnieeglpiei
+echo "select vault.create_secret('$SECRET', 'photo_check_secret');" | pbcopy
+```
+
+Cole a última linha no SQL Editor e rode.
+
+Sem essa chave nada é aprovado sozinho: toda foto espera a fila humana. Não é erro, é o padrão
+seguro.
+
+---
+
+## Parte 2 — a build de outubro (a partir de 01/10)
+
+```bash
+git pull
+npm install
+```
+
+Isso instala `expo-image-picker` (escolher a foto) e `expo-updates` (mandar correção sem build).
+
+### 2.1 Testar no iPhone antes de gastar a cota Android
+
+```bash
+npx expo run:ios --device
+```
+
+Confira: ficha do lugar mostra foto do Mapillary; botão "Adicionar uma foto do lugar" dentro do
+formulário de avaliação; tela Moderação mostra a fila de fotos com Liberar/Recusar.
+
+### 2.2 APK de teste (não gasta a cota de produção)
+
+```bash
+npx eas-cli build -p android --profile preview
+```
+
+### 2.3 Build de produção Android
+
+```bash
+npx eas-cli build -p android --profile production
+```
+
+Envie na mesma faixa de teste fechado. **Nesta versão, mudar a resposta do IARC** sobre bloquear
+ou ocultar outros usuários para **Sim** — o botão de bloquear entra agora.
+
+### 2.4 iOS (TestFlight)
+
+O iOS anda junto desde 28/09: bloqueio de usuário e revogação do Sign in with Apple já foram
+testados no iPhone. Nesta rodada entram as fotos e o EAS Update.
+
+```bash
+npx eas-cli build -p ios --profile production
+npx eas-cli submit -p ios --latest
+```
+
+No App Store Connect (app 6816761128), a versão aparece no TestFlight. As notas de revisão já
+estão escritas — é só enviar para análise.
+
+**Sobre foto enviada por usuário, a Apple é mais exigente que o Google.** A regra 1.2 (conteúdo
+gerado por usuário) pede quatro coisas, e as quatro já existem: filtro do conteúdo antes de
+publicar (o robô do Cloud Vision + a fila humana), denúncia, bloqueio de usuário e um contato de
+suporte (appirisa@gmail.com). Vale dizer isso nas notas de revisão, em uma linha: *"Fotos enviadas
+por usuários passam por análise automática de conteúdo impróprio e por revisão humana antes de
+aparecer. O app tem denúncia, bloqueio e exclusão de conta."* Sem essa frase a revisão costuma
+voltar com pedido de esclarecimento.
+
+No iPhone dele, para testar sem gastar build: `npx expo run:ios --device` (precisa refazer a cada
+7 dias, é limitação do Apple ID gratuito).
+
+### 2.5 Depois desta build, correção de tela não precisa mais de build
+
+```bash
+npx eas-cli update --branch production --message "o que mudou"
+```
+
+Chega em quem já tem o app na próxima abertura, **nos dois sistemas de uma vez**: o mesmo update
+vale para Android e iOS, desde que as duas builds tenham saído com o EAS Update ligado. Só mudança
+de código nativo (lib nova, ícone, permissão) continua exigindo build.
+
+Atenção ao iOS: a Apple permite update de conteúdo e correção, mas **não** mudar o propósito do
+app por esse caminho. Recurso novo de verdade vai por build e revisão, como sempre.
+
+---
+
+## O que entra nesta build (Android e iOS)
+
+- Bloqueio por usuário (migration 20, já no banco) — no Android, a resposta do IARC muda junto;
+  no iOS, é o que atende a regra 1.2 da App Store.
+- Foto do Mapillary aparecendo na ficha e nos cartões.
+- Botão de enviar foto do lugar ao avaliar.
+- Fila de moderação de imagem na tela Moderação.
+- EAS Update ligado nos dois sistemas, para as próximas correções não custarem build.
+
+A cota do plano Free do EAS conta build de Android e de iOS no mesmo balde. Duas builds de
+produção nesta rodada, uma de cada, e o resto do mês sai por update.
