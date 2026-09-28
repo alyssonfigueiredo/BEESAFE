@@ -158,7 +158,7 @@ Tabs: Início, Mapa, Registrar, Apoio, Perfil.
 
 ## 8. Pendências
 
-- Reservar Instagram @irisapp (livre), registrar irisa.com.br e irisa.app.br, protocolar IRISA no INPI (9, 42, 45). Bundle id: br.com.irisa.app. Contato: appirisa@gmail.com.
+- Reservar Instagram @appirisa (livre), registrar irisa.com.br e irisa.app.br, protocolar IRISA no INPI (9, 42, 45). Bundle id: br.com.irisa.app. Contato: appirisa@gmail.com.
 - Layout do Início: decidido manter o painel (opção A). Mockup A/B: `docs/mockup.html`. Pitch: `docs/pitch.html` (publicados no site).
 - Antes do lançamento: apagar os dados de teste do banco com `supabase/seed/limpar-curitiba-teste.sql`. O login Google usa o navegador do sistema via Supabase (PKCE, cliente OAuth do tipo Aplicativo da Web), então **não existe passo de SHA-1**. Bairros das capitais importados; São Paulo saiu pelo nível 9 do OSM. Falta fonte para Brasília, São Luís e Palmas.
 - Confirmar janela de ofuscação de 24 h.

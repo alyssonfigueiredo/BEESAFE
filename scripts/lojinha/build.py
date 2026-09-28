@@ -478,7 +478,7 @@ INT = [
         ("Margem", "Margem real por item depois de taxa e frete. Corta item abaixo de R$ 15 de margem."),
         ("Canal", "Que link vendeu (bit.ly por post). Evento × loja × WhatsApp."),
         ("Ponte com o app", "E-mails novos na lista de testador por evento. Bares com placa que receberam a primeira avaliação."),
-        ("Marca", "Fotos de quem usa recebidas por mês. Menções ao @irisapp."),
+        ("Marca", "Fotos de quem usa recebidas por mês. Menções ao @appirisa."),
         ("Operação", "Prazo médio de envio. Reclamações. Estoque parado há mais de 60 dias."),
     ]),
     how("15. Checklist antes da primeira venda", [
