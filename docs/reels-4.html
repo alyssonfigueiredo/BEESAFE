@@ -26,11 +26,11 @@ body{display:flex;align-items:center;justify-content:center;height:100vh;font-fa
 .h1{background:radial-gradient(28% 20% at 22% 30%,color-mix(in srgb,var(--turq) 30%,transparent),transparent 70%),radial-gradient(26% 18% at 80% 70%,color-mix(in srgb,var(--lilac) 28%,transparent),transparent 70%)}
 .h2{background:radial-gradient(22% 16% at 76% 20%,color-mix(in srgb,var(--coral) 24%,transparent),transparent 70%),radial-gradient(22% 16% at 24% 84%,color-mix(in srgb,var(--yellow) 26%,transparent),transparent 70%)}
 .grain{display:none}
-.scene{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;opacity:0;padding:0 80px}
+.scene{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;opacity:0;padding:220px 80px 540px}
 .c{text-align:center}
 .disp{font-family:var(--display);text-transform:uppercase;font-weight:700;letter-spacing:.01em;line-height:.98;margin:0;color:var(--ink)}
 .w{display:inline-block;will-change:transform,opacity,filter}
-.rainbow{background:var(--rb);-webkit-background-clip:text;background-clip:text;color:transparent}
+.rainbow{background:var(--rb);-webkit-background-clip:text;background-clip:text;color:transparent;padding-top:.2em;margin-top:-.2em}
 .rule{height:12px;border-radius:6px;background:var(--rb);transform-origin:left}
 .small{font-family:var(--body);font-weight:600;text-transform:uppercase;letter-spacing:.14em;font-size:28px;color:var(--dim)}
 .body{font-size:40px;line-height:1.35;color:var(--muted);max-width:860px}
@@ -53,7 +53,7 @@ body{display:flex;align-items:center;justify-content:center;height:100vh;font-fa
 .badge-big{padding:16px 34px;border-radius:999px;background:color-mix(in srgb,var(--turq) 22%,#fff);color:var(--turqInk);font-family:var(--body);font-weight:600;font-size:36px}
 .bar{height:22px;border-radius:11px;background:rgba(20,24,41,.08);width:900px;overflow:hidden}
 .bar i{display:block;height:100%;border-radius:11px;transform-origin:left;transform:scaleX(0)}
-.brand{position:absolute;bottom:120px;left:0;right:0;display:flex;justify-content:center;align-items:center;gap:16px;font-family:var(--wordmark);font-weight:500;text-transform:uppercase;letter-spacing:.2em;font-size:30px;color:var(--ink)}
+.brand{position:absolute;bottom:440px;left:0;right:0;display:flex;justify-content:center;align-items:center;gap:16px;font-family:var(--wordmark);font-weight:500;text-transform:uppercase;letter-spacing:.2em;font-size:30px;color:var(--ink)}
 .brand b{font-weight:500;color:var(--amber)}
 .mark{width:36px;height:36px;flex:none;display:block}
 .map{position:relative;width:900px;height:620px;border-radius:var(--r-xl);background:#ECEAE5;overflow:hidden;box-shadow:var(--shadow-card),var(--glass-inset)}
@@ -95,7 +95,7 @@ body{display:flex;align-items:center;justify-content:center;height:100vh;font-fa
   <div class="scene" id="s3">
     <div class="small c" id="e3">registrar leva um minuto</div>
     <div class="lvl" id="steps" style="flex-direction:column;gap:26px;margin-top:50px;width:900px">
-      <div id="p1" style="background:var(--pane);box-shadow:var(--shadow-card),var(--glass-inset);width:100%;text-align:left;display:flex;gap:30px;align-items:center"><b style="color:var(--coral);font-size:90px">1</b><span style="color:var(--muted);font-size:34px">O tipo. Xingamento, ameaça, agressão, recusa de atendimento.</span></div>
+      <div id="p1" style="background:var(--pane);box-shadow:var(--shadow-card),var(--glass-inset);width:100%;text-align:left;display:flex;gap:30px;align-items:center"><b style="color:var(--coral);font-size:90px">1</b><span style="color:var(--muted);font-size:34px">O tipo. Agressão verbal, ameaça, violência física, discriminação.</span></div>
       <div id="p2" style="background:var(--pane);box-shadow:var(--shadow-card),var(--glass-inset);width:100%;text-align:left;display:flex;gap:30px;align-items:center"><b style="color:var(--yellow);font-size:90px">2</b><span style="color:var(--muted);font-size:34px">O ponto no mapa. Rua, praça, ponto de ônibus.</span></div>
       <div id="p3" style="background:var(--pane);box-shadow:var(--shadow-card),var(--glass-inset);width:100%;text-align:left;display:flex;gap:30px;align-items:center"><b style="color:var(--turq);font-size:90px">3</b><span style="color:var(--muted);font-size:34px">Pronto. Vira aviso para quem passa ali depois de você.</span></div>
     </div>

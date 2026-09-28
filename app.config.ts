@@ -16,7 +16,7 @@ const config: ExpoConfig = {
   backgroundColor: "#FAF9F6",
   primaryColor: "#D98C8A", // coral com a saturação a 60 % (src/theme/tokens.js)
   ios: {
-    bundleIdentifier: "br.com.irisa.ios",
+    bundleIdentifier: "br.com.irisa.ios", // iOS: o App ID do App Store Connect (6816761128). Android segue br.com.irisa.app.
     supportsTablet: false,
     usesAppleSignIn: appleSignIn,
     infoPlist: {
@@ -45,6 +45,13 @@ const config: ExpoConfig = {
     ...(appleSignIn ? ["expo-apple-authentication"] : ["./plugins/withoutAppleSignIn"]),
     "@maplibre/maplibre-react-native",
     [
+      "expo-image-picker",
+      {
+        photosPermission:
+          "A Irisa abre suas fotos para você escolher a imagem do lugar que está avaliando.",
+      },
+    ],
+    [
       "expo-location",
       {
         locationWhenInUsePermission:
@@ -59,6 +66,12 @@ const config: ExpoConfig = {
     ],
   ],
   experiments: { typedRoutes: true },
+  // EAS Update: mudança de tela, texto ou lógica chega em quem já tem o app, sem build nova.
+  // Só código nativo (lib nova, ícone, permissão) continua exigindo build — e a cota do plano
+  // Free do EAS é de build, não de update. `runtimeVersion` pela policy `appVersion`: um update
+  // só alcança quem está na mesma versão do app, então build velha nunca recebe código novo.
+  updates: { url: "https://u.expo.dev/38a09fd2-63cc-4a90-912d-0f73022944ff" },
+  runtimeVersion: { policy: "appVersion" },
   extra: {
     eas: { projectId: "38a09fd2-63cc-4a90-912d-0f73022944ff" },
   },

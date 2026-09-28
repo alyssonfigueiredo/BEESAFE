@@ -13,7 +13,7 @@ do Mac e SQL pronto para colar no SQL Editor do Supabase. Nunca peça nem aceite
 App nacional (Brasil) para a comunidade LGBTQIA+: relatos anônimos de LGBTIfobia, mapa de áreas de atenção,
 lugares avaliados em quatro eixos de acolhimento (atendimento, afeto, banheiro, clientela), mural de apoio,
 botão de emergência. Cidade de referência: Curitiba (parceiros-alvo: Grupo Dignidade, Centro de Cidadania LGBTQIA+).
-Nome: **Irisa** (INPI livre; @appirisa livre). Bundle id `br.com.irisa.app`. Contato: appirisa@gmail.com.
+Nome: **Irisa** (INPI livre; @appirisa livre). Bundle id Android `br.com.irisa.app`, iOS `br.com.irisa.ios` (App Store Connect 6816761128). Contato: appirisa@gmail.com.
 
 ## Estado atual (2026-09-14)
 
@@ -64,6 +64,11 @@ Nome: **Irisa** (INPI livre; @appirisa livre). Bundle id `br.com.irisa.app`. Con
   `SUPABASE_PUBLISHABLE_KEY` (Settings → Secrets and variables → Actions → aba Variables); o build
   recusa qualquer chave que não comece com `sb_publishable_`. Sem a variável, o botão cai no e-mail.
   Variável criada e formulário testado de ponta a ponta em 24/09/2026 (e-mail gravou).
+  **E-mail automático de boas-vindas (migration 22 + Edge Function `tester-welcome`, 28/09/2026):** a cada 10 min
+  o pg_cron chama a função, que manda pelo Gmail da Irisa (SMTP 465, senha de app) o link de participação +
+  o da loja para quem tem `added_at` e ainda não tem `welcomed_at`. Só marcar `added_at` DEPOIS que a lista
+  foi aprovada na Play Console. iPhone só recebe quando existir o secret `TESTFLIGHT_URL` (link público).
+  Secrets: `TESTER_WELCOME_SECRET` (o mesmo no Vault como `tester_welcome_secret`), `GMAIL_USER`, `GMAIL_APP_PASSWORD`.
   As telas, o radar e o desenho do mapa foram copiados do `pitch.html` para dentro do
   `docs/index.html`; mudanças na landing se fazem direto nesse arquivo.
   `docs/og.png` é a prévia de link (WhatsApp/Instagram), 1200×630, tirada do próprio hero.
@@ -121,6 +126,34 @@ Nome: **Irisa** (INPI livre; @appirisa livre). Bundle id `br.com.irisa.app`. Con
   `import-places-overture.mjs <ibge> --atualizar` (só preenche quem já está no banco). O script de fotos
   ordena avaliados primeiro, depois prominence, revezando as cidades (o 1º de cada, depois o 2º…);
   `--todas --listar` mostra os 150 do dia sem gastar cota. A coluna não aparece no app nem entra em nota.
+  **Foto própria pelo Mapillary (migration 23 + `scripts/mapillary-photos.mjs`, 28/09/2026, ainda não
+  aplicada no banco):** a foto do Google não pode ser baixada, vence em 30 dias e gasta cota (150/dia no
+  projeto inteiro), então uma capital leva meses. O Mapillary publica as imagens em CC BY-SA 4.0: dá para
+  baixar, guardar e mostrar com crédito. O script pega a imagem a até 60 m com a câmera apontada para o
+  lugar (desvio ≤ 55°), sobe para o Cloudflare R2 (10 GB grátis, sem custo de saída) e grava `photo_url`.
+  Sem cota: roda tudo de uma vez. Precedência no app: foto própria → Google → azulejo da categoria.
+  Chaves em `.env.scripts` (`MAPILLARY_TOKEN`, `R2_*`), passo a passo em docs/fotos.md. **Conta do
+  Cloudflare é só da Irisa** (appirisa@gmail.com, criada em 28/09/2026): separada da conta pessoal
+  dele para não dividir cota nem cobrança com outro projeto, e para o dia em que a Irisa mudar de
+  mãos bastar entregar o e-mail. Mesma regra vale para o Mapillary.
+  Bucket `irisa-fotos`, leitura pública pela Public Development URL `https://pub-70bc82c84169407ea7e964b1d73cbdc5.r2.dev`
+  (o `r2.dev` é grátis mas tem velocidade limitada; trocar por domínio próprio quando o app
+  tiver movimento). **Nunca raspar
+  foto do Google Maps para guardar**: é proibido nos termos, as fotos são de quem as tirou, e denúncia
+  derruba o app da loja.
+  **Foto de quem avalia (migration 24, 28/09/2026, ainda não aplicada):** bucket público
+  `fotos-lugares` no Storage (`<place_id>/<user_id>/foto.jpg`, o uid na pasta impede sobrescrever a
+  foto alheia e nunca sai do banco), tabela `place_photos` com RLS e rate limit de 10/dia, trigger que
+  põe a mais recente ativa em `places.photo_url` com `photo_source='usuario'` e volta para a foto
+  anterior quando a moderação esconde. Denúncia de foto entra no fluxo existente (`report_target`
+  ganhou `photo`). No app: botão dentro do formulário de avaliação (`src/hooks/usePlacePhoto.ts`).
+  **Nenhuma foto entra no ar sozinha:** nasce `review='pendente'`; a Edge Function `photo-check`
+  (pg_cron 5 em 5 min) passa pelo SafeSearch do Cloud Vision (1.000/mês grátis) e marca aprovada /
+  recusada / `humano`; a fila humana fica na tela Moderação (`fotos_para_moderar` + `moderar_foto`,
+  sem mostrar quem mandou). Sem `VISION_API_KEY` nada é aprovado sozinho — o padrão é não publicar.
+  Secrets: `PHOTO_CHECK_SECRET` (Vault: `photo_check_secret`), `VISION_API_KEY`.
+  **`expo-image-picker` é nativo: precisa de `npx expo run:ios --device` e de build EAS nova.**
+  Ordem final da foto: quem avaliou → Mapillary → Google → azulejo da categoria.
   Popularidade real (nº de avaliações do Google) é campo Enterprise e não pode ser guardado. Decidido não exibir rótulo LGBTQIA+ na ficha
   (lista pública vira alvo); o selo vem dos quatro eixos de acolhimento.
 - Decidido lançar primeiro no Android. iOS fica para depois do primeiro retorno da Play Store.
@@ -178,6 +211,27 @@ Nome: **Irisa** (INPI livre; @appirisa livre). Bundle id `br.com.irisa.app`. Con
   também em lugar sem nota, que é o caso mais comum); no Mapa aparece como área. **Não criar filtro
   de lugares por alerta**: faria a violência parecer atributo do bar e puniria quem só está perto.
 - Ficha das lojas pronta em docs/lojas.md.
+- **Rejeição da Apple 2.1 (28/09/2026), versão 0.1.0 (3):** "Information Needed" — pediram vídeo de
+  tela em aparelho real, descrição do app, instruções de acesso, serviços externos, diferenças por
+  região e material de terceiros. Resposta pronta em `APPLE-REVISAO.md` na raiz: notas em inglês para
+  colar no App Review Information → Notes e no Resolution Center, roteiro da gravação e conta de teste
+  `appirisa+review@gmail.com`. O vídeo precisa mostrar denúncia **e** bloqueio, então só serve build
+  com a migration 20 no app. Nas notas está explicado por que relato não tem botão de bloquear
+  (é anônimo, não tem autor exibido) — a Apple cobra isso.
+- **Bloqueio por usuário (migration 20, 28/09/2026, aplicada no banco no mesmo dia):** tabela `blocked_users` (RLS: cada um vê e apaga só os
+  seus), RPCs `block_user`/`unblock_user`/`block_author(type, id)`. O app nunca recebe o id do autor
+  (`created_by` não sai do banco), então bloqueia pelo id da mensagem/avaliação e o banco resolve.
+  As views `public_support_messages` (ganhou `is_mine`) e `public_place_ratings` filtram o que vem de quem
+  eu bloqueei. Relatos não entram: não têm autoria visível. `BlockButton` ao lado de Denunciar no mural e
+  nas avaliações; lista "Pessoas bloqueadas" com Desbloquear em Perfil. Ao publicar a build com o botão,
+  mudar a resposta do IARC (bloquear/ocultar outros usuários) para **Sim** — nunca antes.
+- **Revogação do Sign in with Apple (migration 21 + Edge Functions, 28/09/2026; migration aplicada e funções publicadas no mesmo dia):** `socialAuth.ts` manda o
+  `authorizationCode` do login para a função `apple-token`, que troca por refresh token e guarda em
+  `apple_refresh_tokens` (só chave de serviço). Excluir conta chama a função `delete-account`: revoga na
+  Apple e só então apaga o usuário; conta Apple nunca cai no fallback da RPC `delete_my_account`. Secrets:
+  `APPLE_TEAM_ID`, `APPLE_KEY_ID`, `APPLE_PRIVATE_KEY` (.p8), `SB_SECRET_KEY`, opcional `APPLE_CLIENT_ID`.
+  `app.config.ts` usa `br.com.irisa.ios` no iOS desde 28/09/2026 (igual ao App Store Connect, ID 6816761128);
+  esse é o client_id da revogação. O provider Apple na Supabase precisa desse id em "Client IDs".
 - Serviços de apoio por cidade em `supabase/seed_services.sql`, já no banco: nacionais + Curitiba,
   Porto Alegre e, desde 23/09/2026, Recife, João Pessoa e Joinville; em 24/09/2026 entraram São Paulo (5 Centros
   de Cidadania LGBTI, um por região), Rio (Disque Cidadania LGBT 0800 023 4567 + Centro Capital I) e Natal
@@ -274,12 +328,6 @@ roda bairros, lugares e fotos com as chaves guardadas nos Secrets do repositóri
 
 Checks antes de commitar: `npm run lint && npm run typecheck`. Migrations testáveis localmente com `scripts/db-smoke.sh`.
 
-- **Rejeição da Apple 2.1 (28/09/2026), versão 0.1.0 (3):** pediram vídeo de tela em aparelho real,
-  descrição do app, instruções de acesso, serviços externos, diferenças por região e material de
-  terceiros. Resposta pronta em `APPLE-REVISAO.md` na raiz (notas em inglês para o App Store Connect,
-  roteiro da gravação, conta de teste `appirisa+review@gmail.com`). O vídeo precisa mostrar denúncia
-  **e** bloqueio — por isso o bloqueio entrou agora.
-
 ## Próximos passos (em ordem)
 
 1. Teste fechado no Google Play: manter 12 testadores opted-in por 14 dias seguidos e depois
@@ -289,12 +337,20 @@ Checks antes de commitar: `npm run lint && npm run typecheck`. Migrations testá
    nome de bairro por setor e dá para dissolver por nome; (b) GeoPortal da Seduh/DF para as regiões
    administrativas; (c) dados abertos das prefeituras de São Luís e Palmas (em Palmas a cidade é
    organizada em quadras, não bairros — o nome do "bairro" ali pode ser a quadra).
-3. ~~Implementar ocultar autor~~ **feito em 28/09/2026 (migration 19)**: `user_blocks`,
-   `block_content_author` (o app pede pelo conteúdo, nunca aprende o uuid do autor), `my_blocks`,
-   `unblock_user`, e as views `public_occurrences`/`public_place_ratings`/`public_support_messages`
-   escondendo quem foi bloqueado (lugar não, é estabelecimento). Botão dentro da folha de Denunciar
-   e tela `app/bloqueados.tsx` em Perfil → Pessoas bloqueadas. Falta: colar a migration no Supabase,
-   build nova e mudar a resposta do IARC sobre ocultar autor de **Não** para **Sim**.
+0. **`SOLTAR-OUTUBRO.md` na raiz é o roteiro da próxima build** (28/09/2026, decisão dele de não
+   gastar build à toa): parte 1 sem build (migrations 23 e 24, contas Mapillary/Cloudflare, script
+   de fotos, Cloud Vision) pode ser feita já; parte 2 é a build única a partir de 01/10 com bloqueio
+   de usuário + IARC, foto do Mapillary, envio de foto, fila de moderação e **EAS Update ligado**
+   (`updates.url` + `runtimeVersion: appVersion` no app.config.ts, `channel` por perfil no eas.json,
+   `expo-updates` nas dependências). Depois dessa build, mudança de JS/tela sai por
+   `npx eas-cli update --branch production` e não custa build.
+3. Bloqueio por usuário e revogação Apple **implementados em 28/09/2026** (branch
+   mesclada na `laughing-keller`): migrations 20 e 21 aplicadas, Edge Functions publicadas, secrets
+   da Apple gravados e build iOS no TestFlight em 28/09. **Testado por ele no iPhone em 28/09:** excluir
+   conta Apple tira a Irisa de Ajustes → Iniciar sessão com a Apple (revogação real), e bloquear/
+   desbloquear esconde e devolve a mensagem. Falta: enviar a versão iOS para revisão (Notes já
+   escritas) e, no Android, a build 10 com a resposta do IARC (bloquear outros usuários) mudando para
+   **Sim** na mesma versão (cota do EAS vira em 01/10).
 4. Apple Developer (US$99/ano) quando decidir publicar no iOS; ou via ONG parceira (Apple isenta ONGs).
    Denúncia, moderação e excluir conta já existem.
 5. Fase 6+: notificações por área, rotas seguras, versão web.

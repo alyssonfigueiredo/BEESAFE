@@ -43,6 +43,10 @@ type Props = {
   photoName?: string | null;
   photoAuthor?: string | null;
   photoAuthorUri?: string | null;
+  /** Foto nossa (R2): vem do Mapillary ou de quem avaliou. Tem preferência sobre a do Google. */
+  photoUrl?: string | null;
+  photoCredit?: string | null;
+  photoCreditUri?: string | null;
   /** "tile" é o quadrado do card; "banner" é a faixa larga da ficha, com o crédito por cima. */
   variant?: "tile" | "banner";
   size?: number;
@@ -57,6 +61,9 @@ export function PlacePhoto({
   photoName,
   photoAuthor,
   photoAuthorUri,
+  photoUrl,
+  photoCredit,
+  photoCreditUri,
   variant = "tile",
   size = 64,
   muted = false,
@@ -64,7 +71,14 @@ export function PlacePhoto({
 }: Props) {
   const [falhou, setFalhou] = useState(false);
   const largura = variant === "banner" ? 800 : 200;
-  const url = falhou ? null : googlePhotoUrl(photoName, largura);
+  // Foto própria primeiro: não vence, não gasta cota e continua valendo se o Google sair do ar.
+  const url = falhou ? null : (photoUrl ?? googlePhotoUrl(photoName, largura));
+  const creditoTexto = photoUrl
+    ? (photoCredit ?? "Foto da comunidade")
+    : photoAuthor
+      ? `Foto: ${photoAuthor} · Google`
+      : "Foto: Google";
+  const creditoUri = photoUrl ? photoCreditUri : photoAuthorUri;
   const { Icon, cor } = ICONES[category] ?? ICONES.outro;
   // Cinza vira cor: quanto da cor já voltou (1 = colorido). Anima a cada resposta.
   const alvo = muted ? progress : 1;
@@ -99,12 +113,12 @@ export function PlacePhoto({
 
   const credito = url && (
     <Pressable
-      onPress={() => photoAuthorUri && Linking.openURL(photoAuthorUri)}
+      onPress={() => creditoUri && Linking.openURL(creditoUri)}
       className="absolute bottom-0 left-0 right-0 px-2 py-1"
       style={{ backgroundColor: "rgba(30,35,64,0.55)" }}
     >
       <Text className="font-body text-[10px] text-paper" numberOfLines={1}>
-        {photoAuthor ? `Foto: ${photoAuthor} · Google` : "Foto: Google"}
+        {creditoTexto}
       </Text>
     </Pressable>
   );

@@ -19,12 +19,14 @@ import { useScreenInsets } from "@/hooks/useScreenInsets";
 import { AreaLevel } from "@/components/AreaLevel";
 import { AxisBars } from "@/components/AxisBars";
 import { Badge } from "@/components/Badge";
+import { BlockButton } from "@/components/BlockButton";
 import { CountUp } from "@/components/CountUp";
 import { IrisScore } from "@/components/IrisScore";
 import { PlacePhoto } from "@/components/PlacePhoto";
 import { RainbowText } from "@/components/RainbowText";
 import { Rainbow } from "@/components/Rainbow";
 import { ReportButton } from "@/components/ReportButton";
+import { useEnviarFotoDoLugar } from "@/hooks/usePlacePhoto";
 import { usePlace, usePlaceRatings, useRatePlace } from "@/hooks/usePlaces";
 import { AXES, AXIS_KEYS, BADGES, PLACE_CATEGORIES, placeScoreColor } from "@/theme/domain";
 import type { Axis } from "@/theme/domain";
@@ -38,6 +40,7 @@ export default function PlaceScreen() {
   const { data: place, isLoading } = usePlace(id);
   const { data: ratings = [] } = usePlaceRatings(id);
   const rate = useRatePlace(id);
+  const enviarFoto = useEnviarFotoDoLugar(id);
   const mine = ratings.find((r) => r.is_mine);
   const [draft, setDraft] = useState<Draft | null>(null);
   const [abrirForm, setAbrirForm] = useState(false);
@@ -72,6 +75,15 @@ export default function PlaceScreen() {
         mine ? "Avaliação atualizada" : "Avaliação registrada",
         "Obrigado por ajudar a comunidade.",
       );
+    } catch (e) {
+      Alert.alert("Não deu certo", e instanceof Error ? e.message : "Tente de novo.");
+    }
+  }
+
+  async function mandarFoto() {
+    try {
+      const url = await enviarFoto.mutateAsync();
+      if (url) Alert.alert("Foto enviada", "Obrigado! Ela já aparece na ficha do lugar.");
     } catch (e) {
       Alert.alert("Não deu certo", e instanceof Error ? e.message : "Tente de novo.");
     }
@@ -130,6 +142,9 @@ export default function PlaceScreen() {
             <PlacePhoto
               category={place.category}
               photoName={place.photo_name}
+              photoUrl={place.photo_url}
+              photoCredit={place.photo_credit}
+              photoCreditUri={place.photo_credit_uri}
               photoAuthor={place.photo_author}
               photoAuthorUri={place.photo_author_uri}
               variant="banner"
@@ -268,6 +283,19 @@ export default function PlaceScreen() {
                 onChangeText={(v) => setDraft({ ...current, comment: v })}
               />
               <Pressable
+                disabled={enviarFoto.isPending}
+                onPress={mandarFoto}
+                className="items-center rounded-full bg-subtle py-3 active:opacity-80 disabled:opacity-50"
+              >
+                <Text className="font-body-bold text-base text-ink">
+                  {enviarFoto.isPending
+                    ? "Enviando foto…"
+                    : place.photo_source === "usuario"
+                      ? "Trocar a foto do lugar"
+                      : "Adicionar uma foto do lugar"}
+                </Text>
+              </Pressable>
+              <Pressable
                 disabled={rate.isPending}
                 onPress={submit}
                 className="items-center rounded-full bg-yellow py-3 active:opacity-80 disabled:opacity-50"
@@ -313,7 +341,12 @@ export default function PlaceScreen() {
                     size={5}
                   />
                   {!!r.comment && <Text className="font-body text-sm text-muted">{r.comment}</Text>}
-                  {!r.is_mine && <ReportButton type="rating" id={r.id} compact />}
+                  {!r.is_mine && (
+                    <View className="flex-row items-center gap-3">
+                      <ReportButton type="rating" id={r.id} compact />
+                      <BlockButton type="rating" id={r.id} compact />
+                    </View>
+                  )}
                 </View>
               ))}
             </View>

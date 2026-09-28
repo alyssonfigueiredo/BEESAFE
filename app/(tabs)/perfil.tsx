@@ -1,11 +1,13 @@
+import { format, parseISO } from "date-fns";
+import { ptBR } from "date-fns/locale";
 import { Link } from "expo-router";
-import { ChevronRight } from "lucide-react-native";
 import { useState } from "react";
 import { Alert, Pressable, ScrollView, Text, TextInput, View } from "react-native";
 
 import { Aurora } from "@/components/Aurora";
 import { useScreenInsets } from "@/hooks/useScreenInsets";
 import { CityPicker } from "@/components/CityPicker";
+import { useBlockedUsers, useUnblockUser } from "@/hooks/useBlocks";
 import { useDeleteAccount, useProfile, useUpdateProfile } from "@/hooks/useProfile";
 import { authMessage } from "@/lib/authErrors";
 import { supabase } from "@/lib/supabase";
@@ -20,6 +22,8 @@ export default function PerfilScreen() {
   const { data: profile } = useProfile();
   const update = useUpdateProfile();
   const del = useDeleteAccount();
+  const { data: blocked = [] } = useBlockedUsers();
+  const unblock = useUnblockUser();
   const [nickname, setNickname] = useState<string | null>(null);
   const value = nickname ?? profile?.nickname ?? "";
 
@@ -39,7 +43,7 @@ export default function PerfilScreen() {
   function confirmDelete() {
     Alert.alert(
       "Excluir conta",
-      "Seus relatos e mensagens continuam no app, sem nenhum vínculo com você. Avaliações e curtidas são apagadas. Não dá para desfazer.",
+      "Seus relatos e mensagens continuam no app, sem nenhum vínculo com você. Avaliações e curtidas são apagadas. Se você entrou com a Apple, o vínculo com sua conta Apple também é desfeito. Não dá para desfazer.",
       [
         { text: "Cancelar", style: "cancel" },
         {
@@ -109,20 +113,39 @@ export default function PerfilScreen() {
           </Text>
         </View>
 
-        <Link href="/bloqueados" asChild>
-          <Pressable
-            className="flex-row items-center justify-between rounded-3xl bg-surface p-4 active:opacity-80"
-            style={shadow.card}
-          >
-            <View className="gap-1">
-              <Text className="font-body-bold text-base text-ink">Pessoas bloqueadas</Text>
-              <Text className="font-body text-sm text-muted">
-                Você não vê o conteúdo de quem bloqueou. Dá para desfazer aqui.
-              </Text>
-            </View>
-            <ChevronRight size={20} color={colors.muted} />
-          </Pressable>
-        </Link>
+        <View className="gap-2 rounded-3xl bg-surface p-4" style={shadow.card}>
+          <Text className="font-body-bold text-xs text-muted">Pessoas bloqueadas</Text>
+          {blocked.length === 0 ? (
+            <Text className="font-body text-sm text-muted">
+              Ninguém. Para bloquear alguém, toque no ícone de bloqueio em uma mensagem do mural ou
+              em uma avaliação: o que a pessoa publicar deixa de aparecer para você.
+            </Text>
+          ) : (
+            blocked.map((b) => (
+              <View
+                key={b.blocked_id}
+                className="flex-row items-center justify-between border-b border-border pb-2"
+              >
+                <Text className="font-body text-sm text-muted">
+                  Bloqueada em {format(parseISO(b.created_at), "d 'de' MMMM", { locale: ptBR })}
+                </Text>
+                <Pressable
+                  disabled={unblock.isPending}
+                  onPress={() =>
+                    unblock
+                      .mutateAsync(b.blocked_id)
+                      .catch((e) =>
+                        Alert.alert("Não deu certo", authMessage(e) ?? "Tente de novo."),
+                      )
+                  }
+                  hitSlop={8}
+                >
+                  <Text className="font-body-bold text-sm text-turquoiseInk">Desbloquear</Text>
+                </Pressable>
+              </View>
+            ))
+          )}
+        </View>
 
         {profile && profile.role !== "user" && (
           <Link href="/moderacao" asChild>

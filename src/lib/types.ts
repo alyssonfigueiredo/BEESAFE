@@ -65,6 +65,11 @@ export type PublicPlace = {
   photo_name: string | null;
   photo_author: string | null;
   photo_author_uri: string | null;
+  // Foto nossa (migration 23): guardada no nosso bucket, não vence e não gasta cota.
+  photo_url: string | null;
+  photo_source: "mapillary" | "usuario" | "wikimedia" | null;
+  photo_credit: string | null;
+  photo_credit_uri: string | null;
 };
 
 export type PublicPlaceRating = {
@@ -100,4 +105,8 @@ export type WelcomingPlace = Pick<
   | "photo_name"
   | "photo_author"
   | "photo_author_uri"
+  | "photo_url"
+  | "photo_source"
+  | "photo_credit"
+  | "photo_credit_uri"
 >;

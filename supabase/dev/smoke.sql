@@ -78,6 +78,22 @@ select count(*) as services_total from public.support_services_for((select id fr
 select public.update_my_profile('  Cacau ', (select id from public.cities limit 1));
 select nickname, default_city_id is not null as has_city from public.profiles where id = auth.uid();
 select nickname from public.public_place_ratings where is_mine; -- deve ser Cacau
+-- ---------- bloqueio (migration 18) ----------
+-- usuário 3 bloqueia o autor da mensagem de Lu (usuário 2): mensagem e avaliação dele somem só para o 3
+select public.block_author('message', (select id from public.public_support_messages where nickname = 'Lu'));
+select count(*) as msgs_after_block_0 from public.public_support_messages;  -- as duas são do usuário 2
+select count(*) as ratings_after_block_1 from public.public_place_ratings;  -- só a minha (Cacau)
+select count(*) as my_blocks_1 from public.blocked_users;
+do $$ begin
+  perform public.block_author('rating', (select id from public.public_place_ratings where is_mine));
+  raise exception 'NAO DEVERIA';
+exception when sqlstate 'P0021' then raise notice 'auto-bloqueio rejeitado ok'; end $$;
+set request.jwt.claim.sub = '22222222-2222-2222-2222-222222222222';
+select count(*) as other_unaffected_2 from public.public_support_messages;
+select count(*) as other_blocks_0 from public.blocked_users;
+set request.jwt.claim.sub = '33333333-3333-3333-3333-333333333333';
+select public.unblock_user((select blocked_id from public.blocked_users));
+select count(*) as msgs_after_unblock_2 from public.public_support_messages;
 select public.delete_my_account();
 reset role;
 select count(*) as users_left from auth.users;
@@ -125,27 +141,4 @@ select count(*) as restored_1 from public.public_support_messages where id = :'m
 select count(*) as open_reports_0 from public.content_reports where status = 'open';
 select public.verify_place('aaaaaaaa-0000-0000-0000-000000000001', true);
 select verified from public.public_places;
-reset role;
-
--- ---------- bloquear pessoa (migration 19) ----------
-set role authenticated;
-set request.jwt.claim.sub = '55555555-5555-5555-5555-555555555555';
-select count(*) as msg_visivel_1 from public.public_support_messages where id = :'msg';
-select public.block_content_author('message', :'msg') as bloqueado;
-select count(*) as msg_invisivel_0 from public.public_support_messages where id = :'msg';
-select count(*) as bloqueados_1 from public.my_blocks();
--- quem não bloqueou continua vendo
-set request.jwt.claim.sub = '66666666-6666-6666-6666-666666666666';
-select count(*) as msg_visivel_pra_outro_1 from public.public_support_messages where id = :'msg';
--- desbloquear devolve o conteúdo
-set request.jwt.claim.sub = '55555555-5555-5555-5555-555555555555';
-select public.unblock_user((select blocked_id from public.my_blocks()));
-select count(*) as msg_de_volta_1 from public.public_support_messages where id = :'msg';
--- não dá para bloquear a si mesmo
-insert into public.support_messages (nickname, category, content, city_id)
-  values ('Eu', 'acolhimento', 'mensagem minha para testar o bloqueio', (select id from public.cities limit 1));
-do $$ begin
-  perform public.block_content_author('message', (select id from public.public_support_messages where nickname = 'Eu'));
-  raise exception 'NAO DEVERIA';
-exception when sqlstate 'P0005' then raise notice 'auto-bloqueio barrado ok'; end $$;
 reset role;

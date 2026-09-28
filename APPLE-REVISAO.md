@@ -6,8 +6,8 @@ Isto é para colar na Apple. Duas coisas:
    ("Review notes") inteiro. Ele fica salvo para as próximas submissões.
 2. No **Resolution Center**, responda a mensagem colando o mesmo bloco e anexando o vídeo.
 
-Antes de responder, leia a seção **Antes de responder**: precisa colar a migration 19 no Supabase,
-gerar build nova e mudar uma resposta do IARC.
+Antes de responder, leia a seção **Antes de responder**, no fim: a build enviada precisa ser uma que
+já tenha o botão de bloquear (migrations 20 e 21, que já estão no banco).
 
 ---
 
@@ -25,10 +25,12 @@ abaixo, sem pressa, ~3 a 4 minutos. Não precisa narrar; se quiser, fale em ingl
 7. **Conteúdo do usuário 2 — registrar um relato:** escolher tipo, onde, quando, enviar, e mostrar o
    relato aparecendo no Mapa como área de atenção.
 8. **Conteúdo do usuário 3 — mural de apoio:** escrever uma mensagem e enviar.
-9. **Denunciar conteúdo:** tocar na bandeira em um relato/mensagem, escolher o motivo, enviar, e
-   mostrar o aviso de que a moderação vai revisar.
-10. **Bloquear pessoa:** tocar em bloquear no conteúdo e mostrar que o conteúdo daquela pessoa
-    desaparece da lista. (Ver "O que falta no app".)
+9. **Denunciar conteúdo:** tocar na bandeira em uma mensagem do mural, escolher o motivo, enviar, e
+   mostrar o aviso de que a moderação vai revisar. Mostrar também a bandeira num relato e numa
+   avaliação de lugar.
+10. **Bloquear pessoa:** no mural, tocar em "Bloquear" ao lado da bandeira, confirmar, e mostrar que
+    a mensagem daquela pessoa sumiu da lista. Depois abrir Perfil → **Pessoas bloqueadas** e mostrar
+    o "Desbloquear".
 11. **Emergência:** abrir a folha de emergência e mostrar os números (não precisa ligar).
 12. **Apoio:** mostrar a lista de serviços da cidade.
 13. **Sair da conta** e **entrar de novo** com a mesma conta (login).
@@ -98,14 +100,24 @@ the app. The project is independent and free of charge.
   questions, submit.
 - Map tab: places and attention areas; tapping a neighborhood opens its summary.
 - Support tab: emergency numbers, city support services, support wall (user posts).
-- Every piece of user-generated content has a flag icon to report it and an option to block
-  its author. Reported content is hidden automatically after 3 reports, pending human review.
-- Profile tab: sign out, and "Excluir minha conta" (delete account) which permanently deletes
-  the account and its content.
+- Every piece of user-generated content has a flag icon to report it. Reported content is
+  hidden automatically after 3 reports from different accounts, pending human review, and
+  moderators can remove content and suspend the account behind it.
+- Content that carries visible authorship — support wall messages and place reviews — also has
+  a "Bloquear" (block) action next to the flag. Blocking hides everything that person
+  publishes from the blocking user. The blocked list, with an unblock action, is in the
+  Profile tab under "Pessoas bloqueadas". Incident reports are fully anonymous: no author,
+  nickname or profile is ever shown or reachable, so there is no author to block there;
+  reporting and human moderation cover that content.
+- Profile tab: nickname and city, blocked people, sign out, and "Excluir minha conta" (delete
+  account), which permanently deletes the account and its content. For accounts created with
+  Sign in with Apple, deleting the account also revokes the Apple token on Apple's servers
+  before the user record is removed.
 
 4) EXTERNAL SERVICES USED
 - Supabase (PostgreSQL + PostGIS, hosted in São Paulo, Brazil): authentication, database,
-  row-level security, realtime. All user data lives here.
+  storage for user-submitted place photos, row-level security, realtime, and Edge Functions
+  (Apple token revocation on account deletion). All user data lives here.
 - Sign in with Apple (native) and Google OAuth via Supabase (system browser, PKCE).
 - MapLibre with Esri "Light Gray Canvas" raster tiles for the base map (no account needed).
 - Google Places API (New): only to fetch one public photo per place, by a server-side script;
@@ -147,29 +159,26 @@ Contact: appirisa@gmail.com
 
 ## 4. Antes de responder
 
-A Apple pede, no vídeo, "the required content reporting **and blocking** mechanisms". Os dois
-existem agora:
+A Apple pede, no vídeo, "the required content reporting **and blocking** mechanisms". Os dois já
+existem no código (migration 20, no banco desde 28/09/2026):
 
-- **Denunciar conteúdo:** bandeira em relato, avaliação, lugar e mensagem; 3 denúncias escondem o
-  conteúdo até a revisão.
-- **Bloquear pessoa (novo, migration 19):** dentro da folha de "Denunciar" tem "Bloquear esta
-  pessoa". Quem você bloqueia some dos relatos, das avaliações e do mural. A lista fica em
-  Perfil → Pessoas bloqueadas, com Desbloquear.
+- **Denunciar:** bandeira em relato, avaliação, lugar e mensagem; 3 denúncias de pessoas diferentes
+  escondem o conteúdo até a revisão.
+- **Bloquear:** botão ao lado da bandeira no mural e nas avaliações, e a lista em Perfil → Pessoas
+  bloqueadas. Relato não tem botão porque é anônimo: não existe autor exibido para bloquear — isso
+  está explicado nas notas em inglês, item 3, e a Apple precisa ler essa explicação.
 
-Faltam três coisas na sua mão:
+O que falta na sua mão:
 
-1. **Colar a migration 19 no Supabase** (SQL Editor → New query):
+1. **Build nova de iOS com esse botão** (a versão 0.1.0 (3), que foi rejeitada, é anterior):
    ```bash
-   pbcopy < supabase/migrations/00000000000019_bloquear_pessoa.sql
+   npx eas-cli build -p ios --profile production
    ```
-   Sem isso o botão de bloquear dá erro.
-2. **Gerar uma build nova de iOS** e enviar ao TestFlight/App Store (o bloqueio é código do app).
-3. **Mudar a resposta do IARC:** a pergunta sobre ocultar/bloquear autor está como **Não** e agora é
-   **Sim**. Mude na mesma versão antes de reenviar.
-
-Também antes de responder: testar a build num iPhone físico com o iOS mais novo (a Apple avisa que
-revisa em aparelho real), e confirmar que as capturas da App Store mostram o app em uso — não a
-abertura, nem a tela de login.
+   Só grave o vídeo nessa build.
+2. **Mudar a resposta do IARC** sobre bloquear/ocultar outros usuários de **Não** para **Sim** — só
+   agora, com o botão publicado.
+3. Testar num iPhone físico com o iOS mais novo (a Apple revisa em aparelho real) e conferir que as
+   capturas da App Store mostram o app em uso, não a abertura nem o login.
 
 ## 5. Sobre a tela "versão rejeitada"
 

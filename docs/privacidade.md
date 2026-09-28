@@ -1,6 +1,6 @@
 # Política de Privacidade — Irisa
 
-Última atualização: 24 de setembro de 2026.
+Última atualização: 28 de setembro de 2026.
 
 A Irisa é um aplicativo comunitário para pessoas LGBTQIA+ registrarem, de forma anônima, ocorrências de LGBTIfobia e avaliarem lugares acolhedores. Esta política explica quais dados coletamos, por que, e o que fazemos com eles, em conformidade com a Lei Geral de Proteção de Dados (Lei 13.709/2018).
 
@@ -10,7 +10,8 @@ Irisa (projeto independente, sem fins lucrativos). Contato: appirisa@gmail.com.
 
 ## 2. Quais dados coletamos
 
-- **Conta**: e-mail e senha (com hash), ou identificador fornecido pelo Google ou pela Apple quando você entra com essas contas. Usamos apenas para autenticar e para impedir spam. Não pedimos nome, CPF, telefone ou orientação sexual.
+- **Conta**: e-mail e senha (com hash), ou identificador fornecido pelo Google ou pela Apple quando você entra com essas contas. Usamos apenas para autenticar e para impedir spam. Não pedimos nome, CPF, telefone ou orientação sexual. Se você entra com a Apple, guardamos também o token de atualização que a Apple emite para o app, exclusivamente para desfazer o vínculo com sua conta Apple quando você excluir a conta; ele não é usado para mais nada e nenhum usuário do app tem acesso a ele.
+- **Bloqueios**: se você bloquear alguém, guardamos o par "quem bloqueou / quem foi bloqueado" para deixar de mostrar a você o que essa conta publica. Só você vê e desfaz seus bloqueios; a pessoa bloqueada não é informada.
 - **Relatos**: tipo, gravidade, data, ponto no mapa e descrição opcional. O relato fica vinculado à sua conta apenas no banco de dados, para fins de segurança e moderação. Esse vínculo nunca é exibido a ninguém, nem a moderadores.
 - **Lugares e avaliações**: nome do lugar, categoria, endereço, ponto no mapa, notas dos quatro eixos de acolhimento e comentário. Avaliações e mensagens mostram apenas o apelido que você escolher (ou "Anônimo").
 - **Localização**: usada no aparelho para centralizar o mapa e marcar um ponto quando você pede. Não guardamos histórico de localização.
@@ -39,7 +40,7 @@ Não vendemos nem compartilhamos dados pessoais, salvo por ordem judicial ou req
 
 ## 7. Retenção e exclusão
 
-Você pode excluir sua conta a qualquer momento em Perfil → Excluir minha conta. Seus relatos e mensagens permanecem, sem qualquer vínculo com você. Avaliações e curtidas são apagadas.
+Você pode excluir sua conta a qualquer momento em Perfil → Excluir minha conta. Seus relatos e mensagens permanecem, sem qualquer vínculo com você. Avaliações, curtidas e bloqueios são apagados. Se você entrou com a Apple, o vínculo do app com sua conta Apple é revogado junto da Apple no mesmo momento.
 
 ## 8. Seus direitos
 
