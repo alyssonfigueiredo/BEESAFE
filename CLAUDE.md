@@ -43,6 +43,11 @@ Nome: **Irisa** (INPI livre; @appirisa livre). Bundle id Android `br.com.irisa.a
   a mesma senha de app do `tester-welcome`) e depois subir o limite em Authentication → Rate Limits. Para
   gravar tela, dá para desligar "Confirm email" temporariamente. `src/lib/authErrors.ts` separa os três
   limites (por hora, "espere N segundos" do mesmo e-mail, e requisições da mesma rede).
+  SMTP próprio configurado por ele em 29/09/2026. Site URL da Supabase é `irisa://auth/callback` (fica
+  assim); o `signUp` manda `emailRedirectTo` para o mesmo endereço e `app/auth/callback.tsx` troca o
+  código pela sessão, então tocar no link do e-mail no mesmo celular já entra na conta. Em outro aparelho
+  a conta fica confirmada e a pessoa entra pelo login. `irisa://auth/callback` tem que continuar em
+  Redirect URLs (o login com Google depende dele).
 - Chaves legadas desativadas: app usa `sb_publishable_...`, scripts usam `sb_secret_...` (só na máquina dele).
 - Dados geográficos: os 5.570 municípios das 27 UFs e os bairros de 24 capitais importados do OSM.
   São Paulo saiu com 96 pelo nível 9 (`--nivel 9`, que lá são os distritos). Seguem sem bairro:
