@@ -757,7 +757,7 @@ footer .sos-line{width:100%;color:#fff;font-family:var(--display);text-transform
       <p class="hint" id="hint" data-android="Use o e-mail da conta Google do seu Android. Ele só serve para liberar o seu acesso." data-ios="Deixe seu e-mail e avisamos quando a Irisa chegar ao iPhone.">Use o e-mail da conta Google do seu Android. Ele só serve para liberar o seu acesso.</p>
       <div class="done" aria-live="polite">
         <svg viewBox="0 0 52 52" aria-hidden="true"><circle cx="26" cy="26" r="24"/><path d="M15 27l7 7 15-15"/></svg>
-        <div><b>Pronto, você está na lista.</b><span class="done-msg">O convite para instalar chega nesse e-mail.</span></div>
+        <div><b>Pronto, você está na lista.</b><span class="done-msg">O convite para instalar chega nesse e-mail — se não aparecer, olha na caixa de spam.</span></div>
       </div>
     </form>
     <div class="steps">
@@ -857,7 +857,7 @@ footer .sos-line{width:100%;color:#fff;font-family:var(--display);text-transform
       e.preventDefault();if(form.classList.contains("sending"))return;
       var em=inp.value.trim().toLowerCase();
       if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(em))return erro("Confere o e-mail: parece que falta alguma coisa.");
-      var fim=function(){msg.textContent=plat()==="ios"?"Avisamos nesse e-mail quando sair no iPhone.":"O convite para instalar chega nesse e-mail.";form.classList.remove("sending");form.classList.add("ok");confete()};
+      var fim=function(){msg.textContent=(plat()==="ios"?"Avisamos nesse e-mail quando sair no iPhone.":"O convite para instalar chega nesse e-mail.")+" Se não aparecer, olha na caixa de spam.";form.classList.remove("sending");form.classList.add("ok");confete()};
       if(form.site.value)return fim();
       if(SB_KEY.indexOf("__")===0){location.href="mailto:appirisa@gmail.com?subject="+encodeURIComponent("Quero testar a Irisa")+"&body="+encodeURIComponent("Meu e-mail: "+em+" ("+plat()+")");return}
       form.classList.add("sending");
