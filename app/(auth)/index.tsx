@@ -42,7 +42,12 @@ export default function LoginScreen() {
         if (error) throw error;
         return;
       }
-      const { data, error } = await supabase.auth.signUp({ email: mail, password });
+      // O link do e-mail de confirmação abre o app (irisa://auth/callback), que já entra na conta.
+      const { data, error } = await supabase.auth.signUp({
+        email: mail,
+        password,
+        options: { emailRedirectTo: "irisa://auth/callback" },
+      });
       if (error) throw error;
       // Com confirmação ligada, a Supabase devolve usuário sem sessão; com e-mail já usado,
       // devolve usuário sem identidades (para não revelar quem tem conta).
@@ -51,7 +56,7 @@ export default function LoginScreen() {
       if (!data.session) {
         Alert.alert(
           "Confira seu e-mail",
-          "Mandamos um link para confirmar a conta. Depois de abrir o link, volte aqui e entre.",
+          "Mandamos um link para confirmar a conta. Abra o e-mail neste celular e toque no link: você entra direto.",
         );
         setMode("login");
       }

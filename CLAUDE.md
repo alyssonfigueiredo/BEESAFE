@@ -36,6 +36,18 @@ Nome: **Irisa** (INPI livre; @appirisa livre). Bundle id Android `br.com.irisa.a
   `br.com.irisa.ios,br.com.irisa.app`, senão dá "Unacceptable audience in id_token".
   Passo a passo de publicação no iPhone para o Alysson: `PUBLICAR-IOS.md` na raiz (fora de `docs/`
   de propósito, para não ir para o site).
+- **Limite de e-mail no cadastro (29/09/2026):** o SMTP embutido da Supabase manda só 2 e-mails por
+  hora no projeto inteiro; com "Confirm email" ligado, o 3º cadastro por e-mail na hora dá "email rate
+  limit exceeded" (no app: "Chegamos ao limite de e-mails de confirmação por hora"). Solução: SMTP próprio
+  em Authentication → Emails → SMTP Settings com o Gmail da Irisa (smtp.gmail.com, 465, appirisa@gmail.com,
+  a mesma senha de app do `tester-welcome`) e depois subir o limite em Authentication → Rate Limits. Para
+  gravar tela, dá para desligar "Confirm email" temporariamente. `src/lib/authErrors.ts` separa os três
+  limites (por hora, "espere N segundos" do mesmo e-mail, e requisições da mesma rede).
+  SMTP próprio configurado por ele em 29/09/2026. Site URL da Supabase é `irisa://auth/callback` (fica
+  assim); o `signUp` manda `emailRedirectTo` para o mesmo endereço e `app/auth/callback.tsx` troca o
+  código pela sessão, então tocar no link do e-mail no mesmo celular já entra na conta. Em outro aparelho
+  a conta fica confirmada e a pessoa entra pelo login. `irisa://auth/callback` tem que continuar em
+  Redirect URLs (o login com Google depende dele).
 - Chaves legadas desativadas: app usa `sb_publishable_...`, scripts usam `sb_secret_...` (só na máquina dele).
 - Dados geográficos: os 5.570 municípios das 27 UFs e os bairros de 24 capitais importados do OSM.
   São Paulo saiu com 96 pelo nível 9 (`--nivel 9`, que lá são os distritos). Seguem sem bairro:
@@ -211,6 +223,13 @@ Nome: **Irisa** (INPI livre; @appirisa livre). Bundle id Android `br.com.irisa.a
   também em lugar sem nota, que é o caso mais comum); no Mapa aparece como área. **Não criar filtro
   de lugares por alerta**: faria a violência parecer atributo do bar e puniria quem só está perto.
 - Ficha das lojas pronta em docs/lojas.md.
+- **Rejeição da Apple 2.1 (28/09/2026), versão 0.1.0 (3):** "Information Needed" — pediram vídeo de
+  tela em aparelho real, descrição do app, instruções de acesso, serviços externos, diferenças por
+  região e material de terceiros. Resposta pronta em `APPLE-REVISAO.md` na raiz: notas em inglês para
+  colar no App Review Information → Notes e no Resolution Center, roteiro da gravação e conta de teste
+  `appirisa+review@gmail.com`. O vídeo precisa mostrar denúncia **e** bloqueio, então só serve build
+  com a migration 20 no app. Nas notas está explicado por que relato não tem botão de bloquear
+  (é anônimo, não tem autor exibido) — a Apple cobra isso.
 - **Bloqueio por usuário (migration 20, 28/09/2026, aplicada no banco no mesmo dia):** tabela `blocked_users` (RLS: cada um vê e apaga só os
   seus), RPCs `block_user`/`unblock_user`/`block_author(type, id)`. O app nunca recebe o id do autor
   (`created_by` não sai do banco), então bloqueia pelo id da mensagem/avaliação e o banco resolve.

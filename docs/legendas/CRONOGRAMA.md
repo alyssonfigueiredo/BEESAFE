@@ -34,11 +34,11 @@ sinal diferente: compartilhar, replay, comentar, salvar.
 | ter 29/09 | 19h | carrossel 3 — Sem nome. Sem perfil. Sem rastro. | comentário, salvar | `carrossel-3.txt` |
 | qua 30/09 | 19h | post-bemvinde — a palavra "bem-vinde" | comentário | `post-bemvinde.txt` |
 | qui 01/10 | 19h | carrossel 4 — Emergência e apoio por cidade | salvar | `carrossel-4.txt` |
-| sex 02/10 | 12h | story `stories-2/01` (quiz) | quiz | `stories-2.md` § 1 |
+| sex 02/10 | 12h | story `stories-2/01` (pergunta e resposta) | — | `stories-2.md` § 1 |
 | sex 02/10 | 19h | **reels 6** — Você já soltou a mão em público? (16 s) | compartilhar por DM, comentar "eu" | `reels-6.txt` |
-| sáb 03/10 | 12h | story `stories-2/02` (caixa de pergunta) | caixa | `stories-2.md` § 2 |
+| sáb 03/10 | 12h | story `stories-2/02` (convite a responder) | resposta por DM (sem adesivo) | `stories-2.md` § 2 |
 | sáb 03/10 | 19h | **reels 9** — Sua cidade está no mapa? (16 s) | comentário simples em massa | `reels-9.txt` |
-| dom 04/10 | 12h | story `stories-2/03` (enquete) | enquete | `stories-2.md` § 3 |
+| dom 04/10 | 12h | story `stories-2/03` (afirmação) | — | `stories-2.md` § 3 |
 | dom 04/10 | 19h | **reels 7** — Mudei de calçada 4 vezes hoje (18 s) | replay, identificação | `reels-7.txt` |
 | seg 05/10 | 12h | story `stories-2/04` (três coisas que o app não pede) | — | `stories-2.md` § 4 |
 | seg 05/10 | 19h | **reels 8** — A bandeira na porta não diz nada (20 s) | comentário (concorda/discorda) | `reels-8.txt` |
@@ -74,3 +74,12 @@ reaproveitar nada já postado.
 
 Fontes: Buffer (9,6M posts), Metricool Instagram Study 2026, Later/Hootsuite guias de
 algoritmo 2026, Social Insider (6M reels).
+
+## Correção (28/09)
+
+Os 4 stories de `stories-2/` (01–04) foram desenhados com adesivo nativo do Instagram (quiz,
+caixa de pergunta, enquete e adesivo de link) — mas a publicação virou automática pelo
+`scripts/publicar-instagram.mjs` (Graph API), que só publica a imagem: não existe endpoint
+que cole adesivo depois. Redesenhados pra funcionar sozinhos, sem depender de colar nada à
+mão (detalhe de cada um em `stories-2.md`); a lâmina 04 trocou o placeholder de adesivo de
+link pelo fecho de bio ("O link está na bio" + @appirisa) já usado no resto da campanha.

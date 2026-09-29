@@ -80,10 +80,41 @@ async function publicarReels(item) {
   return pub.id;
 }
 
+// Confirma de verdade que o media_id existe na conta, em vez de confiar só no retorno de
+// media_publish: consulta o objeto na Graph API (o "ok" do log é só o container, não é o post
+// visto de fora) e, pra story, também checa se ele está na lista de stories ativos.
+async function confirmarPublicado(item) {
+  const info = await chamar(item.media_id, { fields: "id,media_type,timestamp,permalink" });
+  if (item.tipo === "STORY") {
+    const ativos = await chamar(`${IG}/stories`, { fields: "id" });
+    const naLista = (ativos.data || []).some((s) => s.id === item.media_id);
+    return { ...info, na_lista_de_stories_ativos: naLista };
+  }
+  return info;
+}
+
 async function main() {
   const fila = JSON.parse(readFileSync(FILA, "utf8"));
   const agora = new Date();
   let mudou = false;
+
+  // confirma retroativamente quem já publicou mas nunca foi checado de verdade
+  for (const item of fila) {
+    if (item.publicado && item.confirmado === undefined) {
+      try {
+        item.confirmacao = await confirmarPublicado(item);
+        item.confirmado = true;
+        item.confirmado_em = new Date().toISOString();
+        console.log(`confirmado ${item.id}: existe na conta.`);
+      } catch (e) {
+        item.confirmado = false;
+        item.confirmado_erro = e.message;
+        console.error(`não confirmei ${item.id}: ${e.message}`);
+      }
+      mudou = true;
+    }
+  }
+
   for (const item of fila) {
     if (item.publicado) continue;
     if (!item.aprovado) continue; // nunca publica sem "aprovado": true marcado à mão
@@ -95,8 +126,19 @@ async function main() {
       item.publicado = true;
       item.publicado_em = agora.toISOString();
       item.media_id = mediaId;
+      delete item.ultimo_erro;
       mudou = true;
       console.log(`ok ${item.id} -> ${mediaId}`);
+      try {
+        item.confirmacao = await confirmarPublicado(item);
+        item.confirmado = true;
+        item.confirmado_em = new Date().toISOString();
+        console.log(`confirmado ${item.id}: existe na conta.`);
+      } catch (e) {
+        item.confirmado = false;
+        item.confirmado_erro = e.message;
+        console.error(`publicou mas não confirmei ${item.id}: ${e.message}`);
+      }
     } catch (e) {
       console.error(`falhou ${item.id}: ${e.message}`);
       item.ultimo_erro = e.message;

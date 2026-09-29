@@ -13,12 +13,15 @@
     ?v=radar           só o radar (padrão, 4,2 s)
     ?v=1               coração arco-íris → o radar varre a tela inteira pintando os gomos → círculo branco abre → radar (8 s)
     ?v=3               teste: coração → varredura enche a tela → as cores saem acompanhando o radar, que pinta a logo (7,9 s)
+    ?v=apple           radar pinta o anel e, depois da primeira volta, a logo vira uma maçã arco-íris (5,4 s; uso interno:
+                       a Apple não libera o logo dela em divulgação — em loja e anúncio, só o selo oficial da App Store)
     ?v=2               radar → a varredura sai do anel e pinta a tela inteira, gomo a gomo; as cores saem do mesmo jeito e termina no branco (7,9 s)
     ?formato=story     1080×1920 (padrão)      ?formato=quadrado  1080×1080     ?formato=reels  = story
     ?bg=paper          fundo papel com aurora (padrão)
     ?bg=night          fundo escuro (#141829), texto claro
     ?bg=verde          verde chroma (#00FF00) para recortar no editor (CapCut, Premiere, DaVinci)
     ?semfim            não sai de cena no final: segura com o radar girando
+    ?frase=texto       troca a frase debaixo do nome
     ?k=1.5             estica a linha do tempo (1 = 4,2 s)
     ?capture           usado pelo script: congela e espera window.__setT(ms)
 
@@ -142,6 +145,22 @@
   [data-v="2"] .tag,[data-v="2"] .bar{animation:paintout .3s ease var(--flood) forwards}
   @keyframes paintout{to{opacity:0}}
   [data-v="2"] .tag,[data-v="2"] .bar{z-index:2}
+
+  /* ---------- Versão apple: depois da primeira volta, a logo vira uma maçã arco-íris ---------- */
+  @property --a{syntax:"<angle>";inherits:false;initial-value:0deg}
+  [data-v="apple"] .logo > svg.radar{animation:anelSai .55s cubic-bezier(.5,0,.75,0) 2.05s forwards}
+  @keyframes anelSai{to{transform:scale(.55) rotate(-40deg);opacity:0}}
+  .maca{position:absolute;inset:0;opacity:0;
+    -webkit-mask:conic-gradient(from 0deg,#000 var(--a),transparent 0);mask:conic-gradient(from 0deg,#000 var(--a),transparent 0);
+    animation:aparece .01s linear 2.25s forwards,revela 1.25s linear 2.25s forwards,pulo .6s cubic-bezier(.2,.9,.3,1.35) 3.45s}
+  @keyframes aparece{to{opacity:1}}
+  @keyframes revela{to{--a:360deg}}
+  @keyframes pulo{40%{transform:scale(1.08)}}
+  .maca-sw{position:absolute;inset:-8px;opacity:0;animation:aparece .01s linear 2.25s forwards,giro 1.25s linear 2.25s forwards,somem .25s ease 3.5s forwards}
+  .maca-sw::after{content:"";position:absolute;left:calc(50% - 1px);top:0;width:2px;height:50%;border-radius:1px;background:#fff;box-shadow:0 0 10px rgba(255,255,255,.9)}
+  @keyframes giro{to{transform:rotate(360deg)}}
+  @keyframes somem{to{opacity:0}}
+  [data-v="apple"] .bar{display:none}
 </style>
 </head>
 <body>
@@ -152,9 +171,9 @@ const formato=q.get("formato")==="quadrado"?"quadrado":"story";
 const bg=["night","verde"].includes(q.get("bg"))?q.get("bg"):"paper";
 const K=Math.max(.5,Number(q.get("k"))||1);
 const SEMFIM=q.has("semfim");
-const V=["1","2","3"].includes(q.get("v"))?q.get("v"):"radar";
+const V=["1","2","3","apple"].includes(q.get("v"))?q.get("v"):"radar";
 // Linha do tempo base de cada versão (ms) e quando o radar começa dentro dela.
-const CENA={radar:{total:4200,off:0,fim:3500},1:{total:7800,off:4600,fim:7400,wipe:4400},2:{total:7900,off:0,flood:3000,saida:5500},3:{total:7900,off:4736,saida:4700}}[V];
+const CENA={radar:{total:4200,off:0,fim:3500},1:{total:7800,off:4600,fim:7400,wipe:4400},2:{total:7900,off:0,flood:3000,saida:5500},3:{total:7900,off:4736,saida:4700},apple:{total:5400,off:0}}[V];
 const TOTAL=CENA.total;
 document.documentElement.dataset.v=V;
 document.documentElement.dataset.formato=formato;
@@ -186,7 +205,7 @@ function radarSvg(){
     s+=`<path class="rs" style="--d:${d}ms" d="${slice(48,35,i/48*2*Math.PI-Math.PI/2,(i+1)/48*2*Math.PI-Math.PI/2+.05)}" fill="${rc(i/48)}"/>`}
   const a0=-150*Math.PI/180,a1=-55*Math.PI/180,[sx,sy]=pt(33,a0),[ex,ey]=pt(33,a1);
   const sweep=sat("#5CC9B4"),coral=sat("#F4736F");
-  return `<svg viewBox="0 0 100 100" aria-hidden="true">
+  return `<svg class="radar" viewBox="0 0 100 100" aria-hidden="true">
     <defs><linearGradient id="sw" gradientUnits="userSpaceOnUse" x1="${sx}" y1="${sy}" x2="${ex}" y2="${ey}">
       <stop offset="0" stop-color="${sweep}" stop-opacity="0"/><stop offset="1" stop-color="${sweep}" stop-opacity=".55"/></linearGradient></defs>
     ${s}
@@ -225,6 +244,20 @@ function varreSvg(inicio,dur,dy=0,saida=null){
     <path d="M${cx} ${cy}L${ex.toFixed(1)} ${ey.toFixed(1)}" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-opacity=".85"/></g>`).join("")}</svg>`;
 }
 
+// Frase debaixo do nome: ?frase=... troca; na versão apple o padrão é a alfinetada no logo que já foi arco-íris.
+const FRASE=(q.get("frase")||(V==="apple"?"A maçã já foi arco-íris. A gente só lembrou.":"quanta cor tem aqui?")).replace(/[<>&]/g,"");
+const MACA=`<svg class="maca" viewBox="0 0 100 100" aria-hidden="true"><defs>
+  <linearGradient id="listras" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0" stop-color="#49DCC0"/><stop offset=".2" stop-color="#49DCC0"/>
+    <stop offset=".2" stop-color="#FFD066"/><stop offset=".36" stop-color="#FFD066"/>
+    <stop offset=".36" stop-color="#FFA353"/><stop offset=".52" stop-color="#FFA353"/>
+    <stop offset=".52" stop-color="#FF6964"/><stop offset=".68" stop-color="#FF6964"/>
+    <stop offset=".68" stop-color="#A889FF"/><stop offset=".84" stop-color="#A889FF"/>
+    <stop offset=".84" stop-color="#59A7FF"/><stop offset="1" stop-color="#59A7FF"/></linearGradient></defs>
+  <g fill="url(#listras)">
+    <path d="M50 24.5C51 16.5 57 10.5 65 9.5C64.5 17.5 58.5 23.5 50 24.5Z"/>
+    <path d="M50 31C44 26.5 30.5 25 23.5 35C15.5 46.5 20 71 32.5 83.5C38.5 89.5 44.5 87.5 50 85C55.5 87.5 61.5 89.5 67.5 83.5C72.5 78 76.5 71 78.5 65C70.5 61.5 65.5 54 65.5 46C65.5 39.5 69 34 74 31.5C68.5 25.5 61 25 55.5 27.5C53.5 28.5 51.5 29.8 50 31Z"/>
+  </g></svg><div class="maca-sw"></div>`;
 const stage=document.getElementById("stage");
 const sp=document.getElementById("splash");
 function montar(){
@@ -236,7 +269,7 @@ function montar(){
   sp.style.setProperty("--wipe",((CENA.wipe??0)*K)+"ms");
   sp.style.setProperty("--flood",((CENA.flood??0)*K)+"ms");
   sp.style.setProperty("--saida",((CENA.saida??0)*K)+"ms");
-  sp.innerHTML=`${V==="2"?varreSvg(CENA.flood,1600,-42,CENA.saida):V==="3"?varreSvg(2700,1600,-42,CENA.saida):""}<div class="marca"><div class="logo">${radarSvg()}</div><div class="word">Iris<b>a</b></div></div><div class="tag">quanta cor tem aqui?</div><div class="bar"><i></i></div>`;
+  sp.innerHTML=`${V==="2"?varreSvg(CENA.flood,1600,-42,CENA.saida):V==="3"?varreSvg(2700,1600,-42,CENA.saida):""}<div class="marca"><div class="logo">${radarSvg()}${V==="apple"?MACA:""}</div><div class="word">Iris<b>a</b></div></div><div class="tag">${FRASE}</div><div class="bar"><i></i></div>`;
   // k estica só os inícios (não a velocidade de cada entrada); na v1 o radar começa depois do círculo abrir
   for(const a of sp.getAnimations({subtree:true})){const t=a.effect.getTiming();const nome=a.animationName||"";
     const naVarredura=a.effect.target?.closest?.(".varre");
