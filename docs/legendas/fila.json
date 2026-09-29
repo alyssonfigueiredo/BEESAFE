@@ -96,7 +96,7 @@
   {
     "id": "story-irisar",
     "aprovado": false,
-    "quando": "2026-09-29T12:00:00-03:00",
+    "quando": "2026-09-29T17:00:00-03:00",
     "tipo": "STORY",
     "midias": [
       "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/story-irisar/01.png"
