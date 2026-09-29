@@ -165,18 +165,20 @@ npx eas-cli build -p android --profile production
 Envie na mesma faixa de teste fechado. **Nesta versão, mudar a resposta do IARC** sobre bloquear
 ou ocultar outros usuários para **Sim** — o botão de bloquear entra agora.
 
-### 2.4 iOS (TestFlight)
+### 2.4 iOS (App Store)
 
-O iOS anda junto desde 28/09: bloqueio de usuário e revogação do Sign in with Apple já foram
-testados no iPhone. Nesta rodada entram as fotos e o EAS Update.
+A primeira versão do iPhone já foi publicada (29/09/2026). Tudo o que entrou depois está na branch
+principal, então **a próxima versão do iPhone sai com tudo junto**, do mesmo jeito que o Android:
 
 ```bash
+git checkout claude/ecstatic-darwin-cmf7sw && git pull && npm install
 npx eas-cli build -p ios --profile production
 npx eas-cli submit -p ios --latest
 ```
 
-No App Store Connect (app 6816761128), a versão aparece no TestFlight. As notas de revisão já
-estão escritas — é só enviar para análise.
+No App Store Connect (app 6816761128), crie a versão nova, escolha a build que chegou e envie para
+análise. O número da build sobe sozinho (`autoIncrement`). Se a Apple pedir versão nova do app
+(0.1.1, por exemplo), troque `version` em `app.config.ts` antes do build.
 
 **Sobre foto enviada por usuário, a Apple é mais exigente que o Google.** A regra 1.2 (conteúdo
 gerado por usuário) pede quatro coisas, e as quatro já existem: filtro do conteúdo antes de
