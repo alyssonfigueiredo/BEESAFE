@@ -36,6 +36,13 @@ Nome: **Irisa** (INPI livre; @appirisa livre). Bundle id Android `br.com.irisa.a
   `br.com.irisa.ios,br.com.irisa.app`, senão dá "Unacceptable audience in id_token".
   Passo a passo de publicação no iPhone para o Alysson: `PUBLICAR-IOS.md` na raiz (fora de `docs/`
   de propósito, para não ir para o site).
+- **Limite de e-mail no cadastro (29/09/2026):** o SMTP embutido da Supabase manda só 2 e-mails por
+  hora no projeto inteiro; com "Confirm email" ligado, o 3º cadastro por e-mail na hora dá "email rate
+  limit exceeded" (no app: "Chegamos ao limite de e-mails de confirmação por hora"). Solução: SMTP próprio
+  em Authentication → Emails → SMTP Settings com o Gmail da Irisa (smtp.gmail.com, 465, appirisa@gmail.com,
+  a mesma senha de app do `tester-welcome`) e depois subir o limite em Authentication → Rate Limits. Para
+  gravar tela, dá para desligar "Confirm email" temporariamente. `src/lib/authErrors.ts` separa os três
+  limites (por hora, "espere N segundos" do mesmo e-mail, e requisições da mesma rede).
 - Chaves legadas desativadas: app usa `sb_publishable_...`, scripts usam `sb_secret_...` (só na máquina dele).
 - Dados geográficos: os 5.570 municípios das 27 UFs e os bairros de 24 capitais importados do OSM.
   São Paulo saiu com 96 pelo nível 9 (`--nivel 9`, que lá são os distritos). Seguem sem bairro:
