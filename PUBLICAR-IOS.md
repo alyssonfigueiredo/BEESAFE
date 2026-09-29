@@ -1,5 +1,8 @@
 # Publicar a Irisa no iPhone (TestFlight e App Store)
 
+> **Roteiro mais novo:** `SOLTAR-OUTUBRO.md`, na raiz, junta Android e iOS na build de outubro.
+> Este arquivo continua valendo para os detalhes do iPhone.
+
 Passo a passo para o Alysson, no Mac. Os comandos são para colar no Terminal, um bloco por vez.
 Tudo o que o app precisa já está na branch `claude/laughing-keller-my8t7c`.
 

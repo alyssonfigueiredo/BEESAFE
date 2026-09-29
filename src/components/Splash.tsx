@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, type ReactNode } from "react";
 import { StyleSheet, View, useWindowDimensions } from "react-native";
 import Animated, {
   Easing,
@@ -37,7 +37,6 @@ const SWEEP = 1600; // uma volta da varredura grande
 const SAIDA = 5500; // as cores começam a sair
 const END = 7250; // o splash some
 const BIG = 64; // gomos da tela
-const FADE = 260; // cada gomo acende/apaga em 260 ms
 const LOGO = 132;
 const RING_R = (48 / 100) * LOGO; // raio externo do anel, em px
 const DISC = 2 * (RING_R + 5); // disco atrás do olho: anel + 5 px de borda
@@ -100,31 +99,83 @@ function Slice({
   return <AP d={d} fill={fill} animatedProps={props} />;
 }
 
-function BigSlice({
-  d,
-  fill,
-  at,
-  fin,
-  fout,
+/**
+ * Revela `children` (parado) num setor que cresce no sentido horário a partir do topo, de 0 a
+ * `progress` × 360°. Só transform de View: duas metades recortadas, cada uma com uma janela que gira
+ * e o conteúdo girando ao contrário dentro dela, para ficar no lugar. Nada de SVG animado, nada de
+ * transparência parcial: a borda é dura e acompanha a linha da varredura.
+ */
+function PieReveal({
+  R,
+  progress,
+  children,
 }: {
-  d: string;
-  fill: string;
-  at: number;
-  fin: SharedValue<number>;
-  fout: SharedValue<number>;
+  R: number;
+  progress: SharedValue<number>;
+  children: ReactNode;
 }) {
-  const props = useAnimatedProps(() => {
-    const k = SWEEP / FADE;
-    const a = Math.min(1, Math.max(0, (fin.value - at) * k));
-    const b = Math.min(1, Math.max(0, (fout.value - at) * k));
-    return { opacity: a * (1 - b) };
-  });
-  return <AP d={d} fill={fill} animatedProps={props} />;
+  const D = 2 * R;
+  const w1 = useAnimatedStyle(() => ({
+    transform: [{ rotate: `${Math.min(180, Math.max(0, progress.value * 360))}deg` }],
+  }));
+  const c1 = useAnimatedStyle(() => ({
+    transform: [{ rotate: `${-Math.min(180, Math.max(0, progress.value * 360))}deg` }],
+  }));
+  const w2 = useAnimatedStyle(() => ({
+    transform: [{ rotate: `${Math.min(180, Math.max(0, progress.value * 360 - 180))}deg` }],
+  }));
+  const c2 = useAnimatedStyle(() => ({
+    transform: [{ rotate: `${-Math.min(180, Math.max(0, progress.value * 360 - 180))}deg` }],
+  }));
+  return (
+    <View
+      pointerEvents="none"
+      style={{ position: "absolute", left: 0, top: 0, width: D, height: D }}
+    >
+      {/* metade direita: 0° a 180° */}
+      <View
+        style={{ position: "absolute", left: R, top: 0, width: R, height: D, overflow: "hidden" }}
+      >
+        <Animated.View
+          style={[
+            { position: "absolute", left: -R, top: 0, width: R, height: D, overflow: "hidden" },
+            { transformOrigin: "right center" },
+            w1,
+          ]}
+        >
+          <Animated.View
+            style={[{ position: "absolute", left: 0, top: 0, width: D, height: D }, c1]}
+          >
+            {children}
+          </Animated.View>
+        </Animated.View>
+      </View>
+      {/* metade esquerda: 180° a 360° */}
+      <View
+        style={{ position: "absolute", left: 0, top: 0, width: R, height: D, overflow: "hidden" }}
+      >
+        <Animated.View
+          style={[
+            { position: "absolute", left: R, top: 0, width: R, height: D, overflow: "hidden" },
+            { transformOrigin: "left center" },
+            w2,
+          ]}
+        >
+          <Animated.View
+            style={[{ position: "absolute", left: -R, top: 0, width: D, height: D }, c2]}
+          >
+            {children}
+          </Animated.View>
+        </Animated.View>
+      </View>
+    </View>
+  );
 }
 
 export function Splash({ onDone }: { onDone: () => void }) {
   const reduce = useReducedMotion();
-  const sweep = useSharedValue(0); // graus percorridos pela varredura
+  const sweep = useSharedValue(0); // giro do radar (repete para sempre)
+  const paint = useSharedValue(0); // gomos acesos no anel (para em 360: depois disso, nada anima)
   const pupil = useSharedValue(0);
   const word = useSharedValue(0);
   const bar = useSharedValue(0);
@@ -142,6 +193,7 @@ export function Splash({ onDone }: { onDone: () => void }) {
   useEffect(() => {
     if (reduce) {
       sweep.value = 360;
+      paint.value = 360;
       pupil.value = 1;
       word.value = 1;
       bar.value = 1;
@@ -151,6 +203,10 @@ export function Splash({ onDone }: { onDone: () => void }) {
       );
       return;
     }
+    paint.value = withDelay(
+      150,
+      withTiming(360, { duration: 1600, easing: Easing.bezier(0.3, 0.1, 0.3, 1) }),
+    );
     sweep.value = withSequence(
       withDelay(150, withTiming(360, { duration: 1600, easing: Easing.bezier(0.3, 0.1, 0.3, 1) })),
       withRepeat(withTiming(720, { duration: 7000, easing: Easing.linear }), -1, false),
@@ -183,7 +239,7 @@ export function Splash({ onDone }: { onDone: () => void }) {
         runOnJS(setGone)(true),
       ),
     );
-  }, [reduce, sweep, pupil, word, bar, lift, fin, fout, border, white, extra]);
+  }, [reduce, sweep, paint, pupil, word, bar, lift, fin, fout, border, white, extra]);
 
   useEffect(() => {
     if (gone) onDone();
@@ -238,16 +294,15 @@ export function Splash({ onDone }: { onDone: () => void }) {
     if (!center) return null;
     const { x: cx, y: cy } = center;
     const R = Math.hypot(Math.max(cx, win.width - cx), Math.max(cy, win.height - cy)) + 12;
-    const at = (r: number, a: number) => [cx + r * Math.cos(a), cy + r * Math.sin(a)];
+    const at = (r: number, a: number) => [R + r * Math.cos(a), R + r * Math.sin(a)];
     const sectors = Array.from({ length: BIG }, (_, i) => {
       const a0 = (i / BIG) * 2 * Math.PI - Math.PI / 2;
       const a1 = ((i + 1) / BIG) * 2 * Math.PI - Math.PI / 2 + 0.03;
       const [x0, y0] = at(R, a0);
       const [x1, y1] = at(R, a1);
       return {
-        d: `M ${cx} ${cy} L ${x0} ${y0} A ${R} ${R} 0 0 1 ${x1} ${y1} Z`,
+        d: `M ${R} ${R} L ${x0} ${y0} A ${R} ${R} 0 0 1 ${x1} ${y1} Z`,
         fill: ringColor(i / BIG),
-        at: i / BIG,
       };
     });
     // Linha e cunha numa caixa 2R × 2R com o centro do olho no meio: a caixa gira em volta dela mesma.
@@ -278,11 +333,38 @@ export function Splash({ onDone }: { onDone: () => void }) {
     <Animated.View style={[StyleSheet.absoluteFill, styles.root, rootStyle]} pointerEvents="none">
       <Aurora />
       {big && (
-        <Svg style={StyleSheet.absoluteFill} width={win.width} height={win.height}>
-          {big.sectors.map((g) => (
-            <BigSlice key={g.at} d={g.d} fill={g.fill} at={g.at} fin={fin} fout={fout} />
-          ))}
-        </Svg>
+        <View
+          pointerEvents="none"
+          style={{
+            position: "absolute",
+            left: big.cx - big.R,
+            top: big.cy - big.R,
+            width: 2 * big.R,
+            height: 2 * big.R,
+          }}
+        >
+          <PieReveal R={big.R} progress={fin}>
+            <Svg width={2 * big.R} height={2 * big.R}>
+              {big.sectors.map((g) => (
+                <Path key={g.d} d={g.d} fill={g.fill} />
+              ))}
+            </Svg>
+          </PieReveal>
+          <PieReveal R={big.R} progress={fout}>
+            {/* o fundo da tela, no mesmo lugar em que está atrás */}
+            <View
+              style={{
+                position: "absolute",
+                left: big.R - big.cx,
+                top: big.R - big.cy,
+                width: win.width,
+                height: win.height,
+              }}
+            >
+              <Aurora />
+            </View>
+          </PieReveal>
+        </View>
       )}
       {big && (
         <Animated.View
@@ -301,8 +383,8 @@ export function Splash({ onDone }: { onDone: () => void }) {
           <Svg width={2 * big.R} height={2 * big.R}>
             <Defs>
               <LinearGradient id="bigsw" gradientUnits="userSpaceOnUse" {...big.grad}>
-                <Stop offset="0" stopColor={mark.sweep} stopOpacity={0} />
-                <Stop offset="1" stopColor={mark.sweep} stopOpacity={0.45} />
+                <Stop offset="0" stopColor="#FFFFFF" stopOpacity={0} />
+                <Stop offset="1" stopColor="#FFFFFF" stopOpacity={0.35} />
               </LinearGradient>
             </Defs>
             <Path d={big.wedge} fill="url(#bigsw)" />
@@ -328,7 +410,7 @@ export function Splash({ onDone }: { onDone: () => void }) {
         <Svg width={LOGO} height={LOGO} viewBox="0 0 100 100">
           <Circle cx={50} cy={50} r={41.5} fill="none" stroke="#D9D6CF" strokeWidth={13} />
           {slices.map((s) => (
-            <Slice key={s.d} d={s.d} fill={s.fill} theta={s.theta} sweep={sweep} />
+            <Slice key={s.d} d={s.d} fill={s.fill} theta={s.theta} sweep={paint} />
           ))}
         </Svg>
         <Animated.View pointerEvents="none" style={[StyleSheet.absoluteFill, sweepStyle]}>

@@ -101,6 +101,28 @@ seguro.
 
 ---
 
+### 1.5 Conferências na Supabase (cadastro, apelido e login com Apple)
+
+Nada disso gasta build. Faça uma vez, antes de gerar a build.
+
+1. **Apelido (migration 18).** No SQL Editor, rode:
+   ```sql
+   select count(*) from pg_proc where proname = 'ensure_my_profile';
+   ```
+   Se der `0`, cole e rode o arquivo inteiro:
+   ```bash
+   pbcopy < supabase/migrations/00000000000018_perfil_robusto.sql
+   ```
+   Se der `1`, já está aplicada.
+2. **Login com Apple.** Authentication → Sign In / Providers → Apple → **Client IDs** com os dois:
+   `br.com.irisa.ios,br.com.irisa.app`.
+3. **Link do e-mail de confirmação.** Authentication → URL Configuration → **Redirect URLs** precisa
+   ter `irisa://auth/callback` (o login com Google também depende dele).
+4. **Limite de e-mail.** O SMTP próprio (Gmail da Irisa) já foi ligado em 29/09. Em Authentication →
+   Rate Limits, deixe **60** e-mails por hora.
+
+---
+
 ## Parte 2 — a build de outubro (a partir de 01/10)
 
 ```bash
@@ -119,6 +141,15 @@ npx expo run:ios --device
 Confira: ficha do lugar mostra foto do Mapillary; botão "Adicionar uma foto do lugar" dentro do
 formulário de avaliação; tela Moderação mostra a fila de fotos com Liberar/Recusar.
 
+E o que entrou do layout novo (feche o app de vez e abra de novo para ver a abertura inteira):
+
+- **Abertura:** o radar pinta o anel, as cores enchem a tela e saem pela mesma varredura, sem
+  travar e sem listras; não aparece logo parada antes.
+- **Barra de abas** perto do rodapé, com o ícone saindo do cinza para a cor da aba.
+- **Mapa** nítido; tocar num ponto abre o balão com o nome, tocar fora fecha; Mapa/Lista.
+- **Perfil:** trocar o apelido e salvar mostra "Seu apelido agora é …"; no Apoio ele já vem preenchido.
+- **Cadastro por e-mail:** o e-mail de confirmação chega; tocar no link no mesmo celular já entra.
+
 ### 2.2 APK de teste (não gasta a cota de produção)
 
 ```bash
@@ -134,18 +165,20 @@ npx eas-cli build -p android --profile production
 Envie na mesma faixa de teste fechado. **Nesta versão, mudar a resposta do IARC** sobre bloquear
 ou ocultar outros usuários para **Sim** — o botão de bloquear entra agora.
 
-### 2.4 iOS (TestFlight)
+### 2.4 iOS (App Store)
 
-O iOS anda junto desde 28/09: bloqueio de usuário e revogação do Sign in with Apple já foram
-testados no iPhone. Nesta rodada entram as fotos e o EAS Update.
+A primeira versão do iPhone já foi publicada (29/09/2026). Tudo o que entrou depois está na branch
+principal, então **a próxima versão do iPhone sai com tudo junto**, do mesmo jeito que o Android:
 
 ```bash
+git checkout claude/ecstatic-darwin-cmf7sw && git pull && npm install
 npx eas-cli build -p ios --profile production
 npx eas-cli submit -p ios --latest
 ```
 
-No App Store Connect (app 6816761128), a versão aparece no TestFlight. As notas de revisão já
-estão escritas — é só enviar para análise.
+No App Store Connect (app 6816761128), crie a versão nova, escolha a build que chegou e envie para
+análise. O número da build sobe sozinho (`autoIncrement`). Se a Apple pedir versão nova do app
+(0.1.1, por exemplo), troque `version` em `app.config.ts` antes do build.
 
 **Sobre foto enviada por usuário, a Apple é mais exigente que o Google.** A regra 1.2 (conteúdo
 gerado por usuário) pede quatro coisas, e as quatro já existem: filtro do conteúdo antes de
@@ -181,6 +214,11 @@ app por esse caminho. Recurso novo de verdade vai por build e revisão, como sem
 - Botão de enviar foto do lugar ao avaliar.
 - Fila de moderação de imagem na tela Moderação.
 - EAS Update ligado nos dois sistemas, para as próximas correções não custarem build.
+- Layout novo (Liquid Glass, cores vivas, fundo aurora, Mapa em tela cheia com Mapa/Lista) e as
+  animações (abertura do radar, ícones da barra, cinza que ganha cor, nota contando). O vidro
+  (`expo-glass-effect`, `expo-blur`) e o fundo da abertura são nativos: só chegam com esta build.
+- Apelido que salva de verdade (migration 18) e erros de login e cadastro em português.
+- Link do e-mail de confirmação que abre o app e já entra na conta.
 
 A cota do plano Free do EAS conta build de Android e de iOS no mesmo balde. Duas builds de
 produção nesta rodada, uma de cada, e o resto do mês sai por update.
