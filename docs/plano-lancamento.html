@@ -65,8 +65,10 @@
   .card p,.card li{font-size:14.5px;color:var(--t3)}
   ul{margin:0;padding-left:18px;display:grid;gap:6px}
   ul.clean{list-style:none;padding:0}
-  ul.clean li{display:flex;gap:10px;align-items:flex-start}
-  ul.clean li::before{content:"";flex:none;width:8px;height:8px;border-radius:50%;background:var(--rb);margin-top:9px}
+  /* O marcador é um ponto desenhado, não um bullet: fica fora do texto, e o item
+     continua sendo um parágrafo — com flex, cada <b> virava uma coluna. */
+  ul.clean li{position:relative;padding-left:18px}
+  ul.clean li::before{content:"";position:absolute;left:0;top:9px;width:8px;height:8px;border-radius:50%;background:var(--rb)}
 
   .pillar{display:grid;grid-template-columns:auto minmax(0,1fr);gap:16px;align-items:start;background:var(--pane);border-radius:24px;padding:16px 18px;box-shadow:var(--shadow-card),var(--glass-inset),inset 4px 0 0 var(--c,var(--turq))}
   .pillar .n{font:700 36px/1 var(--display);color:color-mix(in srgb,var(--c,var(--turq)) 62%,var(--night));min-width:44px}
