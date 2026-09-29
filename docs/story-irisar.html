@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="pt-BR"><head><meta charset="utf-8">
+<title>Irisa · Story · Dicionário: irisar</title>
+<style>
+/* Irisa · base das lâminas (1080×1350 feed, 1080×1920 story). Padrão 27/09/2026: papel + Liquid Glass + paleta ×1.35. Fonte única de cores e fontes. */
+@import url("https://fonts.googleapis.com/css2?family=Urbanist:wght@500;600&family=Oswald:wght@400;700&family=Space+Grotesk:wght@400;500;600;700&display=swap");
+:root{--paper:#F5F4F1;--surface:#FFFFFF;--subtle:#ECEAE5;--border:#E6E3DD;--night:#141829;--ink:#141829;--muted:#3D4560;--dim:#7C8296;
+  --coral:#FF6964;--orange:#FFA353;--yellow:#FFD066;--turq:#49DCC0;--lilac:#A889FF;--blue:#59A7FF;--amber:#FFAD0F;
+  --coralInk:#C72825;--orangeInk:#AB6207;--yellowInk:#9C6C00;--turqInk:#0A8B7A;--lilacInk:#6037F0;
+  --wordmark:"Urbanist","Helvetica Neue",Arial,sans-serif;--display:"Oswald","Arial Narrow",Impact,sans-serif;--body:"Space Grotesk","Helvetica Neue",Arial,sans-serif;
+  --rb:linear-gradient(90deg,var(--coral),var(--orange),var(--yellow),var(--turq),var(--blue),var(--lilac));
+  --pane:rgba(255,255,255,.62);--pane-edge:rgba(255,255,255,.8);
+  --shadow-card:0 2px 4px rgba(20,24,41,.03),0 16px 40px rgba(20,24,41,.07);
+  --glass-inset:inset 0 1px 0 #fff,inset 0 0 0 1px var(--pane-edge);
+  --r-xl:28px;--r-lg:24px;--r-md:18px}
+*{box-sizing:border-box}p{margin:0}
+html,body{margin:0;background:#e9e9ec}
+body{font-family:var(--body);color:var(--ink);display:flex;flex-direction:column;align-items:center;gap:40px;padding:40px 0}
+.sl{position:relative;width:1080px;height:1350px;flex:none;overflow:hidden;background:var(--paper);color:var(--ink);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:0 80px}
+.bg{position:absolute;inset:0;pointer-events:none;background:
+  radial-gradient(60% 34% at -6% 0%,color-mix(in srgb,var(--turq) 42%,transparent),transparent 62%),
+  radial-gradient(50% 30% at 106% 8%,color-mix(in srgb,var(--coral) 34%,transparent),transparent 62%),
+  radial-gradient(55% 32% at 104% 100%,color-mix(in srgb,var(--lilac) 40%,transparent),transparent 62%),
+  radial-gradient(45% 28% at -4% 100%,color-mix(in srgb,var(--yellow) 38%,transparent),transparent 62%)}
+.sl>*{position:relative}
+.sl>.bg{position:absolute}
+.c{text-align:center}
+.eyebrow{font-family:var(--body);font-weight:600;text-transform:uppercase;letter-spacing:.14em;font-size:28px;color:var(--dim)}
+.big{font-family:var(--display);text-transform:uppercase;font-weight:700;letter-spacing:.01em;line-height:.98;margin:0;color:var(--ink)}
+.big .lt{font-weight:400}
+.rainbow{background:var(--rb);-webkit-background-clip:text;background-clip:text;color:transparent}
+.body{font-size:40px;line-height:1.35;color:var(--muted);max-width:860px}
+.pane{background:var(--pane);border-radius:var(--r-xl);box-shadow:var(--shadow-card),var(--glass-inset);-webkit-backdrop-filter:blur(18px) saturate(1.4);backdrop-filter:blur(18px) saturate(1.4)}
+.list{display:flex;flex-direction:column;gap:22px;width:900px}
+.list div{padding:34px 42px;border-radius:var(--r-lg);text-align:left;background:var(--pane);box-shadow:var(--shadow-card),var(--glass-inset)}
+.list b{display:block;font-family:var(--display);text-transform:uppercase;letter-spacing:.06em;font-size:40px;font-weight:700;line-height:1.1}
+.list span{display:block;font-size:30px;line-height:1.35;color:var(--muted);margin-top:8px}
+.pills{display:flex;flex-wrap:wrap;justify-content:center;gap:18px;max-width:900px}
+.ct{padding:18px 34px;border-radius:999px;font-family:var(--body);font-weight:600;font-size:34px;color:var(--night);box-shadow:var(--shadow-card)}
+.btn{display:inline-flex;align-items:center;gap:14px;padding:28px 56px;border-radius:999px;font-family:var(--body);font-weight:600;font-size:40px;color:var(--night);background:var(--coral);box-shadow:0 10px 30px rgba(255,105,100,.35),inset 0 1px 0 rgba(255,255,255,.5)}
+.num{position:absolute;top:48px;right:64px;font-family:var(--body);font-weight:600;font-size:26px;letter-spacing:.14em;color:var(--dim)}
+.swipe{position:absolute;bottom:60px;right:64px;display:flex;align-items:center;gap:12px;font-family:var(--body);font-weight:600;text-transform:uppercase;letter-spacing:.14em;font-size:24px;color:var(--dim)}
+.swipe svg{width:40px;height:40px}
+.brand{position:absolute;bottom:60px;left:64px;display:flex;align-items:center;gap:14px;font-family:var(--wordmark);font-weight:500;text-transform:uppercase;letter-spacing:.2em;font-size:28px;color:var(--ink)}
+.brand b{font-weight:500;color:var(--amber)}
+.mark{width:36px;height:36px;flex:none;display:block}
+.tag{display:inline-block;padding:14px 30px;border-radius:999px;font-family:var(--body);font-weight:600;font-size:30px;letter-spacing:.02em}
+.sl.story{height:1920px}
+.sl.story .brand{bottom:120px;left:0;right:0;justify-content:center}
+.sl.story .num,.sl.story .swipe{display:none}
+.zone{width:760px;height:200px;border:4px dashed color-mix(in srgb,var(--ink) 30%,transparent);border-radius:var(--r-lg);display:flex;align-items:center;justify-content:center;color:var(--dim);font-weight:600;font-size:30px}
+.dark{background:rgba(20,24,41,.9);color:#fff;box-shadow:0 22px 50px rgba(20,24,41,.25),inset 0 1px 0 rgba(255,255,255,.14),inset 0 0 0 1px rgba(255,255,255,.08)}
+.dark .body,.dark span{color:#D5D8E4}
+.slam{font-family:var(--display);text-transform:uppercase;font-weight:700;font-size:150px;line-height:1;letter-spacing:.01em;color:var(--ink)}
+.qcard{width:900px;padding:52px 60px;border-radius:var(--r-xl);background:var(--pane);box-shadow:var(--shadow-card),var(--glass-inset)}
+.qcard p{font-size:46px;line-height:1.3;color:var(--ink)}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:24px;width:900px}
+.grid2 div{padding:34px 30px;border-radius:var(--r-lg);background:var(--pane);box-shadow:var(--shadow-card),var(--glass-inset);text-align:center}
+.grid2 b{display:block;font-family:var(--display);font-weight:700;font-size:130px;line-height:1}
+.grid2 span{display:block;font-family:var(--body);font-weight:600;text-transform:uppercase;letter-spacing:.14em;font-size:26px;color:var(--dim);margin-top:10px}
+.strike{position:relative;display:inline-block}
+.strike::after{content:"";position:absolute;left:-3%;right:-3%;top:52%;height:12px;border-radius:6px;background:var(--coral);transform:rotate(-4deg)}
+.nring{position:relative;width:520px;height:520px;border-radius:50%}
+.nring .fill{position:absolute;inset:0;border-radius:50%;background:conic-gradient(var(--coral),var(--orange),var(--yellow),var(--turq),var(--blue),var(--lilac),var(--coral));-webkit-mask:conic-gradient(#000 94%,transparent 0);mask:conic-gradient(#000 94%,transparent 0)}
+.nring .track{position:absolute;inset:0;border-radius:50%;background:rgba(20,24,41,.07)}
+.nring .hole{position:absolute;inset:66px;border-radius:50%;background:var(--surface);box-shadow:var(--glass-inset);display:flex;flex-direction:column;align-items:center;justify-content:center}
+.nring b{font-family:var(--display);font-weight:700;font-size:190px;line-height:1;color:var(--ink)}
+.badge-big{padding:16px 34px;border-radius:999px;background:color-mix(in srgb,var(--turq) 22%,#fff);color:var(--turqInk);font-family:var(--body);font-weight:600;font-size:36px}
+.map{position:relative;width:880px;height:520px;border-radius:var(--r-xl);background:var(--subtle);overflow:hidden;box-shadow:var(--shadow-card),var(--glass-inset)}
+.map .st{position:absolute;background:#fff}
+.map .pin{position:absolute;width:64px;height:64px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:var(--display);font-weight:700;font-size:28px;color:var(--night)}
+.map .ring{position:absolute;border-radius:50%;border:4px dashed color-mix(in srgb,var(--coral) 80%,transparent);background:color-mix(in srgb,var(--coral) 14%,transparent)}
+
+</style>
+</head>
+<body>
+<svg style="position:absolute;width:0;height:0" aria-hidden="true"><defs><svg style="position:absolute;width:0;height:0" aria-hidden="true"><defs><symbol id="radarmark" viewBox="0 0 100 100"><defs><linearGradient id="swm" gradientUnits="userSpaceOnUse" x1="21.42" y1="33.50" x2="68.93" y2="22.97"><stop offset="0" stop-color="#49dcc0" stop-opacity="0"/><stop offset="1" stop-color="#49dcc0" stop-opacity=".55"/></linearGradient></defs><path d="M50.00 2.00A48 48 0 0 1 58.64 2.78L56.30 15.57A35 35 0 0 0 50.00 15.00Z" fill="#ff6964"/><path d="M56.27 2.41A48 48 0 0 1 64.73 4.31L60.74 16.69A35 35 0 0 0 54.57 15.30Z" fill="#ff7062"/><path d="M62.42 3.64A48 48 0 0 1 70.56 6.63L64.99 18.37A35 35 0 0 0 59.06 16.19Z" fill="#ff7760"/><path d="M68.37 5.65A48 48 0 0 1 76.05 9.68L68.99 20.60A35 35 0 0 0 63.39 17.66Z" fill="#ff7f5d"/><path d="M74.00 8.43A48 48 0 0 1 81.09 13.43L72.67 23.33A35 35 0 0 0 67.50 19.69Z" fill="#ff875c"/><path d="M79.22 11.92A48 48 0 0 1 85.60 17.80L75.95 26.52A35 35 0 0 0 71.31 22.23Z" fill="#ff8e5a"/><path d="M83.94 16.06A48 48 0 0 1 89.49 22.72L78.80 30.11A35 35 0 0 0 74.75 25.25Z" fill="#ff9558"/><path d="M88.08 20.78A48 48 0 0 1 92.72 28.11L81.15 34.04A35 35 0 0 0 77.77 28.69Z" fill="#ff9c55"/><path d="M91.57 26.00A48 48 0 0 1 95.21 33.87L82.96 38.24A35 35 0 0 0 80.31 32.50Z" fill="#ffa353"/><path d="M94.35 31.63A48 48 0 0 1 96.93 39.91L84.22 42.64A35 35 0 0 0 82.34 36.61Z" fill="#ffa955"/><path d="M96.36 37.58A48 48 0 0 1 97.84 46.12L84.89 47.17A35 35 0 0 0 83.81 40.94Z" fill="#ffae58"/><path d="M97.59 43.73A48 48 0 0 1 97.94 52.40L84.96 51.75A35 35 0 0 0 84.70 45.43Z" fill="#ffb35a"/><path d="M98.00 50.00A48 48 0 0 1 97.22 58.64L84.43 56.30A35 35 0 0 0 85.00 50.00Z" fill="#ffb95d"/><path d="M97.59 56.27A48 48 0 0 1 95.69 64.73L83.31 60.74A35 35 0 0 0 84.70 54.57Z" fill="#ffbf5f"/><path d="M96.36 62.42A48 48 0 0 1 93.37 70.56L81.63 64.99A35 35 0 0 0 83.81 59.06Z" fill="#ffc561"/><path d="M94.35 68.37A48 48 0 0 1 90.32 76.05L79.40 68.99A35 35 0 0 0 82.34 63.39Z" fill="#ffc964"/><path d="M91.57 74.00A48 48 0 0 1 86.57 81.09L76.67 72.67A35 35 0 0 0 80.31 67.50Z" fill="#ffd066"/><path d="M88.08 79.22A48 48 0 0 1 82.20 85.60L73.48 75.95A35 35 0 0 0 77.77 71.31Z" fill="#efd46c"/><path d="M83.94 83.94A48 48 0 0 1 77.28 89.49L69.89 78.80A35 35 0 0 0 74.75 74.75Z" fill="#d7d679"/><path d="M79.22 88.08A48 48 0 0 1 71.89 92.72L65.96 81.15A35 35 0 0 0 71.31 77.77Z" fill="#bed582"/><path d="M74.00 91.57A48 48 0 0 1 66.13 95.21L61.76 82.96A35 35 0 0 0 67.50 80.31Z" fill="#a3d38c"/><path d="M68.37 94.35A48 48 0 0 1 60.09 96.93L57.36 84.22A35 35 0 0 0 63.39 82.34Z" fill="#8bd296"/><path d="M62.42 96.36A48 48 0 0 1 53.88 97.84L52.83 84.89A35 35 0 0 0 59.06 83.81Z" fill="#74d6a4"/><path d="M56.27 97.59A48 48 0 0 1 47.60 97.94L48.25 84.96A35 35 0 0 0 54.57 84.70Z" fill="#5fd9b2"/><path d="M50.00 98.00A48 48 0 0 1 41.36 97.22L43.70 84.43A35 35 0 0 0 50.00 85.00Z" fill="#49dcc0"/><path d="M43.73 97.59A48 48 0 0 1 35.27 95.69L39.26 83.31A35 35 0 0 0 45.43 84.70Z" fill="#4cd7ca"/><path d="M37.58 96.36A48 48 0 0 1 29.44 93.37L35.01 81.63A35 35 0 0 0 40.94 83.81Z" fill="#4fd2d4"/><path d="M31.63 94.35A48 48 0 0 1 23.95 90.32L31.01 79.40A35 35 0 0 0 36.61 82.34Z" fill="#4fcbdc"/><path d="M26.00 91.57A48 48 0 0 1 18.91 86.57L27.33 76.67A35 35 0 0 0 32.50 80.31Z" fill="#50c4e4"/><path d="M20.78 88.08A48 48 0 0 1 14.40 82.20L24.05 73.48A35 35 0 0 0 28.69 77.77Z" fill="#51bcec"/><path d="M16.06 83.94A48 48 0 0 1 10.51 77.28L21.20 69.89A35 35 0 0 0 25.25 74.75Z" fill="#52b4f5"/><path d="M11.92 79.22A48 48 0 0 1 7.28 71.89L18.85 65.96A35 35 0 0 0 22.23 71.31Z" fill="#52aefd"/><path d="M8.43 74.00A48 48 0 0 1 4.79 66.13L17.04 61.76A35 35 0 0 0 19.69 67.50Z" fill="#59a7ff"/><path d="M5.65 68.37A48 48 0 0 1 3.07 60.09L15.78 57.36A35 35 0 0 0 17.66 63.39Z" fill="#63a3ff"/><path d="M3.64 62.42A48 48 0 0 1 2.16 53.88L15.11 52.83A35 35 0 0 0 16.19 59.06Z" fill="#6b9fff"/><path d="M2.41 56.27A48 48 0 0 1 2.06 47.60L15.04 48.25A35 35 0 0 0 15.30 54.57Z" fill="#759aff"/><path d="M2.00 50.00A48 48 0 0 1 2.78 41.36L15.57 43.70A35 35 0 0 0 15.00 50.00Z" fill="#7d96ff"/><path d="M2.41 43.73A48 48 0 0 1 4.31 35.27L16.69 39.26A35 35 0 0 0 15.30 45.43Z" fill="#8791ff"/><path d="M3.64 37.58A48 48 0 0 1 6.63 29.44L18.37 35.01A35 35 0 0 0 16.19 40.94Z" fill="#908dff"/><path d="M5.65 31.63A48 48 0 0 1 9.68 23.95L20.60 31.01A35 35 0 0 0 17.66 36.61Z" fill="#9d8bff"/><path d="M8.43 26.00A48 48 0 0 1 13.43 18.91L23.33 27.33A35 35 0 0 0 19.69 32.50Z" fill="#a889ff"/><path d="M11.92 20.78A48 48 0 0 1 17.80 14.40L26.52 24.05A35 35 0 0 0 22.23 28.69Z" fill="#b684f0"/><path d="M16.06 16.06A48 48 0 0 1 22.72 10.51L30.11 21.20A35 35 0 0 0 25.25 25.25Z" fill="#c681dd"/><path d="M20.78 11.92A48 48 0 0 1 28.11 7.28L34.04 18.85A35 35 0 0 0 28.69 22.23Z" fill="#d37eca"/><path d="M26.00 8.43A48 48 0 0 1 33.87 4.79L38.24 17.04A35 35 0 0 0 32.50 19.69Z" fill="#de78b3"/><path d="M31.63 5.65A48 48 0 0 1 39.91 3.07L42.64 15.78A35 35 0 0 0 36.61 17.66Z" fill="#ea709b"/><path d="M37.58 3.64A48 48 0 0 1 46.12 2.16L47.17 15.11A35 35 0 0 0 40.94 16.19Z" fill="#f56a85"/><path d="M43.73 2.41A48 48 0 0 1 52.40 2.06L51.75 15.04A35 35 0 0 0 45.43 15.30Z" fill="#ff636e"/><g class="sw"><path d="M21.42 33.50A33 33 0 0 1 68.93 22.97L50.00 50.00A0 0 0 0 0 50.00 50.00Z" fill="url(#swm)"/><path d="M50 50L68.93 22.97" stroke="#49dcc0" stroke-width="1.6" stroke-linecap="round" stroke-opacity=".8"/></g><circle cx="50" cy="50" r="25" fill="none" stroke="#49dcc0" stroke-width=".8" stroke-opacity=".35"/><circle cx="66" cy="36" r="3.1" fill="#49dcc0"/><circle cx="63" cy="62" r="2.4" fill="#ff6964"/><circle cx="38" cy="34" r="1.9" fill="#49dcc0"/><circle cx="50" cy="50" r="13" fill="#0F1220"/><circle cx="46.1" cy="45.6" r="2.86" fill="#fff"/></symbol><symbol id="radarmin" viewBox="0 0 100 100"><path d="M50.00 1.00A49 49 0 0 1 58.82 1.80L55.58 19.51A31 31 0 0 0 50.00 19.00Z" fill="#ff6964"/><path d="M56.40 1.42A49 49 0 0 1 65.03 3.36L59.51 20.49A31 31 0 0 0 54.05 19.27Z" fill="#ff7062"/><path d="M62.68 2.67A49 49 0 0 1 70.99 5.72L63.28 21.99A31 31 0 0 0 58.02 20.06Z" fill="#ff7760"/><path d="M68.75 4.73A49 49 0 0 1 76.59 8.84L66.82 23.96A31 31 0 0 0 61.86 21.36Z" fill="#ff7f5d"/><path d="M74.50 7.56A49 49 0 0 1 81.73 12.67L70.08 26.38A31 31 0 0 0 65.50 23.15Z" fill="#ff875c"/><path d="M79.83 11.13A49 49 0 0 1 86.34 17.13L72.99 29.20A31 31 0 0 0 68.87 25.41Z" fill="#ff8e5a"/><path d="M84.65 15.35A49 49 0 0 1 90.32 22.15L75.51 32.38A31 31 0 0 0 71.92 28.08Z" fill="#ff9558"/><path d="M88.87 20.17A49 49 0 0 1 93.61 27.65L77.59 35.86A31 31 0 0 0 74.59 31.13Z" fill="#ff9c55"/><path d="M92.44 25.50A49 49 0 0 1 96.15 33.53L79.20 39.58A31 31 0 0 0 76.85 34.50Z" fill="#ffa353"/><path d="M95.27 31.25A49 49 0 0 1 97.91 39.70L80.31 43.48A31 31 0 0 0 78.64 38.14Z" fill="#ffa955"/><path d="M97.33 37.32A49 49 0 0 1 98.84 46.04L80.90 47.49A31 31 0 0 0 79.94 41.98Z" fill="#ffae58"/><path d="M98.58 43.60A49 49 0 0 1 98.94 52.45L80.96 51.55A31 31 0 0 0 80.73 45.95Z" fill="#ffb35a"/><path d="M99.00 50.00A49 49 0 0 1 98.20 58.82L80.49 55.58A31 31 0 0 0 81.00 50.00Z" fill="#ffb95d"/><path d="M98.58 56.40A49 49 0 0 1 96.64 65.03L79.51 59.51A31 31 0 0 0 80.73 54.05Z" fill="#ffbf5f"/><path d="M97.33 62.68A49 49 0 0 1 94.28 70.99L78.01 63.28A31 31 0 0 0 79.94 58.02Z" fill="#ffc561"/><path d="M95.27 68.75A49 49 0 0 1 91.16 76.59L76.04 66.82A31 31 0 0 0 78.64 61.86Z" fill="#ffc964"/><path d="M92.44 74.50A49 49 0 0 1 87.33 81.73L73.62 70.08A31 31 0 0 0 76.85 65.50Z" fill="#ffd066"/><path d="M88.87 79.83A49 49 0 0 1 82.87 86.34L70.80 72.99A31 31 0 0 0 74.59 68.87Z" fill="#efd46c"/><path d="M84.65 84.65A49 49 0 0 1 77.85 90.32L67.62 75.51A31 31 0 0 0 71.92 71.92Z" fill="#d7d679"/><path d="M79.83 88.87A49 49 0 0 1 72.35 93.61L64.14 77.59A31 31 0 0 0 68.87 74.59Z" fill="#bed582"/><path d="M74.50 92.44A49 49 0 0 1 66.47 96.15L60.42 79.20A31 31 0 0 0 65.50 76.85Z" fill="#a3d38c"/><path d="M68.75 95.27A49 49 0 0 1 60.30 97.91L56.52 80.31A31 31 0 0 0 61.86 78.64Z" fill="#8bd296"/><path d="M62.68 97.33A49 49 0 0 1 53.96 98.84L52.51 80.90A31 31 0 0 0 58.02 79.94Z" fill="#74d6a4"/><path d="M56.40 98.58A49 49 0 0 1 47.55 98.94L48.45 80.96A31 31 0 0 0 54.05 80.73Z" fill="#5fd9b2"/><path d="M50.00 99.00A49 49 0 0 1 41.18 98.20L44.42 80.49A31 31 0 0 0 50.00 81.00Z" fill="#49dcc0"/><path d="M43.60 98.58A49 49 0 0 1 34.97 96.64L40.49 79.51A31 31 0 0 0 45.95 80.73Z" fill="#4cd7ca"/><path d="M37.32 97.33A49 49 0 0 1 29.01 94.28L36.72 78.01A31 31 0 0 0 41.98 79.94Z" fill="#4fd2d4"/><path d="M31.25 95.27A49 49 0 0 1 23.41 91.16L33.18 76.04A31 31 0 0 0 38.14 78.64Z" fill="#4fcbdc"/><path d="M25.50 92.44A49 49 0 0 1 18.27 87.33L29.92 73.62A31 31 0 0 0 34.50 76.85Z" fill="#50c4e4"/><path d="M20.17 88.87A49 49 0 0 1 13.66 82.87L27.01 70.80A31 31 0 0 0 31.13 74.59Z" fill="#51bcec"/><path d="M15.35 84.65A49 49 0 0 1 9.68 77.85L24.49 67.62A31 31 0 0 0 28.08 71.92Z" fill="#52b4f5"/><path d="M11.13 79.83A49 49 0 0 1 6.39 72.35L22.41 64.14A31 31 0 0 0 25.41 68.87Z" fill="#52aefd"/><path d="M7.56 74.50A49 49 0 0 1 3.85 66.47L20.80 60.42A31 31 0 0 0 23.15 65.50Z" fill="#59a7ff"/><path d="M4.73 68.75A49 49 0 0 1 2.09 60.30L19.69 56.52A31 31 0 0 0 21.36 61.86Z" fill="#63a3ff"/><path d="M2.67 62.68A49 49 0 0 1 1.16 53.96L19.10 52.51A31 31 0 0 0 20.06 58.02Z" fill="#6b9fff"/><path d="M1.42 56.40A49 49 0 0 1 1.06 47.55L19.04 48.45A31 31 0 0 0 19.27 54.05Z" fill="#759aff"/><path d="M1.00 50.00A49 49 0 0 1 1.80 41.18L19.51 44.42A31 31 0 0 0 19.00 50.00Z" fill="#7d96ff"/><path d="M1.42 43.60A49 49 0 0 1 3.36 34.97L20.49 40.49A31 31 0 0 0 19.27 45.95Z" fill="#8791ff"/><path d="M2.67 37.32A49 49 0 0 1 5.72 29.01L21.99 36.72A31 31 0 0 0 20.06 41.98Z" fill="#908dff"/><path d="M4.73 31.25A49 49 0 0 1 8.84 23.41L23.96 33.18A31 31 0 0 0 21.36 38.14Z" fill="#9d8bff"/><path d="M7.56 25.50A49 49 0 0 1 12.67 18.27L26.38 29.92A31 31 0 0 0 23.15 34.50Z" fill="#a889ff"/><path d="M11.13 20.17A49 49 0 0 1 17.13 13.66L29.20 27.01A31 31 0 0 0 25.41 31.13Z" fill="#b684f0"/><path d="M15.35 15.35A49 49 0 0 1 22.15 9.68L32.38 24.49A31 31 0 0 0 28.08 28.08Z" fill="#c681dd"/><path d="M20.17 11.13A49 49 0 0 1 27.65 6.39L35.86 22.41A31 31 0 0 0 31.13 25.41Z" fill="#d37eca"/><path d="M25.50 7.56A49 49 0 0 1 33.53 3.85L39.58 20.80A31 31 0 0 0 34.50 23.15Z" fill="#de78b3"/><path d="M31.25 4.73A49 49 0 0 1 39.70 2.09L43.48 19.69A31 31 0 0 0 38.14 21.36Z" fill="#ea709b"/><path d="M37.32 2.67A49 49 0 0 1 46.04 1.16L47.49 19.10A31 31 0 0 0 41.98 20.06Z" fill="#f56a85"/><path d="M43.60 1.42A49 49 0 0 1 52.45 1.06L51.55 19.04A31 31 0 0 0 45.95 19.27Z" fill="#ff636e"/></symbol></defs></svg>
+</defs></svg>
+
+<section class="sl story">
+  <div class="bg"></div>
+  <div class="brand"><svg class="mark" viewBox="0 0 100 100"><use href="#radarmin"></use></svg><span>Iris<b>a</b></span></div>
+
+  <div class="eyebrow c" style="color:var(--turqInk)">Dicionário da Irisa</div>
+
+  <p class="big c" style="font-size:96px;margin:36px 0 18px"><span class="lt">Você sabe o que é</span></p>
+  <p class="slam" style="margin:0 0 20px"><span class="rainbow">Irisar</span><span style="color:var(--ink)">?</span></p>
+
+  <p class="body c" style="max-width:820px;margin-bottom:70px">Chuta aí. A resposta certa aparece na hora.</p>
+
+  <div class="zone" style="height:260px">adesivo de quiz</div>
+
+  <p class="body c" style="margin-top:80px;max-width:800px;font-size:34px;color:var(--dim)">
+    Quatro perguntas. Quem esteve lá responde.</p>
+</section>
+
+</body></html>

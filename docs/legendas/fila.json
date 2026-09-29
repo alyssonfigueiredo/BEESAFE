@@ -94,6 +94,19 @@
     "confirmado_em": "2026-09-28T18:30:26.642Z"
   },
   {
+    "id": "story-irisar",
+    "aprovado": false,
+    "quando": "2026-09-29T12:00:00-03:00",
+    "tipo": "STORY",
+    "midias": [
+      "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/story-irisar/01.png"
+    ],
+    "legenda": "",
+    "primeiro_comentario": "",
+    "publicado": false,
+    "nota": "Tem adesivo de quiz (O que é irisar? → Dar cor a um lugar / Brilhar na balada / Sair do armário). Precisa ir manual pelo app; não deixar o script publicar sozinho. Detalhes em docs/legendas/story-irisar.md."
+  },
+  {
     "id": "post-irisar",
     "aprovado": false,
     "quando": "2026-09-29T19:00:00-03:00",
