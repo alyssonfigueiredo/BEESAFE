@@ -1,0 +1,684 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Irisa: comunidade sem ódio</title>
+<meta name="description" content="Proposta para o Aly: transformar a Irisa numa comunidade que a gente abre toda semana, protegida pelo TybyrIA.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Urbanist:wght@500&family=Oswald:wght@500;700&family=Space+Grotesk:wght@400;500;700&display=swap">
+<style>
+
+  :root{
+    --paper:#F5F4F1;--ink:#141829;--muted:#3D4560;--dim:#7C8296;--night:#141829;
+    --coral:#FF6964;--orange:#FFA353;--yellow:#FFD066;--turq:#49DCC0;--blue:#59A7FF;--lilac:#A889FF;
+    --coral-ink:#C72825;--turq-ink:#0A8B7A;--lilac-ink:#6037F0;--yellow-ink:#9C6C00;
+    --display:"Oswald","Arial Narrow",Impact,sans-serif;--body:"Space Grotesk","Helvetica Neue",Arial,sans-serif;--wordmark:"Urbanist","Helvetica Neue",Arial,sans-serif;
+    --rb:linear-gradient(90deg,var(--coral),var(--orange),var(--yellow),var(--turq),var(--blue),var(--lilac));
+    color-scheme:light;
+  }
+  *{box-sizing:border-box}
+  html,body{height:100%}
+  body{margin:0;color:var(--ink);font-family:var(--body);-webkit-font-smoothing:antialiased;background:var(--paper);overflow:hidden;
+    background-image:
+      radial-gradient(60% 34% at -6% 0%,color-mix(in srgb,var(--turq) 42%,transparent),transparent 62%),
+      radial-gradient(50% 30% at 106% 8%,color-mix(in srgb,var(--coral) 34%,transparent),transparent 62%),
+      radial-gradient(55% 32% at 104% 100%,color-mix(in srgb,var(--lilac) 40%,transparent),transparent 62%),
+      radial-gradient(45% 28% at -4% 100%,color-mix(in srgb,var(--yellow) 38%,transparent),transparent 62%);}
+  @media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
+
+  .deck{position:fixed;inset:0;display:grid;grid-template-rows:auto auto 1fr auto;padding:env(safe-area-inset-top,0px) 0 env(safe-area-inset-bottom,0px)}
+  .top{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:16px 20px 8px}
+  .brand{display:flex;align-items:center;gap:10px;font:500 14px var(--wordmark);letter-spacing:.2em;text-transform:uppercase;color:var(--ink)}
+  .brand b{font-weight:500;color:var(--yellow-ink)}
+  .brand svg{width:24px;height:24px}
+  .brand small{font:400 12px var(--body);letter-spacing:0;text-transform:none;color:var(--dim);margin-left:4px}
+  @media (max-width:640px){.brand small{display:none}}
+  .count{font:600 12px var(--body);color:var(--dim);letter-spacing:.06em}
+  .progress{height:4px;margin:0 20px;border-radius:2px;background:rgba(20,24,41,.08);overflow:hidden}
+  .progress i{display:block;height:100%;width:0;border-radius:2px;background:var(--rb);background-size:200% 100%;transition:width .5s cubic-bezier(.2,.8,.2,1);animation:shimmer 7s linear infinite}
+
+  .stage{position:relative;min-height:0}
+  .slide{position:absolute;inset:12px 20px;overflow:auto;scrollbar-width:none;border-radius:32px;padding:34px 30px;
+    background:rgba(255,255,255,.62);box-shadow:0 2px 4px rgba(20,24,41,.03),0 16px 40px rgba(20,24,41,.07),inset 0 1px 0 #fff,inset 0 0 0 1px rgba(255,255,255,.8);
+    -webkit-backdrop-filter:blur(18px) saturate(1.4);backdrop-filter:blur(18px) saturate(1.4);
+    display:grid;gap:24px;align-content:center;opacity:0;pointer-events:none;transform:translateX(40px) scale(.98);transition:opacity .45s ease,transform .55s cubic-bezier(.2,.8,.2,1);visibility:hidden}
+  .slide::-webkit-scrollbar{display:none}
+  .slide.on{opacity:1;pointer-events:auto;transform:none;visibility:visible}
+  .slide.back{transform:translateX(-40px) scale(.98)}
+  .slide.dark{background:rgba(20,24,41,.9);color:#fff;box-shadow:0 22px 50px rgba(20,24,41,.25),inset 0 1px 0 rgba(255,255,255,.14),inset 0 0 0 1px rgba(255,255,255,.08)}
+  .slide.dark .eyebrow{color:rgba(255,255,255,.62)}
+  .slide.dark p{color:rgba(255,255,255,.78)}
+  .slide.two{grid-template-columns:1.1fr .9fr;align-items:center;column-gap:30px}
+  .slide.two.flip{grid-template-columns:.9fr 1.1fr}
+  .slide.two.flip>.txt{order:2}
+  @media (max-width:760px){.slide{inset:8px 12px;padding:22px 18px;border-radius:26px;align-content:start;gap:18px}.slide.two,.slide.two.flip{grid-template-columns:1fr}.slide.two.flip>.txt{order:0}}
+  .eyebrow{font:600 11px var(--body);letter-spacing:.1em;text-transform:uppercase;color:var(--dim);display:flex;align-items:center;gap:8px}
+  .eyebrow i{width:26px;height:4px;border-radius:2px;background:var(--rb);display:inline-block}
+  h1{font:700 clamp(40px,7.5vw,84px)/.98 var(--display);letter-spacing:.01em;text-transform:uppercase;margin:0;text-wrap:balance}
+  h2{font:700 clamp(28px,4.4vw,46px)/1.02 var(--display);letter-spacing:.01em;text-transform:uppercase;margin:0;text-wrap:balance}
+  h1 .w,h2 .w{display:inline-block}
+  p{font-size:clamp(15px,1.6vw,17px);line-height:1.55;color:var(--muted);margin:0;max-width:60ch}
+  p b{color:var(--ink);font-weight:700}
+  .slide.dark p b{color:#fff}
+  .rb{background:var(--rb);-webkit-background-clip:text;background-clip:text;color:transparent;background-size:200% 100%;animation:shimmer 7s linear infinite}
+  .rbline{height:5px;width:96px;border-radius:3px;background:var(--rb);background-size:200% 100%;animation:shimmer 7s linear infinite}
+  .txt{display:grid;gap:14px;align-content:center}
+  .note{font-size:13.5px;color:var(--dim);line-height:1.5}
+  .slide.dark .note{color:rgba(255,255,255,.55)}
+
+  .phones{display:flex;gap:18px;justify-content:center;align-items:flex-start;flex-wrap:wrap}
+  .ph{display:grid;gap:8px;justify-items:center;flex:1 1 180px;max-width:min(280px,38vh)}
+  .ph img{width:100%;height:auto;border-radius:34px;box-shadow:0 30px 60px rgba(20,24,41,.28);display:block}
+  .ph .cap{font:600 13px var(--body);color:var(--ink);text-align:center}
+  .ph .cap small{display:block;font-weight:400;color:var(--dim);font-size:12px}
+  .slide.dark .ph .cap{color:#fff}.slide.dark .ph .cap small{color:rgba(255,255,255,.55)}
+  .ph.sm{max-width:min(220px,30vh)}
+  .strip{width:100%;max-width:560px;border-radius:24px;box-shadow:0 20px 50px rgba(20,24,41,.22);display:block;margin:0 auto}
+  .arrow{align-self:center;font:700 34px var(--display);color:var(--dim);padding:0 4px}
+  @media (max-width:760px){.arrow{display:none}.ph{max-width:200px}.ph.sm{max-width:150px}}
+
+  .pal{display:grid;grid-template-columns:repeat(5,1fr);gap:10px}
+  .sw{display:grid;gap:6px;justify-items:center;font:600 11px var(--body);color:var(--muted)}
+  .sw i{width:100%;aspect-ratio:1;border-radius:16px;display:block;box-shadow:inset 0 1px 0 rgba(255,255,255,.5)}
+  .sw small{font-weight:400;color:var(--dim)}
+  .pal-title{font:600 12px var(--body);letter-spacing:.08em;text-transform:uppercase;color:var(--dim)}
+
+  ul.list{margin:0;padding:0;list-style:none;display:grid;gap:10px}
+  ul.list li{display:flex;gap:12px;align-items:flex-start;font-size:15.5px;line-height:1.45;color:var(--muted)}
+  ul.list li::before{content:"";flex:none;width:10px;height:10px;border-radius:50%;margin-top:8px;background:var(--rb)}
+  ul.list li b{color:var(--ink)}
+  .slide.dark ul.list li{color:rgba(255,255,255,.8)}.slide.dark ul.list li b{color:#fff}
+
+  .cta{display:inline-flex;align-items:center;gap:10px;justify-self:start;border-radius:999px;padding:16px 22px;font:700 17px var(--body);color:var(--night);background:var(--turq);text-decoration:none;box-shadow:0 10px 26px rgba(73,220,192,.35);transition:transform .15s}
+  .cta:hover{transform:translateY(-1px)}
+  .cta svg{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+  .steps{display:grid;gap:8px;font-size:15px;color:var(--muted)}
+  .steps span{display:flex;gap:10px;align-items:baseline}
+  .steps b{font:700 13px var(--body);color:var(--night);background:var(--yellow);border-radius:999px;padding:2px 9px;flex:none}
+  .sig{font:700 clamp(28px,5vw,44px)/1 var(--display);text-transform:uppercase;letter-spacing:.02em}
+  .kiss{font-size:15px;color:var(--dim)}
+  .pill{display:inline-block;font:600 12px var(--body);padding:5px 11px;border-radius:999px;background:rgba(20,24,41,.08);color:var(--ink)}
+  .slide.dark .pill{background:rgba(255,255,255,.14);color:#fff}
+  .hint{font:500 13px var(--body);color:var(--dim)}
+  .aviso{justify-self:start;font-size:14.5px;line-height:1.5;color:var(--night);background:var(--yellow);border-radius:18px;padding:12px 16px;max-width:60ch}
+  .aviso b{color:var(--night)}
+
+  /* abertura: coração arco-íris que se desenha, bate e revela o deck */
+  .intro{position:fixed;inset:0;z-index:200;display:grid;place-items:center;background:var(--paper);cursor:pointer;
+    background-image:radial-gradient(60% 34% at -6% 0%,color-mix(in srgb,var(--turq) 42%,transparent),transparent 62%),radial-gradient(50% 30% at 106% 8%,color-mix(in srgb,var(--coral) 34%,transparent),transparent 62%),radial-gradient(55% 32% at 104% 100%,color-mix(in srgb,var(--lilac) 40%,transparent),transparent 62%),radial-gradient(45% 28% at -4% 100%,color-mix(in srgb,var(--yellow) 38%,transparent),transparent 62%);
+    animation:introout .7s ease 3.5s forwards}
+  .intro.skip{animation:introout .4s ease forwards}
+  @keyframes introout{to{opacity:0;visibility:hidden}}
+  .intro .heart{width:min(46vw,260px);height:auto;overflow:visible;animation:beat .55s ease-in-out 1.7s 2,blowup 1s cubic-bezier(.7,0,.3,1) 2.9s forwards}
+  @keyframes beat{50%{transform:scale(1.12)}}
+  @keyframes blowup{to{transform:scale(28);opacity:0}}
+  .intro .outline{fill:none;stroke:url(#rbg);stroke-width:3;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:330;stroke-dashoffset:330;animation:draw 1.3s cubic-bezier(.4,0,.2,1) .2s forwards}
+  @keyframes draw{to{stroke-dashoffset:0}}
+  .intro .fillh{fill:url(#rbg);opacity:0;transform-origin:50px 55px;transform:scale(.6);animation:fillin .6s cubic-bezier(.2,.9,.3,1.3) 1.2s forwards}
+  @keyframes fillin{to{opacity:1;transform:none}}
+  .intro .shine{fill:#fff;opacity:0;animation:fillin .5s ease 1.6s forwards}
+  .intro .who{position:absolute;bottom:18%;left:0;right:0;text-align:center;font:500 15px var(--wordmark);letter-spacing:.3em;text-transform:uppercase;color:var(--ink);opacity:0;animation:rise .6s ease 1.9s both,introout .3s ease 2.9s forwards}
+  .intro .mini{position:absolute;width:18px;height:18px;fill:var(--c);opacity:0;animation:fly 1.6s ease-out var(--t) forwards}
+  @keyframes fly{0%{opacity:0;transform:translate(0,0) scale(.4)}20%{opacity:1}100%{opacity:0;transform:translate(var(--x),var(--y)) scale(1.1) rotate(var(--r))}}
+  /* navegação */
+  .nav{display:flex;align-items:center;justify-content:center;gap:14px;padding:10px 20px 16px}
+  .nb{width:44px;height:44px;border-radius:50%;border:0;background:rgba(255,255,255,.7);box-shadow:0 4px 14px rgba(20,24,41,.10),inset 0 0 0 1px rgba(255,255,255,.8);cursor:pointer;display:grid;place-items:center;-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px)}
+  .nb svg{width:20px;height:20px;stroke:var(--ink);fill:none;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+  .nb:disabled{opacity:.35;cursor:default}
+  .dots{display:flex;gap:6px}
+  .dots button{width:8px;height:8px;border-radius:50%;border:0;padding:0;background:rgba(20,24,41,.18);cursor:pointer;transition:transform .2s,background .2s}
+  .dots button.on{background:var(--ink);transform:scale(1.35)}
+
+  /* entradas: tudo visível em repouso; a animação parte do visível para o lugar */
+  .slide.on [data-a]{animation:rise .65s cubic-bezier(.2,.8,.2,1) both;animation-delay:calc(var(--d,0) * 80ms)}
+  @keyframes rise{from{opacity:0;transform:translateY(14px)}}
+  .slide.on h1 .w,.slide.on h2 .w{animation:word .6s cubic-bezier(.2,.8,.2,1) both;animation-delay:calc(var(--w,0) * 60ms + 120ms)}
+  @keyframes word{from{opacity:0;transform:translateY(.4em) rotate(2deg)}}
+  .slide.on .ph{animation:rise .7s cubic-bezier(.2,.8,.2,1) both;animation-delay:calc(var(--d,0) * 140ms + 200ms)}
+  .slide.on .ph img{animation:float 6s ease-in-out infinite;animation-delay:calc(var(--d,0) * .7s)}
+  @keyframes float{50%{transform:translateY(-8px)}}
+  .slide.on .sw{animation:pop .5s cubic-bezier(.2,.9,.3,1.3) both;animation-delay:calc(var(--d,0) * 70ms + 200ms)}
+  @keyframes pop{from{opacity:0;transform:scale(.6)}}
+  .slide.on .arrow{animation:rise .5s both;animation-delay:calc(var(--d,0) * 140ms + 320ms)}
+  .slide.on .strip{animation:slidein .8s cubic-bezier(.2,.8,.2,1) both;animation-delay:.3s}
+  @keyframes slidein{from{opacity:0;transform:translateX(-30px)}}
+  .slide.on .cta{animation:rise .6s both .5s,pulse 2.6s ease-in-out 1.4s infinite}
+  @keyframes pulse{50%{box-shadow:0 10px 26px rgba(73,220,192,.35),0 0 0 10px rgba(73,220,192,.14)}}
+  .slide.on ul.list li{animation:rise .55s both;animation-delay:calc(var(--d,0) * 90ms + 200ms)}
+  .slide.on .steps span{animation:rise .55s both;animation-delay:calc(var(--d,0) * 90ms + 200ms)}
+  @keyframes shimmer{to{background-position:-200% 0}}
+  .slide.on .gray{animation:decolor 1.4s ease both .9s}
+  @keyframes decolor{from{filter:grayscale(1)}to{filter:grayscale(1)}}
+
+  /* ===== peças desta apresentação ===== */
+  .slide{align-content:center}
+  .cards{display:grid;gap:14px}
+  .cards.c3{grid-template-columns:repeat(3,1fr)}
+  .cards.c4{grid-template-columns:repeat(4,1fr)}
+  @media (max-width:900px){.cards.c3,.cards.c4{grid-template-columns:1fr 1fr}}
+  @media (max-width:560px){.cards.c3,.cards.c4{grid-template-columns:1fr}}
+  .card{background:rgba(255,255,255,.78);border-radius:22px;padding:18px 18px 16px;display:grid;gap:6px;align-content:start;
+    box-shadow:0 2px 4px rgba(20,24,41,.03),0 12px 28px rgba(20,24,41,.07),inset 0 1px 0 #fff;border-top:6px solid var(--c,var(--turq))}
+  .card h3{margin:0;font:700 17px/1.2 var(--body);color:var(--ink)}
+  .card p{font-size:14.5px;line-height:1.45}
+  .card .tag{justify-self:start;font:700 11px var(--body);letter-spacing:.06em;text-transform:uppercase;padding:4px 9px;border-radius:999px;background:color-mix(in srgb,var(--c,var(--turq)) 22%,transparent);color:var(--ci,var(--turq-ink))}
+  .slide.dark .card{background:rgba(255,255,255,.07);box-shadow:inset 0 1px 0 rgba(255,255,255,.1)}
+  .slide.dark .card h3{color:#fff}
+  .slide.on .card{animation:pop .55s cubic-bezier(.2,.9,.3,1.25) both;animation-delay:calc(var(--d,0) * 90ms + 250ms)}
+  .card.dark{background:var(--night);border-top-color:var(--c)}.card.dark h3{color:#fff}.card.dark p{color:rgba(255,255,255,.75)}
+
+  /* semana: hoje × com comunidade */
+  .week{display:grid;gap:14px}
+  .week .row{display:grid;gap:8px}
+  .week .lab{font:600 12px var(--body);letter-spacing:.06em;text-transform:uppercase;color:var(--dim)}
+  .days{display:grid;grid-template-columns:repeat(7,1fr);gap:8px}
+  .days i{aspect-ratio:1;border-radius:14px;background:rgba(20,24,41,.08);display:grid;place-items:center;font:600 12px var(--body);color:var(--dim);font-style:normal}
+  .days i.on{background:var(--c);color:var(--night)}
+  .slide.on .days.full i{animation:lightup .5s cubic-bezier(.2,.9,.3,1.3) both;animation-delay:calc(var(--d) * 160ms + 700ms)}
+  @keyframes lightup{from{background:rgba(20,24,41,.08);color:var(--dim);transform:scale(.8)}}
+
+  /* fluxo com pacote andando */
+  .flow{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;position:relative;align-items:stretch}
+  @media (max-width:760px){.flow{grid-template-columns:1fr}}
+  .node{position:relative;z-index:1;background:rgba(255,255,255,.85);border-radius:20px;padding:16px 14px;display:grid;gap:4px;text-align:center;box-shadow:0 10px 24px rgba(20,24,41,.08)}
+  .node b{font:700 15px var(--body)}
+  .node small{font-size:12.5px;color:var(--dim)}
+  .node.ia{background:var(--night);color:#fff}.node.ia small{color:rgba(255,255,255,.6)}.node.ia b{color:var(--lilac)}
+  .slide.on .node{animation:rise .5s both;animation-delay:calc(var(--d) * 140ms + 200ms)}
+  .track{position:absolute;left:8%;right:8%;top:50%;height:3px;border-radius:2px;background:repeating-linear-gradient(90deg,rgba(20,24,41,.18) 0 8px,transparent 8px 14px);z-index:0}
+  .packet{position:absolute;top:50%;left:8%;width:16px;height:16px;margin:-8px 0 0 -8px;border-radius:50%;background:var(--rb);box-shadow:0 0 0 6px rgba(168,137,255,.18);z-index:2}
+  .slide.on .packet{animation:travel 3.2s cubic-bezier(.5,0,.5,1) 1s infinite}
+  @keyframes travel{0%{left:8%;opacity:0}8%{opacity:1}70%{left:92%;opacity:1}80%,100%{left:92%;opacity:0}}
+  @media (max-width:760px){.track,.packet{display:none}}
+  .outs{display:flex;gap:10px;flex-wrap:wrap}
+  .out{font:700 13.5px var(--body);padding:10px 16px;border-radius:999px}
+  .slide.on .out{animation:pop .5s cubic-bezier(.2,.9,.3,1.3) both;animation-delay:calc(var(--d) * 150ms + 1.1s)}
+
+  /* régua da nota */
+  .gauge{position:relative;height:56px;border-radius:18px;overflow:hidden;display:grid;grid-template-columns:30fr 10fr 10fr 50fr;box-shadow:inset 0 0 0 1px rgba(20,24,41,.06)}
+  .gauge span{display:grid;place-items:center;font:700 12px var(--body);color:var(--night)}
+  .needle{position:absolute;top:-6px;bottom:-6px;width:4px;border-radius:2px;background:var(--night);left:5%;box-shadow:0 0 0 3px rgba(255,255,255,.8)}
+  .slide.on .needle{animation:needle 5s cubic-bezier(.6,0,.4,1) .8s infinite}
+  @keyframes needle{0%{left:5%}20%{left:22%}40%{left:35%}60%{left:46%}80%{left:78%}100%{left:5%}}
+  .ticks{display:flex;font:600 12px var(--body);color:var(--dim);padding:0 2px}
+  .bands{display:grid;gap:8px}
+  .band{display:grid;grid-template-columns:120px 1fr;gap:12px;align-items:center;background:rgba(255,255,255,.7);border-radius:16px;padding:10px 14px}
+  .band b{font:700 14px var(--body);color:var(--night);padding:6px 10px;border-radius:999px;text-align:center;background:var(--c)}
+  .band span{font-size:14.5px;color:var(--muted)}
+  .slide.on .band{animation:slidein .5s both;animation-delay:calc(var(--d) * 110ms + 400ms)}
+
+  /* grupos, agenda, cheguei bem */
+  .trio{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+  @media (max-width:900px){.trio{grid-template-columns:1fr}}
+  .pane{background:rgba(255,255,255,.07);border-radius:24px;padding:18px;display:grid;gap:12px;align-content:start;box-shadow:inset 0 1px 0 rgba(255,255,255,.1);border-top:6px solid var(--c)}
+  .pane h3{margin:0;font:700 22px/1.1 var(--display);text-transform:uppercase;color:#fff}
+  .pane p{font-size:14.5px}
+  .pane .why{font:700 12px var(--body);letter-spacing:.06em;text-transform:uppercase;color:var(--c)}
+  .slide.on .pane{animation:rise .6s both;animation-delay:calc(var(--d) * 150ms + 250ms)}
+  .viz{height:120px;border-radius:18px;background:rgba(255,255,255,.06);position:relative;overflow:hidden}
+  .bub{position:absolute;border-radius:50%;display:grid;place-items:center;font:700 12px var(--body);color:var(--night)}
+  .slide.on .bub{animation:pop .5s cubic-bezier(.2,.9,.3,1.3) both,float 5s ease-in-out infinite;animation-delay:calc(var(--d) * 180ms + 700ms),calc(var(--d) * .6s)}
+  .cal{position:absolute;inset:14px;display:grid;grid-template-columns:repeat(7,1fr);gap:5px}
+  .cal i{border-radius:6px;background:rgba(255,255,255,.1)}
+  .cal i.ev{background:var(--yellow)}
+  .slide.on .cal i.ev{animation:pop .45s cubic-bezier(.2,.9,.3,1.4) both;animation-delay:calc(var(--d) * 200ms + 800ms)}
+  .route{position:absolute;inset:0}
+  .route path{fill:none;stroke:rgba(255,255,255,.28);stroke-width:3;stroke-dasharray:6 7}
+  .walker{offset-path:path("M20 96 C 70 96, 80 30, 140 44 S 220 90, 262 30");offset-rotate:0deg;position:absolute;left:0;top:0;width:16px;height:16px;margin:-8px;border-radius:50%;background:var(--turq);box-shadow:0 0 0 6px rgba(73,220,192,.22)}
+  .slide.on .walker{animation:walk 3.6s ease-in-out .8s infinite}
+  @keyframes walk{0%{offset-distance:0%}75%,100%{offset-distance:100%}}
+  .ok{position:absolute;right:12px;top:10px;font:700 12px var(--body);background:var(--turq);color:var(--night);padding:6px 10px;border-radius:999px;opacity:0}
+  .slide.on .ok{animation:okin 3.6s ease-in-out .8s infinite}
+  @keyframes okin{0%,72%{opacity:0;transform:scale(.7)}80%,95%{opacity:1;transform:none}100%{opacity:0}}
+
+  /* mural */
+  .mural{display:grid;gap:10px}
+  .msg{background:rgba(255,255,255,.85);border-radius:20px 20px 20px 6px;padding:14px 16px;box-shadow:0 10px 24px rgba(20,24,41,.08);display:grid;gap:8px;max-width:420px}
+  .msg.me{justify-self:end;border-radius:20px 20px 6px 20px;background:var(--night);color:#fff}
+  .msg p{font-size:15px;color:inherit}
+  .msg small{font:600 12px var(--body);color:var(--dim)}
+  .reacts{display:flex;gap:6px}
+  .reacts span{font-size:13px;background:rgba(20,24,41,.06);padding:3px 9px;border-radius:999px}
+  .slide.on .msg{animation:rise .5s both;animation-delay:calc(var(--d) * 450ms + 300ms)}
+  .slide.on .reacts span{animation:pop .4s cubic-bezier(.2,.9,.3,1.5) both;animation-delay:calc(var(--d) * 160ms + 1.8s)}
+  .menu{display:grid;gap:8px}
+  .item{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center;background:rgba(255,255,255,.72);border-radius:16px;padding:11px 14px}
+  .item b{font:700 14.5px var(--body)}.item span{font-size:13px;color:var(--muted);display:block;font-weight:400}
+  .eff{font:700 11px var(--body);letter-spacing:.06em;text-transform:uppercase;padding:5px 9px;border-radius:999px;color:var(--night);background:var(--c)}
+  .slide.on .item{animation:slidein .45s both;animation-delay:calc(var(--d) * 80ms + 300ms)}
+
+  /* linha do tempo */
+  .tl{position:relative;display:grid;grid-template-columns:repeat(4,1fr);gap:14px;padding-top:26px}
+  @media (max-width:900px){.tl{grid-template-columns:1fr 1fr}}
+  .tl::before{content:"";position:absolute;left:0;top:8px;height:5px;border-radius:3px;width:0;background:var(--rb)}
+  .slide.on .tl::before{animation:grow 1.8s cubic-bezier(.4,0,.2,1) .4s forwards}
+  @keyframes grow{to{width:100%}}
+  .ph4{position:relative;background:rgba(255,255,255,.8);border-radius:22px;padding:16px;display:grid;gap:6px;align-content:start;box-shadow:0 12px 28px rgba(20,24,41,.07)}
+  .ph4::before{content:"";position:absolute;top:-24px;left:18px;width:14px;height:14px;border-radius:50%;background:var(--c);box-shadow:0 0 0 5px rgba(255,255,255,.9)}
+  .ph4 .wk{font:700 12px var(--body);color:var(--ci)}
+  .ph4 h3{margin:0;font:700 22px/1 var(--display);text-transform:uppercase}
+  .ph4 p{font-size:14px;line-height:1.45}
+  .ph4.dark{background:var(--night)}.ph4.dark h3{color:#fff}.ph4.dark p{color:rgba(255,255,255,.75)}
+  .slide.on .ph4{animation:rise .55s both;animation-delay:calc(var(--d) * 380ms + 500ms)}
+
+  /* parceria */
+  .deal{display:grid;grid-template-columns:1fr auto 1fr;gap:16px;align-items:center}
+  @media (max-width:760px){.deal{grid-template-columns:1fr}}
+  .side{background:rgba(255,255,255,.8);border-radius:24px;padding:18px;display:grid;gap:10px;box-shadow:0 12px 28px rgba(20,24,41,.07)}
+  .side h3{margin:0;font:700 18px var(--body);color:var(--ci)}
+  .swap{display:grid;place-items:center;gap:6px}
+  .swap i{display:block;width:54px;height:54px;border-radius:50%;background:var(--rb);background-size:200% 100%;animation:shimmer 5s linear infinite;box-shadow:0 10px 24px rgba(168,137,255,.3)}
+  .slide.on .swap i{animation:shimmer 5s linear infinite,beat2 1.6s ease-in-out 1s infinite}
+  @keyframes beat2{50%{transform:scale(1.12)}}
+  .slide.on .side{animation:rise .55s both;animation-delay:calc(var(--d) * 200ms + 250ms)}
+
+  /* termômetro ilustrativo */
+  .thermo{display:grid;gap:10px}
+  .bar2{display:grid;grid-template-columns:110px 1fr;gap:10px;align-items:center}
+  .bar2 span{font:600 13px var(--body);color:rgba(255,255,255,.75)}
+  .bar2 i{display:block;height:22px;border-radius:11px;background:var(--c);width:var(--w)}
+  .slide.on .bar2 i{animation:barin 1s cubic-bezier(.2,.8,.2,1) both;animation-delay:calc(var(--d) * 150ms + 500ms)}
+  @keyframes barin{from{width:0}}
+  .dates{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+  .date{background:rgba(255,255,255,.08);border-radius:16px;padding:10px 12px;display:grid;gap:2px}
+  .date b{font:700 20px var(--display);color:var(--c)}
+  .date span{font-size:13px;color:rgba(255,255,255,.75)}
+  .slide.on .date{animation:pop .5s cubic-bezier(.2,.9,.3,1.3) both;animation-delay:calc(var(--d) * 120ms + 900ms)}
+
+  /* cuidados */
+  .care{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+  @media (max-width:900px){.care{grid-template-columns:1fr 1fr}}
+  @media (max-width:560px){.care{grid-template-columns:1fr}}
+  .fix{background:rgba(255,255,255,.8);border-radius:20px;padding:14px 16px;display:grid;gap:6px;align-content:start;box-shadow:0 10px 24px rgba(20,24,41,.07);border-left:6px solid var(--c)}
+  .fix h3{margin:0;font:700 15.5px var(--body)}
+  .fix .r{font-size:13.5px;line-height:1.4;color:var(--muted)}
+  .fix .a{font-size:13.5px;line-height:1.4;color:var(--ink)}
+  .fix .a::before{content:"Ajuste: ";font-weight:700;color:var(--turq-ink)}
+  .slide.on .fix{animation:pop .5s cubic-bezier(.2,.9,.3,1.2) both;animation-delay:calc(var(--d) * 90ms + 250ms)}
+
+  /* roda de ganhos */
+  .wheel{position:relative;width:min(420px,78vw);aspect-ratio:1;margin:0 auto;--R:calc(min(420px, 78vw) * .37)}
+  .wheel .ring{position:absolute;inset:14%;border-radius:50%;border:3px dashed rgba(20,24,41,.18)}
+  .slide.on .wheel .ring{animation:radar 30s linear infinite}
+  .wheel .core{position:absolute;inset:34%;border-radius:50%;background:var(--night);display:grid;place-items:center;text-align:center;color:#fff;font:700 15px/1.2 var(--display);text-transform:uppercase;padding:10px;box-shadow:0 18px 40px rgba(20,24,41,.3)}
+  .wn{position:absolute;width:31%;left:34.5%;top:34.5%;transform:rotate(var(--a)) translateY(calc(-1 * var(--R))) rotate(calc(-1 * var(--a)));background:#fff;border-radius:16px;padding:8px 6px;text-align:center;font:700 12.5px/1.2 var(--body);box-shadow:0 10px 24px rgba(20,24,41,.1);border-bottom:4px solid var(--c)}
+  .slide.on .wn{animation:pop .5s cubic-bezier(.2,.9,.3,1.3) both;animation-delay:calc(var(--d) * 160ms + 400ms)}
+  @keyframes radar{to{transform:rotate(360deg)}}
+  .gl{display:grid;gap:8px}
+  .g{display:grid;gap:2px}.g b{font:700 15px var(--body)}.g span{font-size:14px;color:var(--muted)}
+
+  /* tabela de indicadores */
+  .kpi{width:100%;border-collapse:separate;border-spacing:0 8px;font-size:14.5px}
+  .kpi th{text-align:left;font:600 11px var(--body);letter-spacing:.08em;text-transform:uppercase;color:var(--dim);padding:0 12px}
+  .kpi td{background:rgba(255,255,255,.8);padding:12px;color:var(--muted)}
+  .kpi td:first-child{border-radius:14px 0 0 14px;font-weight:700;color:var(--ink)}
+  .kpi td:last-child{border-radius:0 14px 14px 0;font-weight:700;color:var(--turq-ink);white-space:nowrap}
+  .slide.on .kpi tr{animation:rise .45s both;animation-delay:calc(var(--d) * 110ms + 300ms)}
+
+  .asks{display:grid;gap:10px;counter-reset:q}
+  .ask{display:grid;grid-template-columns:34px 1fr;gap:12px;align-items:start;font-size:15.5px;line-height:1.45;color:rgba(255,255,255,.85)}
+  .ask::before{counter-increment:q;content:counter(q);display:grid;place-items:center;width:34px;height:34px;border-radius:50%;background:var(--c);color:var(--night);font:700 15px var(--body)}
+  .slide.on .ask{animation:rise .5s both;animation-delay:calc(var(--d) * 140ms + 300ms)}
+</style>
+</head>
+<body>
+<div class="intro" id="intro" aria-hidden="true">
+  <svg class="heart" viewBox="0 0 100 100"><defs><linearGradient id="rbg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#FF6964"/><stop offset=".2" stop-color="#FFA353"/><stop offset=".4" stop-color="#FFD066"/><stop offset=".6" stop-color="#49DCC0"/><stop offset=".8" stop-color="#59A7FF"/><stop offset="1" stop-color="#A889FF"/></linearGradient></defs>
+    <path class="fillh" d="M50 88C20 65 5 45 5 28A20 20 0 0 1 50 20A20 20 0 0 1 95 28C95 45 80 65 50 88Z"/>
+    <path class="outline" d="M50 88C20 65 5 45 5 28A20 20 0 0 1 50 20A20 20 0 0 1 95 28C95 45 80 65 50 88Z"/>
+    <circle class="shine" cx="30" cy="34" r="4"/>
+  </svg>
+  <div class="who">para o Aly</div>
+</div>
+<div class="deck">
+  <div class="top">
+    <div class="brand"><svg viewBox="0 0 100 100" aria-hidden="true"><defs><linearGradient id="g"><stop offset="0" stop-color="#FF6964"/><stop offset=".2" stop-color="#FFA353"/><stop offset=".4" stop-color="#FFD066"/><stop offset=".6" stop-color="#49DCC0"/><stop offset=".8" stop-color="#59A7FF"/><stop offset="1" stop-color="#A889FF"/></linearGradient></defs><circle cx="50" cy="50" r="41.5" fill="none" stroke="url(#g)" stroke-width="13"/><circle cx="50" cy="50" r="13" fill="#0F1220"/><circle cx="46.1" cy="45.6" r="2.9" fill="#fff"/></svg>Iris<b>a</b><small>comunidade sem ódio</small></div>
+    <div class="count" id="count">1 / 16</div>
+  </div>
+  <div class="progress"><i id="bar"></i></div>
+
+  <div class="stage" id="stage">
+
+  <!-- 1 -->
+  <section class="slide dark">
+    <div class="eyebrow" data-a><i></i>De: Leandro · Para: Aly · Assunto: o próximo passo</div>
+    <h1>Da consulta ao <span class="rb">encontro</span>.</h1>
+    <p data-a style="--d:3">A Irisa já responde "é de boa ir lá?" e acolhe quem passou por violência. A proposta é virar <b>o lugar onde a comunidade se encontra toda semana</b>, com uma IA garantindo que ninguém leva ódio nos comentários.</p>
+    <div class="aviso" data-a style="--d:5"><b>É uma visão para conversar.</b> Nada disso foi implementado, e o TybyrIA ainda precisa ser testado com texto real do app.</div>
+    <div class="hint" data-a style="--d:6">→ setas, espaço ou deslizar</div>
+  </section>
+
+  <!-- 2 -->
+  <section class="slide two">
+    <div class="txt">
+      <div class="eyebrow" data-a><i></i>O problema</div>
+      <h2>Ninguém abre app de denúncia <span class="rb">toda semana</span>.</h2>
+      <p data-a style="--d:3">Relato e guia de lugares são usos de momento: a pessoa abre quando precisa, e fica semanas sem voltar. <b>Sem volta, não vem avaliação, e o mapa não ganha cor.</b></p>
+      <p data-a style="--d:4">Frequência vem de três coisas: <b>gente, agenda e utilidade no dia a dia.</b></p>
+    </div>
+    <div class="week">
+      <div class="row"><div class="lab" data-a style="--d:2">Hoje</div>
+        <div class="days"><i>seg</i><i>ter</i><i>qua</i><i>qui</i><i class="on" style="--c:var(--yellow)">sex</i><i>sáb</i><i>dom</i></div></div>
+      <div class="row"><div class="lab" data-a style="--d:3">Com comunidade</div>
+        <div class="days full"><i class="on" style="--c:var(--coral);--d:0">seg</i><i class="on" style="--c:var(--orange);--d:1">ter</i><i class="on" style="--c:var(--yellow);--d:2">qua</i><i class="on" style="--c:var(--turq);--d:3">qui</i><i class="on" style="--c:var(--blue);--d:4">sex</i><i class="on" style="--c:var(--lilac);--d:5">sáb</i><i class="on" style="--c:var(--coral);--d:6">dom</i></div></div>
+      <p class="note" data-a style="--d:5">Ilustração: um motivo de abrir por dia, não um dado medido.</p>
+    </div>
+  </section>
+
+  <!-- 3 -->
+  <section class="slide">
+    <div class="txt">
+      <div class="eyebrow" data-a><i></i>A tese</div>
+      <h2>Três motivos para voltar, <span class="rb">um escudo</span> para todos.</h2>
+    </div>
+    <div class="cards c3">
+      <div class="card" style="--c:var(--coral);--ci:var(--coral-ink);--d:0"><span class="tag">Gente</span><h3>Grupos, mural com respostas, mentoria</h3><p>Onde a pessoa encontra quem vive o mesmo que ela.</p></div>
+      <div class="card" style="--c:var(--yellow);--ci:var(--yellow-ink);--d:1"><span class="tag">Agenda</span><h3>Festas, rodas, paradas, esporte</h3><p>Com "quem vai" e check-in nos lugares avaliados.</p></div>
+      <div class="card" style="--c:var(--turq);--ci:var(--turq-ink);--d:2"><span class="tag">Utilidade</span><h3>Cheguei bem, profissionais, guias, vagas</h3><p>O que resolve a vida real, toda semana.</p></div>
+    </div>
+    <div class="card dark" style="--c:var(--lilac);--d:3"><h3>Tudo protegido pelo TybyrIA</h3><p>A comunidade LGBTQIA+ sem ódio nos comentários. É isso que nenhuma outra rede garante.</p></div>
+  </section>
+
+  <!-- 4 -->
+  <section class="slide">
+    <div class="txt">
+      <div class="eyebrow" data-a><i></i>Como funciona</div>
+      <h2>Todo texto passa pelo <span class="rb">mesmo caminho</span>.</h2>
+      <p data-a style="--d:3">Comentário, post, relato, avaliação ou mensagem: antes de aparecer, ganha uma <b>nota de ódio</b> de 0 a 1. Para quem escreve, nada muda.</p>
+    </div>
+    <div class="flow">
+      <div class="track"></div><div class="packet"></div>
+      <div class="node" style="--d:0"><b>Pessoa escreve</b><small>no app</small></div>
+      <div class="node" style="--d:1"><b>Supabase</b><small>grava o texto</small></div>
+      <div class="node" style="--d:2"><b>Edge Function</b><small>chama a IA</small></div>
+      <div class="node ia" style="--d:3"><b>TybyrIA</b><small>API na Oracle Free</small></div>
+      <div class="node" style="--d:4"><b>Nota e status</b><small>gravados no texto</small></div>
+    </div>
+    <div class="outs">
+      <span class="out" style="--d:0;background:color-mix(in srgb,var(--turq) 30%,transparent);color:var(--turq-ink)">Publica</span>
+      <span class="out" style="--d:1;background:color-mix(in srgb,var(--yellow) 40%,transparent);color:var(--yellow-ink)">Publica e revisa</span>
+      <span class="out" style="--d:2;background:color-mix(in srgb,var(--coral) 26%,transparent);color:var(--coral-ink)">Oculta até revisar</span>
+    </div>
+  </section>
+
+  <!-- 5 -->
+  <section class="slide two">
+    <div class="txt">
+      <div class="eyebrow" data-a><i></i>A régua</div>
+      <h2>Quatro faixas, <span class="rb">quatro ações</span>.</h2>
+      <p data-a style="--d:3">A agulha mostra onde cada texto cai. <b>Toda decisão da moderação vira rótulo</b> (ódio ou não ódio), que melhora o modelo e é a base da parceria com a CNB.</p>
+      <p class="note" data-a style="--d:4">Os limites são ponto de partida: a primeira fase serve para calibrar com texto real do app.</p>
+    </div>
+    <div style="display:grid;gap:14px">
+      <div class="gauge" data-a style="--d:2"><span style="background:var(--turq)">&lt; 0,30</span><span style="background:var(--yellow)"></span><span style="background:var(--orange)"></span><span style="background:var(--coral)">0,50 ou mais</span><i class="needle"></i></div>
+      <div class="ticks"><span>0</span><span style="margin-left:24%">0,3 · 0,4</span><span style="margin-left:auto;margin-right:48%">0,5</span><span>1</span></div>
+      <div class="bands">
+        <div class="band" style="--c:var(--turq);--d:0"><b>&lt; 0,30</b><span>Publica na hora</span></div>
+        <div class="band" style="--c:var(--yellow);--d:1"><b>0,30–0,40</b><span>Publica e entra na fila de revisão</span></div>
+        <div class="band" style="--c:var(--orange);--d:2"><b>0,40–0,50</b><span>Fica oculto até alguém revisar</span></div>
+        <div class="band" style="--c:var(--coral);--d:3"><b>≥ 0,50</b><span>Oculto, com prioridade e alerta para a moderação</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 6 -->
+  <section class="slide">
+    <div class="txt">
+      <div class="eyebrow" data-a><i></i>Sete usos do TybyrIA</div>
+      <h2>Do básico obrigatório ao que <span class="rb">gera receita</span>.</h2>
+    </div>
+    <div class="cards c4">
+      <div class="card" style="--c:var(--coral);--ci:var(--coral-ink);--d:0"><span class="tag">A · proteger</span><h3>Moderação</h3><p>Mural, comentários e avaliações. Obrigatório em área social.</p></div>
+      <div class="card" style="--c:var(--orange);--ci:#AB6207;--d:1"><span class="tag">B · proteger</span><h3>Filtro de DM</h3><p>Mensagem suspeita chega borrada, com "ver mesmo assim?".</p></div>
+      <div class="card" style="--c:var(--yellow);--ci:var(--yellow-ink);--d:2"><span class="tag">C · denunciar</span><h3>Relato com prova</h3><p>Cola o texto ou print e exporta PDF para B.O., Disque 100 ou advogado.</p></div>
+      <div class="card" style="--c:var(--turq);--ci:var(--turq-ink);--d:3"><span class="tag">D · proteger</span><h3>Triagem</h3><p>A fila de denúncias vem ordenada pela gravidade.</p></div>
+      <div class="card" style="--c:var(--blue);--ci:#1F5FB8;--d:4"><span class="tag">E · receita</span><h3>Escudo creator</h3><p>Sinaliza ódio nos comentários do Instagram de quem conectar.</p></div>
+      <div class="card" style="--c:var(--lilac);--ci:var(--lilac-ink);--d:5"><span class="tag">F · mídia</span><h3>Termômetro do Ódio</h3><p>Dados anônimos por estado e plataforma, todo mês.</p></div>
+      <div class="card dark" style="--c:var(--yellow);--d:6"><h3>G · Selo de lugar</h3><p>Avaliações limpas e compromisso assinado. Receita de empresas.</p></div>
+    </div>
+  </section>
+
+  <!-- 7 -->
+  <section class="slide dark">
+    <div class="txt">
+      <div class="eyebrow" data-a><i></i>Por onde começar</div>
+      <h2>Três coisas que fazem <span class="rb">abrir toda semana</span>.</h2>
+    </div>
+    <div class="trio">
+      <div class="pane" style="--c:var(--coral);--d:0">
+        <div class="viz">
+          <i class="bub" style="--d:0;left:12%;top:22%;width:48px;height:48px;background:var(--coral)">TR</i>
+          <i class="bub" style="--d:1;left:38%;top:48%;width:40px;height:40px;background:var(--yellow)">SP</i>
+          <i class="bub" style="--d:2;left:58%;top:14%;width:54px;height:54px;background:var(--turq)">PA</i>
+          <i class="bub" style="--d:3;left:78%;top:50%;width:36px;height:36px;background:var(--lilac)">+</i>
+        </div>
+        <h3>Grupos por cidade</h3>
+        <p>Trans Curitiba, Sapatão que corre, Pais de LGBT. Todos moderados pelo TybyrIA.</p>
+        <div class="why">O motor de retorno</div>
+      </div>
+      <div class="pane" style="--c:var(--yellow);--d:1">
+        <div class="viz"><div class="cal"><i></i><i></i><i class="ev" style="--d:0"></i><i></i><i></i><i class="ev" style="--d:1"></i><i class="ev" style="--d:2"></i><i></i><i class="ev" style="--d:3"></i><i></i><i></i><i></i><i class="ev" style="--d:4"></i><i></i><i></i><i></i><i></i><i class="ev" style="--d:5"></i><i></i><i class="ev" style="--d:6"></i><i class="ev" style="--d:7"></i></div></div>
+        <h3>Agenda local</h3>
+        <p>Festas, rodas, paradas e esporte, com "quem vai". Liga direto aos lugares avaliados.</p>
+        <div class="why">O motivo para abrir</div>
+      </div>
+      <div class="pane" style="--c:var(--turq);--d:2">
+        <div class="viz"><svg class="route" viewBox="0 0 282 120" preserveAspectRatio="none" aria-hidden="true"><path d="M20 96 C 70 96, 80 30, 140 44 S 220 90, 262 30"/></svg><i class="walker"></i><span class="ok">Cheguei bem ✓</span></div>
+        <h3>Cheguei bem</h3>
+        <p>Na volta do rolê, amigos acompanham o trajeto e recebem aviso da chegada.</p>
+        <div class="why">O valor emocional</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 8 -->
+  <section class="slide two">
+    <div class="mural">
+      <div class="msg" style="--d:0"><small>Mural · Curitiba</small><p>Hoje contei pra minha mãe. Ela chorou, depois me abraçou.</p><div class="reacts"><span style="--d:0">💜 48</span><span style="--d:1">🫂 21</span><span style="--d:2">🌈 12</span></div></div>
+      <div class="msg me" style="--d:1"><p>Que orgulho de você. Lembra de mim no seu primeiro Natal? Agora é tua vez de ajudar alguém.</p></div>
+      <p class="note" data-a style="--d:6">Exemplo inventado para mostrar o formato.</p>
+    </div>
+    <div class="txt">
+      <div class="eyebrow" data-a><i></i>O resto do cardápio</div>
+      <h2>Mais motivos, <span class="rb">por esforço</span>.</h2>
+      <div class="menu">
+        <div class="item" style="--d:0"><div><b>Mural com respostas</b><span>A comunidade reage e responde; um tema por dia da semana</span></div><i class="eff" style="--c:var(--turq)">baixo</i></div>
+        <div class="item" style="--d:1"><div><b>Guias práticos</b><span>Retificação de nome, direitos no trabalho, como denunciar</span></div><i class="eff" style="--c:var(--turq)">baixo</i></div>
+        <div class="item" style="--d:2"><div><b>Check-in em lugares</b><span>Mostra o lugar movimentado agora e puxa avaliação</span></div><i class="eff" style="--c:var(--yellow)">médio</i></div>
+        <div class="item" style="--d:3"><div><b>Profissionais friendly</b><span>Psicólogo, médico, advogado avaliados pela comunidade</span></div><i class="eff" style="--c:var(--yellow)">médio</i></div>
+        <div class="item" style="--d:4"><div><b>Reputação e validação</b><span>Selos por acolher; gente de confiança ajuda a moderar</span></div><i class="eff" style="--c:var(--yellow)">médio</i></div>
+        <div class="item" style="--d:5"><div><b>Mentoria e vagas</b><span>Quem já passou acolhe quem começa; empregabilidade retém</span></div><i class="eff" style="--c:var(--coral)">alto</i></div>
+      </div>
+      <p class="note" data-a style="--d:8">Esforço é estimativa minha.</p>
+    </div>
+  </section>
+
+  <!-- 9 -->
+  <section class="slide">
+    <div class="txt">
+      <div class="eyebrow" data-a><i></i>Plano de ação</div>
+      <h2>Quatro fases em <span class="rb">dez semanas</span>.</h2>
+    </div>
+    <div class="tl">
+      <div class="ph4" style="--c:var(--lilac);--ci:var(--lilac-ink);--d:0"><span class="wk">Semanas 1–2</span><h3>Validar</h3><p>API na Oracle Free, teste com ~500 textos reais, falso positivo com pajubá e ironia, LGPD, primeiro contato com a CNB.</p></div>
+      <div class="ph4" style="--c:var(--turq);--ci:var(--turq-ink);--d:1"><span class="wk">Semanas 3–6</span><h3>Proteger</h3><p>Moderação e triagem, painel na tela de Moderação que já existe, política pública de moderação.</p></div>
+      <div class="ph4" style="--c:var(--yellow);--ci:var(--yellow-ink);--d:2"><span class="wk">Semanas 6–10</span><h3>Fortalecer</h3><p>Relato com prova, parceria formal com a CNB, botão "quero ajuda" para ONGs, Defensoria e Disque 100.</p></div>
+      <div class="ph4 dark" style="--c:var(--coral);--ci:var(--coral);--d:3"><span class="wk">Semana 10 em diante</span><h3>Crescer</h3><p>Termômetro do Ódio com a CNB, escudo para creators e selo de lugar.</p></div>
+    </div>
+    <p class="note" data-a style="--d:6">Grupos, agenda e Cheguei bem entram assim que a proteção básica estiver no ar.</p>
+  </section>
+
+  <!-- 10 -->
+  <section class="slide">
+    <div class="txt">
+      <div class="eyebrow" data-a><i></i>Parceria com a Código Não Binário</div>
+      <h2>Cada lado leva <span class="rb">o que falta</span> ao outro.</h2>
+    </div>
+    <div class="deal">
+      <div class="side" style="--ci:var(--coral-ink);--d:0"><h3>A Irisa oferece</h3><ul class="list"><li style="--d:0">Uso real do modelo, por gente da comunidade</li><li style="--d:1">Dados rotulados, anônimos e com consentimento</li><li style="--d:2">Visibilidade e marca junto</li></ul></div>
+      <div class="swap"><i></i><span class="note">troca</span></div>
+      <div class="side" style="--ci:var(--lilac-ink);--d:1"><h3>A CNB oferece</h3><ul class="list"><li style="--d:0">Aval técnico e ativista</li><li style="--d:1">Licença clara para uso comercial</li><li style="--d:2">Credibilidade com a imprensa e rede de ONGs</li></ul></div>
+    </div>
+    <div class="aviso" data-a style="--d:6"><b>Na primeira conversa, pedir:</b> permissão de uso comercial, interesse nos dados de volta e se topam assinar juntos o Termômetro do Ódio.</div>
+  </section>
+
+  <!-- 11 -->
+  <section class="slide dark two">
+    <div class="txt">
+      <div class="eyebrow" data-a><i></i>Como vira mídia</div>
+      <h2>Dado inédito é o <span class="rb">ativo principal</span>.</h2>
+      <p data-a style="--d:3">Termômetro do Ódio todo mês: "[__]% dos ataques em SP foram no Instagram". <b>Jornalista adora número que ninguém tem.</b></p>
+      <p data-a style="--d:4">Pauta de lançamento: <b>primeiro app brasileiro com IA aberta contra LGBTfobia</b>, feito com a CNB. E todo mês, "o que a IA pegou", com exemplos anônimos de ódio disfarçado.</p>
+    </div>
+    <div style="display:grid;gap:16px">
+      <div class="thermo">
+        <div class="bar2" style="--d:0"><span>Instagram</span><i style="--c:var(--coral);--w:88%"></i></div>
+        <div class="bar2" style="--d:1"><span>X</span><i style="--c:var(--orange);--w:64%"></i></div>
+        <div class="bar2" style="--d:2"><span>TikTok</span><i style="--c:var(--yellow);--w:52%"></i></div>
+        <div class="bar2" style="--d:3"><span>Rua</span><i style="--c:var(--turq);--w:40%"></i></div>
+        <p class="note">Barras ilustrativas, sem dado real.</p>
+      </div>
+      <div class="dates">
+        <div class="date" style="--c:var(--blue);--d:0"><b>29/jan</b><span>Visibilidade Trans</span></div>
+        <div class="date" style="--c:var(--coral);--d:1"><b>17/mai</b><span>Contra a LGBTfobia</span></div>
+        <div class="date" style="--c:var(--yellow);--d:2"><b>28/jun</b><span>Orgulho</span></div>
+        <div class="date" style="--c:var(--lilac);--d:3"><b>29/ago</b><span>Visibilidade Lésbica</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 12 -->
+  <section class="slide">
+    <div class="txt">
+      <div class="eyebrow" data-a><i></i>Como podemos melhorar · 1 de 2</div>
+      <h2>O que já decidimos e <span class="rb">continua valendo</span>.</h2>
+    </div>
+    <div class="care">
+      <div class="fix" style="--c:var(--yellow);--d:0"><h3>Selo de lugar</h3><div class="r">Decidimos não marcar lugar como LGBTQIA+: lista pública vira alvo.</div><div class="a">selo só se o lugar pedir; o "Acolhedor" dos quatro eixos segue como base.</div></div>
+      <div class="fix" style="--c:var(--coral);--d:1"><h3>Alertas de região</h3><div class="r">Sem relato não quer dizer seguro. O alerta é da rua, não do bar.</div><div class="a">só área agregada, nunca "região segura", sem filtro de lugar por alerta.</div></div>
+      <div class="fix" style="--c:var(--orange);--d:2"><h3>Mensagem direta</h3><div class="r">O app não tem DM hoje. DM é o canal preferido de assédio e pesa na revisão da Apple.</div><div class="a">começar por respostas no mural e nos grupos; DM depois.</div></div>
+      <div class="fix" style="--c:var(--lilac);--d:3"><h3>Pajubá e ironia</h3><div class="r">"Bicha", "sapatão" e a ironia da comunidade podem ser lidas como ódio.</div><div class="a">na primeira fase só medir; nada é ocultado sem revisão humana no começo.</div></div>
+      <div class="fix" style="--c:var(--turq);--d:4"><h3>LGPD</h3><div class="r">Orientação e identidade de gênero são dado sensível.</div><div class="a">consentimento por uso e opt-in separado para dividir com a CNB.</div></div>
+    </div>
+  </section>
+
+  <!-- 13 -->
+  <section class="slide">
+    <div class="txt">
+      <div class="eyebrow" data-a><i></i>Como podemos melhorar · 2 de 2</div>
+      <h2>Riscos técnicos e <span class="rb">de reputação</span>.</h2>
+    </div>
+    <div class="care">
+      <div class="fix" style="--c:var(--blue);--d:0"><h3>IA fora do ar</h3><div class="r">Oracle Free não tem garantia. O app não pode travar nem liberar tudo.</div><div class="a">sem resposta da IA, o texto vai para a fila; relato nunca espera.</div></div>
+      <div class="fix" style="--c:var(--coral);--d:1"><h3>Escudo creator</h3><div class="r">O Instagram só libera comentários de contas profissionais, com revisão da Meta.</div><div class="a">piloto com 10 contas antes de prometer ao público.</div></div>
+      <div class="fix" style="--c:var(--lilac);--d:2"><h3>Termômetro</h3><div class="r">Com poucos usuários, o número mede o app, não o país. Recorte pequeno identifica.</div><div class="a">mínimo de casos por recorte e sempre dizer qual é a base.</div></div>
+      <div class="fix" style="--c:var(--turq);--d:3"><h3>Cheguei bem</h3><div class="r">Localização é dado sensível e a Apple revisa com lupa.</div><div class="a">só durante o trajeto, sem histórico, com fim automático.</div></div>
+      <div class="fix" style="--c:var(--yellow);--d:4"><h3>Moderação humana</h3><div class="r">Grupos novos geram fila nova. Sem gente para revisar, a fila vira gargalo.</div><div class="a">começar nas quatro cidades de lançamento, com validação comunitária.</div></div>
+    </div>
+  </section>
+
+  <!-- 14 -->
+  <section class="slide two">
+    <div class="wheel">
+      <div class="ring"></div>
+      <div class="core">Mais gente<br>volta</div>
+      <div class="wn" style="--a:0deg;--c:var(--coral);--d:0">Frequência</div>
+      <div class="wn" style="--a:60deg;--c:var(--orange);--d:1">Avaliações</div>
+      <div class="wn" style="--a:120deg;--c:var(--yellow);--d:2">Moderação escala</div>
+      <div class="wn" style="--a:180deg;--c:var(--turq);--d:3">Credibilidade</div>
+      <div class="wn" style="--a:240deg;--c:var(--blue);--d:4">Receita</div>
+      <div class="wn" style="--a:300deg;--c:var(--lilac);--d:5">Impacto</div>
+    </div>
+    <div class="txt">
+      <div class="eyebrow" data-a><i></i>O que a Irisa ganha</div>
+      <h2>Seis ganhos, <span class="rb">um puxa o outro</span>.</h2>
+      <div class="gl">
+        <div class="g" data-a style="--d:3"><b>Frequência e avaliações</b><span>Quem volta avalia; lugar com 5 notas sai do cinza e o mapa ganha cor.</span></div>
+        <div class="g" data-a style="--d:4"><b>Moderação que escala</b><span>A IA filtra o grosso; a equipe revisa só o duvidoso.</span></div>
+        <div class="g" data-a style="--d:5"><b>Credibilidade e receita</b><span>Aval da CNB abre imprensa e ONGs; selo e escudo premium trazem dinheiro.</span></div>
+        <div class="g" data-a style="--d:6"><b>Impacto</b><span>Relato com prova vira B.O.; dado agregado vira política pública.</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 15 -->
+  <section class="slide">
+    <div class="txt">
+      <div class="eyebrow" data-a><i></i>Como saber se deu certo</div>
+      <h2>Cinco números para <span class="rb">acompanhar</span>.</h2>
+    </div>
+    <table class="kpi">
+      <tr><th>Indicador</th><th>Como medir</th><th>Meta</th></tr>
+      <tr style="--d:0"><td>Moderação correta</td><td>Decisão da IA confirmada pela revisão humana</td><td>[__]%</td></tr>
+      <tr style="--d:1"><td>Tempo até revisar</td><td>Da entrada na fila até a decisão</td><td>[__] h</td></tr>
+      <tr style="--d:2"><td>Relatos com prova</td><td>PDFs exportados por mês</td><td>[__]</td></tr>
+      <tr style="--d:3"><td>Uso recorrente</td><td>Quem abre no dia dividido por quem abre no mês</td><td>[__]%</td></tr>
+      <tr style="--d:4"><td>Retenção em 30 dias</td><td>Quem ainda usa um mês depois de entrar</td><td>[__]%</td></tr>
+    </table>
+    <p class="note" data-a style="--d:6">Metas a definir juntos depois da primeira fase, quando tivermos o número de partida.</p>
+  </section>
+
+  <!-- 16 -->
+  <section class="slide dark">
+    <div class="txt">
+      <div class="eyebrow" data-a><i></i>Próximos passos</div>
+      <h2>O que decidir <span class="rb">nesta conversa</span>.</h2>
+      <div class="asks">
+        <div class="ask" style="--c:var(--coral);--d:0">Topamos a tese: grupos, agenda e Cheguei bem, com o TybyrIA protegendo?</div>
+        <div class="ask" style="--c:var(--yellow);--d:1">Começar a primeira fase: API na Oracle Free e teste com textos reais do app.</div>
+        <div class="ask" style="--c:var(--turq);--d:2">Quem faz o primeiro contato com a CNB, e até quando.</div>
+        <div class="ask" style="--c:var(--lilac);--d:3">Fechar os ajustes: selo, alertas, mensagem direta e dados.</div>
+      </div>
+      <div class="rbline" data-a style="--d:7"></div>
+      <div class="sig" data-a style="--d:8">A comunidade <span class="rb">sem ódio</span>.</div>
+      <div class="kiss" data-a style="--d:9">Beijo, Leandro 💜</div>
+    </div>
+  </section>
+
+  </div>
+
+  <nav class="nav" aria-label="Navegação">
+    <button class="nb" id="prev" aria-label="Anterior"><svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg></button>
+    <div class="dots" id="dots"></div>
+    <button class="nb" id="next" aria-label="Próximo"><svg viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg></button>
+  </nav>
+</div>
+
+<script>
+const slides=[...document.querySelectorAll(".slide")],N=slides.length;
+const dots=document.getElementById("dots"),bar=document.getElementById("bar"),count=document.getElementById("count"),prev=document.getElementById("prev"),next=document.getElementById("next");
+// palavras dos títulos entram uma a uma
+document.querySelectorAll("h1,h2").forEach(h=>{let i=0;h.innerHTML=h.innerHTML.replace(/(<br\s*\/?>|<span class="rb">[^<]*<\/span>|[^\s<>]+)/g,m=>/^<br/i.test(m)?m:`<span class="w" style="--w:${i++}">${m}</span>`)});
+slides.forEach((s,i)=>{const b=document.createElement("button");b.setAttribute("aria-label",`Cartão ${i+1}`);b.addEventListener("click",()=>go(i));dots.appendChild(b)});
+let cur=-1;
+function go(n){
+  n=Math.max(0,Math.min(N-1,n));if(n===cur)return;
+  slides.forEach((s,i)=>{s.classList.remove("on","back");if(i<n)s.classList.add("back")});
+  const el=slides[n];void el.offsetWidth;el.classList.add("on");el.scrollTop=0;
+  cur=n;[...dots.children].forEach((d,i)=>d.classList.toggle("on",i===n));
+  bar.style.width=((n+1)/N*100)+"%";count.textContent=`${n+1} / ${N}`;
+  prev.disabled=n===0;next.disabled=n===N-1;
+  try{history.replaceState(null,"","#"+(n+1))}catch(e){}
+}
+prev.addEventListener("click",()=>go(cur-1));next.addEventListener("click",()=>go(cur+1));
+window.addEventListener("keydown",e=>{if(["ArrowRight"," ","PageDown"].includes(e.key)){e.preventDefault();go(cur+1)}if(["ArrowLeft","PageUp"].includes(e.key)){e.preventDefault();go(cur-1)}});
+let tx=null,ty=null;
+document.getElementById("stage").addEventListener("touchstart",e=>{tx=e.touches[0].clientX;ty=e.touches[0].clientY},{passive:true});
+document.getElementById("stage").addEventListener("touchend",e=>{if(tx==null)return;const dx=e.changedTouches[0].clientX-tx,dy=e.changedTouches[0].clientY-ty;if(Math.abs(dx)>50&&Math.abs(dx)>Math.abs(dy)*1.3)go(cur-Math.sign(dx));tx=ty=null});
+const h=parseInt((location.hash||"").replace("#",""),10);
+const intro=document.getElementById("intro"),reduce=matchMedia("(prefers-reduced-motion:reduce)").matches;
+if(reduce||(!isNaN(h)&&h>1)){intro.remove();go(isNaN(h)?0:h-1)}
+else{
+  const cols=["#FF6964","#FFA353","#FFD066","#49DCC0","#59A7FF","#A889FF"];
+  for(let i=0;i<14;i++){const a=(i/14)*Math.PI*2,d=120+Math.random()*160;const m=document.createElementNS("http://www.w3.org/2000/svg","svg");m.setAttribute("viewBox","0 0 100 100");m.classList.add("mini");
+    m.style.cssText=`left:calc(50% - 9px);top:calc(50% - 9px);--c:${cols[i%6]};--x:${Math.cos(a)*d}px;--y:${Math.sin(a)*d-60}px;--r:${(Math.random()*60-30).toFixed(0)}deg;--t:${(1.6+Math.random()*.6).toFixed(2)}s`;
+    m.innerHTML='<path d="M50 88C20 65 5 45 5 28A20 20 0 0 1 50 20A20 20 0 0 1 95 28C95 45 80 65 50 88Z"/>';intro.appendChild(m)}
+  let started=false;const start=()=>{if(started)return;started=true;go(0);setTimeout(()=>intro.remove(),800)};
+  setTimeout(start,3300);
+  intro.addEventListener("click",()=>{intro.classList.add("skip");start()});
+}
+</script>
+</body>
+</html>
