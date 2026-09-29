@@ -17,8 +17,21 @@ export function authMessage(e: unknown): string | null {
     return "A senha precisa ter pelo menos 6 caracteres.";
   if (/unable to validate email|invalid email|email address .* is invalid/.test(m))
     return "Esse e-mail não parece válido.";
-  if (/rate limit|too many requests|for security purposes/.test(m))
-    return "Muitas tentativas seguidas. Espere um minuto e tente de novo.";
+  // Três limites diferentes da Supabase, cada um com a sua espera.
+  // 1) Mesmo e-mail pedido de novo em poucos segundos ("after 42 seconds"). Vem antes porque a
+  // Supabase usa o mesmo código do limite por hora:
+  const secs = m.match(/after (\d+) seconds?/);
+  if (secs) return `Espere ${secs[1]} segundos antes de tentar de novo com esse e-mail.`;
+  // 2) E-mails por hora do projeto (o SMTP embutido manda só 2 por hora para todo mundo):
+  if (/email rate limit|over_email_send_rate_limit/.test(m + " " + code))
+    return "Chegamos ao limite de e-mails de confirmação por hora. Tente de novo mais tarde, ou entre com Google ou Apple agora.";
+  // 3) Muitas tentativas do mesmo aparelho/rede:
+  if (
+    /rate limit|too many requests|for security purposes|over_request_rate_limit/.test(
+      m + " " + code,
+    )
+  )
+    return "Muitas tentativas seguidas desta rede. Espere alguns minutos e tente de novo.";
   if (/unacceptable audience|audience/.test(m))
     return "O login com Apple ainda não está liberado para esta versão do app. Use Google ou e-mail por enquanto.";
   if (/provider is not enabled|unsupported provider/.test(m))
