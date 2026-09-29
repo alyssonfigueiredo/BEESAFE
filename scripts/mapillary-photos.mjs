@@ -23,6 +23,7 @@
 // segue mostrando o azulejo da categoria.
 
 import { createHash, createHmac } from "node:crypto";
+import { Buffer } from "node:buffer";
 
 import { createClient } from "@supabase/supabase-js";
 
