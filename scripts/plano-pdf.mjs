@@ -12,6 +12,12 @@ const CSS = `
   section{break-inside:avoid-page}
   .card,.piece,.day,.pillar,table{break-inside:avoid-page}
   *{animation:none!important;transition:none!important}
+  /* O texto em arco-íris usa background-clip:text; a impressão do Chromium
+     ignora o recorte e pinta o retângulo inteiro por cima da letra. No PDF
+     o arco-íris vira uma cor só. */
+  .rb,.rainbow{background:none!important;-webkit-background-clip:border-box!important;
+    background-clip:border-box!important;color:var(--orangeInk)!important;
+    -webkit-text-fill-color:var(--orangeInk)!important}
 `;
 const html = "file://" + resolve("docs/plano-lancamento.html");
 const b = await chromium.launch({ executablePath: process.env.PW_CHROMIUM ?? "/opt/pw-browsers/chromium" });
