@@ -7,6 +7,7 @@ on:
 
 permissions:
   contents: write
+  issues: write
 
 jobs:
   publicar:
@@ -17,11 +18,16 @@ jobs:
         with:
           node-version: 22
       - name: Publica o que venceu
+        id: publicar
         env:
           META_IG_USER_ID: ${{ secrets.META_IG_USER_ID }}
           META_ACCESS_TOKEN: ${{ secrets.META_ACCESS_TOKEN }}
         run: node scripts/publicar-instagram.mjs
+
+      # A fila é gravada mesmo quando alguma publicação falha: o erro fica
+      # registrado no JSON para a próxima rodada.
       - name: Grava a fila atualizada
+        if: always()
         run: |
           if ! git diff --quiet docs/legendas/fila.json; then
             git config user.name "github-actions[bot]"
@@ -30,3 +36,45 @@ jobs:
             git commit -m "Fila do Instagram: atualiza status de publicação"
             git push
           fi
+
+      # Post que não vai ao ar é prejuízo silencioso: abre issue (que o GitHub
+      # manda por e-mail) em vez de deixar o workflow vermelho sem ninguém ver.
+      - name: Avisa que não foi ao ar
+        if: failure()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require("fs");
+            let detalhe = "O script terminou com erro. Veja o log do run.";
+            try { detalhe = fs.readFileSync("falhas-instagram.txt", "utf8"); } catch {}
+            const titulo = "NAO FOI AO AR: publicacao do Instagram falhou";
+            const corpo = [
+              "O robô tentou publicar e não conseguiu. **Nada foi ao ar.**",
+              "",
+              "```",
+              detalhe.trim(),
+              "```",
+              "",
+              `Run: ${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`,
+              "",
+              "O que fazer agora:",
+              "1. Publicar a peça pelo celular (imagem e legenda estão em `docs/legendas/`).",
+              "2. Se o erro for de limite da Meta (código 4), esperar algumas horas.",
+              "3. Marcar `publicado: true` na fila para o robô não postar de novo.",
+            ].join("\n");
+            const abertas = await github.rest.issues.listForRepo({
+              owner: context.repo.owner, repo: context.repo.repo,
+              state: "open", labels: "instagram",
+            });
+            const jaTem = abertas.data.find((i) => i.title === titulo);
+            if (jaTem) {
+              await github.rest.issues.createComment({
+                owner: context.repo.owner, repo: context.repo.repo,
+                issue_number: jaTem.number, body: corpo,
+              });
+            } else {
+              await github.rest.issues.create({
+                owner: context.repo.owner, repo: context.repo.repo,
+                title: titulo, body: corpo, labels: ["instagram"],
+              });
+            }

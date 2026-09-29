@@ -97,6 +97,10 @@ async function main() {
   const fila = JSON.parse(readFileSync(FILA, "utf8"));
   const agora = new Date();
   let mudou = false;
+  // O que deu errado nesta rodada. Silêncio aqui já custou um post: o script
+  // gravava o erro no JSON e terminava com sucesso, então o workflow ficava
+  // verde e ninguém ficava sabendo que nada tinha ido ao ar.
+  const falhas = [];
 
   // confirma retroativamente quem já publicou mas nunca foi checado de verdade
   for (const item of fila) {
@@ -142,11 +146,31 @@ async function main() {
     } catch (e) {
       console.error(`falhou ${item.id}: ${e.message}`);
       item.ultimo_erro = e.message;
+      item.tentativas = (item.tentativas ?? 0) + 1;
+      falhas.push(`${item.id} (${item.tipo}, ${item.quando}): ${e.message}`);
       mudou = true;
     }
   }
+
+  // Aprovado, hora já passou faz mais de 30 minutos e continua sem publicar:
+  // ninguém tentou, ou toda tentativa caiu. Também é motivo de aviso.
+  const ATRASO_MS = 30 * 60 * 1000;
+  for (const item of fila) {
+    if (item.publicado || !item.aprovado) continue;
+    const atraso = agora - new Date(item.quando);
+    if (atraso > ATRASO_MS && !falhas.some((f) => f.startsWith(`${item.id} `))) {
+      falhas.push(`${item.id} (${item.tipo}, ${item.quando}): aprovado e atrasado ${Math.round(atraso / 60000)} min, sem publicar.`);
+    }
+  }
+
   if (mudou) writeFileSync(FILA, JSON.stringify(fila, null, 1) + "\n");
   else console.log("nada vencido pra publicar agora.");
+
+  if (falhas.length) {
+    writeFileSync("falhas-instagram.txt", falhas.join("\n") + "\n");
+    console.error(`\n${falhas.length} publicação(ões) não foram ao ar.`);
+    process.exitCode = 1;
+  }
 }
 
 await main();
