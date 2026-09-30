@@ -352,7 +352,8 @@ Checks antes de commitar: `npm run lint && npm run typecheck`. Migrations testá
 
 ## Próximos passos (em ordem)
 
-1. ~~Teste fechado no Google Play: 12 testadores por 14 dias e pedir produção~~ — feito (dito por ele em 30/09/2026).
+1. Teste fechado no Google Play: 12 testadores já na lista e a contagem dos 14 dias em andamento (dito por ele
+   em 30/09/2026). No fim, "Solicitar acesso à produção". Não deixar cair abaixo de 12 (reinicia a contagem).
 2. Bairros de Brasília, São Luís e Palmas — tem que existir fonte, o OSM é que não cobre. Pistas
    ainda não testadas: (a) malha de setores censitários do Censo 2022 no geoftp do IBGE, que traz
    nome de bairro por setor e dá para dissolver por nome; (b) GeoPortal da Seduh/DF para as regiões
