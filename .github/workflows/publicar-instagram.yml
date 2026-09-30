@@ -76,5 +76,8 @@ jobs:
               await github.rest.issues.create({
                 owner: context.repo.owner, repo: context.repo.repo,
                 title: titulo, body: corpo, labels: ["instagram"],
+                // Atribuir ao dono garante o e-mail mesmo se ele não estiver
+                // observando o repositório.
+                assignees: [context.repo.owner],
               });
             }
