@@ -106,7 +106,9 @@
   "publicado": true,
   "nota": "Tem adesivo de quiz (O que é irisar? → Dar cor a um lugar / Brilhar na balada / Sair do armário). Precisa ir manual pelo app; não deixar o script publicar sozinho. Detalhes em docs/legendas/story-irisar.md.",
   "publicado_em": "2026-09-29T22:10:00.000Z",
-  "publicado_manual": "postado à mão pelo app"
+  "publicado_manual": "postado à mão pelo app",
+  "confirmado": false,
+  "confirmado_erro": "undefined: API access blocked."
  },
  {
   "id": "post-irisar",
@@ -121,7 +123,9 @@
   "publicado": true,
   "nota": "Publicação manual pelo app, decisão dele (29/09). Não deixar o script publicar sozinho.",
   "publicado_em": "2026-09-29T22:10:00.000Z",
-  "publicado_manual": "postado à mão pelo app"
+  "publicado_manual": "postado à mão pelo app",
+  "confirmado": false,
+  "confirmado_erro": "undefined: API access blocked."
  },
  {
   "id": "post-bemvinde",
