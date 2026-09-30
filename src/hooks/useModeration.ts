@@ -61,8 +61,8 @@ export function useModerate() {
 }
 
 /**
- * Fila de imagem: foto que o robô recusou, não soube decidir, ou que ainda espera (sem a chave
- * do Vision, tudo cai aqui). Foto nenhuma entra na ficha antes de passar por esta fila.
+ * Fila de imagem: foto que o robô recusou, em que viu qualquer sinal de dúvida, ou que ainda
+ * espera (sem a chave do Vision, tudo cai aqui). Foto nenhuma entra na ficha antes de passar por esta fila.
  */
 export type FotoPendente = {
   id: string;

@@ -3,9 +3,10 @@
 //
 // Usa o SafeSearch do Google Cloud Vision (1.000 análises por mês de graça). Ele devolve, para
 // adulto, violência, sensual e médico, uma escala de VERY_UNLIKELY a VERY_LIKELY:
-//   tudo baixo                     → aprovada, entra no ar
-//   qualquer coisa LIKELY ou acima → recusada, não entra
-//   POSSIBLE                       → 'humano': fila da tela de moderação
+//   as três em VERY_UNLIKELY       → aprovada, entra no ar
+//   qualquer coisa LIKELY ou acima → recusada, não entra (segue visível na fila para conferir)
+//   qualquer outra resposta        → 'humano': fila da tela de moderação
+// Regra do Alysson: qualquer sinal de dúvida (até UNLIKELY) passa por uma pessoa.
 // Sem VISION_API_KEY, nada é aprovado sozinho: tudo cai na fila humana. O silêncio é seguro.
 //
 // Secrets: PHOTO_CHECK_SECRET (o mesmo no Vault como photo_check_secret), SB_SECRET_KEY,
@@ -18,7 +19,8 @@ type Nivel = "UNKNOWN" | "VERY_UNLIKELY" | "UNLIKELY" | "POSSIBLE" | "LIKELY" | 
 // recusar isso num app que lista serviço de apoio seria errado.
 const CATEGORIAS = ["adult", "violence", "racy"] as const;
 const RECUSA: Nivel[] = ["LIKELY", "VERY_LIKELY"];
-const DUVIDA: Nivel[] = ["POSSIBLE"];
+// Só isto aprova sozinho. UNLIKELY, POSSIBLE e UNKNOWN já são dúvida.
+const LIMPA: Nivel = "VERY_UNLIKELY";
 
 Deno.serve(async (req) => {
   const secret = Deno.env.get("PHOTO_CHECK_SECRET");
@@ -71,12 +73,12 @@ Deno.serve(async (req) => {
       if (niveis.some((n) => RECUSA.includes(n))) {
         review = "recusada";
         contagem.recusadas++;
-      } else if (niveis.some((n) => DUVIDA.includes(n) || n === "UNKNOWN")) {
-        review = "humano";
-        contagem.humano++;
-      } else {
+      } else if (niveis.every((n) => n === LIMPA)) {
         review = "aprovada";
         contagem.aprovadas++;
+      } else {
+        review = "humano";
+        contagem.humano++;
       }
 
       await admin

@@ -155,8 +155,8 @@ Nome: **Irisa** (INPI livre; @appirisa livre). Bundle id Android `br.com.irisa.a
   tiver movimento). **Nunca raspar
   foto do Google Maps para guardar**: é proibido nos termos, as fotos são de quem as tirou, e denúncia
   derruba o app da loja.
-  **Foto de quem avalia (migration 24, 28/09/2026, aplicada no banco; o cron `photo-check` entrou em 30/09/2026.
-  A Edge Function `photo-check` ainda não está publicada e faltam os secrets — até lá toda foto fica pendente):** bucket público
+  **Foto de quem avalia (migration 24, 28/09/2026, aplicada no banco; função `photo-check` e cron publicados em 30/09/2026.
+  Faltam os secrets `PHOTO_CHECK_SECRET`/`VISION_API_KEY` (SOLTAR-OUTUBRO.md 1.4) — até lá toda foto vai para a fila dele):** bucket público
   `fotos-lugares` no Storage (`<place_id>/<user_id>/foto.jpg`, o uid na pasta impede sobrescrever a
   foto alheia e nunca sai do banco), tabela `place_photos` com RLS e rate limit de 10/dia, trigger que
   põe a mais recente ativa em `places.photo_url` com `photo_source='usuario'` e volta para a foto
@@ -164,7 +164,8 @@ Nome: **Irisa** (INPI livre; @appirisa livre). Bundle id Android `br.com.irisa.a
   ganhou `photo`). No app: botão dentro do formulário de avaliação (`src/hooks/usePlacePhoto.ts`).
   **Nenhuma foto entra no ar sozinha:** nasce `review='pendente'`; a Edge Function `photo-check`
   (pg_cron 5 em 5 min) passa pelo SafeSearch do Cloud Vision (1.000/mês grátis) e marca aprovada /
-  recusada / `humano`; a fila humana fica na tela Moderação (`fotos_para_moderar` + `moderar_foto`,
+  recusada / `humano` (**decisão dele, 30/09/2026: só aprova sozinho com as três notas em
+  `VERY_UNLIKELY`; qualquer sinal de dúvida vai para a fila**); a fila humana fica na tela Moderação (`fotos_para_moderar` + `moderar_foto`,
   sem mostrar quem mandou). Sem `VISION_API_KEY` nada é aprovado sozinho — o padrão é não publicar.
   Secrets: `PHOTO_CHECK_SECRET` (Vault: `photo_check_secret`), `VISION_API_KEY`.
   **`expo-image-picker` é nativo: precisa de `npx expo run:ios --device` e de build EAS nova.**

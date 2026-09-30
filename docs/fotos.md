@@ -156,8 +156,9 @@ exige moderação do que o usuário envia. Toda foto nasce `review = 'pendente'`
 
 1. **Robô** — a Edge Function `photo-check` (pg_cron, de 5 em 5 min, só quando há foto pendente)
    manda a imagem para o **SafeSearch do Google Cloud Vision** (1.000 análises/mês grátis).
-   Limpa → `aprovada`, entra no ar. `LIKELY` ou acima em adulto/violência/sensual → `recusada`.
-   `POSSIBLE`, resposta estranha ou erro → `humano`, vai para a fila. ("medical" fica de fora de
+   Só aprova sozinho se adulto, violência e sensual vierem as três em `VERY_UNLIKELY`.
+   `LIKELY` ou acima em qualquer uma → `recusada`. Qualquer outra resposta (`UNLIKELY`, `POSSIBLE`,
+   `UNKNOWN`) ou erro → `humano`, vai para a fila: qualquer sinal de dúvida passa por uma pessoa. ("medical" fica de fora de
    propósito: farmácia e serviço de saúde caem nele.)
 2. **Fila humana** — tela **Moderação** do app mostra a foto, o lugar e o que o robô achou, com
    **Liberar** / **Recusar**. Quem modera não vê quem mandou.
