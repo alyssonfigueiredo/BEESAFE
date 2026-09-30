@@ -80,14 +80,14 @@ create policy "fotos: troca a sua" on public.place_photos for update to authenti
 create policy "fotos: apaga a sua" on public.place_photos for delete to authenticated
   using (user_id = (select auth.uid()) or public.is_moderator());
 
--- Rate limit do projeto (10/dia, igual às avaliações). A função conta pela coluna do argumento.
+-- Rate limit do projeto (fotos 10/dia; avaliações 50/dia desde a migration 25). A função conta pela coluna do argumento.
 create or replace function public.enforce_rate_limit()
 returns trigger language plpgsql security definer set search_path = public as $$
 declare v_limit integer; v_count integer; v_age interval;
 begin
   v_limit := case tg_table_name
     when 'occurrences' then 5
-    when 'place_ratings' then 10
+    when 'place_ratings' then 50
     when 'place_photos' then 10
     when 'support_messages' then 20
     when 'places' then 5

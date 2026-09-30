@@ -156,8 +156,9 @@ exige moderação do que o usuário envia. Toda foto nasce `review = 'pendente'`
 
 1. **Robô** — a Edge Function `photo-check` (pg_cron, de 5 em 5 min, só quando há foto pendente)
    manda a imagem para o **SafeSearch do Google Cloud Vision** (1.000 análises/mês grátis).
-   Limpa → `aprovada`, entra no ar. `LIKELY` ou acima em adulto/violência/sensual → `recusada`.
-   `POSSIBLE`, resposta estranha ou erro → `humano`, vai para a fila. ("medical" fica de fora de
+   Só aprova sozinho se adulto, violência e sensual vierem as três em `VERY_UNLIKELY`.
+   `LIKELY` ou acima em qualquer uma → `recusada`. Qualquer outra resposta (`UNLIKELY`, `POSSIBLE`,
+   `UNKNOWN`) ou erro → `humano`, vai para a fila: qualquer sinal de dúvida passa por uma pessoa. ("medical" fica de fora de
    propósito: farmácia e serviço de saúde caem nele.)
 2. **Fila humana** — tela **Moderação** do app mostra a foto, o lugar e o que o robô achou, com
    **Liberar** / **Recusar**. Quem modera não vê quem mandou.
@@ -167,8 +168,13 @@ exige moderação do que o usuário envia. Toda foto nasce `review = 'pendente'`
 **Sem `VISION_API_KEY` nada é aprovado automaticamente**: tudo espera a fila humana. Falha do
 robô nunca publica — o padrão é não publicar.
 
-Secrets da função: `PHOTO_CHECK_SECRET` (o mesmo no Vault como `photo_check_secret`),
-`SB_SECRET_KEY`, `VISION_API_KEY` (chave do Google Cloud com a **Cloud Vision API** ativada).
+Aviso: sempre que uma foto cai na fila, a função manda um e-mail pelo Gmail da Irisa para
+appirisa@gmail.com (ou para `MODERACAO_EMAIL`, se existir) com quantas fotos esperam decisão.
+
+Secrets da função: `SB_SECRET_KEY`, `GMAIL_USER`, `GMAIL_APP_PASSWORD` (os mesmos do
+`tester-welcome`) e `VISION_API_KEY` (chave do Google Cloud com a **Cloud Vision API** ativada).
+A chave do cron fica só no Vault (`photo_check_secret`, criada pela migration 26); a função
+confere pela RPC `photo_check_autorizado`.
 - No app: botão **Adicionar uma foto do lugar** dentro do formulário de avaliação
   (`app/lugar/[id].tsx` + `src/hooks/usePlacePhoto.ts`). Recorte 16:9 e qualidade 0.7 no envio,
   para a faixa da ficha e para não subir arquivo gigante.

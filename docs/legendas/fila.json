@@ -80,7 +80,7 @@
     "legenda": "",
     "primeiro_comentario": "",
     "publicado": true,
-    "ultimo_erro": "EAAXApo4zB6cBSvgZCMXQzoZAZANCIk3anGnkh0aWaqiRieA1AFZCIjApIniRZCisCRwmEDdSPAaymIUzlqxPJ5bgEXJNUMa31kSzPGlVhuJOCFuZCLZBcwGZBy4Qtw1ySzkSSqoli7l1081Jhw7g5T7lejXdKRHon8caTkC3SnH4pomlz5wc0bNHMkfM1Nq3maP5ZCJooVQ4ZD/media: Unsupported post request. Object with ID 'EAAXApo4zB6cBSvgZCMXQzoZAZANCIk3anGnkh0aWaqiRieA1AFZCIjApIniRZCisCRwmEDdSPAaymIUzlqxPJ5bgEXJNUMa31kSzPGlVhuJOCFuZCLZBcwGZBy4Qtw1ySzkSSqoli7l1081Jhw7g5T7lejXdKRHon8caTkC3SnH4pomlz5wc0bNHMkfM1Nq3maP5ZCJooVQ4ZD' does not exist, cannot be loaded due to missing permissions, or does not support this operation. Please read the Graph API documentation at https://developers.facebook.com/docs/graph-api",
+    "ultimo_erro": "***/media: Unsupported post request. Object with ID '***' does not exist, cannot be loaded due to missing permissions, or does not support this operation. Please read the Graph API documentation at https://developers.facebook.com/docs/graph-api",
     "publicado_em": "2026-09-28T18:23:46.921Z",
     "media_id": "18108605300334854",
     "confirmacao": {
@@ -109,6 +109,41 @@
     "publicado_manual": "postado à mão pelo app",
     "confirmado": false,
     "confirmado_erro": "undefined: API access blocked."
+  },
+  {
+    "id": "post-irisar",
+    "aprovado": false,
+    "quando": "2026-09-29T18:00:00-03:00",
+    "tipo": "POST",
+    "midias": [
+      "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/post-irisar/01.png"
+    ],
+    "legenda": "Irisar: verbo.\n\nDar cor a um lugar respondendo quatro perguntas sobre como ele recebe a gente — atendimento, afeto, banheiro, clientela. Quem esteve lá responde. As respostas viram nota, e a nota vira cor.\n\nEstrela não diz nada pra gente. Cinco estrelas num lugar onde a recepção te olha torto continuam sendo cinco estrelas.\n\nQual lugar da sua cidade você irisaria hoje? 🌈\n\nO link está na bio.\n\n#Irisa #LGBTQIA #Orgulho #AppLGBT #Dicionario",
+    "primeiro_comentario": "bit.ly/appirisa",
+    "publicado": true,
+    "nota": "Publicação manual pelo app, decisão dele (29/09). Não deixar o script publicar sozinho.",
+    "publicado_em": "2026-09-29T22:10:00.000Z",
+    "publicado_manual": "postado à mão pelo app",
+    "confirmado": false,
+    "confirmado_erro": "undefined: API access blocked."
+  },
+  {
+    "id": "post-bemvinde",
+    "aprovado": false,
+    "quando": "2026-09-30T18:00:00-03:00",
+    "tipo": "POST",
+    "midias": [
+      "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/post-bemvinde/01.png"
+    ],
+    "legenda": "Uma escolha de palavra: bem-vinde.\n\n\"Bem-vindo\" deixa gente de fora. O mapa é de todo mundo que entra pela porta — e a linguagem do app segue essa regra em tudo: identificade, questionade, recebide.\n\nQual foi a primeira vez que alguém usou uma palavra assim com você? 🌈\n\nO link está na bio.\n\n#Irisa #LGBTQIA #Orgulho #AppLGBT #BemVinde",
+    "primeiro_comentario": "",
+    "publicado": true,
+    "tentativas": 1,
+    "nota": "Publicado à mão em 30/09 enquanto o token da Meta era trocado.",
+    "publicado_em": "2026-09-30T21:30:00.000Z",
+    "publicado_manual": "postado à mão pelo app (API bloqueada pelo token vazado)",
+    "confirmado": false,
+    "confirmado_erro": "publicação manual, sem media_id para conferir"
   },
   {
     "id": "carrossel-4",
@@ -340,21 +375,9 @@
     "publicado": false
   },
   {
-    "id": "post-bemvinde",
-    "aprovado": false,
-    "quando": "2026-10-13T19:00:00-03:00",
-    "tipo": "POST",
-    "midias": [
-      "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/post-bemvinde/01.png"
-    ],
-    "legenda": "Uma escolha de palavra: bem-vinde.\n\n\"Bem-vindo\" deixa gente de fora. O mapa é de todo mundo que entra pela porta — e a linguagem do app segue essa regra em tudo: identificade, questionade, recebide.\n\nQual foi a primeira vez que alguém usou uma palavra assim com você? 🌈\n\nO link está na bio.\n\n#Irisa #LGBTQIA #Orgulho #AppLGBT #BemVinde",
-    "primeiro_comentario": "",
-    "publicado": false
-  },
-  {
     "id": "reels-olhar",
     "aprovado": false,
-    "quando": "2026-10-14T19:00:00-03:00",
+    "quando": "2026-10-13T19:00:00-03:00",
     "tipo": "REELS",
     "midias": [
       "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/Irisa-reels-olhar.mp4"
@@ -364,26 +387,9 @@
     "publicado": false
   },
   {
-    "id": "post-irisar",
-    "aprovado": false,
-    "quando": "2026-10-15T19:00:00-03:00",
-    "tipo": "POST",
-    "midias": [
-      "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/post-irisar/01.png"
-    ],
-    "legenda": "Irisar: verbo.\n\nDar cor a um lugar respondendo quatro perguntas sobre como ele recebe a gente — atendimento, afeto, banheiro, clientela. Quem esteve lá responde. As respostas viram nota, e a nota vira cor.\n\nEstrela não diz nada pra gente. Cinco estrelas num lugar onde a recepção te olha torto continuam sendo cinco estrelas.\n\nQual lugar da sua cidade você irisaria hoje? 🌈\n\nO link está na bio.\n\n#Irisa #LGBTQIA #Orgulho #AppLGBT #Dicionario",
-    "primeiro_comentario": "bit.ly/appirisa",
-    "publicado": true,
-    "nota": "Publicação manual pelo app, decisão dele (29/09). Não deixar o script publicar sozinho.",
-    "publicado_em": "2026-09-29T22:10:00.000Z",
-    "publicado_manual": "postado à mão pelo app",
-    "confirmado": false,
-    "confirmado_erro": "undefined: API access blocked."
-  },
-  {
     "id": "reels-3",
     "aprovado": false,
-    "quando": "2026-10-16T19:00:00-03:00",
+    "quando": "2026-10-14T19:00:00-03:00",
     "tipo": "REELS",
     "midias": [
       "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/Irisa-reels-3.mp4"
@@ -395,7 +401,7 @@
   {
     "id": "reels-4",
     "aprovado": false,
-    "quando": "2026-10-17T19:00:00-03:00",
+    "quando": "2026-10-15T19:00:00-03:00",
     "tipo": "REELS",
     "midias": [
       "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/Irisa-reels-4.mp4"
@@ -407,7 +413,7 @@
   {
     "id": "reels-5",
     "aprovado": false,
-    "quando": "2026-10-18T19:00:00-03:00",
+    "quando": "2026-10-16T19:00:00-03:00",
     "tipo": "REELS",
     "midias": [
       "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/Irisa-reels-5.mp4"

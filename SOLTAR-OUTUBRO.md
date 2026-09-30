@@ -87,14 +87,15 @@ Google Cloud (mesmo projeto das outras chaves), https://console.cloud.google.com
 No Terminal:
 
 ```bash
-SECRET=$(openssl rand -hex 24)
 read -s -p "Chave da Cloud Vision: " V; echo
-npx supabase secrets set PHOTO_CHECK_SECRET=$SECRET VISION_API_KEY="$V" --project-ref ntjirpqulrnieeglpiei
-npx supabase functions deploy photo-check --project-ref ntjirpqulrnieeglpiei
-echo "select vault.create_secret('$SECRET', 'photo_check_secret');" | pbcopy
+npx supabase secrets set VISION_API_KEY="$V" --project-ref ntjirpqulrnieeglpiei
 ```
 
-Cole a última linha no SQL Editor e rode.
+(A chave do cron já está no Vault desde a migration 26; não tem mais `PHOTO_CHECK_SECRET`.)
+
+A função `photo-check` e o agendamento já estão no ar (30/09/2026). Critério: só aprova sozinho
+foto com as três notas (adulto, violência, sensual) em "muito improvável"; qualquer dúvida vai
+para a tela de Moderação, e chega um e-mail em appirisa@gmail.com avisando.
 
 Sem essa chave nada é aprovado sozinho: toda foto espera a fila humana. Não é erro, é o padrão
 seguro.
@@ -182,10 +183,10 @@ análise. O número da build sobe sozinho (`autoIncrement`). Se a Apple pedir ve
 
 **Sobre foto enviada por usuário, a Apple é mais exigente que o Google.** A regra 1.2 (conteúdo
 gerado por usuário) pede quatro coisas, e as quatro já existem: filtro do conteúdo antes de
-publicar (o robô do Cloud Vision + a fila humana), denúncia, bloqueio de usuário e um contato de
-suporte (appirisa@gmail.com). Vale dizer isso nas notas de revisão, em uma linha: *"Fotos enviadas
-por usuários passam por análise automática de conteúdo impróprio e por revisão humana antes de
-aparecer. O app tem denúncia, bloqueio e exclusão de conta."* Sem essa frase a revisão costuma
+publicar (toda foto passa pela aprovação da moderação; sem a chave do Cloud Vision não há robô),
+denúncia, bloqueio de usuário e um contato de suporte (appirisa@gmail.com). Vale dizer isso nas
+notas de revisão, em uma linha: *"Photos uploaded by users are reviewed by a human moderator before
+they appear. The app has reporting, user blocking and account deletion."* Sem essa frase a revisão costuma
 voltar com pedido de esclarecimento.
 
 No iPhone dele, para testar sem gastar build: `npx expo run:ios --device` (precisa refazer a cada
