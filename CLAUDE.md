@@ -352,8 +352,7 @@ Checks antes de commitar: `npm run lint && npm run typecheck`. Migrations testá
 
 ## Próximos passos (em ordem)
 
-1. Teste fechado no Google Play: manter 12 testadores opted-in por 14 dias seguidos e depois
-   "Solicitar acesso à produção". A versão 8 já está em revisão.
+1. ~~Teste fechado no Google Play: 12 testadores por 14 dias e pedir produção~~ — feito (dito por ele em 30/09/2026).
 2. Bairros de Brasília, São Luís e Palmas — tem que existir fonte, o OSM é que não cobre. Pistas
    ainda não testadas: (a) malha de setores censitários do Censo 2022 no geoftp do IBGE, que traz
    nome de bairro por setor e dá para dissolver por nome; (b) GeoPortal da Seduh/DF para as regiões
@@ -370,8 +369,8 @@ Checks antes de commitar: `npm run lint && npm run typecheck`. Migrations testá
    mesclada na `laughing-keller`): migrations 20 e 21 aplicadas, Edge Functions publicadas, secrets
    da Apple gravados e build iOS no TestFlight em 28/09. **Testado por ele no iPhone em 28/09:** excluir
    conta Apple tira a Irisa de Ajustes → Iniciar sessão com a Apple (revogação real), e bloquear/
-   desbloquear esconde e devolve a mensagem. Falta: enviar a versão iOS para revisão (Notes já
-   escritas) e, no Android, a build 10 com a resposta do IARC (bloquear outros usuários) mudando para
+   desbloquear esconde e devolve a mensagem. Versão iOS enviada para revisão (dito por ele em
+   30/09/2026). Falta, no Android, a build 10 com a resposta do IARC (bloquear outros usuários) mudando para
    **Sim** na mesma versão (cota do EAS vira em 01/10).
 4. Apple Developer (US$99/ano) quando decidir publicar no iOS; ou via ONG parceira (Apple isenta ONGs).
    Denúncia, moderação e excluir conta já existem.
