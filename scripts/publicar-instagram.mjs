@@ -12,6 +12,21 @@ const FILA = "docs/legendas/fila.json";
 
 if (!IG || !TOKEN) throw new Error("faltam META_IG_USER_ID / META_ACCESS_TOKEN no ambiente");
 
+// O erro da Graph API volta com o texto da requisição, e às vezes o próprio
+// token (quando um secret é trocado pelo outro, ele vira o "ID" do objeto).
+// A mensagem vai para fila.json, que é público: nunca deixar o token passar.
+function semSegredo(texto) {
+  let t = String(texto);
+  if (TOKEN) t = t.split(TOKEN).join("***");
+  return t.replace(/EAA[A-Za-z0-9]{20,}/g, "***");
+}
+
+function erroDaApi(path, j) {
+  const e = j.error;
+  const detalhe = [e.code && `código ${e.code}`, e.error_subcode && `subcódigo ${e.error_subcode}`].filter(Boolean).join(", ");
+  return new Error(semSegredo(`${path}: ${e.message}${detalhe ? ` (${detalhe})` : ""}`));
+}
+
 async function chamar(path, params, method = "GET") {
   const url = new URL(`${API}/${path}`);
   if (method === "GET") {
@@ -19,13 +34,13 @@ async function chamar(path, params, method = "GET") {
     url.searchParams.set("access_token", TOKEN);
     const r = await fetch(url);
     const j = await r.json();
-    if (j.error) throw new Error(`${path}: ${j.error.message}`);
+    if (j.error) throw erroDaApi(path, j);
     return j;
   }
   const body = new URLSearchParams({ ...params, access_token: TOKEN });
   const r = await fetch(url, { method: "POST", body });
   const j = await r.json();
-  if (j.error) throw new Error(`${path}: ${j.error.message}`);
+  if (j.error) throw erroDaApi(path, j);
   return j;
 }
 
@@ -112,8 +127,8 @@ async function main() {
         console.log(`confirmado ${item.id}: existe na conta.`);
       } catch (e) {
         item.confirmado = false;
-        item.confirmado_erro = e.message;
-        console.error(`não confirmei ${item.id}: ${e.message}`);
+        item.confirmado_erro = semSegredo(e.message);
+        console.error(`não confirmei ${item.id}: ${semSegredo(e.message)}`);
       }
       mudou = true;
     }
@@ -140,14 +155,14 @@ async function main() {
         console.log(`confirmado ${item.id}: existe na conta.`);
       } catch (e) {
         item.confirmado = false;
-        item.confirmado_erro = e.message;
-        console.error(`publicou mas não confirmei ${item.id}: ${e.message}`);
+        item.confirmado_erro = semSegredo(e.message);
+        console.error(`publicou mas não confirmei ${item.id}: ${semSegredo(e.message)}`);
       }
     } catch (e) {
-      console.error(`falhou ${item.id}: ${e.message}`);
-      item.ultimo_erro = e.message;
+      console.error(`falhou ${item.id}: ${semSegredo(e.message)}`);
+      item.ultimo_erro = semSegredo(e.message);
       item.tentativas = (item.tentativas ?? 0) + 1;
-      falhas.push(`${item.id} (${item.tipo}, ${item.quando}): ${e.message}`);
+      falhas.push(`${item.id} (${item.tipo}, ${item.quando}): ${semSegredo(e.message)}`);
       mudou = true;
     }
   }

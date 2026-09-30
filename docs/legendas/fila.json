@@ -80,7 +80,7 @@
   "legenda": "",
   "primeiro_comentario": "",
   "publicado": true,
-  "ultimo_erro": "EAAXApo4zB6cBSvgZCMXQzoZAZANCIk3anGnkh0aWaqiRieA1AFZCIjApIniRZCisCRwmEDdSPAaymIUzlqxPJ5bgEXJNUMa31kSzPGlVhuJOCFuZCLZBcwGZBy4Qtw1ySzkSSqoli7l1081Jhw7g5T7lejXdKRHon8caTkC3SnH4pomlz5wc0bNHMkfM1Nq3maP5ZCJooVQ4ZD/media: Unsupported post request. Object with ID 'EAAXApo4zB6cBSvgZCMXQzoZAZANCIk3anGnkh0aWaqiRieA1AFZCIjApIniRZCisCRwmEDdSPAaymIUzlqxPJ5bgEXJNUMa31kSzPGlVhuJOCFuZCLZBcwGZBy4Qtw1ySzkSSqoli7l1081Jhw7g5T7lejXdKRHon8caTkC3SnH4pomlz5wc0bNHMkfM1Nq3maP5ZCJooVQ4ZD' does not exist, cannot be loaded due to missing permissions, or does not support this operation. Please read the Graph API documentation at https://developers.facebook.com/docs/graph-api",
+  "ultimo_erro": "***/media: Unsupported post request. Object with ID '***' does not exist, cannot be loaded due to missing permissions, or does not support this operation. Please read the Graph API documentation at https://developers.facebook.com/docs/graph-api",
   "publicado_em": "2026-09-28T18:23:46.921Z",
   "media_id": "18108605300334854",
   "confirmacao": {
@@ -129,7 +129,7 @@
  },
  {
   "id": "post-bemvinde",
-  "aprovado": true,
+  "aprovado": false,
   "quando": "2026-09-30T18:00:00-03:00",
   "tipo": "POST",
   "midias": [
@@ -139,7 +139,8 @@
   "primeiro_comentario": "",
   "publicado": false,
   "ultimo_erro": "17841429721624871/media: API access blocked.",
-  "tentativas": 1
+  "tentativas": 1,
+  "nota": "Pausado em 30/09: a Meta bloqueou o acesso da API (token vazou no repositório em 28/09). Voltar para aprovado só depois de trocar o META_ACCESS_TOKEN."
  },
  {
   "id": "carrossel-4",
