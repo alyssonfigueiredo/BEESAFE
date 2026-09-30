@@ -392,7 +392,9 @@ Checks antes de commitar: `npm run lint && npm run typecheck`. Migrations testá
   devolveu o token e o robô gravou em `docs/legendas/fila.json`, público). Desde 29/09 a Meta responde
   "API access blocked". Desde 30/09 o script passa todo erro por `semSegredo()`. O token segue no
   histórico do git: tem que ser revogado e trocado, não basta apagar do arquivo. `post-bemvinde`
-  ficou com `aprovado: false` até o token novo entrar.
+  ficou com `aprovado: false` até o token novo entrar. **Token novo (usuário, longo, app Irisa
+  2296597601132815) gravado e testado em 30/09/2026; vence por volta de 29/11/2026.** Para testar sem
+  publicar: Actions → Publicar Instagram → Run workflow com "Só testar o token" marcado.
 - O aviso "Security Definer View" do linter da Supabase nas views `public_*` é proposital, não bug:
   as tabelas-base não têm policy de leitura para usuário comum, e a view é o único caminho — ela
   esconde `created_by`, filtra `status = 'active'` e arredonda coordenada recente. Não converter
