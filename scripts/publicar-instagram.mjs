@@ -188,4 +188,18 @@ async function main() {
   }
 }
 
-await main();
+// --testar: só confere se o token e o ID da conta funcionam, sem publicar nada.
+// Roda pelo botão "Run workflow" com "testar" marcado, depois de trocar o token.
+async function testar() {
+  try {
+    const conta = await chamar(IG, { fields: "username" });
+    const limite = await chamar(`${IG}/content_publishing_limit`, { fields: "quota_usage" });
+    console.log(`token ok: @${conta.username}, ${limite.data?.[0]?.quota_usage ?? "?"} publicações nas últimas 24 h.`);
+  } catch (e) {
+    console.error(`token NÃO funciona: ${semSegredo(e.message)}`);
+    process.exitCode = 1;
+  }
+}
+
+if (process.argv.includes("--testar")) await testar();
+else await main();

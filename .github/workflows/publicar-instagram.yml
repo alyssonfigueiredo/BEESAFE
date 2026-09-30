@@ -3,7 +3,12 @@ name: Publicar Instagram
 on:
   schedule:
     - cron: "*/30 * * * *"
-  workflow_dispatch: {}
+  workflow_dispatch:
+    inputs:
+      testar:
+        description: "Só testar o token (não publica nada)"
+        type: boolean
+        default: false
 
 permissions:
   contents: write
@@ -17,7 +22,15 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
+      - name: Testa o token
+        if: inputs.testar
+        env:
+          META_IG_USER_ID: ${{ secrets.META_IG_USER_ID }}
+          META_ACCESS_TOKEN: ${{ secrets.META_ACCESS_TOKEN }}
+        run: node scripts/publicar-instagram.mjs --testar
+
       - name: Publica o que venceu
+        if: ${{ !inputs.testar }}
         id: publicar
         env:
           META_IG_USER_ID: ${{ secrets.META_IG_USER_ID }}
@@ -27,7 +40,7 @@ jobs:
       # A fila é gravada mesmo quando alguma publicação falha: o erro fica
       # registrado no JSON para a próxima rodada.
       - name: Grava a fila atualizada
-        if: always()
+        if: ${{ always() && !inputs.testar }}
         run: |
           if ! git diff --quiet docs/legendas/fila.json; then
             git config user.name "github-actions[bot]"
@@ -40,7 +53,7 @@ jobs:
       # Post que não vai ao ar é prejuízo silencioso: abre issue (que o GitHub
       # manda por e-mail) em vez de deixar o workflow vermelho sem ninguém ver.
       - name: Avisa que não foi ao ar
-        if: failure()
+        if: ${{ failure() && !inputs.testar }}
         uses: actions/github-script@v7
         with:
           script: |
