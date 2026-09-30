@@ -136,6 +136,10 @@ Nome: **Irisa** (INPI livre; @appirisa livre). Bundle id Android `br.com.irisa.a
   ≥ 0.5 (`--confianca`), tira repetidos a 150 m e o que já existe no banco com nome igual a 150 m. Sem
   `--limite` entra tudo: Curitiba dá ~10.700 candidatos (vs. 256 do OSM). `--simular` só conta, sem chave.
   `gay_bar` do Overture só dá prioridade, não vira rótulo. Atribuição das fontes está nos termos (item 12).
+  **Todas as 27 capitais com Overture desde 30/09/2026** (154 mil lugares ativos): as 8 que faltavam
+  entraram pelo Mac dele — Florianópolis 4.414, Campo Grande 3.510, Cuiabá 2.077, São Luís 1.912,
+  Porto Velho 1.486, Boa Vista 882, Palmas 816, Rio Branco 724. Rio Branco tem 1 bairro só no banco
+  (lugares ficam sem bairro, como em São Luís e Palmas).
   No workflow Importar cidade o Overture é o padrão e o OSM ficou desligado. Fotos: cada lugar novo entra
   na fila do Google (150/dia), então uma capital inteira leva meses de cota — aceito, cai no ícone.
   **Fila de fotos por relevância (migration 17, 25/09/2026):** `places.prominence` (0–100 = confiança do
