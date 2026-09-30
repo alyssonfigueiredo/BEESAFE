@@ -70,7 +70,7 @@ Eixos têm cor fixa: Atendimento coral, Afeto orange, Banheiro yellow, Clientela
 - **`#radarmark`** = símbolo completo (anel de 48 gomos, varredura turquesa, três pontos, pupila #0F1220 com brilho). Só a partir de **50 px**: marca vertical, horizontal, fecho de reels (`.handle` com @appirisa a 78 px), capa de story.
 - **`#radarmin`** = **redução**: só o anel colorido, centro vazio, sem pupila. É a **assinatura de post**: rodapé de toda lâmina e de todo reels, ícone ao lado de @appirisa abaixo de 50 px. Mínimo 20 px.
 - Nunca: círculo liso em CSS, cor única, preto e branco, esticar, girar, sombra, `filter:saturate` por cima (o fragmento já vem na paleta ×1.35).
-- **Rodapé de toda lâmina**: canto inferior esquerdo `.brand` = `#radarmin` 36 px + "IRIS" + "a" amber. Canto inferior direito `.swipe` = "arraste →" (não na última). Canto superior direito `.num` = "3/8". No story o `.brand` fica centralizado a 120 px do fundo. No reels fica a 440 px do fundo (acima da legenda e do @ que o Instagram sobrepõe) e as cenas usam `padding:220px 80px 540px` para o conteúdo não encostar nele.
+- **Rodapé de toda lâmina**: canto inferior esquerdo `.brand` = `#radarmin` (nunca `#radarmark`, que só existe a partir de 50 px — os carrosséis 3 a 7 e o post-bemvinde nasceram errados e foram corrigidos em 30/09) 36 px + "IRIS" + "a" amber. Canto inferior direito `.swipe` = "arraste →" (não na última). Canto superior direito `.num` = "3/8". No story o `.brand` fica centralizado a 120 px do fundo. No reels fica a 440 px do fundo (acima da legenda e do @ que o Instagram sobrepõe) e as cenas usam `padding:220px 80px 540px` para o conteúdo não encostar nele.
 - A capa de carrossel nunca é a logo. É o gancho.
 - Vinheta em vídeo: `docs/abertura.html` (4,2 s, `?formato=quadrado|story&bg=paper|night`), MP4 prontos em `docs/marca-pack/video/`.
 
@@ -117,6 +117,33 @@ peça clara no meio de peça clara para "adiantar".
 Conferir antes de agendar: `docs/legendas/fila.json` em ordem de `quando`, lendo duas colunas —
 tipo e cor da capa. Se as duas não alternam, a fila está errada, não a arte.
 
+### O papel de noite (`.sl.night`) — valores fechados
+
+Fechado em 30/09/2026. **Não redesenhar, não improvisar outro escuro, não mexer nestes números**:
+quem precisar de lâmina escura usa `.sl.night` como está. Só `--paper` veio da marca (é o `--night`
+de sempre, o mesmo de `src/theme/tokens.js`); o resto foi derivado clareando o acento cheio da
+paleta até separar do fundo, mantendo o matiz. O contraste sobre `#141829` está entre parênteses —
+todos acima do que os Ink de papel entregam (3,8 a 5,8), de propósito, porque na grade a peça é
+uma miniatura.
+
+| token | valor | de onde veio |
+| --- | --- | --- |
+| `--paper` | `#141829` | o `--night` da marca |
+| `--ink` | `#FFFFFF` | branco (17,6) |
+| `--muted` | `#C8CCDC` | o muted do papel, invertido (11,0) |
+| `--dim` | `#8E96AE` | o dim do papel, clareado (6,0) |
+| `--coralInk` | `#FF8D89` | coral `#FF6964` (7,9) |
+| `--orangeInk` | `#FFBB7A` | laranja `#FFA353` (10,6) |
+| `--yellowInk` | `#FFDE95` | amarelo `#FFD066` (13,5) |
+| `--turqInk` | `#6FE7D0` | turquesa `#49DCC0` (11,8) |
+| `--lilacInk` | `#C3ABFF` | lilás `#A889FF` (8,9) |
+| `--pane` / `--pane-edge` | branco a 8% / 16% | vidro sobre escuro |
+
+As manchas dos cantos ficam em `opacity:.85;mix-blend-mode:screen;filter:saturate(.8)` — sem o
+`screen` o `.bg` some no escuro, e acima disso o canto vira néon. `.ct` e `.btn` mantêm o texto
+`#141829`, porque a cápsula continua em cor cheia.
+
+
 ## 7a. Perfil zero (decisão de 27/09/2026)
 
 Para quem não segue a conta, conteúdo que explica o app não segura 3 segundos. A sequência de ataque começa por reels curtos de reconhecimento (uma cena da vida de quem assiste, sem dizer "Irisa" na abertura), cada um pedindo um sinal só (compartilhar por DM, replay, comentar "eu" ou a cidade), e só depois entram os reels e carrosséis que apresentam o produto. Regras: gancho legível em 1 s sem contexto, sem pausa morta (cena nova a cada 4–6 s), texto grande porque a maioria assiste sem som, @appirisa só no fecho. Nunca prometer alcance nem correr atrás de trend sem relação com o tema.
@@ -154,6 +181,8 @@ Para quem não segue a conta, conteúdo que explica o app não segura 3 segundos
 - [ ] "cor" em arco-íris quando a frase oficial aparece.
 - [ ] Capa é gancho, não logo. Rodapé com mark + IRISa em toda lâmina.
 - [ ] Capa entra no xadrez: alterna claro/escuro e estático/reels com a peça anterior da fila (seção 6a).
+- [ ] Lâmina escura usa `.sl.night` com os valores fechados da seção 6a — nenhum escuro novo.
+- [ ] Rodapé com `#radarmin`, nunca `#radarmark` (que só vale de 50 px para cima).
 - [ ] Sem link escrito na arte; sem número de testadores; sem emoji na arte.
 - [ ] Fecho com pergunta + "O link está na bio" + "em fase de testes · Android".
 - [ ] Arco-íris na ordem coral → orange → yellow → turq → blue → lilac.
