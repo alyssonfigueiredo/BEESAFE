@@ -95,6 +95,28 @@ Story (1080×1920, `.sl.story`): mesma gramática, mais ar, marca centralizada n
 
 Reels (`docs/reels-3..9.html` como referência): mesmo CSS dentro de `#stage` 1080×1920, cenas em Web Animations presas a `window.__setT`, eyebrow com o nome da série na cena 0, assinatura "cinza vira cor" (`grayscale` no `#col` até o momento da virada), fecho `.handle` com `#radarmark` 78 px + @appirisa e `.brand` com `#radarmin`. Render: `FFMPEG=… node scripts/story-video.mjs docs/reels-N.html docs/Irisa-reels-N.mp4`. Sempre mostrar quadros estáticos antes de renderizar. **O bloco `#col` (com `.bg` e os dois `.halo`) entra uma vez só**: duplicado, as manchas dos cantos são pintadas duas vezes e o papel vira uma lavagem de cor fora da marca.
 
+## 6a. A grade do perfil (xadrez)
+
+O perfil não é uma fila de peças soltas: quem chega vê nove quadradinhos de uma vez, e é a grade
+que diz se a conta tem dono. Duas alternâncias, sempre, na ordem de publicação:
+
+1. **Claro e escuro na capa.** Uma peça de papel, a seguinte de noite (`.sl.night`), e assim por
+   diante. Na grade de três colunas isso vira um tabuleiro: nenhuma mancha clara ou escura grudada.
+   `.sl.night` só troca os tokens (papel vira `#141829`, Ink vira a cor clara, `.pane` vira vidro
+   escuro) — a gramática da lâmina é a mesma, nada é redesenhado. **Só a capa muda de cor**: o miolo
+   do carrossel continua papel, porque a virada capa→lâmina 2 já é parte da leitura.
+2. **Tipo de post.** Estático e reels se revezam dia a dia. Quatro reels em sequência transformam
+   a grade numa parede de miniaturas de vídeo, e três carrosséis seguidos matam o alcance de quem
+   só assiste.
+
+Data comemorativa manda mais que o xadrez: se a peça do dia é fixa (11/10, Dia de Sair do Armário),
+ela fica no dia e a alternância se acomoda em volta. Quando o acervo desequilibra (mais reels que
+estáticos), a sobra vai para o fim da fila e a dívida é escrita no cronograma — nunca se enfia
+peça clara no meio de peça clara para "adiantar".
+
+Conferir antes de agendar: `docs/legendas/fila.json` em ordem de `quando`, lendo duas colunas —
+tipo e cor da capa. Se as duas não alternam, a fila está errada, não a arte.
+
 ## 7a. Perfil zero (decisão de 27/09/2026)
 
 Para quem não segue a conta, conteúdo que explica o app não segura 3 segundos. A sequência de ataque começa por reels curtos de reconhecimento (uma cena da vida de quem assiste, sem dizer "Irisa" na abertura), cada um pedindo um sinal só (compartilhar por DM, replay, comentar "eu" ou a cidade), e só depois entram os reels e carrosséis que apresentam o produto. Regras: gancho legível em 1 s sem contexto, sem pausa morta (cena nova a cada 4–6 s), texto grande porque a maioria assiste sem som, @appirisa só no fecho. Nunca prometer alcance nem correr atrás de trend sem relação com o tema.
@@ -131,6 +153,7 @@ Para quem não segue a conta, conteúdo que explica o app não segura 3 segundos
 - [ ] "bem-vinde", "identificade" etc. (neutro).
 - [ ] "cor" em arco-íris quando a frase oficial aparece.
 - [ ] Capa é gancho, não logo. Rodapé com mark + IRISa em toda lâmina.
+- [ ] Capa entra no xadrez: alterna claro/escuro e estático/reels com a peça anterior da fila (seção 6a).
 - [ ] Sem link escrito na arte; sem número de testadores; sem emoji na arte.
 - [ ] Fecho com pergunta + "O link está na bio" + "em fase de testes · Android".
 - [ ] Arco-íris na ordem coral → orange → yellow → turq → blue → lilac.
