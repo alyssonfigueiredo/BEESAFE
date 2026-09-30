@@ -348,6 +348,8 @@ node scripts/pitch-pdf.mjs                           # regera docs/Irisa-apresen
 Sem o Mac (pelo celular): GitHub → Actions → **Importar cidade** → Run workflow. Pede o código IBGE e
 roda bairros, lugares e fotos com as chaves guardadas nos Secrets do repositório
 (`SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY`, `GOOGLE_MAPS_API_KEY`).
+**Não funciona hoje (30/09/2026):** o repositório não tem esses secrets (o run sai com a chave vazia) e a
+API de malhas do IBGE não responde aos servidores do GitHub (timeout). Importar pelo Mac.
 
 Checks antes de commitar: `npm run lint && npm run typecheck`. Migrations testáveis localmente com `scripts/db-smoke.sh`.
 
