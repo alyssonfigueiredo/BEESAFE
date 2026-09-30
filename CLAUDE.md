@@ -48,6 +48,8 @@ Nome: **Irisa** (INPI livre; @appirisa livre). Bundle id Android `br.com.irisa.a
   código pela sessão, então tocar no link do e-mail no mesmo celular já entra na conta. Em outro aparelho
   a conta fica confirmada e a pessoa entra pelo login. `irisa://auth/callback` tem que continuar em
   Redirect URLs (o login com Google depende dele).
+- **Limite de avaliações 50/dia (migration 25, 30/09/2026, ainda não colada):** antes era 10. Só muda
+  `enforce_rate_limit` no banco, sem build. A 24 já foi ajustada para não voltar a 10 se for colada depois.
 - Chaves legadas desativadas: app usa `sb_publishable_...`, scripts usam `sb_secret_...` (só na máquina dele).
 - Dados geográficos: os 5.570 municípios das 27 UFs e os bairros de 24 capitais importados do OSM.
   São Paulo saiu com 96 pelo nível 9 (`--nivel 9`, que lá são os distritos). Seguem sem bairro:
