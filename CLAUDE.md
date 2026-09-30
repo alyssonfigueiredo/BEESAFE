@@ -160,7 +160,7 @@ Nome: **Irisa** (INPI livre; @appirisa livre). Bundle id Android `br.com.irisa.a
   derruba o app da loja.
   **Foto de quem avalia (migration 24, 28/09/2026, aplicada no banco; função `photo-check` e cron publicados em 30/09/2026.
   Chave do cron só no Vault (migration 26, RPC `photo_check_autorizado`). Foto na fila → e-mail para appirisa@gmail.com.
-  Falta só `VISION_API_KEY` (SOLTAR-OUTUBRO.md 1.4) — sem ela toda foto vai para a fila dele):** bucket público
+  Sem `VISION_API_KEY` por decisão dele (30/09/2026): toda foto passa pela aprovação dele; a chave fica para quando o volume pedir):** bucket público
   `fotos-lugares` no Storage (`<place_id>/<user_id>/foto.jpg`, o uid na pasta impede sobrescrever a
   foto alheia e nunca sai do banco), tabela `place_photos` com RLS e rate limit de 10/dia, trigger que
   põe a mais recente ativa em `places.photo_url` com `photo_source='usuario'` e volta para a foto
