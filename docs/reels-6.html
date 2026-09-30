@@ -109,18 +109,18 @@ const confetti=(box,start)=>{let s=11;const r=()=>(s=s*17387%2147483647)/2147483
   const dx=(r()-.5)*1300,dy=-(300+r()*600),rot=(r()-.5)*900,d=2200+r()*1200;
   A(c,[{opacity:0,transform:"translate(0,0) rotate(0)"},{opacity:1,transform:"translate("+dx*.5+"px,"+dy+"px) rotate("+rot/2+"deg)",offset:.35},{opacity:0,transform:"translate("+dx+"px,"+(dy+1500)+"px) rotate("+rot+"deg)"}],start+r()*400,d,"cubic-bezier(.2,.7,.3,1)")}};
 A($("#e0"),IN_BLUR,100,600);
-[$("#col")].forEach(el=>A(el,[{filter:"grayscale(1)"},{filter:"grayscale(1)",offset:0.9189},{filter:"grayscale(0)"}],0,11100,"linear",{composite:"add"}));
+[$("#col")].forEach(el=>A(el,[{filter:"grayscale(1)"},{filter:"grayscale(1)",offset:0.9375},{filter:"grayscale(0)"}],0,14400,"linear",{composite:"add"}));
 // cinza vira cor na virada (10200 ms)
-const TOTAL=16000;
+const TOTAL=22000;
 A($("#brand"),[{opacity:0},{opacity:1}],400,600,"linear");
-scene("#s0",0,4200);
-words("#h0",200,260,700);
-scene("#s1",4200,10200);
-["#c1","#c2","#c3"].forEach((c,i)=>A($(c),[{opacity:0,transform:"translateX(-90px)"},{opacity:1,transform:"none"}],4350+i*1500,600,BACK));
-scene("#s2",10200,TOTAL+1000);
-words("#t2",10350,180,800);
-A($("#b2"),IN_BLUR,12200,800);
-A($("#handle"),[{opacity:0,transform:"translateY(50px)",filter:"blur(12px)"},{opacity:1,transform:"none",filter:"blur(0)"}],13200,800);
+scene("#s0",0,7000);
+words("#h0",400,1000,900);
+scene("#s1",7000,13500);
+["#c1","#c2","#c3"].forEach((c,i)=>A($(c),[{opacity:0,transform:"translateX(-90px)"},{opacity:1,transform:"none"}],7150+i*1500,600,BACK));
+scene("#s2",13500,TOTAL+1000);
+words("#t2",13700,1000,900);
+A($("#b2"),IN_BLUR,17200,900);
+A($("#handle"),[{opacity:0,transform:"translateY(50px)",filter:"blur(12px)"},{opacity:1,transform:"none",filter:"blur(0)"}],18400,900);
 window.__setT=function(t){document.getAnimations().forEach(a=>{a.pause();a.currentTime=t});ticks.forEach(f=>f(t))};
 window.__TOTAL=TOTAL*K;
 const fit=()=>{const k=Math.min(innerWidth/1080,innerHeight/1920);$("#stage").style.transform="scale("+k+")"};

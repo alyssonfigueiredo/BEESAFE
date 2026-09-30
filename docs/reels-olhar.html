@@ -109,18 +109,18 @@ const confetti=(box,start)=>{let s=11;const r=()=>(s=s*17387%2147483647)/2147483
   const dx=(r()-.5)*1300,dy=-(300+r()*600),rot=(r()-.5)*900,d=2200+r()*1200;
   A(c,[{opacity:0,transform:"translate(0,0) rotate(0)"},{opacity:1,transform:"translate("+dx*.5+"px,"+dy+"px) rotate("+rot/2+"deg)",offset:.35},{opacity:0,transform:"translate("+dx+"px,"+(dy+1500)+"px) rotate("+rot+"deg)"}],start+r()*400,d,"cubic-bezier(.2,.7,.3,1)")}};
 A($("#e0"),IN_BLUR,100,600);
-[$("#col")].forEach(el=>A(el,[{filter:"grayscale(1)"},{filter:"grayscale(1)",offset:0.9333},{filter:"grayscale(0)"}],0,13500,"linear",{composite:"add"}));
-// cinza vira cor na virada (12600 ms)
-const TOTAL=20000;
+[$("#col")].forEach(el=>A(el,[{filter:"grayscale(1)"},{filter:"grayscale(1)",offset:0.9416},{filter:"grayscale(0)"}],0,15400,"linear",{composite:"add"}));
+// cinza vira cor na virada (14500 ms)
+const TOTAL=24000;
 A($("#brand"),[{opacity:0},{opacity:1}],400,600,"linear");
-scene("#s0",0,6000);
-words("#h0",300,300,900);
-scene("#s1",6000,12600);
-["#c1","#c2","#c3"].forEach((c,i)=>A($(c),[{opacity:0,transform:"translateX(-90px)"},{opacity:1,transform:"none"}],6150+i*1900,600,BACK));
-scene("#s2",12600,TOTAL+1000);
-words("#t2",12800,280,950);
-A($("#b2"),IN_BLUR,15200,900);
-A($("#handle"),[{opacity:0,transform:"translateY(50px)",filter:"blur(12px)"},{opacity:1,transform:"none",filter:"blur(0)"}],16400,900);
+scene("#s0",0,7500);
+words("#h0",400,1000,900);
+scene("#s1",7500,14500);
+["#c1","#c2","#c3"].forEach((c,i)=>A($(c),[{opacity:0,transform:"translateX(-90px)"},{opacity:1,transform:"none"}],7700+i*2000,600,BACK));
+scene("#s2",14500,TOTAL+1000);
+words("#t2",14700,1000,900);
+A($("#b2"),IN_BLUR,19200,900);
+A($("#handle"),[{opacity:0,transform:"translateY(50px)",filter:"blur(12px)"},{opacity:1,transform:"none",filter:"blur(0)"}],20400,900);
 window.__setT=function(t){document.getAnimations().forEach(a=>{a.pause();a.currentTime=t});ticks.forEach(f=>f(t))};
 window.__TOTAL=TOTAL*K;
 const fit=()=>{const k=Math.min(innerWidth/1080,innerHeight/1920);$("#stage").style.transform="scale("+k+")"};
