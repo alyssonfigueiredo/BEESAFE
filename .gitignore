@@ -44,3 +44,4 @@ yarn-error.*
 .env
 screenshots/
 .env.scripts
+.claude/settings.local.json
