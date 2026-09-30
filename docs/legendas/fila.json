@@ -130,7 +130,7 @@
  {
   "id": "post-bemvinde",
   "aprovado": true,
-  "quando": "2026-09-30T19:00:00-03:00",
+  "quando": "2026-09-30T18:00:00-03:00",
   "tipo": "POST",
   "midias": [
    "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/post-bemvinde/01.png"
