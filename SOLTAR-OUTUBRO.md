@@ -183,10 +183,10 @@ análise. O número da build sobe sozinho (`autoIncrement`). Se a Apple pedir ve
 
 **Sobre foto enviada por usuário, a Apple é mais exigente que o Google.** A regra 1.2 (conteúdo
 gerado por usuário) pede quatro coisas, e as quatro já existem: filtro do conteúdo antes de
-publicar (o robô do Cloud Vision + a fila humana), denúncia, bloqueio de usuário e um contato de
-suporte (appirisa@gmail.com). Vale dizer isso nas notas de revisão, em uma linha: *"Fotos enviadas
-por usuários passam por análise automática de conteúdo impróprio e por revisão humana antes de
-aparecer. O app tem denúncia, bloqueio e exclusão de conta."* Sem essa frase a revisão costuma
+publicar (toda foto passa pela aprovação da moderação; sem a chave do Cloud Vision não há robô),
+denúncia, bloqueio de usuário e um contato de suporte (appirisa@gmail.com). Vale dizer isso nas
+notas de revisão, em uma linha: *"Photos uploaded by users are reviewed by a human moderator before
+they appear. The app has reporting, user blocking and account deletion."* Sem essa frase a revisão costuma
 voltar com pedido de esclarecimento.
 
 No iPhone dele, para testar sem gastar build: `npx expo run:ios --device` (precisa refazer a cada
