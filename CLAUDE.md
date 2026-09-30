@@ -140,8 +140,8 @@ Nome: **Irisa** (INPI livre; @appirisa livre). Bundle id Android `br.com.irisa.a
   `import-places-overture.mjs <ibge> --atualizar` (só preenche quem já está no banco). O script de fotos
   ordena avaliados primeiro, depois prominence, revezando as cidades (o 1º de cada, depois o 2º…);
   `--todas --listar` mostra os 150 do dia sem gastar cota. A coluna não aparece no app nem entra em nota.
-  **Foto própria pelo Mapillary (migration 23 + `scripts/mapillary-photos.mjs`, 28/09/2026, ainda não
-  aplicada no banco):** a foto do Google não pode ser baixada, vence em 30 dias e gasta cota (150/dia no
+  **Foto própria pelo Mapillary (migration 23 + `scripts/mapillary-photos.mjs`, 28/09/2026, aplicada
+  no banco):** a foto do Google não pode ser baixada, vence em 30 dias e gasta cota (150/dia no
   projeto inteiro), então uma capital leva meses. O Mapillary publica as imagens em CC BY-SA 4.0: dá para
   baixar, guardar e mostrar com crédito. O script pega a imagem a até 60 m com a câmera apontada para o
   lugar (desvio ≤ 55°), sobe para o Cloudflare R2 (10 GB grátis, sem custo de saída) e grava `photo_url`.
@@ -155,7 +155,8 @@ Nome: **Irisa** (INPI livre; @appirisa livre). Bundle id Android `br.com.irisa.a
   tiver movimento). **Nunca raspar
   foto do Google Maps para guardar**: é proibido nos termos, as fotos são de quem as tirou, e denúncia
   derruba o app da loja.
-  **Foto de quem avalia (migration 24, 28/09/2026, ainda não aplicada):** bucket público
+  **Foto de quem avalia (migration 24, 28/09/2026, aplicada no banco; o cron `photo-check` entrou em 30/09/2026.
+  A Edge Function `photo-check` ainda não está publicada e faltam os secrets — até lá toda foto fica pendente):** bucket público
   `fotos-lugares` no Storage (`<place_id>/<user_id>/foto.jpg`, o uid na pasta impede sobrescrever a
   foto alheia e nunca sai do banco), tabela `place_photos` com RLS e rate limit de 10/dia, trigger que
   põe a mais recente ativa em `places.photo_url` com `photo_source='usuario'` e volta para a foto
