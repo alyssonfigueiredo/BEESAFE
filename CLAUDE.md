@@ -48,6 +48,11 @@ Nome: **Irisa** (INPI livre; @appirisa livre). Bundle id Android `br.com.irisa.a
   código pela sessão, então tocar no link do e-mail no mesmo celular já entra na conta. Em outro aparelho
   a conta fica confirmada e a pessoa entra pelo login. `irisa://auth/callback` tem que continuar em
   Redirect URLs (o login com Google depende dele).
+- **Limite de avaliações 50/dia (migration 25, aplicada no banco em 30/09/2026):** antes era 10. Só muda
+  `enforce_rate_limit` no banco, sem build. A 24 já foi ajustada para não voltar a 10 se for colada depois.
+- **Avaliação sem limite para a equipe (migration 26, 30/09/2026, aplicada):** tabela `rate_limit_exempt`
+  (sem policy; entra pelo SQL Editor, sem e-mail no repo). Liberadas as 7 contas do Alysson e do Leandro
+  (e-mails começando com `alysson`/`leandro`). As contas da Irisa (appirisa, irisateste) seguem com limite.
 - Chaves legadas desativadas: app usa `sb_publishable_...`, scripts usam `sb_secret_...` (só na máquina dele).
 - Dados geográficos: os 5.570 municípios das 27 UFs e os bairros de 24 capitais importados do OSM.
   São Paulo saiu com 96 pelo nível 9 (`--nivel 9`, que lá são os distritos). Seguem sem bairro:
@@ -131,6 +136,10 @@ Nome: **Irisa** (INPI livre; @appirisa livre). Bundle id Android `br.com.irisa.a
   ≥ 0.5 (`--confianca`), tira repetidos a 150 m e o que já existe no banco com nome igual a 150 m. Sem
   `--limite` entra tudo: Curitiba dá ~10.700 candidatos (vs. 256 do OSM). `--simular` só conta, sem chave.
   `gay_bar` do Overture só dá prioridade, não vira rótulo. Atribuição das fontes está nos termos (item 12).
+  **Todas as 27 capitais com Overture desde 30/09/2026** (154 mil lugares ativos): as 8 que faltavam
+  entraram pelo Mac dele — Florianópolis 4.414, Campo Grande 3.510, Cuiabá 2.077, São Luís 1.912,
+  Porto Velho 1.486, Boa Vista 882, Palmas 816, Rio Branco 724. Rio Branco tem 1 bairro só no banco
+  (lugares ficam sem bairro, como em São Luís e Palmas).
   No workflow Importar cidade o Overture é o padrão e o OSM ficou desligado. Fotos: cada lugar novo entra
   na fila do Google (150/dia), então uma capital inteira leva meses de cota — aceito, cai no ícone.
   **Fila de fotos por relevância (migration 17, 25/09/2026):** `places.prominence` (0–100 = confiança do
@@ -138,8 +147,8 @@ Nome: **Irisa** (INPI livre; @appirisa livre). Bundle id Android `br.com.irisa.a
   `import-places-overture.mjs <ibge> --atualizar` (só preenche quem já está no banco). O script de fotos
   ordena avaliados primeiro, depois prominence, revezando as cidades (o 1º de cada, depois o 2º…);
   `--todas --listar` mostra os 150 do dia sem gastar cota. A coluna não aparece no app nem entra em nota.
-  **Foto própria pelo Mapillary (migration 23 + `scripts/mapillary-photos.mjs`, 28/09/2026, ainda não
-  aplicada no banco):** a foto do Google não pode ser baixada, vence em 30 dias e gasta cota (150/dia no
+  **Foto própria pelo Mapillary (migration 23 + `scripts/mapillary-photos.mjs`, 28/09/2026, aplicada
+  no banco):** a foto do Google não pode ser baixada, vence em 30 dias e gasta cota (150/dia no
   projeto inteiro), então uma capital leva meses. O Mapillary publica as imagens em CC BY-SA 4.0: dá para
   baixar, guardar e mostrar com crédito. O script pega a imagem a até 60 m com a câmera apontada para o
   lugar (desvio ≤ 55°), sobe para o Cloudflare R2 (10 GB grátis, sem custo de saída) e grava `photo_url`.
@@ -153,7 +162,9 @@ Nome: **Irisa** (INPI livre; @appirisa livre). Bundle id Android `br.com.irisa.a
   tiver movimento). **Nunca raspar
   foto do Google Maps para guardar**: é proibido nos termos, as fotos são de quem as tirou, e denúncia
   derruba o app da loja.
-  **Foto de quem avalia (migration 24, 28/09/2026, ainda não aplicada):** bucket público
+  **Foto de quem avalia (migration 24, 28/09/2026, aplicada no banco; função `photo-check` e cron publicados em 30/09/2026.
+  Chave do cron só no Vault (migration 26, RPC `photo_check_autorizado`). Foto na fila → e-mail para appirisa@gmail.com.
+  Sem `VISION_API_KEY` por decisão dele (30/09/2026): toda foto passa pela aprovação dele; a chave fica para quando o volume pedir):** bucket público
   `fotos-lugares` no Storage (`<place_id>/<user_id>/foto.jpg`, o uid na pasta impede sobrescrever a
   foto alheia e nunca sai do banco), tabela `place_photos` com RLS e rate limit de 10/dia, trigger que
   põe a mais recente ativa em `places.photo_url` com `photo_source='usuario'` e volta para a foto
@@ -161,15 +172,17 @@ Nome: **Irisa** (INPI livre; @appirisa livre). Bundle id Android `br.com.irisa.a
   ganhou `photo`). No app: botão dentro do formulário de avaliação (`src/hooks/usePlacePhoto.ts`).
   **Nenhuma foto entra no ar sozinha:** nasce `review='pendente'`; a Edge Function `photo-check`
   (pg_cron 5 em 5 min) passa pelo SafeSearch do Cloud Vision (1.000/mês grátis) e marca aprovada /
-  recusada / `humano`; a fila humana fica na tela Moderação (`fotos_para_moderar` + `moderar_foto`,
+  recusada / `humano` (**decisão dele, 30/09/2026: só aprova sozinho com as três notas em
+  `VERY_UNLIKELY`; qualquer sinal de dúvida vai para a fila**); a fila humana fica na tela Moderação (`fotos_para_moderar` + `moderar_foto`,
   sem mostrar quem mandou). Sem `VISION_API_KEY` nada é aprovado sozinho — o padrão é não publicar.
-  Secrets: `PHOTO_CHECK_SECRET` (Vault: `photo_check_secret`), `VISION_API_KEY`.
+  Secrets: `VISION_API_KEY` (opcional); `GMAIL_*` e `SB_SECRET_KEY` já existem.
   **`expo-image-picker` é nativo: precisa de `npx expo run:ios --device` e de build EAS nova.**
   Ordem final da foto: quem avaliou → Mapillary → Google → azulejo da categoria.
   Popularidade real (nº de avaliações do Google) é campo Enterprise e não pode ser guardado. Decidido não exibir rótulo LGBTQIA+ na ficha
   (lista pública vira alvo); o selo vem dos quatro eixos de acolhimento.
 - Decidido lançar primeiro no Android. iOS fica para depois do primeiro retorno da Play Store.
-  **iOS publicado em 29/09/2026** (dito por ele). A branch principal `claude/ecstatic-darwin-cmf7sw` fica
+  **iOS enviado para revisão da Apple; em 30/09/2026 ainda sem resposta** (não está na App Store). Link público do TestFlight pedido, esperando a revisão beta: quando sair, gravar
+  `TESTFLIGHT_URL` e marcar `added_at` dos 9 inscritos de iPhone (todos os pendentes de `tester_signups` em 30/09). A branch principal `claude/ecstatic-darwin-cmf7sw` fica
   sempre igual à de trabalho, pronta para a próxima versão subir com tudo (roteiro em `SOLTAR-OUTUBRO.md`).
 - Play Console: versão 8 (0.1.0) enviada para revisão na faixa de teste fechado em 22/09/2026, com a
   ficha da loja, os prints e o gráfico de recursos. Falta a lista de testadores completar 12 pessoas
@@ -339,13 +352,15 @@ node scripts/pitch-pdf.mjs                           # regera docs/Irisa-apresen
 Sem o Mac (pelo celular): GitHub → Actions → **Importar cidade** → Run workflow. Pede o código IBGE e
 roda bairros, lugares e fotos com as chaves guardadas nos Secrets do repositório
 (`SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY`, `GOOGLE_MAPS_API_KEY`).
+**Não funciona hoje (30/09/2026):** o repositório não tem esses secrets (o run sai com a chave vazia) e a
+API de malhas do IBGE não responde aos servidores do GitHub (timeout). Importar pelo Mac.
 
 Checks antes de commitar: `npm run lint && npm run typecheck`. Migrations testáveis localmente com `scripts/db-smoke.sh`.
 
 ## Próximos passos (em ordem)
 
-1. Teste fechado no Google Play: manter 12 testadores opted-in por 14 dias seguidos e depois
-   "Solicitar acesso à produção". A versão 8 já está em revisão.
+1. Teste fechado no Google Play: 12 testadores já na lista e a contagem dos 14 dias em andamento (dito por ele
+   em 30/09/2026). No fim, "Solicitar acesso à produção". Não deixar cair abaixo de 12 (reinicia a contagem).
 2. Bairros de Brasília, São Luís e Palmas — tem que existir fonte, o OSM é que não cobre. Pistas
    ainda não testadas: (a) malha de setores censitários do Censo 2022 no geoftp do IBGE, que traz
    nome de bairro por setor e dá para dissolver por nome; (b) GeoPortal da Seduh/DF para as regiões
@@ -362,8 +377,8 @@ Checks antes de commitar: `npm run lint && npm run typecheck`. Migrations testá
    mesclada na `laughing-keller`): migrations 20 e 21 aplicadas, Edge Functions publicadas, secrets
    da Apple gravados e build iOS no TestFlight em 28/09. **Testado por ele no iPhone em 28/09:** excluir
    conta Apple tira a Irisa de Ajustes → Iniciar sessão com a Apple (revogação real), e bloquear/
-   desbloquear esconde e devolve a mensagem. Falta: enviar a versão iOS para revisão (Notes já
-   escritas) e, no Android, a build 10 com a resposta do IARC (bloquear outros usuários) mudando para
+   desbloquear esconde e devolve a mensagem. Versão iOS enviada para revisão (dito por ele em
+   30/09/2026). Falta, no Android, a build 10 com a resposta do IARC (bloquear outros usuários) mudando para
    **Sim** na mesma versão (cota do EAS vira em 01/10).
 4. Apple Developer (US$99/ano) quando decidir publicar no iOS; ou via ONG parceira (Apple isenta ONGs).
    Denúncia, moderação e excluir conta já existem.
