@@ -168,8 +168,13 @@ exige moderação do que o usuário envia. Toda foto nasce `review = 'pendente'`
 **Sem `VISION_API_KEY` nada é aprovado automaticamente**: tudo espera a fila humana. Falha do
 robô nunca publica — o padrão é não publicar.
 
-Secrets da função: `PHOTO_CHECK_SECRET` (o mesmo no Vault como `photo_check_secret`),
-`SB_SECRET_KEY`, `VISION_API_KEY` (chave do Google Cloud com a **Cloud Vision API** ativada).
+Aviso: sempre que uma foto cai na fila, a função manda um e-mail pelo Gmail da Irisa para
+appirisa@gmail.com (ou para `MODERACAO_EMAIL`, se existir) com quantas fotos esperam decisão.
+
+Secrets da função: `SB_SECRET_KEY`, `GMAIL_USER`, `GMAIL_APP_PASSWORD` (os mesmos do
+`tester-welcome`) e `VISION_API_KEY` (chave do Google Cloud com a **Cloud Vision API** ativada).
+A chave do cron fica só no Vault (`photo_check_secret`, criada pela migration 26); a função
+confere pela RPC `photo_check_autorizado`.
 - No app: botão **Adicionar uma foto do lugar** dentro do formulário de avaliação
   (`app/lugar/[id].tsx` + `src/hooks/usePlacePhoto.ts`). Recorte 16:9 e qualidade 0.7 no envio,
   para a faixa da ficha e para não subir arquivo gigante.

@@ -8,9 +8,13 @@
 //   qualquer outra resposta        → 'humano': fila da tela de moderação
 // Regra do Alysson: qualquer sinal de dúvida (até UNLIKELY) passa por uma pessoa.
 // Sem VISION_API_KEY, nada é aprovado sozinho: tudo cai na fila humana. O silêncio é seguro.
+// Quando alguma foto cai na fila, manda um e-mail pelo Gmail da Irisa (MODERACAO_EMAIL, ou o
+// próprio GMAIL_USER) avisando que tem foto para aprovar.
 //
-// Secrets: PHOTO_CHECK_SECRET (o mesmo no Vault como photo_check_secret), SB_SECRET_KEY,
-// VISION_API_KEY (chave do Google Cloud com a Cloud Vision API ativada).
+// O cron manda a chave guardada no Vault (photo_check_secret, migration 26) e a função confere
+// pela RPC photo_check_autorizado. Secrets: SB_SECRET_KEY, GMAIL_USER, GMAIL_APP_PASSWORD;
+// opcionais VISION_API_KEY (chave do Google Cloud com a Cloud Vision API) e MODERACAO_EMAIL.
+import nodemailer from "npm:nodemailer@6";
 import { adminClient, json } from "../_shared/supabase.ts";
 
 type Nivel = "UNKNOWN" | "VERY_UNLIKELY" | "UNLIKELY" | "POSSIBLE" | "LIKELY" | "VERY_LIKELY";
@@ -22,11 +26,41 @@ const RECUSA: Nivel[] = ["LIKELY", "VERY_LIKELY"];
 // Só isto aprova sozinho. UNLIKELY, POSSIBLE e UNKNOWN já são dúvida.
 const LIMPA: Nivel = "VERY_UNLIKELY";
 
-Deno.serve(async (req) => {
-  const secret = Deno.env.get("PHOTO_CHECK_SECRET");
-  if (!secret || req.headers.get("x-cron-secret") !== secret) return json(401, { error: "não autorizado" });
+// Falha no e-mail nunca desfaz a análise: a foto já está na fila e aparece na tela de Moderação.
+async function avisarModeracao(admin: ReturnType<typeof adminClient>, novas: number) {
+  const user = Deno.env.get("GMAIL_USER");
+  const pass = Deno.env.get("GMAIL_APP_PASSWORD");
+  if (!user || !pass || novas === 0) return;
+  const { count } = await admin
+    .from("place_photos")
+    .select("id", { count: "exact", head: true })
+    .in("review", ["humano", "recusada"]);
+  const total = count ?? novas;
+  const smtp = nodemailer.createTransport({ host: "smtp.gmail.com", port: 465, secure: true, auth: { user, pass } });
+  try {
+    await smtp.sendMail({
+      from: `Irisa <${user}>`,
+      to: Deno.env.get("MODERACAO_EMAIL") ?? user,
+      subject: novas === 1 ? "Irisa: 1 foto nova para aprovar" : `Irisa: ${novas} fotos novas para aprovar`,
+      text:
+        `Chegaram ${novas} foto(s) de lugar esperando sua decisão (${total} na fila no total).\n\n` +
+        "Abra a Irisa → Perfil → Moderação para liberar ou recusar.\n" +
+        "Nenhuma delas aparece na ficha do lugar antes disso.",
+    });
+  } catch (e) {
+    console.error("photo-check: e-mail de aviso falhou", e);
+  } finally {
+    smtp.close();
+  }
+}
 
+Deno.serve(async (req) => {
   const admin = adminClient();
+  const { data: autorizado } = await admin.rpc("photo_check_autorizado", {
+    p_secret: req.headers.get("x-cron-secret") ?? "",
+  });
+  if (autorizado !== true) return json(401, { error: "não autorizado" });
+
   const { data: pendentes, error } = await admin
     .from("place_photos")
     .select("id, url")
@@ -44,6 +78,7 @@ Deno.serve(async (req) => {
       .from("place_photos")
       .update({ review: "humano", review_note: "sem VISION_API_KEY: fila humana" })
       .in("id", ids);
+    await avisarModeracao(admin, ids.length);
     return json(200, { analisadas: 0, paraHumano: ids.length });
   }
 
@@ -96,5 +131,6 @@ Deno.serve(async (req) => {
     }
   }
 
+  await avisarModeracao(admin, contagem.recusadas + contagem.humano + contagem.erro);
   return json(200, contagem);
 });

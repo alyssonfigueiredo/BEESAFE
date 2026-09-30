@@ -87,17 +87,15 @@ Google Cloud (mesmo projeto das outras chaves), https://console.cloud.google.com
 No Terminal:
 
 ```bash
-SECRET=$(openssl rand -hex 24)
 read -s -p "Chave da Cloud Vision: " V; echo
-npx supabase secrets set PHOTO_CHECK_SECRET=$SECRET VISION_API_KEY="$V" --project-ref ntjirpqulrnieeglpiei
-echo "select vault.create_secret('$SECRET', 'photo_check_secret');" | pbcopy
+npx supabase secrets set VISION_API_KEY="$V" --project-ref ntjirpqulrnieeglpiei
 ```
 
-Cole a última linha no SQL Editor e rode.
+(A chave do cron já está no Vault desde a migration 26; não tem mais `PHOTO_CHECK_SECRET`.)
 
 A função `photo-check` e o agendamento já estão no ar (30/09/2026). Critério: só aprova sozinho
 foto com as três notas (adulto, violência, sensual) em "muito improvável"; qualquer dúvida vai
-para a tela de Moderação.
+para a tela de Moderação, e chega um e-mail em appirisa@gmail.com avisando.
 
 Sem essa chave nada é aprovado sozinho: toda foto espera a fila humana. Não é erro, é o padrão
 seguro.

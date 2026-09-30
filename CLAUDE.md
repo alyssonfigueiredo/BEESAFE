@@ -50,6 +50,9 @@ Nome: **Irisa** (INPI livre; @appirisa livre). Bundle id Android `br.com.irisa.a
   Redirect URLs (o login com Google depende dele).
 - **Limite de avaliações 50/dia (migration 25, aplicada no banco em 30/09/2026):** antes era 10. Só muda
   `enforce_rate_limit` no banco, sem build. A 24 já foi ajustada para não voltar a 10 se for colada depois.
+- **Avaliação sem limite para a equipe (migration 26, 30/09/2026, aplicada):** tabela `rate_limit_exempt`
+  (sem policy; entra pelo SQL Editor, sem e-mail no repo). Liberadas as 7 contas do Alysson e do Leandro
+  (e-mails começando com `alysson`/`leandro`). As contas da Irisa (appirisa, irisateste) seguem com limite.
 - Chaves legadas desativadas: app usa `sb_publishable_...`, scripts usam `sb_secret_...` (só na máquina dele).
 - Dados geográficos: os 5.570 municípios das 27 UFs e os bairros de 24 capitais importados do OSM.
   São Paulo saiu com 96 pelo nível 9 (`--nivel 9`, que lá são os distritos). Seguem sem bairro:
@@ -156,7 +159,8 @@ Nome: **Irisa** (INPI livre; @appirisa livre). Bundle id Android `br.com.irisa.a
   foto do Google Maps para guardar**: é proibido nos termos, as fotos são de quem as tirou, e denúncia
   derruba o app da loja.
   **Foto de quem avalia (migration 24, 28/09/2026, aplicada no banco; função `photo-check` e cron publicados em 30/09/2026.
-  Faltam os secrets `PHOTO_CHECK_SECRET`/`VISION_API_KEY` (SOLTAR-OUTUBRO.md 1.4) — até lá toda foto vai para a fila dele):** bucket público
+  Chave do cron só no Vault (migration 26, RPC `photo_check_autorizado`). Foto na fila → e-mail para appirisa@gmail.com.
+  Falta só `VISION_API_KEY` (SOLTAR-OUTUBRO.md 1.4) — sem ela toda foto vai para a fila dele):** bucket público
   `fotos-lugares` no Storage (`<place_id>/<user_id>/foto.jpg`, o uid na pasta impede sobrescrever a
   foto alheia e nunca sai do banco), tabela `place_photos` com RLS e rate limit de 10/dia, trigger que
   põe a mais recente ativa em `places.photo_url` com `photo_source='usuario'` e volta para a foto
@@ -167,7 +171,7 @@ Nome: **Irisa** (INPI livre; @appirisa livre). Bundle id Android `br.com.irisa.a
   recusada / `humano` (**decisão dele, 30/09/2026: só aprova sozinho com as três notas em
   `VERY_UNLIKELY`; qualquer sinal de dúvida vai para a fila**); a fila humana fica na tela Moderação (`fotos_para_moderar` + `moderar_foto`,
   sem mostrar quem mandou). Sem `VISION_API_KEY` nada é aprovado sozinho — o padrão é não publicar.
-  Secrets: `PHOTO_CHECK_SECRET` (Vault: `photo_check_secret`), `VISION_API_KEY`.
+  Secrets: `VISION_API_KEY` (opcional); `GMAIL_*` e `SB_SECRET_KEY` já existem.
   **`expo-image-picker` é nativo: precisa de `npx expo run:ios --device` e de build EAS nova.**
   Ordem final da foto: quem avaliou → Mapillary → Google → azulejo da categoria.
   Popularidade real (nº de avaliações do Google) é campo Enterprise e não pode ser guardado. Decidido não exibir rótulo LGBTQIA+ na ficha
