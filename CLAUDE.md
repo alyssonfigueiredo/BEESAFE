@@ -139,7 +139,9 @@ Nome: **Irisa** (INPI livre; @appirisa livre). Bundle id Android `br.com.irisa.a
   **Todas as 27 capitais com Overture desde 30/09/2026** (154 mil lugares ativos): as 8 que faltavam
   entraram pelo Mac dele — Florianópolis 4.414, Campo Grande 3.510, Cuiabá 2.077, São Luís 1.912,
   Porto Velho 1.486, Boa Vista 882, Palmas 816, Rio Branco 724. Rio Branco tem 1 bairro só no banco
-  (lugares ficam sem bairro, como em São Luís e Palmas).
+  (lugares ficam sem bairro, como em São Luís e Palmas). Nível 9 do OSM lá é o distrito inteiro ("Rio Branco",
+  apagado em 30/09); o nível 10 deu Overpass 504 duas vezes — tentar de novo em outro horário e, se entrar,
+  rodar o UPDATE de reprocessamento de `places` do supabase/README.md.
   No workflow Importar cidade o Overture é o padrão e o OSM ficou desligado. Fotos: cada lugar novo entra
   na fila do Google (150/dia), então uma capital inteira leva meses de cota — aceito, cai no ícone.
   **Fila de fotos por relevância (migration 17, 25/09/2026):** `places.prominence` (0–100 = confiança do
