@@ -388,6 +388,11 @@ Checks antes de commitar: `npm run lint && npm run typecheck`. Migrations testá
 
 ## Armadilhas já resolvidas (não repetir)
 
+- **Token da Meta vazou em 28/09/2026** (`META_IG_USER_ID` estava com o token; o erro da Graph API
+  devolveu o token e o robô gravou em `docs/legendas/fila.json`, público). Desde 29/09 a Meta responde
+  "API access blocked". Desde 30/09 o script passa todo erro por `semSegredo()`. O token segue no
+  histórico do git: tem que ser revogado e trocado, não basta apagar do arquivo. `post-bemvinde`
+  ficou com `aprovado: false` até o token novo entrar.
 - O aviso "Security Definer View" do linter da Supabase nas views `public_*` é proposital, não bug:
   as tabelas-base não têm policy de leitura para usuário comum, e a view é o único caminho — ela
   esconde `created_by`, filtra `status = 'active'` e arredonda coordenada recente. Não converter
