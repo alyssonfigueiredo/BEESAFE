@@ -177,7 +177,8 @@ Nome: **Irisa** (INPI livre; @appirisa livre). Bundle id Android `br.com.irisa.a
   Popularidade real (nº de avaliações do Google) é campo Enterprise e não pode ser guardado. Decidido não exibir rótulo LGBTQIA+ na ficha
   (lista pública vira alvo); o selo vem dos quatro eixos de acolhimento.
 - Decidido lançar primeiro no Android. iOS fica para depois do primeiro retorno da Play Store.
-  **iOS enviado para revisão da Apple; em 30/09/2026 ainda sem resposta** (não está na App Store). A branch principal `claude/ecstatic-darwin-cmf7sw` fica
+  **iOS enviado para revisão da Apple; em 30/09/2026 ainda sem resposta** (não está na App Store). Link público do TestFlight pedido, esperando a revisão beta: quando sair, gravar
+  `TESTFLIGHT_URL` e marcar `added_at` dos 9 inscritos de iPhone (todos os pendentes de `tester_signups` em 30/09). A branch principal `claude/ecstatic-darwin-cmf7sw` fica
   sempre igual à de trabalho, pronta para a próxima versão subir com tudo (roteiro em `SOLTAR-OUTUBRO.md`).
 - Play Console: versão 8 (0.1.0) enviada para revisão na faixa de teste fechado em 22/09/2026, com a
   ficha da loja, os prints e o gráfico de recursos. Falta a lista de testadores completar 12 pessoas
