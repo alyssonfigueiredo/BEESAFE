@@ -58,7 +58,8 @@ Eixos têm cor fixa: Atendimento coral, Afeto orange, Banheiro yellow, Clientela
 
 ## 4. Tipografia
 
-- **Oswald 700** (`--display`), caixa alta, `letter-spacing .01em`, `line-height .98`: títulos, números grandes. `.lt` (peso 400) para a parte "leve" da frase, 700 para a parte que importa.
+- **Oswald 700** (`--display`), caixa alta, `letter-spacing .01em`: títulos, números grandes. `.lt` (peso 400) para a parte "leve" da frase, 700 para a parte que importa. **Entrelinha: `.98` só em bloco de uma linha** (`.slam`, número). **Título de duas linhas ou mais usa `1.14`** — em caixa alta o Ã, É e Ç sobem acima da altura da maiúscula, e com `.98` o til bate na linha de cima. A caixa do `.rainbow` também precisa de folga nos dois lados (`padding:.2em 0 .14em;margin:-.2em 0 -.14em`), senão o recorte do gradiente corta o til em cima e a cedilha embaixo.
+- **Cada linha do título é escrita à mão, com `<br>`, e tem que caber sem rebarbar.** Se o texto reflui sozinho, a composição vira outra coisa. Antes de renderizar, medir: nenhuma `.w` pode ocupar mais de uma linha. Não cabe? Quebrar a frase em mais linhas — nunca baixar o corpo abaixo de 92 px.
 - **Space Grotesk** (`--body`): corpo 400, 36–40 px em lâmina de 1080; eyebrow, numeração, botões e chips em 600. Nunca caixa alta no corpo; eyebrow em caixa alta com `.14em`.
 - **Urbanist 500** (`--wordmark`), caixa alta, `letter-spacing .2em`: só a palavra IRISA. O "a" final em amber (rodapé) ou yellow (grande).
 - Tamanhos de referência (lâmina 1080×1350): eyebrow 28 · título 92–120 · palavra-impacto (`.slam`) 150 · corpo 36–40 · apoio 30–34 · rodapé 28.
@@ -92,7 +93,7 @@ Padrões de lâmina (escolher um por lâmina, nunca misturar dois):
 
 Story (1080×1920, `.sl.story`): mesma gramática, mais ar, marca centralizada no rodapé e uma **área tracejada** (`.zone`) onde entra o adesivo do Instagram (quiz, enquete, caixa de pergunta, link). O link nunca é escrito na arte.
 
-Reels (`docs/reels-3..9.html` como referência): mesmo CSS dentro de `#stage` 1080×1920, cenas em Web Animations presas a `window.__setT`, eyebrow com o nome da série na cena 0, assinatura "cinza vira cor" (`grayscale` no `#col` até o momento da virada), fecho `.handle` com `#radarmark` 78 px + @appirisa e `.brand` com `#radarmin`. Render: `FFMPEG=… node scripts/story-video.mjs docs/reels-N.html docs/Irisa-reels-N.mp4`. Sempre mostrar quadros estáticos antes de renderizar.
+Reels (`docs/reels-3..9.html` como referência): mesmo CSS dentro de `#stage` 1080×1920, cenas em Web Animations presas a `window.__setT`, eyebrow com o nome da série na cena 0, assinatura "cinza vira cor" (`grayscale` no `#col` até o momento da virada), fecho `.handle` com `#radarmark` 78 px + @appirisa e `.brand` com `#radarmin`. Render: `FFMPEG=… node scripts/story-video.mjs docs/reels-N.html docs/Irisa-reels-N.mp4`. Sempre mostrar quadros estáticos antes de renderizar. **O bloco `#col` (com `.bg` e os dois `.halo`) entra uma vez só**: duplicado, as manchas dos cantos são pintadas duas vezes e o papel vira uma lavagem de cor fora da marca.
 
 ## 7a. Perfil zero (decisão de 27/09/2026)
 
