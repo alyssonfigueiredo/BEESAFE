@@ -129,7 +129,7 @@
  },
  {
   "id": "post-bemvinde",
-  "aprovado": false,
+  "aprovado": true,
   "quando": "2026-09-30T19:00:00-03:00",
   "tipo": "POST",
   "midias": [
