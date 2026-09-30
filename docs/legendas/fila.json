@@ -137,10 +137,13 @@
   ],
   "legenda": "Uma escolha de palavra: bem-vinde.\n\n\"Bem-vindo\" deixa gente de fora. O mapa é de todo mundo que entra pela porta — e a linguagem do app segue essa regra em tudo: identificade, questionade, recebide.\n\nQual foi a primeira vez que alguém usou uma palavra assim com você? 🌈\n\nO link está na bio.\n\n#Irisa #LGBTQIA #Orgulho #AppLGBT #BemVinde",
   "primeiro_comentario": "",
-  "publicado": false,
-  "ultimo_erro": "17841429721624871/media: API access blocked.",
+  "publicado": true,
   "tentativas": 1,
-  "nota": "Pausado em 30/09: a Meta bloqueou o acesso da API (token vazou no repositório em 28/09). Voltar para aprovado só depois de trocar o META_ACCESS_TOKEN."
+  "nota": "Publicado à mão em 30/09 enquanto o token da Meta era trocado.",
+  "publicado_em": "2026-09-30T21:30:00.000Z",
+  "publicado_manual": "postado à mão pelo app (API bloqueada pelo token vazado)",
+  "confirmado": false,
+  "confirmado_erro": "publicação manual, sem media_id para conferir"
  },
  {
   "id": "carrossel-4",
