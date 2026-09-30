@@ -183,7 +183,7 @@ Para quem não segue a conta, conteúdo que explica o app não segura 3 segundos
 - [ ] Capa entra no xadrez: alterna claro/escuro e estático/reels com a peça anterior da fila (seção 6a).
 - [ ] Lâmina escura usa `.sl.night` com os valores fechados da seção 6a — nenhum escuro novo.
 - [ ] Rodapé com `#radarmin`, nunca `#radarmark` (que só vale de 50 px para cima).
-- [ ] Sem link escrito na arte; sem número de testadores; sem emoji na arte.
+- [ ] Sem link escrito na arte; sem número de testadores; sem emoji na arte. Exceção única: glifo de interface (`✔`, `⚠`, `➤`) **dentro** de um print simulado do app, porque ali ele é parte da tela, não enfeite da lâmina.
 - [ ] Fecho com pergunta + "O link está na bio" + "em fase de testes · Android".
 - [ ] Arco-íris na ordem coral → orange → yellow → turq → blue → lilac.
 - [ ] Título ≤ 2 linhas, corpo ≤ 3 linhas, nada cortado nas bordas.
