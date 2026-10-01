@@ -19,7 +19,7 @@ Nome: **Irisa** (INPI livre; @appirisa livre). Bundle id Android `br.com.irisa.a
 
 - Branch de trabalho: `claude/laughing-keller-my8t7c` (default do repo: `claude/ecstatic-darwin-cmf7sw`).
 - MVP completo e rodando no iPhone do usuário (Xcode, Apple ID gratuito, expira em 7 dias) e em APK Android (EAS preview).
-- Supabase projeto `ntjirpqulrnieeglpiei`, região São Paulo. Migrations 0–17 aplicadas (17 = prominence, colada em 25/09/2026)
+- Supabase projeto `ntjirpqulrnieeglpiei`, região us-east-1 (Virgínia, não São Paulo — conferido em 01/10/2026). Migrations 0–17 aplicadas (17 = prominence, colada em 25/09/2026)
   (10 a 15 coladas em 23/09/2026: anti-duplicata, initplan da RLS, relato do entorno não desconta
   nota, nível de atenção da região, onde/quando no relato, ficha do bairro). A 16 (inscrição de
   testadores pelo site) colada em 23/09/2026. Build 9 (versionCode 9) gerada
@@ -387,7 +387,7 @@ Checks antes de commitar: `npm run lint && npm run typecheck`. Migrations testá
 roda o smoke (`db.yml`) e, se passar, o job `aplicar` chama `scripts/aplicar-migrations.sh`, que aplica no
 banco só os arquivos que ainda não estão em `irisa_ops.migrations` (cada um numa transação, junto com o
 registro). Secret `SUPABASE_DB_URL` no GitHub; se vier a conexão direta (IPv6, o GitHub não alcança) o
-script troca sozinho pelo pooler de São Paulo. Não colar no SQL Editor migration que está no repositório
+script troca sozinho pelo pooler (us-east-1). Não colar no SQL Editor migration que está no repositório
 (rodaria de novo no push). Migration nova é sempre arquivo novo — editar um já registrado não reaplica.
 O smoke usa stubs de pg_net (`supabase/dev/pg_net/`), storage, vault e pgcrypto em `supabase/dev/supabase-stubs.sql`.
 

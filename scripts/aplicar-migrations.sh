@@ -8,11 +8,11 @@ set -euo pipefail
 URL=$SUPABASE_DB_URL
 
 # A conexão direta (db.<ref>.supabase.co) é só IPv6 e o GitHub não alcança: troca pelo pooler
-# de sessão de São Paulo, com o usuário postgres.<ref> que o pooler exige.
+# de sessão (o projeto fica em us-east-1), com o usuário postgres.<ref> que o pooler exige.
 if [[ $URL =~ ^postgres(ql)?://postgres:(.*)@db\.([a-z0-9]+)\.supabase\.co(:[0-9]+)?/(.*)$ ]]; then
   senha=${BASH_REMATCH[2]} ref=${BASH_REMATCH[3]} banco=${BASH_REMATCH[5]}
   URL=""
-  for h in aws-0-sa-east-1 aws-1-sa-east-1; do
+  for h in aws-0-us-east-1 aws-1-us-east-1 aws-0-sa-east-1 aws-1-sa-east-1; do
     tentativa="postgresql://postgres.$ref:$senha@$h.pooler.supabase.com:5432/$banco"
     if erro=$(psql "$tentativa" -X -q -c "select 1" 2>&1 >/dev/null); then URL=$tentativa; echo "usando o pooler $h"; break; fi
     echo "$h: $erro" >&2
