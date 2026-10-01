@@ -383,6 +383,14 @@ API de malhas do IBGE não responde aos servidores do GitHub (timeout). Importar
 
 Checks antes de commitar: `npm run lint && npm run typecheck`. Migrations testáveis localmente com `scripts/db-smoke.sh`.
 
+**Migrations sobem sozinhas (01/10/2026, pedido dele):** push em `supabase/**` nas duas branches principais
+roda o smoke (`db.yml`) e, se passar, o job `aplicar` chama `scripts/aplicar-migrations.sh`, que aplica no
+banco só os arquivos que ainda não estão em `irisa_ops.migrations` (cada um numa transação, junto com o
+registro). Secret `SUPABASE_DB_URL` no GitHub; se vier a conexão direta (IPv6, o GitHub não alcança) o
+script troca sozinho pelo pooler de São Paulo. Não colar no SQL Editor migration que está no repositório
+(rodaria de novo no push). Migration nova é sempre arquivo novo — editar um já registrado não reaplica.
+O smoke usa stubs de pg_net (`supabase/dev/pg_net/`), storage, vault e pgcrypto em `supabase/dev/supabase-stubs.sql`.
+
 ## Próximos passos (em ordem)
 
 1. Teste fechado no Google Play: 12 testadores já na lista e a contagem dos 14 dias em andamento (dito por ele
