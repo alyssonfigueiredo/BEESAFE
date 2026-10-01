@@ -65,7 +65,10 @@ export default function RegistrarScreen() {
         {mode === "relato" ? (
           <ReportForm onDone={() => router.replace("/mapa")} />
         ) : (
-          <PlaceForm onDone={(id) => router.replace({ pathname: "/lugar/[id]", params: { id } })} />
+          // push, nunca replace: a ficha do lugar vive no stack de cima: replace trocava a
+          // própria aba por ela, e aí não havia botão de voltar nem barra de abas — só fechar
+          // o app saía da tela (relatado por ele em 01/10/2026).
+          <PlaceForm onDone={(id) => router.push({ pathname: "/lugar/[id]", params: { id } })} />
         )}
 
         <View className="gap-3 rounded-3xl bg-surface p-4" style={shadow.card}>

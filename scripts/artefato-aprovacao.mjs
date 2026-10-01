@@ -15,6 +15,7 @@
 // A página grava em `aprovacoes` (doc_id = id da peça, {aprovado, ts, quem}) e `pedidos`
 // ({texto, resolvido, ts}) — os mesmos nomes de antes, para não perder o que já foi decidido.
 
+import { Buffer } from "node:buffer";
 import { mkdirSync, readFileSync, writeFileSync, existsSync, copyFileSync, readdirSync } from "node:fs";
 import { resolve, join } from "node:path";
 import { execFileSync } from "node:child_process";

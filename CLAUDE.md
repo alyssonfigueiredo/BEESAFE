@@ -549,6 +549,12 @@ e `pedidos` — então republicar não apaga nada do que já foi decidido.
   recusava lugar novo de conta com menos de 24h (erro "Contas novas podem adicionar lugares após 24
   horas."). App lançou em 01/10/2026 e isso travava gente se cadastrando e já tentando cadastrar o
   primeiro lugar no mesmo dia — tirado por decisão dele. Continua a antiduplicata de 150 m (migration 10).
+- **Tela presa depois de cadastrar lugar (01/10/2026, corrigido):** `registrar.tsx` mandava
+  `router.replace` para `/lugar/[id]`. A ficha do lugar mora no stack de cima, acima de `(tabs)`:
+  o replace trocava a rota `(tabs)` por ela, o stack ficava com uma entrada só e não havia botão
+  de voltar nem barra de abas — só fechar o app saía. **Para rota fora das abas use `push`**;
+  `replace` só entre abas (o `router.replace("/mapa")` do relato está certo). O formulário se
+  limpa antes de sair, porque a aba fica montada no fundo. Só JS: `npx expo start --dev-client` + `r`.
 - **Limite de lugares/dia: 5 → 20 (migration 30, 01/10/2026).** Conta dele e do Leandro (tabela
   `rate_limit_exempt`, mesma usada para avaliação) ficam sem limite também em `places`, não só em
   `place_ratings`.

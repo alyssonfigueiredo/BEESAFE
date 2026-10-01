@@ -218,6 +218,10 @@ app por esse caminho. Recurso novo de verdade vai por build e revisão, como sem
 - Layout novo (Liquid Glass, cores vivas, fundo aurora, Mapa em tela cheia com Mapa/Lista) e as
   animações (abertura do radar, ícones da barra, cinza que ganha cor, nota contando). O vidro
   (`expo-glass-effect`, `expo-blur`) e o fundo da abertura são nativos: só chegam com esta build.
+- Busca de lugar no banco (RPC `search_places`, migration 28) e lote ordenado — lugar cadastrado
+  não desaparece mais da lista nem da busca. **Precisa da migration 28 colada antes da build.**
+- Volta da ficha do lugar depois de cadastrar (era `replace`, virou `push`): sem isso a pessoa
+  ficava presa na tela e tinha que fechar o app.
 - Apelido que salva de verdade (migration 18) e erros de login e cadastro em português.
 - Link do e-mail de confirmação que abre o app e já entra na conta.
 
