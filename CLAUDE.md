@@ -484,5 +484,7 @@ Checks antes de commitar: `npm run lint && npm run typecheck`. Migrations testá
 - **Limite de 24h para cadastrar lugar removido (migration 29, 01/10/2026):** `enforce_rate_limit`
   recusava lugar novo de conta com menos de 24h (erro "Contas novas podem adicionar lugares após 24
   horas."). App lançou em 01/10/2026 e isso travava gente se cadastrando e já tentando cadastrar o
-  primeiro lugar no mesmo dia — tirado por decisão dele. Continua o limite de 5 lugares/dia por conta
-  e a antiduplicata de 150 m (migration 10).
+  primeiro lugar no mesmo dia — tirado por decisão dele. Continua a antiduplicata de 150 m (migration 10).
+- **Limite de lugares/dia: 5 → 20 (migration 30, 01/10/2026).** Conta dele e do Leandro (tabela
+  `rate_limit_exempt`, mesma usada para avaliação) ficam sem limite também em `places`, não só em
+  `place_ratings`.
