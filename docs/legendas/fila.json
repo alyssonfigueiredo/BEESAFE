@@ -390,7 +390,7 @@
   },
   {
     "id": "carrossel-10",
-    "aprovado": false,
+    "aprovado": true,
     "quando": "2026-10-15T19:00:00-03:00",
     "tipo": "POST",
     "midias": [
@@ -421,7 +421,7 @@
   },
   {
     "id": "carrossel-11",
-    "aprovado": false,
+    "aprovado": true,
     "quando": "2026-10-17T19:00:00-03:00",
     "tipo": "POST",
     "midias": [
