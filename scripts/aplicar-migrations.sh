@@ -14,7 +14,8 @@ if [[ $URL =~ ^postgres(ql)?://postgres:(.*)@db\.([a-z0-9]+)\.supabase\.co(:[0-9
   URL=""
   for h in aws-0-sa-east-1 aws-1-sa-east-1; do
     tentativa="postgresql://postgres.$ref:$senha@$h.pooler.supabase.com:5432/$banco"
-    if psql "$tentativa" -X -q -c "select 1" >/dev/null 2>&1; then URL=$tentativa; echo "usando o pooler $h"; break; fi
+    if erro=$(psql "$tentativa" -X -q -c "select 1" 2>&1 >/dev/null); then URL=$tentativa; echo "usando o pooler $h"; break; fi
+    echo "$h: $erro" >&2
   done
   [[ -n $URL ]] || { echo "não conectou pelo pooler; confira a senha no secret SUPABASE_DB_URL" >&2; exit 1; }
 fi
