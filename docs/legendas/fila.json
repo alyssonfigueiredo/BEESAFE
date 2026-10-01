@@ -178,7 +178,7 @@
   },
   {
     "id": "reels-6",
-    "aprovado": false,
+    "aprovado": true,
     "quando": "2026-10-02T19:00:00-03:00",
     "tipo": "REELS",
     "midias": [
