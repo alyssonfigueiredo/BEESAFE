@@ -9,13 +9,51 @@ export function usePlaces(cityId: number | undefined) {
     queryKey: ["places", cityId],
     enabled: !!cityId,
     queryFn: async () => {
+      // Ordem importa: a cidade tem muito mais lugar que o lote que cabe aqui (Curitiba passou
+      // de 10 mil depois do Overture). Sem order by, o Postgres devolve 1.000 quaisquer e o que
+      // ficou de fora some do app. Quem tem nota e quem acabou de ser cadastrado vêm primeiro.
       const { data, error } = await supabase
         .from("public_places")
         .select("*")
         .eq("city_id", cityId!)
+        .order("rating_count", { ascending: false, nullsFirst: false })
+        .order("created_at", { ascending: false })
         .limit(1000);
       if (error) throw error;
       return data as PublicPlace[];
+    },
+  });
+}
+
+// Busca por nome no banco, não no lote carregado: só assim um lugar fora dos 1.000 aparece.
+export function useSearchPlaces(cityId: number | undefined, termo: string) {
+  const texto = termo.trim();
+  return useQuery({
+    queryKey: ["places-busca", cityId, texto],
+    enabled: !!cityId && texto.length >= 2,
+    queryFn: async () => {
+      const { data, error } = await supabase.rpc("search_places", {
+        p_city_id: cityId!,
+        p_termo: texto,
+      });
+      if (error) throw error;
+      return data as PublicPlace[];
+    },
+  });
+}
+
+// Quantos lugares a cidade tem de verdade (o lote de usePlaces é só o que cabe na tela).
+export function usePlaceCount(cityId: number | undefined) {
+  return useQuery({
+    queryKey: ["places-total", cityId],
+    enabled: !!cityId,
+    queryFn: async () => {
+      const { count, error } = await supabase
+        .from("public_places")
+        .select("id", { count: "exact", head: true })
+        .eq("city_id", cityId!);
+      if (error) throw error;
+      return count ?? 0;
     },
   });
 }
