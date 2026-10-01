@@ -424,8 +424,14 @@ manual, e antes de marcar qualquer coisa é preciso perguntar pro Alysson se a s
 Sessão aberta por essa conta lê a coleção com a ferramenta de banco do artefato e sincroniza a fila.
 **Sessão aberta pela conta da Conquer (leandro.borges@escolaconquer) não lê**: a página abre, mas o
 banco responde "public artifact from outside the user's organization" e não há o que tentar. Dessa
-conta, o caminho é o Alysson dizer no chat o que liberou, ou a sessão dele sincronizar. Verificado em
-01/10/2026.
+conta, o caminho é o Alysson dizer no chat o que liberou. Verificado em 01/10/2026.
+
+**Regra dele (01/10/2026): quem sincroniza o artefato com `fila.json` é só a sessão da conta dele.**
+Duas sessões mexendo no mesmo arquivo dão conflito — aconteceu neste dia, com uma marcando aprovações
+vindas do artefato e a outra remarcando datas. Qualquer outra sessão pode escrever peça nova, legenda,
+data e ordem na fila, mas **não mexe no campo `aprovado`**: quem decide isso é o artefato, e quem
+transcreve é a sessão dele. Exceção única: o Alysson aprovar explicitamente no chat de outra sessão —
+aí ela marca e avisa, para a sessão dele não desfazer.
 
 ## Armadilhas já resolvidas (não repetir)
 
