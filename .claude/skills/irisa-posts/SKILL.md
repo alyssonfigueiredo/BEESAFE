@@ -18,6 +18,7 @@ App brasileiro para a comunidade LGBTQIA+. Duas coisas, e a regra que as separa:
 - Anonimato por construção: sem autor na base pública, sem página de perfil, ponto deslocado ~100 m em relato de hoje/ontem, só e-mail para entrar, excluir conta apaga tudo.
 - Botão de emergência: 190, 192, 100, 188. Aba Apoio com serviços por cidade.
 - Sete cidades com lugares no mapa: Curitiba, Recife, João Pessoa, Joinville, Natal, São Paulo, Rio. Em fase de testes, Android primeiro.
+- **Na App Store desde 01/10/2026**; no Android ainda em teste fechado. Nenhum texto novo pode dizer que só existe no Android.
 - Link: bit.ly/appirisa (vai na bio e no adesivo de story, nunca escrito na arte). Instagram @appirisa.
 
 ## 2. Tom de voz
@@ -89,7 +90,7 @@ Padrões de lâmina (escolher um por lâmina, nunca misturar dois):
 - **Riscado**: `.strike` para negar uma ideia ("~~região tranquila~~").
 - **Nota**: `.nring` (anel conic com 4.7 no centro branco) + `.badge-big` "Acolhedor".
 - **Cidades**: `.pills` com `.ct` (cápsulas em cor cheia, texto night).
-- **Fecho**: pergunta para comentário + `.btn` coral "O link está na bio" + eyebrow "em fase de testes · Android".
+- **Fecho**: pergunta para comentário + `.btn` coral "O link está na bio" + eyebrow **"no iPhone · Android em fase de testes"** (desde 01/10/2026 o app está na App Store; o Android segue em teste fechado — a linha antiga, "em fase de testes · Android", ficou falsa).
 
 Story (1080×1920, `.sl.story`): mesma gramática, mais ar, marca centralizada no rodapé e uma **área tracejada** (`.zone`) onde entra o adesivo do Instagram (quiz, enquete, caixa de pergunta, link). O link nunca é escrito na arte.
 
@@ -184,6 +185,6 @@ Para quem não segue a conta, conteúdo que explica o app não segura 3 segundos
 - [ ] Lâmina escura usa `.sl.night` com os valores fechados da seção 6a — nenhum escuro novo.
 - [ ] Rodapé com `#radarmin`, nunca `#radarmark` (que só vale de 50 px para cima).
 - [ ] Sem link escrito na arte; sem número de testadores; sem emoji na arte. Exceção única: glifo de interface (`✔`, `⚠`, `➤`) **dentro** de um print simulado do app, porque ali ele é parte da tela, não enfeite da lâmina.
-- [ ] Fecho com pergunta + "O link está na bio" + "em fase de testes · Android".
+- [ ] Fecho com pergunta + "O link está na bio" + "no iPhone · Android em fase de testes".
 - [ ] Arco-íris na ordem coral → orange → yellow → turq → blue → lilac.
 - [ ] Título ≤ 2 linhas, corpo ≤ 3 linhas, nada cortado nas bordas.

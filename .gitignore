@@ -45,3 +45,6 @@ yarn-error.*
 screenshots/
 .env.scripts
 .claude/settings.local.json
+
+# A pasta que scripts/artefato-aprovacao.mjs monta para publicar no artefato (cópia do que já está em docs/).
+build/

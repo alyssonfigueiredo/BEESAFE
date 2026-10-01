@@ -183,7 +183,9 @@ Nome: **Irisa** (INPI livre; @appirisa livre). Bundle id Android `br.com.irisa.a
   Popularidade real (nº de avaliações do Google) é campo Enterprise e não pode ser guardado. Decidido não exibir rótulo LGBTQIA+ na ficha
   (lista pública vira alvo); o selo vem dos quatro eixos de acolhimento.
 - Decidido lançar primeiro no Android. iOS fica para depois do primeiro retorno da Play Store.
-  **iOS enviado para revisão da Apple; em 30/09/2026 ainda sem resposta** (não está na App Store). Link público do TestFlight pedido, esperando a revisão beta: quando sair, gravar
+  **iOS APROVADO e no ar na App Store em 01/10/2026** (dito por ele). A partir daqui o link do iPhone
+  existe e pode ir para a bio, para a landing e para o e-mail de boas-vindas — hoje tudo ainda aponta
+  só para o teste do Android. Link público do TestFlight pedido, esperando a revisão beta: quando sair, gravar
   `TESTFLIGHT_URL` e marcar `added_at` dos 9 inscritos de iPhone (todos os pendentes de `tester_signups` em 30/09). A branch principal `claude/ecstatic-darwin-cmf7sw` fica
   sempre igual à de trabalho, pronta para a próxima versão subir com tudo (roteiro em `SOLTAR-OUTUBRO.md`).
 - Play Console: versão 8 (0.1.0) enviada para revisão na faixa de teste fechado em 22/09/2026, com a
@@ -408,6 +410,58 @@ Checks antes de commitar: `npm run lint && npm run typecheck`. Migrations testá
    Denúncia, moderação e excluir conta já existem.
 5. Fase 6+: notificações por área, rotas seguras, versão web.
 
+## Aprovação de posts do Instagram
+
+Artefato onde o Alysson aprova/reprova cada item de `docs/legendas/fila.json` antes de publicar:
+https://claude.ai/artifact/KZFTMrCF28RLVRJr7JXBC5
+Coleção `aprovacoes` (doc_id = id do item, `{aprovado, ts}`) e `pedidos` (pedidos de alteração,
+filtrar `resolvido == false`). Regra de sincronização: item tipo POST/REELS com `primeiro_comentario`
+já preenchido pode virar `aprovado: true` direto a partir do artefato; item tipo STORY nunca
+(a API do Graph não posta adesivo de link/enquete/quiz/pergunta em story) — toda story é publicação
+manual, e antes de marcar qualquer coisa é preciso perguntar pro Alysson se a story leva adesivo e qual o texto.
+
+**Quem consegue ler as aprovações:** o artefato é público e pertence à conta pessoal do Alysson.
+Sessão aberta por essa conta lê a coleção com a ferramenta de banco do artefato e sincroniza a fila.
+**Sessão aberta pela conta da Conquer (leandro.borges@escolaconquer) não lê**: a página abre, mas o
+banco responde "public artifact from outside the user's organization" e não há o que tentar. Dessa
+conta, o caminho é o Alysson dizer no chat o que liberou. Verificado em 01/10/2026.
+
+**Regra dele (01/10/2026): quem sincroniza o artefato com `fila.json` é só a sessão da conta dele.**
+Duas sessões mexendo no mesmo arquivo dão conflito — aconteceu neste dia, com uma marcando aprovações
+vindas do artefato e a outra remarcando datas. Qualquer outra sessão pode escrever peça nova, legenda,
+data e ordem na fila, mas **não mexe no campo `aprovado`**: quem decide isso é o artefato, e quem
+transcreve é a sessão dele. Exceção única: o Alysson aprovar explicitamente no chat de outra sessão —
+aí ela marca e avisa, para a sessão dele não desfazer.
+
+### Como republicar o artefato (para a sessão da conta dele)
+
+A página era remontada à mão e por isso vivia atrasada: em 01/10 ela ainda mostrava o carrossel-6 com
+a lâmina "Ainda não tem no iPhone → **Verdade**" (virou **Mito** no mesmo dia), o fecho antigo
+"em fase de testes · Android" em meia dúzia de peças, e não tinha o carrossel-10 nem o 11. Aprovar
+olhando aquilo é aprovar o que não vai ao ar. Agora a página nasce do repositório:
+
+```bash
+node scripts/artefato-aprovacao.mjs          # no Mac
+FFMPEG=/caminho/do/ffmpeg node scripts/artefato-aprovacao.mjs   # no cloud, onde ffmpeg não está no PATH
+```
+
+Ele lê `docs/legendas/fila.json`, encontra a arte de cada peça (pela pasta de mesmo nome ou pelo que
+`midias` aponta — os stories de outubro, por exemplo, saem de `stories-2/`), e monta **`build/aprovacao/`**:
+`index.html`, `t/` (capa de cada peça), `c/` (todas as lâminas) e `v/` (os reels). `build/` está no
+.gitignore de propósito: é cópia do que já existe em `docs/`, não entra no repositório nem no site.
+
+Publicar, da sessão da conta dele, **no artefato que já existe** (o `url` da seção acima, para não
+perder as decisões gravadas):
+
+- `file_path` = `build/aprovacao/index.html`, `root` = `build/aprovacao`, e `files` com `t/`, `c/` e `v/`.
+- `capabilities: {db: {rules: [{path: "aprovacoes", read: "view", write: "interact"}, {path: "pedidos", read: "view", write: "interact"}]}, user: {}}`.
+- São ~35 MB, a maior parte vídeo: mandar em lotes (um publish leva no máximo 64 MB e 255 arquivos).
+
+A página escreve nas **mesmas coleções de sempre** — `aprovacoes` (doc_id = id da peça,
+`{aprovado, status, nota, ts, quem}`) e `pedidos` — então republicar não apaga nada do que já foi
+decidido. Peça já publicada aparece esmaecida e com os botões desligados, e cada cartão mostra de que
+lado do xadrez a capa cai (papel ou noite).
+
 ## Armadilhas já resolvidas (não repetir)
 
 - **Token da Meta vazou em 28/09/2026** (`META_IG_USER_ID` estava com o token; o erro da Graph API
@@ -479,3 +533,16 @@ Checks antes de commitar: `npm run lint && npm run typecheck`. Migrations testá
   Perto de 1.000, parar e esperar o mês virar — rodar no ritmo padrão (150/dia) nunca estourou o grátis
   sozinho em menos de uma semana, então não tem pressa. Se mesmo assim bater o teto grátis, o gasto é
   mínimo (centavos por lugar), mas a regra é zero, não "pouco".
+- **Limite de 24h para cadastrar lugar removido (migration 29, 01/10/2026):** `enforce_rate_limit`
+  recusava lugar novo de conta com menos de 24h (erro "Contas novas podem adicionar lugares após 24
+  horas."). App lançou em 01/10/2026 e isso travava gente se cadastrando e já tentando cadastrar o
+  primeiro lugar no mesmo dia — tirado por decisão dele. Continua a antiduplicata de 150 m (migration 10).
+- **Tela presa depois de cadastrar lugar (01/10/2026, corrigido):** `registrar.tsx` mandava
+  `router.replace` para `/lugar/[id]`. A ficha do lugar mora no stack de cima, acima de `(tabs)`:
+  o replace trocava a rota `(tabs)` por ela, o stack ficava com uma entrada só e não havia botão
+  de voltar nem barra de abas — só fechar o app saía. **Para rota fora das abas use `push`**;
+  `replace` só entre abas (o `router.replace("/mapa")` do relato está certo). O formulário se
+  limpa antes de sair, porque a aba fica montada no fundo. Só JS: `npx expo start --dev-client` + `r`.
+- **Limite de lugares/dia: 5 → 20 (migration 30, 01/10/2026).** Conta dele e do Leandro (tabela
+  `rate_limit_exempt`, mesma usada para avaliação) ficam sem limite também em `places`, não só em
+  `place_ratings`.
