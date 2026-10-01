@@ -389,9 +389,28 @@
     "publicado": false
   },
   {
-    "id": "reels-olhar",
+    "id": "carrossel-10",
     "aprovado": false,
     "quando": "2026-10-15T19:00:00-03:00",
+    "tipo": "POST",
+    "midias": [
+      "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/carrossel-10/01.png",
+      "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/carrossel-10/02.png",
+      "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/carrossel-10/03.png",
+      "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/carrossel-10/04.png",
+      "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/carrossel-10/05.png",
+      "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/carrossel-10/06.png",
+      "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/carrossel-10/07.png"
+    ],
+    "legenda": "Por que banheiro pesa 25% da nota?\n\nPorque para muita gente é a parte do lugar que decide se dá para ficar.\n\nNa Irisa, quem esteve lá responde quatro perguntas — e cada uma pesa diferente:\n\nAtendimento, 30%. O garçom que trata vocês como casal, ou o que chama de \"amigos\". É a primeira coisa que acontece e a que mais pesa.\n\nAfeto, 30%. Se dá para dar a mão sem medir a sala antes. Pesa igual ao atendimento porque é por isso que a gente sai de casa.\n\nBanheiro, 25%. Para pessoa trans e não-binárie, escolher a porta é a parte mais tensa do lugar. Por isso vale um quarto da nota, não uma nota de rodapé.\n\nClientela, 15%. O bar pode treinar a equipe, mas não escolhe quem senta ali. Conta, mas não é culpa do lugar.\n\nAs quatro viram uma nota só. E a nota vira cor.\n\nQual desses quatro pesa mais pra você? Comenta aqui embaixo — a gente leva em conta na hora de ajustar os pesos. 🌈\n\nO link está na bio. Já no iPhone. Android em fase de testes.\n\n#Irisa #LGBTQIA #Orgulho #AppLGBT #Acolhimento",
+    "primeiro_comentario": "bit.ly/appirisa",
+    "publicado": false,
+    "confirmado": false
+  },
+  {
+    "id": "reels-olhar",
+    "aprovado": false,
+    "quando": "2026-10-16T19:00:00-03:00",
     "tipo": "REELS",
     "midias": [
       "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/Irisa-reels-olhar.mp4"
@@ -401,9 +420,28 @@
     "publicado": false
   },
   {
+    "id": "carrossel-11",
+    "aprovado": false,
+    "quando": "2026-10-17T19:00:00-03:00",
+    "tipo": "POST",
+    "midias": [
+      "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/carrossel-11/01.png",
+      "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/carrossel-11/02.png",
+      "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/carrossel-11/03.png",
+      "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/carrossel-11/04.png",
+      "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/carrossel-11/05.png",
+      "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/carrossel-11/06.png",
+      "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/carrossel-11/07.png"
+    ],
+    "legenda": "O que a Irisa não tem. De propósito.\n\nCinco coisas que todo mundo pediu e a gente decidiu não fazer:\n\nLista de lugar LGBT. Uma lista pública de onde a gente se reúne é um mapa pronto para quem quer nos achar. O selo vem do acolhimento, nunca de um rótulo na ficha.\n\nSelo de região tranquila. Sem relato não quer dizer sem violência. Quer dizer que ninguém registrou ainda — e dizer o contrário seria a falha mais perigosa que o app poderia cometer.\n\nPágina de perfil. Não existe tela com o seu histórico, nem para você, nem para ninguém. Só um e-mail para a conta existir. Não vaza o que não existe.\n\nFiltro de bar por alerta. O relato acontece no beco, na praça, no ponto de ônibus. Filtrar bar por isso faria a violência parecer atributo do lugar e puniria quem só está perto.\n\nEstrela. Cinco estrelas num lugar onde a recepção te olha torto continuam sendo cinco estrelas. Cor é medida: quatro perguntas, respondidas por quem entrou.\n\nQual dessas cinco você não sabia? Comenta aqui — e salva este post para quando alguém perguntar por que o app não tem lista. 🌈\n\nO link está na bio. Já no iPhone. Android em fase de testes.\n\n#Irisa #LGBTQIA #Orgulho #AppLGBT #Anonimato",
+    "primeiro_comentario": "bit.ly/appirisa",
+    "publicado": false,
+    "confirmado": false
+  },
+  {
     "id": "reels-3",
     "aprovado": false,
-    "quando": "2026-10-16T19:00:00-03:00",
+    "quando": "2026-10-18T19:00:00-03:00",
     "tipo": "REELS",
     "midias": [
       "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/Irisa-reels-3.mp4"
@@ -415,7 +453,7 @@
   {
     "id": "reels-4",
     "aprovado": false,
-    "quando": "2026-10-17T19:00:00-03:00",
+    "quando": "2026-10-19T19:00:00-03:00",
     "tipo": "REELS",
     "midias": [
       "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/Irisa-reels-4.mp4"
@@ -427,7 +465,7 @@
   {
     "id": "reels-5",
     "aprovado": false,
-    "quando": "2026-10-18T19:00:00-03:00",
+    "quando": "2026-10-20T19:00:00-03:00",
     "tipo": "REELS",
     "midias": [
       "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/Irisa-reels-5.mp4"
