@@ -2,9 +2,10 @@ name: DB smoke
 
 on:
   push:
-    paths: ["supabase/**", "scripts/db-smoke.sh"]
+    paths: ["supabase/**", "scripts/db-smoke.sh", "scripts/aplicar-migrations.sh"]
   pull_request:
     paths: ["supabase/**", "scripts/db-smoke.sh"]
+  workflow_dispatch:
 
 jobs:
   smoke:
@@ -18,3 +19,21 @@ jobs:
           sudo systemctl stop postgresql || true
       - name: Roda migrations e smoke test
         run: sudo -u postgres env PG_BIN=/usr/lib/postgresql/16/bin PORT=54329 bash scripts/db-smoke.sh
+
+  # Só depois do smoke passar: aplica na Supabase o que for novo em supabase/migrations.
+  aplicar:
+    needs: smoke
+    if: github.event_name != 'pull_request' && (github.ref == 'refs/heads/claude/laughing-keller-my8t7c' || github.ref == 'refs/heads/claude/ecstatic-darwin-cmf7sw')
+    runs-on: ubuntu-24.04
+    concurrency: { group: banco-producao, cancel-in-progress: false }
+    steps:
+      - uses: actions/checkout@v4
+      - name: Aplica migrations novas
+        env:
+          SUPABASE_DB_URL: ${{ secrets.SUPABASE_DB_URL }}
+        run: |
+          if [ -z "$SUPABASE_DB_URL" ]; then
+            echo "::warning::Secret SUPABASE_DB_URL não existe: nada foi aplicado no banco."
+            exit 0
+          fi
+          bash scripts/aplicar-migrations.sh
