@@ -449,3 +449,19 @@ Checks antes de commitar: `npm run lint && npm run typecheck`. Migrations testá
   `r`, sem build nenhum. Testar em `--profile preview` (APK) antes de gastar cota em `production`.
   `npx eas-cli build:list --platform android --limit 15` mostra o histórico e as datas se precisar
   conferir de novo quantos builds já foram usados no mês.
+- **Regra do Alysson (01/10/2026): NUNCA gastar dinheiro com a Google Places API, em hipótese nenhuma.**
+  Aconteceu em 30/09/2026: a cota diária de `SearchTextRequest` foi subida de 150 para 5.000 pra
+  aproveitar a cota do mês antes do reset, e o script rodou tanto num dia só (2.545 lugares casaram
+  com foto) que estourou o grátis mensal do SKU "Places API Place Details Photos" (1.000/mês) e gerou
+  cobrança real (uns R$2,51+ nesse dia — a cota diária do Console é só um limite de taxa, não um teto
+  de gasto; quem trava o gasto é o grátis mensal do SKU, e passar dele cobra na hora, sem aviso).
+  Daqui pra frente: cota diária de `SearchTextRequest`/`GetPhotoMediaRequest` sempre no padrão (150/300)
+  — nunca subir para "aproveitar" antes do reset. Antes de rodar `google-place-photos.mjs`, conferir
+  quantos lugares já casaram com foto **neste mês civil** (não só hoje) e parar com folga antes de 1.000:
+  ```sql
+  select count(*) from places
+  where google_photo_at >= date_trunc('month', now());
+  ```
+  Perto de 1.000, parar e esperar o mês virar — rodar no ritmo padrão (150/dia) nunca estourou o grátis
+  sozinho em menos de uma semana, então não tem pressa. Se mesmo assim bater o teto grátis, o gasto é
+  mínimo (centavos por lugar), mas a regra é zero, não "pouco".
