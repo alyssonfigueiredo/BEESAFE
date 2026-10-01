@@ -114,7 +114,7 @@ quatro eixos de 1 a 5, e é a combinação deles que vira a nota:
 
 ### Anti-abuso
 
-- Rate limit: 5 relatos/dia, 10 avaliações/dia, 20 mensagens/dia por usuário. Aplicado por Edge Function.
+- Rate limit: 5 relatos/dia, 50 avaliações/dia, 20 mensagens/dia por usuário. Aplicado por Edge Function.
 - Uma avaliação por usuário por lugar, editável.
 - Conta com menos de 24 h de idade não pode criar lugares.
 - Denúncia de conteúdo em qualquer item. 3 denúncias ocultam automaticamente até revisão.

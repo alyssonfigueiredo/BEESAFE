@@ -70,7 +70,7 @@ Eixos têm cor fixa: Atendimento coral, Afeto orange, Banheiro yellow, Clientela
 - **`#radarmark`** = símbolo completo (anel de 48 gomos, varredura turquesa, três pontos, pupila #0F1220 com brilho). Só a partir de **50 px**: marca vertical, horizontal, fecho de reels (`.handle` com @appirisa a 78 px), capa de story.
 - **`#radarmin`** = **redução**: só o anel colorido, centro vazio, sem pupila. É a **assinatura de post**: rodapé de toda lâmina e de todo reels, ícone ao lado de @appirisa abaixo de 50 px. Mínimo 20 px.
 - Nunca: círculo liso em CSS, cor única, preto e branco, esticar, girar, sombra, `filter:saturate` por cima (o fragmento já vem na paleta ×1.35).
-- **Rodapé de toda lâmina**: canto inferior esquerdo `.brand` = `#radarmin` 36 px + "IRIS" + "a" amber. Canto inferior direito `.swipe` = "arraste →" (não na última). Canto superior direito `.num` = "3/8". No story o `.brand` fica centralizado a 120 px do fundo. No reels fica a 440 px do fundo (acima da legenda e do @ que o Instagram sobrepõe) e as cenas usam `padding:220px 80px 540px` para o conteúdo não encostar nele.
+- **Rodapé de toda lâmina**: canto inferior esquerdo `.brand` = `#radarmin` (nunca `#radarmark`, que só existe a partir de 50 px — os carrosséis 3 a 7 e o post-bemvinde nasceram errados e foram corrigidos em 30/09) 36 px + "IRIS" + "a" amber. Canto inferior direito `.swipe` = "arraste →" (não na última). Canto superior direito `.num` = "3/8". No story o `.brand` fica centralizado a 120 px do fundo. No reels fica a 440 px do fundo (acima da legenda e do @ que o Instagram sobrepõe) e as cenas usam `padding:220px 80px 540px` para o conteúdo não encostar nele.
 - A capa de carrossel nunca é a logo. É o gancho.
 - Vinheta em vídeo: `docs/abertura.html` (4,2 s, `?formato=quadrado|story&bg=paper|night`), MP4 prontos em `docs/marca-pack/video/`.
 
@@ -94,6 +94,55 @@ Padrões de lâmina (escolher um por lâmina, nunca misturar dois):
 Story (1080×1920, `.sl.story`): mesma gramática, mais ar, marca centralizada no rodapé e uma **área tracejada** (`.zone`) onde entra o adesivo do Instagram (quiz, enquete, caixa de pergunta, link). O link nunca é escrito na arte.
 
 Reels (`docs/reels-3..9.html` como referência): mesmo CSS dentro de `#stage` 1080×1920, cenas em Web Animations presas a `window.__setT`, eyebrow com o nome da série na cena 0, assinatura "cinza vira cor" (`grayscale` no `#col` até o momento da virada), fecho `.handle` com `#radarmark` 78 px + @appirisa e `.brand` com `#radarmin`. Render: `FFMPEG=… node scripts/story-video.mjs docs/reels-N.html docs/Irisa-reels-N.mp4`. Sempre mostrar quadros estáticos antes de renderizar. **O bloco `#col` (com `.bg` e os dois `.halo`) entra uma vez só**: duplicado, as manchas dos cantos são pintadas duas vezes e o papel vira uma lavagem de cor fora da marca.
+
+## 6a. A grade do perfil (xadrez)
+
+O perfil não é uma fila de peças soltas: quem chega vê nove quadradinhos de uma vez, e é a grade
+que diz se a conta tem dono. Duas alternâncias, sempre, na ordem de publicação:
+
+1. **Claro e escuro na capa.** Uma peça de papel, a seguinte de noite (`.sl.night`), e assim por
+   diante. Na grade de três colunas isso vira um tabuleiro: nenhuma mancha clara ou escura grudada.
+   `.sl.night` só troca os tokens (papel vira `#141829`, Ink vira a cor clara, `.pane` vira vidro
+   escuro) — a gramática da lâmina é a mesma, nada é redesenhado. **Só a capa muda de cor**: o miolo
+   do carrossel continua papel, porque a virada capa→lâmina 2 já é parte da leitura.
+2. **Tipo de post.** Estático e reels se revezam dia a dia. Quatro reels em sequência transformam
+   a grade numa parede de miniaturas de vídeo, e três carrosséis seguidos matam o alcance de quem
+   só assiste.
+
+Data comemorativa manda mais que o xadrez: se a peça do dia é fixa (11/10, Dia de Sair do Armário),
+ela fica no dia e a alternância se acomoda em volta. Quando o acervo desequilibra (mais reels que
+estáticos), a sobra vai para o fim da fila e a dívida é escrita no cronograma — nunca se enfia
+peça clara no meio de peça clara para "adiantar".
+
+Conferir antes de agendar: `docs/legendas/fila.json` em ordem de `quando`, lendo duas colunas —
+tipo e cor da capa. Se as duas não alternam, a fila está errada, não a arte.
+
+### O papel de noite (`.sl.night`) — valores fechados
+
+Fechado em 30/09/2026. **Não redesenhar, não improvisar outro escuro, não mexer nestes números**:
+quem precisar de lâmina escura usa `.sl.night` como está. Só `--paper` veio da marca (é o `--night`
+de sempre, o mesmo de `src/theme/tokens.js`); o resto foi derivado clareando o acento cheio da
+paleta até separar do fundo, mantendo o matiz. O contraste sobre `#141829` está entre parênteses —
+todos acima do que os Ink de papel entregam (3,8 a 5,8), de propósito, porque na grade a peça é
+uma miniatura.
+
+| token | valor | de onde veio |
+| --- | --- | --- |
+| `--paper` | `#141829` | o `--night` da marca |
+| `--ink` | `#FFFFFF` | branco (17,6) |
+| `--muted` | `#C8CCDC` | o muted do papel, invertido (11,0) |
+| `--dim` | `#8E96AE` | o dim do papel, clareado (6,0) |
+| `--coralInk` | `#FF8D89` | coral `#FF6964` (7,9) |
+| `--orangeInk` | `#FFBB7A` | laranja `#FFA353` (10,6) |
+| `--yellowInk` | `#FFDE95` | amarelo `#FFD066` (13,5) |
+| `--turqInk` | `#6FE7D0` | turquesa `#49DCC0` (11,8) |
+| `--lilacInk` | `#C3ABFF` | lilás `#A889FF` (8,9) |
+| `--pane` / `--pane-edge` | branco a 8% / 16% | vidro sobre escuro |
+
+As manchas dos cantos ficam em `opacity:.85;mix-blend-mode:screen;filter:saturate(.8)` — sem o
+`screen` o `.bg` some no escuro, e acima disso o canto vira néon. `.ct` e `.btn` mantêm o texto
+`#141829`, porque a cápsula continua em cor cheia.
+
 
 ## 7a. Perfil zero (decisão de 27/09/2026)
 
@@ -131,7 +180,10 @@ Para quem não segue a conta, conteúdo que explica o app não segura 3 segundos
 - [ ] "bem-vinde", "identificade" etc. (neutro).
 - [ ] "cor" em arco-íris quando a frase oficial aparece.
 - [ ] Capa é gancho, não logo. Rodapé com mark + IRISa em toda lâmina.
-- [ ] Sem link escrito na arte; sem número de testadores; sem emoji na arte.
+- [ ] Capa entra no xadrez: alterna claro/escuro e estático/reels com a peça anterior da fila (seção 6a).
+- [ ] Lâmina escura usa `.sl.night` com os valores fechados da seção 6a — nenhum escuro novo.
+- [ ] Rodapé com `#radarmin`, nunca `#radarmark` (que só vale de 50 px para cima).
+- [ ] Sem link escrito na arte; sem número de testadores; sem emoji na arte. Exceção única: glifo de interface (`✔`, `⚠`, `➤`) **dentro** de um print simulado do app, porque ali ele é parte da tela, não enfeite da lâmina.
 - [ ] Fecho com pergunta + "O link está na bio" + "em fase de testes · Android".
 - [ ] Arco-íris na ordem coral → orange → yellow → turq → blue → lilac.
 - [ ] Título ≤ 2 linhas, corpo ≤ 3 linhas, nada cortado nas bordas.
