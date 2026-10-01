@@ -420,6 +420,13 @@ já preenchido pode virar `aprovado: true` direto a partir do artefato; item tip
 (a API do Graph não posta adesivo de link/enquete/quiz/pergunta em story) — toda story é publicação
 manual, e antes de marcar qualquer coisa é preciso perguntar pro Alysson se a story leva adesivo e qual o texto.
 
+**Quem consegue ler as aprovações:** o artefato é público e pertence à conta pessoal do Alysson.
+Sessão aberta por essa conta lê a coleção com a ferramenta de banco do artefato e sincroniza a fila.
+**Sessão aberta pela conta da Conquer (leandro.borges@escolaconquer) não lê**: a página abre, mas o
+banco responde "public artifact from outside the user's organization" e não há o que tentar. Dessa
+conta, o caminho é o Alysson dizer no chat o que liberou, ou a sessão dele sincronizar. Verificado em
+01/10/2026.
+
 ## Armadilhas já resolvidas (não repetir)
 
 - **Token da Meta vazou em 28/09/2026** (`META_IG_USER_ID` estava com o token; o erro da Graph API
