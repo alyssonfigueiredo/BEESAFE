@@ -14,6 +14,10 @@ import { colors, shadow } from "@/theme/tokens";
 
 const CATEGORY_KEYS = Object.keys(PLACE_CATEGORIES) as PlaceCategory[];
 
+// O aviso de repetido agora alcança a cidade inteira, então a distância pode ser de quilômetros.
+const distancia = (m: number) =>
+  m >= 1000 ? `${(m / 1000).toFixed(1).replace(".", ",")} km` : `${Math.round(m)} m`;
+
 export function PlaceForm({ onDone }: { onDone: (placeId: string) => void }) {
   const { city, userLocation } = useCity();
   const router = useRouter();
@@ -190,8 +194,9 @@ export function PlaceForm({ onDone }: { onDone: (placeId: string) => void }) {
             {jaExistem.length === 1 ? "Já existe um parecido" : "Já existem parecidos"}
           </Text>
           <Text className="font-body text-sm text-dim">
-            Se for o mesmo lugar, abra e avalie — a nota da comunidade some quando o mesmo bar vira
-            duas fichas.
+            Se for o mesmo lugar, abra e avalie — a nota da comunidade racha quando o mesmo bar vira
+            duas fichas, e nenhuma das duas chega ao selo. Lugar que mudou de endereço aparece aqui
+            longe do ponto: é a ficha antiga, com o endereço velho.
           </Text>
           {jaExistem.map((p) => (
             <Pressable
@@ -202,7 +207,7 @@ export function PlaceForm({ onDone }: { onDone: (placeId: string) => void }) {
               <Text className="font-body-medium text-base text-ink">{p.name}</Text>
               <Text className="font-body text-xs text-dim">
                 {PLACE_CATEGORIES[p.category]}
-                {p.neighborhood ? ` · ${p.neighborhood}` : ""} · a {Math.round(p.distance_m)} m
+                {p.neighborhood ? ` · ${p.neighborhood}` : ""} · a {distancia(p.distance_m)}
               </Text>
             </Pressable>
           ))}
