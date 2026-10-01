@@ -410,6 +410,16 @@ Checks antes de commitar: `npm run lint && npm run typecheck`. Migrations testá
    Denúncia, moderação e excluir conta já existem.
 5. Fase 6+: notificações por área, rotas seguras, versão web.
 
+## Aprovação de posts do Instagram
+
+Artefato onde o Alysson aprova/reprova cada item de `docs/legendas/fila.json` antes de publicar:
+https://claude.ai/artifact/KZFTMrCF28RLVRJr7JXBC5
+Coleção `aprovacoes` (doc_id = id do item, `{aprovado, ts}`) e `pedidos` (pedidos de alteração,
+filtrar `resolvido == false`). Regra de sincronização: item tipo POST/REELS com `primeiro_comentario`
+já preenchido pode virar `aprovado: true` direto a partir do artefato; item tipo STORY nunca
+(a API do Graph não posta adesivo de link/enquete/quiz/pergunta em story) — toda story é publicação
+manual, e antes de marcar qualquer coisa é preciso perguntar pro Alysson se a story leva adesivo e qual o texto.
+
 ## Armadilhas já resolvidas (não repetir)
 
 - **Token da Meta vazou em 28/09/2026** (`META_IG_USER_ID` estava com o token; o erro da Graph API
