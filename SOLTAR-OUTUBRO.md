@@ -220,6 +220,8 @@ app por esse caminho. Recurso novo de verdade vai por build e revisão, como sem
   (`expo-glass-effect`, `expo-blur`) e o fundo da abertura são nativos: só chegam com esta build.
 - Busca de lugar no banco (RPC `search_places`, migration 28) e lote ordenado — lugar cadastrado
   não desaparece mais da lista nem da busca. **Precisa da migration 28 colada antes da build.**
+- "Achar esse endereço no mapa" no cadastro de lugar (Nominatim/OSM, sem chave e sem custo):
+  o endereço escrito passa a mover o alfinete, e o app avisa quando ele cai em outra cidade.
 - Volta da ficha do lugar depois de cadastrar (era `replace`, virou `push`): sem isso a pessoa
   ficava presa na tela e tinha que fechar o app.
 - Apelido que salva de verdade (migration 18) e erros de login e cadastro em português.

@@ -27,6 +27,8 @@ type Props = {
   /** Modo seleção: esconde calor e pontos e devolve o ponto tocado. */
   onPick?: (point: LngLat) => void;
   picked?: LngLat | null;
+  /** Ponto que veio de fora (GPS, endereço achado): a câmera vai até ele. Toque no mapa não. */
+  focus?: LngLat | null;
   onSelect?: (occurrence: PublicOccurrence | null) => void;
   /** Toque no mapa fora de qualquer pino (fecha balões abertos). */
   onPressEmpty?: () => void;
@@ -41,6 +43,7 @@ export function CityMap({
   zoom = 12,
   onPick,
   picked,
+  focus,
   onSelect,
   onPressEmpty,
   style,
@@ -118,6 +121,14 @@ export function CityMap({
     );
     fitted.current = true;
   }, [dataKey, occurrences, places]);
+
+  // Ponto marcado de fora da tela do mapa (GPS ou endereço achado): leva a câmera até lá, senão
+  // o alfinete cai fora do enquadramento e a pessoa acha que nada aconteceu. Toque no mapa não
+  // entra aqui de propósito — recentralizar a cada toque atrapalha quem está ajustando o ponto.
+  useEffect(() => {
+    if (!focus) return;
+    cameraRef.current?.easeTo({ center: [focus.lng, focus.lat], zoom: 17, duration: 500 });
+  }, [focus]);
 
   // O toque num pino também chega ao onPress do mapa, que limpa a seleção. O pino marca a hora do
   // toque e o mapa ignora o que chegar logo em seguida; toque no mapa vazio fecha o balão.

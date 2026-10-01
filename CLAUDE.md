@@ -543,6 +543,16 @@ lado do xadrez a capa cai (papel ou noite).
   de voltar nem barra de abas — só fechar o app saía. **Para rota fora das abas use `push`**;
   `replace` só entre abas (o `router.replace("/mapa")` do relato está certo). O formulário se
   limpa antes de sair, porque a aba fica montada no fundo. Só JS: `npx expo start --dev-client` + `r`.
+- **Endereço escrito não virava o ponto do lugar (01/10/2026, corrigido):** no cadastro, o campo
+  de endereço era só texto — a cidade e o bairro do lugar saem da COORDENADA (trigger no banco).
+  Quem escrevia "Rua X, 100" de outra cidade e marcava o ponto com "estou no lugar agora"
+  cadastrava o lugar onde estava. Agora o campo tem **"Achar esse endereço no mapa"**
+  (`src/lib/geocode.ts`, Nominatim do OpenStreetMap: grátis e sem chave, pela regra de não gastar
+  com a API do Google), que move o alfinete, mostra o endereço achado e avisa quando ele cai em
+  outro município. A política do Nominatim pede User-Agent identificável e no máximo 1 busca por
+  segundo: **a busca é sempre por botão, nunca a cada tecla digitada.** `CityMap` ganhou a prop
+  `focus` para a câmera ir até o ponto que veio de fora (GPS ou endereço achado) — toque no mapa
+  não recentraliza, de propósito. O texto da seção Local diz que o alfinete é o que vale.
 - **Limite de lugares/dia: 5 → 20 (migration 30, 01/10/2026).** Conta dele e do Leandro (tabela
   `rate_limit_exempt`, mesma usada para avaliação) ficam sem limite também em `places`, não só em
   `place_ratings`.
