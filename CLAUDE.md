@@ -479,3 +479,8 @@ Checks antes de commitar: `npm run lint && npm run typecheck`. Migrations testá
   Perto de 1.000, parar e esperar o mês virar — rodar no ritmo padrão (150/dia) nunca estourou o grátis
   sozinho em menos de uma semana, então não tem pressa. Se mesmo assim bater o teto grátis, o gasto é
   mínimo (centavos por lugar), mas a regra é zero, não "pouco".
+- **Limite de 24h para cadastrar lugar removido (migration 29, 01/10/2026):** `enforce_rate_limit`
+  recusava lugar novo de conta com menos de 24h (erro "Contas novas podem adicionar lugares após 24
+  horas."). App lançou em 01/10/2026 e isso travava gente se cadastrando e já tentando cadastrar o
+  primeiro lugar no mesmo dia — tirado por decisão dele. Continua o limite de 5 lugares/dia por conta
+  e a antiduplicata de 150 m (migration 10).
