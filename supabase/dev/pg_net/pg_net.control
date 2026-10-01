@@ -1,0 +1,5 @@
+# Stub do pg_net para o smoke local/CI: só a assinatura de net.http_post, sem rede.
+comment = 'stub de teste do pg_net'
+default_version = '0.0'
+relocatable = false
+schema = net

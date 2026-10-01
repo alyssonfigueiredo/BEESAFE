@@ -17,6 +17,7 @@ jobs:
           sudo apt-get update -qq
           sudo apt-get install -y -qq postgresql-16 postgresql-16-postgis-3 postgresql-16-cron
           sudo systemctl stop postgresql || true
+          sudo cp supabase/dev/pg_net/* /usr/share/postgresql/16/extension/  # stub, sem rede
       - name: Roda migrations e smoke test
         run: sudo -u postgres env PG_BIN=/usr/lib/postgresql/16/bin PORT=54329 bash scripts/db-smoke.sh
 
