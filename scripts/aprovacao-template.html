@@ -1,0 +1,793 @@
+<!doctype html><html lang="pt-BR"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Fila da Irisa</title>
+<meta name="description" content="Prévia navegável (grade, stories, reels, zoom) de tudo que está agendado para o Instagram da Irisa, com aprovação e pedido de alteração.">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Urbanist:wght@600;700&family=Oswald:wght@400;500&family=Space+Grotesk:wght@400;500;600&display=swap">
+<style>
+:root{
+  --night:#F5F4EF; --night2:#EAE6DC; --surface:#FFFFFF; --line:#E1DDD0;
+  --ink:#1E2340; --muted:#4B4F6B; --dim:#767A91;
+  --coral:#F4736F; --orange:#F5A45D; --yellow:#D9A800; --turq:#3AA692; --lilac:#8C6FE0;
+  --wordmark:"Urbanist","Helvetica Neue",Arial,sans-serif;
+  --display:"Oswald",Impact,"Arial Narrow",sans-serif;
+  --body:"Space Grotesk","Helvetica Neue",Arial,sans-serif;
+  color-scheme: light;
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--night);color:var(--ink);font-family:var(--body);font-size:14px}
+.wrap{max-width:470px;margin:0 auto;padding:18px 0 50px}
+h1,h2,h3{font-family:var(--display);text-transform:uppercase;margin:0}
+.mono{font-family:var(--display);letter-spacing:.06em}
+
+.top{padding:0 16px 12px;display:flex;justify-content:space-between;align-items:baseline;gap:10px}
+.top h1{font-size:14px;font-weight:500;letter-spacing:.01em;text-transform:none;font-family:var(--body)}
+.top .tag{font-size:10.5px;color:var(--dim);letter-spacing:.08em;text-transform:uppercase}
+
+.phone{background:var(--surface);border:1px solid var(--line);border-radius:26px;overflow:hidden}
+.hdr{padding:18px 16px 6px;display:grid;grid-template-columns:74px 1fr;gap:16px;align-items:center}
+.av{width:74px;height:74px;border-radius:50%;flex:0 0 auto;position:relative;background:conic-gradient(from -90deg,var(--coral),var(--orange),var(--yellow),var(--turq),#6AA8EE,var(--lilac),var(--coral))}
+.av::after{content:"";position:absolute;inset:6px;border-radius:50%;background:var(--night2)}
+.av::before{content:"";position:absolute;left:50%;top:50%;width:11px;height:11px;margin:-5.5px;border-radius:50%;background:#fff;z-index:1}
+.counts{display:flex;gap:20px}
+.counts b{display:block;font-family:var(--display);font-weight:500;font-size:17px;line-height:1.1}
+.counts span{font-size:11px;color:var(--dim)}
+.bio{padding:0 16px 12px;font-size:13.5px;line-height:1.45}
+.bio b{font-family:var(--wordmark);font-weight:700;letter-spacing:.02em}
+.bio .link{color:var(--turq);text-decoration:none}
+
+.rings{display:flex;gap:13px;padding:4px 16px 14px;overflow-x:auto;scrollbar-width:none}
+.rings::-webkit-scrollbar{display:none}
+.ring{flex:0 0 auto;width:60px;text-align:center;background:none;border:0;padding:0;cursor:pointer;color:var(--ink);font:inherit;position:relative}
+.ring .c{width:60px;height:60px;border-radius:50%;padding:3px;background:conic-gradient(var(--lilac),var(--coral),var(--yellow),var(--lilac))}
+.ring .c.ok{background:var(--turq)}
+.ring img{width:100%;height:100%;border-radius:50%;object-fit:cover;display:block;border:2px solid var(--surface);background:var(--night2)}
+.ring .mono{display:block;font-size:9px;margin-top:5px;color:var(--dim);letter-spacing:.04em}
+
+.tabs{display:flex;border-top:1px solid var(--line)}
+.tabs div{flex:1;text-align:center;padding:10px 0;font-size:10.5px;letter-spacing:.1em;color:var(--dim);font-family:var(--display)}
+.tabs div.on{color:var(--ink);border-bottom:1.5px solid var(--turq)}
+
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;background:var(--line)}
+.tile{position:relative;aspect-ratio:4/5;background:var(--night2);border:0;padding:0;cursor:pointer;overflow:hidden}
+.tile img,.tile video{width:100%;height:100%;object-fit:cover;display:block}
+.tile .ic{position:absolute;top:7px;right:7px;width:17px;height:17px;filter:drop-shadow(0 1px 2px rgba(0,0,0,.6))}
+.tile .badge{position:absolute;left:7px;bottom:7px;font-family:var(--display);font-size:8.5px;letter-spacing:.06em;text-transform:uppercase;padding:3px 6px;border-radius:4px;font-weight:500}
+.badge.pend{background:rgba(244,115,111,.92);color:#1E2340}
+.badge.ok{background:rgba(92,201,180,.92);color:#1E2340}
+
+.legend{padding:14px 16px 4px;font-size:11.5px;color:var(--dim);line-height:1.5}
+.legend i{display:inline-block;width:7px;height:7px;border-radius:50%;margin-right:6px;vertical-align:middle}
+.legend i.pend{background:var(--coral)}
+.legend i.ok{background:var(--turq)}
+
+/* lightbox (post/carrossel/reels) */
+.ov{position:fixed;inset:0;background:rgba(10,12,26,.96);display:none;z-index:20;overflow:auto}
+.ov.on{display:block}
+.vw{max-width:470px;margin:0 auto;min-height:100%;display:flex;flex-direction:column;background:var(--night)}
+.vh{display:flex;align-items:center;gap:10px;padding:12px 14px;border-bottom:1px solid var(--line)}
+.vh .who{flex:1;font-size:13px;font-weight:600}
+.vh .who span{display:block;font-weight:400;color:var(--dim);font-size:11px;font-family:var(--display);letter-spacing:.04em}
+.x{background:none;border:0;color:var(--ink);font:inherit;font-size:22px;cursor:pointer;padding:4px 8px;line-height:1}
+
+.stage-scroll{position:relative;background:var(--night2);aspect-ratio:4/5;overflow:hidden;scrollbar-width:none}
+.stage-scroll.zoom-on{overflow:auto}
+.stage-scroll::-webkit-scrollbar{display:none}
+.stage-scroll img{width:100%;height:100%;object-fit:contain;display:block;cursor:zoom-in;user-select:none}
+.stage-scroll img.zoomed{width:230%;height:auto;object-fit:none;cursor:zoom-out}
+.stage-scroll video{width:100%;height:100%;object-fit:contain;display:block;background:#000}
+.arr{position:absolute;top:50%;transform:translateY(-50%);width:32px;height:32px;border-radius:50%;border:0;background:rgba(255,255,255,.92);color:#141426;cursor:pointer;display:grid;place-items:center;box-shadow:0 1px 4px rgba(0,0,0,.4);z-index:2}
+.arr svg{width:15px;height:15px}
+.arr.l{left:8px}.arr.r{right:8px}
+.dots{display:flex;justify-content:center;gap:5px;padding:9px 0 2px;min-height:24px}
+.dots i{width:6px;height:6px;border-radius:50%;background:var(--line)}
+.dots i.on{background:var(--turq)}
+
+.acts{display:flex;gap:10px;padding:10px 14px 0;flex-wrap:wrap}
+.btn{display:inline-flex;align-items:center;gap:7px;border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:999px;padding:8px 14px;font:inherit;font-size:12.5px;font-weight:600;cursor:pointer;white-space:nowrap}
+.btn svg{width:15px;height:15px;flex:0 0 auto}
+.btn:hover{border-color:var(--turq)}
+.btn:disabled{opacity:.5;cursor:default}
+.btn-aprovar{border-color:var(--turq);color:var(--turq)}
+.btn-aprovar:hover{background:rgba(92,201,180,.12)}
+.btn-desfazer{color:var(--dim);font-size:11.5px;padding:7px 12px;border-color:transparent}
+.pill-ok{font-family:var(--display);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:#0F1830;background:var(--turq);padding:7px 14px;border-radius:999px;display:inline-flex;align-items:center;gap:6px}
+
+.cap{padding:10px 14px 4px;font-size:13.5px;white-space:pre-wrap;line-height:1.5;color:var(--muted)}
+.cap b{font-weight:700;color:var(--ink);margin-right:6px}
+.cap .tags{color:var(--turq);display:block;margin-top:8px;font-size:12.5px}
+.fixed{padding:0 14px 6px;font-size:12px;color:var(--dim)}
+.fixed b{color:var(--yellow);font-weight:600}
+
+.pedido{margin:8px 14px 18px;border-top:1px solid var(--line);padding-top:10px}
+.pedido summary{cursor:pointer;font-family:var(--display);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--lilac);list-style:none}
+.pedido summary::-webkit-details-marker{display:none}
+.pedido textarea{width:100%;margin-top:8px;background:var(--surface);border:1px solid var(--line);border-radius:10px;color:var(--ink);font-family:var(--body);font-size:13px;padding:10px;min-height:56px;resize:vertical}
+.pedido textarea:focus{outline:2px solid var(--lilac);outline-offset:1px}
+.btn-pedido{margin-top:8px;border-color:var(--lilac);color:var(--lilac);font-size:11.5px;padding:7px 12px}
+.btn-pedido:hover{background:rgba(174,150,242,.12)}
+.pedido-ok{color:var(--turq);font-size:12px;margin:8px 0 0}
+.db-off{color:var(--dim);font-size:12px;font-style:italic;margin:4px 0 0}
+
+/* stories */
+.sv{position:fixed;inset:0;background:#000;display:none;z-index:30}
+.sv.on{display:block}
+.sf{position:relative;max-width:470px;height:100%;margin:0 auto;display:flex;flex-direction:column;align-items:center;justify-content:center;box-sizing:border-box}
+.sbox{position:relative;width:100%;height:100%;overflow:hidden}
+.sbox img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;background:#000}
+.bars{position:absolute;top:10px;left:10px;right:10px;display:flex;gap:3px;z-index:2}
+.bars i{flex:1;height:2px;background:rgba(255,255,255,.35);border-radius:2px;overflow:hidden;position:relative}
+.bars i b{position:absolute;inset:0;width:0;background:#fff;display:block}
+.bars i.done b{width:100%}
+.bars i.on b{animation:fill var(--dur,5s) linear forwards}
+@keyframes fill{from{width:0}to{width:100%}}
+.suser{position:absolute;top:22px;left:12px;display:flex;align-items:center;gap:8px;color:#fff;font-size:13px;font-weight:600;text-shadow:0 1px 3px rgba(0,0,0,.6);z-index:2}
+.suser .dot{width:26px;height:26px;border-radius:50%;background:conic-gradient(from -90deg,var(--coral),var(--orange),var(--yellow),var(--turq),var(--lilac),var(--coral))}
+.suser span{font-weight:400;opacity:.85;font-size:11.5px;font-family:var(--display)}
+.sx{position:absolute;top:16px;right:10px;color:#fff;background:none;border:0;font-size:24px;cursor:pointer;z-index:3}
+.snav{position:absolute;top:0;bottom:0;width:40%;background:none;border:0;cursor:pointer;z-index:1}
+.snav.l{left:0}.snav.r{right:0}
+.sbadge{position:absolute;bottom:14px;left:12px;right:12px;z-index:2;display:flex;justify-content:space-between;align-items:center;gap:8px}
+.schip{font-family:var(--display);font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;padding:5px 10px;border-radius:999px;background:rgba(20,20,38,.6);color:#fff}
+.sbtn{font-family:var(--display);font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;padding:6px 12px;border-radius:999px;border:1px solid rgba(255,255,255,.5);background:rgba(20,20,38,.4);color:#fff;cursor:pointer}
+.sbtn.ok{background:var(--turq);border-color:var(--turq);color:#0F1830}
+
+/* abas de visão (perfil / lista / calendário) */
+.viewtabs{display:flex;gap:8px;padding:0 16px 14px}
+.vtab{flex:1;font-family:var(--display);font-size:11px;letter-spacing:.08em;text-transform:uppercase;padding:10px 0;border-radius:999px;border:1px solid var(--line);background:var(--surface);color:var(--dim);cursor:pointer}
+.vtab.on{color:#0F1830;background:var(--turq);border-color:var(--turq)}
+
+/* visão em calendário (mês) */
+.calwrap{max-width:960px;margin:0 auto;padding:0 16px 50px}
+.cal-head{display:flex;align-items:center;gap:10px;margin-bottom:14px;flex-wrap:wrap}
+.cal-nav{display:flex;align-items:center;gap:6px}
+.cal-arrow{width:32px;height:32px;border-radius:50%;border:1px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer;display:grid;place-items:center;font-size:15px}
+.cal-arrow:hover{border-color:var(--turq)}
+.cal-today{font-family:var(--display);font-size:11px;letter-spacing:.06em;text-transform:uppercase;padding:8px 14px;border-radius:999px;border:1px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer}
+.cal-today:hover{border-color:var(--turq)}
+.cal-title{font-family:var(--display);font-size:22px;text-transform:uppercase;letter-spacing:.02em;margin-left:4px}
+.cal-count{margin-left:auto;font-size:11.5px;color:var(--dim)}
+.cal-legend{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:12px;font-size:11.5px;color:var(--dim)}
+.cal-legend i{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:5px;vertical-align:middle}
+.cal-legend i.pend{background:var(--coral)}
+.cal-legend i.aprov{background:var(--lilac)}
+.cal-legend i.pub{background:var(--turq)}
+.cal-weekdays{display:grid;grid-template-columns:repeat(7,1fr);gap:1px;background:var(--line);border-radius:12px 12px 0 0;overflow:hidden}
+.cal-weekdays span{background:var(--surface);text-align:center;padding:8px 0;font-family:var(--display);font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--dim)}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:1px;background:var(--line);border-radius:0 0 12px 12px;overflow:hidden}
+.cal-day{background:var(--surface);min-height:96px;padding:6px 6px 8px;display:flex;flex-direction:column;gap:3px}
+.cal-day.out{background:var(--night2)}
+.cal-daynum{font-family:var(--display);font-size:12px;color:var(--muted)}
+.cal-day.out .cal-daynum{color:var(--dim)}
+.cal-day.istoday .cal-daynum{color:#0F1830;background:var(--turq);width:20px;height:20px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center}
+
+/* dia com um item só: a mídia preenche o quadrado inteiro */
+.cal-day.single{padding:0;position:relative;overflow:hidden;cursor:pointer;border:0}
+.cal-day.single .cal-fullthumb{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;background:var(--night2)}
+.cal-day.single .cal-daynum{position:absolute;top:5px;left:5px;z-index:2;background:rgba(255,255,255,.88);border-radius:50%;width:18px;height:18px;display:flex;align-items:center;justify-content:center;font-size:10px;box-shadow:0 1px 3px rgba(0,0,0,.25)}
+.cal-day.single.istoday .cal-daynum{background:var(--turq);color:#0F1830}
+.cal-day.single .cal-hora{position:absolute;top:5px;right:5px;z-index:2;background:rgba(20,20,38,.6);color:#fff;font-size:9px;padding:2px 6px;border-radius:999px;font-family:var(--display)}
+.cal-day.single .cal-statusdot{position:absolute;bottom:5px;right:5px;width:10px;height:10px;border-radius:50%;z-index:2;box-shadow:0 0 0 2px rgba(255,255,255,.9)}
+.cal-day.single .cal-statusdot.st-pend{background:var(--coral)}
+.cal-day.single .cal-statusdot.st-aprov{background:var(--lilac)}
+.cal-day.single .cal-statusdot.st-pub{background:var(--turq)}
+.cal-item{border:0;text-align:left;border-radius:6px;padding:3px 5px;font-size:10.5px;line-height:1.3;cursor:pointer;display:flex;align-items:center;gap:5px;background:rgba(244,115,111,.14);color:var(--muted)}
+.cal-item .cal-thumb{width:20px;height:20px;border-radius:5px;object-fit:cover;flex:0 0 auto;background:var(--night2);display:block}
+.cal-item .cal-txt{display:flex;flex-direction:column;min-width:0;overflow:hidden}
+.cal-item b{font-family:var(--display);font-size:8.5px;letter-spacing:.03em;color:var(--ink)}
+.cal-item .cal-txt span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cal-item.st-aprov{background:rgba(174,150,242,.16)}
+.cal-item.st-pub{background:rgba(92,201,180,.16)}
+.cal-item:hover{outline:1.5px solid var(--turq)}
+
+/* visão em lista, dia a dia (largura própria, mais ampla que o telefone) */
+.listwrap{max-width:960px;margin:0 auto;padding:0 16px 50px}
+.list{display:flex;flex-direction:column;gap:18px}
+.lcard{background:var(--surface);border:1px solid var(--line);border-radius:18px;overflow:hidden}
+.lmeta{display:flex;flex-wrap:wrap;align-items:baseline;gap:8px;padding:14px 18px 10px}
+.ldate{font-family:var(--display);font-weight:500;text-transform:uppercase;letter-spacing:.03em;font-size:15px}
+.ltime{font-family:var(--display);font-size:12px;letter-spacing:.06em;color:var(--dim)}
+.lkind{margin-left:auto;font-family:var(--display);font-size:10px;letter-spacing:.1em;text-transform:uppercase;padding:4px 9px;border-radius:999px;background:rgba(30,35,64,.06);color:var(--turq)}
+.lkind.story{color:var(--lilac)}
+.lkind.reels{color:var(--coral)}
+
+/* peça e legenda lado a lado; empilha em telas estreitas */
+.lbody{display:grid;grid-template-columns:280px 1fr;gap:0}
+@media (max-width:640px){.lbody{grid-template-columns:1fr}}
+.lmedia{position:relative;background:var(--night2);border-right:1px solid var(--line)}
+@media (max-width:640px){.lmedia{border-right:0;border-bottom:1px solid var(--line)}}
+.lstage-scroll{overflow:hidden;scrollbar-width:none;aspect-ratio:4/5;background:var(--night2)}
+.lstage-scroll.zoom-on{overflow:auto}
+.lstage-scroll::-webkit-scrollbar{display:none}
+.lstage-scroll img{width:100%;height:100%;object-fit:contain;display:block;cursor:zoom-in;user-select:none}
+.lstage-scroll img.zoomed{width:230%;height:auto;object-fit:none;cursor:zoom-out}
+.lstage-scroll video{width:100%;height:100%;object-fit:contain;display:block;background:#000}
+.larr{position:absolute;top:50%;transform:translateY(-50%);width:30px;height:30px;border-radius:50%;border:0;background:rgba(255,255,255,.92);color:#141426;cursor:pointer;display:grid;place-items:center;box-shadow:0 1px 4px rgba(0,0,0,.4);z-index:2}
+.larr svg{width:14px;height:14px}
+.larr.l{left:8px}.larr.r{right:8px}
+.ldots{display:flex;justify-content:center;gap:5px;padding:8px 0;min-height:20px;background:var(--night2)}
+.ldots i{width:5px;height:5px;border-radius:50%;background:var(--line)}
+.ldots i.on{background:var(--turq)}
+.lside{display:flex;flex-direction:column;padding:14px 18px 16px;min-width:0}
+.lstatusrow{display:flex;align-items:center;gap:10px;flex-wrap:wrap;order:-1;margin-bottom:12px}
+.lpill{font-family:var(--display);font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;padding:6px 11px;border-radius:999px;display:inline-flex;align-items:center;gap:5px}
+.lpill.pend{background:rgba(244,115,111,.16);color:var(--coral)}
+.lpill.ok{background:rgba(92,201,180,.16);color:var(--turq)}
+.lapprove-big{font-family:var(--display);font-size:12px;letter-spacing:.06em;text-transform:uppercase;padding:9px 18px;border-radius:999px;border:1.5px solid var(--turq);background:transparent;color:var(--turq);cursor:pointer;font-weight:600}
+.lapprove-big:hover{background:rgba(92,201,180,.14)}
+.lapprove-big.ok{background:var(--turq);color:#0F1830}
+.lapprove-big:disabled{opacity:.5;cursor:default}
+.lacts{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px}
+.lbtn{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);background:var(--night2);color:var(--ink);border-radius:999px;padding:7px 12px;font:inherit;font-size:11.5px;font-weight:600;cursor:pointer;white-space:nowrap}
+.lbtn svg{width:13px;height:13px;flex:0 0 auto}
+.lbtn:hover{border-color:var(--turq)}
+.lbtn:disabled{opacity:.5;cursor:default}
+.lcap{font-size:13px;white-space:pre-wrap;line-height:1.5;color:var(--muted);margin-bottom:8px}
+.lcap b{font-weight:700;color:var(--ink);margin-right:6px}
+.lcap .tags{color:var(--turq);display:block;margin-top:6px;font-size:12px}
+.lfixed{font-size:11.5px;color:var(--dim);margin-bottom:4px}
+.lfixed b{color:var(--yellow);font-weight:600}
+.lpedido{margin-top:auto;border-top:1px solid var(--line);padding-top:10px}
+.lpedido summary{cursor:pointer;font-family:var(--display);font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--lilac);list-style:none}
+.lpedido summary::-webkit-details-marker{display:none}
+.lpedido textarea{width:100%;margin-top:8px;background:var(--night2);border:1px solid var(--line);border-radius:10px;color:var(--ink);font-family:var(--body);font-size:12.5px;padding:9px;min-height:52px;resize:vertical}
+.lpedido .lbtn{margin-top:8px;border-color:var(--lilac);color:var(--lilac)}
+.lok{color:var(--turq);font-size:11.5px;margin:8px 0 0}
+
+footer{max-width:470px;margin:16px auto 0;padding:0 16px;color:var(--dim);font-size:12px;line-height:1.6}
+footer code{background:var(--surface);padding:2px 6px;border-radius:6px;color:var(--muted)}
+</style>
+</head><body>
+<div class="wrap">
+  <div class="top"><h1>Fila de publicação — Irisa</h1><span class="tag" id="chip-total">carregando…</span></div>
+
+  <div class="viewtabs">
+    <button class="vtab on" id="tabPerfil" type="button">Perfil</button>
+    <button class="vtab" id="tabLista" type="button">Lista, dia a dia</button>
+    <button class="vtab" id="tabCal" type="button">Calendário</button>
+  </div>
+
+  <div id="viewProfile">
+    <div class="phone">
+      <div class="hdr">
+        <div class="av"></div>
+        <div class="counts">
+          <div><b id="cPosts">–</b><span>posts</span></div>
+          <div><b id="cStories">–</b><span>stories</span></div>
+        </div>
+      </div>
+      <div class="bio"><b>Iris<span style="color:var(--yellow)">a</span> · @irisapp</b><br>O mapa dos lugares onde a gente é <span style="color:var(--turq);font-weight:600">bem-vinde</span>, feito por nós.<br>Anônimo, gratuito, Android e iPhone.<br><a class="link" href="#">bit.ly/appirisa</a></div>
+      <div class="rings" id="rings"></div>
+      <div class="tabs"><div class="on">POSTS</div><div>STORIES</div></div>
+      <div class="grid" id="grid"></div>
+    </div>
+    <div class="legend">
+      <span><i class="pend"></i>aguardando aprovação</span> · <span><i class="ok"></i>aprovado</span><br>
+      Toque numa lâmina pra abrir (reels tocam com som). Zoom em imagem com duplo toque/clique.
+      Aprovar e pedir alteração ficam salvos aqui e eu sincronizo pro <code>fila.json</code> do repositório.
+    </div>
+  </div>
+
+  <footer>
+    Gerado de <code>docs/legendas/fila.json</code> por <code>scripts/artefato-aprovacao.mjs</code> — toda
+    peça nova ou legenda corrigida já nasce aqui certa. Aprovar grava só neste artefato; o robô continua
+    exigindo <code style="color:var(--yellow)">aprovado: true</code> direto no repositório antes de publicar.
+  </footer>
+</div>
+
+<div id="viewList" class="listwrap" style="display:none">
+  <div class="list" id="list"></div>
+</div>
+
+<div id="viewCal" class="calwrap" style="display:none">
+  <div class="cal-head">
+    <div class="cal-nav">
+      <button class="cal-arrow" id="calPrev" type="button" aria-label="Mês anterior">‹</button>
+      <button class="cal-arrow" id="calNext" type="button" aria-label="Próximo mês">›</button>
+    </div>
+    <button class="cal-today" id="calHoje" type="button">Hoje</button>
+    <span class="cal-title" id="calTitle"></span>
+    <span class="cal-count" id="calCount"></span>
+  </div>
+  <div class="cal-legend">
+    <span><i class="pend"></i>aguardando aprovação</span>
+    <span><i class="aprov"></i>aprovado, na fila</span>
+    <span><i class="pub"></i>publicado</span>
+  </div>
+  <div class="cal-weekdays">
+    <span>Dom</span><span>Seg</span><span>Ter</span><span>Qua</span><span>Qui</span><span>Sex</span><span>Sáb</span>
+  </div>
+  <div class="cal-grid" id="calGrid"></div>
+</div>
+
+<!-- lightbox de post/carrossel/reels -->
+<div class="ov" id="ov"><div class="vw">
+  <div class="vh"><div class="who">Iris<span style="color:var(--yellow)">a</span><span id="vmeta"></span></div><button class="x" id="vx" aria-label="Fechar">×</button></div>
+  <div class="stage-scroll" id="stage">
+    <img id="vimg" alt="">
+    <video id="vvid" controls playsinline style="display:none"></video>
+    <button class="arr l" id="vl" aria-label="Anterior"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M15 5l-7 7 7 7"/></svg></button>
+    <button class="arr r" id="vr" aria-label="Próximo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M9 5l7 7-7 7"/></svg></button>
+  </div>
+  <div class="dots" id="dots"></div>
+  <div class="acts">
+    <button class="btn" id="bcopy" type="button">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h8"/></svg>
+      <span>Copiar legenda</span>
+    </button>
+  </div>
+  <textarea id="vsel" readonly aria-label="Legenda para copiar" style="display:none;width:100%;margin:10px 14px 0;max-width:calc(100% - 28px);min-height:120px;padding:10px;border:1px solid var(--turq);border-radius:10px;background:var(--surface);color:var(--ink);font:inherit;font-size:12.5px"></textarea>
+  <div class="cap" id="vcap"></div>
+  <div class="fixed" id="vfixed"></div>
+  <div class="acts" id="vapprove"></div>
+  <details class="pedido" id="vpedido">
+    <summary>Pedir alteração</summary>
+    <textarea placeholder="O que precisa mudar nessa peça?"></textarea>
+    <button class="btn btn-pedido" type="button">Enviar pedido</button>
+    <p class="pedido-ok" hidden>Pedido enviado — eu vejo na próxima sincronização.</p>
+  </details>
+</div></div>
+
+<!-- viewer de stories -->
+<div class="sv" id="sv"><div class="sf">
+  <div class="sbox">
+    <img id="simg" alt="">
+    <div class="bars" id="bars"></div>
+    <div class="suser"><div class="dot"></div>@irisapp <span id="sday"></span></div>
+    <button class="x sx" id="sx" aria-label="Fechar">×</button>
+    <button class="snav l" id="sl" aria-label="Anterior"></button>
+    <button class="snav r" id="sr" aria-label="Próximo"></button>
+    <div class="sbadge">
+      <span class="schip" id="sstatus"></span>
+      <button class="sbtn" id="sapprove" type="button"></button>
+    </div>
+  </div>
+</div></div>
+
+<script>
+const FEED = __FEED_JSON__;
+const STORIES = __STORIES_JSON__;
+function urlFor(p){ return p; }
+const esc=s=>s.replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
+
+const $=id=>document.getElementById(id);
+$('cPosts').textContent = FEED.length;
+$('cStories').textContent = STORIES.length;
+
+function fmtQuando(iso){
+  const d = new Date(iso);
+  const dia = d.toLocaleDateString("pt-BR",{weekday:"short",day:"2-digit",month:"2-digit",timeZone:"America/Sao_Paulo"});
+  const hora = d.toLocaleTimeString("pt-BR",{hour:"2-digit",minute:"2-digit",timeZone:"America/Sao_Paulo"});
+  return `${dia} · ${hora}`;
+}
+const icCar='<svg class="ic" viewBox="0 0 24 24" fill="#fff"><path d="M8 4h13v13h-2V6H8V4zM3 7h13v13H3V7z"/></svg>';
+const icReels='<svg class="ic" viewBox="0 0 24 24" fill="#fff"><path d="M8 5v14l11-7z"/></svg>';
+
+// ---- estado de aprovação, vindo do banco do artefato (capability "db") ----
+// aprovacoes/<id> = {aprovado:bool}; pedidos = coleção de pedidos de alteração.
+// Aprovar aqui NUNCA publica nada: é só o registro que eu leio pra sincronizar
+// manualmente o campo "aprovado" no docs/legendas/fila.json do repositório.
+let dbNs = null;
+const aprovadoState = {}; // id -> bool
+const listCardUpdaters = {}; // id -> função que atualiza o card da visão em lista
+
+async function initDb(){
+  try { dbNs = window.claude && window.claude.use ? await window.claude.use("db") : null; }
+  catch(e){ dbNs = null; }
+  const allIds = [...FEED.map(p=>p.id), ...STORIES.map(s=>s.id)];
+  if(!dbNs){
+    allIds.forEach(id=>aprovadoState[id]=false);
+    render(); renderS_ifOpen(); updateChip();
+    return;
+  }
+  allIds.forEach(id=>{
+    dbNs.doc("aprovacoes/"+id).onSnapshot(snap=>{
+      aprovadoState[id] = !!(snap.data() && snap.data().aprovado);
+      updateGridBadge(id);
+      updateChip();
+      if(cur && cur.id===id) renderApprove();
+      if(sc && sc.id===id) renderSApprove();
+      if(listCardUpdaters[id]) listCardUpdaters[id]();
+      if(viewCal.style.display!=='none') renderCalendar();
+    }, ()=>{});
+  });
+}
+function updateChip(){
+  const total = FEED.length + STORIES.length;
+  const aprovados = Object.values(aprovadoState).filter(Boolean).length;
+  $('chip-total').textContent = `${total} itens · ${aprovados} aprovado${aprovados===1?'':'s'}`;
+}
+async function setAprovado(id, val){
+  if(!dbNs) return;
+  await dbNs.doc("aprovacoes/"+id).set({aprovado: val, ts: new Date().toISOString()});
+}
+async function enviarPedido(id, texto){
+  if(!dbNs || !texto.trim()) return false;
+  await dbNs.collection("pedidos").add({item:id, texto:texto.trim(), ts:new Date().toISOString(), resolvido:false});
+  return true;
+}
+
+// grade (posts + reels)
+const grid=$('grid');
+FEED.forEach((p,i)=>{
+  const b=document.createElement('button'); b.className='tile'; b.dataset.id=p.id;
+  const isReels = p.tipo==='REELS';
+  const thumb = isReels
+    ? (p.video ? `<video src="${urlFor(p.video)}" muted preload="metadata"></video>` : '')
+    : (p.arquivos && p.arquivos.length ? `<img src="${urlFor(p.arquivos[0])}" alt="">` : '');
+  const icon = isReels ? icReels : (p.arquivos && p.arquivos.length>1?icCar:'');
+  b.innerHTML=`${thumb}${icon}<span class="badge pend">pendente</span>`;
+  b.addEventListener('click',()=>abrir(i));
+  grid.appendChild(b);
+});
+function updateGridBadge(id){
+  const tile = grid.querySelector(`[data-id="${id}"]`); if(!tile) return;
+  const badge = tile.querySelector('.badge'); if(!badge) return;
+  const ok = !!aprovadoState[id];
+  badge.className = 'badge '+(ok?'ok':'pend'); badge.textContent = ok?'aprovado':'pendente';
+}
+
+const ov=$('ov'),vimg=$('vimg'),vvid=$('vvid'),stage=$('stage'),dots=$('dots'),vcap=$('vcap'),vmeta=$('vmeta'),vl=$('vl'),vr=$('vr'),vfixed=$('vfixed'),vapprove=$('vapprove');
+let cur=null,idx=0;
+
+function abrir(i){cur=FEED[i];idx=0;ov.classList.add('on');document.body.style.overflow='hidden';render();}
+function render(){
+  const p=cur; if(!p) return;
+  vvid.pause();
+  if(p.tipo==='REELS'){
+    vimg.style.display='none'; vvid.style.display='block';
+    vvid.src=p.video?urlFor(p.video):'';
+    dots.innerHTML=''; vl.style.display=vr.style.display='none';
+  } else {
+    vvid.style.display='none'; vimg.style.display='block';
+    vimg.classList.remove('zoomed'); stage.classList.remove('zoom-on');
+    const arqs = p.arquivos||[];
+    vimg.src=arqs.length?urlFor(arqs[idx]):'';
+    const multi=arqs.length>1;
+    dots.innerHTML=multi?arqs.map((_,k)=>`<i class="${k===idx?'on':''}"></i>`).join(''):'';
+    vl.style.display=vr.style.display=multi?'grid':'none';
+  }
+  const leg=(p.legenda||'').split('\n\n'); const tags=leg.length>1&&leg[leg.length-1].startsWith('#')?leg.pop():'';
+  vcap.innerHTML=`<b>irisapp</b>${esc(leg.join('\n\n'))}${tags?`<span class="tags">${esc(tags)}</span>`:''}`;
+  vfixed.innerHTML = p.fixado ? `Comentário fixado: <b>${esc(p.fixado)}</b>` : '';
+  const multi = p.tipo!=='REELS' && (p.arquivos||[]).length>1;
+  vmeta.textContent=` · ${p.id} · ${fmtQuando(p.quando)}${multi?' · '+(idx+1)+'/'+p.arquivos.length:''}`;
+  bcopy.classList.remove('ok'); rotuloCopia('Copiar legenda'); vsel.style.display='none';
+  renderApprove();
+  // reseta o formulário de pedido do item anterior
+  const ta = document.querySelector('#vpedido textarea'); if(ta) ta.value='';
+  const ok = document.querySelector('#vpedido .pedido-ok'); if(ok) ok.hidden=true;
+}
+function renderApprove(){
+  if(!cur) return;
+  const aprovado = !!aprovadoState[cur.id];
+  if(!dbNs){
+    vapprove.innerHTML = `<p class="db-off">Abra este link com sua conta pra aprovar por aqui — ou me diga e eu marco direto.</p>`;
+    return;
+  }
+  vapprove.innerHTML = aprovado
+    ? `<span class="pill-ok">✓ Aprovado</span><button class="btn btn-desfazer" id="bundo" type="button">Desfazer</button>`
+    : `<button class="btn btn-aprovar" id="bapprove" type="button">Aprovar</button>`;
+  const ba=document.getElementById('bapprove'); if(ba) ba.onclick=async()=>{ba.disabled=true;await setAprovado(cur.id,true);};
+  const bu=document.getElementById('bundo'); if(bu) bu.onclick=async()=>{bu.disabled=true;await setAprovado(cur.id,false);};
+}
+function fechar(){ov.classList.remove('on');document.body.style.overflow='';vvid.pause();}
+$('vx').onclick=fechar;
+vl.onclick=()=>{idx=(idx-1+cur.arquivos.length)%cur.arquivos.length;render();};
+vr.onclick=()=>{idx=(idx+1)%cur.arquivos.length;render();};
+
+// zoom: duplo toque/clique alterna 230%; a rolagem nativa da caixa faz o pan (só imagem)
+let lastTap=0;
+function toggleZoom(){ vimg.classList.toggle('zoomed'); stage.classList.toggle('zoom-on', vimg.classList.contains('zoomed')); }
+vimg.addEventListener('dblclick',toggleZoom);
+vimg.addEventListener('touchend',()=>{ const t=Date.now(); if(t-lastTap<320){toggleZoom();} lastTap=t; });
+
+// swipe entre lâminas (só quando não tá com zoom e não é reels)
+let tx=null; stage.addEventListener('touchstart',e=>{ if(!cur||cur.tipo==='REELS'||vimg.classList.contains('zoomed'))return; tx=e.touches[0].clientX; },{passive:true});
+stage.addEventListener('touchend',e=>{ if(tx===null||!cur||cur.tipo==='REELS'||(cur.arquivos||[]).length<2)return; const dx=e.changedTouches[0].clientX-tx; if(dx<-40)vr.click(); if(dx>40)vl.click(); tx=null; });
+
+// copiar legenda
+const bcopy=$('bcopy'), bcopyT=bcopy.querySelector('span'), vsel=$('vsel');
+function rotuloCopia(t){bcopyT.textContent=t;}
+async function copiar(txt){
+  try{ await navigator.clipboard.writeText(txt); return true; }catch(e){}
+  vsel.value=txt; vsel.style.display='block'; vsel.focus(); vsel.select();
+  return false;
+}
+bcopy.addEventListener('click',async()=>{
+  const t=(cur&&cur.legenda)||''; if(!t) return;
+  const ok=await copiar(t);
+  if(ok){ bcopy.classList.add('ok'); rotuloCopia('Legenda copiada'); setTimeout(()=>{bcopy.classList.remove('ok');rotuloCopia('Copiar legenda');},1900); }
+  else { rotuloCopia('Selecionado, é só copiar'); }
+});
+
+// pedir alteração (post/carrossel/reels)
+const pedBtn = document.querySelector('#vpedido .btn-pedido');
+const pedTxt = document.querySelector('#vpedido textarea');
+const pedOk = document.querySelector('#vpedido .pedido-ok');
+pedBtn.addEventListener('click', async()=>{
+  if(!cur) return;
+  if(!dbNs){ pedTxt.placeholder='Indisponível nesta visualização — me diga direto no chat.'; return; }
+  if(!pedTxt.value.trim()){ pedTxt.focus(); return; }
+  pedBtn.disabled=true;
+  const ok = await enviarPedido(cur.id, pedTxt.value);
+  pedBtn.disabled=false;
+  if(ok){ pedTxt.value=''; pedOk.hidden=false; setTimeout(()=>{pedOk.hidden=true;},5000); }
+});
+
+// stories
+const rings=$('rings');
+STORIES.forEach((s,i)=>{
+  const b=document.createElement('button'); b.className='ring'; b.dataset.id=s.id;
+  b.innerHTML=`<div class="c"><img src="${s.arquivo?urlFor(s.arquivo):''}" alt=""></div><span class="mono">${s.id.replace('story-','')}</span>`;
+  b.addEventListener('click',()=>abrirS(i));
+  rings.appendChild(b);
+});
+const sv=$('sv'),simg=$('simg'),bars=$('bars'),sday=$('sday'),sstatus=$('sstatus'),sapprove=$('sapprove');
+const DUR=5000;
+let sd=0,sc=null,timer=null;
+function abrirS(i){sd=i;sc=STORIES[i];sv.classList.add('on');document.body.style.overflow='hidden';renderS();}
+function renderS(){
+  clearTimeout(timer);
+  const s=sc;
+  simg.src=s.arquivo?urlFor(s.arquivo):''; sday.textContent=fmtQuando(s.quando);
+  bars.innerHTML=STORIES.map((_,k)=>`<i class="${k<sd?'done':(k===sd?'on':'')}" style="--dur:${DUR}ms"><b></b></i>`).join('');
+  renderSApprove();
+  timer=setTimeout(proxS,DUR);
+}
+function renderS_ifOpen(){ if(sv.classList.contains('on')) renderSApprove(); }
+function renderSApprove(){
+  if(!sc) return;
+  const aprovado = !!aprovadoState[sc.id];
+  sstatus.textContent = (sc.nota?sc.nota+' · ':'') + (aprovado?'aprovado':'pendente');
+  sapprove.textContent = aprovado?'Desfazer':'Aprovar';
+  sapprove.className = 'sbtn'+(aprovado?' ok':'');
+  sapprove.onclick = async(e)=>{ e.stopPropagation(); clearTimeout(timer); sapprove.disabled=true; await setAprovado(sc.id,!aprovado); sapprove.disabled=false; timer=setTimeout(proxS,DUR); };
+}
+function proxS(){ if(sd<STORIES.length-1){sd++;sc=STORIES[sd];renderS();} else fecharS(); }
+function fecharS(){clearTimeout(timer);sv.classList.remove('on');document.body.style.overflow='';}
+$('sx').onclick=(e)=>{e.stopPropagation();fecharS();};
+$('sl').onclick=(e)=>{e.stopPropagation();clearTimeout(timer); if(sd>0){sd--;sc=STORIES[sd];renderS();} };
+$('sr').onclick=(e)=>{e.stopPropagation();clearTimeout(timer);proxS();};
+
+document.addEventListener('keydown',e=>{
+  if(sv.classList.contains('on')){ if(e.key==='Escape')fecharS(); if(e.key==='ArrowRight')$('sr').click(); if(e.key==='ArrowLeft')$('sl').click(); return; }
+  if(ov.classList.contains('on')){ if(e.key==='Escape')fechar(); if(e.key==='ArrowRight')vr.click(); if(e.key==='ArrowLeft')vl.click(); }
+});
+
+// ---- abas de visão ----
+const tabPerfil=$('tabPerfil'), tabLista=$('tabLista'), tabCal=$('tabCal'), viewProfile=$('viewProfile'), viewList=$('viewList'), viewCal=$('viewCal');
+function ativarAba(tab){
+  [tabPerfil,tabLista,tabCal].forEach(t=>t.classList.remove('on'));
+  [viewProfile,viewList,viewCal].forEach(v=>v.style.display='none');
+  tab.classList.add('on');
+  if(tab===tabPerfil) viewProfile.style.display='';
+  if(tab===tabLista) viewList.style.display='';
+  if(tab===tabCal){ viewCal.style.display=''; renderCalendar(); }
+}
+tabPerfil.onclick=()=>ativarAba(tabPerfil);
+tabLista.onclick=()=>ativarAba(tabLista);
+tabCal.onclick=()=>ativarAba(tabCal);
+
+// ---- visão em calendário (mês) ----
+const feedIndexById={}, storyIndexById={};
+FEED.forEach((p,i)=>feedIndexById[p.id]=i);
+STORIES.forEach((s,i)=>storyIndexById[s.id]=i);
+function statusOf(item){
+  if(item.publicado) return 'pub';
+  if(aprovadoState[item.id]) return 'aprov';
+  return 'pend';
+}
+const STATUS_LABEL={pend:'aguardando aprovação', aprov:'aprovado, na fila', pub:'publicado'};
+let calMes = new Date(); calMes.setDate(1);
+function abrirItemDoCalendario(item){
+  if(item.tipo==='STORY') abrirS(storyIndexById[item.id]);
+  else abrir(feedIndexById[item.id]);
+}
+function calThumb(item){
+  if(item.tipo==='REELS') return item.video ? `<video class="cal-fullthumb" src="${urlFor(item.video)}" muted autoplay loop playsinline preload="auto"></video>` : '';
+  const src = item.tipo==='STORY' ? item.arquivo : (item.arquivos&&item.arquivos[0]);
+  return src ? `<img class="cal-fullthumb" src="${urlFor(src)}" alt="">` : '';
+}
+function calThumbSmall(item){
+  if(item.tipo==='REELS') return item.video ? `<video class="cal-thumb" src="${urlFor(item.video)}" muted autoplay loop playsinline preload="auto"></video>` : '<span class="cal-thumb"></span>';
+  const src = item.tipo==='STORY' ? item.arquivo : (item.arquivos&&item.arquivos[0]);
+  return src ? `<img class="cal-thumb" src="${urlFor(src)}" alt="">` : '<span class="cal-thumb"></span>';
+}
+function renderCalendar(){
+  const grid=$('calGrid');
+  const ano=calMes.getFullYear(), mes=calMes.getMonth();
+  $('calTitle').textContent = calMes.toLocaleDateString('pt-BR',{month:'long',year:'numeric',timeZone:'America/Sao_Paulo'});
+  const primeiroDiaSemana = new Date(ano,mes,1).getDay(); // 0=dom
+  const diasNoMes = new Date(ano,mes+1,0).getDate();
+  const hojeStr = new Date().toLocaleDateString('pt-BR');
+
+  // agrupa itens por dia (chave YYYY-MM-DD no fuso de SP) só do mês exibido, mas calcula pra qualquer célula
+  const porDia = {};
+  ALL_ITEMS.forEach(item=>{
+    const d = new Date(item.quando);
+    const chave = d.toLocaleDateString('en-CA',{timeZone:'America/Sao_Paulo'}); // YYYY-MM-DD
+    (porDia[chave] = porDia[chave] || []).push(item);
+  });
+  Object.values(porDia).forEach(lista=>lista.sort((a,b)=>new Date(a.quando)-new Date(b.quando)));
+
+  const totalCelulas = Math.ceil((primeiroDiaSemana + diasNoMes) / 7) * 7;
+  const primeiraData = new Date(ano, mes, 1 - primeiroDiaSemana);
+
+  let totalMes = 0;
+  const celulasHtml = [];
+  for(let i=0;i<totalCelulas;i++){
+    const dataObj = new Date(primeiraData); dataObj.setDate(primeiraData.getDate()+i);
+    const fora = dataObj.getMonth() !== mes;
+    const chave = `${dataObj.getFullYear()}-${String(dataObj.getMonth()+1).padStart(2,'0')}-${String(dataObj.getDate()).padStart(2,'0')}`;
+    const dataStr = dataObj.toLocaleDateString('pt-BR');
+    const isToday = dataStr === hojeStr;
+    const itens = porDia[chave] || [];
+    if(!fora) totalMes += itens.length;
+
+    if(itens.length === 1){
+      const item = itens[0];
+      const st = statusOf(item);
+      const hora = new Date(item.quando).toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit',timeZone:'America/Sao_Paulo'});
+      celulasHtml.push(`<button class="cal-day single ${fora?'out':''} ${isToday?'istoday':''}" data-id="${item.id}" title="${item.id} · ${STATUS_LABEL[st]}">${calThumb(item)}<span class="cal-daynum">${dataObj.getDate()}</span><span class="cal-hora">${hora}</span><span class="cal-statusdot st-${st}"></span></button>`);
+      continue;
+    }
+
+    const itensHtml = itens.map(item=>{
+      const st = statusOf(item);
+      const hora = new Date(item.quando).toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit',timeZone:'America/Sao_Paulo'});
+      const rotulo = item.tipo==='STORY' ? item.id.replace('story-','Story ') : item.id;
+      return `<button class="cal-item st-${st}" data-id="${item.id}" title="${STATUS_LABEL[st]}">${calThumbSmall(item)}<span class="cal-txt"><b>${hora}</b><span>${esc(rotulo)}</span></span></button>`;
+    }).join('');
+    celulasHtml.push(`<div class="cal-day ${fora?'out':''} ${isToday?'istoday':''}"><span class="cal-daynum">${dataObj.getDate()}</span>${itensHtml}</div>`);
+  }
+  grid.innerHTML = celulasHtml.join('');
+  $('calCount').textContent = `${totalMes} item${totalMes===1?'':'s'} neste mês`;
+  grid.querySelectorAll('.cal-item, .cal-day.single').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      const item = ALL_ITEMS.find(i=>i.id===btn.dataset.id);
+      if(item) abrirItemDoCalendario(item);
+    });
+  });
+}
+$('calPrev').onclick=()=>{ calMes.setMonth(calMes.getMonth()-1); renderCalendar(); };
+$('calNext').onclick=()=>{ calMes.setMonth(calMes.getMonth()+1); renderCalendar(); };
+$('calHoje').onclick=()=>{ calMes=new Date(); calMes.setDate(1); renderCalendar(); };
+
+// ---- visão em lista, dia a dia (posts, reels e stories juntos, em ordem cronológica) ----
+const ALL_ITEMS = [...FEED, ...STORIES].sort((a,b)=> new Date(a.quando) - new Date(b.quando));
+
+function buildListCard(item){
+  const el = document.createElement('div'); el.className='lcard';
+  const d = new Date(item.quando);
+  const dia = d.toLocaleDateString('pt-BR',{weekday:'long',timeZone:'America/Sao_Paulo'});
+  const dataStr = d.toLocaleDateString('pt-BR',{day:'2-digit',month:'2-digit',timeZone:'America/Sao_Paulo'});
+  const horaStr = d.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit',timeZone:'America/Sao_Paulo'});
+  const isReels = item.tipo==='REELS';
+  const isStory = item.tipo==='STORY';
+  const multi = !isReels && !isStory && (item.arquivos||[]).length>1;
+  const kindLabel = isStory?'Story':(isReels?'Reels':'Post');
+
+  el.innerHTML = `
+    <div class="lmeta">
+      <span class="ldate">${esc(dia)} ${dataStr}</span><span class="ltime">${horaStr}</span>
+      <span class="lkind ${isStory?'story':(isReels?'reels':'')}">${kindLabel} · ${esc(item.id)}</span>
+    </div>
+    <div class="lbody">
+      <div class="lmedia">
+        <div class="lstage-scroll">${isReels?`<video class="lvid" controls playsinline></video>`:`<img class="limg" alt="">`}</div>
+        ${multi?`
+          <button class="larr l" aria-label="Anterior"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M15 5l-7 7 7 7"/></svg></button>
+          <button class="larr r" aria-label="Próximo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M9 5l7 7-7 7"/></svg></button>
+          <div class="ldots"></div>
+        `:''}
+      </div>
+      <div class="lside">
+        <div class="lstatusrow">
+          <span class="lpill pend">aguardando aprovação</span>
+          <button class="lapprove-big" type="button">Aprovar</button>
+        </div>
+        <div class="lacts">
+          ${item.legenda?`<button class="lbtn lcopy" type="button">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h8"/></svg>
+            <span>Copiar legenda</span>
+          </button>`:''}
+        </div>
+        ${item.legenda?`<div class="lcap"><b>irisapp</b><span class="ltext"></span></div>`:''}
+        ${item.fixado?`<div class="lfixed">Comentário fixado: <b>${esc(item.fixado)}</b></div>`:''}
+        ${item.nota?`<div class="lfixed">${esc(item.nota)}</div>`:''}
+        <details class="lpedido">
+          <summary>Pedir alteração</summary>
+          <textarea placeholder="O que precisa mudar nessa peça?"></textarea>
+          <button class="lbtn" type="button">Enviar pedido</button>
+          <p class="lok" hidden>Pedido enviado — eu vejo na próxima sincronização.</p>
+        </details>
+      </div>
+    </div>
+  `;
+
+  // legenda com tags destacadas
+  if(item.legenda){
+    const leg=(item.legenda||'').split('\n\n'); const tags=leg.length>1&&leg[leg.length-1].startsWith('#')?leg.pop():'';
+    el.querySelector('.ltext').innerHTML = esc(leg.join('\n\n')) + (tags?`<span class="tags">${esc(tags)}</span>`:'');
+  }
+
+  let idx=0;
+  const scroller = el.querySelector('.lstage-scroll');
+
+  if(isReels){
+    const vid = el.querySelector('.lvid');
+    vid.src = item.video?urlFor(item.video):'';
+  } else {
+    const img = el.querySelector('.limg');
+    const dotsEl = el.querySelector('.ldots');
+    const arquivos = isStory ? [item.arquivo] : (item.arquivos||[]);
+    function renderMedia(){
+      img.classList.remove('zoomed'); scroller.classList.remove('zoom-on');
+      img.src = arquivos[idx]?urlFor(arquivos[idx]):'';
+      if(dotsEl) dotsEl.innerHTML = arquivos.map((_,k)=>`<i class="${k===idx?'on':''}"></i>`).join('');
+    }
+    renderMedia();
+    if(multi){
+      const bl=el.querySelector('.larr.l'), br=el.querySelector('.larr.r');
+      bl.onclick=()=>{ idx=(idx-1+arquivos.length)%arquivos.length; renderMedia(); };
+      br.onclick=()=>{ idx=(idx+1)%arquivos.length; renderMedia(); };
+      let tx=null;
+      scroller.addEventListener('touchstart',e=>{ if(img.classList.contains('zoomed'))return; tx=e.touches[0].clientX; },{passive:true});
+      scroller.addEventListener('touchend',e=>{ if(tx===null)return; const dx=e.changedTouches[0].clientX-tx; if(dx<-40)br.click(); if(dx>40)bl.click(); tx=null; });
+    }
+    // zoom: duplo toque/clique
+    let lastTap=0;
+    function toggleZoomL(){ img.classList.toggle('zoomed'); scroller.classList.toggle('zoom-on', img.classList.contains('zoomed')); }
+    img.addEventListener('dblclick',toggleZoomL);
+    img.addEventListener('touchend',()=>{ const t=Date.now(); if(t-lastTap<320){toggleZoomL();} lastTap=t; });
+  }
+
+  // copiar legenda
+  const bcopyL = el.querySelector('.lcopy');
+  if(bcopyL){
+    bcopyL.addEventListener('click', async()=>{
+      const span=bcopyL.querySelector('span');
+      try{ await navigator.clipboard.writeText(item.legenda); span.textContent='Copiada!'; }
+      catch(e){ span.textContent='Não deu, copie manualmente'; }
+      setTimeout(()=>{ span.textContent='Copiar legenda'; },1900);
+    });
+  }
+
+  // aprovação
+  const pill = el.querySelector('.lpill');
+  const bapprove = el.querySelector('.lapprove-big');
+  function renderApproveL(){
+    const ok = !!aprovadoState[item.id];
+    pill.className='lpill '+(ok?'ok':'pend'); pill.textContent = ok?'aprovado':'aguardando aprovação';
+    bapprove.className='lapprove-big'+(ok?' ok':''); bapprove.textContent = ok?'Desfazer':'Aprovar';
+  }
+  bapprove.addEventListener('click', async()=>{
+    if(!dbNs){ bapprove.textContent='Indisponível aqui'; return; }
+    bapprove.disabled=true;
+    await setAprovado(item.id, !aprovadoState[item.id]);
+    bapprove.disabled=false;
+  });
+  renderApproveL();
+  listCardUpdaters[item.id]=renderApproveL;
+
+  // pedir alteração
+  const pedBtn=el.querySelector('.lpedido .lbtn'), pedTxt=el.querySelector('.lpedido textarea'), pedOk=el.querySelector('.lok');
+  pedBtn.addEventListener('click', async()=>{
+    if(!dbNs){ pedTxt.placeholder='Indisponível nesta visualização — me diga direto no chat.'; return; }
+    if(!pedTxt.value.trim()){ pedTxt.focus(); return; }
+    pedBtn.disabled=true;
+    const ok = await enviarPedido(item.id, pedTxt.value);
+    pedBtn.disabled=false;
+    if(ok){ pedTxt.value=''; pedOk.hidden=false; setTimeout(()=>{pedOk.hidden=true;},5000); }
+  });
+
+  return el;
+}
+
+const listEl = $('list');
+ALL_ITEMS.forEach(item => listEl.appendChild(buildListCard(item)));
+
+initDb();
+</script>
+</body></html>
