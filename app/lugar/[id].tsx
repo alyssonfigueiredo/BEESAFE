@@ -83,7 +83,7 @@ export default function PlaceScreen() {
   async function mandarFoto() {
     try {
       const url = await enviarFoto.mutateAsync();
-      if (url) Alert.alert("Foto enviada", "Obrigado! Ela já aparece na ficha do lugar.");
+      if (url) Alert.alert("Foto enviada", "Enviada. Ela aparece na ficha depois de revisada.");
     } catch (e) {
       Alert.alert("Não deu certo", e instanceof Error ? e.message : "Tente de novo.");
     }

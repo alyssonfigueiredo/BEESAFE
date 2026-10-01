@@ -15,7 +15,7 @@ import { SearchField } from "@/components/SearchField";
 import { StatCard } from "@/components/StatCard";
 import { useCityStats } from "@/hooks/useCityStats";
 import { useAreaRisk, useOccurrences } from "@/hooks/useOccurrences";
-import { usePlaces, useWelcoming } from "@/hooks/usePlaces";
+import { usePlaces, useSearchPlaces, useWelcoming } from "@/hooks/usePlaces";
 import { useScreenInsets } from "@/hooks/useScreenInsets";
 import { distanceMeters } from "@/lib/geo";
 import { useCity } from "@/providers/CityProvider";
@@ -37,6 +37,8 @@ export default function HomeScreen() {
   const { data: places = [] } = usePlaces(city?.id);
   const [busca, setBusca] = useState("");
   const [filtro, setFiltro] = useState<Filtro>("all");
+  // Com 2+ letras a busca vai ao banco: o lote carregado não cobre a cidade toda.
+  const { data: achados } = useSearchPlaces(city?.id, busca);
 
   // O ranking só aceita lugar com RATING_MIN avaliações, e nos primeiros meses isso é ninguém.
   // Até lá mostra quem já recebeu alguma nota: a seção precisa provar que o app está vivo.
@@ -51,10 +53,12 @@ export default function HomeScreen() {
   const filtrando = !!termo || filtro !== "all";
   const resultado = useMemo(() => {
     if (!filtrando) return [];
-    return places
+    const doBanco = termo.length >= 2;
+    const base = doBanco ? (achados ?? []) : places;
+    return base
       .filter((p) => filtro === "all" || filtro === "rated" || p.category === filtro)
       .filter((p) => filtro !== "rated" || p.rating_count > 0)
-      .filter((p) => !termo || simplifica(p.name).includes(termo))
+      .filter((p) => doBanco || !termo || simplifica(p.name).includes(termo))
       .map((p) => ({
         place: p,
         distance: userLocation
@@ -67,7 +71,7 @@ export default function HomeScreen() {
           : a.place.name.localeCompare(b.place.name, "pt-BR"),
       )
       .slice(0, 20);
-  }, [places, filtrando, filtro, termo, userLocation]);
+  }, [places, achados, filtrando, filtro, termo, userLocation]);
 
   const categorias = (Object.keys(PLACE_CATEGORIES) as PlaceCategory[]).filter((c) =>
     places.some((p) => p.category === c),

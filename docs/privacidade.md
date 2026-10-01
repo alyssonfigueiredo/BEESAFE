@@ -40,7 +40,7 @@ Não vendemos nem compartilhamos dados pessoais, salvo por ordem judicial ou req
 
 ## 7. Retenção e exclusão
 
-Você pode excluir sua conta a qualquer momento em Perfil → Excluir minha conta. Seus relatos e mensagens permanecem, sem qualquer vínculo com você. Avaliações, curtidas e bloqueios são apagados. Se você entrou com a Apple, o vínculo do app com sua conta Apple é revogado junto da Apple no mesmo momento.
+Você pode excluir sua conta a qualquer momento em Perfil → Excluir minha conta. Seus relatos e mensagens permanecem, sem qualquer vínculo com você. As avaliações que você fez também permanecem, sem vínculo com você. Fotos que você enviou, curtidas e bloqueios são apagados. Se você entrou com a Apple, o vínculo do app com sua conta Apple é revogado junto da Apple no mesmo momento.
 
 ## 8. Seus direitos
 

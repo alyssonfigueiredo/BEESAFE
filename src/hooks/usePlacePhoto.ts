@@ -5,6 +5,10 @@ import { supabase } from "@/lib/supabase";
 
 const BUCKET = "fotos-lugares";
 
+/** A foto nasce "pendente": só vai ao ar depois da revisão. Use no aviso após o envio. */
+export const FOTO_EM_REVISAO =
+  "Obrigado! Sua foto está em revisão e aparece na ficha assim que for aprovada.";
+
 /**
  * Foto do lugar tirada por quem avalia. É a melhor fonte que a Irisa tem: atual, do jeito que o
  * lugar é, e da comunidade — a do Google é alugada (vence e gasta cota) e a do Mapillary é
@@ -52,10 +56,12 @@ export function useEnviarFotoDoLugar(placeId: string) {
       if (error) throw new Error(error.message);
       return url;
     },
+
     onSuccess: (url) => {
       if (!url) return;
       client.invalidateQueries({ queryKey: ["place", placeId] });
       client.invalidateQueries({ queryKey: ["places"] });
+      client.invalidateQueries({ queryKey: ["places-busca"] });
       client.invalidateQueries({ queryKey: ["welcoming"] });
     },
   });

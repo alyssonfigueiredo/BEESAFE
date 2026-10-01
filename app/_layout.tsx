@@ -29,11 +29,11 @@ function RootNavigator() {
   if (loading) return null;
   return (
     <Stack screenOptions={{ headerShown: false, contentStyle: { backgroundColor: colors.paper } }}>
+      <Stack.Screen name="auth/callback" />
       <Stack.Protected guard={!!session}>
         <Stack.Screen name="(tabs)" />
         <Stack.Screen name="lugar/[id]" />
         <Stack.Screen name="moderacao" />
-        <Stack.Screen name="auth/callback" />
       </Stack.Protected>
       <Stack.Protected guard={!session}>
         <Stack.Screen name="(auth)" />

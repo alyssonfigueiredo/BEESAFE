@@ -1,8 +1,8 @@
 import { MapPin, X } from "lucide-react-native";
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import { Pressable, Text, TextInput, View } from "react-native";
 
-import { usePlaces } from "@/hooks/usePlaces";
+import { useNearbyPlaces, useSearchPlaces } from "@/hooks/usePlaces";
 import { distanceMeters, formatDistance } from "@/lib/geo";
 import { useCity } from "@/providers/CityProvider";
 import { PLACE_CATEGORIES } from "@/theme/domain";
@@ -27,31 +27,17 @@ export function PlacePicker({
   onChange: (p: PickedPlace) => void;
 }) {
   const { city } = useCity();
-  const { data: places = [], isLoading } = usePlaces(city?.id);
   const [search, setSearch] = useState("");
   const [searching, setSearching] = useState(false);
+  // Os dois vêm do banco: o lote de 1.000 da cidade não cobre Curitiba inteira.
+  const { data: perto = [], isLoading } = useNearbyPlaces(point, RADIUS);
+  const { data: achados = [], isFetching } = useSearchPlaces(city?.id, search);
 
-  const nearby = useMemo(
-    () =>
-      places
-        .map((p) => ({
-          ...p,
-          meters: distanceMeters(point, { lat: p.latitude, lng: p.longitude }),
-        }))
-        .filter((p) => p.meters <= RADIUS)
-        .sort((a, b) => a.meters - b.meters),
-    [places, point],
-  );
-
-  const found = useMemo(() => {
-    const q = search.trim().toLowerCase();
-    if (q.length < 2) return [];
-    return places
-      .filter((p) => p.name.toLowerCase().includes(q))
-      .map((p) => ({ ...p, meters: distanceMeters(point, { lat: p.latitude, lng: p.longitude }) }))
-      .sort((a, b) => a.meters - b.meters)
-      .slice(0, SHOWN);
-  }, [places, point, search]);
+  const nearby = perto.map((p) => ({ ...p, meters: p.distance_m }));
+  const found = achados
+    .map((p) => ({ ...p, meters: distanceMeters(point, { lat: p.latitude, lng: p.longitude }) }))
+    .sort((a, b) => a.meters - b.meters)
+    .slice(0, SHOWN);
 
   const list = searching ? found : nearby.slice(0, SHOWN);
 
@@ -121,7 +107,7 @@ export function PlacePicker({
 
       {list.length === 0 && (
         <Text className="font-body text-sm text-dim">
-          {isLoading
+          {isLoading || (searching && isFetching)
             ? "Procurando lugares…"
             : searching
               ? "Nenhum lugar com esse nome nesta cidade."

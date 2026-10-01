@@ -1,6 +1,6 @@
 import { Siren, X } from "lucide-react-native";
 import { useEffect, useState } from "react";
-import { Linking, Modal, Pressable, StyleSheet, Text, View } from "react-native";
+import { Alert, Linking, Modal, Pressable, StyleSheet, Text, View } from "react-native";
 import Animated, {
   Easing,
   useAnimatedStyle,
@@ -14,6 +14,18 @@ import { useCity } from "@/providers/CityProvider";
 import { EMERGENCY_CONTACTS } from "@/theme/domain";
 import { Glass } from "@/components/Glass";
 import { colors } from "@/theme/tokens";
+
+function ligar(numero: string) {
+  Linking.openURL(`tel:${numero}`).catch(() =>
+    Alert.alert("Não foi possível ligar daqui", `Disque ${numero} manualmente no seu telefone.`),
+  );
+}
+
+function abrirSite(url: string) {
+  Linking.openURL(url).catch(() =>
+    Alert.alert("Não deu certo", "Não foi possível abrir o site agora."),
+  );
+}
 
 export function EmergencyButton() {
   const [open, setOpen] = useState(false);
@@ -73,7 +85,7 @@ export function EmergencyButton() {
             {EMERGENCY_CONTACTS.map((c) => (
               <Pressable
                 key={c.number}
-                onPress={() => Linking.openURL(`tel:${c.number}`)}
+                onPress={() => ligar(c.number)}
                 className="flex-row items-center gap-4 rounded-2xl px-4 py-3 active:opacity-80"
                 style={styles.row}
               >
@@ -92,7 +104,7 @@ export function EmergencyButton() {
                 {local.map((s) => (
                   <Pressable
                     key={s.id}
-                    onPress={() => Linking.openURL(s.phone ? `tel:${s.phone}` : (s.url ?? ""))}
+                    onPress={() => (s.phone ? ligar(s.phone) : abrirSite(s.url ?? ""))}
                     disabled={!s.phone && !s.url}
                     className="rounded-2xl px-4 py-3 active:opacity-80"
                     style={styles.row}
