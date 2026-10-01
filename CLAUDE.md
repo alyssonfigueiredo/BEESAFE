@@ -433,6 +433,35 @@ data e ordem na fila, mas **não mexe no campo `aprovado`**: quem decide isso é
 transcreve é a sessão dele. Exceção única: o Alysson aprovar explicitamente no chat de outra sessão —
 aí ela marca e avisa, para a sessão dele não desfazer.
 
+### Como republicar o artefato (para a sessão da conta dele)
+
+A página era remontada à mão e por isso vivia atrasada: em 01/10 ela ainda mostrava o carrossel-6 com
+a lâmina "Ainda não tem no iPhone → **Verdade**" (virou **Mito** no mesmo dia), o fecho antigo
+"em fase de testes · Android" em meia dúzia de peças, e não tinha o carrossel-10 nem o 11. Aprovar
+olhando aquilo é aprovar o que não vai ao ar. Agora a página nasce do repositório:
+
+```bash
+node scripts/artefato-aprovacao.mjs          # no Mac
+FFMPEG=/caminho/do/ffmpeg node scripts/artefato-aprovacao.mjs   # no cloud, onde ffmpeg não está no PATH
+```
+
+Ele lê `docs/legendas/fila.json`, encontra a arte de cada peça (pela pasta de mesmo nome ou pelo que
+`midias` aponta — os stories de outubro, por exemplo, saem de `stories-2/`), e monta **`build/aprovacao/`**:
+`index.html`, `t/` (capa de cada peça), `c/` (todas as lâminas) e `v/` (os reels). `build/` está no
+.gitignore de propósito: é cópia do que já existe em `docs/`, não entra no repositório nem no site.
+
+Publicar, da sessão da conta dele, **no artefato que já existe** (o `url` da seção acima, para não
+perder as decisões gravadas):
+
+- `file_path` = `build/aprovacao/index.html`, `root` = `build/aprovacao`, e `files` com `t/`, `c/` e `v/`.
+- `capabilities: {db: {rules: [{path: "aprovacoes", read: "view", write: "interact"}, {path: "pedidos", read: "view", write: "interact"}]}, user: {}}`.
+- São ~35 MB, a maior parte vídeo: mandar em lotes (um publish leva no máximo 64 MB e 255 arquivos).
+
+A página escreve nas **mesmas coleções de sempre** — `aprovacoes` (doc_id = id da peça,
+`{aprovado, status, nota, ts, quem}`) e `pedidos` — então republicar não apaga nada do que já foi
+decidido. Peça já publicada aparece esmaecida e com os botões desligados, e cada cartão mostra de que
+lado do xadrez a capa cai (papel ou noite).
+
 ## Armadilhas já resolvidas (não repetir)
 
 - **Token da Meta vazou em 28/09/2026** (`META_IG_USER_ID` estava com o token; o erro da Graph API
