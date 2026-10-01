@@ -15,6 +15,7 @@
 // A página grava em `aprovacoes` (doc_id = id da peça, {aprovado, ts, quem}) e `pedidos`
 // ({texto, resolvido, ts}) — os mesmos nomes de antes, para não perder o que já foi decidido.
 
+import { Buffer } from "node:buffer";
 import { mkdirSync, readFileSync, writeFileSync, existsSync, copyFileSync, readdirSync } from "node:fs";
 import { resolve, join } from "node:path";
 import { execFileSync } from "node:child_process";
@@ -28,7 +29,6 @@ const FFMPEG = process.env.FFMPEG ?? "ffmpeg";
 const NOITE = new Set(["carrossel-4","carrossel-5","carrossel-6","carrossel-7","carrossel-8",
                        "carrossel-9","carrossel-10","carrossel-11"]);
 const DIAS = ["segunda","terça","quarta","quinta","sexta","sábado","domingo"];
-const esc = (s) => String(s ?? "").replace(/[&<>"]/g, (c) => ({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;" }[c]));
 
 mkdirSync(join(SAIDA, "t"), { recursive: true });
 mkdirSync(join(SAIDA, "c"), { recursive: true });

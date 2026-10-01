@@ -45,6 +45,12 @@ export function PlaceForm({ onDone }: { onDone: (placeId: string) => void }) {
         lat: point.lat,
         lng: point.lng,
       });
+      // Limpa antes de sair: a tela fica montada no fundo (aba escondida), então voltar
+      // encontraria o formulário preenchido com o lugar que já foi criado.
+      setName("");
+      setAddress("");
+      setCategory("bar");
+      setPoint(null);
       onDone(id);
     } catch (e) {
       Alert.alert("Não deu certo", e instanceof Error ? e.message : "Tente de novo.");
