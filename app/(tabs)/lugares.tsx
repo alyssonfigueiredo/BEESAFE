@@ -7,7 +7,7 @@ import { Aurora } from "@/components/Aurora";
 import { Chip } from "@/components/Chip";
 import { PlaceCard } from "@/components/PlaceCard";
 import { SearchField } from "@/components/SearchField";
-import { usePlaces } from "@/hooks/usePlaces";
+import { usePlaceCount, usePlaces, useSearchPlaces } from "@/hooks/usePlaces";
 import { distanceMeters } from "@/lib/geo";
 import { useCity } from "@/providers/CityProvider";
 import { PLACE_CATEGORIES, type PlaceCategory } from "@/theme/domain";
@@ -20,6 +20,10 @@ export default function LugaresScreen() {
   const { city, loading, userLocation } = useCity();
   const { data: places = [], isLoading } = usePlaces(city?.id);
   const [busca, setBusca] = useState("");
+  // Com dois caracteres a busca vai ao banco: a cidade tem muito mais lugar do que o lote
+  // carregado, então filtrar só o que está na memória esconde lugar que existe.
+  const { data: achados, isFetching: buscando } = useSearchPlaces(city?.id, busca);
+  const { data: totalCidade } = usePlaceCount(city?.id);
   const [categoria, setCategoria] = useState<PlaceCategory | "all">("all");
   // Recorte transversal à categoria, só para responder "onde a comunidade já falou".
   // NÃO existe filtro por alerta aqui de propósito: relato é da rua, do beco, da praça — filtrar
@@ -46,7 +50,8 @@ export default function LugaresScreen() {
   // a lista é para achar um lugar, o ranking fica no Início.
   const lista = useMemo(() => {
     const termo = simplifica(busca.trim());
-    const comDistancia = places
+    const base = busca.trim().length >= 2 ? (achados ?? []) : places;
+    const comDistancia = base
       .filter((p) => categoria === "all" || p.category === categoria)
       .filter((p) => recorte !== "avaliados" || p.rating_count > 0)
       .filter((p) => !termo || simplifica(p.name).includes(termo))
@@ -61,7 +66,7 @@ export default function LugaresScreen() {
         ? a.distance - b.distance
         : a.place.name.localeCompare(b.place.name, "pt-BR"),
     );
-  }, [places, busca, categoria, recorte, userLocation]);
+  }, [places, achados, busca, categoria, recorte, userLocation]);
 
   if (loading || !city) {
     return (
@@ -90,7 +95,8 @@ export default function LugaresScreen() {
                 Lugares
               </Text>
               <Text className="font-body text-sm text-dim">
-                {city.name} · {city.state} · {places.length} cadastrados
+                {city.name} · {city.state}
+                {totalCidade != null ? ` · ${totalCidade} cadastrados` : ""}
               </Text>
             </View>
 
@@ -137,7 +143,7 @@ export default function LugaresScreen() {
         )}
         ListEmptyComponent={
           <Text className="font-body text-sm text-dim">
-            {isLoading ? "Carregando…" : "Nada com esse nome por aqui."}
+            {isLoading || buscando ? "Carregando…" : "Nada com esse nome por aqui."}
           </Text>
         }
         ListFooterComponent={
