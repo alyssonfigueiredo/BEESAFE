@@ -450,17 +450,29 @@ Ele lê `docs/legendas/fila.json`, encontra a arte de cada peça (pela pasta de 
 `index.html`, `t/` (capa de cada peça), `c/` (todas as lâminas) e `v/` (os reels). `build/` está no
 .gitignore de propósito: é cópia do que já existe em `docs/`, não entra no repositório nem no site.
 
+**Layout é fixo (regra dele, 01/10/2026): mockup de perfil do Instagram, abas Perfil / Lista, dia a dia /
+Calendário, em `scripts/aprovacao-template.html`.** O script só injeta o conteúdo vivo (`FEED`/`STORIES`,
+calculados de `fila.json` dentro de `scripts/artefato-aprovacao.mjs`) nesse template — **nunca muda o
+visual sozinho**. Trocou de visual uma vez (01/10) sem ele pedir e ele reclamou; o antigo foi restaurado.
+Qualquer sessão que rodar o script de novo só deve alterar `aprovacao-template.html` (CSS/HTML/JS do
+layout) se o Alysson pedir explicitamente uma mudança de visual — para peça nova, legenda corrigida ou
+qualquer outro conteúdo, só `fila.json` muda, o script e o template ficam intocados.
+
 Publicar, da sessão da conta dele, **no artefato que já existe** (o `url` da seção acima, para não
 perder as decisões gravadas):
 
-- `file_path` = `build/aprovacao/index.html`, `root` = `build/aprovacao`, e `files` com `t/`, `c/` e `v/`.
-- `capabilities: {db: {rules: [{path: "aprovacoes", read: "view", write: "interact"}, {path: "pedidos", read: "view", write: "interact"}]}, user: {}}`.
-- São ~35 MB, a maior parte vídeo: mandar em lotes (um publish leva no máximo 64 MB e 255 arquivos).
+- `file_path` = `build/aprovacao/index.html`; só manda `root`/`files` (`t/`, `c/`, `v/`) quando a arte
+  mudou — se só o texto/aprovação mudou, os nomes dos arquivos de mídia continuam os mesmos e um
+  publish só do `index.html` basta.
+- `capabilities: {db: {rules: [{path: "aprovacoes", read: "view", write: "interact"}, {path: "pedidos", read: "view", write: "interact"}]}, user: {}}`
+  — se o artefato já tiver outras capabilities guardadas (ex. `assets`, `downloads` de uma versão
+  antiga) e você mandar só `db`/`user`, o publish é recusado por "revogação silenciosa": manda primeiro
+  a união de todas, depois republica só com `db`/`user`.
+- Com arte nova, são ~35 MB, a maior parte vídeo: mandar em lotes (um publish leva no máximo 64 MB e
+  255 arquivos).
 
-A página escreve nas **mesmas coleções de sempre** — `aprovacoes` (doc_id = id da peça,
-`{aprovado, status, nota, ts, quem}`) e `pedidos` — então republicar não apaga nada do que já foi
-decidido. Peça já publicada aparece esmaecida e com os botões desligados, e cada cartão mostra de que
-lado do xadrez a capa cai (papel ou noite).
+A página escreve nas **mesmas coleções de sempre** — `aprovacoes` (doc_id = id da peça, `{aprovado, ts}`)
+e `pedidos` — então republicar não apaga nada do que já foi decidido.
 
 ## Armadilhas já resolvidas (não repetir)
 
