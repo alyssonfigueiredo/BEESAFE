@@ -146,23 +146,17 @@
     "confirmado_erro": "publicação manual, sem media_id para conferir"
   },
   {
-    "id": "carrossel-4",
-    "aprovado": true,
+    "id": "reels-apple",
+    "aprovado": false,
     "quando": "2026-10-01T19:00:00-03:00",
-    "tipo": "POST",
-    "midias": [
-      "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/carrossel-4/01.png",
-      "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/carrossel-4/02.png",
-      "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/carrossel-4/03.png",
-      "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/carrossel-4/04.png",
-      "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/carrossel-4/05.png",
-      "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/carrossel-4/06.png",
-      "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/carrossel-4/07.png",
-      "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/carrossel-4/08.png"
-    ],
-    "legenda": "Aconteceu agora. Quatro números que valem em qualquer cidade do Brasil — salva este post.\n\n190 e 192: polícia e SAMU. 100: denúncia de LGBTIfobia, 24h, de graça. 188: CVV, pra quem precisa conversar, a qualquer hora.\n\nNo app é um botão na tela inicial: toca, escolhe o número, liga — sem cadastro, sem tela no meio.\n\nDepois da emergência, a aba Apoio tem endereço e contato de cada serviço em Curitiba, Recife, João Pessoa, Joinville, Natal, Rio e São Paulo. Conferimos os contatos a cada seis meses.\n\nQual desses números você já conhecia? 🚨\n\nO link está na bio.\n\n#Irisa #LGBTQIA #Orgulho #AppLGBT #Disque100",
-    "primeiro_comentario": "",
-    "publicado": false
+    "tipo": "REELS",
+    "midias": [],
+    "legenda": "Não foi a gente que pintou a maçã. 🍎\n\nEla já era assim. Só tinham esquecido. 🌈\n\nÉ mais ou menos o que a Irisa faz com a sua cidade: o lugar não vira acolhedor porque a gente disse. Ele já era — faltava quem contasse. ✨\n\nAgora no iPhone. 📲 O link está na bio.\n\nQual vai ser o primeiro lugar que você vai irisar? 👇\n\n#Irisa #LGBTQIA #Orgulho #AppLGBT #iPhone",
+    "primeiro_comentario": "🔗 bit.ly/appirisa",
+    "publicado": true,
+    "publicado_em": "2026-10-01T22:00:00.000Z",
+    "publicado_manual": "Reels de lançamento no iOS (vídeo de desenho à mão, fecho 'A maçã já foi arco-íris'), postado direto pelo app",
+    "confirmado": false
   },
   {
     "id": "story-01",
@@ -177,16 +171,24 @@
     "publicado": false
   },
   {
-    "id": "reels-6",
-    "aprovado": true,
+    "id": "carrossel-4",
+    "aprovado": false,
     "quando": "2026-10-02T19:00:00-03:00",
-    "tipo": "REELS",
+    "tipo": "POST",
     "midias": [
-      "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/Irisa-reels-6.mp4"
+      "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/carrossel-4/01.png",
+      "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/carrossel-4/02.png",
+      "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/carrossel-4/03.png",
+      "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/carrossel-4/04.png",
+      "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/carrossel-4/05.png",
+      "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/carrossel-4/06.png",
+      "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/carrossel-4/07.png",
+      "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/carrossel-4/08.png"
     ],
-    "legenda": "Você já soltou a mão em público?\n\nNa rua, quando o grupo se aproximou. No ônibus, quando alguém ficou olhando. Na porta do bar, antes de saber se dava.\n\nA gente está mapeando onde não precisa.\n\nComenta \"eu\" se já soltou. E manda para quem segurou a sua. 🌈\n\n#LGBTQIA #Orgulho #CasalLGBT #Irisa #Curitiba",
-    "primeiro_comentario": "bit.ly/appirisa",
-    "publicado": false
+    "legenda": "Aconteceu agora. Quatro números que valem em qualquer cidade do Brasil — salva este post.\n\n190 e 192: polícia e SAMU. 100: denúncia de LGBTIfobia, 24h, de graça. 188: CVV, pra quem precisa conversar, a qualquer hora.\n\nNo app é um botão na tela inicial: toca, escolhe o número, liga — sem cadastro, sem tela no meio.\n\nDepois da emergência, a aba Apoio tem endereço e contato de cada serviço em Curitiba, Recife, João Pessoa, Joinville, Natal, Rio e São Paulo. Conferimos os contatos a cada seis meses.\n\nQual desses números você já conhecia? 🚨\n\nO link está na bio.\n\n#Irisa #LGBTQIA #Orgulho #AppLGBT #Disque100",
+    "primeiro_comentario": "",
+    "publicado": false,
+    "nota": "Remarcado: 01/10 saiu o reels de lançamento do iOS, postado à mão."
   },
   {
     "id": "story-02",
@@ -201,21 +203,15 @@
     "publicado": false
   },
   {
-    "id": "carrossel-5",
-    "aprovado": false,
+    "id": "reels-6",
+    "aprovado": true,
     "quando": "2026-10-03T19:00:00-03:00",
-    "tipo": "POST",
+    "tipo": "REELS",
     "midias": [
-      "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/carrossel-5/01.png",
-      "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/carrossel-5/02.png",
-      "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/carrossel-5/03.png",
-      "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/carrossel-5/04.png",
-      "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/carrossel-5/05.png",
-      "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/carrossel-5/06.png",
-      "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/carrossel-5/07.png"
+      "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/Irisa-reels-6.mp4"
     ],
-    "legenda": "Uma dúvida que todo mundo tem: se rolou uma confusão perto de um bar, a culpa é do bar?\n\nNão. A violência acontece no beco, na praça, no ponto de ônibus — quem está perto não é culpado por ela.\n\nA regra da Irisa, em duas frases: o lugar recebe cor (quatro perguntas, respondidas por quem entrou — atendimento, afeto, banheiro, clientela) e a rua recebe aviso (relatos num raio de 100 m viram nível de atenção da região, visível no mapa e na ficha do bairro).\n\nA nota só cai quando o relato aponta o lugar. Fora disso, o bar aparece com o contexto da região — nunca com a punição. E sem relato não quer dizer sem violência: quer dizer que ninguém registrou ainda. Por isso a Irisa nunca diz \"aqui é tranquilo\".\n\nOs dois juntos fazem o mapa. Um sem o outro é metade da história.\n\nO link está na bio.\n\n#Irisa #LGBTQIA #Orgulho #AppLGBT #LGBTfobia",
-    "primeiro_comentario": "",
+    "legenda": "Você já soltou a mão em público?\n\nNa rua, quando o grupo se aproximou. No ônibus, quando alguém ficou olhando. Na porta do bar, antes de saber se dava.\n\nA gente está mapeando onde não precisa.\n\nComenta \"eu\" se já soltou. E manda para quem segurou a sua. 🌈\n\n#LGBTQIA #Orgulho #CasalLGBT #Irisa #Curitiba",
+    "primeiro_comentario": "bit.ly/appirisa",
     "publicado": false
   },
   {
@@ -231,15 +227,21 @@
     "publicado": false
   },
   {
-    "id": "reels-9",
+    "id": "carrossel-5",
     "aprovado": false,
     "quando": "2026-10-04T19:00:00-03:00",
-    "tipo": "REELS",
+    "tipo": "POST",
     "midias": [
-      "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/Irisa-reels-9.mp4"
+      "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/carrossel-5/01.png",
+      "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/carrossel-5/02.png",
+      "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/carrossel-5/03.png",
+      "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/carrossel-5/04.png",
+      "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/carrossel-5/05.png",
+      "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/carrossel-5/06.png",
+      "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/carrossel-5/07.png"
     ],
-    "legenda": "Sua cidade está no mapa?\n\nCuritiba, Recife, João Pessoa, Joinville, Natal, São Paulo e Rio já estão. A próxima sai dos comentários.\n\nIrisa: o mapa dos lugares onde a gente é bem-vinde, feito por nós. Em fase de testes, Android.\n\nComenta a sua cidade. 🌈\n\n#LGBTQIA #Orgulho #AppLGBT #Irisa #Curitiba",
-    "primeiro_comentario": "bit.ly/appirisa",
+    "legenda": "Uma dúvida que todo mundo tem: se rolou uma confusão perto de um bar, a culpa é do bar?\n\nNão. A violência acontece no beco, na praça, no ponto de ônibus — quem está perto não é culpado por ela.\n\nA regra da Irisa, em duas frases: o lugar recebe cor (quatro perguntas, respondidas por quem entrou — atendimento, afeto, banheiro, clientela) e a rua recebe aviso (relatos num raio de 100 m viram nível de atenção da região, visível no mapa e na ficha do bairro).\n\nA nota só cai quando o relato aponta o lugar. Fora disso, o bar aparece com o contexto da região — nunca com a punição. E sem relato não quer dizer sem violência: quer dizer que ninguém registrou ainda. Por isso a Irisa nunca diz \"aqui é tranquilo\".\n\nOs dois juntos fazem o mapa. Um sem o outro é metade da história.\n\nO link está na bio.\n\n#Irisa #LGBTQIA #Orgulho #AppLGBT #LGBTfobia",
+    "primeiro_comentario": "",
     "publicado": false
   },
   {
@@ -255,9 +257,21 @@
     "publicado": false
   },
   {
-    "id": "carrossel-6",
+    "id": "reels-9",
     "aprovado": false,
     "quando": "2026-10-05T19:00:00-03:00",
+    "tipo": "REELS",
+    "midias": [
+      "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/Irisa-reels-9.mp4"
+    ],
+    "legenda": "Sua cidade está no mapa?\n\nCuritiba, Recife, João Pessoa, Joinville, Natal, São Paulo e Rio já estão. A próxima sai dos comentários.\n\nIrisa: o mapa dos lugares onde a gente é bem-vinde, feito por nós. Em fase de testes, Android.\n\nComenta a sua cidade. 🌈\n\n#LGBTQIA #Orgulho #AppLGBT #Irisa #Curitiba",
+    "primeiro_comentario": "bit.ly/appirisa",
+    "publicado": false
+  },
+  {
+    "id": "carrossel-6",
+    "aprovado": false,
+    "quando": "2026-10-06T19:00:00-03:00",
     "tipo": "POST",
     "midias": [
       "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/carrossel-6/01.png",
@@ -276,7 +290,7 @@
   {
     "id": "reels-7",
     "aprovado": false,
-    "quando": "2026-10-06T19:00:00-03:00",
+    "quando": "2026-10-07T19:00:00-03:00",
     "tipo": "REELS",
     "midias": [
       "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/Irisa-reels-7.mp4"
@@ -288,7 +302,7 @@
   {
     "id": "carrossel-7",
     "aprovado": false,
-    "quando": "2026-10-07T19:00:00-03:00",
+    "quando": "2026-10-08T19:00:00-03:00",
     "tipo": "POST",
     "midias": [
       "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/carrossel-7/01.png",
@@ -306,41 +320,12 @@
   {
     "id": "reels-8",
     "aprovado": false,
-    "quando": "2026-10-08T19:00:00-03:00",
+    "quando": "2026-10-09T19:00:00-03:00",
     "tipo": "REELS",
     "midias": [
       "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/Irisa-reels-8.mp4"
     ],
     "legenda": "A bandeira na porta não diz nada.\n\nO que diz é o garçom, o banheiro e a mesa ao lado. Quem te tratou bem, se deu para ficar à vontade, quem estava lá dentro.\n\nBandeira é promessa. Cor é medida. Um lugar só ganha cor quando quem esteve lá responde.\n\nConcorda, ou para você a bandeira já basta? Comenta. 🌈\n\n#LGBTQIA #Orgulho #BarLGBT #Irisa #Curitiba",
-    "primeiro_comentario": "bit.ly/appirisa",
-    "publicado": false
-  },
-  {
-    "id": "carrossel-9",
-    "aprovado": false,
-    "quando": "2026-10-09T19:00:00-03:00",
-    "tipo": "POST",
-    "midias": [
-      "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/carrossel-9/01.png",
-      "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/carrossel-9/02.png",
-      "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/carrossel-9/03.png",
-      "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/carrossel-9/04.png",
-      "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/carrossel-9/05.png",
-      "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/carrossel-9/06.png"
-    ],
-    "legenda": "3 coisas que ninguém te conta sobre viajar em casal.\n\n1. A reserva. \"Cama de casal ou duas de solteiro?\" vem no check-in, na frente de todo mundo. Um hotel que insiste já respondeu por si.\n2. O café da manhã. Ninguém fala nada, mas todo mundo olha. Clientela é um dos quatro eixos da Irisa por isso.\n3. A rua do hotel. O hotel pode ser ótimo e a quadra, não. O lugar recebe cor, a rua recebe aviso: você olha os dois antes de reservar.\n\nQuem esteve lá responde: atendimento, afeto, banheiro, clientela.\n\nQual hotel te tratou como casal? Conta aqui e salva para quem vai viajar. 🌈\n\nO link está na bio. Em fase de testes · Android.\n\n#Irisa #LGBTQIA #Orgulho #CasalLGBT #ViagemLGBT",
-    "primeiro_comentario": "bit.ly/appirisa",
-    "publicado": false
-  },
-  {
-    "id": "reels-ombro",
-    "aprovado": false,
-    "quando": "2026-10-10T19:00:00-03:00",
-    "tipo": "REELS",
-    "midias": [
-      "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/Irisa-reels-ombro.mp4"
-    ],
-    "legenda": "Tem um momento exato em que o corpo relaxa.\n\nNão é a bebida. É perceber que ali, naquela mesa, ninguém tá contando quantas vezes vocês se tocaram.\n\nIsso tem nome: acolhimento. E devia acontecer em qualquer lugar, não só naquele.\n\nOnde foi a última vez que seu ombro relaxou assim? Comenta. 🌈\n\nO link está na bio · em fase de testes · Android.\n\n#Irisa #LGBTQIA #Orgulho #AppLGBT #Acolhimento",
     "primeiro_comentario": "bit.ly/appirisa",
     "publicado": false
   },
@@ -363,9 +348,38 @@
     "publicado": false
   },
   {
-    "id": "reels-nota",
+    "id": "reels-ombro",
     "aprovado": false,
     "quando": "2026-10-12T19:00:00-03:00",
+    "tipo": "REELS",
+    "midias": [
+      "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/Irisa-reels-ombro.mp4"
+    ],
+    "legenda": "Tem um momento exato em que o corpo relaxa.\n\nNão é a bebida. É perceber que ali, naquela mesa, ninguém tá contando quantas vezes vocês se tocaram.\n\nIsso tem nome: acolhimento. E devia acontecer em qualquer lugar, não só naquele.\n\nOnde foi a última vez que seu ombro relaxou assim? Comenta. 🌈\n\nO link está na bio · em fase de testes · Android.\n\n#Irisa #LGBTQIA #Orgulho #AppLGBT #Acolhimento",
+    "primeiro_comentario": "bit.ly/appirisa",
+    "publicado": false
+  },
+  {
+    "id": "carrossel-9",
+    "aprovado": false,
+    "quando": "2026-10-13T19:00:00-03:00",
+    "tipo": "POST",
+    "midias": [
+      "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/carrossel-9/01.png",
+      "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/carrossel-9/02.png",
+      "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/carrossel-9/03.png",
+      "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/carrossel-9/04.png",
+      "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/carrossel-9/05.png",
+      "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/carrossel-9/06.png"
+    ],
+    "legenda": "3 coisas que ninguém te conta sobre viajar em casal.\n\n1. A reserva. \"Cama de casal ou duas de solteiro?\" vem no check-in, na frente de todo mundo. Um hotel que insiste já respondeu por si.\n2. O café da manhã. Ninguém fala nada, mas todo mundo olha. Clientela é um dos quatro eixos da Irisa por isso.\n3. A rua do hotel. O hotel pode ser ótimo e a quadra, não. O lugar recebe cor, a rua recebe aviso: você olha os dois antes de reservar.\n\nQuem esteve lá responde: atendimento, afeto, banheiro, clientela.\n\nQual hotel te tratou como casal? Conta aqui e salva para quem vai viajar. 🌈\n\nO link está na bio. Em fase de testes · Android.\n\n#Irisa #LGBTQIA #Orgulho #CasalLGBT #ViagemLGBT",
+    "primeiro_comentario": "bit.ly/appirisa",
+    "publicado": false
+  },
+  {
+    "id": "reels-nota",
+    "aprovado": false,
+    "quando": "2026-10-14T19:00:00-03:00",
     "tipo": "REELS",
     "midias": [
       "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/Irisa-reels-nota.mp4"
@@ -377,7 +391,7 @@
   {
     "id": "reels-olhar",
     "aprovado": false,
-    "quando": "2026-10-13T19:00:00-03:00",
+    "quando": "2026-10-15T19:00:00-03:00",
     "tipo": "REELS",
     "midias": [
       "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/Irisa-reels-olhar.mp4"
@@ -389,7 +403,7 @@
   {
     "id": "reels-3",
     "aprovado": false,
-    "quando": "2026-10-14T19:00:00-03:00",
+    "quando": "2026-10-16T19:00:00-03:00",
     "tipo": "REELS",
     "midias": [
       "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/Irisa-reels-3.mp4"
@@ -401,7 +415,7 @@
   {
     "id": "reels-4",
     "aprovado": false,
-    "quando": "2026-10-15T19:00:00-03:00",
+    "quando": "2026-10-17T19:00:00-03:00",
     "tipo": "REELS",
     "midias": [
       "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/Irisa-reels-4.mp4"
@@ -413,7 +427,7 @@
   {
     "id": "reels-5",
     "aprovado": false,
-    "quando": "2026-10-16T19:00:00-03:00",
+    "quando": "2026-10-18T19:00:00-03:00",
     "tipo": "REELS",
     "midias": [
       "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/Irisa-reels-5.mp4"
