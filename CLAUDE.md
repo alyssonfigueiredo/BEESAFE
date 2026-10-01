@@ -247,6 +247,14 @@ Nome: **Irisa** (INPI livre; @appirisa livre). Bundle id Android `br.com.irisa.a
   `appirisa+review@gmail.com`. O vídeo precisa mostrar denúncia **e** bloqueio, então só serve build
   com a migration 20 no app. Nas notas está explicado por que relato não tem botão de bloquear
   (é anônimo, não tem autor exibido) — a Apple cobra isso.
+- **Excluir conta apagava as avaliações (migration 27, 01/10/2026, ainda não aplicada):** `place_ratings.user_id`
+  era `on delete cascade`, então toda avaliação da pessoa sumia junto com a conta — e com ela a nota e o selo do
+  lugar, sem ninguém ter mexido em nada. `occurrences.created_by`, `places.created_by` e `support_messages.created_by`
+  sempre foram `on delete set null` (o conteúdo fica, o vínculo some); a avaliação é conteúdo da comunidade igual
+  aos outros e passa a seguir a mesma regra. `user_id` vira nulável, `is_mine` ganha `coalesce(..., false)` e a
+  avaliação órfã deixa de ter dono para editar ou apagar (só a moderação). **`place_photos` continua em cascade de
+  propósito:** imagem pode mostrar a pessoa, e aí apagar é o certo. Diagnóstico pronto em `supabase/diagnostico.sql`.
+
 - **Bloqueio por usuário (migration 20, 28/09/2026, aplicada no banco no mesmo dia):** tabela `blocked_users` (RLS: cada um vê e apaga só os
   seus), RPCs `block_user`/`unblock_user`/`block_author(type, id)`. O app nunca recebe o id do autor
   (`created_by` não sai do banco), então bloqueia pelo id da mensagem/avaliação e o banco resolve.
