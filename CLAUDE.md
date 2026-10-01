@@ -573,6 +573,17 @@ e `pedidos` — então republicar não apaga nada do que já foi decidido.
   segundo: **a busca é sempre por botão, nunca a cada tecla digitada.** `CityMap` ganhou a prop
   `focus` para a câmera ir até o ponto que veio de fora (GPS ou endereço achado) — toque no mapa
   não recentraliza, de propósito. O texto da seção Local diz que o alfinete é o que vale.
+- **Ficha duplicada de bar que mudou de endereço (migrations 31 e 32, 01/10/2026, aplicadas pelo CI):**
+  o "Na Feira Bar" de Curitiba estava em duas fichas — a do Overture (endereço antigo, Rua Padre
+  Anchieta, zero avaliações) e a que o Leandro cadastrou na porta do bar (Alameda Princesa Izabel,
+  1 avaliação), 3,1 km adiante. A trava de 150 m não vê isso. Ficha duplicada racha a nota entre as
+  duas e nenhuma chega às 5 avaliações do selo. A 31 faz `places_similar` somar os parecidos da
+  **cidade inteira** aos de 300 m (perto: semelhança > 0,3; longe: > 0,55, senão "Bar do João"
+  casaria com meia Curitiba) e a tela mostra a distância em km quando passa de 1.000 m. A 32
+  escondeu a ficha do Overture (`status = 'hidden'`, não apaga nada; desfaz com `'active'`).
+  **A barreira dura do banco segue em 150 m de propósito:** rede com duas lojas na mesma cidade é
+  legítima, e recusar cadastro pelo nome a quilômetros travaria lugar de verdade. Longe é conselho,
+  perto é regra.
 - **Limite de lugares/dia: 5 → 20 (migration 30, 01/10/2026).** Conta dele e do Leandro (tabela
   `rate_limit_exempt`, mesma usada para avaliação) ficam sem limite também em `places`, não só em
   `place_ratings`.
