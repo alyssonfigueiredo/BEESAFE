@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState, type ReactNode } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { StyleSheet, View, useWindowDimensions } from "react-native";
 import Animated, {
   Easing,
@@ -36,7 +36,7 @@ const FLOOD = 3000; // a varredura grande começa a pintar a tela
 const SWEEP = 1600; // uma volta da varredura grande
 const SAIDA = 5500; // as cores começam a sair
 const END = 7250; // o splash some
-const BIG = 64; // gomos da tela
+const BIG = 120; // gomos da tela
 const LOGO = 132;
 const RING_R = (48 / 100) * LOGO; // raio externo do anel, em px
 const DISC = 2 * (RING_R + 5); // disco atrás do olho: anel + 5 px de borda
@@ -100,76 +100,26 @@ function Slice({
 }
 
 /**
- * Revela `children` (parado) num setor que cresce no sentido horário a partir do topo, de 0 a
- * `progress` × 360°. Só transform de View: duas metades recortadas, cada uma com uma janela que gira
- * e o conteúdo girando ao contrário dentro dela, para ficar no lugar. Nada de SVG animado, nada de
- * transparência parcial: a borda é dura e acompanha a linha da varredura.
+ * Gomo da varredura grande. Aparece quando a linha passa pelo fim dele e some, na saída, do mesmo
+ * jeito: um único SVG com opacidade por gomo (a mesma técnica do anel), sem recortes girando.
  */
-function PieReveal({
-  R,
-  progress,
-  children,
+function BigSlice({
+  d,
+  fill,
+  theta,
+  fin,
+  fout,
 }: {
-  R: number;
-  progress: SharedValue<number>;
-  children: ReactNode;
+  d: string;
+  fill: string;
+  theta: number;
+  fin: SharedValue<number>;
+  fout: SharedValue<number>;
 }) {
-  const D = 2 * R;
-  const w1 = useAnimatedStyle(() => ({
-    transform: [{ rotate: `${Math.min(180, Math.max(0, progress.value * 360))}deg` }],
+  const props = useAnimatedProps(() => ({
+    opacity: fin.value * 360 >= theta && fout.value * 360 < theta ? 1 : 0,
   }));
-  const c1 = useAnimatedStyle(() => ({
-    transform: [{ rotate: `${-Math.min(180, Math.max(0, progress.value * 360))}deg` }],
-  }));
-  const w2 = useAnimatedStyle(() => ({
-    transform: [{ rotate: `${Math.min(180, Math.max(0, progress.value * 360 - 180))}deg` }],
-  }));
-  const c2 = useAnimatedStyle(() => ({
-    transform: [{ rotate: `${-Math.min(180, Math.max(0, progress.value * 360 - 180))}deg` }],
-  }));
-  return (
-    <View
-      pointerEvents="none"
-      style={{ position: "absolute", left: 0, top: 0, width: D, height: D }}
-    >
-      {/* metade direita: 0° a 180° */}
-      <View
-        style={{ position: "absolute", left: R, top: 0, width: R, height: D, overflow: "hidden" }}
-      >
-        <Animated.View
-          style={[
-            { position: "absolute", left: -R, top: 0, width: R, height: D, overflow: "hidden" },
-            { transformOrigin: "right center" },
-            w1,
-          ]}
-        >
-          <Animated.View
-            style={[{ position: "absolute", left: 0, top: 0, width: D, height: D }, c1]}
-          >
-            {children}
-          </Animated.View>
-        </Animated.View>
-      </View>
-      {/* metade esquerda: 180° a 360° */}
-      <View
-        style={{ position: "absolute", left: 0, top: 0, width: R, height: D, overflow: "hidden" }}
-      >
-        <Animated.View
-          style={[
-            { position: "absolute", left: R, top: 0, width: R, height: D, overflow: "hidden" },
-            { transformOrigin: "left center" },
-            w2,
-          ]}
-        >
-          <Animated.View
-            style={[{ position: "absolute", left: -R, top: 0, width: D, height: D }, c2]}
-          >
-            {children}
-          </Animated.View>
-        </Animated.View>
-      </View>
-    </View>
-  );
+  return <AP d={d} fill={fill} animatedProps={props} />;
 }
 
 export function Splash({ onDone }: { onDone: () => void }) {
@@ -303,6 +253,7 @@ export function Splash({ onDone }: { onDone: () => void }) {
       return {
         d: `M ${R} ${R} L ${x0} ${y0} A ${R} ${R} 0 0 1 ${x1} ${y1} Z`,
         fill: ringColor(i / BIG),
+        theta: ((i + 1) / BIG) * 360,
       };
     });
     // Linha e cunha numa caixa 2R × 2R com o centro do olho no meio: a caixa gira em volta dela mesma.
@@ -343,27 +294,11 @@ export function Splash({ onDone }: { onDone: () => void }) {
             height: 2 * big.R,
           }}
         >
-          <PieReveal R={big.R} progress={fin}>
-            <Svg width={2 * big.R} height={2 * big.R}>
-              {big.sectors.map((g) => (
-                <Path key={g.d} d={g.d} fill={g.fill} />
-              ))}
-            </Svg>
-          </PieReveal>
-          <PieReveal R={big.R} progress={fout}>
-            {/* o fundo da tela, no mesmo lugar em que está atrás */}
-            <View
-              style={{
-                position: "absolute",
-                left: big.R - big.cx,
-                top: big.R - big.cy,
-                width: win.width,
-                height: win.height,
-              }}
-            >
-              <Aurora />
-            </View>
-          </PieReveal>
+          <Svg width={2 * big.R} height={2 * big.R}>
+            {big.sectors.map((g) => (
+              <BigSlice key={g.d} d={g.d} fill={g.fill} theta={g.theta} fin={fin} fout={fout} />
+            ))}
+          </Svg>
         </View>
       )}
       {big && (
