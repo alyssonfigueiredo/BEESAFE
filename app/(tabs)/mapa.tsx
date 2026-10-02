@@ -85,6 +85,7 @@ export default function MapaScreen() {
   return (
     <View className="flex-1 bg-paper">
       <CityMap
+        key={city.id}
         occurrences={layers.relatos ? filtered : []}
         places={layers.lugares ? places : []}
         onSelectPlace={(p) => {

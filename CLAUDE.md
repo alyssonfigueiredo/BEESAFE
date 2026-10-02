@@ -89,6 +89,15 @@ Nome: **Irisa** (INPI livre; @appirisa livre). Bundle id Android `br.com.irisa.a
   As telas, o radar e o desenho do mapa foram copiados do `pitch.html` para dentro do
   `docs/index.html`; mudanças na landing se fazem direto nesse arquivo.
   `docs/og.png` é a prévia de link (WhatsApp/Instagram), 1200×630, tirada do próprio hero.
+  **Landing refeita em 01/10/2026 na estética nova** (a mesma do app e do Instagram, `base.css` da skill
+  irisa-posts): papel com as quatro manchas de cor, cartões de vidro, Oswald 700 caixa alta com parte
+  leve em 400 e linhas quebradas à mão, botões em cápsula, `#radarmin` na marca. Sem seção escura
+  inteira: o único bloco escuro é o cartão da emergência. As telas são as reais do app (renders do
+  protótipo, `docs/telas/*.webp`, copiadas pelo `build-site.mjs`), em celulares inclinados que entram
+  girando. **iOS está na App Store** (https://apps.apple.com/br/app/irisa/id6816761128): botão
+  "Baixar na App Store" no hero, no bloco Baixar e no rodapé; o formulário de teste agora é só do
+  Android (`p_platform` sempre `android`), e `#testar` continua existindo para links antigos.
+  Seção de cidades diz "O Brasil todo no mapa" (funciona em qualquer cidade) e lista as sete como "Começando por". Nada de conteúdo saiu: o detalhe segue atrás dos botões que abrem.
   **Story de divulgação (24/09/2026):** `docs/story.html` é um story vertical 1080×1920 de 49 s no
   mesmo estilo da landing. Dez cenas: gancho em conversa de WhatsApp ("aquele bar novo é de boa pra
   gente?") → "E se a resposta já estivesse no mapa?" + marca → "Nesse bar pode / Nessa rua, de noite,
@@ -142,6 +151,10 @@ Nome: **Irisa** (INPI livre; @appirisa livre). Bundle id Android `br.com.irisa.a
   (lugares ficam sem bairro, como em São Luís e Palmas). Nível 9 do OSM lá é o distrito inteiro ("Rio Branco",
   apagado em 30/09); o nível 10 deu Overpass 504 duas vezes — tentar de novo em outro horário e, se entrar,
   rodar o UPDATE de reprocessamento de `places` do supabase/README.md.
+  **Itapeva/SP (3522406) em 02/10/2026:** 256 lugares do Overture, inseridos pela sessão cloud via SQL
+  (sem chave de serviço lá: o script rodou com `--simular` e despejou os candidatos). Fora 5 que não são
+  lugar (igreja marcada como balada, academia, salão de beleza, motorista de Uber, banda). Sem bairro: o OSM
+  não tem nível 10 lá e o nível 9 deu timeout no Overpass.
   No workflow Importar cidade o Overture é o padrão e o OSM ficou desligado. Fotos: cada lugar novo entra
   na fila do Google (150/dia), então uma capital inteira leva meses de cota — aceito, cai no ícone.
   **Fila de fotos por relevância (migration 17, 25/09/2026):** `places.prominence` (0–100 = confiança do

@@ -50,11 +50,12 @@ export default function LugaresScreen() {
   // a lista é para achar um lugar, o ranking fica no Início.
   const lista = useMemo(() => {
     const termo = simplifica(busca.trim());
-    const base = busca.trim().length >= 2 ? (achados ?? []) : places;
+    const doBanco = busca.trim().length >= 2;
+    const base = doBanco ? (achados ?? []) : places;
     const comDistancia = base
       .filter((p) => categoria === "all" || p.category === categoria)
       .filter((p) => recorte !== "avaliados" || p.rating_count > 0)
-      .filter((p) => !termo || simplifica(p.name).includes(termo))
+      .filter((p) => doBanco || !termo || simplifica(p.name).includes(termo))
       .map((p) => ({
         place: p,
         distance: userLocation

@@ -47,7 +47,7 @@ export default function PerfilScreen() {
   function confirmDelete() {
     Alert.alert(
       "Excluir conta",
-      "Seus relatos e mensagens continuam no app, sem nenhum vínculo com você. Avaliações e curtidas são apagadas. Se você entrou com a Apple, o vínculo com sua conta Apple também é desfeito. Não dá para desfazer.",
+      "Seus relatos e mensagens continuam no app, sem nenhum vínculo com você. As avaliações que você fez também ficam, sem vínculo com você; fotos que você enviou, curtidas e bloqueios são apagados. Se você entrou com a Apple, o vínculo com sua conta Apple também é desfeito. Não dá para desfazer.",
       [
         { text: "Cancelar", style: "cancel" },
         {

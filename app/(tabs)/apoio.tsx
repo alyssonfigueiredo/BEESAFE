@@ -31,6 +31,10 @@ const KIND_LABEL: Record<string, string> = {
   juridico: "Jurídico",
 };
 
+function abrir(url: string, aviso: string) {
+  Linking.openURL(url).catch(() => Alert.alert("Não deu certo", aviso));
+}
+
 export default function ApoioScreen() {
   const insets = useScreenInsets();
   const { city } = useCity();
@@ -182,7 +186,12 @@ export default function ApoioScreen() {
               <View className="flex-row gap-3">
                 {!!s.phone && (
                   <Pressable
-                    onPress={() => Linking.openURL(`tel:${s.phone}`)}
+                    onPress={() =>
+                      abrir(
+                        `tel:${s.phone}`,
+                        `Não foi possível ligar daqui. Disque ${s.phone} manualmente.`,
+                      )
+                    }
                     className="flex-row items-center gap-1"
                   >
                     <Phone size={14} color={colors.coralInk} />
@@ -191,7 +200,7 @@ export default function ApoioScreen() {
                 )}
                 {!!s.url && (
                   <Pressable
-                    onPress={() => Linking.openURL(s.url!)}
+                    onPress={() => abrir(s.url!, "Não foi possível abrir o site agora.")}
                     className="flex-row items-center gap-1"
                   >
                     <ExternalLink size={14} color={colors.turquoiseInk} />

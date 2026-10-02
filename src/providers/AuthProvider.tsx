@@ -1,6 +1,9 @@
 import type { Session } from "@supabase/supabase-js";
 import { createContext, useContext, useEffect, useState, type PropsWithChildren } from "react";
 
+import AsyncStorage from "@react-native-async-storage/async-storage";
+
+import { queryClient } from "@/lib/query";
 import { supabase } from "@/lib/supabase";
 
 type AuthState = { session: Session | null; loading: boolean };
@@ -14,7 +17,12 @@ export function AuthProvider({ children }: PropsWithChildren) {
     supabase.auth
       .getSession()
       .then(({ data }) => setState({ session: data.session, loading: false }));
-    const { data: sub } = supabase.auth.onAuthStateChange((_event, session) => {
+    const { data: sub } = supabase.auth.onAuthStateChange((event, session) => {
+      if (event === "SIGNED_OUT") {
+        // Nada da conta anterior pode aparecer na próxima.
+        queryClient.clear();
+        AsyncStorage.removeItem("irisa.city").catch(() => {});
+      }
       setState({ session, loading: false });
     });
     return () => sub.subscription.unsubscribe();

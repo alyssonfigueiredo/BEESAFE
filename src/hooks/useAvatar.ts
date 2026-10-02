@@ -6,7 +6,7 @@ import { supabase } from "@/lib/supabase";
 const BUCKET = "avatares";
 
 /**
- * Foto de perfil: privada, só aparece na tela Perfil de quem a enviou (migration 33). O bucket
+ * Foto de perfil: privada, só aparece na tela Perfil de quem a enviou (migration 36). O bucket
  * não é público, então a imagem vem por URL assinada, renovada a cada abertura.
  */
 export function useAvatarUrl(path: string | null | undefined) {

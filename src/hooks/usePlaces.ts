@@ -42,6 +42,34 @@ export function useSearchPlaces(cityId: number | undefined, termo: string) {
   });
 }
 
+export type NearbyPlace = {
+  id: string;
+  name: string;
+  category: PlaceCategory;
+  latitude: number;
+  longitude: number;
+  distance_m: number;
+};
+
+/** Lugares num raio do ponto, direto do banco (o lote de usePlaces não cobre a cidade toda). */
+export function useNearbyPlaces(point: { lat: number; lng: number } | null, radius = 300) {
+  return useQuery({
+    queryKey: ["places-nearby", point?.lat, point?.lng, radius],
+    enabled: !!point,
+    staleTime: 60_000,
+    queryFn: async () => {
+      const { data, error } = await supabase.rpc("places_nearby", {
+        p_lat: point!.lat,
+        p_lng: point!.lng,
+        p_radius_m: radius,
+        p_limit: 20,
+      });
+      if (error) throw error;
+      return data as NearbyPlace[];
+    },
+  });
+}
+
 // Quantos lugares a cidade tem de verdade (o lote de usePlaces é só o que cabe na tela).
 export function usePlaceCount(cityId: number | undefined) {
   return useQuery({
@@ -112,7 +140,6 @@ const MESSAGES: Record<string, string> = {
   "23514": "Confira os campos: nome entre 2 e 80 letras, comentário até 500.",
   "42501": "Sua sessão expirou. Entre de novo.",
   P0002: "Limite diário atingido. Tente amanhã.",
-  P0003: "Contas novas podem adicionar lugares após 24 horas.",
   // P0004 (lugar duplicado) fica de fora de propósito: a mensagem do banco nomeia o lugar
   // que já existe e a distância, e isso é mais útil do que qualquer texto fixo daqui.
 };
@@ -175,6 +202,10 @@ export function useCreatePlace() {
     },
     onSuccess: () => {
       client.invalidateQueries({ queryKey: ["places"] });
+      client.invalidateQueries({ queryKey: ["places-total"] });
+      client.invalidateQueries({ queryKey: ["places-busca"] });
+      client.invalidateQueries({ queryKey: ["places-nearby"] });
+      client.invalidateQueries({ queryKey: ["places-similar"] });
       client.invalidateQueries({ queryKey: ["welcoming"] });
     },
   });
@@ -199,6 +230,7 @@ export function useRatePlace(placeId: string) {
       client.invalidateQueries({ queryKey: ["place", placeId] });
       client.invalidateQueries({ queryKey: ["place-ratings", placeId] });
       client.invalidateQueries({ queryKey: ["places"] });
+      client.invalidateQueries({ queryKey: ["places-busca"] });
       client.invalidateQueries({ queryKey: ["welcoming"] });
     },
   });

@@ -36,14 +36,21 @@ export function PlaceForm({ onDone }: { onDone: (placeId: string) => void }) {
   const jaExistem = similar.data ?? [];
 
   async function useMyLocation() {
-    const { status } = await Location.requestForegroundPermissionsAsync();
-    if (status !== "granted")
-      return Alert.alert("Sem permissão de localização", "Toque no mapa para marcar o ponto.");
-    const pos = await Location.getCurrentPositionAsync({ accuracy: Location.Accuracy.High });
-    const p = { lat: pos.coords.latitude, lng: pos.coords.longitude };
-    setPoint(p);
-    setFoco(p);
-    setRotulo(null);
+    try {
+      const { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== "granted")
+        return Alert.alert("Sem permissão de localização", "Toque no mapa para marcar o ponto.");
+      const pos = await Location.getCurrentPositionAsync({ accuracy: Location.Accuracy.High });
+      const p = { lat: pos.coords.latitude, lng: pos.coords.longitude };
+      setPoint(p);
+      setFoco(p);
+      setRotulo(null);
+    } catch {
+      Alert.alert(
+        "Não consegui sua localização",
+        "Confira se a localização do celular está ligada, ou toque no mapa para marcar o ponto.",
+      );
+    }
   }
 
   // A cidade e o bairro do lugar saem da coordenada, não do texto: sem isto, quem escrevia o
