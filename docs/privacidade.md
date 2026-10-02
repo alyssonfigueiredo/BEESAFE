@@ -1,6 +1,6 @@
 # Política de Privacidade — Irisa
 
-Última atualização: 28 de setembro de 2026.
+Última atualização: 2 de outubro de 2026.
 
 A Irisa é um aplicativo comunitário para pessoas LGBTQIA+ registrarem, de forma anônima, ocorrências de LGBTIfobia e avaliarem lugares acolhedores. Esta política explica quais dados coletamos, por que, e o que fazemos com eles, em conformidade com a Lei Geral de Proteção de Dados (Lei 13.709/2018).
 
@@ -14,6 +14,7 @@ Irisa (projeto independente, sem fins lucrativos). Contato: appirisa@gmail.com.
 - **Bloqueios**: se você bloquear alguém, guardamos o par "quem bloqueou / quem foi bloqueado" para deixar de mostrar a você o que essa conta publica. Só você vê e desfaz seus bloqueios; a pessoa bloqueada não é informada.
 - **Relatos**: tipo, gravidade, data, ponto no mapa e descrição opcional. O relato fica vinculado à sua conta apenas no banco de dados, para fins de segurança e moderação. Esse vínculo nunca é exibido a ninguém, nem a moderadores.
 - **Lugares e avaliações**: nome do lugar, categoria, endereço, ponto no mapa, notas dos quatro eixos de acolhimento e comentário. Avaliações e mensagens mostram apenas o apelido que você escolher (ou "Anônimo").
+- **Fotos de lugares**: se você escolher anexar uma foto ao avaliar um lugar, guardamos essa imagem (uma por lugar e por conta) e ela fica ligada à sua conta apenas no banco de dados, nunca exibida. Nenhuma foto aparece no app antes de revisão: ela é analisada por uma pessoa da moderação (e, se houver, por um filtro automático de conteúdo impróprio). Não envie fotos em que apareçam pessoas sem a autorização delas. Você pode denunciar fotos de outras pessoas. Se você excluir a conta, as fotos que enviou são apagadas.
 - **Localização**: usada no aparelho para centralizar o mapa e marcar um ponto quando você pede. Não guardamos histórico de localização.
 - **Inscrição no teste (site)**: se você pede para testar o app pelo site, guardamos o e-mail informado e o tipo de celular (Android ou iPhone). Usamos só para liberar o acesso ao teste na Google Play ou avisar quando sair no iPhone. Não enviamos propaganda nem compartilhamos esse e-mail. Para apagar, escreva para appirisa@gmail.com.
 - **Dados técnicos**: logs de acesso mantidos pelo provedor de infraestrutura (Supabase) por até 7 dias, para segurança.
@@ -34,8 +35,9 @@ Não vendemos nem compartilhamos dados pessoais, salvo por ordem judicial ou req
 
 ## 6. Provedores
 
-- Supabase (banco de dados e autenticação), servidores na região de São Paulo.
+- Supabase (banco de dados, autenticação e armazenamento das fotos), servidores na região de Virgínia, nos Estados Unidos. Isso é uma transferência internacional de dados (LGPD, art. 33), feita com base no seu consentimento e nas garantias contratuais do provedor.
 - OpenFreeMap (mapas base, dados do OpenStreetMap), que recebe requisições de blocos de mapa sem identificação da sua conta.
+- OpenStreetMap Nominatim, somente se você tocar em "Achar esse endereço no mapa": o endereço digitado é enviado a esse serviço, sem identificar sua conta.
 - Google e Apple, apenas se você optar por entrar com essas contas.
 
 ## 7. Retenção e exclusão
