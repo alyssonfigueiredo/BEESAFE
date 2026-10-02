@@ -204,6 +204,18 @@ Nome: **Irisa** (INPI livre; @appirisa livre). Bundle id Android `br.com.irisa.a
   só para o teste do Android. Link público do TestFlight pedido, esperando a revisão beta: quando sair, gravar
   `TESTFLIGHT_URL` e marcar `added_at` dos 9 inscritos de iPhone (todos os pendentes de `tester_signups` em 30/09). A branch principal `claude/ecstatic-darwin-cmf7sw` fica
   sempre igual à de trabalho, pronta para a próxima versão subir com tudo (roteiro em `SOLTAR-OUTUBRO.md`).
+- **Build 0.1.1 enviada nos dois sistemas em 02/10/2026** (dito por ele). iOS: build 8, `eas submit`
+  feito, esperando o processamento do TestFlight. Android: AAB enviado na faixa de teste fechado,
+  **com a resposta do IARC sobre bloquear/ocultar outros usuários já mudada para Sim** — era a
+  pendência que segurava essa build. É a primeira versão dos dois lados com o **EAS Update ligado**:
+  daqui pra frente correção de JS/tela sai por `npx eas-cli update --branch production`, sem gastar
+  build. **O `runtimeVersion` segue a versão do app (`appVersion`), então update vale para quem tem
+  0.1.1** — quem ficar na 0.1.0 (a que está na App Store desde 01/10) não recebe nada até atualizar.
+  O que vai nela: as correções de 01 e 02/10 (tela presa ao cadastrar lugar, endereço virando ponto
+  no mapa, busca de lugar no banco, aviso de repetido na cidade), foto de perfil, bloqueio de
+  usuário, foto do Mapillary, envio de foto ao avaliar, fila de moderação de imagem, layout novo
+  com as animações. Pendência conhecida que foi junto: o fundo branco quadrado da aba ativa na barra
+  de baixo (é JS, sai por update).
 - Play Console: versão 8 (0.1.0) enviada para revisão na faixa de teste fechado em 22/09/2026, com a
   ficha da loja, os prints e o gráfico de recursos. Falta a lista de testadores completar 12 pessoas
   por 14 dias seguidos antes de pedir produção. Apps da categoria Social exigem a declaração de
