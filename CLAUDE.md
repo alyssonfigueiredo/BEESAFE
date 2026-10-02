@@ -155,6 +155,9 @@ Nome: **Irisa** (INPI livre; @appirisa livre). Bundle id Android `br.com.irisa.a
   (sem chave de serviço lá: o script rodou com `--simular` e despejou os candidatos). Fora 5 que não são
   lugar (igreja marcada como balada, academia, salão de beleza, motorista de Uber, banda). Sem bairro: o OSM
   não tem nível 10 lá e o nível 9 deu timeout no Overpass.
+  **Grande João Pessoa em 02/10/2026** (mesmo caminho de Itapeva): Bayeux 89, Santa Rita 105 e Conde 93
+  (Jacumã, Carapibus, Tabatinga, Coqueirinho, Tambaba — quase metade é pousada). Tirados nome repetido na
+  mesma cidade e o que não é lugar (depósito de bebidas, xerox, residencial, hotel de Campina Grande). Sem bairro.
   No workflow Importar cidade o Overture é o padrão e o OSM ficou desligado. Fotos: cada lugar novo entra
   na fila do Google (150/dia), então uma capital inteira leva meses de cota — aceito, cai no ícone.
   **Fila de fotos por relevância (migration 17, 25/09/2026):** `places.prominence` (0–100 = confiança do
