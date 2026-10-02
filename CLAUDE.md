@@ -207,7 +207,7 @@ Nome: **Irisa** (INPI livre; @appirisa livre). Bundle id Android `br.com.irisa.a
   só para o teste do Android. Link público do TestFlight pedido, esperando a revisão beta: quando sair, gravar
   `TESTFLIGHT_URL` e marcar `added_at` dos 9 inscritos de iPhone (todos os pendentes de `tester_signups` em 30/09). A branch principal `claude/ecstatic-darwin-cmf7sw` fica
   sempre igual à de trabalho, pronta para a próxima versão subir com tudo (roteiro em `SOLTAR-OUTUBRO.md`).
-- **Build 0.1.1 enviada nos dois sistemas em 02/10/2026** (dito por ele). iOS: build 8, `eas submit`
+- **Build 0.1.1 enviada nos dois sistemas em 02/10/2026; iOS em revisão na Apple e Android em revisão na Play Console (dito por ele).** O que está no ar hoje: iOS 0.1.0 na App Store (público) e Android em teste fechado. iOS: build 8, `eas submit`
   feito, esperando o processamento do TestFlight. Android: AAB enviado na faixa de teste fechado,
   **com a resposta do IARC sobre bloquear/ocultar outros usuários já mudada para Sim** — era a
   pendência que segurava essa build. É a primeira versão dos dois lados com o **EAS Update ligado**:
