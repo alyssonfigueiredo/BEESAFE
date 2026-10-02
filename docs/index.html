@@ -111,34 +111,12 @@ nav.top.solid .in{background:rgba(255,255,255,.7);box-shadow:var(--shadow-card),
 .meta span::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--c,var(--turq))}
 @media(max-width:960px){.hero .wrap{grid-template-columns:1fr}}
 
-/* celular com a tela real do app */
-.ph{--w:270px;--rot:0deg;position:relative;width:var(--w);aspect-ratio:1107/2484;flex:none;padding:calc(var(--w)*.035);border-radius:calc(var(--w)*.16);background:var(--night);box-shadow:0 40px 80px -30px rgba(20,24,41,.5),0 12px 24px -12px rgba(20,24,41,.25),inset 0 0 0 1.5px #3A4060;transform:rotate(var(--rot))}
-.ph img{width:100%;height:100%;object-fit:cover;border-radius:calc(var(--w)*.125);background:var(--paper)}
-.ph::after{content:"";position:absolute;left:50%;top:calc(var(--w)*.06);width:28%;height:calc(var(--w)*.075);margin-left:-14%;border-radius:999px;background:#0B0E1A}
-.js .ph.float{animation:float 8s ease-in-out infinite}
-.js .ph.float.b{animation-delay:-3s}.js .ph.float.c{animation-delay:-5.5s}
-@keyframes float{0%,100%{translate:0 0}50%{translate:0 -12px}}
-
-/* palco do hero: três telas passando de uma para a outra, cada uma num ângulo */
-.stage{position:relative;height:640px}
-.stage .ph{position:absolute;left:50%;top:50%}
-.stage .p1{--w:236px;--rot:-11deg;margin:-236px 0 0 -262px;z-index:1}
-.stage .p2{--w:270px;--rot:2deg;margin:-300px 0 0 -135px;z-index:3}
-.stage .p3{--w:236px;--rot:12deg;margin:-220px 0 0 52px;z-index:2}
-.chip{position:absolute;z-index:4;display:inline-flex;align-items:center;gap:8px;padding:10px 16px;border-radius:999px;font-weight:600;font-size:14px;white-space:nowrap;background:rgba(255,255,255,.78);box-shadow:var(--shadow-up),var(--glass-inset);-webkit-backdrop-filter:blur(14px) saturate(1.4);backdrop-filter:blur(14px) saturate(1.4)}
-.chip i{width:10px;height:10px;border-radius:50%;background:var(--c)}
-.chip b{font-family:var(--display);font-weight:700;font-size:18px;line-height:1}
-.stage .k1{left:0;top:24%;--c:var(--turq)}
-.stage .k2{right:0;top:58%;--c:var(--coral)}
-.stage .k3{left:10%;bottom:6%;--c:var(--lilac)}
-@media(max-width:1100px) and (min-width:961px){.stage .p1{margin-left:-236px}.stage .p3{margin-left:36px}}
-@media(max-width:560px){
-  .stage{height:520px}
-  .stage .p1{--w:180px;margin:-180px 0 0 -178px}
-  .stage .p2{--w:216px;margin:-240px 0 0 -108px}
-  .stage .p3{--w:180px;margin:-160px 0 0 2px}
-  .stage .k1{left:0;top:0}.stage .k2{right:0;top:66%}.stage .k3{left:0;bottom:2%}
-}
+/* telas reais do app em celulares 3D, recortadas da arte com a fita (docs/telas3d) */
+.cut{margin:0;display:flex;justify-content:center;align-items:center;min-width:0}
+.cut img{display:block;width:100%;max-width:500px;height:auto}
+.hero .cut img{max-width:600px}
+.js .cut img.float{animation:float 8s ease-in-out infinite}
+.js .split.rev .cut img.float{animation-delay:-3s}
 
 /* faixa que corre */
 .marquee{margin:0 max(var(--gut),calc((100% - 1440px) / 2));border-radius:999px;overflow:hidden;padding:16px 0}
@@ -154,14 +132,6 @@ nav.top.solid .in{background:rgba(255,255,255,.7);box-shadow:var(--shadow-card),
 .split.rev>:first-child{order:2}
 @media(max-width:900px){.split{grid-template-columns:1fr}.split.rev>:first-child{order:0}}
 .txt{display:flex;flex-direction:column;gap:22px;min-width:0}
-.duo{position:relative;height:620px}
-.duo .ph{position:absolute;left:50%;top:50%}
-.duo .a{--w:262px;--rot:4deg;margin:-290px 0 0 -100px;z-index:2}
-.duo .b{--w:226px;--rot:-9deg;margin:-230px 0 0 -230px;z-index:1}
-.duo .solo{--w:270px;--rot:-3deg;margin:-300px 0 0 -135px}
-.duo .chip.k{z-index:3}
-@media(max-width:560px){.duo{height:540px}.duo .a{--w:228px;margin:-250px 0 0 -84px}.duo .b{--w:196px;margin:-200px 0 0 -170px}.duo .solo{--w:236px;margin:-262px 0 0 -118px}}
-
 .tipos{display:flex;flex-wrap:wrap;gap:8px}
 .tipos span{padding:8px 16px;border-radius:999px;font-weight:600;font-size:14px;color:var(--night)}
 .checks{list-style:none;margin:0;padding:0;display:grid;gap:12px}
@@ -186,9 +156,12 @@ nav.top.solid .in{background:rgba(255,255,255,.7);box-shadow:var(--shadow-card),
 .strike::after{content:"";position:absolute;left:-3%;right:-3%;top:52%;height:3px;border-radius:2px;background:var(--coral);transform:rotate(-4deg)}
 
 /* emergência: o cartão escuro de contraste da página */
-.sos-card{border-radius:36px;padding:clamp(28px,5vw,64px)}
-.sos{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:36px}
-@media(max-width:760px){.sos{grid-template-columns:repeat(2,1fr)}}
+.sos-card{border-radius:36px;padding:clamp(28px,5vw,64px);overflow:hidden}
+.sos-grid{display:grid;grid-template-columns:1.25fr .75fr;gap:clamp(20px,4vw,56px);align-items:center}
+.sos-txt{min-width:0}
+.sos-grid .cut img{max-width:420px;margin:-40px 0}
+@media(max-width:900px){.sos-grid{grid-template-columns:1fr}.sos-grid .cut img{margin:0 auto -20px;max-width:340px}}
+.sos{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin-top:36px}
 .sos a{text-decoration:none;border-radius:var(--r-lg);padding:22px;background:rgba(255,255,255,.07);box-shadow:inset 0 0 0 1px rgba(255,255,255,.12);display:flex;flex-direction:column;gap:4px;transition:background .25s,transform .25s}
 .sos a:hover{background:rgba(255,105,100,.18);transform:translateY(-3px)}
 .sos b{font-family:var(--display);font-weight:700;font-size:clamp(46px,5.4vw,72px);line-height:1;color:#fff}
@@ -217,11 +190,11 @@ nav.top.solid .in{background:rgba(255,255,255,.7);box-shadow:var(--shadow-card),
 .get h3{font-family:var(--display);text-transform:uppercase;font-weight:700;font-size:clamp(28px,3vw,38px);line-height:1.14;letter-spacing:.01em}
 .get h3 .lt{font-weight:400}
 .ios-card{position:relative;overflow:hidden}
-.ios-card .ph{--w:190px;--rot:10deg;position:absolute;right:-26px;bottom:-150px}
-.ios-card .btns{margin-top:auto;position:relative;z-index:1}
-.ios-card>*:not(.ph){position:relative;z-index:1;max-width:calc(100% - 150px)}
-@media(min-width:481px){.ios-card{min-height:420px}}
-@media(max-width:480px){.ios-card .ph{display:none}.ios-card>*:not(.ph){max-width:none}}
+.ios-card .cut{position:absolute;right:-40px;bottom:-60px;width:270px}
+.ios-card>*:not(.cut){position:relative;z-index:1;max-width:calc(100% - 190px)}
+.ios-card .btns{margin-top:auto}
+@media(min-width:481px){.ios-card{min-height:440px}}
+@media(max-width:480px){.ios-card .cut{position:relative;right:auto;bottom:auto;width:auto;margin:-10px -10px -60px}.ios-card>*:not(.cut){max-width:none}}
 .steps{display:grid;gap:14px;margin-top:4px}
 .step{display:flex;gap:14px;align-items:flex-start}
 .step .n{font-family:var(--display);font-weight:700;font-size:34px;line-height:1;width:28px;flex:none}
@@ -318,17 +291,12 @@ footer .sos-line{width:100%;color:var(--coralInk);font-weight:600;text-transform
 .js .rule.rv{transform:scaleX(0);transform-origin:left;filter:none}.js .rule.rv.in{transform:none}
 .js .hero h1 .w{display:inline-block;opacity:0;transform:translateY(.35em);filter:blur(10px);transition:opacity .7s ease,transform .9s var(--ease),filter .8s ease}
 .js .hero.in h1 .w{opacity:1;transform:none;filter:none}
-/* telas entram girando até o próprio ângulo */
-.js .deal .ph{opacity:0;transform:rotate(calc(var(--rot) * -1.6)) translateY(60px) scale(.94);transition:opacity .9s ease,transform 1.2s var(--ease)}
-.js .deal.in .ph{opacity:1;transform:rotate(var(--rot))}
-.js .deal.in .ph:nth-of-type(2){transition-delay:.14s}.js .deal.in .ph:nth-of-type(3){transition-delay:.28s}
-.js .deal .chip{opacity:0;transform:scale(.8);transition:opacity .6s ease,transform .7s var(--spring)}
-.js .deal.in .chip{opacity:1;transform:none;transition-delay:.7s}
-.js .deal.in .chip.k2{transition-delay:.9s}.js .deal.in .chip.k3{transition-delay:1.1s}
+/* telas entram subindo e girando até o ângulo da arte */
+.js .deal img{opacity:0;transform:translateY(60px) rotate(-5deg) scale(.94);transition:opacity .9s ease,transform 1.2s var(--ease)}
+.js .deal.in img{opacity:1;transform:none}
 @media (prefers-reduced-motion:reduce){
-  .js .rv,.js .hero h1 .w,.js .deal .ph,.js .deal .chip{opacity:1!important;transform:rotate(var(--rot,0deg))!important;filter:none!important;transition:none!important}
-  .js .deal .chip{transform:none!important}
-  .js .ph.float,.js .marquee .track,.js .pulse,.js .xp-btn .pm{animation:none!important}
+  .js .rv,.js .hero h1 .w,.js .deal img{opacity:1!important;transform:none!important;filter:none!important;transition:none!important}
+  .js .cut img.float,.js .marquee .track,.js .pulse,.js .xp-btn .pm{animation:none!important}
   .xp,.xp .st,.xp-in::before,.pm,.done,.done path{transition:none!important}
 }
 </style>
@@ -362,14 +330,7 @@ footer .sos-line{width:100%;color:var(--coralInk);font-weight:600;text-transform
       </div>
       <div class="meta rv d4"><span>Na App Store</span><span style="--c:var(--yellow)">Em teste no Android</span><span style="--c:var(--lilac)">Anônimo por construção</span></div>
     </div>
-    <div class="stage deal" aria-hidden="true">
-      <div class="ph p1 float"><img src="telas/04-mapa.webp" alt="" width="600" height="1346" fetchpriority="high"></div>
-      <div class="ph p2 float b"><img src="telas/01-inicio.webp" alt="" width="600" height="1346" fetchpriority="high"></div>
-      <div class="ph p3 float c"><img src="telas/02-lugar.webp" alt="" width="600" height="1346"></div>
-      <div class="chip k1"><i></i><b class="c-turq">4.6</b> Acolhedor</div>
-      <div class="chip k2"><i></i>Região com relato</div>
-      <div class="chip k3"><i></i>Sem nome. Sem perfil.</div>
-    </div>
+    <figure class="cut deal" aria-hidden="true"><img class="float" src="telas3d/01-inicio.webp" alt="" width="1020" height="1215" fetchpriority="high"></figure>
   </div>
 </section>
 
@@ -420,12 +381,7 @@ footer .sos-line{width:100%;color:var(--coralInk);font-weight:600;text-transform
         </ul>
       </div></div></div>
     </div>
-    <div class="duo deal" aria-hidden="true">
-      <div class="ph b float b"><img src="telas/03-lugares.webp" alt="" width="600" height="1346" loading="lazy"></div>
-      <div class="ph a float"><img src="telas/02-lugar.webp" alt="" width="600" height="1346" loading="lazy"></div>
-      <div class="chip k k1" style="left:4%;top:8%;--c:var(--coral)"><i></i>Atendimento <b class="c-coral">4.7</b></div>
-      <div class="chip k k2" style="right:2%;bottom:12%;--c:var(--orange)"><i></i>Afeto <b class="c-orange">4.6</b></div>
-    </div>
+    <figure class="cut deal" aria-hidden="true"><img class="float" src="telas3d/02-lugar.webp" alt="" width="1000" height="1266" loading="lazy"></figure>
   </div>
 </section>
 
@@ -467,12 +423,7 @@ footer .sos-line{width:100%;color:var(--coralInk);font-weight:600;text-transform
         </ul>
       </div></div></div>
     </div>
-    <div class="duo deal" aria-hidden="true">
-      <div class="ph b float b"><img src="telas/04-mapa.webp" alt="" width="600" height="1346" loading="lazy"></div>
-      <div class="ph a float"><img src="telas/05-registrar.webp" alt="" width="600" height="1346" loading="lazy"></div>
-      <div class="chip k k1" style="right:4%;top:10%;--c:var(--coral)"><i></i>Anônimo</div>
-      <div class="chip k k2" style="left:0;bottom:14%;--c:var(--yellow)"><i></i>Onde e quando: opcionais</div>
-    </div>
+    <figure class="cut deal" aria-hidden="true"><img class="float" src="telas3d/05-registrar.webp" alt="" width="940" height="1359" loading="lazy"></figure>
   </div>
 </section>
 
@@ -485,11 +436,7 @@ footer .sos-line{width:100%;color:var(--coralInk);font-weight:600;text-transform
         <h2 class="big rv d1"><span class="a">O lugar<br>recebe cor.</span><br><span class="b">A rua<br>recebe aviso.</span></h2>
         <p class="lead rv d2">Violência acontece no beco, na praça, no ponto de ônibus. Relato na esquina não derruba a nota do bar. Quem perde confiança é a região, e o app avisa quem vai passar por ali.</p>
       </div>
-      <div class="duo deal" aria-hidden="true">
-        <div class="ph solo float"><img src="telas/06-bairro.webp" alt="" width="600" height="1346" loading="lazy"></div>
-        <div class="chip k k1" style="left:2%;top:12%;--c:var(--coral)"><i></i>Ficha do bairro</div>
-        <div class="chip k k2" style="right:2%;bottom:16%;--c:var(--turq)"><i></i>Lugares acolhedores ali</div>
-      </div>
+      <figure class="cut deal" aria-hidden="true"><img class="float" src="telas3d/06-bairro.webp" alt="" width="1060" height="1381" loading="lazy"></figure>
     </div>
     <div class="trio">
       <div class="xc pane rv d1" style="--a:var(--turq)"><button class="xc-h" aria-expanded="false" aria-controls="xc-viz"><h3 class="c-turq">Ninguém é punido pela vizinhança</h3><span class="pm"></span></button>
@@ -506,6 +453,8 @@ footer .sos-line{width:100%;color:var(--coralInk);font-weight:600;text-transform
 <section class="block" style="padding-top:0">
   <div class="wrap">
     <div class="sos-card dark rv">
+     <div class="sos-grid">
+      <div class="sos-txt">
       <div class="eyebrow"><span class="pulse" style="width:10px;height:10px;margin-right:10px"></span>Em todas as telas</div>
       <h2 class="big" style="margin-top:14px"><span class="lt">Pedir ajuda,</span><br>um toque</h2>
       <p class="lead" style="margin-top:20px">O botão no topo do app disca direto. Abaixo dos números nacionais, os serviços LGBT da sua cidade.</p>
@@ -515,6 +464,9 @@ footer .sos-line{width:100%;color:var(--coralInk);font-weight:600;text-transform
         <a href="tel:100"><b>100</b><span>Direitos Humanos</span></a>
         <a href="tel:188"><b>188</b><span>CVV</span></a>
       </div>
+      </div>
+      <figure class="cut deal" aria-hidden="true"><img class="float" src="telas3d/07-emergencia.webp" alt="" width="1000" height="1333" loading="lazy"></figure>
+     </div>
       <div class="xp-row" data-xp-group style="margin-top:28px">
         <button class="xp-btn" style="--a:var(--turq)" aria-expanded="false" aria-controls="xp-servicos"><span class="pm"></span>Serviços de apoio por cidade</button>
         <button class="xp-btn" style="--a:var(--lilac)" aria-expanded="false" aria-controls="xp-mural"><span class="pm"></span>Mural da comunidade</button>
@@ -546,10 +498,11 @@ footer .sos-line{width:100%;color:var(--coralInk);font-weight:600;text-transform
 
 <!-- ANONIMATO -->
 <section class="block" style="padding-top:0">
-  <div class="wrap">
+  <div class="wrap split rev">
+    <div class="txt">
     <div class="eyebrow c-lilac rv">Anonimato por construção</div>
     <h2 class="big rv d1" style="margin-top:14px"><span class="lt">Ninguém sabe</span><br>que foi você</h2>
-    <div class="trio">
+    <div class="cutcol">
       <div class="xc pane rv d1" style="--a:var(--turq)"><button class="xc-h" aria-expanded="false" aria-controls="xc-criador"><span class="ic" style="background:color-mix(in srgb,var(--turq) 22%,#fff);color:var(--turqInk)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg></span><h3>Nem o criador vê</h3><span class="pm"></span></button>
         <div class="xp" id="xc-criador"><div><div class="xp-in"><p class="st">O banco guarda o relato sem expor quem escreveu. Nem quem administra o app consegue ligar texto a pessoa.</p></div></div></div></div>
       <div class="xc pane rv d2" style="--a:var(--lilac)"><button class="xc-h" aria-expanded="false" aria-controls="xc-perfil"><span class="ic" style="background:color-mix(in srgb,var(--lilac) 22%,#fff);color:var(--lilacInk)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v2"/><circle cx="10" cy="7" r="4"/><path d="M22 2 16 8"/><path d="M16 2l6 6"/></svg></span><h3>Sem perfil público</h3><span class="pm"></span></button>
@@ -557,12 +510,15 @@ footer .sos-line{width:100%;color:var(--coralInk);font-weight:600;text-transform
       <div class="xc pane rv d3" style="--a:var(--coral)"><button class="xc-h" aria-expanded="false" aria-controls="xc-lista"><span class="ic" style="background:color-mix(in srgb,var(--coral) 20%,#fff);color:var(--coralInk)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s7-6.2 7-12a7 7 0 0 0-14 0c0 5.8 7 12 7 12z"/><path d="M4 4l16 16"/></svg></span><h3>Sem lista de "lugar LGBT"</h3><span class="pm"></span></button>
         <div class="xp" id="xc-lista"><div><div class="xp-in"><p class="st">Lista pública vira alvo. O selo vem da avaliação da comunidade, não de um rótulo na vitrine.</p></div></div></div></div>
     </div>
+    </div>
+    <figure class="cut deal" aria-hidden="true"><img class="float" src="telas3d/08-apoio.webp" alt="" width="1000" height="1351" loading="lazy"></figure>
   </div>
 </section>
 
 <!-- CIDADES -->
 <section class="block" style="padding-top:0">
-  <div class="wrap">
+  <div class="wrap split">
+    <div class="txt" style="gap:0">
     <div class="eyebrow c-orange rv">Onde começa</div>
     <h2 class="big rv d1" style="margin-top:14px"><span class="lt">O Brasil todo</span><br>no mapa</h2>
     <p class="lead rv d2" style="margin-top:20px">A Irisa funciona em qualquer cidade do país: você cadastra o lugar, irisa e registra relato onde estiver. A gente começa por estas, onde os lugares já chegam no mapa, do café da esquina ao hotel. Falta a opinião de quem frequenta.</p>
@@ -578,6 +534,8 @@ footer .sos-line{width:100%;color:var(--coralInk);font-weight:600;text-transform
     </div>
     <p class="rv note" style="margin-top:18px">Sua cidade não está aqui? Ela já está no mapa. As primeiras avaliações são as que fazem o app existir nela.</p>
   </div>
+    <figure class="cut deal" aria-hidden="true"><img class="float" src="telas3d/04-mapa.webp" alt="" width="940" height="1202" loading="lazy"></figure>
+  </div>
 </section>
 
 <!-- BAIXAR -->
@@ -591,7 +549,7 @@ footer .sos-line{width:100%;color:var(--coralInk);font-weight:600;text-transform
         <h3><span class="lt">Já está na</span><br>App Store</h3>
         <p class="lead">Baixe, entre com Apple, Google ou e-mail e diga quanta cor tem o último lugar onde você foi.</p>
         <div class="btns"><a class="btn night store" href="https://apps.apple.com/br/app/irisa/id6816761128" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M16.37 1.43c0 1.14-.42 2.2-1.25 3.06-.9.93-1.98 1.47-3.16 1.38a3.6 3.6 0 0 1-.03-.43c0-1.1.48-2.27 1.33-3.14.42-.44.96-.8 1.6-1.09.65-.28 1.26-.44 1.83-.47.02.23.03.46.03.69zm4.3 15.6c-.35.82-.77 1.57-1.25 2.26-.66.94-1.2 1.6-1.61 1.96-.65.6-1.34.9-2.09.92-.53 0-1.18-.15-1.93-.46-.75-.31-1.45-.46-2.08-.46-.66 0-1.37.15-2.13.46-.76.31-1.37.47-1.84.49-.71.03-1.42-.28-2.13-.95-.45-.39-1.02-1.07-1.69-2.03-.72-1.03-1.32-2.22-1.78-3.58-.5-1.47-.75-2.89-.75-4.27 0-1.58.34-2.94 1.02-4.08a6 6 0 0 1 2.14-2.17 5.76 5.76 0 0 1 2.9-.82c.56 0 1.3.17 2.22.52.92.35 1.5.52 1.76.52.2 0 .86-.2 1.98-.62 1.06-.38 1.95-.54 2.68-.48 1.98.16 3.47.94 4.46 2.35-1.77 1.07-2.65 2.58-2.63 4.51.02 1.51.56 2.76 1.63 3.75.48.46 1.02.81 1.62 1.06-.13.38-.27.74-.41 1.09z"/></svg><span><small>Baixar na</small><span>App Store</span></span></a></div>
-        <div class="ph" aria-hidden="true"><img src="telas/01-inicio.webp" alt="" width="600" height="1346" loading="lazy"></div>
+        <figure class="cut deal" aria-hidden="true"><img class="float" src="telas3d/03-lugares.webp" alt="" width="940" height="1180" loading="lazy"></figure>
       </div>
       <div class="pane rv d2" id="testar">
         <div class="eyebrow">Android · em fase de testes</div>
