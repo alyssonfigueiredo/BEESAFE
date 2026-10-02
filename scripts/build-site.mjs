@@ -74,9 +74,9 @@ const pubKey = process.env.SUPABASE_PUBLISHABLE_KEY ?? "";
 if (pubKey && !pubKey.startsWith("sb_publishable_")) throw new Error("SUPABASE_PUBLISHABLE_KEY precisa ser a chave sb_publishable_ (nunca a secreta)");
 writeFileSync("site/index.html", readFileSync("docs/index.html", "utf8").replace("__SUPABASE_PUBLISHABLE_KEY__", pubKey || "__SUPABASE_PUBLISHABLE_KEY__"));
 copyFileSync("docs/og.png", "site/og.png");
-// Telas reais do app usadas na landing (docs/telas/*.webp, 600 px de largura).
-mkdirSync("site/telas", { recursive: true });
-for (const f of readdirSync("docs/telas")) copyFileSync(`docs/telas/${f}`, `site/telas/${f}`);
+// Celulares 3D com as telas reais do app, recortados da arte com a fita (docs/telas3d/*.webp).
+mkdirSync("site/telas3d", { recursive: true });
+for (const f of readdirSync("docs/telas3d")) copyFileSync(`docs/telas3d/${f}`, `site/telas3d/${f}`);
 // Domínio próprio (registro.br): appirisa.com.br, apontado por A/AAAA pro GitHub Pages.
 writeFileSync("site/CNAME", "appirisa.com.br\n");
 console.log("site/ gerado");
