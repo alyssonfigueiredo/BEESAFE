@@ -29,7 +29,6 @@ function RootNavigator() {
   if (loading) return null;
   return (
     <Stack screenOptions={{ headerShown: false, contentStyle: { backgroundColor: colors.paper } }}>
-      <Stack.Screen name="auth/callback" />
       <Stack.Protected guard={!!session}>
         <Stack.Screen name="(tabs)" />
         <Stack.Screen name="lugar/[id]" />
@@ -38,6 +37,9 @@ function RootNavigator() {
       <Stack.Protected guard={!session}>
         <Stack.Screen name="(auth)" />
       </Stack.Protected>
+      {/* Fora dos guards (o retorno do login chega sem sessão), mas por último: a primeira tela da
+          lista vira a rota inicial, e esta nunca pode ser a de abertura do app. */}
+      <Stack.Screen name="auth/callback" />
     </Stack>
   );
 }
