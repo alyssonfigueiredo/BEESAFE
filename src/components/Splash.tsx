@@ -35,7 +35,7 @@ const SWEEP_END = (-55 * Math.PI) / 180;
 const FLOOD = 3000; // a varredura grande começa a pintar a tela
 const SWEEP = 1600; // uma volta da varredura grande
 const SAIDA = 5500; // as cores começam a sair
-const END = 7200; // a saída termina em SAIDA + SWEEP; o resto é só a folga do último gomo // o splash some
+const END = 6500; // o app já aparece por baixo enquanto as últimas cores saem // o splash some
 const BIG = 120; // gomos da tela
 const LOGO = 132;
 const RING_R = (48 / 100) * LOGO; // raio externo do anel, em px
@@ -118,7 +118,8 @@ function BigSlice({
 }) {
   // Perto do fim, tudo acende de uma vez: sem fresta sem cor entre a linha e o ponto de partida.
   const props = useAnimatedProps(() => {
-    const entrou = fin.value >= 0.985 || fin.value * 360 + 3 >= theta;
+    // `fin > 0`: antes da varredura começar, nenhum gomo aparece (o primeiro, vermelho, ficava parado).
+    const entrou = fin.value > 0 && (fin.value >= 0.985 || fin.value * 360 + 3 >= theta);
     const saiu = fout.value > 0 && fout.value * 360 >= theta;
     return { opacity: entrou && !saiu ? 1 : 0 };
   });
@@ -188,7 +189,7 @@ export function Splash({ onDone }: { onDone: () => void }) {
     extra.value = withDelay(FLOOD, withTiming(0, { duration: 300 }));
     lift.value = withDelay(
       END,
-      withTiming(1, { duration: 250, easing: Easing.bezier(0.4, 0, 0.2, 1) }, () =>
+      withTiming(1, { duration: 700, easing: Easing.bezier(0.4, 0, 0.2, 1) }, () =>
         runOnJS(setGone)(true),
       ),
     );
@@ -207,7 +208,7 @@ export function Splash({ onDone }: { onDone: () => void }) {
   const shineProps = useAnimatedProps(() => ({ r: 2.86 * pupil.value }));
   // opacidade e subida na linha; o espaçamento que fecha, em cada parte do nome
   const wordStyle = useAnimatedStyle(() => ({
-    opacity: word.value * (1 - Math.min(1, fout.value * 5)),
+    opacity: word.value,
     transform: [{ translateY: 6 * (1 - word.value) }],
   }));
   const spacing = useAnimatedStyle(() => ({ letterSpacing: 26 * (0.6 - 0.26 * word.value) }));
@@ -276,10 +277,6 @@ export function Splash({ onDone }: { onDone: () => void }) {
       grad: { x1: gx, y1: gy, x2: ex, y2: ey },
     };
   }, [center, win.width, win.height]);
-  // Na saída, a varredura revela o app que está por baixo (nada de tela branca no meio): o fundo
-  // de papel do splash e a marca saem de cena assim que ela começa.
-  const bgStyle = useAnimatedStyle(() => ({ opacity: fout.value > 0 ? 0 : 1 }));
-  const markOut = useAnimatedStyle(() => ({ opacity: 1 - Math.min(1, fout.value * 5) }));
   const rootStyle = useAnimatedStyle(() => ({
     opacity: 1 - lift.value,
     transform: [{ scale: 1 + 0.04 * lift.value }],
@@ -289,9 +286,7 @@ export function Splash({ onDone }: { onDone: () => void }) {
 
   return (
     <Animated.View style={[StyleSheet.absoluteFill, styles.root, rootStyle]} pointerEvents="none">
-      <Animated.View pointerEvents="none" style={[StyleSheet.absoluteFill, bgStyle]}>
-        <Aurora />
-      </Animated.View>
+      <Aurora />
       {big && (
         <View
           pointerEvents="none"
@@ -342,8 +337,8 @@ export function Splash({ onDone }: { onDone: () => void }) {
           </Svg>
         </Animated.View>
       )}
-      <Animated.View
-        style={[styles.logo, markOut]}
+      <View
+        style={styles.logo}
         onLayout={(e) => {
           const { x, y, width, height } = e.nativeEvent.layout;
           setCenter({ x: x + width / 2, y: y + height / 2 });
@@ -389,7 +384,7 @@ export function Splash({ onDone }: { onDone: () => void }) {
           <AC cx={50} cy={50} fill={mark.pupil} animatedProps={pupilProps} />
           <AC cx={46.1} cy={45.6} fill="#FFFFFF" animatedProps={shineProps} />
         </Svg>
-      </Animated.View>
+      </View>
       {/* Duas partes para o A amarelo poder ficar branco junto com o resto na versão negativa. */}
       <Animated.View style={[styles.wordRow, wordStyle]}>
         <Animated.Text style={[styles.word, spacing, irisStyle]}>IRIS</Animated.Text>
