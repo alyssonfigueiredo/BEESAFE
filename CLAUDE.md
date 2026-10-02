@@ -92,17 +92,9 @@ Nome: **Irisa** (INPI livre; @appirisa livre). Bundle id Android `br.com.irisa.a
   **Landing refeita em 01/10/2026 na estética nova** (a mesma do app e do Instagram, `base.css` da skill
   irisa-posts): papel com as quatro manchas de cor, cartões de vidro, Oswald 700 caixa alta com parte
   leve em 400 e linhas quebradas à mão, botões em cápsula, `#radarmin` na marca. Sem seção escura
-  inteira: o único bloco escuro é o cartão da emergência. Grid de 1440 px; links externos (App Store,
-  Instagram, apresentação, PDF) abrem em outra aba. **Celulares (02/10/2026):** os oito são recortes das
-  duas artes 3D da Meta AI que ele mandou (celulares inclinados sobre a fita arco-íris, fundo
-  transparente), com o mesmo processo dos prints da loja: as telas inventadas pela IA foram trocadas
-  pelas telas reais do app (perspectiva por cv2), os objetos que ficam na frente (xícara, pinos, chips,
-  cartão do 190, coração) voltam da arte original, e os três cartões flutuantes com texto errado
-  (estrelas, "veitica refesas") foram redesenhados em HTML e encaixados. A tela da emergência foi
-  montada com um vão onde o cartão do 190 "saiu". Saída em `docs/telas3d/*.webp` (2×, fita sumindo
-  nas bordas), copiada pelo `build-site.mjs`. Uma tela por seção: Início no hero, Lugar no Irisar,
-  Registrar, Bairro na regra, Emergência no cartão escuro, Apoio no anonimato, Mapa nas cidades,
-  Lugares no cartão do iPhone. **iOS está na App Store** (https://apps.apple.com/br/app/irisa/id6816761128): botão
+  inteira: o único bloco escuro é o cartão da emergência. As telas são as reais do app (renders do
+  protótipo, `docs/telas/*.webp`, copiadas pelo `build-site.mjs`), em celulares inclinados que entram
+  girando. **iOS está na App Store** (https://apps.apple.com/br/app/irisa/id6816761128): botão
   "Baixar na App Store" no hero, no bloco Baixar e no rodapé; o formulário de teste agora é só do
   Android (`p_platform` sempre `android`), e `#testar` continua existindo para links antigos.
   Seção de cidades diz "O Brasil todo no mapa" (funciona em qualquer cidade) e lista as sete como "Começando por". Nada de conteúdo saiu: o detalhe segue atrás dos botões que abrem.
