@@ -1,10 +1,12 @@
 import { format, parseISO } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { Link } from "expo-router";
+import { Ban, LogOut, ShieldCheck, User, type LucideIcon } from "lucide-react-native";
 import { useState } from "react";
 import { Alert, Pressable, ScrollView, Text, TextInput, View } from "react-native";
 
 import { Aurora } from "@/components/Aurora";
+import { RainbowLine } from "@/components/Rainbow";
 import { useScreenInsets } from "@/hooks/useScreenInsets";
 import { CityPicker } from "@/components/CityPicker";
 import { useBlockedUsers, useUnblockUser } from "@/hooks/useBlocks";
@@ -13,6 +15,7 @@ import { authMessage } from "@/lib/authErrors";
 import { supabase } from "@/lib/supabase";
 import { useAuth } from "@/providers/AuthProvider";
 import { useCity } from "@/providers/CityProvider";
+import { onLight } from "@/theme/domain";
 import { colors, shadow } from "@/theme/tokens";
 
 export default function PerfilScreen() {
@@ -58,6 +61,11 @@ export default function PerfilScreen() {
     );
   }
 
+  const shown = value.trim() || "Anônimo";
+  const mail = session?.user.email?.endsWith("privaterelay.appleid.com")
+    ? "Conta Apple (e-mail oculto)"
+    : session?.user.email;
+
   return (
     <View className="flex-1">
       <Aurora />
@@ -67,22 +75,54 @@ export default function PerfilScreen() {
         contentContainerStyle={insets}
         keyboardShouldPersistTaps="handled"
       >
-        <View>
-          <Text className="font-display text-2xl uppercase tracking-wide text-ink">Perfil</Text>
-          <Text className="font-body text-sm text-dim">
-            {session?.user.email?.endsWith("privaterelay.appleid.com")
-              ? "Conta Apple (e-mail oculto)"
-              : session?.user.email}
-          </Text>
-          {profile?.role !== "user" && profile && (
-            <Text className="font-body-bold text-xs uppercase tracking-widest text-lilacInk">
-              {profile.role === "admin" ? "Administração" : "Moderação"}
-            </Text>
-          )}
+        {/* Cartão escuro, como o do Início: a pessoa, sem nome real, só o apelido. */}
+        <View
+          className="gap-3 rounded-[28px] p-5"
+          style={[{ backgroundColor: colors.night }, shadow.lift]}
+        >
+          <View className="flex-row items-center gap-3">
+            <View
+              className="h-14 w-14 items-center justify-center rounded-2xl"
+              style={{ backgroundColor: colors.lilac }}
+            >
+              <Text className="font-display text-2xl uppercase text-night">
+                {shown.charAt(0)}
+              </Text>
+            </View>
+            <View className="min-w-0 flex-1">
+              <Text className="font-display text-2xl uppercase tracking-wide text-paper" numberOfLines={1}>
+                {shown}
+              </Text>
+              <Text className="font-body text-sm text-paper/60" numberOfLines={1}>
+                {mail}
+              </Text>
+            </View>
+          </View>
+          <RainbowLine />
+          <View className="flex-row flex-wrap items-center gap-2">
+            {city && (
+              <View
+                className="rounded-full px-3 py-1"
+                style={{ backgroundColor: "rgba(255,255,255,0.10)" }}
+              >
+                <Text className="font-body-medium text-xs text-paper/80">
+                  {city.name} · {city.state}
+                </Text>
+              </View>
+            )}
+            {profile && profile.role !== "user" && (
+              <View className="rounded-full px-3 py-1" style={{ backgroundColor: colors.lilac }}>
+                <Text className="font-body-bold text-xs text-night">
+                  {profile.role === "admin" ? "Administração" : "Moderação"}
+                </Text>
+              </View>
+            )}
+          </View>
         </View>
 
         <View className="gap-3 rounded-3xl bg-surface p-4" style={shadow.card}>
-          <Text className="font-body-bold text-xs text-muted">
+          <Header icon={User} color={colors.turquoise} title="Seu perfil" />
+          <Text className="font-body-medium text-xs text-muted">
             Apelido no mural e nas avaliações
           </Text>
           <TextInput
@@ -93,12 +133,12 @@ export default function PerfilScreen() {
             value={value}
             onChangeText={setNickname}
           />
-          <Text className="font-body-bold text-xs text-muted">Cidade padrão</Text>
+          <Text className="font-body-medium text-xs text-muted">Cidade padrão</Text>
           <CityPicker />
           <Pressable
             disabled={update.isPending}
             onPress={save}
-            className="items-center rounded-full bg-turquoise py-3 active:opacity-80 disabled:opacity-50"
+            className="h-12 items-center justify-center rounded-full bg-turquoise active:opacity-80 disabled:opacity-50"
             style={shadow.turquoise}
           >
             <Text className="font-body-bold text-base text-night">Salvar</Text>
@@ -106,7 +146,7 @@ export default function PerfilScreen() {
         </View>
 
         <View className="gap-2 rounded-3xl bg-surface p-4" style={shadow.card}>
-          <Text className="font-body-bold text-xs text-muted">Privacidade</Text>
+          <Header icon={ShieldCheck} color={colors.yellow} title="Privacidade" />
           <Text className="font-body text-sm text-muted">
             Relatos e mensagens nunca mostram seu nome ou e-mail. Só o apelido que você escolher
             aparece no mural e nas avaliações de lugares.
@@ -114,7 +154,7 @@ export default function PerfilScreen() {
         </View>
 
         <View className="gap-2 rounded-3xl bg-surface p-4" style={shadow.card}>
-          <Text className="font-body-bold text-xs text-muted">Pessoas bloqueadas</Text>
+          <Header icon={Ban} color={colors.coral} title="Pessoas bloqueadas" />
           {blocked.length === 0 ? (
             <Text className="font-body text-sm text-muted">
               Ninguém. Para bloquear alguém, toque no ícone de bloqueio em uma mensagem do mural ou
@@ -150,7 +190,7 @@ export default function PerfilScreen() {
         {profile && profile.role !== "user" && (
           <Link href="/moderacao" asChild>
             <Pressable
-              className="items-center rounded-full bg-lilac py-3 active:opacity-80"
+              className="h-12 items-center justify-center rounded-full bg-lilac active:opacity-80"
               style={shadow.lilac}
             >
               <Text className="font-body-bold text-base text-night">Fila de moderação</Text>
@@ -159,14 +199,30 @@ export default function PerfilScreen() {
         )}
         <Pressable
           onPress={() => supabase.auth.signOut()}
-          className="items-center rounded-full bg-subtle py-3 active:opacity-80"
+          className="h-12 flex-row items-center justify-center gap-2 rounded-full bg-subtle active:opacity-80"
         >
+          <LogOut color={colors.ink} size={18} />
           <Text className="font-body-bold text-base text-ink">Sair</Text>
         </Pressable>
         <Pressable onPress={confirmDelete} className="items-center py-3 active:opacity-80">
           <Text className="font-body text-sm text-coralInk">Excluir minha conta</Text>
         </Pressable>
       </ScrollView>
+    </View>
+  );
+}
+
+/** Título de cartão: ícone tonal e rótulo. */
+function Header({ icon: Icon, color, title }: { icon: LucideIcon; color: string; title: string }) {
+  return (
+    <View className="flex-row items-center gap-2">
+      <View
+        className="h-8 w-8 items-center justify-center rounded-xl"
+        style={{ backgroundColor: color + "33" }}
+      >
+        <Icon color={onLight(color)} size={16} />
+      </View>
+      <Text className="font-body-bold text-base text-ink">{title}</Text>
     </View>
   );
 }
