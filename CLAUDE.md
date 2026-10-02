@@ -157,7 +157,10 @@ Nome: **Irisa** (INPI livre; @appirisa livre). Bundle id Android `br.com.irisa.a
   não tem nível 10 lá e o nível 9 deu timeout no Overpass.
   **Grande João Pessoa em 02/10/2026** (mesmo caminho de Itapeva): Bayeux 89, Santa Rita 105 e Conde 93
   (Jacumã, Carapibus, Tabatinga, Coqueirinho, Tambaba — quase metade é pousada). Tirados nome repetido na
-  mesma cidade e o que não é lugar (depósito de bebidas, xerox, residencial, hotel de Campina Grande). Sem bairro.
+  mesma cidade e o que não é lugar (depósito de bebidas, xerox, residencial, hotel de Campina Grande).
+  Bairros do OSM no mesmo dia (polígonos simplificados a ~10 m e gravados por `upsert_neighborhoods` via SQL):
+  Bayeux 12 (84 de 89 lugares com bairro), Santa Rita 19 (94 de 105), Conde só Jacumã (27 de 93) — o resto
+  do litoral de Conde não tem bairro no OSM, e o distrito "Conde" do nível 9 cobria a costa toda, então ficou fora.
   No workflow Importar cidade o Overture é o padrão e o OSM ficou desligado. Fotos: cada lugar novo entra
   na fila do Google (150/dia), então uma capital inteira leva meses de cota — aceito, cai no ícone.
   **Fila de fotos por relevância (migration 17, 25/09/2026):** `places.prominence` (0–100 = confiança do
