@@ -114,6 +114,12 @@ const glass = {
 const tinted = (hex) => ({ boxShadow: `0 6px 18px ${hex}48` });
 const shadow = {
   card: { boxShadow: "0 2px 4px rgba(20,24,41,0.03), 0 12px 32px rgba(20,24,41,0.06)" },
+  // Campo de texto: cápsula branca com fio e sombra suave; em foco, contorno turquesa.
+  field: {
+    boxShadow:
+      "0 0 0 1px rgba(20,24,41,0.07), 0 1px 2px rgba(20,24,41,0.03), 0 8px 18px rgba(20,24,41,0.04)",
+  },
+  fieldFocus: { boxShadow: `0 0 0 1.5px ${colors.turquoise}, 0 8px 22px ${colors.turquoise}33` },
   lift: { boxShadow: "0 2px 4px rgba(20,24,41,0.08), 0 14px 36px rgba(20,24,41,0.16)" },
   turquoise: tinted(colors.turquoise),
   coral: tinted(colors.coral),

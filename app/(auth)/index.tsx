@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Lock, Mail } from "lucide-react-native";
+import { ArrowRight, Eye, EyeOff, Lock, Mail } from "lucide-react-native";
 import {
   Alert,
   KeyboardAvoidingView,
@@ -7,13 +7,13 @@ import {
   Pressable,
   ScrollView,
   Text,
-  TextInput,
   View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 import { Aurora } from "@/components/Aurora";
 import { AppleLogo, GoogleG } from "@/components/BrandIcons";
+import { Field } from "@/components/Field";
 import { Logo } from "@/components/Logo";
 import { authMessage } from "@/lib/authErrors";
 import { isAppleSignInAvailable, signInWithApple, signInWithGoogle } from "@/lib/socialAuth";
@@ -24,6 +24,7 @@ export default function LoginScreen() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [mode, setMode] = useState<"login" | "signup">("login");
+  const [showPw, setShowPw] = useState(false);
   const [busy, setBusy] = useState(false);
   const [appleAvailable, setAppleAvailable] = useState(false);
 
@@ -84,29 +85,29 @@ export default function LoginScreen() {
           behavior={Platform.OS === "ios" ? "padding" : undefined}
         >
           <ScrollView
-            contentContainerClassName="flex-grow justify-center gap-6 px-5 py-6"
+            contentContainerClassName="flex-grow justify-center gap-6 px-6 py-8"
             keyboardShouldPersistTaps="handled"
             showsVerticalScrollIndicator={false}
           >
-            <View className="gap-4">
+            <View className="gap-4 px-1">
               <Logo size="lg" />
-              <Text className="font-display text-3xl uppercase leading-9 tracking-wide text-ink">
-                Entre para dar cor ao mapa
+              <Text className="font-display text-[25px] uppercase leading-[30px] tracking-wide text-ink">
+                {"Entre para dar\ncor ao mapa"}
               </Text>
-              <Text className="font-body text-base text-muted">
+              <Text className="font-body text-[14.5px] leading-[21px] text-muted">
                 Sua identidade nunca aparece. O cadastro existe só para evitar relatos falsos.
               </Text>
             </View>
 
-            <View className="gap-3 rounded-[28px] bg-surface p-5" style={shadow.card}>
+            <View className="gap-3.5 rounded-[30px] bg-surface px-5 py-6" style={shadow.card}>
               <Pressable
                 disabled={busy}
                 onPress={() => run(signInWithGoogle)}
                 className="h-12 flex-row items-center justify-center gap-3 rounded-full bg-solid active:opacity-80 disabled:opacity-50"
-                style={shadow.card}
+                style={shadow.field}
               >
                 <GoogleG size={20} />
-                <Text className="font-body-bold text-base text-ink">Entrar com Google</Text>
+                <Text className="font-body-bold text-[15px] text-ink">Entrar com Google</Text>
               </Pressable>
               {appleAvailable && Platform.OS === "ios" && (
                 <Pressable
@@ -115,55 +116,64 @@ export default function LoginScreen() {
                   className="h-12 flex-row items-center justify-center gap-3 rounded-full bg-black active:opacity-80 disabled:opacity-50"
                 >
                   <AppleLogo size={20} />
-                  <Text className="font-body-bold text-base text-white">Entrar com Apple</Text>
+                  <Text className="font-body-bold text-[15px] text-white">Entrar com Apple</Text>
                 </Pressable>
               )}
 
               <View className="flex-row items-center gap-3 py-1">
-                <View className="h-px flex-1 bg-border" />
+                <View className="flex-1 border-t border-dashed border-ink/15" />
                 <Text className="font-body-medium text-[11px] uppercase tracking-wider text-dim">
                   ou com e-mail
                 </Text>
-                <View className="h-px flex-1 bg-border" />
+                <View className="flex-1 border-t border-dashed border-ink/15" />
               </View>
 
-              <View className="flex-row items-center gap-3 rounded-2xl bg-subtle px-4">
-                <Mail color={colors.dim} size={18} />
-                <TextInput
-                  className="flex-1 py-3 font-body text-base text-ink"
-                  placeholder="E-mail"
-                  placeholderTextColor={colors.dim}
-                  autoCapitalize="none"
-                  autoCorrect={false}
-                  autoComplete="email"
-                  textContentType="emailAddress"
-                  keyboardType="email-address"
-                  value={email}
-                  onChangeText={setEmail}
-                />
-              </View>
-              <View className="flex-row items-center gap-3 rounded-2xl bg-subtle px-4">
-                <Lock color={colors.dim} size={18} />
-                <TextInput
-                  className="flex-1 py-3 font-body text-base text-ink"
-                  placeholder="Senha"
-                  placeholderTextColor={colors.dim}
-                  secureTextEntry
-                  autoComplete={mode === "login" ? "current-password" : "new-password"}
-                  textContentType={mode === "login" ? "password" : "newPassword"}
-                  value={password}
-                  onChangeText={setPassword}
-                />
-              </View>
+              <Field
+                label="E-mail"
+                icon={Mail}
+                placeholder="voce@email.com"
+                autoCapitalize="none"
+                autoCorrect={false}
+                autoComplete="email"
+                textContentType="emailAddress"
+                keyboardType="email-address"
+                value={email}
+                onChangeText={setEmail}
+              />
+              <Field
+                label="Senha"
+                icon={Lock}
+                placeholder="Sua senha"
+                secureTextEntry={!showPw}
+                autoComplete={mode === "login" ? "current-password" : "new-password"}
+                textContentType={mode === "login" ? "password" : "newPassword"}
+                value={password}
+                onChangeText={setPassword}
+                right={
+                  <Pressable onPress={() => setShowPw(!showPw)} hitSlop={10}>
+                    {showPw ? (
+                      <EyeOff color={colors.dim} size={18} strokeWidth={1.75} />
+                    ) : (
+                      <Eye color={colors.dim} size={18} strokeWidth={1.75} />
+                    )}
+                  </Pressable>
+                }
+              />
               <Pressable
                 disabled={busy}
                 onPress={submitEmail}
-                className="h-12 items-center justify-center rounded-full bg-coral active:opacity-80 disabled:opacity-50"
+                className="mt-1 h-12 flex-row items-center justify-center rounded-full bg-coral active:opacity-80 disabled:opacity-50"
                 style={shadow.coral}
               >
-                <Text className="font-body-bold text-base text-night">
+                <Text className="font-body-bold text-[15px] text-night">
                   {mode === "login" ? "Entrar" : "Criar conta"}
                 </Text>
+                <View
+                  className="absolute right-[5px] h-[38px] w-[38px] items-center justify-center rounded-full"
+                  style={{ backgroundColor: "rgba(20,24,41,0.10)" }}
+                >
+                  <ArrowRight color={colors.night} size={18} strokeWidth={1.75} />
+                </View>
               </Pressable>
             </View>
 
