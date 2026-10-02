@@ -151,6 +151,10 @@ Nome: **Irisa** (INPI livre; @appirisa livre). Bundle id Android `br.com.irisa.a
   (lugares ficam sem bairro, como em São Luís e Palmas). Nível 9 do OSM lá é o distrito inteiro ("Rio Branco",
   apagado em 30/09); o nível 10 deu Overpass 504 duas vezes — tentar de novo em outro horário e, se entrar,
   rodar o UPDATE de reprocessamento de `places` do supabase/README.md.
+  **Itapeva/SP (3522406) em 02/10/2026:** 256 lugares do Overture, inseridos pela sessão cloud via SQL
+  (sem chave de serviço lá: o script rodou com `--simular` e despejou os candidatos). Fora 5 que não são
+  lugar (igreja marcada como balada, academia, salão de beleza, motorista de Uber, banda). Sem bairro: o OSM
+  não tem nível 10 lá e o nível 9 deu timeout no Overpass.
   No workflow Importar cidade o Overture é o padrão e o OSM ficou desligado. Fotos: cada lugar novo entra
   na fila do Google (150/dia), então uma capital inteira leva meses de cota — aceito, cai no ícone.
   **Fila de fotos por relevância (migration 17, 25/09/2026):** `places.prominence` (0–100 = confiança do
