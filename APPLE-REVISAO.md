@@ -121,7 +121,7 @@ the app. The project is independent and free of charge.
   row-level security, realtime, and Edge Functions (Apple token revocation on account
   deletion). All user data lives here.
 - Sign in with Apple (native) and Google OAuth via Supabase (system browser, PKCE).
-- MapLibre with Esri "Light Gray Canvas" raster tiles for the base map (no account needed).
+- MapLibre with OpenFreeMap vector tiles (OpenStreetMap data, no account needed).
 - Google Places API (New): only to fetch one public photo per place, by a server-side script;
   the app just displays the resulting photo URL. No user data is sent to Google.
 - Place data (name, category, coordinates, address) is imported from open databases:
