@@ -34,8 +34,8 @@ const SWEEP_END = (-55 * Math.PI) / 180;
 // Linha do tempo (ms), a mesma do vídeo.
 const FLOOD = 3000; // a varredura grande começa a pintar a tela
 const SWEEP = 1600; // uma volta da varredura grande
-const SAIDA = 5500; // as cores começam a sair
-const END = 7250; // o splash some
+const SAIDA = 6000; // as cores começam a sair
+const END = 7750; // o splash some
 const BIG = 120; // gomos da tela
 const LOGO = 132;
 const RING_R = (48 / 100) * LOGO; // raio externo do anel, em px
@@ -116,9 +116,12 @@ function BigSlice({
   fin: SharedValue<number>;
   fout: SharedValue<number>;
 }) {
-  const props = useAnimatedProps(() => ({
-    opacity: fin.value * 360 >= theta && fout.value * 360 < theta ? 1 : 0,
-  }));
+  // Perto do fim, tudo acende de uma vez: sem fresta sem cor entre a linha e o ponto de partida.
+  const props = useAnimatedProps(() => {
+    const entrou = fin.value >= 0.985 || fin.value * 360 + 3 >= theta;
+    const saiu = fout.value > 0 && fout.value * 360 >= theta;
+    return { opacity: entrou && !saiu ? 1 : 0 };
+  });
   return <AP d={d} fill={fill} animatedProps={props} />;
 }
 
