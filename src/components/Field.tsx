@@ -33,6 +33,7 @@ export function FieldShell({
         style={focused ? shadow.fieldFocus : shadow.field}
       >
         <IconDot icon={icon} />
+        {/* Centra na vertical o que não é TextInput (ex.: o seletor de cidade). */}
         {children}
       </View>
     </View>

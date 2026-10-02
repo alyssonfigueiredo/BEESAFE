@@ -156,7 +156,9 @@ export default function PerfilScreen() {
             onChangeText={setNickname}
           />
           <FieldShell label="Cidade padrão" icon={MapPin}>
-            <CityPicker />
+            <View className="h-full flex-1 justify-center">
+              <CityPicker />
+            </View>
           </FieldShell>
           <Pressable
             disabled={update.isPending}
