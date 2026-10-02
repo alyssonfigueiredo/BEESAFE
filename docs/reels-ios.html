@@ -68,45 +68,75 @@ body{display:flex;align-items:center;justify-content:center;height:100vh;font-fa
 .conf{position:absolute;width:18px;height:18px;border-radius:4px}
 .handle{display:flex;align-items:center;gap:26px;font-family:var(--wordmark);font-weight:500;letter-spacing:.12em;font-size:84px;line-height:1;color:var(--ink)}
 
-/* --- aparelho e telas (só deste reels) --- */
-.phone{position:relative;width:520px;height:900px;border-radius:66px;background:var(--night);padding:15px;box-shadow:0 34px 90px rgba(20,24,41,.30)}
-.phone .scr{position:relative;width:100%;height:100%;border-radius:52px;background:var(--paper);overflow:hidden;display:flex;flex-direction:column;align-items:center;padding:74px 34px 34px}
-.phone .notch{position:absolute;top:20px;left:50%;transform:translateX(-50%);width:148px;height:32px;border-radius:16px;background:var(--night);z-index:3}
-.phone .bgp{position:absolute;inset:0;background:
+/* ---- vocabulário de movimento do site (docs/index.html) ---- */
+:root{--ease:cubic-bezier(.2,.7,.2,1);--spring:cubic-bezier(.3,1.4,.4,1);
+  --rbv:linear-gradient(180deg,var(--coral),var(--orange),var(--yellow),var(--turq),var(--blue),var(--lilac))}
+
+/* aparelho, com a mesma proporção e sombra do site */
+.ph{--w:520px;--rot:0deg;position:relative;width:var(--w);aspect-ratio:1107/2484;flex:none;padding:calc(var(--w)*.035);border-radius:calc(var(--w)*.16);background:var(--night);box-shadow:0 40px 80px -30px rgba(20,24,41,.5),0 12px 24px -12px rgba(20,24,41,.25),inset 0 0 0 1.5px #3A4060;transform:rotate(var(--rot))}
+.ph .scr{position:relative;width:100%;height:100%;border-radius:calc(var(--w)*.13);background:var(--paper);overflow:hidden;display:flex;flex-direction:column;align-items:center;padding:calc(var(--w)*.14) calc(var(--w)*.065) calc(var(--w)*.05)}
+.ph .notch{position:absolute;top:calc(var(--w)*.045);left:50%;transform:translateX(-50%);width:calc(var(--w)*.3);height:calc(var(--w)*.065);border-radius:999px;background:var(--night);z-index:4}
+.ph .bgp{position:absolute;inset:0;background:
   radial-gradient(60% 30% at -8% 0%,color-mix(in srgb,var(--turq) 40%,transparent),transparent 62%),
   radial-gradient(55% 28% at 108% 6%,color-mix(in srgb,var(--coral) 32%,transparent),transparent 62%),
   radial-gradient(55% 30% at 106% 100%,color-mix(in srgb,var(--lilac) 38%,transparent),transparent 62%)}
+.stage{position:relative;width:1080px;height:900px;display:flex;align-items:center;justify-content:center}
+.stage .ph{position:absolute}
+.stage .p1{--w:320px;--rot:-11deg;transform:translateX(-330px) rotate(var(--rot));z-index:1}
+.stage .p2{--w:368px;--rot:2deg;z-index:3}
+.stage .p3{--w:320px;--rot:12deg;transform:translateX(330px) rotate(var(--rot));z-index:2}
+
+/* cartão de vidro que abre como os blocos do site */
 .card{position:relative;width:100%;border-radius:var(--r-lg);background:var(--pane);box-shadow:var(--shadow-card),var(--glass-inset);-webkit-backdrop-filter:blur(18px) saturate(1.4);backdrop-filter:blur(18px) saturate(1.4);padding:28px}
+.card.rb::before{content:"";position:absolute;left:14px;top:22px;bottom:22px;width:5px;border-radius:3px;background:var(--rbv);transform:scaleY(var(--rbp,0));transform-origin:top}
 .ttl{font-family:var(--display);font-weight:700;text-transform:uppercase;letter-spacing:.01em;font-size:40px;color:var(--ink);line-height:1.1}
 .sub{font-family:var(--body);font-size:24px;color:var(--dim);margin-top:6px}
-.axes{display:flex;flex-direction:column;gap:18px;width:100%;margin-top:8px}
+.axes{display:flex;flex-direction:column;gap:18px;width:100%;margin-top:10px}
 .ax{display:flex;align-items:center;gap:16px}
 .ax span{font-family:var(--body);font-weight:600;font-size:24px;color:var(--muted);width:172px;flex:none;white-space:nowrap}
 .ax .tr{flex:1;height:18px;border-radius:9px;background:rgba(20,24,41,.08);overflow:hidden}
 .ax .tr i{display:block;height:100%;border-radius:9px;transform-origin:left;transform:scaleX(0)}
-.ring{position:relative;width:260px;height:260px;border-radius:50%;margin:6px auto}
+.ring{position:relative;width:250px;height:250px;border-radius:50%;margin:8px auto 0}
 .ring .fill{position:absolute;inset:0;border-radius:50%;background:conic-gradient(var(--coral),var(--orange),var(--yellow),var(--turq),var(--blue),var(--lilac),var(--coral));-webkit-mask:conic-gradient(#000 var(--p,0%),transparent 0);mask:conic-gradient(#000 var(--p,0%),transparent 0)}
 .ring .track{position:absolute;inset:0;border-radius:50%;background:rgba(20,24,41,.07)}
-.ring .hole{position:absolute;inset:34px;border-radius:50%;background:var(--surface);box-shadow:var(--glass-inset);display:flex;flex-direction:column;align-items:center;justify-content:center}
+.ring .hole{position:absolute;inset:32px;border-radius:50%;background:var(--surface);box-shadow:var(--glass-inset);display:flex;align-items:center;justify-content:center}
 .ring b{font-family:var(--display);font-weight:700;font-size:92px;line-height:1;color:var(--ink)}
 .badge{display:inline-block;padding:12px 26px;border-radius:999px;background:color-mix(in srgb,var(--turq) 22%,#fff);color:var(--turqInk);font-family:var(--body);font-weight:600;font-size:26px}
-.trio{position:relative;width:1080px;height:1120px;display:flex;align-items:center;justify-content:center;perspective:2200px}
-.trio .phone{position:absolute;transform-origin:center}
-.rowp{display:flex;gap:14px;width:100%;margin-top:4px}
-.chip{padding:10px 20px;border-radius:999px;font-family:var(--body);font-weight:600;font-size:22px;color:var(--night)}
 .plc{display:flex;align-items:center;gap:14px;width:100%;padding:16px 18px;border-radius:var(--r-md);background:var(--pane);box-shadow:var(--glass-inset);margin-top:14px}
-.plc .ph{width:56px;height:56px;border-radius:14px;flex:none}
+.plc .pho{width:56px;height:56px;border-radius:14px;flex:none}
 .plc b{display:block;font-family:var(--body);font-weight:700;font-size:23px;color:var(--ink);line-height:1.2}
 .plc span{font-family:var(--body);font-size:19px;color:var(--dim)}
 .plc em{margin-left:auto;font-family:var(--display);font-weight:700;font-size:34px;font-style:normal;color:var(--ink)}
-.tile{width:100%;height:150px;border-radius:var(--r-md);background:#DEDAD2;margin-bottom:16px;position:relative;overflow:hidden}
-.tile i{position:absolute;inset:0;background:linear-gradient(120deg,var(--turq),var(--lilac));opacity:0}
+.stage .plc{padding:12px 14px;gap:10px}
+.stage .plc .pho{width:44px;height:44px;border-radius:12px}
+.stage .plc b{font-size:19px;white-space:nowrap}
+.stage .plc span{font-size:16px;white-space:nowrap}
+.stage .plc em{font-size:26px}
+.chip{padding:12px 22px;border-radius:999px;font-family:var(--body);font-weight:600;font-size:22px;color:var(--night)}
+
+/* cápsula que se enche de cor e leva um brilho por cima, como os botões do site */
+.sweepbtn{position:relative;display:inline-flex;align-items:center;gap:14px;padding:28px 54px;border-radius:999px;overflow:hidden;background:var(--pane);box-shadow:var(--shadow-card),var(--glass-inset);font-family:var(--body);font-weight:600;font-size:40px;color:var(--ink)}
+.sweepbtn i.fillb{position:absolute;inset:0;background:var(--turq);opacity:.3;transform:scaleX(0);transform-origin:left}
+.sweepbtn i.shine{position:absolute;inset:0;background:linear-gradient(110deg,transparent 30%,rgba(255,255,255,.85) 50%,transparent 70%);transform:translateX(-120%)}
+.sweepbtn span{position:relative}
+
+/* tarja rolando */
+.marq{position:absolute;left:0;right:0;overflow:hidden;padding:18px 0}
+.marq .track{display:flex;gap:56px;width:max-content;font-family:var(--display);text-transform:uppercase;font-weight:700;letter-spacing:.02em;font-size:46px;white-space:nowrap;color:var(--ink);opacity:.28}
+.marq .track span.l{font-weight:300}
+
+/* mapa */
 .mapmini{position:relative;width:100%;flex:1;border-radius:var(--r-lg);background:#ECEAE5;overflow:hidden;box-shadow:var(--glass-inset)}
 .mapmini .st{position:absolute;background:#fff}
-.mapmini .pin{position:absolute;width:40px;height:40px;border-radius:50%;box-shadow:0 4px 12px rgba(20,24,41,.18)}
-.mapmini .area{position:absolute;border-radius:50%;border:4px dashed color-mix(in srgb,var(--coral) 80%,transparent);background:color-mix(in srgb,var(--coral) 14%,transparent)}
-.tag2{white-space:nowrap;position:absolute;left:50%;transform:translateX(-50%);bottom:26px;padding:14px 28px;border-radius:999px;background:var(--surface);box-shadow:var(--shadow-card),var(--glass-inset);font-family:var(--body);font-weight:600;font-size:24px;color:var(--ink)}
-.store{display:inline-flex;align-items:center;gap:18px;padding:26px 46px;border-radius:999px;background:var(--night);color:#fff;font-family:var(--body);font-weight:600;font-size:36px;box-shadow:0 14px 36px rgba(20,24,41,.28)}
+.mapmini .pin{position:absolute;width:38px;height:38px;border-radius:50%;box-shadow:0 4px 12px rgba(20,24,41,.18);transform:scale(0)}
+.bigmap{position:relative;width:900px;height:760px;border-radius:var(--r-xl);background:#ECEAE5;overflow:hidden;box-shadow:var(--shadow-card),var(--glass-inset)}
+.bigmap .st{position:absolute;background:#fff}
+.bigmap .pin{position:absolute;width:64px;height:64px;border-radius:50%;box-shadow:0 6px 16px rgba(20,24,41,.18);transform:scale(0)}
+.bigmap .area{position:absolute;width:300px;height:300px;border-radius:50%;border:5px dashed color-mix(in srgb,var(--coral) 85%,transparent);background:color-mix(in srgb,var(--coral) 16%,transparent);transform:scale(0)}
+.tag2{white-space:nowrap;position:absolute;padding:16px 32px;border-radius:999px;background:var(--surface);box-shadow:var(--shadow-card),var(--glass-inset);font-family:var(--body);font-weight:600;font-size:28px;color:var(--ink)}
+
+/* transição em círculo, a mesma da abertura */
+.wipe{position:absolute;inset:0;background:var(--rb);clip-path:circle(0 at 50% 50%);z-index:9}
 </style>
 </head>
 <body><div id="stage">
@@ -114,167 +144,224 @@ body{display:flex;align-items:center;justify-content:center;height:100vh;font-fa
 <div id="col" style="position:absolute;inset:0">
   <div class="bg"></div><div class="halo h1"></div><div class="halo h2"></div>
 
-  <!-- 0. gancho: a pergunta da marca -->
+  <!-- 0. gancho: a decisão de 3 segundos na porta -->
   <div class="scene" id="s0">
-    <div class="small c" id="e0" style="color:var(--turqInk)">antes de entrar, você pergunta</div>
-    <h1 class="disp c" id="h0" style="font-size:112px;margin-top:26px"><span class="w" style="font-weight:300">Quanta</span> <span class="w rainbow">cor</span><br><span class="w">tem esse lugar?</span></h1>
+    <div class="marq" id="mq" style="top:430px"><div class="track" id="mqt">
+      <span class="l">Bem-vinde aqui</span><span>·</span><span>A rua também é nossa</span><span>·</span><span class="l">Não é fase. É endereço</span><span>·</span><span>Quem esteve lá responde</span><span>·</span>
+      <span class="l">Bem-vinde aqui</span><span>·</span><span>A rua também é nossa</span><span>·</span><span class="l">Não é fase. É endereço</span><span>·</span><span>Quem esteve lá responde</span><span>·</span>
+    </div></div>
+    <div class="small c" id="e0" style="color:var(--coralInk)">na porta do lugar</div>
+    <h1 class="disp c" id="h0" style="font-size:118px;margin-top:28px"><span class="w" style="font-weight:300">Três segundos</span><br><span class="w">pra decidir</span><br><span class="w rainbow">se entra.</span></h1>
   </div>
 
-  <!-- 1. a ficha: quatro eixos, nota, selo. é aqui que o cinza vira cor -->
+  <!-- 1. a ficha monta: régua arco-íris desce, eixos escalonados, anel conta -->
   <div class="scene" id="s1">
-    <div class="small c" id="e1">quem esteve lá responde</div>
-    <div class="phone" id="p1" style="margin-top:34px;transform:scale(.88)">
+    <div class="small c" id="e1">agora dá pra saber antes</div>
+    <div class="ph p2" id="p1" style="--w:470px;--rot:0deg;margin-top:40px">
       <div class="notch"></div>
       <div class="scr">
         <div class="bgp"></div>
-        <div class="card" style="z-index:2">
+        <div class="card rb" id="cd1" style="z-index:2;padding-left:36px">
           <div class="ttl">Janela Bar</div>
           <div class="sub">Bar · Centro</div>
           <div class="ring" id="ring1"><div class="track"></div><div class="fill"></div>
             <div class="hole"><b id="nota1">0.0</b></div></div>
-          <div class="c" style="text-align:center;margin:-4px 0 14px"><span class="badge" id="selo1">Acolhedor</span></div>
+          <div class="c" style="text-align:center;margin:14px 0 4px"><span class="badge" id="selo1">Acolhedor</span></div>
           <div class="axes">
-            <div class="ax"><span>Atendimento</span><div class="tr"><i id="ax1" style="background:var(--coral)"></i></div></div>
-            <div class="ax"><span>Afeto</span><div class="tr"><i id="ax2" style="background:var(--orange)"></i></div></div>
-            <div class="ax"><span>Banheiro</span><div class="tr"><i id="ax3" style="background:var(--yellow)"></i></div></div>
-            <div class="ax"><span>Clientela</span><div class="tr"><i id="ax4" style="background:var(--turq)"></i></div></div>
+            <div class="ax st"><span>Atendimento</span><div class="tr"><i id="ax1" style="background:var(--coral)"></i></div></div>
+            <div class="ax st"><span>Afeto</span><div class="tr"><i id="ax2" style="background:var(--orange)"></i></div></div>
+            <div class="ax st"><span>Banheiro</span><div class="tr"><i id="ax3" style="background:var(--yellow)"></i></div></div>
+            <div class="ax st"><span>Clientela</span><div class="tr"><i id="ax4" style="background:var(--turq)"></i></div></div>
           </div>
         </div>
-        <div class="card" id="cmt1" style="z-index:2;margin-top:20px;padding:24px">
-          <p style="font-family:var(--body);font-size:25px;line-height:1.35;color:var(--ink);margin:0">“Fomos em duas, de mãos dadas. Ninguém olhou torto.”</p>
-          <div class="sub" style="margin-top:10px">há 2 dias</div>
+        <div class="card" id="cmt1" style="z-index:2;margin-top:18px;padding:22px">
+          <p style="font-family:var(--body);font-size:24px;line-height:1.35;color:var(--ink);margin:0">“Fomos em duas, de mãos dadas. Ninguém olhou torto.”</p>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- 2. a notícia -->
+  <!-- 2. a regra da casa -->
   <div class="scene" id="s2">
-    <div class="small c" id="e2" style="color:var(--coralInk)">01 de outubro</div>
-    <div class="slam c" id="k2" style="font-size:150px;margin-top:20px">Já está</div>
-    <div class="slam c" id="k2b" style="font-size:150px"><span class="rainbow">no iPhone.</span></div>
-    <p class="body c" id="b2" style="margin-top:50px">E chegou com a cara nova — a mesma do site.</p>
+    <h1 class="disp c" id="t2" style="font-size:92px"><span class="w">O lugar recebe cor.</span><br><span class="w" style="font-weight:300">A rua recebe aviso.</span></h1>
+    <div class="bigmap" id="bm" style="margin-top:56px">
+      <div class="st" style="left:0;right:0;top:26%;height:9px"></div>
+      <div class="st" style="left:0;right:0;top:64%;height:7px"></div>
+      <div class="st" style="left:30%;top:0;bottom:0;width:9px"></div>
+      <div class="st" style="left:70%;top:0;bottom:0;width:7px"></div>
+      <div class="st" style="left:12%;top:0;bottom:0;width:5px"></div>
+      <div class="area" id="ar" style="left:40%;top:36%"></div>
+      <div class="pin" id="pn1" style="left:14%;top:14%;background:var(--turq)"></div>
+      <div class="pin" id="pn2" style="left:62%;top:31%;background:var(--lilac)"></div>
+      <div class="pin" id="pn3" style="left:22%;top:72%;background:var(--orange)"></div>
+      <div class="pin" id="pn4" style="left:78%;top:76%;background:var(--coral)"></div>
+      <div class="tag2" id="tg1" style="left:60px;bottom:48px">lugar avaliado</div>
+      <div class="tag2" id="tg2" style="right:60px;top:48px;color:var(--coralInk)">área de atenção</div>
+    </div>
   </div>
 
-  <!-- 3. o layout novo: três telas -->
-  <div class="scene" id="s3" style="padding:140px 0 460px">
-    <h1 class="disp c" id="t3" style="font-size:96px"><span class="w" style="font-weight:300">Papel, vidro</span><br><span class="w">e cor medida.</span></h1>
-    <div class="trio" id="trio" style="margin-top:-150px">
-      <div class="phone" id="pa" style="transform:scale(.56) translateX(-640px) rotateY(24deg) rotateZ(-6deg)">
+  <!-- 3. a notícia -->
+  <div class="scene" id="s3">
+    <div class="small c" id="e3" style="color:var(--coralInk)">01 de outubro</div>
+    <div class="slam c" id="k3" style="font-size:154px;margin-top:22px">Já está</div>
+    <div class="slam c" id="k3b" style="font-size:154px"><span class="rainbow">no iPhone.</span></div>
+    <div class="sweepbtn" id="btn3" style="margin-top:60px"><i class="fillb"></i><i class="shine"></i><span>Baixe na App Store</span></div>
+  </div>
+
+  <!-- 4. o layout novo: as telas entram como cartas -->
+  <div class="scene" id="s4" style="padding:180px 0 480px">
+    <h1 class="disp c" id="t4" style="font-size:98px"><span class="w" style="font-weight:300">E por dentro,</span><br><span class="w">tudo novo.</span></h1>
+    <div class="stage" id="stage4" style="margin-top:40px">
+      <div class="ph p1" id="pa">
         <div class="notch"></div>
         <div class="scr"><div class="bgp"></div>
           <div class="card" style="z-index:2;padding:22px">
-            <div class="ttl" style="font-size:34px">Sua cidade</div>
-            <div class="rowp"><span class="chip" style="background:var(--turq)">Avaliar um lugar</span></div>
-            <div class="rowp"><span class="chip" style="background:var(--coral)">Registrar relato</span></div>
+            <div class="ttl" style="font-size:32px">Sua cidade</div>
+            <div style="display:flex;gap:10px;margin-top:14px"><span class="chip ch" style="background:var(--turq);font-size:19px">Avaliar</span><span class="chip ch" style="background:var(--coral);font-size:19px">Registrar</span></div>
           </div>
-          <div class="plc" style="margin-top:26px"><div class="ph" style="background:linear-gradient(135deg,var(--turq),var(--blue))"></div><div><b>Janela Bar</b><span>Acolhedor</span></div><em>4.7</em></div>
-          <div class="plc"><div class="ph" style="background:linear-gradient(135deg,var(--orange),var(--coral))"></div><div><b>Café da Praça</b><span>Bem avaliado</span></div><em>4.4</em></div>
-          <div class="plc"><div class="ph" style="background:linear-gradient(135deg,var(--lilac),var(--turq))"></div><div><b>Hotel Centro</b><span>Poucas notas</span></div><em>—</em></div>
+          <div class="plc"><div class="pho" style="background:linear-gradient(135deg,var(--turq),var(--blue))"></div><div><b>Janela Bar</b><span>Acolhedor</span></div><em>4.7</em></div>
+          <div class="plc"><div class="pho" style="background:linear-gradient(135deg,var(--orange),var(--coral))"></div><div><b>Café da Praça</b><span>Bem avaliado</span></div><em>4.4</em></div>
+          <div class="plc"><div class="pho" style="background:linear-gradient(135deg,var(--lilac),var(--turq))"></div><div><b>Hotel Centro</b><span>Poucas notas</span></div><em>—</em></div>
         </div>
       </div>
-      <div class="phone" id="pb" style="transform:scale(.72)">
+      <div class="ph p2" id="pb">
         <div class="notch"></div>
-        <div class="scr" style="padding:74px 20px 20px"><div class="bgp"></div>
+        <div class="scr" style="padding-left:20px;padding-right:20px"><div class="bgp"></div>
           <div class="mapmini" style="z-index:2">
-            <div class="st" style="left:0;right:0;top:30%;height:7px"></div>
-            <div class="st" style="left:0;right:0;top:62%;height:6px"></div>
-            <div class="st" style="left:34%;top:0;bottom:0;width:7px"></div>
-            <div class="st" style="left:72%;top:0;bottom:0;width:6px"></div>
-            <div class="st" style="left:12%;top:0;bottom:0;width:5px"></div>
-            <div class="st" style="left:0;right:0;top:84%;height:5px"></div>
-            <div class="area" style="left:46%;top:40%;width:200px;height:200px"></div>
-            <div class="pin" style="left:18%;top:18%;background:var(--turq)"></div>
-            <div class="pin" style="left:58%;top:24%;background:var(--lilac)"></div>
-            <div class="pin" style="left:26%;top:68%;background:var(--orange)"></div>
-            <div class="pin" style="left:76%;top:72%;background:var(--coral)"></div>
-            <div class="tag2">o lugar recebe cor</div>
+            <div class="st" style="left:0;right:0;top:28%;height:7px"></div>
+            <div class="st" style="left:0;right:0;top:66%;height:5px"></div>
+            <div class="st" style="left:32%;top:0;bottom:0;width:7px"></div>
+            <div class="st" style="left:74%;top:0;bottom:0;width:5px"></div>
+            <div class="pin mp" style="left:16%;top:16%;background:var(--turq)"></div>
+            <div class="pin mp" style="left:58%;top:22%;background:var(--lilac)"></div>
+            <div class="pin mp" style="left:24%;top:70%;background:var(--orange)"></div>
+            <div class="pin mp" style="left:76%;top:74%;background:var(--coral)"></div>
           </div>
         </div>
       </div>
-      <div class="phone" id="pc" style="transform:scale(.56) translateX(640px) rotateY(-24deg) rotateZ(6deg)">
+      <div class="ph p3" id="pc">
         <div class="notch"></div>
         <div class="scr"><div class="bgp"></div>
-          <div class="card" style="z-index:2;padding:22px">
-            <div class="ttl" style="font-size:34px">Quanta cor<br>tem aqui?</div>
-            <div class="axes" style="margin-top:18px">
-              <div class="ax"><span style="width:128px;font-size:20px">Atendimento</span><div class="tr"><i style="background:var(--coral);transform:scaleX(.92)"></i></div></div>
-              <div class="ax"><span style="width:128px;font-size:20px">Afeto</span><div class="tr"><i style="background:var(--orange);transform:scaleX(.88)"></i></div></div>
-              <div class="ax"><span style="width:128px;font-size:20px">Banheiro</span><div class="tr"><i style="background:var(--yellow);transform:scaleX(.74)"></i></div></div>
-              <div class="ax"><span style="width:128px;font-size:20px">Clientela</span><div class="tr"><i style="background:var(--turq);transform:scaleX(.96)"></i></div></div>
+          <div class="card" style="z-index:2;padding:20px">
+            <div class="ttl" style="font-size:30px">Quanta cor<br>tem aqui?</div>
+            <div class="axes" style="margin-top:16px">
+              <div class="ax"><span style="width:112px;font-size:18px">Atendimento</span><div class="tr" style="height:14px"><i style="background:var(--coral);transform:scaleX(.92)"></i></div></div>
+              <div class="ax"><span style="width:112px;font-size:18px">Afeto</span><div class="tr" style="height:14px"><i style="background:var(--orange);transform:scaleX(.88)"></i></div></div>
+              <div class="ax"><span style="width:112px;font-size:18px">Banheiro</span><div class="tr" style="height:14px"><i style="background:var(--yellow);transform:scaleX(.74)"></i></div></div>
+              <div class="ax"><span style="width:112px;font-size:18px">Clientela</span><div class="tr" style="height:14px"><i style="background:var(--turq);transform:scaleX(.96)"></i></div></div>
             </div>
           </div>
-          <div class="plc" style="margin-top:22px"><div class="ph" style="background:linear-gradient(135deg,var(--turq),var(--lilac))"></div><div><b>Como chegar</b><span>abre no mapa</span></div></div>
-          <div class="card" style="z-index:2;margin-top:16px;padding:20px">
-            <p style="font-family:var(--body);font-size:21px;line-height:1.35;color:var(--ink);margin:0">“Banheiro sem placa de gênero. Alívio.”</p>
-          </div>
+          <div class="plc"><div class="pho" style="background:linear-gradient(135deg,var(--turq),var(--lilac))"></div><div><b>Como chegar</b><span>abre no mapa</span></div></div>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- 4. fecho -->
-  <div class="scene" id="s4">
-    <h1 class="disp c" id="t4" style="font-size:84px"><span class="w" style="font-weight:300">Qual lugar</span><br><span class="w">você irisa primeiro?</span></h1>
-    <div class="store" id="store" style="margin-top:56px"><span>Baixe na App Store</span></div>
-    <div class="handle" id="handle" style="margin-top:56px"><svg class="mark" style="width:78px;height:78px" viewBox="0 0 100 100"><use href="#radarmark"></use></svg><span>@appirisa</span></div>
-    <div class="small c" id="e4" style="margin-top:34px">no iPhone · Android em fase de testes</div>
+  <!-- 5. fecho -->
+  <div class="scene" id="s5">
+    <div class="marq" id="mq2" style="top:470px"><div class="track" id="mqt2">
+      <span class="l">Irise você também</span><span>·</span><span>Já irisei esse lugar</span><span>·</span><span class="l">Cor é medida</span><span>·</span><span>Feito por nós</span><span>·</span>
+      <span class="l">Irise você também</span><span>·</span><span>Já irisei esse lugar</span><span>·</span><span class="l">Cor é medida</span><span>·</span><span>Feito por nós</span><span>·</span>
+    </div></div>
+    <h1 class="disp c" id="t5" style="font-size:84px;margin-top:30px"><span class="w" style="font-weight:300">Qual lugar</span><br><span class="w">você irisa primeiro?</span></h1>
+    <div class="handle" id="handle" style="margin-top:64px"><svg class="mark" style="width:78px;height:78px" viewBox="0 0 100 100"><use href="#radarmark"></use></svg><span>@appirisa</span></div>
+    <div class="small c" id="e5" style="margin-top:36px">no iPhone · Android em fase de testes</div>
   </div>
 
+  <div class="wipe" id="wp"></div>
   <div class="brand" id="brand"><svg class="mark" viewBox="0 0 100 100"><use href="#radarmin"></use></svg><span>Iris<b>a</b></span></div>
 </div>
 </div>
 <script>
 const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
-const EO="cubic-bezier(.2,.7,.2,1)";
+const EASE="cubic-bezier(.2,.7,.2,1)", SPRING="cubic-bezier(.3,1.4,.4,1)";
 const Q=new URLSearchParams(location.search), K=Number(Q.get("k")||1);
-const A=(el,kf,start,dur,ease=EO,extra={})=>el&&el.animate(kf,Object.assign({delay:start*K,duration:dur,easing:ease,fill:"both"},extra));
+const A=(el,kf,start,dur,ease=EASE,extra={})=>el&&el.animate(kf,Object.assign({delay:start*K,duration:dur,easing:ease,fill:"both"},extra));
 const IN_BLUR=[{opacity:0,transform:"translateY(40px)",filter:"blur(16px)"},{opacity:1,transform:"none",filter:"blur(0)"}];
 const SLAM=[{opacity:0,transform:"scale(1.6)",filter:"blur(18px)"},{opacity:1,transform:"scale(1)",filter:"blur(0)"}];
 const words=(sel,start,step=110,dur=800)=>$$(sel+" .w").forEach((w,i)=>A(w,IN_BLUR,start+i*step,dur));
-const scene=(id,a,b,ex=450)=>{const s=$(id);A(s,[{opacity:0},{opacity:1}],a,350,"linear");A(s,[{opacity:1,transform:"none",filter:"blur(0)"},{opacity:0,transform:"translateY(-60px) scale(.98)",filter:"blur(14px)"}],b-ex/K,ex,"ease-in")};
 const ticks=[];
 const count=(sel,start,dur,to,fmt)=>ticks.push(t=>{const p=Math.max(0,Math.min(1,(t-start*K)/dur)),e=1-Math.pow(1-p,3);$(sel).textContent=fmt(e*to)});
 const ringTo=(sel,start,dur,pct)=>ticks.push(t=>{const p=Math.max(0,Math.min(1,(t-start*K)/dur)),e=1-Math.pow(1-p,3);$(sel).style.setProperty("--p",(e*pct).toFixed(2)+"%")});
+// Entrada de cena sem o fade+blur de sempre: sobe com mola, sai encolhendo.
+const scene=(id,a,b,ex=420)=>{const s=$(id);
+  A(s,[{opacity:0,transform:"translateY(70px) scale(.97)"},{opacity:1,transform:"none"}],a,560,SPRING);
+  A(s,[{opacity:1,transform:"none",filter:"blur(0)"},{opacity:0,transform:"translateY(-56px) scale(.97)",filter:"blur(12px)"}],b-ex/K,ex,"ease-in")};
+// Transição em círculo arco-íris, a mesma da abertura do app.
+const wipe=at=>A($("#wp"),[{clipPath:"circle(0 at 50% 50%)",opacity:1},{clipPath:"circle(85% at 50% 50%)",opacity:1,offset:.5},{clipPath:"circle(85% at 50% 50%)",opacity:0}],at,900,"cubic-bezier(.4,0,.2,1)");
+// Cartas sendo distribuídas, igual aos celulares do site.
+const deal=(sel,rot,x,start)=>A($(sel),
+  [{opacity:0,transform:"translateX("+x+"px) translateY(70px) rotate("+(-rot*1.6)+"deg) scale(.94)"},
+   {opacity:1,transform:"translateX("+x+"px) translateY(0) rotate("+rot+"deg) scale(1)"}],start,1200,EASE);
+const float=(sel,start,dur)=>A($(sel),[{translate:"0 0"},{translate:"0 -14px"},{translate:"0 0"}],start,dur,"ease-in-out",{iterations:Infinity});
 
 A($(".h1"),[{transform:"translate(0,0) rotate(0)"},{transform:"translate(6%,-5%) rotate(10deg)"}],0,9000,"ease-in-out",{iterations:Infinity,direction:"alternate"});
 A($(".h2"),[{transform:"translate(0,0) rotate(0)"},{transform:"translate(-6%,4%) rotate(-8deg)"}],0,11000,"ease-in-out",{iterations:Infinity,direction:"alternate"});
 
-const TOTAL=23000;
-// Assinatura da marca: tudo nasce cinza e vira cor quando a ficha enche (8,2 s).
-A($("#col"),[{filter:"grayscale(1)"},{filter:"grayscale(1)",offset:.8913},{filter:"grayscale(0)"}],0,9200,"linear",{composite:"add"});
+const TOTAL=36000;
+A($("#col"),[{filter:"grayscale(1)"},{filter:"grayscale(1)",offset:.9545},{filter:"grayscale(0)"}],0,11000,"linear",{composite:"add"});
 A($("#brand"),[{opacity:0},{opacity:1}],400,600,"linear");
 
-scene("#s0",0,5200);
-A($("#e0"),IN_BLUR,150,600);
-words("#h0",600,900,900);
+/* 0 — gancho */
+scene("#s0",0,6200);
+A($("#mqt"),[{transform:"translateX(0)"},{transform:"translateX(-50%)"}],0,26000,"linear",{iterations:Infinity});
+A($("#mq"),[{opacity:0},{opacity:1}],200,800,"linear");
+A($("#e0"),IN_BLUR,250,600);
+words("#h0",700,820,860);
 
-scene("#s1",5200,11600);
-A($("#e1"),IN_BLUR,5350,600);
-A($("#p1"),[{opacity:0,transform:"scale(.80) translateY(90px)",filter:"blur(14px)"},{opacity:1,transform:"scale(.88) translateY(0)",filter:"blur(0)"}],5500,900);
-ringTo("#ring1",6600,1700,94);
-count("#nota1",6600,1700,4.7,v=>v.toFixed(1));
-[["#ax1",.94],["#ax2",.9],["#ax3",.76],["#ax4",.96]].forEach(([s,v],i)=>
-  A($(s),[{transform:"scaleX(0)"},{transform:"scaleX("+v+")"}],7000+i*180,760));
-A($("#selo1"),SLAM,8600,420,"cubic-bezier(.2,.9,.3,1)");
+/* 1 — a ficha se monta */
+scene("#s1",6200,13600);
+A($("#e1"),IN_BLUR,6350,600);
+deal("#p1",0,0,6500);
+float("#p1",7700,7000);
+A($("#cd1"),[{opacity:0,transform:"translateY(26px)"},{opacity:1,transform:"none"}],7000,700);
+ticks.push(t=>{const p=Math.max(0,Math.min(1,(t-7400*K)/900)),e=1-Math.pow(1-p,3);$("#cd1").style.setProperty("--rbp",e.toFixed(3))});
+A($("#ring1"),[{opacity:0,transform:"scale(.8)"},{opacity:1,transform:"scale(1)"}],7600,600,SPRING);
+ringTo("#ring1",7900,1800,94);
+count("#nota1",7900,1800,4.7,v=>v.toFixed(1));
+A($("#selo1"),SLAM,9700,420,SPRING);
+$$("#cd1 .ax.st").forEach((el,i)=>A(el,[{opacity:0,transform:"translateY(16px)",filter:"blur(5px)"},{opacity:1,transform:"none",filter:"blur(0)"}],9900+i*130,520));
+[["#ax1",.94],["#ax2",.9],["#ax3",.76],["#ax4",.96]].forEach(([s,v],i)=>A($(s),[{transform:"scaleX(0)"},{transform:"scaleX("+v+")"}],10050+i*130,700));
+A($("#cmt1"),[{opacity:0,transform:"translateY(24px)"},{opacity:1,transform:"none"}],11000,650);
 
-scene("#s2",11600,15800);
-A($("#e2"),IN_BLUR,11750,500);
-A($("#k2"),SLAM,12050,480,"cubic-bezier(.2,.9,.3,1)");
-A($("#k2b"),SLAM,12420,480,"cubic-bezier(.2,.9,.3,1)");
-A($("#b2"),IN_BLUR,13300,800);
+/* 2 — a regra */
+wipe(13300);
+scene("#s2",13700,20400);
+words("#t2",13900,900,860);
+A($("#bm"),[{opacity:0,transform:"translateY(60px) scale(.96)"},{opacity:1,transform:"none"}],14500,800,SPRING);
+["#pn1","#pn2","#pn3","#pn4"].forEach((p,i)=>A($(p),[{transform:"scale(0)"},{transform:"scale(1.18)",offset:.7},{transform:"scale(1)"}],15200+i*220,620,SPRING));
+A($("#tg1"),IN_BLUR,16300,600);
+A($("#ar"),[{transform:"scale(0)"},{transform:"scale(1)"}],17000,700,SPRING);
+A($("#ar"),[{boxShadow:"0 0 0 0 rgba(255,105,100,.55)"},{boxShadow:"0 0 0 46px rgba(255,105,100,0)"}],17700,1800,"ease-out",{iterations:Infinity});
+A($("#tg2"),IN_BLUR,17600,600);
 
-scene("#s3",15800,20100);
-words("#t3",15950,900,850);
-A($("#pb"),[{opacity:0,transform:"scale(.52) translateY(120px)",filter:"blur(12px)"},{opacity:1,transform:"scale(.72) translateY(0)",filter:"blur(0)"}],16500,900);
-A($("#pa"),[{opacity:0,transform:"scale(.44) translateX(-200px) rotateY(44deg) rotateZ(-6deg)"},{opacity:1,transform:"scale(.56) translateX(-640px) rotateY(24deg) rotateZ(-6deg)"}],16900,1000);
-A($("#pc"),[{opacity:0,transform:"scale(.44) translateX(200px) rotateY(-44deg) rotateZ(6deg)"},{opacity:1,transform:"scale(.56) translateX(640px) rotateY(-24deg) rotateZ(6deg)"}],17100,1000);
+/* 3 — a notícia */
+wipe(20100);
+scene("#s3",20500,26200);
+A($("#e3"),IN_BLUR,20650,500);
+A($("#k3"),SLAM,20950,480,SPRING);
+A($("#k3b"),SLAM,21320,480,SPRING);
+A($("#btn3"),[{opacity:0,transform:"translateY(40px) scale(.92)"},{opacity:1,transform:"none"}],22200,620,SPRING);
+A($("#btn3 .fillb"),[{transform:"scaleX(0)"},{transform:"scaleX(1)"}],22700,900);
+A($("#btn3 .shine"),[{transform:"translateX(-120%)"},{transform:"translateX(120%)"}],23300,900,"ease");
 
-scene("#s4",20100,TOTAL+1000);
-words("#t4",20250,900,850);
-A($("#store"),[{opacity:0,transform:"translateY(50px) scale(.9)",filter:"blur(10px)"},{opacity:1,transform:"none",filter:"blur(0)"}],21150,760);
-A($("#handle"),IN_BLUR,21600,760);
-A($("#e4"),[{opacity:0},{opacity:1}],22050,600,"linear");
+/* 4 — as telas entram como cartas */
+scene("#s4",26200,32000);
+words("#t4",26400,900,860);
+deal("#pb",2,0,27000); float("#pb",28400,8000);
+deal("#pa",-11,-330,27350); float("#pa",28900,9000);
+deal("#pc",12,330,27600); float("#pc",29200,8500);
+$$("#pa .ch").forEach((el,i)=>A(el,[{opacity:0,transform:"scale(.8)"},{opacity:1,transform:"none"}],28300+i*140,620,SPRING));
+$$("#pb .mp").forEach((el,i)=>A(el,[{transform:"scale(0)"},{transform:"scale(1.15)",offset:.7},{transform:"scale(1)"}],28600+i*180,560,SPRING));
+
+/* 5 — fecho */
+wipe(31700);
+scene("#s5",32100,TOTAL+1000);
+A($("#mqt2"),[{transform:"translateX(0)"},{transform:"translateX(-50%)"}],0,26000,"linear",{iterations:Infinity});
+A($("#mq2"),[{opacity:0},{opacity:1}],32200,700,"linear");
+words("#t5",32400,900,860);
+A($("#handle"),[{opacity:0,transform:"translateY(50px) scale(.94)"},{opacity:1,transform:"none"}],33500,700,SPRING);
+A($("#e5"),[{opacity:0},{opacity:1}],34100,600,"linear");
 
 window.__setT=function(t){document.getAnimations().forEach(a=>{a.pause();a.currentTime=t});ticks.forEach(f=>f(t))};
 window.__TOTAL=TOTAL*K;
