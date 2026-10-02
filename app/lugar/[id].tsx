@@ -83,7 +83,7 @@ export default function PlaceScreen() {
   async function mandarFoto() {
     try {
       const url = await enviarFoto.mutateAsync();
-      if (url) Alert.alert("Foto enviada", "Obrigado! Ela já aparece na ficha do lugar.");
+      if (url) Alert.alert("Foto enviada", "Enviada. Ela aparece na ficha depois de revisada.");
     } catch (e) {
       Alert.alert("Não deu certo", e instanceof Error ? e.message : "Tente de novo.");
     }
@@ -273,7 +273,8 @@ export default function PlaceScreen() {
                 </View>
               ))}
               <TextInput
-                className="min-h-20 rounded-2xl bg-subtle px-4 py-3 font-body text-base text-ink"
+                className="min-h-20 rounded-2xl bg-solid px-4 py-3 font-body text-base text-ink"
+                style={shadow.field}
                 placeholder="Quer contar como foi? (opcional, até 500 caracteres)"
                 placeholderTextColor={colors.dim}
                 multiline

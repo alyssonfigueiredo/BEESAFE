@@ -42,14 +42,25 @@ export function ReportForm({ onDone }: { onDone: () => void }) {
   // vida de alguém é atrito que não vale o dado.
   const [setting, setSetting] = useState<OccurrenceSetting | null>(null);
   const [period, setPeriod] = useState<DayPeriod | null>(null);
+  // `foco` leva a câmera ao ponto do GPS; toque no mapa não mexe nela.
+  const [foco, setFoco] = useState<{ lat: number; lng: number } | null>(null);
 
   async function useMyLocation() {
-    const { status } = await Location.requestForegroundPermissionsAsync();
-    if (status !== "granted")
-      return Alert.alert("Sem permissão de localização", "Toque no mapa para marcar o ponto.");
-    const pos = await Location.getCurrentPositionAsync({ accuracy: Location.Accuracy.High });
-    setPoint({ lat: pos.coords.latitude, lng: pos.coords.longitude });
-    setPlace(null);
+    try {
+      const { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== "granted")
+        return Alert.alert("Sem permissão de localização", "Toque no mapa para marcar o ponto.");
+      const pos = await Location.getCurrentPositionAsync({ accuracy: Location.Accuracy.High });
+      const p = { lat: pos.coords.latitude, lng: pos.coords.longitude };
+      setPoint(p);
+      setFoco(p);
+      setPlace(null);
+    } catch {
+      Alert.alert(
+        "Não consegui sua localização",
+        "Confira se a localização do celular está ligada, ou toque no mapa para marcar o ponto.",
+      );
+    }
   }
 
   async function submit() {
@@ -74,6 +85,16 @@ export function ReportForm({ onDone }: { onDone: () => void }) {
         "Relato registrado",
         "Obrigado. Ele já aparece no mapa, sem nenhuma identificação sua.",
       );
+      // Limpa antes de sair: a aba fica montada no fundo e voltaria com o relato anterior.
+      setType("verbal");
+      setSeverity("media");
+      setDate(new Date());
+      setPoint(null);
+      setFoco(null);
+      setDescription("");
+      setPlace(null);
+      setSetting(null);
+      setPeriod(null);
       onDone();
     } catch (e) {
       Alert.alert("Não deu certo", e instanceof Error ? e.message : "Tente de novo.");
@@ -105,8 +126,8 @@ export function ReportForm({ onDone }: { onDone: () => void }) {
         {Platform.OS === "android" && (
           <Pressable
             onPress={() => setShowPicker(true)}
-            className="rounded-2xl bg-subtle px-4 py-3"
-            style={shadow.card}
+            className="rounded-2xl bg-solid px-4 py-3"
+            style={shadow.field}
           >
             <Text className="font-body text-base text-ink">
               {format(date, "d 'de' MMMM 'de' yyyy", { locale: ptBR })}
@@ -119,7 +140,7 @@ export function ReportForm({ onDone }: { onDone: () => void }) {
             mode="date"
             maximumDate={new Date()}
             display={Platform.OS === "ios" ? "compact" : "default"}
-            themeVariant="dark"
+            themeVariant="light"
             onChange={(_, d) => {
               if (Platform.OS === "android") setShowPicker(false);
               if (d) setDate(d);
@@ -163,6 +184,7 @@ export function ReportForm({ onDone }: { onDone: () => void }) {
             setPlace(null);
           }}
           picked={point}
+          focus={foco}
           style={{ height: 260 }}
         />
         <Text className="font-body text-xs text-dim">
@@ -210,8 +232,8 @@ export function ReportForm({ onDone }: { onDone: () => void }) {
 
       <Field label="Descrição (opcional)" hint={`${description.length}/2000`}>
         <TextInput
-          className="min-h-28 rounded-2xl bg-subtle px-4 py-3 font-body text-base text-ink"
-          style={shadow.card}
+          className="min-h-28 rounded-2xl bg-solid px-4 py-3 font-body text-base text-ink"
+          style={shadow.field}
           placeholder="O que aconteceu? Não inclua seu nome nem dados que identifiquem você ou outras pessoas."
           placeholderTextColor={colors.dim}
           multiline

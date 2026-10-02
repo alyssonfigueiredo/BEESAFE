@@ -77,7 +77,8 @@ export function ReportButton({
               ))}
             </View>
             <TextInput
-              className="rounded-2xl bg-subtle px-4 py-3 font-body text-base text-ink"
+              className="rounded-2xl bg-solid px-4 py-3 font-body text-base text-ink"
+              style={shadow.field}
               placeholder="Detalhe se quiser (até 500 caracteres)"
               placeholderTextColor={colors.dim}
               maxLength={500}

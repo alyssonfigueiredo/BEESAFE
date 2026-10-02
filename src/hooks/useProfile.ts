@@ -12,6 +12,7 @@ export type Profile = {
   role: "user" | "moderator" | "admin";
   nickname: string | null;
   default_city_id: number | null;
+  avatar_path: string | null;
 };
 
 export function useProfile() {

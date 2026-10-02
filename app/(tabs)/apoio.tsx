@@ -31,6 +31,10 @@ const KIND_LABEL: Record<string, string> = {
   juridico: "Jurídico",
 };
 
+function abrir(url: string, aviso: string) {
+  Linking.openURL(url).catch(() => Alert.alert("Não deu certo", aviso));
+}
+
 export default function ApoioScreen() {
   const insets = useScreenInsets();
   const { city } = useCity();
@@ -75,7 +79,8 @@ export default function ApoioScreen() {
         <View className="gap-3 rounded-3xl bg-surface p-4" style={shadow.card}>
           <Text className="font-body-bold text-base text-ink">Deixe uma mensagem</Text>
           <TextInput
-            className="rounded-2xl bg-subtle px-4 py-3 font-body text-base text-ink"
+            className="rounded-2xl bg-solid px-4 py-3 font-body text-base text-ink"
+            style={shadow.field}
             placeholder="Apelido (opcional, vira Anônimo)"
             placeholderTextColor={colors.dim}
             maxLength={40}
@@ -98,7 +103,8 @@ export default function ApoioScreen() {
             })}
           </View>
           <TextInput
-            className="min-h-24 rounded-2xl bg-subtle px-4 py-3 font-body text-base text-ink"
+            className="min-h-24 rounded-2xl bg-solid px-4 py-3 font-body text-base text-ink"
+            style={shadow.field}
             placeholder="Uma palavra de acolhimento, uma dica ou um pedido de ajuda (até 1000 caracteres)"
             placeholderTextColor={colors.dim}
             multiline
@@ -180,7 +186,12 @@ export default function ApoioScreen() {
               <View className="flex-row gap-3">
                 {!!s.phone && (
                   <Pressable
-                    onPress={() => Linking.openURL(`tel:${s.phone}`)}
+                    onPress={() =>
+                      abrir(
+                        `tel:${s.phone}`,
+                        `Não foi possível ligar daqui. Disque ${s.phone} manualmente.`,
+                      )
+                    }
                     className="flex-row items-center gap-1"
                   >
                     <Phone size={14} color={colors.coralInk} />
@@ -189,7 +200,7 @@ export default function ApoioScreen() {
                 )}
                 {!!s.url && (
                   <Pressable
-                    onPress={() => Linking.openURL(s.url!)}
+                    onPress={() => abrir(s.url!, "Não foi possível abrir o site agora.")}
                     className="flex-row items-center gap-1"
                   >
                     <ExternalLink size={14} color={colors.turquoiseInk} />

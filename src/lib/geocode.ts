@@ -21,12 +21,7 @@ export type Achado = {
   cidadeConfere: boolean;
 };
 
-const chave = (s: string) =>
-  s
-    .normalize("NFD")
-    .replace(/[̀-ͯ]/g, "")
-    .toLowerCase()
-    .trim();
+const chave = (s: string) => s.normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase().trim();
 
 type Resposta = {
   lat: string;

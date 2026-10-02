@@ -1,6 +1,6 @@
 // Gera site/ (GitHub Pages): landing (docs/index.html), apresentação e páginas legais a partir dos .md.
 //   node scripts/build-site.mjs
-import { readFileSync, writeFileSync, mkdirSync, copyFileSync } from "node:fs";
+import { readFileSync, writeFileSync, mkdirSync, copyFileSync, readdirSync } from "node:fs";
 
 const esc = (s) => s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
 const inline = (s) =>
@@ -74,6 +74,9 @@ const pubKey = process.env.SUPABASE_PUBLISHABLE_KEY ?? "";
 if (pubKey && !pubKey.startsWith("sb_publishable_")) throw new Error("SUPABASE_PUBLISHABLE_KEY precisa ser a chave sb_publishable_ (nunca a secreta)");
 writeFileSync("site/index.html", readFileSync("docs/index.html", "utf8").replace("__SUPABASE_PUBLISHABLE_KEY__", pubKey || "__SUPABASE_PUBLISHABLE_KEY__"));
 copyFileSync("docs/og.png", "site/og.png");
+// Telas reais do app usadas na landing (docs/telas/*.webp, 600 px de largura).
+mkdirSync("site/telas", { recursive: true });
+for (const f of readdirSync("docs/telas")) copyFileSync(`docs/telas/${f}`, `site/telas/${f}`);
 // Domínio próprio (registro.br): appirisa.com.br, apontado por A/AAAA pro GitHub Pages.
 writeFileSync("site/CNAME", "appirisa.com.br\n");
 console.log("site/ gerado");

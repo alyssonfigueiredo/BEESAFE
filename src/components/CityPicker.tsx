@@ -43,8 +43,8 @@ export function CityPicker({ tone = "light" }: { tone?: "light" | "dark" } = {})
           </View>
           <TextInput
             autoFocus
-            className="rounded-2xl bg-subtle px-4 py-3 font-body text-base text-ink"
-            style={shadow.card}
+            className="rounded-2xl bg-solid px-4 py-3 font-body text-base text-ink"
+            style={shadow.field}
             placeholder="Digite o nome da cidade"
             placeholderTextColor={colors.dim}
             value={q}

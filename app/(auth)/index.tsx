@@ -1,7 +1,19 @@
 import { useEffect, useState } from "react";
-import { Alert, Platform, Pressable, Text, TextInput, View } from "react-native";
+import { ArrowRight, Eye, EyeOff, Lock, Mail } from "lucide-react-native";
+import {
+  Alert,
+  KeyboardAvoidingView,
+  Platform,
+  Pressable,
+  ScrollView,
+  Text,
+  View,
+} from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
+import { Aurora } from "@/components/Aurora";
+import { AppleLogo, GoogleG } from "@/components/BrandIcons";
+import { Field } from "@/components/Field";
 import { Logo } from "@/components/Logo";
 import { authMessage } from "@/lib/authErrors";
 import { isAppleSignInAvailable, signInWithApple, signInWithGoogle } from "@/lib/socialAuth";
@@ -12,6 +24,7 @@ export default function LoginScreen() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [mode, setMode] = useState<"login" | "signup">("login");
+  const [showPw, setShowPw] = useState(false);
   const [busy, setBusy] = useState(false);
   const [appleAvailable, setAppleAvailable] = useState(false);
 
@@ -64,83 +77,114 @@ export default function LoginScreen() {
   }
 
   return (
-    <SafeAreaView className="flex-1 bg-paper px-6">
-      <View className="flex-1 justify-center gap-6">
-        <Logo size="lg" />
-        <Text className="font-body text-base text-muted">
-          Sua identidade nunca aparece. O cadastro existe só para evitar relatos falsos.
-        </Text>
-
-        <View className="gap-3">
-          <Pressable
-            disabled={busy}
-            onPress={() => run(signInWithGoogle)}
-            className="items-center rounded-full bg-ink py-3 active:opacity-80 disabled:opacity-50"
+    <View className="flex-1">
+      <Aurora />
+      <SafeAreaView className="flex-1">
+        <KeyboardAvoidingView
+          className="flex-1"
+          behavior={Platform.OS === "ios" ? "padding" : undefined}
+        >
+          <ScrollView
+            contentContainerClassName="flex-grow justify-center gap-6 px-6 py-8"
+            keyboardShouldPersistTaps="handled"
+            showsVerticalScrollIndicator={false}
           >
-            <Text className="font-body-bold text-base text-paper">Entrar com Google</Text>
-          </Pressable>
-          {appleAvailable && Platform.OS === "ios" && (
-            <Pressable
-              disabled={busy}
-              onPress={() => run(signInWithApple)}
-              className="items-center rounded-full bg-subtle py-3 active:opacity-80 disabled:opacity-50"
-            >
-              <Text className="font-body-bold text-base text-ink">Entrar com Apple</Text>
+            <View className="gap-4 px-1">
+              <Logo size="lg" />
+              <Text className="font-display text-[25px] uppercase leading-[30px] tracking-wide text-ink">
+                {"Entre para dar\ncor ao mapa"}
+              </Text>
+              <Text className="font-body text-[14.5px] leading-[21px] text-muted">
+                Sua identidade nunca aparece. O cadastro existe só para evitar relatos falsos.
+              </Text>
+            </View>
+
+            <View className="gap-3.5 rounded-[30px] bg-surface px-5 py-6" style={shadow.card}>
+              <Pressable
+                disabled={busy}
+                onPress={() => run(signInWithGoogle)}
+                className="h-12 flex-row items-center justify-center gap-3 rounded-full bg-solid active:opacity-80 disabled:opacity-50"
+                style={shadow.field}
+              >
+                <GoogleG size={20} />
+                <Text className="font-body-bold text-[15px] text-ink">Entrar com Google</Text>
+              </Pressable>
+              {appleAvailable && Platform.OS === "ios" && (
+                <Pressable
+                  disabled={busy}
+                  onPress={() => run(signInWithApple)}
+                  className="h-12 flex-row items-center justify-center gap-3 rounded-full bg-black active:opacity-80 disabled:opacity-50"
+                >
+                  <AppleLogo size={20} />
+                  <Text className="font-body-bold text-[15px] text-white">Entrar com Apple</Text>
+                </Pressable>
+              )}
+
+              <View className="flex-row items-center gap-3 py-1">
+                <View className="flex-1 border-t border-dashed border-ink/15" />
+                <Text className="font-body-medium text-[11px] uppercase tracking-wider text-dim">
+                  ou com e-mail
+                </Text>
+                <View className="flex-1 border-t border-dashed border-ink/15" />
+              </View>
+
+              <Field
+                label="E-mail"
+                icon={Mail}
+                placeholder="voce@email.com"
+                autoCapitalize="none"
+                autoCorrect={false}
+                autoComplete="email"
+                textContentType="emailAddress"
+                keyboardType="email-address"
+                value={email}
+                onChangeText={setEmail}
+              />
+              <Field
+                label="Senha"
+                icon={Lock}
+                placeholder="Sua senha"
+                secureTextEntry={!showPw}
+                autoComplete={mode === "login" ? "current-password" : "new-password"}
+                textContentType={mode === "login" ? "password" : "newPassword"}
+                value={password}
+                onChangeText={setPassword}
+                right={
+                  <Pressable onPress={() => setShowPw(!showPw)} hitSlop={10}>
+                    {showPw ? (
+                      <EyeOff color={colors.dim} size={18} strokeWidth={1.75} />
+                    ) : (
+                      <Eye color={colors.dim} size={18} strokeWidth={1.75} />
+                    )}
+                  </Pressable>
+                }
+              />
+              <Pressable
+                disabled={busy}
+                onPress={submitEmail}
+                className="mt-1 h-12 flex-row items-center justify-center rounded-full bg-coral active:opacity-80 disabled:opacity-50"
+                style={shadow.coral}
+              >
+                <Text className="font-body-bold text-[15px] text-night">
+                  {mode === "login" ? "Entrar" : "Criar conta"}
+                </Text>
+                <View
+                  className="absolute right-[5px] h-[38px] w-[38px] items-center justify-center rounded-full"
+                  style={{ backgroundColor: "rgba(20,24,41,0.10)" }}
+                >
+                  <ArrowRight color={colors.night} size={18} strokeWidth={1.75} />
+                </View>
+              </Pressable>
+            </View>
+
+            <Pressable onPress={() => setMode(mode === "login" ? "signup" : "login")}>
+              <Text className="text-center font-body-medium text-sm text-turquoiseInk">
+                {mode === "login" ? "Não tem conta? Cadastre-se" : "Já tem conta? Entrar"}
+              </Text>
             </Pressable>
-          )}
-        </View>
-
-        <View className="flex-row items-center gap-3">
-          <View className="h-px flex-1 bg-border" />
-          <Text className="font-body-medium text-[11px] uppercase tracking-wider text-dim">
-            ou com e-mail
-          </Text>
-          <View className="h-px flex-1 bg-border" />
-        </View>
-
-        <View className="gap-3">
-          <TextInput
-            className="rounded-2xl bg-subtle px-4 py-3 font-body text-base text-ink"
-            style={shadow.card}
-            placeholder="E-mail"
-            placeholderTextColor={colors.dim}
-            autoCapitalize="none"
-            autoCorrect={false}
-            autoComplete="email"
-            textContentType="emailAddress"
-            keyboardType="email-address"
-            value={email}
-            onChangeText={setEmail}
-          />
-          <TextInput
-            className="rounded-2xl bg-subtle px-4 py-3 font-body text-base text-ink"
-            style={shadow.card}
-            placeholder="Senha"
-            placeholderTextColor={colors.dim}
-            secureTextEntry
-            autoComplete={mode === "login" ? "current-password" : "new-password"}
-            textContentType={mode === "login" ? "password" : "newPassword"}
-            value={password}
-            onChangeText={setPassword}
-          />
-          <Pressable
-            disabled={busy}
-            onPress={submitEmail}
-            className="items-center rounded-full bg-coral py-3 active:opacity-80 disabled:opacity-50"
-            style={shadow.coral}
-          >
-            <Text className="font-body-bold text-base text-night">
-              {mode === "login" ? "Entrar" : "Criar conta"}
-            </Text>
-          </Pressable>
-        </View>
-
-        <Pressable onPress={() => setMode(mode === "login" ? "signup" : "login")}>
-          <Text className="text-center font-body text-sm text-turquoiseInk">
-            {mode === "login" ? "Não tem conta? Cadastre-se" : "Já tem conta? Entrar"}
-          </Text>
-        </Pressable>
-      </View>
-    </SafeAreaView>
+          </ScrollView>
+        </KeyboardAvoidingView>
+      </SafeAreaView>
+    </View>
   );
 }

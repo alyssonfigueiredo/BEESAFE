@@ -14,6 +14,10 @@ import { colors, shadow } from "@/theme/tokens";
 
 const CATEGORY_KEYS = Object.keys(PLACE_CATEGORIES) as PlaceCategory[];
 
+// O aviso de repetido agora alcança a cidade inteira, então a distância pode ser de quilômetros.
+const distancia = (m: number) =>
+  m >= 1000 ? `${(m / 1000).toFixed(1).replace(".", ",")} km` : `${Math.round(m)} m`;
+
 export function PlaceForm({ onDone }: { onDone: (placeId: string) => void }) {
   const { city, userLocation } = useCity();
   const router = useRouter();
@@ -32,14 +36,21 @@ export function PlaceForm({ onDone }: { onDone: (placeId: string) => void }) {
   const jaExistem = similar.data ?? [];
 
   async function useMyLocation() {
-    const { status } = await Location.requestForegroundPermissionsAsync();
-    if (status !== "granted")
-      return Alert.alert("Sem permissão de localização", "Toque no mapa para marcar o ponto.");
-    const pos = await Location.getCurrentPositionAsync({ accuracy: Location.Accuracy.High });
-    const p = { lat: pos.coords.latitude, lng: pos.coords.longitude };
-    setPoint(p);
-    setFoco(p);
-    setRotulo(null);
+    try {
+      const { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== "granted")
+        return Alert.alert("Sem permissão de localização", "Toque no mapa para marcar o ponto.");
+      const pos = await Location.getCurrentPositionAsync({ accuracy: Location.Accuracy.High });
+      const p = { lat: pos.coords.latitude, lng: pos.coords.longitude };
+      setPoint(p);
+      setFoco(p);
+      setRotulo(null);
+    } catch {
+      Alert.alert(
+        "Não consegui sua localização",
+        "Confira se a localização do celular está ligada, ou toque no mapa para marcar o ponto.",
+      );
+    }
   }
 
   // A cidade e o bairro do lugar saem da coordenada, não do texto: sem isto, quem escrevia o
@@ -106,8 +117,8 @@ export function PlaceForm({ onDone }: { onDone: (placeId: string) => void }) {
       <View className="gap-2">
         <Text className="font-body-bold text-xs text-muted">Nome</Text>
         <TextInput
-          className="rounded-2xl bg-subtle px-4 py-3 font-body text-base text-ink"
-          style={shadow.card}
+          className="rounded-2xl bg-solid px-4 py-3 font-body text-base text-ink"
+          style={shadow.field}
           placeholder="Ex.: Bar da Esquina"
           placeholderTextColor={colors.dim}
           maxLength={80}
@@ -133,8 +144,8 @@ export function PlaceForm({ onDone }: { onDone: (placeId: string) => void }) {
       <View className="gap-2">
         <Text className="font-body-bold text-xs text-muted">Endereço (opcional)</Text>
         <TextInput
-          className="rounded-2xl bg-subtle px-4 py-3 font-body text-base text-ink"
-          style={shadow.card}
+          className="rounded-2xl bg-solid px-4 py-3 font-body text-base text-ink"
+          style={shadow.field}
           placeholder="Rua e número"
           placeholderTextColor={colors.dim}
           maxLength={200}
@@ -190,8 +201,9 @@ export function PlaceForm({ onDone }: { onDone: (placeId: string) => void }) {
             {jaExistem.length === 1 ? "Já existe um parecido" : "Já existem parecidos"}
           </Text>
           <Text className="font-body text-sm text-dim">
-            Se for o mesmo lugar, abra e avalie — a nota da comunidade some quando o mesmo bar vira
-            duas fichas.
+            Se for o mesmo lugar, abra e avalie — a nota da comunidade racha quando o mesmo bar vira
+            duas fichas, e nenhuma das duas chega ao selo. Lugar que mudou de endereço aparece aqui
+            longe do ponto: é a ficha antiga, com o endereço velho.
           </Text>
           {jaExistem.map((p) => (
             <Pressable
@@ -202,7 +214,7 @@ export function PlaceForm({ onDone }: { onDone: (placeId: string) => void }) {
               <Text className="font-body-medium text-base text-ink">{p.name}</Text>
               <Text className="font-body text-xs text-dim">
                 {PLACE_CATEGORIES[p.category]}
-                {p.neighborhood ? ` · ${p.neighborhood}` : ""} · a {Math.round(p.distance_m)} m
+                {p.neighborhood ? ` · ${p.neighborhood}` : ""} · a {distancia(p.distance_m)}
               </Text>
             </Pressable>
           ))}

@@ -89,6 +89,15 @@ Nome: **Irisa** (INPI livre; @appirisa livre). Bundle id Android `br.com.irisa.a
   As telas, o radar e o desenho do mapa foram copiados do `pitch.html` para dentro do
   `docs/index.html`; mudanças na landing se fazem direto nesse arquivo.
   `docs/og.png` é a prévia de link (WhatsApp/Instagram), 1200×630, tirada do próprio hero.
+  **Landing refeita em 01/10/2026 na estética nova** (a mesma do app e do Instagram, `base.css` da skill
+  irisa-posts): papel com as quatro manchas de cor, cartões de vidro, Oswald 700 caixa alta com parte
+  leve em 400 e linhas quebradas à mão, botões em cápsula, `#radarmin` na marca. Sem seção escura
+  inteira: o único bloco escuro é o cartão da emergência. As telas são as reais do app (renders do
+  protótipo, `docs/telas/*.webp`, copiadas pelo `build-site.mjs`), em celulares inclinados que entram
+  girando. **iOS está na App Store** (https://apps.apple.com/br/app/irisa/id6816761128): botão
+  "Baixar na App Store" no hero, no bloco Baixar e no rodapé; o formulário de teste agora é só do
+  Android (`p_platform` sempre `android`), e `#testar` continua existindo para links antigos.
+  Seção de cidades diz "O Brasil todo no mapa" (funciona em qualquer cidade) e lista as sete como "Começando por". Nada de conteúdo saiu: o detalhe segue atrás dos botões que abrem.
   **Story de divulgação (24/09/2026):** `docs/story.html` é um story vertical 1080×1920 de 49 s no
   mesmo estilo da landing. Dez cenas: gancho em conversa de WhatsApp ("aquele bar novo é de boa pra
   gente?") → "E se a resposta já estivesse no mapa?" + marca → "Nesse bar pode / Nessa rua, de noite,
@@ -142,6 +151,16 @@ Nome: **Irisa** (INPI livre; @appirisa livre). Bundle id Android `br.com.irisa.a
   (lugares ficam sem bairro, como em São Luís e Palmas). Nível 9 do OSM lá é o distrito inteiro ("Rio Branco",
   apagado em 30/09); o nível 10 deu Overpass 504 duas vezes — tentar de novo em outro horário e, se entrar,
   rodar o UPDATE de reprocessamento de `places` do supabase/README.md.
+  **Itapeva/SP (3522406) em 02/10/2026:** 256 lugares do Overture, inseridos pela sessão cloud via SQL
+  (sem chave de serviço lá: o script rodou com `--simular` e despejou os candidatos). Fora 5 que não são
+  lugar (igreja marcada como balada, academia, salão de beleza, motorista de Uber, banda). Sem bairro: o OSM
+  não tem nível 10 lá e o nível 9 deu timeout no Overpass.
+  **Grande João Pessoa em 02/10/2026** (mesmo caminho de Itapeva): Bayeux 89, Santa Rita 105 e Conde 93
+  (Jacumã, Carapibus, Tabatinga, Coqueirinho, Tambaba — quase metade é pousada). Tirados nome repetido na
+  mesma cidade e o que não é lugar (depósito de bebidas, xerox, residencial, hotel de Campina Grande).
+  Bairros do OSM no mesmo dia (polígonos simplificados a ~10 m e gravados por `upsert_neighborhoods` via SQL):
+  Bayeux 12 (84 de 89 lugares com bairro), Santa Rita 19 (94 de 105), Conde só Jacumã (27 de 93) — o resto
+  do litoral de Conde não tem bairro no OSM, e o distrito "Conde" do nível 9 cobria a costa toda, então ficou fora.
   No workflow Importar cidade o Overture é o padrão e o OSM ficou desligado. Fotos: cada lugar novo entra
   na fila do Google (150/dia), então uma capital inteira leva meses de cota — aceito, cai no ícone.
   **Fila de fotos por relevância (migration 17, 25/09/2026):** `places.prominence` (0–100 = confiança do
@@ -188,6 +207,18 @@ Nome: **Irisa** (INPI livre; @appirisa livre). Bundle id Android `br.com.irisa.a
   só para o teste do Android. Link público do TestFlight pedido, esperando a revisão beta: quando sair, gravar
   `TESTFLIGHT_URL` e marcar `added_at` dos 9 inscritos de iPhone (todos os pendentes de `tester_signups` em 30/09). A branch principal `claude/ecstatic-darwin-cmf7sw` fica
   sempre igual à de trabalho, pronta para a próxima versão subir com tudo (roteiro em `SOLTAR-OUTUBRO.md`).
+- **Build 0.1.1 enviada nos dois sistemas em 02/10/2026; iOS em revisão na Apple e Android em revisão na Play Console (dito por ele).** O que está no ar hoje: iOS 0.1.0 na App Store (público) e Android em teste fechado. iOS: build 8, `eas submit`
+  feito, esperando o processamento do TestFlight. Android: AAB enviado na faixa de teste fechado,
+  **com a resposta do IARC sobre bloquear/ocultar outros usuários já mudada para Sim** — era a
+  pendência que segurava essa build. É a primeira versão dos dois lados com o **EAS Update ligado**:
+  daqui pra frente correção de JS/tela sai por `npx eas-cli update --branch production`, sem gastar
+  build. **O `runtimeVersion` segue a versão do app (`appVersion`), então update vale para quem tem
+  0.1.1** — quem ficar na 0.1.0 (a que está na App Store desde 01/10) não recebe nada até atualizar.
+  O que vai nela: as correções de 01 e 02/10 (tela presa ao cadastrar lugar, endereço virando ponto
+  no mapa, busca de lugar no banco, aviso de repetido na cidade), foto de perfil, bloqueio de
+  usuário, foto do Mapillary, envio de foto ao avaliar, fila de moderação de imagem, layout novo
+  com as animações. Pendência conhecida que foi junto: o fundo branco quadrado da aba ativa na barra
+  de baixo (é JS, sai por update).
 - Play Console: versão 8 (0.1.0) enviada para revisão na faixa de teste fechado em 22/09/2026, com a
   ficha da loja, os prints e o gráfico de recursos. Falta a lista de testadores completar 12 pessoas
   por 14 dias seguidos antes de pedir produção. Apps da categoria Social exigem a declaração de
@@ -573,6 +604,17 @@ e `pedidos` — então republicar não apaga nada do que já foi decidido.
   segundo: **a busca é sempre por botão, nunca a cada tecla digitada.** `CityMap` ganhou a prop
   `focus` para a câmera ir até o ponto que veio de fora (GPS ou endereço achado) — toque no mapa
   não recentraliza, de propósito. O texto da seção Local diz que o alfinete é o que vale.
+- **Ficha duplicada de bar que mudou de endereço (migrations 31 e 32, 01/10/2026, aplicadas pelo CI):**
+  o "Na Feira Bar" de Curitiba estava em duas fichas — a do Overture (endereço antigo, Rua Padre
+  Anchieta, zero avaliações) e a que o Leandro cadastrou na porta do bar (Alameda Princesa Izabel,
+  1 avaliação), 3,1 km adiante. A trava de 150 m não vê isso. Ficha duplicada racha a nota entre as
+  duas e nenhuma chega às 5 avaliações do selo. A 31 faz `places_similar` somar os parecidos da
+  **cidade inteira** aos de 300 m (perto: semelhança > 0,3; longe: > 0,55, senão "Bar do João"
+  casaria com meia Curitiba) e a tela mostra a distância em km quando passa de 1.000 m. A 32
+  escondeu a ficha do Overture (`status = 'hidden'`, não apaga nada; desfaz com `'active'`).
+  **A barreira dura do banco segue em 150 m de propósito:** rede com duas lojas na mesma cidade é
+  legítima, e recusar cadastro pelo nome a quilômetros travaria lugar de verdade. Longe é conselho,
+  perto é regra.
 - **Limite de lugares/dia: 5 → 20 (migration 30, 01/10/2026).** Conta dele e do Leandro (tabela
   `rate_limit_exempt`, mesma usada para avaliação) ficam sem limite também em `places`, não só em
   `place_ratings`.

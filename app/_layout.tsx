@@ -33,11 +33,13 @@ function RootNavigator() {
         <Stack.Screen name="(tabs)" />
         <Stack.Screen name="lugar/[id]" />
         <Stack.Screen name="moderacao" />
-        <Stack.Screen name="auth/callback" />
       </Stack.Protected>
       <Stack.Protected guard={!session}>
         <Stack.Screen name="(auth)" />
       </Stack.Protected>
+      {/* Fora dos guards (o retorno do login chega sem sessão), mas por último: a primeira tela da
+          lista vira a rota inicial, e esta nunca pode ser a de abertura do app. */}
+      <Stack.Screen name="auth/callback" />
     </Stack>
   );
 }

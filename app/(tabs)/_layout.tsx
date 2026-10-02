@@ -1,6 +1,14 @@
 import { Tabs } from "expo-router";
 import { Home, LifeBuoy, Map, Store, User } from "lucide-react-native";
-import { StyleSheet } from "react-native";
+import type { ReactNode } from "react";
+import {
+  Pressable,
+  StyleSheet,
+  View,
+  type PressableProps,
+  type StyleProp,
+  type ViewStyle,
+} from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import { EmergencyButton } from "@/components/EmergencyButton";
@@ -9,6 +17,52 @@ import { Logo } from "@/components/Logo";
 import { TabIcon } from "@/components/TabIcon";
 import { tabBarBottom } from "@/hooks/useScreenInsets";
 import { colors, fonts, glass, tabColors } from "@/theme/tokens";
+
+function TabButton({
+  children,
+  style,
+  onPress,
+  onLongPress,
+  accessibilityState,
+  accessibilityLabel,
+  testID,
+}: {
+  children?: ReactNode;
+  style?: StyleProp<ViewStyle>;
+  onPress?: PressableProps["onPress"];
+  onLongPress?: PressableProps["onLongPress"];
+  accessibilityState?: { selected?: boolean };
+  accessibilityLabel?: string;
+  testID?: string;
+}) {
+  const on = !!accessibilityState?.selected;
+  return (
+    <Pressable
+      onPress={onPress}
+      onLongPress={onLongPress}
+      accessibilityRole="button"
+      accessibilityState={accessibilityState}
+      accessibilityLabel={accessibilityLabel}
+      testID={testID}
+      style={[style, { flex: 1 }]}
+    >
+      <View
+        style={{
+          flex: 1,
+          marginVertical: 5,
+          marginHorizontal: 4,
+          borderRadius: glass.radius - 5,
+          backgroundColor: on ? colors.solid : "transparent",
+          alignItems: "center",
+          justifyContent: "center",
+          overflow: "hidden",
+        }}
+      >
+        {children}
+      </View>
+    </Pressable>
+  );
+}
 
 export default function TabsLayout() {
   const safe = useSafeAreaInsets();
@@ -64,14 +118,9 @@ export default function TabsLayout() {
         tabBarBackground: () => (
           <Glass style={[StyleSheet.absoluteFill, { borderRadius: glass.radius }]} />
         ),
-        // Lente: a aba ativa ganha uma cápsula branca que desliza; a cor vem de cada aba.
-        tabBarItemStyle: {
-          paddingVertical: 6,
-          marginVertical: 5,
-          marginHorizontal: 4,
-          borderRadius: glass.radius - 5,
-        },
-        tabBarActiveBackgroundColor: colors.solid,
+        // Lente: a aba ativa ganha uma cápsula branca; a cor vem de cada aba. A lente é desenhada
+        // por TabButton (a cor de fundo nativa da aba ignora o raio e escapava como um quadrado).
+        tabBarButton: (props) => <TabButton {...props} />,
         tabBarActiveTintColor: colors.ink,
         tabBarInactiveTintColor: colors.dim,
         tabBarLabelStyle: { fontFamily: fonts.bodyMedium, fontSize: 11 },
