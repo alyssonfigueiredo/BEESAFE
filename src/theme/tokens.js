@@ -66,7 +66,7 @@ const accents = {
 
 const colors = {
   paper: "#F5F4F1", // fundo das telas (por baixo da aurora)
-  surface: "rgba(255,255,255,0.66)", // cartões: translúcidos, a aurora passa de leve por baixo
+  surface: "rgba(255,255,255,0.4)", // cartões: translúcidos, a aurora passa de leve por baixo
   solid: "#FFFFFF", // onde precisa ser opaco (lente da aba, balão do mapa)
   subtle: "#ECEAE5", // campos, chips e botões fantasma (tonais, sem borda)
   border: "#E6E3DD", // linhas divisórias; cartão não tem borda

@@ -273,7 +273,8 @@ export default function PlaceScreen() {
                 </View>
               ))}
               <TextInput
-                className="min-h-20 rounded-2xl bg-subtle px-4 py-3 font-body text-base text-ink"
+                className="min-h-20 rounded-2xl bg-solid px-4 py-3 font-body text-base text-ink"
+                style={shadow.field}
                 placeholder="Quer contar como foi? (opcional, até 500 caracteres)"
                 placeholderTextColor={colors.dim}
                 multiline

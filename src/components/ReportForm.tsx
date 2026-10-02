@@ -105,8 +105,8 @@ export function ReportForm({ onDone }: { onDone: () => void }) {
         {Platform.OS === "android" && (
           <Pressable
             onPress={() => setShowPicker(true)}
-            className="rounded-2xl bg-subtle px-4 py-3"
-            style={shadow.card}
+            className="rounded-2xl bg-solid px-4 py-3"
+            style={shadow.field}
           >
             <Text className="font-body text-base text-ink">
               {format(date, "d 'de' MMMM 'de' yyyy", { locale: ptBR })}
@@ -210,8 +210,8 @@ export function ReportForm({ onDone }: { onDone: () => void }) {
 
       <Field label="Descrição (opcional)" hint={`${description.length}/2000`}>
         <TextInput
-          className="min-h-28 rounded-2xl bg-subtle px-4 py-3 font-body text-base text-ink"
-          style={shadow.card}
+          className="min-h-28 rounded-2xl bg-solid px-4 py-3 font-body text-base text-ink"
+          style={shadow.field}
           placeholder="O que aconteceu? Não inclua seu nome nem dados que identifiquem você ou outras pessoas."
           placeholderTextColor={colors.dim}
           multiline

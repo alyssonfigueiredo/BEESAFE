@@ -80,8 +80,8 @@ export function PlacePicker({
       {searching ? (
         <View className="flex-row items-center gap-2">
           <TextInput
-            className="flex-1 rounded-2xl bg-subtle px-4 py-3 font-body text-base text-ink"
-            style={shadow.card}
+            className="flex-1 rounded-2xl bg-solid px-4 py-3 font-body text-base text-ink"
+            style={shadow.field}
             placeholder="Nome do lugar"
             placeholderTextColor={colors.dim}
             autoFocus

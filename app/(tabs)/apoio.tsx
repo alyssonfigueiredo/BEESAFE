@@ -75,7 +75,8 @@ export default function ApoioScreen() {
         <View className="gap-3 rounded-3xl bg-surface p-4" style={shadow.card}>
           <Text className="font-body-bold text-base text-ink">Deixe uma mensagem</Text>
           <TextInput
-            className="rounded-2xl bg-subtle px-4 py-3 font-body text-base text-ink"
+            className="rounded-2xl bg-solid px-4 py-3 font-body text-base text-ink"
+            style={shadow.field}
             placeholder="Apelido (opcional, vira Anônimo)"
             placeholderTextColor={colors.dim}
             maxLength={40}
@@ -98,7 +99,8 @@ export default function ApoioScreen() {
             })}
           </View>
           <TextInput
-            className="min-h-24 rounded-2xl bg-subtle px-4 py-3 font-body text-base text-ink"
+            className="min-h-24 rounded-2xl bg-solid px-4 py-3 font-body text-base text-ink"
+            style={shadow.field}
             placeholder="Uma palavra de acolhimento, uma dica ou um pedido de ajuda (até 1000 caracteres)"
             placeholderTextColor={colors.dim}
             multiline

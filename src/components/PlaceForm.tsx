@@ -110,8 +110,8 @@ export function PlaceForm({ onDone }: { onDone: (placeId: string) => void }) {
       <View className="gap-2">
         <Text className="font-body-bold text-xs text-muted">Nome</Text>
         <TextInput
-          className="rounded-2xl bg-subtle px-4 py-3 font-body text-base text-ink"
-          style={shadow.card}
+          className="rounded-2xl bg-solid px-4 py-3 font-body text-base text-ink"
+          style={shadow.field}
           placeholder="Ex.: Bar da Esquina"
           placeholderTextColor={colors.dim}
           maxLength={80}
@@ -137,8 +137,8 @@ export function PlaceForm({ onDone }: { onDone: (placeId: string) => void }) {
       <View className="gap-2">
         <Text className="font-body-bold text-xs text-muted">Endereço (opcional)</Text>
         <TextInput
-          className="rounded-2xl bg-subtle px-4 py-3 font-body text-base text-ink"
-          style={shadow.card}
+          className="rounded-2xl bg-solid px-4 py-3 font-body text-base text-ink"
+          style={shadow.field}
           placeholder="Rua e número"
           placeholderTextColor={colors.dim}
           maxLength={200}
