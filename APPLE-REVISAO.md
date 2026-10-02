@@ -109,13 +109,15 @@ the app. The project is independent and free of charge.
   Profile tab under "Pessoas bloqueadas". Incident reports are fully anonymous: no author,
   nickname or profile is ever shown or reachable, so there is no author to block there;
   reporting and human moderation cover that content.
+- When rating a place, an optional "add a photo" button lets the user pick a photo from the
+  library. It stays hidden until a moderator approves it.
 - Profile tab: nickname and city, blocked people, sign out, and "Excluir minha conta" (delete
   account), which permanently deletes the account and its content. For accounts created with
   Sign in with Apple, deleting the account also revokes the Apple token on Apple's servers
   before the user record is removed.
 
 4) EXTERNAL SERVICES USED
-- Supabase (PostgreSQL + PostGIS, hosted in São Paulo, Brazil): authentication, database,
+- Supabase (PostgreSQL + PostGIS, hosted in Virginia, USA, us-east-1): authentication, database,
   row-level security, realtime, and Edge Functions (Apple token revocation on account
   deletion). All user data lives here.
 - Sign in with Apple (native) and Google OAuth via Supabase (system browser, PKCE).
@@ -143,12 +145,14 @@ is not published by, and does not claim to represent, any government body, NGO o
 Third-party material used is limited to openly licensed map data (OpenStreetMap, ODbL 1.0;
 Overture Maps, CDLA-Permissive 2.0), attributed in the terms, and public place photos served
 through the Google Places API under Google's terms. Place names and addresses are public
-business information. Users cannot upload photos in this version: all user-generated content
-is text only.
+business information. Users can optionally attach one photo of a place when rating it (picked from the photo
+library). Photos are never published automatically: each one is held for human review, can be
+reported, and is deleted together with the account.
 
 7) PRIVACY AND MODERATION SUMMARY
 Incident reports are anonymous: the author is never exposed in any public view, coordinates of
-recent reports are blurred, and no photos or attachments are accepted. Users can report
+recent reports are blurred, and the only attachment accepted is one optional place photo per rating, reviewed by a human
+before it is shown. Users can report
 content, block other users, and delete their own account and content from inside the app.
 Privacy policy: https://alyssonfigueiredo.github.io/BEESAFE/privacidade.html
 Terms: https://alyssonfigueiredo.github.io/BEESAFE/termos.html
