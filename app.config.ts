@@ -63,8 +63,14 @@ const config: ExpoConfig = {
     [
       "expo-splash-screen",
       // Só a cor do papel: o radar animado (src/components/Splash.tsx) é a abertura de verdade,
-      // e uma logo estática antes dele parecia duas aberturas.
-      { backgroundColor: "#F5F4F1" },
+      // e uma logo estática antes dele parecia duas aberturas. A imagem é um PNG transparente:
+      // sem `image` o plugin não gera o drawable `splashscreen_logo` que o tema do Android
+      // referencia, e o gradle quebra em processReleaseResources.
+      {
+        backgroundColor: "#F5F4F1",
+        image: "./assets/splash-transparente.png",
+        imageWidth: 200,
+      },
     ],
   ],
   experiments: { typedRoutes: true },
