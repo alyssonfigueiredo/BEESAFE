@@ -35,6 +35,12 @@ Deno.serve(async (req) => {
     // Sem token guardado (login anterior a esta versão): não há o que revogar; a exclusão segue.
   }
 
+  // A foto de perfil mora no Storage, que não some pelas FKs: apaga a pasta da pessoa antes.
+  const { data: files } = await admin.storage.from("avatares").list(user.id);
+  if (files?.length) {
+    await admin.storage.from("avatares").remove(files.map((f) => `${user.id}/${f.name}`));
+  }
+
   const { error: delError } = await admin.auth.admin.deleteUser(user.id);
   if (delError) return json(500, { error: delError.message });
   return json(200, { deleted: true, appleRevoked });

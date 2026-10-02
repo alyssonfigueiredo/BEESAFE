@@ -1,15 +1,16 @@
 import { format, parseISO } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { Link } from "expo-router";
-import { Ban, LogOut, MapPin, ShieldCheck, User, type LucideIcon } from "lucide-react-native";
+import { Ban, Camera, LogOut, Trash2, MapPin, ShieldCheck, User, type LucideIcon } from "lucide-react-native";
 import { useState, type ReactNode } from "react";
 import Svg, { Circle, Defs, LinearGradient, Stop } from "react-native-svg";
-import { Alert, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
+import { Alert, Image, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 
 import { Aurora } from "@/components/Aurora";
 import { Field, FieldShell } from "@/components/Field";
 import { useScreenInsets } from "@/hooks/useScreenInsets";
 import { CityPicker } from "@/components/CityPicker";
+import { useAvatarUrl, useChangeAvatar, useRemoveAvatar } from "@/hooks/useAvatar";
 import { useBlockedUsers, useUnblockUser } from "@/hooks/useBlocks";
 import { useDeleteAccount, useProfile, useUpdateProfile } from "@/hooks/useProfile";
 import { authMessage } from "@/lib/authErrors";
@@ -61,6 +62,24 @@ export default function PerfilScreen() {
     );
   }
 
+  const { data: avatarUrl } = useAvatarUrl(profile?.avatar_path);
+  const photo = useChangeAvatar();
+  const removePhoto = useRemoveAvatar();
+  const fail = (e: unknown) => Alert.alert("Não deu certo", authMessage(e) ?? "Tente de novo.");
+
+  function changePhoto() {
+    if (!profile?.avatar_path) return photo.mutate(undefined, { onError: fail });
+    Alert.alert("Foto de perfil", "Só você vê essa foto. Ela não aparece no mural nem nas avaliações.", [
+      { text: "Trocar foto", onPress: () => photo.mutate(undefined, { onError: fail }) },
+      {
+        text: "Remover foto",
+        style: "destructive",
+        onPress: () => removePhoto.mutate(profile.avatar_path!, { onError: fail }),
+      },
+      { text: "Cancelar", style: "cancel" },
+    ]);
+  }
+
   const shown = value.trim() || "Anônimo";
   const mail = session?.user.email?.endsWith("privaterelay.appleid.com")
     ? "Conta Apple (e-mail oculto)"
@@ -71,13 +90,17 @@ export default function PerfilScreen() {
       <Aurora />
       <ScrollView
         className="flex-1"
-        contentContainerClassName="gap-[18px] px-6"
+        contentContainerClassName="gap-6 px-6"
         contentContainerStyle={insets}
         keyboardShouldPersistTaps="handled"
       >
-        <View className="flex-row items-center gap-4 rounded-[30px] bg-surface p-5" style={shadow.card}>
-          <View className="h-[60px] w-[60px] items-center justify-center">
-            <Svg width={60} height={60} style={StyleSheet.absoluteFill}>
+        <View className="flex-row items-center gap-5 rounded-[30px] bg-surface px-6 py-6" style={shadow.card}>
+          <Pressable
+            onPress={changePhoto}
+            disabled={photo.isPending}
+            className="h-[72px] w-[72px] items-center justify-center active:opacity-80"
+          >
+            <Svg width={72} height={72} style={StyleSheet.absoluteFill}>
               <Defs>
                 <LinearGradient id="avatar" x1="0" y1="0" x2="1" y2="1">
                   {mark.ring.map((c, i) => (
@@ -85,10 +108,20 @@ export default function PerfilScreen() {
                   ))}
                 </LinearGradient>
               </Defs>
-              <Circle cx={30} cy={30} r={28} fill="#FFFFFF" stroke="url(#avatar)" strokeWidth={3} />
+              <Circle cx={36} cy={36} r={34} fill="#FFFFFF" stroke="url(#avatar)" strokeWidth={3} />
             </Svg>
-            <Text className="font-display text-2xl uppercase text-ink">{shown.charAt(0)}</Text>
-          </View>
+            {avatarUrl ? (
+              <Image source={{ uri: avatarUrl }} style={{ width: 62, height: 62, borderRadius: 31 }} />
+            ) : (
+              <Text className="font-display text-3xl uppercase text-ink">{shown.charAt(0)}</Text>
+            )}
+            <View
+              className="absolute -bottom-0.5 -right-0.5 h-7 w-7 items-center justify-center rounded-full bg-solid"
+              style={shadow.field}
+            >
+              <Camera color={colors.ink} size={14} strokeWidth={1.75} />
+            </View>
+          </Pressable>
           <View className="min-w-0 flex-1 gap-1">
             <Text
               className="font-display text-[22px] uppercase tracking-wide text-ink"
@@ -112,7 +145,7 @@ export default function PerfilScreen() {
           </View>
         </View>
 
-        <View className="gap-3.5 rounded-[30px] bg-surface px-5 py-6" style={shadow.card}>
+        <View className="gap-4 rounded-[30px] bg-surface px-6 py-7" style={shadow.card}>
           <Text className="font-body-medium text-[17px] text-ink">Seu perfil</Text>
           <Field
             label="Apelido no mural e nas avaliações"
@@ -135,7 +168,7 @@ export default function PerfilScreen() {
           </Pressable>
         </View>
 
-        <View className="rounded-[30px] bg-surface px-5 py-2" style={shadow.card}>
+        <View className="rounded-[30px] bg-surface px-6 py-3" style={shadow.card}>
           <ListRow icon={ShieldCheck} color={colors.yellowInk} title="Privacidade">
             <Text className="font-body text-[12.5px] leading-[17px] text-dim">
               Relatos e mensagens nunca mostram seu nome ou e-mail. Só o apelido que você escolher
@@ -182,17 +215,23 @@ export default function PerfilScreen() {
             </Pressable>
           </Link>
         )}
-        <Pressable
-          onPress={() => supabase.auth.signOut()}
-          className="h-12 flex-row items-center justify-center gap-2 rounded-full bg-solid active:opacity-80"
-          style={shadow.field}
-        >
-          <LogOut color={colors.ink} size={18} strokeWidth={1.75} />
-          <Text className="font-body-bold text-[15px] text-ink">Sair</Text>
-        </Pressable>
-        <Pressable onPress={confirmDelete} className="items-center py-3 active:opacity-80">
-          <Text className="font-body text-sm text-coralInk">Excluir minha conta</Text>
-        </Pressable>
+        <View className="gap-2 pt-1">
+          <Pressable
+            onPress={() => supabase.auth.signOut()}
+            className="min-h-[52px] flex-row items-center justify-center gap-2 rounded-full bg-solid px-6 py-3.5 active:opacity-80"
+            style={shadow.field}
+          >
+            <LogOut color={colors.ink} size={18} strokeWidth={1.75} />
+            <Text className="font-body-bold text-[15px] text-ink">Sair</Text>
+          </Pressable>
+          <Pressable
+            onPress={confirmDelete}
+            className="min-h-[48px] flex-row items-center justify-center gap-2 py-3 active:opacity-70"
+          >
+            <Trash2 color={colors.coralInk} size={16} strokeWidth={1.75} />
+            <Text className="font-body-medium text-sm text-coralInk">Excluir minha conta</Text>
+          </Pressable>
+        </View>
       </ScrollView>
     </View>
   );
@@ -224,7 +263,7 @@ function ListRow({
 }) {
   return (
     <View
-      className={`flex-row items-center gap-3.5 py-4 ${last ? "" : "border-b border-dashed border-ink/15"}`}
+      className={`flex-row items-center gap-3.5 py-5 ${last ? "" : "border-b border-dashed border-ink/15"}`}
     >
       <View className="h-10 w-10 items-center justify-center rounded-full bg-solid" style={shadow.field}>
         <Icon_ icon={icon} color={color} />
