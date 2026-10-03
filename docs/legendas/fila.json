@@ -193,7 +193,7 @@
   {
     "id": "story-02",
     "aprovado": false,
-    "quando": "2026-10-04T12:00:00-03:00",
+    "quando": "2026-10-06T12:00:00-03:00",
     "tipo": "STORY",
     "midias": [
       "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/stories-2/02.png"
@@ -256,6 +256,19 @@
     "legenda": "",
     "primeiro_comentario": "",
     "publicado": false
+  },
+  {
+    "id": "story-05",
+    "aprovado": true,
+    "quando": "2026-10-04T12:00:00-03:00",
+    "tipo": "STORY",
+    "midias": [
+      "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/stories-2/05.png"
+    ],
+    "legenda": "",
+    "primeiro_comentario": "",
+    "publicado": false,
+    "nota": "VOTE/IRISE, dia da eleição (pedido e aprovado por ele no chat, 03/10). Sem citar partido/candidato. Sem adesivo, publicação automática pelo robô igual as outras stories-2."
   },
   {
     "id": "reels-9",
