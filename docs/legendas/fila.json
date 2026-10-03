@@ -193,7 +193,7 @@
   {
     "id": "story-02",
     "aprovado": false,
-    "quando": "2026-10-03T12:00:00-03:00",
+    "quando": "2026-10-04T12:00:00-03:00",
     "tipo": "STORY",
     "midias": [
       "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/stories-2/02.png"
@@ -216,15 +216,16 @@
   },
   {
     "id": "story-03",
-    "aprovado": false,
-    "quando": "2026-10-04T12:00:00-03:00",
+    "aprovado": true,
+    "quando": "2026-10-03T12:00:00-03:00",
     "tipo": "STORY",
     "midias": [
       "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/stories-2/03.png"
     ],
     "legenda": "",
     "primeiro_comentario": "",
-    "publicado": false
+    "publicado": false,
+    "nota": "Publicar agora (pedido dele, 03/10): furou a fila pro horário de hoje. STORY é sempre manual."
   },
   {
     "id": "carrossel-5",
