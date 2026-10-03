@@ -65,7 +65,7 @@ function head(t){
 const TAIL=2600;   // comprimento do rastro em px
 function tail(t,h){const base=h-TAIL;if(t<2700)return base;return base+eout(seg(t,2700,3500))*(TOT-base)}
 
-function ribbon(t){
+function ribbonDraw(t,g){
   const h=head(t);if(h<0)return;const s0=Math.max(0,tail(t,h));if(h-s0<2)return;
   const step=5,fade=Math.min(900,h-s0);
   g.save();g.globalCompositeOperation="lighter";g.lineCap="butt";g.lineJoin="round";
@@ -75,7 +75,7 @@ function ribbon(t){
     const CH=14;
     for(let i0=0;i0<pts.length-1;i0+=CH){
       const ch=pts.slice(i0,Math.min(pts.length,i0+CH+1));const m=ch[ch.length>>1];const fa=clamp((m[3]-s0)/fade);
-      for(const [mul,alp] of [[1.9,.10],[1.05,.55],[.42,.9]]){
+      for(const [mul,alp] of [[1.9,.10],[1.05,.45],[.42,.55]]){
         g.strokeStyle=NEON[k];g.globalAlpha=alp*fa;g.lineWidth=m[2]*mul;
         g.beginPath();g.moveTo(ch[0][0],ch[0][1]);for(let j=1;j<ch.length;j++)g.lineTo(ch[j][0],ch[j][1]);g.stroke();
       }
@@ -84,6 +84,34 @@ function ribbon(t){
   // brilho da cabeça
   const{p}=at(h),w=wAt(h);const rg=g.createRadialGradient(p[0],p[1],0,p[0],p[1],w*6);
   rg.addColorStop(0,"rgba(255,255,255,.55)");rg.addColorStop(1,"rgba(255,255,255,0)");g.globalAlpha=1;g.fillStyle=rg;g.beginPath();g.arc(p[0],p[1],w*6,0,7);g.fill();
+  g.restore();
+}
+
+
+// Rastro de fada: a fita é desenhada num canvas à parte e composta só com blur forte (nada de traço
+// sólido), em três camadas de brilho, mais poeira cintilante espalhada pelo caminho.
+const rc=document.createElement("canvas");rc.width=W;rc.height=H;const rg2=rc.getContext("2d");
+const hash=(n)=>{const x=Math.sin(n*127.1+311.7)*43758.5453;return x-Math.floor(x)};
+function ribbon(t){
+  const h=head(t);if(h<0)return;
+  rg2.setTransform(1,0,0,1,0,0);rg2.globalAlpha=1;rg2.globalCompositeOperation="source-over";rg2.clearRect(0,0,W,H);
+  ribbonDraw(t,rg2);
+  g.save();g.globalCompositeOperation="lighter";
+  for(const [px,alp] of [[90,.55],[44,.4],[18,.28],[7,.16]]){g.filter=`blur(${px}px)`;g.globalAlpha=alp;g.drawImage(rc,0,0)}
+  g.filter="none";
+  // poeira de fada: pontos que cintilam atrás da cabeça e somem com o rastro
+  const s0=Math.max(0,tail(t,h)),span=Math.min(TAIL,h-s0);
+  if(span>20){
+    for(let i=0;i<150;i++){
+      const r1=hash(i),r2=hash(i+500),r3=hash(i+900),r4=hash(i+1300);
+      const L=h-r1*span;if(L<s0)continue;const{p,t:tg}=at(L);
+      const off=(r2-.5)*wAt(L)*9;
+      const x=p[0]+tg[1]*off,y=p[1]-tg[0]*off+Math.sin(t*.002+i)*6;
+      const vida=1-r1,tw=.55+.45*Math.sin(t*.014+i*3.1),r=(3+r4*9)*(.5+vida);
+      const gl=g.createRadialGradient(x,y,0,x,y,r*4);gl.addColorStop(0,"rgba(255,255,255,.95)");gl.addColorStop(.25,NEON[Math.floor(r3*6)]);gl.addColorStop(1,"rgba(0,0,0,0)");
+      g.globalAlpha=vida*tw*.9;g.fillStyle=gl;g.beginPath();g.arc(x,y,r*4,0,7);g.fill();
+    }
+  }
   g.restore();
 }
 
