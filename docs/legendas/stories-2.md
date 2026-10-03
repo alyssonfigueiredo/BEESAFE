@@ -18,12 +18,12 @@ implícita (quase todo mundo já deixou), então sustenta sozinha sem precisar d
 **Trocou de lugar com a story-02 a pedido dele (03/10)**: furou a fila pra sair no sábado,
 aprovada e marcada "publicar agora" no artefato — publicada 17h55 do mesmo dia.
 
-## story-05 · `stories-2/05.png` (VOTE/IRISE) — dom 04/10, 12h, dia de eleição
-"VOTE. Cada voto conta pra eleger quem te protege — não quem te ataca. IRISE. Cada cor conta
-pra mostrar quem já te acolhe." Dois cartões lado a lado (borda coral/turquesa), sem citar
+## story-05 · `stories-2/05.png` (VAI VOTAR, VIADO / IRISA, MONA) — dom 04/10, 12h, dia de eleição
+"VAI VOTAR, VIADO. Cada voto conta pra eleger quem te protege — não quem te ataca. IRISA, MONA.
+Cada cor conta pra mostrar quem já te acolhe." Dois cartões lado a lado (borda coral/turquesa), sem citar
 partido ou candidato — é sobre o ato de votar e a garantia de direitos, ligado ao gesto de
 irisar um lugar. Pedida e aprovada por ele no chat em 03/10 (texto workshopeado até chegar
-nessa versão); `aprovado: true` direto no `fila.json`, sem passar pelo artefato — é a exceção
+nessa versão; títulos trocados por ele em 03/10, na voz da comunidade); `aprovado: true` direto no `fila.json`, sem passar pelo artefato — é a exceção
 do CLAUDE.md pra aprovação explícita em chat. Entrou no lugar da story-02 nesse horário.
 
 ## story-02 · `stories-2/02.png` (convite a responder) — adiada pra ter 06/10, 12h
