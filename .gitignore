@@ -48,3 +48,8 @@ screenshots/
 
 # A pasta que scripts/artefato-aprovacao.mjs monta para publicar no artefato (cópia do que já está em docs/).
 build/
+
+# Controle de alertas de publicação já enviados por e-mail (rotina de aviso, não é conteúdo do projeto).
+scripts/.alertas-enviados.json
+import-rm.log
+supabase/.temp/

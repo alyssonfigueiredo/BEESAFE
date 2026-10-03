@@ -1,477 +1,512 @@
 [
-  {
-    "id": "story-hoje",
-    "aprovado": true,
-    "quando": "2026-09-26T18:00:00-03:00",
-    "tipo": "STORY",
-    "midias": [
-      "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/story-hoje.png"
-    ],
-    "legenda": "",
-    "primeiro_comentario": "",
-    "publicado": true,
-    "publicado_em": "2026-09-26T21:10:00.000Z",
-    "publicado_manual": "adesivo de link (bit.ly/appirisa), postado direto pelo app",
-    "confirmado": false,
-    "confirmado_erro": "undefined: Unsupported get request. Object with ID 'undefined' does not exist, cannot be loaded due to missing permissions, or does not support this operation. Please read the Graph API documentation at https://developers.facebook.com/docs/graph-api"
+ {
+  "id": "story-hoje",
+  "aprovado": true,
+  "quando": "2026-09-26T18:00:00-03:00",
+  "tipo": "STORY",
+  "midias": [
+   "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/story-hoje.png"
+  ],
+  "legenda": "",
+  "primeiro_comentario": "",
+  "publicado": true,
+  "publicado_em": "2026-09-26T21:10:00.000Z",
+  "publicado_manual": "adesivo de link (bit.ly/appirisa), postado direto pelo app",
+  "confirmado": false,
+  "confirmado_erro": "undefined: Unsupported get request. Object with ID 'undefined' does not exist, cannot be loaded due to missing permissions, or does not support this operation. Please read the Graph API documentation at https://developers.facebook.com/docs/graph-api"
+ },
+ {
+  "id": "story-arcoiris",
+  "aprovado": false,
+  "quando": "2026-09-27T17:00:00-03:00",
+  "tipo": "STORY",
+  "midias": [
+   "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/story-arcoiris.png"
+  ],
+  "legenda": "",
+  "primeiro_comentario": "",
+  "publicado": false,
+  "nota": "Aprovado pelo Alysson, mas tem adesivo (caixa de pergunta) — precisa ir manual pelo app, igual story-hoje. Não deixar o script publicar sozinho."
+ },
+ {
+  "id": "carrossel-3",
+  "aprovado": true,
+  "quando": "2026-09-28T09:00:00-03:00",
+  "tipo": "POST",
+  "midias": [
+   "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/carrossel-3/01.png",
+   "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/carrossel-3/02.png",
+   "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/carrossel-3/03.png",
+   "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/carrossel-3/04.png",
+   "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/carrossel-3/05.png",
+   "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/carrossel-3/06.png",
+   "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/carrossel-3/07.png",
+   "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/carrossel-3/08.png"
+  ],
+  "legenda": "Quem registra tem medo de uma coisa: que alguém descubra que foi ela.\n\nPor isso a Irisa foi feita pra não saber quem você é.\n\nSem nome — seu relato aparece sem autor, pra quem lê, pro lugar, pra gente.\nSem perfil — não existe página de usuário, ninguém abre seu histórico.\nSem rastro — o ponto do relato de hoje sai deslocado, ninguém te acha pela localização.\n\nExcluir a conta apaga tudo, na hora, dentro do app. Anônimo de verdade não é promessa: é como o banco de dados foi construído.\n\nO que te faria registrar sem medo? Conta aqui embaixo — e salva esse post pra quando precisar explicar isso pra alguém. 🌈\n\nO link está na bio.\n\n#Irisa #LGBTQIA #Orgulho #AppLGBT #Anonimato",
+  "primeiro_comentario": "",
+  "publicado": true,
+  "publicado_em": "2026-09-28T22:26:04.897Z",
+  "media_id": "18633766786028633",
+  "confirmacao": {
+   "id": "18633766786028633",
+   "media_type": "CAROUSEL_ALBUM",
+   "permalink": "https://www.instagram.com/p/Dd2QW7kF74h/",
+   "timestamp": "2026-09-28T22:27:10+0000"
   },
-  {
-    "id": "story-arcoiris",
-    "aprovado": false,
-    "quando": "2026-09-27T17:00:00-03:00",
-    "tipo": "STORY",
-    "midias": [
-      "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/story-arcoiris.png"
-    ],
-    "legenda": "",
-    "primeiro_comentario": "",
-    "publicado": false,
-    "nota": "Aprovado pelo Alysson, mas tem adesivo (caixa de pergunta) — precisa ir manual pelo app, igual story-hoje. Não deixar o script publicar sozinho."
+  "confirmado": true,
+  "confirmado_em": "2026-09-28T22:27:14.943Z"
+ },
+ {
+  "id": "story-cidades",
+  "aprovado": false,
+  "quando": "2026-09-28T12:00:00-03:00",
+  "tipo": "STORY",
+  "midias": [
+   "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/story-cidades.png"
+  ],
+  "legenda": "",
+  "primeiro_comentario": "",
+  "publicado": false
+ },
+ {
+  "id": "story-eixos",
+  "aprovado": true,
+  "quando": "2026-09-28T15:01:00-03:00",
+  "tipo": "STORY",
+  "midias": [
+   "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/story-eixos.png"
+  ],
+  "legenda": "",
+  "primeiro_comentario": "",
+  "publicado": true,
+  "ultimo_erro": "***/media: Unsupported post request. Object with ID '***' does not exist, cannot be loaded due to missing permissions, or does not support this operation. Please read the Graph API documentation at https://developers.facebook.com/docs/graph-api",
+  "publicado_em": "2026-09-28T18:23:46.921Z",
+  "media_id": "18108605300334854",
+  "confirmacao": {
+   "id": "18108605300334854",
+   "media_type": "IMAGE",
+   "permalink": "https://www.instagram.com/stories/appirisa/3996331237149509729",
+   "timestamp": "2026-09-28T18:23:53+0000",
+   "na_lista_de_stories_ativos": true
   },
-  {
-    "id": "carrossel-3",
-    "aprovado": true,
-    "quando": "2026-09-28T09:00:00-03:00",
-    "tipo": "POST",
-    "midias": [
-      "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/carrossel-3/01.png",
-      "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/carrossel-3/02.png",
-      "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/carrossel-3/03.png",
-      "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/carrossel-3/04.png",
-      "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/carrossel-3/05.png",
-      "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/carrossel-3/06.png",
-      "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/carrossel-3/07.png",
-      "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/carrossel-3/08.png"
-    ],
-    "legenda": "Quem registra tem medo de uma coisa: que alguém descubra que foi ela.\n\nPor isso a Irisa foi feita pra não saber quem você é.\n\nSem nome — seu relato aparece sem autor, pra quem lê, pro lugar, pra gente.\nSem perfil — não existe página de usuário, ninguém abre seu histórico.\nSem rastro — o ponto do relato de hoje sai deslocado, ninguém te acha pela localização.\n\nExcluir a conta apaga tudo, na hora, dentro do app. Anônimo de verdade não é promessa: é como o banco de dados foi construído.\n\nO que te faria registrar sem medo? Conta aqui embaixo — e salva esse post pra quando precisar explicar isso pra alguém. 🌈\n\nO link está na bio.\n\n#Irisa #LGBTQIA #Orgulho #AppLGBT #Anonimato",
-    "primeiro_comentario": "",
-    "publicado": true,
-    "publicado_em": "2026-09-28T22:26:04.897Z",
-    "media_id": "18633766786028633",
-    "confirmacao": {
-      "id": "18633766786028633",
-      "media_type": "CAROUSEL_ALBUM",
-      "permalink": "https://www.instagram.com/p/Dd2QW7kF74h/",
-      "timestamp": "2026-09-28T22:27:10+0000"
-    },
-    "confirmado": true,
-    "confirmado_em": "2026-09-28T22:27:14.943Z"
+  "confirmado": true,
+  "confirmado_em": "2026-09-28T18:30:26.642Z"
+ },
+ {
+  "id": "story-irisar",
+  "aprovado": false,
+  "quando": "2026-09-29T17:00:00-03:00",
+  "tipo": "STORY",
+  "midias": [
+   "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/story-irisar/01.png"
+  ],
+  "legenda": "",
+  "primeiro_comentario": "",
+  "publicado": true,
+  "nota": "Tem adesivo de quiz (O que é irisar? → Dar cor a um lugar / Brilhar na balada / Sair do armário). Precisa ir manual pelo app; não deixar o script publicar sozinho. Detalhes em docs/legendas/story-irisar.md.",
+  "publicado_em": "2026-09-29T22:10:00.000Z",
+  "publicado_manual": "postado à mão pelo app",
+  "confirmado": false,
+  "confirmado_erro": "undefined: API access blocked."
+ },
+ {
+  "id": "post-irisar",
+  "aprovado": false,
+  "quando": "2026-09-29T18:00:00-03:00",
+  "tipo": "POST",
+  "midias": [
+   "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/post-irisar/01.png"
+  ],
+  "legenda": "Irisar: verbo.\n\nDar cor a um lugar respondendo quatro perguntas sobre como ele recebe a gente — atendimento, afeto, banheiro, clientela. Quem esteve lá responde. As respostas viram nota, e a nota vira cor.\n\nEstrela não diz nada pra gente. Cinco estrelas num lugar onde a recepção te olha torto continuam sendo cinco estrelas.\n\nQual lugar da sua cidade você irisaria hoje? 🌈\n\nO link está na bio.\n\n#Irisa #LGBTQIA #Orgulho #AppLGBT #Dicionario",
+  "primeiro_comentario": "bit.ly/appirisa",
+  "publicado": true,
+  "nota": "Publicação manual pelo app, decisão dele (29/09). Não deixar o script publicar sozinho.",
+  "publicado_em": "2026-09-29T22:10:00.000Z",
+  "publicado_manual": "postado à mão pelo app",
+  "confirmado": false,
+  "confirmado_erro": "undefined: API access blocked."
+ },
+ {
+  "id": "post-bemvinde",
+  "aprovado": true,
+  "quando": "2026-09-30T18:00:00-03:00",
+  "tipo": "POST",
+  "midias": [
+   "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/post-bemvinde/01.png"
+  ],
+  "legenda": "Uma escolha de palavra: bem-vinde.\n\n\"Bem-vindo\" deixa gente de fora. O mapa é de todo mundo que entra pela porta — e a linguagem do app segue essa regra em tudo: identificade, questionade, recebide.\n\nQual foi a primeira vez que alguém usou uma palavra assim com você? 🌈\n\nO link está na bio.\n\n#Irisa #LGBTQIA #Orgulho #AppLGBT #BemVinde",
+  "primeiro_comentario": "",
+  "publicado": true,
+  "tentativas": 1,
+  "nota": "Publicado à mão em 30/09 enquanto o token da Meta era trocado.",
+  "publicado_em": "2026-09-30T21:30:00.000Z",
+  "publicado_manual": "postado à mão pelo app (API bloqueada pelo token vazado)",
+  "confirmado": false,
+  "confirmado_erro": "publicação manual, sem media_id para conferir"
+ },
+ {
+  "id": "reels-apple",
+  "aprovado": false,
+  "quando": "2026-10-01T19:00:00-03:00",
+  "tipo": "REELS",
+  "midias": [],
+  "legenda": "Não foi a gente que pintou a maçã. 🍎\n\nEla já era assim. Só tinham esquecido. 🌈\n\nÉ mais ou menos o que a Irisa faz com a sua cidade: o lugar não vira acolhedor porque a gente disse. Ele já era — faltava quem contasse. ✨\n\nAgora no iPhone. 📲 O link está na bio.\n\nQual vai ser o primeiro lugar que você vai irisar? 👇\n\n#Irisa #LGBTQIA #Orgulho #AppLGBT #iPhone",
+  "primeiro_comentario": "🔗 bit.ly/appirisa",
+  "publicado": true,
+  "publicado_em": "2026-10-01T22:00:00.000Z",
+  "publicado_manual": "Reels de lançamento no iOS (vídeo de desenho à mão, fecho 'A maçã já foi arco-íris'), postado direto pelo app",
+  "confirmado": false
+ },
+ {
+  "id": "story-01",
+  "aprovado": false,
+  "quando": "2026-10-02T12:00:00-03:00",
+  "tipo": "STORY",
+  "midias": [
+   "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/stories-2/01.png"
+  ],
+  "legenda": "",
+  "primeiro_comentario": "",
+  "publicado": false
+ },
+ {
+  "id": "carrossel-4",
+  "aprovado": true,
+  "quando": "2026-10-02T19:00:00-03:00",
+  "tipo": "POST",
+  "midias": [
+   "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/carrossel-4/01.png",
+   "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/carrossel-4/02.png",
+   "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/carrossel-4/03.png",
+   "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/carrossel-4/04.png",
+   "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/carrossel-4/05.png",
+   "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/carrossel-4/06.png",
+   "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/carrossel-4/07.png",
+   "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/carrossel-4/08.png"
+  ],
+  "legenda": "Aconteceu agora. Quatro números que valem em qualquer cidade do Brasil — salva este post.\n\n190 e 192: polícia e SAMU. 100: denúncia de LGBTIfobia, 24h, de graça. 188: CVV, pra quem precisa conversar, a qualquer hora.\n\nNo app é um botão na tela inicial: toca, escolhe o número, liga — sem cadastro, sem tela no meio.\n\nDepois da emergência, a aba Apoio tem endereço e contato de cada serviço em Curitiba, Recife, João Pessoa, Joinville, Natal, Rio e São Paulo. Conferimos os contatos a cada seis meses.\n\nQual desses números você já conhecia? 🚨\n\nO link está na bio.\n\n#Irisa #LGBTQIA #Orgulho #AppLGBT #Disque100",
+  "primeiro_comentario": "appirisa.com.br",
+  "publicado": false,
+  "nota": "Remarcado: 01/10 saiu o reels de lançamento do iOS, postado à mão."
+ },
+ {
+  "id": "story-02",
+  "aprovado": false,
+  "quando": "2026-10-06T12:00:00-03:00",
+  "tipo": "STORY",
+  "midias": [
+   "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/stories-2/02.png"
+  ],
+  "legenda": "",
+  "primeiro_comentario": "",
+  "publicado": false
+ },
+ {
+  "id": "reels-6",
+  "aprovado": true,
+  "quando": "2026-10-03T19:00:00-03:00",
+  "tipo": "REELS",
+  "midias": [
+   "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/Irisa-reels-6.mp4"
+  ],
+  "legenda": "Você já soltou a mão em público?\n\nNa rua, quando o grupo se aproximou. No ônibus, quando alguém ficou olhando. Na porta do bar, antes de saber se dava.\n\nA gente está mapeando onde não precisa.\n\nComenta \"eu\" se já soltou. E manda para quem segurou a sua. 🌈\n\n#LGBTQIA #Orgulho #CasalLGBT #Irisa #Curitiba",
+  "primeiro_comentario": "appirisa.com.br",
+  "publicado": true,
+  "publicado_em": "2026-10-03T22:21:18.642Z",
+  "media_id": "18093453287410400",
+  "confirmacao": {
+   "id": "18093453287410400",
+   "media_type": "VIDEO",
+   "permalink": "https://www.instagram.com/reel/DeDHrzkkp9n/",
+   "timestamp": "2026-10-03T22:21:50+0000"
   },
-  {
-    "id": "story-cidades",
-    "aprovado": false,
-    "quando": "2026-09-28T12:00:00-03:00",
-    "tipo": "STORY",
-    "midias": [
-      "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/story-cidades.png"
-    ],
-    "legenda": "",
-    "primeiro_comentario": "",
-    "publicado": false
+  "confirmado": true,
+  "confirmado_em": "2026-10-03T22:22:00.509Z"
+ },
+ {
+  "id": "story-03",
+  "aprovado": true,
+  "quando": "2026-10-03T12:00:00-03:00",
+  "tipo": "STORY",
+  "midias": [
+   "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/stories-2/03.png"
+  ],
+  "legenda": "",
+  "primeiro_comentario": "",
+  "publicado": true,
+  "nota": "Publicar agora (pedido dele, 03/10): furou a fila pro horário de hoje. STORY é sempre manual.",
+  "publicado_em": "2026-10-03T17:55:28.053Z",
+  "media_id": "18097785689356462",
+  "confirmacao": {
+   "id": "18097785689356462",
+   "media_type": "IMAGE",
+   "permalink": "https://www.instagram.com/stories/appirisa/3999940864180539225",
+   "timestamp": "2026-10-03T17:55:36+0000",
+   "na_lista_de_stories_ativos": true
   },
-  {
-    "id": "story-eixos",
-    "aprovado": true,
-    "quando": "2026-09-28T15:01:00-03:00",
-    "tipo": "STORY",
-    "midias": [
-      "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/story-eixos.png"
-    ],
-    "legenda": "",
-    "primeiro_comentario": "",
-    "publicado": true,
-    "ultimo_erro": "***/media: Unsupported post request. Object with ID '***' does not exist, cannot be loaded due to missing permissions, or does not support this operation. Please read the Graph API documentation at https://developers.facebook.com/docs/graph-api",
-    "publicado_em": "2026-09-28T18:23:46.921Z",
-    "media_id": "18108605300334854",
-    "confirmacao": {
-      "id": "18108605300334854",
-      "media_type": "IMAGE",
-      "permalink": "https://www.instagram.com/stories/appirisa/3996331237149509729",
-      "timestamp": "2026-09-28T18:23:53+0000",
-      "na_lista_de_stories_ativos": true
-    },
-    "confirmado": true,
-    "confirmado_em": "2026-09-28T18:30:26.642Z"
-  },
-  {
-    "id": "story-irisar",
-    "aprovado": false,
-    "quando": "2026-09-29T17:00:00-03:00",
-    "tipo": "STORY",
-    "midias": [
-      "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/story-irisar/01.png"
-    ],
-    "legenda": "",
-    "primeiro_comentario": "",
-    "publicado": true,
-    "nota": "Tem adesivo de quiz (O que é irisar? → Dar cor a um lugar / Brilhar na balada / Sair do armário). Precisa ir manual pelo app; não deixar o script publicar sozinho. Detalhes em docs/legendas/story-irisar.md.",
-    "publicado_em": "2026-09-29T22:10:00.000Z",
-    "publicado_manual": "postado à mão pelo app",
-    "confirmado": false,
-    "confirmado_erro": "undefined: API access blocked."
-  },
-  {
-    "id": "post-irisar",
-    "aprovado": false,
-    "quando": "2026-09-29T18:00:00-03:00",
-    "tipo": "POST",
-    "midias": [
-      "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/post-irisar/01.png"
-    ],
-    "legenda": "Irisar: verbo.\n\nDar cor a um lugar respondendo quatro perguntas sobre como ele recebe a gente — atendimento, afeto, banheiro, clientela. Quem esteve lá responde. As respostas viram nota, e a nota vira cor.\n\nEstrela não diz nada pra gente. Cinco estrelas num lugar onde a recepção te olha torto continuam sendo cinco estrelas.\n\nQual lugar da sua cidade você irisaria hoje? 🌈\n\nO link está na bio.\n\n#Irisa #LGBTQIA #Orgulho #AppLGBT #Dicionario",
-    "primeiro_comentario": "bit.ly/appirisa",
-    "publicado": true,
-    "nota": "Publicação manual pelo app, decisão dele (29/09). Não deixar o script publicar sozinho.",
-    "publicado_em": "2026-09-29T22:10:00.000Z",
-    "publicado_manual": "postado à mão pelo app",
-    "confirmado": false,
-    "confirmado_erro": "undefined: API access blocked."
-  },
-  {
-    "id": "post-bemvinde",
-    "aprovado": false,
-    "quando": "2026-09-30T18:00:00-03:00",
-    "tipo": "POST",
-    "midias": [
-      "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/post-bemvinde/01.png"
-    ],
-    "legenda": "Uma escolha de palavra: bem-vinde.\n\n\"Bem-vindo\" deixa gente de fora. O mapa é de todo mundo que entra pela porta — e a linguagem do app segue essa regra em tudo: identificade, questionade, recebide.\n\nQual foi a primeira vez que alguém usou uma palavra assim com você? 🌈\n\nO link está na bio.\n\n#Irisa #LGBTQIA #Orgulho #AppLGBT #BemVinde",
-    "primeiro_comentario": "",
-    "publicado": true,
-    "tentativas": 1,
-    "nota": "Publicado à mão em 30/09 enquanto o token da Meta era trocado.",
-    "publicado_em": "2026-09-30T21:30:00.000Z",
-    "publicado_manual": "postado à mão pelo app (API bloqueada pelo token vazado)",
-    "confirmado": false,
-    "confirmado_erro": "publicação manual, sem media_id para conferir"
-  },
-  {
-    "id": "reels-apple",
-    "aprovado": false,
-    "quando": "2026-10-01T19:00:00-03:00",
-    "tipo": "REELS",
-    "midias": [],
-    "legenda": "Não foi a gente que pintou a maçã. 🍎\n\nEla já era assim. Só tinham esquecido. 🌈\n\nÉ mais ou menos o que a Irisa faz com a sua cidade: o lugar não vira acolhedor porque a gente disse. Ele já era — faltava quem contasse. ✨\n\nAgora no iPhone. 📲 O link está na bio.\n\nQual vai ser o primeiro lugar que você vai irisar? 👇\n\n#Irisa #LGBTQIA #Orgulho #AppLGBT #iPhone",
-    "primeiro_comentario": "🔗 bit.ly/appirisa",
-    "publicado": true,
-    "publicado_em": "2026-10-01T22:00:00.000Z",
-    "publicado_manual": "Reels de lançamento no iOS (vídeo de desenho à mão, fecho 'A maçã já foi arco-íris'), postado direto pelo app",
-    "confirmado": false
-  },
-  {
-    "id": "story-01",
-    "aprovado": false,
-    "quando": "2026-10-02T12:00:00-03:00",
-    "tipo": "STORY",
-    "midias": [
-      "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/stories-2/01.png"
-    ],
-    "legenda": "",
-    "primeiro_comentario": "",
-    "publicado": false
-  },
-  {
-    "id": "carrossel-4",
-    "aprovado": false,
-    "quando": "2026-10-02T19:00:00-03:00",
-    "tipo": "POST",
-    "midias": [
-      "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/carrossel-4/01.png",
-      "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/carrossel-4/02.png",
-      "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/carrossel-4/03.png",
-      "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/carrossel-4/04.png",
-      "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/carrossel-4/05.png",
-      "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/carrossel-4/06.png",
-      "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/carrossel-4/07.png",
-      "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/carrossel-4/08.png"
-    ],
-    "legenda": "Aconteceu agora. Quatro números que valem em qualquer cidade do Brasil — salva este post.\n\n190 e 192: polícia e SAMU. 100: denúncia de LGBTIfobia, 24h, de graça. 188: CVV, pra quem precisa conversar, a qualquer hora.\n\nNo app é um botão na tela inicial: toca, escolhe o número, liga — sem cadastro, sem tela no meio.\n\nDepois da emergência, a aba Apoio tem endereço e contato de cada serviço em Curitiba, Recife, João Pessoa, Joinville, Natal, Rio e São Paulo. Conferimos os contatos a cada seis meses.\n\nQual desses números você já conhecia? 🚨\n\nO link está na bio.\n\n#Irisa #LGBTQIA #Orgulho #AppLGBT #Disque100",
-    "primeiro_comentario": "",
-    "publicado": false,
-    "nota": "Remarcado: 01/10 saiu o reels de lançamento do iOS, postado à mão."
-  },
-  {
-    "id": "story-02",
-    "aprovado": false,
-    "quando": "2026-10-03T12:00:00-03:00",
-    "tipo": "STORY",
-    "midias": [
-      "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/stories-2/02.png"
-    ],
-    "legenda": "",
-    "primeiro_comentario": "",
-    "publicado": false
-  },
-  {
-    "id": "reels-6",
-    "aprovado": true,
-    "quando": "2026-10-03T19:00:00-03:00",
-    "tipo": "REELS",
-    "midias": [
-      "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/Irisa-reels-6.mp4"
-    ],
-    "legenda": "Você já soltou a mão em público?\n\nNa rua, quando o grupo se aproximou. No ônibus, quando alguém ficou olhando. Na porta do bar, antes de saber se dava.\n\nA gente está mapeando onde não precisa.\n\nComenta \"eu\" se já soltou. E manda para quem segurou a sua. 🌈\n\n#LGBTQIA #Orgulho #CasalLGBT #Irisa #Curitiba",
-    "primeiro_comentario": "bit.ly/appirisa",
-    "publicado": false
-  },
-  {
-    "id": "story-03",
-    "aprovado": false,
-    "quando": "2026-10-04T12:00:00-03:00",
-    "tipo": "STORY",
-    "midias": [
-      "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/stories-2/03.png"
-    ],
-    "legenda": "",
-    "primeiro_comentario": "",
-    "publicado": false
-  },
-  {
-    "id": "carrossel-5",
-    "aprovado": false,
-    "quando": "2026-10-04T19:00:00-03:00",
-    "tipo": "POST",
-    "midias": [
-      "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/carrossel-5/01.png",
-      "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/carrossel-5/02.png",
-      "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/carrossel-5/03.png",
-      "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/carrossel-5/04.png",
-      "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/carrossel-5/05.png",
-      "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/carrossel-5/06.png",
-      "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/carrossel-5/07.png"
-    ],
-    "legenda": "Uma dúvida que todo mundo tem: se rolou uma confusão perto de um bar, a culpa é do bar?\n\nNão. A violência acontece no beco, na praça, no ponto de ônibus — quem está perto não é culpado por ela.\n\nA regra da Irisa, em duas frases: o lugar recebe cor (quatro perguntas, respondidas por quem entrou — atendimento, afeto, banheiro, clientela) e a rua recebe aviso (relatos num raio de 100 m viram nível de atenção da região, visível no mapa e na ficha do bairro).\n\nA nota só cai quando o relato aponta o lugar. Fora disso, o bar aparece com o contexto da região — nunca com a punição. E sem relato não quer dizer sem violência: quer dizer que ninguém registrou ainda. Por isso a Irisa nunca diz \"aqui é tranquilo\".\n\nOs dois juntos fazem o mapa. Um sem o outro é metade da história.\n\nO link está na bio.\n\n#Irisa #LGBTQIA #Orgulho #AppLGBT #LGBTfobia",
-    "primeiro_comentario": "",
-    "publicado": false
-  },
-  {
-    "id": "story-04",
-    "aprovado": false,
-    "quando": "2026-10-05T12:00:00-03:00",
-    "tipo": "STORY",
-    "midias": [
-      "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/stories-2/04.png"
-    ],
-    "legenda": "",
-    "primeiro_comentario": "",
-    "publicado": false
-  },
-  {
-    "id": "reels-9",
-    "aprovado": false,
-    "quando": "2026-10-05T19:00:00-03:00",
-    "tipo": "REELS",
-    "midias": [
-      "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/Irisa-reels-9.mp4"
-    ],
-    "legenda": "Sua cidade está no mapa?\n\nCuritiba, Recife, João Pessoa, Joinville, Natal, São Paulo e Rio já estão. A próxima sai dos comentários.\n\nIrisa: o mapa dos lugares onde a gente é bem-vinde, feito por nós. Em fase de testes, Android.\n\nComenta a sua cidade. 🌈\n\n#LGBTQIA #Orgulho #AppLGBT #Irisa #Curitiba",
-    "primeiro_comentario": "bit.ly/appirisa",
-    "publicado": false
-  },
-  {
-    "id": "carrossel-6",
-    "aprovado": false,
-    "quando": "2026-10-06T19:00:00-03:00",
-    "tipo": "POST",
-    "midias": [
-      "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/carrossel-6/01.png",
-      "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/carrossel-6/02.png",
-      "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/carrossel-6/03.png",
-      "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/carrossel-6/04.png",
-      "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/carrossel-6/05.png",
-      "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/carrossel-6/06.png",
-      "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/carrossel-6/07.png",
-      "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/carrossel-6/08.png"
-    ],
-    "legenda": "O que perguntam no direct. Seis dúvidas sobre a Irisa, respondidas sem rodeio.\n\n\"Se eu registrar, o bar fica sabendo que fui eu.\" Mito. Ninguém vê quem registrou — nem o bar, nem outra pessoa, nem a gente.\n\n\"Preciso criar perfil, colocar foto, nome…\" Mito. Só um e-mail pra conta existir.\n\n\"Se um bairro não tem relato, ele é tranquilo.\" Mito. Sem relato quer dizer que ninguém registrou ainda — o app nunca diz \"região tranquila\", de propósito.\n\n\"Um lugar só ganha selo depois de cinco avaliações.\" Verdade. Antes disso ele mostra a nota que já tem, mas sem selo.\n\n\"Relato na esquina derruba a nota do bar.\" Mito. Na esquina, vira aviso da região.\n\n\"Ainda não tem no iPhone.\" Verdade. Android primeiro, em fase de testes.\n\nManda nos comentários: qual mito você também já acreditou? A próxima rodada sai daqui. 🌈\n\nO link está na bio · em fase de testes · Android.\n\n#Irisa #LGBTQIA #Orgulho #AppLGBT #MitoOuVerdade",
-    "primeiro_comentario": "",
-    "publicado": false
-  },
-  {
-    "id": "reels-7",
-    "aprovado": false,
-    "quando": "2026-10-07T19:00:00-03:00",
-    "tipo": "REELS",
-    "midias": [
-      "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/Irisa-reels-7.mp4"
-    ],
-    "legenda": "Mudei de calçada 4 vezes hoje.\n\nGrupo na esquina. Ponto de ônibus de noite. Um carro que diminuiu. A rua do bar, sempre a rua do bar.\n\nNinguém conta. Então ninguém sabe.\n\nUm app da comunidade está juntando essas ruas num mapa, sem nome e sem perfil. Quantas vezes você mudou hoje? 🌈\n\n#LGBTQIA #Orgulho #LGBTfobia #Irisa #Curitiba",
-    "primeiro_comentario": "bit.ly/appirisa",
-    "publicado": false
-  },
-  {
-    "id": "carrossel-7",
-    "aprovado": false,
-    "quando": "2026-10-08T19:00:00-03:00",
-    "tipo": "POST",
-    "midias": [
-      "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/carrossel-7/01.png",
-      "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/carrossel-7/02.png",
-      "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/carrossel-7/03.png",
-      "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/carrossel-7/04.png",
-      "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/carrossel-7/05.png",
-      "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/carrossel-7/06.png",
-      "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/carrossel-7/07.png"
-    ],
-    "legenda": "Dá pra saber como é um bairro antes de chegar?\n\nA ficha do bairro é onde os dois lados do mapa se encontram: os lugares avaliados pela comunidade e os relatos registrados na região, numa tela só.\n\nEla mostra o total de relatos (e quantos foram graves), o tipo, onde e quando aconteceram, e o nível de atenção da área — atenção ou alerta, pelo peso dos relatos nos últimos 180 dias. Os lugares que já têm nota de acolhimento aparecem primeiro.\n\nUma coisa que ela nunca diz: que um bairro sem relato é um bairro seguro. Sem relato quer dizer que ninguém registrou ainda — dizer o contrário seria a falha mais perigosa que o app poderia cometer.\n\nJá testou a ficha do seu bairro? Abre o app, confere e comenta o que apareceu. 🌈\n\nO link está na bio · em fase de testes · Android.\n\n#Irisa #LGBTQIA #Orgulho #AppLGBT #Curitiba",
-    "primeiro_comentario": "",
-    "publicado": false
-  },
-  {
-    "id": "reels-8",
-    "aprovado": false,
-    "quando": "2026-10-09T19:00:00-03:00",
-    "tipo": "REELS",
-    "midias": [
-      "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/Irisa-reels-8.mp4"
-    ],
-    "legenda": "A bandeira na porta não diz nada.\n\nO que diz é o garçom, o banheiro e a mesa ao lado. Quem te tratou bem, se deu para ficar à vontade, quem estava lá dentro.\n\nBandeira é promessa. Cor é medida. Um lugar só ganha cor quando quem esteve lá responde.\n\nConcorda, ou para você a bandeira já basta? Comenta. 🌈\n\n#LGBTQIA #Orgulho #BarLGBT #Irisa #Curitiba",
-    "primeiro_comentario": "bit.ly/appirisa",
-    "publicado": false
-  },
-  {
-    "id": "carrossel-8",
-    "aprovado": false,
-    "quando": "2026-10-11T12:00:00-03:00",
-    "tipo": "POST",
-    "midias": [
-      "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/carrossel-8/01.png",
-      "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/carrossel-8/02.png",
-      "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/carrossel-8/03.png",
-      "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/carrossel-8/04.png",
-      "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/carrossel-8/05.png",
-      "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/carrossel-8/06.png",
-      "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/carrossel-8/07.png"
-    ],
-    "legenda": "Sair do armário é um dia. Escolher onde ir de mão dada é todo fim de semana.\n\n11 de outubro é o Dia de Sair do Armário. E a Irisa quer falar do lado de fora da porta: o bar, o café, o hotel, o banheiro.\n\nNão é fase. É endereço.\n\nAntes, a pergunta ficava no grupo: \"aquele lugar é de boa pra gente?\". Agora quem esteve lá responde em quatro perguntas: atendimento, afeto, banheiro, clientela.\n\nNão é a bandeira na porta que diz. É a gente.\n\nE se hoje ainda não dá para sair do armário, você também conta: sem nome, sem perfil, ninguém sabe quem avaliou.\n\nQual foi o primeiro lugar onde você se sentiu bem-vinde depois de sair do armário? Conta aqui. 🌈\n\nO link está na bio. Em fase de testes · Android.\n\n#Irisa #LGBTQIA #Orgulho #AppLGBT #DiaDeSairDoArmário",
-    "primeiro_comentario": "bit.ly/appirisa",
-    "publicado": false
-  },
-  {
-    "id": "reels-ombro",
-    "aprovado": false,
-    "quando": "2026-10-12T19:00:00-03:00",
-    "tipo": "REELS",
-    "midias": [
-      "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/Irisa-reels-ombro.mp4"
-    ],
-    "legenda": "Tem um momento exato em que o corpo relaxa.\n\nNão é a bebida. É perceber que ali, naquela mesa, ninguém tá contando quantas vezes vocês se tocaram.\n\nIsso tem nome: acolhimento. E devia acontecer em qualquer lugar, não só naquele.\n\nOnde foi a última vez que seu ombro relaxou assim? Comenta. 🌈\n\nO link está na bio · em fase de testes · Android.\n\n#Irisa #LGBTQIA #Orgulho #AppLGBT #Acolhimento",
-    "primeiro_comentario": "bit.ly/appirisa",
-    "publicado": false
-  },
-  {
-    "id": "carrossel-9",
-    "aprovado": false,
-    "quando": "2026-10-13T19:00:00-03:00",
-    "tipo": "POST",
-    "midias": [
-      "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/carrossel-9/01.png",
-      "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/carrossel-9/02.png",
-      "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/carrossel-9/03.png",
-      "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/carrossel-9/04.png",
-      "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/carrossel-9/05.png",
-      "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/carrossel-9/06.png"
-    ],
-    "legenda": "3 coisas que ninguém te conta sobre viajar em casal.\n\n1. A reserva. \"Cama de casal ou duas de solteiro?\" vem no check-in, na frente de todo mundo. Um hotel que insiste já respondeu por si.\n2. O café da manhã. Ninguém fala nada, mas todo mundo olha. Clientela é um dos quatro eixos da Irisa por isso.\n3. A rua do hotel. O hotel pode ser ótimo e a quadra, não. O lugar recebe cor, a rua recebe aviso: você olha os dois antes de reservar.\n\nQuem esteve lá responde: atendimento, afeto, banheiro, clientela.\n\nQual hotel te tratou como casal? Conta aqui e salva para quem vai viajar. 🌈\n\nO link está na bio. Em fase de testes · Android.\n\n#Irisa #LGBTQIA #Orgulho #CasalLGBT #ViagemLGBT",
-    "primeiro_comentario": "bit.ly/appirisa",
-    "publicado": false
-  },
-  {
-    "id": "reels-nota",
-    "aprovado": false,
-    "quando": "2026-10-14T19:00:00-03:00",
-    "tipo": "REELS",
-    "midias": [
-      "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/Irisa-reels-nota.mp4"
-    ],
-    "legenda": "Uma nota de cinco estrelas não muda a vida de ninguém.\n\nMas um \"atendimento\", um \"afeto\" bem marcado, numa sexta-feira — isso já é o \"pode ir\" que alguém precisava antes de sair de casa.\n\nSua nota de hoje é a coragem de alguém amanhã.\n\nJá avaliou o lugar que te acolheu? Comenta. 🌈\n\nO link está na bio · em fase de testes · Android.\n\n#Irisa #LGBTQIA #Orgulho #AppLGBT #Avaliacao",
-    "primeiro_comentario": "bit.ly/appirisa",
-    "publicado": false
-  },
-  {
-    "id": "carrossel-10",
-    "aprovado": true,
-    "quando": "2026-10-15T19:00:00-03:00",
-    "tipo": "POST",
-    "midias": [
-      "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/carrossel-10/01.png",
-      "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/carrossel-10/02.png",
-      "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/carrossel-10/03.png",
-      "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/carrossel-10/04.png",
-      "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/carrossel-10/05.png",
-      "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/carrossel-10/06.png",
-      "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/carrossel-10/07.png"
-    ],
-    "legenda": "Por que banheiro pesa 25% da nota?\n\nPorque para muita gente é a parte do lugar que decide se dá para ficar.\n\nNa Irisa, quem esteve lá responde quatro perguntas — e cada uma pesa diferente:\n\nAtendimento, 30%. O garçom que trata vocês como casal, ou o que chama de \"amigos\". É a primeira coisa que acontece e a que mais pesa.\n\nAfeto, 30%. Se dá para dar a mão sem medir a sala antes. Pesa igual ao atendimento porque é por isso que a gente sai de casa.\n\nBanheiro, 25%. Para pessoa trans e não-binárie, escolher a porta é a parte mais tensa do lugar. Por isso vale um quarto da nota, não uma nota de rodapé.\n\nClientela, 15%. O bar pode treinar a equipe, mas não escolhe quem senta ali. Conta, mas não é culpa do lugar.\n\nAs quatro viram uma nota só. E a nota vira cor.\n\nQual desses quatro pesa mais pra você? Comenta aqui embaixo — a gente leva em conta na hora de ajustar os pesos. 🌈\n\nO link está na bio. Já no iPhone. Android em fase de testes.\n\n#Irisa #LGBTQIA #Orgulho #AppLGBT #Acolhimento",
-    "primeiro_comentario": "bit.ly/appirisa",
-    "publicado": false,
-    "confirmado": false
-  },
-  {
-    "id": "reels-olhar",
-    "aprovado": false,
-    "quando": "2026-10-16T19:00:00-03:00",
-    "tipo": "REELS",
-    "midias": [
-      "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/Irisa-reels-olhar.mp4"
-    ],
-    "legenda": "Duas pessoas que nunca se falaram se olham do outro lado do salão.\n\nNão precisa de mais nada — os dois já sabem, sem perguntar, que ali os dois são bem-vindes.\n\nIsso não devia ser sorte. Devia ser informação.\n\nJá teve esse olhar com um estranho, num lugar bom? Comenta. 🌈\n\nO link está na bio · em fase de testes · Android.\n\n#Irisa #LGBTQIA #Orgulho #AppLGBT #Acolhimento",
-    "primeiro_comentario": "bit.ly/appirisa",
-    "publicado": false
-  },
-  {
-    "id": "carrossel-11",
-    "aprovado": true,
-    "quando": "2026-10-17T19:00:00-03:00",
-    "tipo": "POST",
-    "midias": [
-      "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/carrossel-11/01.png",
-      "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/carrossel-11/02.png",
-      "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/carrossel-11/03.png",
-      "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/carrossel-11/04.png",
-      "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/carrossel-11/05.png",
-      "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/carrossel-11/06.png",
-      "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/carrossel-11/07.png"
-    ],
-    "legenda": "O que a Irisa não tem. De propósito.\n\nCinco coisas que todo mundo pediu e a gente decidiu não fazer:\n\nLista de lugar LGBT. Uma lista pública de onde a gente se reúne é um mapa pronto para quem quer nos achar. O selo vem do acolhimento, nunca de um rótulo na ficha.\n\nSelo de região tranquila. Sem relato não quer dizer sem violência. Quer dizer que ninguém registrou ainda — e dizer o contrário seria a falha mais perigosa que o app poderia cometer.\n\nPágina de perfil. Não existe tela com o seu histórico, nem para você, nem para ninguém. Só um e-mail para a conta existir. Não vaza o que não existe.\n\nFiltro de bar por alerta. O relato acontece no beco, na praça, no ponto de ônibus. Filtrar bar por isso faria a violência parecer atributo do lugar e puniria quem só está perto.\n\nEstrela. Cinco estrelas num lugar onde a recepção te olha torto continuam sendo cinco estrelas. Cor é medida: quatro perguntas, respondidas por quem entrou.\n\nQual dessas cinco você não sabia? Comenta aqui — e salva este post para quando alguém perguntar por que o app não tem lista. 🌈\n\nO link está na bio. Já no iPhone. Android em fase de testes.\n\n#Irisa #LGBTQIA #Orgulho #AppLGBT #Anonimato",
-    "primeiro_comentario": "bit.ly/appirisa",
-    "publicado": false,
-    "confirmado": false
-  },
-  {
-    "id": "reels-3",
-    "aprovado": false,
-    "quando": "2026-10-18T19:00:00-03:00",
-    "tipo": "REELS",
-    "midias": [
-      "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/Irisa-reels-3.mp4"
-    ],
-    "legenda": "Aconteceu na esquina do bar. A culpa é do bar?\n\nNão. A violência foi na rua. Quem estava lá dentro sendo bem tratade não tem culpa.\n\nNa Irisa a regra é uma só:\no lugar recebe cor, a rua recebe aviso.\n\nRelatos num raio de 100 m viram nível da região:\nAtenção: 1 a 3 relatos em 180 dias.\nAlerta: 4 ou mais, ou um grave.\n\nO bar mantém a nota. Quem vai passar por ali recebe o aviso.\n\nE o mapa nunca vai dizer \"região tranquila\". Sem relato não é rua tranquila. É ninguém registrando.\n\nRegistrar leva um minuto. Sem nome, sem perfil, sem rastro.\n\nVocê já deixou de passar por algum lugar por medo? Comenta. 🌈\n\nO link está na bio. Em fase de testes · Android.\n\n#Irisa #LGBTQIA #Orgulho #AppLGBT #LGBTfobia",
-    "primeiro_comentario": "bit.ly/appirisa",
-    "publicado": false
-  },
-  {
-    "id": "reels-4",
-    "aprovado": false,
-    "quando": "2026-10-19T19:00:00-03:00",
-    "tipo": "REELS",
-    "midias": [
-      "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/Irisa-reels-4.mp4"
-    ],
-    "legenda": "Quem registra tem medo de uma coisa: ser identificade.\n\nPor isso a Irisa foi feita para não saber quem você é.\n\nSem nome: o relato aparece sem autor. A tabela pública nem tem a coluna.\nSem perfil: não existe página de usuário. Ninguém abre seu histórico.\nSem rastro: relato de hoje aparece com o ponto deslocado uns 100 metros.\n\nO que a gente guarda: um e-mail para a conta existir, a cidade e o bairro do relato. Nada mais. Não vazamos o que não existe.\n\nRegistrar leva um minuto. Onde e a que hora são opcionais: você conta o que conseguir contar.\n\nSe aconteceu, registra. Por quem vem depois. 🌈\n\nO link está na bio. Em fase de testes · Android.\n\n#Irisa #LGBTQIA #Orgulho #AppLGBT #Anonimato",
-    "primeiro_comentario": "bit.ly/appirisa",
-    "publicado": false
-  },
-  {
-    "id": "reels-5",
-    "aprovado": false,
-    "quando": "2026-10-20T19:00:00-03:00",
-    "tipo": "REELS",
-    "midias": [
-      "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/Irisa-reels-5.mp4"
-    ],
-    "legenda": "Quantos relatos tem o seu bairro? Você não sabe. Ninguém sabe. Isso é o problema.\n\nE zero não quer dizer bairro tranquilo. Quer dizer que ninguém registrou. Por isso a Irisa nunca dá selo de \"região tranquila\".\n\nA ficha do bairro junta os dois lados:\nquantos relatos em 180 dias, quantos graves, de que tipo e a que hora;\ne os lugares do bairro, avaliados primeiro. Os sem nota esperam você irisar.\n\nCada relato é anônimo. Cada bairro ganha uma ficha.\n\nComece pelo seu bairro: um lugar irisado ou um relato, um minuto, e a ficha deixa de ser zero.\n\nQual é o seu bairro? Comenta que a gente conta quantos lugares já estão no mapa por lá. 🌈\n\nO link está na bio. Em fase de testes · Android.\n\n#Irisa #LGBTQIA #Orgulho #AppLGBT #LGBTfobia",
-    "primeiro_comentario": "bit.ly/appirisa",
-    "publicado": false
-  }
+  "confirmado": true,
+  "confirmado_em": "2026-10-03T17:55:39.126Z"
+ },
+ {
+  "id": "carrossel-5",
+  "aprovado": false,
+  "quando": "2026-10-04T19:00:00-03:00",
+  "tipo": "POST",
+  "midias": [
+   "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/carrossel-5/01.png",
+   "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/carrossel-5/02.png",
+   "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/carrossel-5/03.png",
+   "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/carrossel-5/04.png",
+   "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/carrossel-5/05.png",
+   "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/carrossel-5/06.png",
+   "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/carrossel-5/07.png"
+  ],
+  "legenda": "Uma dúvida que todo mundo tem: se rolou uma confusão perto de um bar, a culpa é do bar?\n\nNão. A violência acontece no beco, na praça, no ponto de ônibus — quem está perto não é culpado por ela.\n\nA regra da Irisa, em duas frases: o lugar recebe cor (quatro perguntas, respondidas por quem entrou — atendimento, afeto, banheiro, clientela) e a rua recebe aviso (relatos num raio de 100 m viram nível de atenção da região, visível no mapa e na ficha do bairro).\n\nA nota só cai quando o relato aponta o lugar. Fora disso, o bar aparece com o contexto da região — nunca com a punição. E sem relato não quer dizer sem violência: quer dizer que ninguém registrou ainda. Por isso a Irisa nunca diz \"aqui é tranquilo\".\n\nOs dois juntos fazem o mapa. Um sem o outro é metade da história.\n\nO link está na bio.\n\n#Irisa #LGBTQIA #Orgulho #AppLGBT #LGBTfobia",
+  "primeiro_comentario": "appirisa.com.br",
+  "publicado": false
+ },
+ {
+  "id": "story-04",
+  "aprovado": false,
+  "quando": "2026-10-05T12:00:00-03:00",
+  "tipo": "STORY",
+  "midias": [
+   "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/stories-2/04.png"
+  ],
+  "legenda": "",
+  "primeiro_comentario": "",
+  "publicado": false
+ },
+ {
+  "id": "story-05",
+  "aprovado": true,
+  "quando": "2026-10-04T09:00:00-03:00",
+  "tipo": "STORY",
+  "midias": [
+   "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/stories-2/05-urna.jpg"
+  ],
+  "legenda": "",
+  "primeiro_comentario": "",
+  "publicado": false,
+  "nota": "Dia da eleição (pedido e aprovado por ele no chat, 03/10). Arte da urna com arco-íris, enviada por ele em 03/10 — substitui a lâmina gerada em stories-2.html. Sem citar partido/candidato. Sem adesivo, publicação automática pelo robô igual as outras stories-2."
+ },
+ {
+  "id": "reels-9",
+  "aprovado": false,
+  "quando": "2026-10-05T19:00:00-03:00",
+  "tipo": "REELS",
+  "midias": [
+   "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/Irisa-reels-9.mp4"
+  ],
+  "legenda": "Sua cidade está no mapa?\n\nCuritiba, Recife, João Pessoa, Joinville, Natal, São Paulo e Rio já estão. A próxima sai dos comentários.\n\nIrisa: o mapa dos lugares onde a gente é bem-vinde, feito por nós. Já na App Store; Android ainda em teste.\n\nComenta a sua cidade. 🌈\n\n#LGBTQIA #Orgulho #AppLGBT #Irisa #Curitiba",
+  "primeiro_comentario": "appirisa.com.br",
+  "publicado": false
+ },
+ {
+  "id": "carrossel-6",
+  "aprovado": false,
+  "quando": "2026-10-06T19:00:00-03:00",
+  "tipo": "POST",
+  "midias": [
+   "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/carrossel-6/01.png",
+   "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/carrossel-6/02.png",
+   "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/carrossel-6/03.png",
+   "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/carrossel-6/04.png",
+   "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/carrossel-6/05.png",
+   "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/carrossel-6/06.png",
+   "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/carrossel-6/07.png",
+   "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/carrossel-6/08.png"
+  ],
+  "legenda": "O que perguntam no direct. Seis dúvidas sobre a Irisa, respondidas sem rodeio.\n\n\"Se eu registrar, o bar fica sabendo que fui eu.\" Mito. Ninguém vê quem registrou — nem o bar, nem outra pessoa, nem a gente.\n\n\"Preciso criar perfil, colocar foto, nome…\" Mito. Só um e-mail pra conta existir.\n\n\"Se um bairro não tem relato, ele é tranquilo.\" Mito. Sem relato quer dizer que ninguém registrou ainda — o app nunca diz \"região tranquila\", de propósito.\n\n\"Um lugar só ganha selo depois de cinco avaliações.\" Verdade. Antes disso ele mostra a nota que já tem, mas sem selo.\n\n\"Relato na esquina derruba a nota do bar.\" Mito. Na esquina, vira aviso da região.\n\n\"Ainda não tem no iPhone.\" Mito: já está na App Store. O Android é que ainda está em teste.\n\nManda nos comentários: qual mito você também já acreditou? A próxima rodada sai daqui. 🌈\n\nO link está na bio. iPhone na App Store; Android ainda em teste.\n\n#Irisa #LGBTQIA #Orgulho #AppLGBT #MitoOuVerdade",
+  "primeiro_comentario": "appirisa.com.br",
+  "publicado": false
+ },
+ {
+  "id": "reels-7",
+  "aprovado": false,
+  "quando": "2026-10-07T19:00:00-03:00",
+  "tipo": "REELS",
+  "midias": [
+   "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/Irisa-reels-7.mp4"
+  ],
+  "legenda": "Mudei de calçada 4 vezes hoje.\n\nGrupo na esquina. Ponto de ônibus de noite. Um carro que diminuiu. A rua do bar, sempre a rua do bar.\n\nNinguém conta. Então ninguém sabe.\n\nUm app da comunidade está juntando essas ruas num mapa, sem nome e sem perfil. Quantas vezes você mudou hoje? 🌈\n\n#LGBTQIA #Orgulho #LGBTfobia #Irisa #Curitiba",
+  "primeiro_comentario": "appirisa.com.br",
+  "publicado": false
+ },
+ {
+  "id": "carrossel-7",
+  "aprovado": false,
+  "quando": "2026-10-08T19:00:00-03:00",
+  "tipo": "POST",
+  "midias": [
+   "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/carrossel-7/01.png",
+   "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/carrossel-7/02.png",
+   "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/carrossel-7/03.png",
+   "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/carrossel-7/04.png",
+   "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/carrossel-7/05.png",
+   "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/carrossel-7/06.png",
+   "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/carrossel-7/07.png"
+  ],
+  "legenda": "Dá pra saber como é um bairro antes de chegar?\n\nA ficha do bairro é onde os dois lados do mapa se encontram: os lugares avaliados pela comunidade e os relatos registrados na região, numa tela só.\n\nEla mostra o total de relatos (e quantos foram graves), o tipo, onde e quando aconteceram, e o nível de atenção da área — atenção ou alerta, pelo peso dos relatos nos últimos 180 dias. Os lugares que já têm nota de acolhimento aparecem primeiro.\n\nUma coisa que ela nunca diz: que um bairro sem relato é um bairro seguro. Sem relato quer dizer que ninguém registrou ainda — dizer o contrário seria a falha mais perigosa que o app poderia cometer.\n\nJá testou a ficha do seu bairro? Abre o app, confere e comenta o que apareceu. 🌈\n\nO link está na bio. iPhone na App Store; Android ainda em teste.\n\n#Irisa #LGBTQIA #Orgulho #AppLGBT #Curitiba",
+  "primeiro_comentario": "appirisa.com.br",
+  "publicado": false
+ },
+ {
+  "id": "reels-8",
+  "aprovado": false,
+  "quando": "2026-10-09T19:00:00-03:00",
+  "tipo": "REELS",
+  "midias": [
+   "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/Irisa-reels-8.mp4"
+  ],
+  "legenda": "A bandeira na porta não diz nada.\n\nO que diz é o garçom, o banheiro e a mesa ao lado. Quem te tratou bem, se deu para ficar à vontade, quem estava lá dentro.\n\nBandeira é promessa. Cor é medida. Um lugar só ganha cor quando quem esteve lá responde.\n\nConcorda, ou para você a bandeira já basta? Comenta. 🌈\n\n#LGBTQIA #Orgulho #BarLGBT #Irisa #Curitiba",
+  "primeiro_comentario": "appirisa.com.br",
+  "publicado": false
+ },
+ {
+  "id": "carrossel-8",
+  "aprovado": false,
+  "quando": "2026-10-11T12:00:00-03:00",
+  "tipo": "POST",
+  "midias": [
+   "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/carrossel-8/01.png",
+   "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/carrossel-8/02.png",
+   "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/carrossel-8/03.png",
+   "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/carrossel-8/04.png",
+   "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/carrossel-8/05.png",
+   "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/carrossel-8/06.png",
+   "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/carrossel-8/07.png"
+  ],
+  "legenda": "Sair do armário é um dia. Escolher onde ir de mão dada é todo fim de semana.\n\n11 de outubro é o Dia de Sair do Armário. E a Irisa quer falar do lado de fora da porta: o bar, o café, o hotel, o banheiro.\n\nNão é fase. É endereço.\n\nAntes, a pergunta ficava no grupo: \"aquele lugar é de boa pra gente?\". Agora quem esteve lá responde em quatro perguntas: atendimento, afeto, banheiro, clientela.\n\nNão é a bandeira na porta que diz. É a gente.\n\nE se hoje ainda não dá para sair do armário, você também conta: sem nome, sem perfil, ninguém sabe quem avaliou.\n\nQual foi o primeiro lugar onde você se sentiu bem-vinde depois de sair do armário? Conta aqui. 🌈\n\nO link está na bio. iPhone na App Store; Android ainda em teste.\n\n#Irisa #LGBTQIA #Orgulho #AppLGBT #DiaDeSairDoArmário",
+  "primeiro_comentario": "appirisa.com.br",
+  "publicado": false
+ },
+ {
+  "id": "reels-ombro",
+  "aprovado": false,
+  "quando": "2026-10-12T19:00:00-03:00",
+  "tipo": "REELS",
+  "midias": [
+   "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/Irisa-reels-ombro.mp4"
+  ],
+  "legenda": "Tem um momento exato em que o corpo relaxa.\n\nNão é a bebida. É perceber que ali, naquela mesa, ninguém tá contando quantas vezes vocês se tocaram.\n\nIsso tem nome: acolhimento. E devia acontecer em qualquer lugar, não só naquele.\n\nOnde foi a última vez que seu ombro relaxou assim? Comenta. 🌈\n\nO link está na bio. iPhone na App Store; Android ainda em teste.\n\n#Irisa #LGBTQIA #Orgulho #AppLGBT #Acolhimento",
+  "primeiro_comentario": "appirisa.com.br",
+  "publicado": false
+ },
+ {
+  "id": "carrossel-9",
+  "aprovado": false,
+  "quando": "2026-10-13T19:00:00-03:00",
+  "tipo": "POST",
+  "midias": [
+   "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/carrossel-9/01.png",
+   "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/carrossel-9/02.png",
+   "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/carrossel-9/03.png",
+   "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/carrossel-9/04.png",
+   "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/carrossel-9/05.png",
+   "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/carrossel-9/06.png"
+  ],
+  "legenda": "3 coisas que ninguém te conta sobre viajar em casal.\n\n1. A reserva. \"Cama de casal ou duas de solteiro?\" vem no check-in, na frente de todo mundo. Um hotel que insiste já respondeu por si.\n2. O café da manhã. Ninguém fala nada, mas todo mundo olha. Clientela é um dos quatro eixos da Irisa por isso.\n3. A rua do hotel. O hotel pode ser ótimo e a quadra, não. O lugar recebe cor, a rua recebe aviso: você olha os dois antes de reservar.\n\nQuem esteve lá responde: atendimento, afeto, banheiro, clientela.\n\nQual hotel te tratou como casal? Conta aqui e salva para quem vai viajar. 🌈\n\nO link está na bio. iPhone na App Store; Android ainda em teste.\n\n#Irisa #LGBTQIA #Orgulho #CasalLGBT #ViagemLGBT",
+  "primeiro_comentario": "appirisa.com.br",
+  "publicado": false
+ },
+ {
+  "id": "reels-nota",
+  "aprovado": false,
+  "quando": "2026-10-14T19:00:00-03:00",
+  "tipo": "REELS",
+  "midias": [
+   "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/Irisa-reels-nota.mp4"
+  ],
+  "legenda": "Uma nota de cinco estrelas não muda a vida de ninguém.\n\nMas um \"atendimento\", um \"afeto\" bem marcado, numa sexta-feira — isso já é o \"pode ir\" que alguém precisava antes de sair de casa.\n\nSua nota de hoje é a coragem de alguém amanhã.\n\nJá avaliou o lugar que te acolheu? Comenta. 🌈\n\nO link está na bio. iPhone na App Store; Android ainda em teste.\n\n#Irisa #LGBTQIA #Orgulho #AppLGBT #Avaliacao",
+  "primeiro_comentario": "appirisa.com.br",
+  "publicado": false
+ },
+ {
+  "id": "carrossel-10",
+  "aprovado": true,
+  "quando": "2026-10-15T19:00:00-03:00",
+  "tipo": "POST",
+  "midias": [
+   "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/carrossel-10/01.png",
+   "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/carrossel-10/02.png",
+   "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/carrossel-10/03.png",
+   "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/carrossel-10/04.png",
+   "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/carrossel-10/05.png",
+   "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/carrossel-10/06.png",
+   "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/carrossel-10/07.png"
+  ],
+  "legenda": "Por que banheiro pesa 25% da nota?\n\nPorque para muita gente é a parte do lugar que decide se dá para ficar.\n\nNa Irisa, quem esteve lá responde quatro perguntas — e cada uma pesa diferente:\n\nAtendimento, 30%. O garçom que trata vocês como casal, ou o que chama de \"amigos\". É a primeira coisa que acontece e a que mais pesa.\n\nAfeto, 30%. Se dá para dar a mão sem medir a sala antes. Pesa igual ao atendimento porque é por isso que a gente sai de casa.\n\nBanheiro, 25%. Para pessoa trans e não-binárie, escolher a porta é a parte mais tensa do lugar. Por isso vale um quarto da nota, não uma nota de rodapé.\n\nClientela, 15%. O bar pode treinar a equipe, mas não escolhe quem senta ali. Conta, mas não é culpa do lugar.\n\nAs quatro viram uma nota só. E a nota vira cor.\n\nQual desses quatro pesa mais pra você? Comenta aqui embaixo — a gente leva em conta na hora de ajustar os pesos. 🌈\n\nO link está na bio. iPhone na App Store; Android ainda em teste.\n\n#Irisa #LGBTQIA #Orgulho #AppLGBT #Acolhimento",
+  "primeiro_comentario": "appirisa.com.br",
+  "publicado": false,
+  "confirmado": false
+ },
+ {
+  "id": "reels-olhar",
+  "aprovado": false,
+  "quando": "2026-10-16T19:00:00-03:00",
+  "tipo": "REELS",
+  "midias": [
+   "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/Irisa-reels-olhar.mp4"
+  ],
+  "legenda": "Duas pessoas que nunca se falaram se olham do outro lado do salão.\n\nNão precisa de mais nada — os dois já sabem, sem perguntar, que ali os dois são bem-vindes.\n\nIsso não devia ser sorte. Devia ser informação.\n\nJá teve esse olhar com um estranho, num lugar bom? Comenta. 🌈\n\nO link está na bio. iPhone na App Store; Android ainda em teste.\n\n#Irisa #LGBTQIA #Orgulho #AppLGBT #Acolhimento",
+  "primeiro_comentario": "appirisa.com.br",
+  "publicado": false
+ },
+ {
+  "id": "carrossel-11",
+  "aprovado": true,
+  "quando": "2026-10-17T19:00:00-03:00",
+  "tipo": "POST",
+  "midias": [
+   "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/carrossel-11/01.png",
+   "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/carrossel-11/02.png",
+   "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/carrossel-11/03.png",
+   "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/carrossel-11/04.png",
+   "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/carrossel-11/05.png",
+   "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/carrossel-11/06.png",
+   "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/carrossel-11/07.png"
+  ],
+  "legenda": "O que a Irisa não tem. De propósito.\n\nCinco coisas que todo mundo pediu e a gente decidiu não fazer:\n\nLista de lugar LGBT. Uma lista pública de onde a gente se reúne é um mapa pronto para quem quer nos achar. O selo vem do acolhimento, nunca de um rótulo na ficha.\n\nSelo de região tranquila. Sem relato não quer dizer sem violência. Quer dizer que ninguém registrou ainda — e dizer o contrário seria a falha mais perigosa que o app poderia cometer.\n\nPágina de perfil. Não existe tela com o seu histórico, nem para você, nem para ninguém. Só um e-mail para a conta existir. Não vaza o que não existe.\n\nFiltro de bar por alerta. O relato acontece no beco, na praça, no ponto de ônibus. Filtrar bar por isso faria a violência parecer atributo do lugar e puniria quem só está perto.\n\nEstrela. Cinco estrelas num lugar onde a recepção te olha torto continuam sendo cinco estrelas. Cor é medida: quatro perguntas, respondidas por quem entrou.\n\nQual dessas cinco você não sabia? Comenta aqui — e salva este post para quando alguém perguntar por que o app não tem lista. 🌈\n\nO link está na bio. iPhone na App Store; Android ainda em teste.\n\n#Irisa #LGBTQIA #Orgulho #AppLGBT #Anonimato",
+  "primeiro_comentario": "appirisa.com.br",
+  "publicado": false,
+  "confirmado": false
+ },
+ {
+  "id": "reels-3",
+  "aprovado": false,
+  "quando": "2026-10-18T19:00:00-03:00",
+  "tipo": "REELS",
+  "midias": [
+   "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/Irisa-reels-3.mp4"
+  ],
+  "legenda": "Aconteceu na esquina do bar. A culpa é do bar?\n\nNão. A violência foi na rua. Quem estava lá dentro sendo bem tratade não tem culpa.\n\nNa Irisa a regra é uma só:\no lugar recebe cor, a rua recebe aviso.\n\nRelatos num raio de 100 m viram nível da região:\nAtenção: 1 a 3 relatos em 180 dias.\nAlerta: 4 ou mais, ou um grave.\n\nO bar mantém a nota. Quem vai passar por ali recebe o aviso.\n\nE o mapa nunca vai dizer \"região tranquila\". Sem relato não é rua tranquila. É ninguém registrando.\n\nRegistrar leva um minuto. Sem nome, sem perfil, sem rastro.\n\nVocê já deixou de passar por algum lugar por medo? Comenta. 🌈\n\nO link está na bio. iPhone na App Store; Android ainda em teste.\n\n#Irisa #LGBTQIA #Orgulho #AppLGBT #LGBTfobia",
+  "primeiro_comentario": "appirisa.com.br",
+  "publicado": false
+ },
+ {
+  "id": "reels-4",
+  "aprovado": false,
+  "quando": "2026-10-19T19:00:00-03:00",
+  "tipo": "REELS",
+  "midias": [
+   "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/Irisa-reels-4.mp4"
+  ],
+  "legenda": "Quem registra tem medo de uma coisa: ser identificade.\n\nPor isso a Irisa foi feita para não saber quem você é.\n\nSem nome: o relato aparece sem autor. A tabela pública nem tem a coluna.\nSem perfil: não existe página de usuário. Ninguém abre seu histórico.\nSem rastro: relato de hoje aparece com o ponto deslocado uns 100 metros.\n\nO que a gente guarda: um e-mail para a conta existir, a cidade e o bairro do relato. Nada mais. Não vazamos o que não existe.\n\nRegistrar leva um minuto. Onde e a que hora são opcionais: você conta o que conseguir contar.\n\nSe aconteceu, registra. Por quem vem depois. 🌈\n\nO link está na bio. iPhone na App Store; Android ainda em teste.\n\n#Irisa #LGBTQIA #Orgulho #AppLGBT #Anonimato",
+  "primeiro_comentario": "appirisa.com.br",
+  "publicado": false
+ },
+ {
+  "id": "reels-5",
+  "aprovado": false,
+  "quando": "2026-10-20T19:00:00-03:00",
+  "tipo": "REELS",
+  "midias": [
+   "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/Irisa-reels-5.mp4"
+  ],
+  "legenda": "Quantos relatos tem o seu bairro? Você não sabe. Ninguém sabe. Isso é o problema.\n\nE zero não quer dizer bairro tranquilo. Quer dizer que ninguém registrou. Por isso a Irisa nunca dá selo de \"região tranquila\".\n\nA ficha do bairro junta os dois lados:\nquantos relatos em 180 dias, quantos graves, de que tipo e a que hora;\ne os lugares do bairro, avaliados primeiro. Os sem nota esperam você irisar.\n\nCada relato é anônimo. Cada bairro ganha uma ficha.\n\nComece pelo seu bairro: um lugar irisado ou um relato, um minuto, e a ficha deixa de ser zero.\n\nQual é o seu bairro? Comenta que a gente conta quantos lugares já estão no mapa por lá. 🌈\n\nO link está na bio. iPhone na App Store; Android ainda em teste.\n\n#Irisa #LGBTQIA #Orgulho #AppLGBT #LGBTfobia",
+  "primeiro_comentario": "appirisa.com.br",
+  "publicado": false
+ }
 ]
