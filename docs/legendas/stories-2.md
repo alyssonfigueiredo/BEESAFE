@@ -18,7 +18,7 @@ implícita (quase todo mundo já deixou), então sustenta sozinha sem precisar d
 **Trocou de lugar com a story-02 a pedido dele (03/10)**: furou a fila pra sair no sábado,
 aprovada e marcada "publicar agora" no artefato — publicada 17h55 do mesmo dia.
 
-## story-05 · `stories-2/05-urna.jpg` (VAI VOTAR, VIADO / IRISA, MONA) — dom 04/10, 12h, dia de eleição
+## story-05 · `stories-2/05-urna.jpg` (VAI VOTAR, VIADO / IRISA, MONA) — dom 04/10, 9h, dia de eleição
 "VAI VOTAR, VIADO. Cada voto conta pra eleger quem te protege — não quem te ataca. IRISA, MONA.
 Cada cor conta pra mostrar quem já te acolhe." Dois cartões lado a lado (borda coral/turquesa), sem citar
 partido ou candidato — é sobre o ato de votar e a garantia de direitos, ligado ao gesto de

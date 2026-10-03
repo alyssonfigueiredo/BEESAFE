@@ -271,7 +271,7 @@
   {
     "id": "story-05",
     "aprovado": true,
-    "quando": "2026-10-04T12:00:00-03:00",
+    "quando": "2026-10-04T09:00:00-03:00",
     "tipo": "STORY",
     "midias": [
       "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/stories-2/05-urna.jpg"
