@@ -156,8 +156,9 @@ function pagina() {
   return html;
 }
 
+const CHROMIUM = process.env.PW_CHROMIUM ?? "/opt/pw-browsers/chromium";
 const navegador = await chromium.launch({
-  executablePath: process.env.PW_CHROMIUM ?? "/opt/pw-browsers/chromium",
+  ...(existsSync(CHROMIUM) ? { executablePath: CHROMIUM } : {}),
   args: ["--ignore-certificate-errors"],
 });
 const pg = await navegador.newPage();
