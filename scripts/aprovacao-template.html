@@ -92,6 +92,9 @@ h1,h2,h3{font-family:var(--display);text-transform:uppercase;margin:0}
 .btn-aprovar:hover{background:rgba(92,201,180,.12)}
 .btn-desfazer{color:var(--dim);font-size:11.5px;padding:7px 12px;border-color:transparent}
 .pill-ok{font-family:var(--display);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:#0F1830;background:var(--turq);padding:7px 14px;border-radius:999px;display:inline-flex;align-items:center;gap:6px}
+.pill-pub{font-family:var(--display);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:#0F1830;background:var(--lilac);padding:7px 14px;border-radius:999px;display:inline-flex;align-items:center;gap:6px}
+.btn-pub{border-color:var(--lilac);color:var(--lilac)}
+.btn-pub:hover{background:rgba(140,111,224,.12)}
 
 .cap{padding:10px 14px 4px;font-size:13.5px;white-space:pre-wrap;line-height:1.5;color:var(--muted)}
 .cap b{font-weight:700;color:var(--ink);margin-right:6px}
@@ -127,7 +130,8 @@ h1,h2,h3{font-family:var(--display);text-transform:uppercase;margin:0}
 .sx{position:absolute;top:16px;right:10px;color:#fff;background:none;border:0;font-size:24px;cursor:pointer;z-index:3}
 .snav{position:absolute;top:0;bottom:0;width:40%;background:none;border:0;cursor:pointer;z-index:1}
 .snav.l{left:0}.snav.r{right:0}
-.sbadge{position:absolute;bottom:14px;left:12px;right:12px;z-index:2;display:flex;justify-content:space-between;align-items:center;gap:8px}
+.sbadge{position:absolute;bottom:14px;left:12px;right:12px;z-index:2;display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:8px}
+.sbadge .sbtns{display:flex;gap:6px;flex-wrap:wrap;margin-left:auto}
 .schip{font-family:var(--display);font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;padding:5px 10px;border-radius:999px;background:rgba(20,20,38,.6);color:#fff}
 .sbtn{font-family:var(--display);font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;padding:6px 12px;border-radius:999px;border:1px solid rgba(255,255,255,.5);background:rgba(20,20,38,.4);color:#fff;cursor:pointer}
 .sbtn.ok{background:var(--turq);border-color:var(--turq);color:#0F1830}
@@ -217,6 +221,11 @@ h1,h2,h3{font-family:var(--display);text-transform:uppercase;margin:0}
 .lapprove-big:hover{background:rgba(92,201,180,.14)}
 .lapprove-big.ok{background:var(--turq);color:#0F1830}
 .lapprove-big:disabled{opacity:.5;cursor:default}
+.lpill.pub{background:rgba(140,111,224,.16);color:var(--lilac)}
+.lpub-big{font-family:var(--display);font-size:12px;letter-spacing:.06em;text-transform:uppercase;padding:9px 18px;border-radius:999px;border:1.5px solid var(--lilac);background:transparent;color:var(--lilac);cursor:pointer;font-weight:600}
+.lpub-big:hover{background:rgba(140,111,224,.14)}
+.lpub-big.ok{background:var(--lilac);color:#0F1830}
+.lpub-big:disabled{opacity:.5;cursor:default}
 .lacts{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px}
 .lbtn{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);background:var(--night2);color:var(--ink);border-radius:999px;padding:7px 12px;font:inherit;font-size:11.5px;font-weight:600;cursor:pointer;white-space:nowrap}
 .lbtn svg{width:13px;height:13px;flex:0 0 auto}
@@ -320,6 +329,7 @@ footer code{background:var(--surface);padding:2px 6px;border-radius:6px;color:va
   <div class="cap" id="vcap"></div>
   <div class="fixed" id="vfixed"></div>
   <div class="acts" id="vapprove"></div>
+  <div class="acts" id="vpub"></div>
   <details class="pedido" id="vpedido">
     <summary>Pedir alteração</summary>
     <textarea placeholder="O que precisa mudar nessa peça?"></textarea>
@@ -339,7 +349,10 @@ footer code{background:var(--surface);padding:2px 6px;border-radius:6px;color:va
     <button class="snav r" id="sr" aria-label="Próximo"></button>
     <div class="sbadge">
       <span class="schip" id="sstatus"></span>
-      <button class="sbtn" id="sapprove" type="button"></button>
+      <div class="sbtns">
+        <button class="sbtn" id="spub" type="button"></button>
+        <button class="sbtn" id="sapprove" type="button"></button>
+      </div>
     </div>
   </div>
 </div></div>
@@ -369,6 +382,7 @@ const icReels='<svg class="ic" viewBox="0 0 24 24" fill="#fff"><path d="M8 5v14l
 // manualmente o campo "aprovado" no docs/legendas/fila.json do repositório.
 let dbNs = null;
 const aprovadoState = {}; // id -> bool
+const publicadoState = {}; // id -> bool (marcado aqui; some ao fila.json trazer publicado:true)
 const listCardUpdaters = {}; // id -> função que atualiza o card da visão em lista
 
 async function initDb(){
@@ -376,21 +390,28 @@ async function initDb(){
   catch(e){ dbNs = null; }
   const allIds = [...FEED.map(p=>p.id), ...STORIES.map(s=>s.id)];
   if(!dbNs){
-    allIds.forEach(id=>aprovadoState[id]=false);
+    allIds.forEach(id=>{aprovadoState[id]=false; publicadoState[id]=false;});
     render(); renderS_ifOpen(); updateChip();
     return;
   }
   allIds.forEach(id=>{
     dbNs.doc("aprovacoes/"+id).onSnapshot(snap=>{
       aprovadoState[id] = !!(snap.data() && snap.data().aprovado);
-      updateGridBadge(id);
-      updateChip();
-      if(cur && cur.id===id) renderApprove();
-      if(sc && sc.id===id) renderSApprove();
-      if(listCardUpdaters[id]) listCardUpdaters[id]();
-      if(viewCal.style.display!=='none') renderCalendar();
+      atualizarEstado(id);
+    }, ()=>{});
+    dbNs.doc("publicados/"+id).onSnapshot(snap=>{
+      publicadoState[id] = !!(snap.data() && snap.data().publicado);
+      atualizarEstado(id);
     }, ()=>{});
   });
+}
+function atualizarEstado(id){
+  updateGridBadge(id);
+  updateChip();
+  if(cur && cur.id===id) { renderApprove(); renderPublicado(); }
+  if(sc && sc.id===id) renderSApprove();
+  if(listCardUpdaters[id]) listCardUpdaters[id]();
+  if(viewCal.style.display!=='none') renderCalendar();
 }
 function updateChip(){
   const total = FEED.length + STORIES.length;
@@ -401,6 +422,11 @@ async function setAprovado(id, val){
   if(!dbNs) return;
   await dbNs.doc("aprovacoes/"+id).set({aprovado: val, ts: new Date().toISOString()});
 }
+async function setPublicado(id, val){
+  if(!dbNs) return;
+  await dbNs.doc("publicados/"+id).set({publicado: val, ts: new Date().toISOString()});
+}
+function jaPublicado(item){ return !!item.publicado || !!publicadoState[item.id]; }
 async function enviarPedido(id, texto){
   if(!dbNs || !texto.trim()) return false;
   await dbNs.collection("pedidos").add({item:id, texto:texto.trim(), ts:new Date().toISOString(), resolvido:false});
@@ -427,7 +453,7 @@ function updateGridBadge(id){
   badge.className = 'badge '+(ok?'ok':'pend'); badge.textContent = ok?'aprovado':'pendente';
 }
 
-const ov=$('ov'),vimg=$('vimg'),vvid=$('vvid'),stage=$('stage'),dots=$('dots'),vcap=$('vcap'),vmeta=$('vmeta'),vl=$('vl'),vr=$('vr'),vfixed=$('vfixed'),vapprove=$('vapprove');
+const ov=$('ov'),vimg=$('vimg'),vvid=$('vvid'),stage=$('stage'),dots=$('dots'),vcap=$('vcap'),vmeta=$('vmeta'),vl=$('vl'),vr=$('vr'),vfixed=$('vfixed'),vapprove=$('vapprove'),vpub=$('vpub');
 let cur=null,idx=0;
 
 function abrir(i){cur=FEED[i];idx=0;ov.classList.add('on');document.body.style.overflow='hidden';render();}
@@ -454,6 +480,7 @@ function render(){
   vmeta.textContent=` · ${p.id} · ${fmtQuando(p.quando)}${multi?' · '+(idx+1)+'/'+p.arquivos.length:''}`;
   bcopy.classList.remove('ok'); rotuloCopia('Copiar legenda'); vsel.style.display='none';
   renderApprove();
+  renderPublicado();
   // reseta o formulário de pedido do item anterior
   const ta = document.querySelector('#vpedido textarea'); if(ta) ta.value='';
   const ok = document.querySelector('#vpedido .pedido-ok'); if(ok) ok.hidden=true;
@@ -470,6 +497,18 @@ function renderApprove(){
     : `<button class="btn btn-aprovar" id="bapprove" type="button">Aprovar</button>`;
   const ba=document.getElementById('bapprove'); if(ba) ba.onclick=async()=>{ba.disabled=true;await setAprovado(cur.id,true);};
   const bu=document.getElementById('bundo'); if(bu) bu.onclick=async()=>{bu.disabled=true;await setAprovado(cur.id,false);};
+}
+function renderPublicado(){
+  if(!cur || !dbNs) { vpub.innerHTML=''; return; }
+  const ja = jaPublicado(cur);
+  const viaFila = !!cur.publicado; // já vem do fila.json: não dá pra desfazer por aqui
+  vpub.innerHTML = viaFila
+    ? `<span class="pill-pub">✓ Publicado</span>`
+    : (ja
+        ? `<span class="pill-pub">✓ Marcado como publicado</span><button class="btn btn-desfazer" id="bpubundo" type="button">Desfazer</button>`
+        : `<button class="btn btn-pub" id="bpub" type="button">Marcar como já publicado</button>`);
+  const bp=document.getElementById('bpub'); if(bp) bp.onclick=async()=>{bp.disabled=true;await setPublicado(cur.id,true);};
+  const bpu=document.getElementById('bpubundo'); if(bpu) bpu.onclick=async()=>{bpu.disabled=true;await setPublicado(cur.id,false);};
 }
 function fechar(){ov.classList.remove('on');document.body.style.overflow='';vvid.pause();}
 $('vx').onclick=fechar;
@@ -523,7 +562,7 @@ STORIES.forEach((s,i)=>{
   b.addEventListener('click',()=>abrirS(i));
   rings.appendChild(b);
 });
-const sv=$('sv'),simg=$('simg'),bars=$('bars'),sday=$('sday'),sstatus=$('sstatus'),sapprove=$('sapprove');
+const sv=$('sv'),simg=$('simg'),bars=$('bars'),sday=$('sday'),sstatus=$('sstatus'),sapprove=$('sapprove'),spub=$('spub');
 const DUR=5000;
 let sd=0,sc=null,timer=null;
 function abrirS(i){sd=i;sc=STORIES[i];sv.classList.add('on');document.body.style.overflow='hidden';renderS();}
@@ -539,10 +578,18 @@ function renderS_ifOpen(){ if(sv.classList.contains('on')) renderSApprove(); }
 function renderSApprove(){
   if(!sc) return;
   const aprovado = !!aprovadoState[sc.id];
-  sstatus.textContent = (sc.nota?sc.nota+' · ':'') + (aprovado?'aprovado':'pendente');
+  const ja = jaPublicado(sc);
+  sstatus.textContent = (sc.nota?sc.nota+' · ':'') + (ja?'publicado':(aprovado?'aprovado':'pendente'));
   sapprove.textContent = aprovado?'Desfazer':'Aprovar';
   sapprove.className = 'sbtn'+(aprovado?' ok':'');
   sapprove.onclick = async(e)=>{ e.stopPropagation(); clearTimeout(timer); sapprove.disabled=true; await setAprovado(sc.id,!aprovado); sapprove.disabled=false; timer=setTimeout(proxS,DUR); };
+  if(!dbNs || sc.publicado){ spub.style.display='none'; }
+  else {
+    spub.style.display='';
+    spub.textContent = publicadoState[sc.id] ? 'Desfazer publicado' : 'Marcar publicado';
+    spub.className = 'sbtn'+(publicadoState[sc.id]?' ok':'');
+    spub.onclick = async(e)=>{ e.stopPropagation(); clearTimeout(timer); spub.disabled=true; await setPublicado(sc.id,!publicadoState[sc.id]); spub.disabled=false; timer=setTimeout(proxS,DUR); };
+  }
 }
 function proxS(){ if(sd<STORIES.length-1){sd++;sc=STORIES[sd];renderS();} else fecharS(); }
 function fecharS(){clearTimeout(timer);sv.classList.remove('on');document.body.style.overflow='';}
@@ -574,7 +621,7 @@ const feedIndexById={}, storyIndexById={};
 FEED.forEach((p,i)=>feedIndexById[p.id]=i);
 STORIES.forEach((s,i)=>storyIndexById[s.id]=i);
 function statusOf(item){
-  if(item.publicado) return 'pub';
+  if(jaPublicado(item)) return 'pub';
   if(aprovadoState[item.id]) return 'aprov';
   return 'pend';
 }
@@ -686,6 +733,7 @@ function buildListCard(item){
         <div class="lstatusrow">
           <span class="lpill pend">aguardando aprovação</span>
           <button class="lapprove-big" type="button">Aprovar</button>
+          <button class="lpub-big" type="button">Marcar como já publicado</button>
         </div>
         <div class="lacts">
           ${item.legenda?`<button class="lbtn lcopy" type="button">
@@ -757,16 +805,30 @@ function buildListCard(item){
   // aprovação
   const pill = el.querySelector('.lpill');
   const bapprove = el.querySelector('.lapprove-big');
+  const bpub = el.querySelector('.lpub-big');
   function renderApproveL(){
+    const ja = jaPublicado(item);
     const ok = !!aprovadoState[item.id];
-    pill.className='lpill '+(ok?'ok':'pend'); pill.textContent = ok?'aprovado':'aguardando aprovação';
+    pill.className='lpill '+(ja?'pub':(ok?'ok':'pend')); pill.textContent = ja?'publicado':(ok?'aprovado':'aguardando aprovação');
     bapprove.className='lapprove-big'+(ok?' ok':''); bapprove.textContent = ok?'Desfazer':'Aprovar';
+    if(item.publicado){ bpub.style.display='none'; }
+    else {
+      bpub.style.display='';
+      const marcado = !!publicadoState[item.id];
+      bpub.className='lpub-big'+(marcado?' ok':''); bpub.textContent = marcado?'Desfazer publicado':'Marcar como já publicado';
+    }
   }
   bapprove.addEventListener('click', async()=>{
     if(!dbNs){ bapprove.textContent='Indisponível aqui'; return; }
     bapprove.disabled=true;
     await setAprovado(item.id, !aprovadoState[item.id]);
     bapprove.disabled=false;
+  });
+  bpub.addEventListener('click', async()=>{
+    if(!dbNs){ bpub.textContent='Indisponível aqui'; return; }
+    bpub.disabled=true;
+    await setPublicado(item.id, !publicadoState[item.id]);
+    bpub.disabled=false;
   });
   renderApproveL();
   listCardUpdaters[item.id]=renderApproveL;
