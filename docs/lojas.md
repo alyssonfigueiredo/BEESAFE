@@ -47,10 +47,10 @@ App Store: 17+ (User Generated Content, Infrequent/Mild Mature Themes).
 
 Publicadas pelo GitHub Pages (workflow `.github/workflows/pages.yml`, fonte `docs/*.md` → `site/`):
 
-- Site: https://alyssonfigueiredo.github.io/BEESAFE/
-- Política de privacidade: https://alyssonfigueiredo.github.io/BEESAFE/privacidade.html
-- Termos: https://alyssonfigueiredo.github.io/BEESAFE/termos.html
-- Exclusão de conta: https://alyssonfigueiredo.github.io/BEESAFE/excluir-conta.html
+- Site: https://appirisa.com.br/
+- Política de privacidade: https://appirisa.com.br/privacidade.html
+- Termos: https://appirisa.com.br/termos.html
+- Exclusão de conta: https://appirisa.com.br/excluir-conta.html
 - Suporte: e-mail de contato appirisa@gmail.com.
 
 ## Play Console — o que colar em cada tela
@@ -71,7 +71,7 @@ Publicadas pelo GitHub Pages (workflow `.github/workflows/pages.yml`, fonte `doc
 | Categoria | Social |
 | Tags | Comunidade, Segurança, LGBTQIA+ |
 
-**Política de privacidade**: https://alyssonfigueiredo.github.io/BEESAFE/privacidade.html
+**Política de privacidade**: https://appirisa.com.br/privacidade.html
 
 **Acesso ao app**: "Todas as funcionalidades estão disponíveis sem restrições especiais" não vale: exige login. Marcar "Todo o app ou parte dele é restrito" e informar credenciais de teste (criar usuário teste@irisa.app com senha só para o Google, sem dados reais).
 
@@ -94,7 +94,7 @@ Familiar, que o app não cumpre. Depois o Console pergunta se o app pode atrair 
 | O app coleta ou compartilha dados do usuário? | Sim |
 | Dados criptografados em trânsito? | Sim |
 | Permite solicitar exclusão dos dados? | Sim (dentro do app: Perfil → Excluir minha conta) |
-| URL de exclusão de conta | https://alyssonfigueiredo.github.io/BEESAFE/excluir-conta.html |
+| URL de exclusão de conta | https://appirisa.com.br/excluir-conta.html |
 
 Tipos de dados: marcar exatamente estes.
 
@@ -131,8 +131,8 @@ para sobrar margem.
 | Categoria primária | Social Networking |
 | Categoria secundária | Navigation |
 | Palavras-chave (100) | lgbt,lgbtqia,segurança,mapa,acolhimento,lgbtfobia,denúncia,comunidade,bar,curitiba |
-| URL de suporte | https://alyssonfigueiredo.github.io/BEESAFE/ |
-| URL de privacidade | https://alyssonfigueiredo.github.io/BEESAFE/privacidade.html |
+| URL de suporte | https://appirisa.com.br/ |
+| URL de privacidade | https://appirisa.com.br/privacidade.html |
 | Classificação | 17+ (Conteúdo gerado por usuário; Temas maduros infrequentes/leves) |
 | Login para revisão | usuário de teste com senha; explicar em "Notes" que relatos são anônimos e ocultados após 3 denúncias |
 
