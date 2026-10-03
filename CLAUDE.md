@@ -376,6 +376,13 @@ Nome: **Irisa** (INPI livre; @appirisa livre). Bundle id Android `br.com.irisa.a
   apresentação para o Alysson em `docs/apresentacao-liquid.html`; plano de lançamento em
   `docs/plano-lancamento.html` (nenhum deles é publicado no site).
 
+- **Gamificação (proposta, 03/10/2026, nada no app ainda):** `docs/gamificacao.html` é a apresentação para o Aly
+  (anel de 48 gomos, dias acesos, faíscas, caixinha, desafios, pulseira). Pingentes seguem o briefing dele: título
+  primeiro, objeto depois, sem bandeira/arco-íris/emoji; os 30 estão em `docs/pingentes.js` (dados + SVG) e no
+  catálogo `docs/pingentes.html`. Títulos com flexão (Famosinha/o/e) a pessoa escolhe no Perfil. Telas de exemplo em
+  `docs/gamificacao-telas.html`, exportadas por `node scripts/gamificacao-telas.mjs` para `docs/gamificacao/tela-*.png`.
+  Regras: relato nunca pontua, nada público, nada de check-in, "Da Casa" nunca mostra o lugar no cartão do story.
+
 ## Stack
 
 Expo SDK 57, Expo Router, NativeWind v4, TypeScript, TanStack Query, MapLibre React Native v11 com tiles Esri
