@@ -12,8 +12,11 @@
 //        build/aprovacao/v/<id>.mp4  (os reels)
 // Depois: publicar essa pasta no artefato, numa sessão da conta dele (só ela alcança o artefato).
 //
-// A página grava em `aprovacoes` (doc_id = id da peça, {aprovado, ts, quem}) e `pedidos`
-// ({texto, resolvido, ts}) — os mesmos nomes de antes, para não perder o que já foi decidido.
+// A página grava em `aprovacoes` (doc_id = id da peça, {aprovado, publicar_agora, arquivado, ts})
+// e `pedidos` ({texto, resolvido, ts}) — os mesmos nomes de antes, para não perder o que já foi
+// decidido. As três decisões moram no MESMO documento, então quem gravar de fora tem que mesclar.
+//   publicar_agora: ele quer furar a fila (aprovado + a data puxada pra agora na sincronização).
+//   arquivado: a data passou e a peça não foi usada — sai da fila sem ser apagada, pra reaproveitar.
 
 import { Buffer } from "node:buffer";
 import { mkdirSync, readFileSync, writeFileSync, existsSync, copyFileSync, readdirSync } from "node:fs";
@@ -123,6 +126,11 @@ function construirDados() {
       fixado: item.primeiro_comentario || "",
       nota: item.nota || "",
       publicado: !!item.publicado,
+      // estado inicial: o banco do artefato manda, mas se ele ainda não tem documento
+      // dessa peça vale o que está no fila.json (eu transcrevo as decisões pra lá).
+      aprovado: !!item.aprovado,
+      publicar_agora: !!item.publicar_agora,
+      arquivado: !!item.arquivado,
     };
     if (item.tipo === "STORY") {
       STORIES.push({ ...base, tipo: "STORY", arquivo: comArte ? `c/${item.id}-01.jpg` : "" });

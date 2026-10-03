@@ -510,8 +510,21 @@ perder as decisões gravadas):
 - Com arte nova, são ~35 MB, a maior parte vídeo: mandar em lotes (um publish leva no máximo 64 MB e
   255 arquivos).
 
-A página escreve nas **mesmas coleções de sempre** — `aprovacoes` (doc_id = id da peça, `{aprovado, ts}`)
-e `pedidos` — então republicar não apaga nada do que já foi decidido.
+A página escreve nas **mesmas coleções de sempre** — `aprovacoes` (doc_id = id da peça) e `pedidos` —
+então republicar não apaga nada do que já foi decidido.
+**Três decisões no mesmo documento `aprovacoes/<id>` (03/10/2026, pedido dele):**
+`{aprovado, publicar_agora, arquivado, ts}`. Quem gravar de fora **tem que mesclar** — um `set` cru
+apaga as outras duas (a página mescla pelo cache `docAprov`).
+- `publicar_agora: true` — ele quer furar a fila. Na sincronização, além de `aprovado: true`, puxar o
+  `quando` da peça no `fila.json` pra agora (STORY continua manual: a Graph API não posta adesivo).
+- `arquivado: true` — a data passou e a peça não foi usada. Sai da grade, dos stories, da lista e do
+  calendário **sem apagar nada**; o botão "Ver arquivadas" no cabeçalho revela as guardadas e
+  "Reaproveitar" devolve pra fila. No `fila.json` é o campo `arquivado` na peça, e peça arquivada
+  nunca é publicada pelo robô.
+- Peça já publicada não mostra "Publicar agora" nem "Arquivar"; peça arquivada não mostra nenhum outro
+  botão além de "Reaproveitar".
+Pedido de alteração **não avisa ninguém**: fica em `pedidos` e só é lido quando uma sessão abre a fila —
+a própria página diz isso, pra ele chamar no chat quando for urgente.
 **Coleção `publicados` (03/10/2026):** botão "Marcar como já publicado" em cada peça (Perfil, Lista
 e Story), pra quando ele publica manualmente e quer registrar sem esperar o `fila.json` trazer
 `publicado: true`. `jaPublicado(item)` no template é `item.publicado || publicadoState[id]`; some sozinho

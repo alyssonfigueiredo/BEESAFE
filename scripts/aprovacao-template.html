@@ -55,11 +55,16 @@ h1,h2,h3{font-family:var(--display);text-transform:uppercase;margin:0}
 .tile .badge{position:absolute;left:7px;bottom:7px;font-family:var(--display);font-size:8.5px;letter-spacing:.06em;text-transform:uppercase;padding:3px 6px;border-radius:4px;font-weight:500}
 .badge.pend{background:rgba(244,115,111,.92);color:#1E2340}
 .badge.ok{background:rgba(92,201,180,.92);color:#1E2340}
+.badge.jaja{background:rgba(245,164,93,.95);color:#1E2340}
+.badge.arq{background:rgba(118,122,145,.92);color:#fff}
+.badge.pub{background:rgba(30,35,64,.9);color:#fff}
 
 .legend{padding:14px 16px 4px;font-size:11.5px;color:var(--dim);line-height:1.5}
 .legend i{display:inline-block;width:7px;height:7px;border-radius:50%;margin-right:6px;vertical-align:middle}
 .legend i.pend{background:var(--coral)}
 .legend i.ok{background:var(--turq)}
+.legend i.jaja{background:var(--orange)}
+.legend i.arq{background:var(--dim)}
 
 /* lightbox (post/carrossel/reels) */
 .ov{position:fixed;inset:0;background:rgba(10,12,26,.96);display:none;z-index:20;overflow:auto}
@@ -95,6 +100,20 @@ h1,h2,h3{font-family:var(--display);text-transform:uppercase;margin:0}
 .pill-pub{font-family:var(--display);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:#0F1830;background:var(--lilac);padding:7px 14px;border-radius:999px;display:inline-flex;align-items:center;gap:6px}
 .btn-pub{border-color:var(--lilac);color:var(--lilac)}
 .btn-pub:hover{background:rgba(140,111,224,.12)}
+.btn-jaja{border-color:var(--coral);color:var(--coral)}
+.btn-jaja:hover{background:rgba(244,115,111,.12)}
+.pill-jaja{font-family:var(--display);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:#0F1830;background:var(--orange);padding:7px 14px;border-radius:999px;display:inline-flex;align-items:center;gap:6px}
+.btn-arquivar{color:var(--dim);font-size:11.5px;padding:7px 12px}
+.pill-arq{font-family:var(--display);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--dim);border:1px solid var(--line);padding:6px 13px;border-radius:999px;display:inline-flex;align-items:center;gap:6px}
+
+/* arquivada: sai da fila sem sumir do repositório (dá pra reaproveitar depois) */
+.oculto{display:none !important}
+.tile.arq img,.tile.arq video{filter:grayscale(1);opacity:.5}
+.ring.arq img{filter:grayscale(1);opacity:.6}
+.ring.arq .c{background:var(--line)}
+.lcard.arq{opacity:.74}
+.arqtoggle{font-family:var(--display);font-size:10px;letter-spacing:.08em;text-transform:uppercase;padding:6px 11px;border-radius:999px;border:1px solid var(--line);background:var(--surface);color:var(--dim);cursor:pointer}
+.arqtoggle:hover,.arqtoggle.on{border-color:var(--lilac);color:var(--lilac)}
 
 .cap{padding:10px 14px 4px;font-size:13.5px;white-space:pre-wrap;line-height:1.5;color:var(--muted)}
 .cap b{font-weight:700;color:var(--ink);margin-right:6px}
@@ -135,6 +154,7 @@ h1,h2,h3{font-family:var(--display);text-transform:uppercase;margin:0}
 .schip{font-family:var(--display);font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;padding:5px 10px;border-radius:999px;background:rgba(20,20,38,.6);color:#fff}
 .sbtn{font-family:var(--display);font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;padding:6px 12px;border-radius:999px;border:1px solid rgba(255,255,255,.5);background:rgba(20,20,38,.4);color:#fff;cursor:pointer}
 .sbtn.ok{background:var(--turq);border-color:var(--turq);color:#0F1830}
+.sbtn.jaja{background:var(--orange);border-color:var(--orange);color:#0F1830}
 
 /* abas de visão (perfil / lista / calendário) */
 .viewtabs{display:flex;gap:8px;padding:0 16px 14px}
@@ -156,6 +176,8 @@ h1,h2,h3{font-family:var(--display);text-transform:uppercase;margin:0}
 .cal-legend i.pend{background:var(--coral)}
 .cal-legend i.aprov{background:var(--lilac)}
 .cal-legend i.pub{background:var(--turq)}
+.cal-legend i.jaja{background:var(--orange)}
+.cal-legend i.arq{background:var(--dim)}
 .cal-weekdays{display:grid;grid-template-columns:repeat(7,1fr);gap:1px;background:var(--line);border-radius:12px 12px 0 0;overflow:hidden}
 .cal-weekdays span{background:var(--surface);text-align:center;padding:8px 0;font-family:var(--display);font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--dim)}
 .cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:1px;background:var(--line);border-radius:0 0 12px 12px;overflow:hidden}
@@ -175,6 +197,8 @@ h1,h2,h3{font-family:var(--display);text-transform:uppercase;margin:0}
 .cal-day.single .cal-statusdot.st-pend{background:var(--coral)}
 .cal-day.single .cal-statusdot.st-aprov{background:var(--lilac)}
 .cal-day.single .cal-statusdot.st-pub{background:var(--turq)}
+.cal-day.single .cal-statusdot.st-jaja{background:var(--orange)}
+.cal-day.single .cal-statusdot.st-arq{background:var(--dim)}
 .cal-item{border:0;text-align:left;border-radius:6px;padding:3px 5px;font-size:10.5px;line-height:1.3;cursor:pointer;display:flex;align-items:center;gap:5px;background:rgba(244,115,111,.14);color:var(--muted)}
 .cal-item .cal-thumb{width:20px;height:20px;border-radius:5px;object-fit:cover;flex:0 0 auto;background:var(--night2);display:block}
 .cal-item .cal-txt{display:flex;flex-direction:column;min-width:0;overflow:hidden}
@@ -182,6 +206,8 @@ h1,h2,h3{font-family:var(--display);text-transform:uppercase;margin:0}
 .cal-item .cal-txt span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .cal-item.st-aprov{background:rgba(174,150,242,.16)}
 .cal-item.st-pub{background:rgba(92,201,180,.16)}
+.cal-item.st-jaja{background:rgba(245,164,93,.22)}
+.cal-item.st-arq{background:rgba(118,122,145,.12);opacity:.65}
 .cal-item:hover{outline:1.5px solid var(--turq)}
 
 /* visão em lista, dia a dia (largura própria, mais ampla que o telefone) */
@@ -217,6 +243,10 @@ h1,h2,h3{font-family:var(--display);text-transform:uppercase;margin:0}
 .lpill{font-family:var(--display);font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;padding:6px 11px;border-radius:999px;display:inline-flex;align-items:center;gap:5px}
 .lpill.pend{background:rgba(244,115,111,.16);color:var(--coral)}
 .lpill.ok{background:rgba(92,201,180,.16);color:var(--turq)}
+.lpill.jaja{background:rgba(245,164,93,.22);color:#8A5A1B}
+.lpill.arq{background:rgba(118,122,145,.14);color:var(--dim)}
+.lbtn.ljaja{border-color:var(--coral);color:var(--coral)}
+.lbtn.larq{color:var(--dim)}
 .lapprove-big{font-family:var(--display);font-size:12px;letter-spacing:.06em;text-transform:uppercase;padding:9px 18px;border-radius:999px;border:1.5px solid var(--turq);background:transparent;color:var(--turq);cursor:pointer;font-weight:600}
 .lapprove-big:hover{background:rgba(92,201,180,.14)}
 .lapprove-big.ok{background:var(--turq);color:#0F1830}
@@ -248,7 +278,12 @@ footer code{background:var(--surface);padding:2px 6px;border-radius:6px;color:va
 </style>
 </head><body>
 <div class="wrap">
-  <div class="top"><h1>Fila de publicação — Irisa</h1><span class="tag" id="chip-total">carregando…</span></div>
+  <div class="top"><h1>Fila de publicação — Irisa</h1>
+    <span style="display:flex;align-items:center;gap:8px">
+      <span class="tag" id="chip-total">carregando…</span>
+      <button class="arqtoggle" id="btnArq" type="button" style="display:none">Ver arquivadas</button>
+    </span>
+  </div>
 
   <div class="viewtabs">
     <button class="vtab on" id="tabPerfil" type="button">Perfil</button>
@@ -271,8 +306,12 @@ footer code{background:var(--surface);padding:2px 6px;border-radius:6px;color:va
       <div class="grid" id="grid"></div>
     </div>
     <div class="legend">
-      <span><i class="pend"></i>aguardando aprovação</span> · <span><i class="ok"></i>aprovado</span><br>
+      <span><i class="pend"></i>aguardando aprovação</span> · <span><i class="ok"></i>aprovado</span> ·
+      <span><i class="jaja"></i>publicar agora</span> · <span><i class="arq"></i>arquivada</span><br>
       Toque numa lâmina pra abrir (reels tocam com som). Zoom em imagem com duplo toque/clique.
+      <b>Publicar agora</b> fura a fila: aprova e pede que eu solte na próxima rodada, sem esperar a data.
+      <b>Arquivar</b> tira da fila sem apagar nada — a peça fica guardada e volta quando você quiser
+      (botão "Ver arquivadas" aqui em cima).
       Aprovar e pedir alteração ficam salvos aqui e eu sincronizo pro <code>fila.json</code> do repositório.
     </div>
   </div>
@@ -301,7 +340,9 @@ footer code{background:var(--surface);padding:2px 6px;border-radius:6px;color:va
   <div class="cal-legend">
     <span><i class="pend"></i>aguardando aprovação</span>
     <span><i class="aprov"></i>aprovado, na fila</span>
+    <span><i class="jaja"></i>publicar agora</span>
     <span><i class="pub"></i>publicado</span>
+    <span><i class="arq"></i>arquivada</span>
   </div>
   <div class="cal-weekdays">
     <span>Dom</span><span>Seg</span><span>Ter</span><span>Qua</span><span>Qui</span><span>Sex</span><span>Sáb</span>
@@ -334,7 +375,7 @@ footer code{background:var(--surface);padding:2px 6px;border-radius:6px;color:va
     <summary>Pedir alteração</summary>
     <textarea placeholder="O que precisa mudar nessa peça?"></textarea>
     <button class="btn btn-pedido" type="button">Enviar pedido</button>
-    <p class="pedido-ok" hidden>Pedido enviado — eu vejo na próxima sincronização.</p>
+    <p class="pedido-ok" hidden>Pedido gravado. Não chega aviso no meu colo: me chama no chat quando for pra valer agora.</p>
   </details>
 </div></div>
 
@@ -352,6 +393,8 @@ footer code{background:var(--surface);padding:2px 6px;border-radius:6px;color:va
       <div class="sbtns">
         <button class="sbtn" id="spub" type="button"></button>
         <button class="sbtn" id="sapprove" type="button"></button>
+        <button class="sbtn" id="sjaja" type="button"></button>
+        <button class="sbtn" id="sarq" type="button"></button>
       </div>
     </div>
   </div>
@@ -383,20 +426,37 @@ const icReels='<svg class="ic" viewBox="0 0 24 24" fill="#fff"><path d="M8 5v14l
 let dbNs = null;
 const aprovadoState = {}; // id -> bool
 const publicadoState = {}; // id -> bool (marcado aqui; some ao fila.json trazer publicado:true)
+const jajaState = {};     // id -> pediu "publicar agora" (furar a fila)
+const arqState = {};      // id -> arquivada (fora da fila, guardada pra reaproveitar)
+const docAprov = {};      // id -> documento aprovacoes/<id> como ele está agora
 const listCardUpdaters = {}; // id -> função que atualiza o card da visão em lista
+const porId = {};
+[...FEED, ...STORIES].forEach(i=>porId[i.id]=i);
+
+// aprovado, publicar_agora e arquivado moram no MESMO documento aprovacoes/<id>:
+// sem o estado em mão, um .set() apagaria os outros dois. Daí o cache docAprov.
+function lerAprovacao(id, d){
+  const base = porId[id] || {};
+  docAprov[id] = d || {};
+  const tem = (k)=> k in docAprov[id];
+  aprovadoState[id] = tem('aprovado') ? !!docAprov[id].aprovado : !!base.aprovado;
+  jajaState[id]     = tem('publicar_agora') ? !!docAprov[id].publicar_agora : !!base.publicar_agora;
+  arqState[id]      = tem('arquivado') ? !!docAprov[id].arquivado : !!base.arquivado;
+}
 
 async function initDb(){
   try { dbNs = window.claude && window.claude.use ? await window.claude.use("db") : null; }
   catch(e){ dbNs = null; }
-  const allIds = [...FEED.map(p=>p.id), ...STORIES.map(s=>s.id)];
+  const allIds = Object.keys(porId);
+  allIds.forEach(id=>lerAprovacao(id, null));
   if(!dbNs){
-    allIds.forEach(id=>{aprovadoState[id]=false; publicadoState[id]=false;});
-    render(); renderS_ifOpen(); updateChip();
+    allIds.forEach(id=>{publicadoState[id]=false;});
+    render(); renderS_ifOpen(); updateChip(); aplicarArquivadas();
     return;
   }
   allIds.forEach(id=>{
     dbNs.doc("aprovacoes/"+id).onSnapshot(snap=>{
-      aprovadoState[id] = !!(snap.data() && snap.data().aprovado);
+      lerAprovacao(id, (snap.data && snap.data()) || null);
       atualizarEstado(id);
     }, ()=>{});
     dbNs.doc("publicados/"+id).onSnapshot(snap=>{
@@ -408,19 +468,43 @@ async function initDb(){
 function atualizarEstado(id){
   updateGridBadge(id);
   updateChip();
+  aplicarArquivadas();
   if(cur && cur.id===id) { renderApprove(); renderPublicado(); }
   if(sc && sc.id===id) renderSApprove();
   if(listCardUpdaters[id]) listCardUpdaters[id]();
   if(viewCal.style.display!=='none') renderCalendar();
 }
 function updateChip(){
-  const total = FEED.length + STORIES.length;
-  const aprovados = Object.values(aprovadoState).filter(Boolean).length;
-  $('chip-total').textContent = `${total} itens · ${aprovados} aprovado${aprovados===1?'':'s'}`;
+  const ids = Object.keys(porId);
+  const arquivadas = ids.filter(id=>arqState[id]).length;
+  const naFila = ids.length - arquivadas;
+  const aprovados = ids.filter(id=>!arqState[id] && aprovadoState[id]).length;
+  const jaja = ids.filter(id=>!arqState[id] && jajaState[id]).length;
+  $('chip-total').textContent = `${naFila} na fila · ${aprovados} aprovado${aprovados===1?'':'s'}`
+    + (jaja?` · ${jaja} pra já`:'') + (arquivadas?` · ${arquivadas} arquivada${arquivadas===1?'':'s'}`:'');
 }
-async function setAprovado(id, val){
+async function gravarAprovacao(id, patch){
   if(!dbNs) return;
-  await dbNs.doc("aprovacoes/"+id).set({aprovado: val, ts: new Date().toISOString()});
+  await dbNs.doc("aprovacoes/"+id).set({...(docAprov[id]||{}), ...patch, ts: new Date().toISOString()});
+}
+async function setAprovado(id, val){ await gravarAprovacao(id, {aprovado: val, ...(val?{}:{publicar_agora:false})}); }
+
+// Nada aqui publica sozinho: o robô só olha o `aprovado: true` do fila.json no repositório.
+// "Publicar agora" é o mesmo recado com pressa — aprova e pede que eu puxe a data pra agora
+// na próxima sincronização. "Arquivar" tira da fila sem apagar: dá pra reaproveitar depois.
+const ACOES = {
+  jaja:        {aprovado:true, publicar_agora:true, arquivado:false},
+  desjaja:     {publicar_agora:false},
+  arquivar:    {arquivado:true, publicar_agora:false},
+  desarquivar: {arquivado:false},
+};
+const AVISO_JAJA = 'Furar a fila com essa peça?\n\nEla fica aprovada e marcada pra sair na próxima rodada, sem esperar a data agendada. A publicação em si não sai daqui: eu vejo a marca e solto.';
+async function acao(id, qual, btn){
+  if(!dbNs) return;
+  if(qual==='jaja' && !confirm(AVISO_JAJA)) return;
+  if(btn) btn.disabled = true;
+  await gravarAprovacao(id, ACOES[qual]);
+  if(btn) btn.disabled = false;
 }
 async function setPublicado(id, val){
   if(!dbNs) return;
@@ -446,11 +530,43 @@ FEED.forEach((p,i)=>{
   b.addEventListener('click',()=>abrir(i));
   grid.appendChild(b);
 });
+function rotuloStatus(id){
+  const item = porId[id] || {};
+  if(jaPublicado(item)) return ['pub','publicado'];
+  if(arqState[id]) return ['arq','arquivada'];
+  if(jajaState[id]) return ['jaja','publicar agora'];
+  if(aprovadoState[id]) return ['ok','aprovado'];
+  return ['pend','pendente'];
+}
 function updateGridBadge(id){
   const tile = grid.querySelector(`[data-id="${id}"]`); if(!tile) return;
   const badge = tile.querySelector('.badge'); if(!badge) return;
-  const ok = !!aprovadoState[id];
-  badge.className = 'badge '+(ok?'ok':'pend'); badge.textContent = ok?'aprovado':'pendente';
+  const [cls, txt] = rotuloStatus(id);
+  badge.className = 'badge '+cls; badge.textContent = txt;
+}
+
+// Arquivada sai da grade, dos stories, da lista e do calendário sem apagar nada: o botão
+// do cabeçalho revela as guardadas pra ele reaproveitar quando quiser.
+let verArquivadas = false;
+function aplicarArquivadas(){
+  const ids = Object.keys(porId);
+  const n = ids.filter(id=>arqState[id]).length;
+  const btn = $('btnArq');
+  btn.style.display = n ? '' : 'none';
+  btn.classList.toggle('on', verArquivadas);
+  btn.textContent = (verArquivadas?'Esconder arquivadas':'Ver arquivadas') + ` (${n})`;
+  ids.forEach(id=>{
+    const arq = !!arqState[id];
+    const esconder = arq && !verArquivadas;
+    [grid.querySelector(`.tile[data-id="${id}"]`),
+     rings.querySelector(`.ring[data-id="${id}"]`),
+     listEl.querySelector(`.lcard[data-id="${id}"]`)].forEach(el=>{
+      if(!el) return;
+      el.classList.toggle('oculto', esconder);
+      el.classList.toggle('arq', arq);
+    });
+  });
+  if(viewCal.style.display!=='none') renderCalendar();
 }
 
 const ov=$('ov'),vimg=$('vimg'),vvid=$('vvid'),stage=$('stage'),dots=$('dots'),vcap=$('vcap'),vmeta=$('vmeta'),vl=$('vl'),vr=$('vr'),vfixed=$('vfixed'),vapprove=$('vapprove'),vpub=$('vpub');
@@ -492,14 +608,28 @@ function renderApprove(){
     vapprove.innerHTML = `<p class="db-off">Abra este link com sua conta pra aprovar por aqui — ou me diga e eu marco direto.</p>`;
     return;
   }
-  vapprove.innerHTML = aprovado
-    ? `<span class="pill-ok">✓ Aprovado</span><button class="btn btn-desfazer" id="bundo" type="button">Desfazer</button>`
-    : `<button class="btn btn-aprovar" id="bapprove" type="button">Aprovar</button>`;
+  const id = cur.id, jaja = !!jajaState[id], arq = !!arqState[id];
+  if(arq){
+    vapprove.innerHTML = `<span class="pill-arq">Arquivada</span>`
+      + `<button class="btn btn-aprovar" data-a="desarquivar" type="button">Reaproveitar</button>`;
+  } else {
+    const partes = [aprovado
+      ? `<span class="pill-ok">✓ Aprovado</span><button class="btn btn-desfazer" id="bundo" type="button">Desfazer</button>`
+      : `<button class="btn btn-aprovar" id="bapprove" type="button">Aprovar</button>`];
+    if(!jaPublicado(cur)){
+      partes.push(jaja
+        ? `<span class="pill-jaja">↑ Publicar agora</span><button class="btn btn-desfazer" data-a="desjaja" type="button">Cancelar</button>`
+        : `<button class="btn btn-jaja" data-a="jaja" type="button">Publicar agora</button>`);
+      partes.push(`<button class="btn btn-arquivar" data-a="arquivar" type="button">Arquivar</button>`);
+    }
+    vapprove.innerHTML = partes.join('');
+  }
   const ba=document.getElementById('bapprove'); if(ba) ba.onclick=async()=>{ba.disabled=true;await setAprovado(cur.id,true);};
   const bu=document.getElementById('bundo'); if(bu) bu.onclick=async()=>{bu.disabled=true;await setAprovado(cur.id,false);};
+  vapprove.querySelectorAll('button[data-a]').forEach(b=>{ b.onclick=()=>acao(id, b.dataset.a, b); });
 }
 function renderPublicado(){
-  if(!cur || !dbNs) { vpub.innerHTML=''; return; }
+  if(!cur || !dbNs || arqState[cur.id]) { vpub.innerHTML=''; return; }
   const ja = jaPublicado(cur);
   const viaFila = !!cur.publicado; // já vem do fila.json: não dá pra desfazer por aqui
   vpub.innerHTML = viaFila
@@ -562,7 +692,7 @@ STORIES.forEach((s,i)=>{
   b.addEventListener('click',()=>abrirS(i));
   rings.appendChild(b);
 });
-const sv=$('sv'),simg=$('simg'),bars=$('bars'),sday=$('sday'),sstatus=$('sstatus'),sapprove=$('sapprove'),spub=$('spub');
+const sv=$('sv'),simg=$('simg'),bars=$('bars'),sday=$('sday'),sstatus=$('sstatus'),sapprove=$('sapprove'),spub=$('spub'),sjaja=$('sjaja'),sarq=$('sarq');
 const DUR=5000;
 let sd=0,sc=null,timer=null;
 function abrirS(i){sd=i;sc=STORIES[i];sv.classList.add('on');document.body.style.overflow='hidden';renderS();}
@@ -579,11 +709,28 @@ function renderSApprove(){
   if(!sc) return;
   const aprovado = !!aprovadoState[sc.id];
   const ja = jaPublicado(sc);
-  sstatus.textContent = (sc.nota?sc.nota+' · ':'') + (ja?'publicado':(aprovado?'aprovado':'pendente'));
+  const jaja = !!jajaState[sc.id], arq = !!arqState[sc.id];
+  const [, txt] = rotuloStatus(sc.id);
+  sstatus.textContent = (sc.nota?sc.nota+' · ':'') + txt;
+  // o relógio do story não pode virar a página no meio de uma decisão
+  const agir = (qual, btn) => async(e)=>{
+    e.stopPropagation(); clearTimeout(timer);
+    await acao(sc.id, qual, btn);
+    timer = setTimeout(proxS, DUR);
+  };
+  sapprove.style.display = arq ? 'none' : '';
   sapprove.textContent = aprovado?'Desfazer':'Aprovar';
   sapprove.className = 'sbtn'+(aprovado?' ok':'');
   sapprove.onclick = async(e)=>{ e.stopPropagation(); clearTimeout(timer); sapprove.disabled=true; await setAprovado(sc.id,!aprovado); sapprove.disabled=false; timer=setTimeout(proxS,DUR); };
-  if(!dbNs || sc.publicado){ spub.style.display='none'; }
+  sjaja.style.display = (arq || ja) ? 'none' : '';
+  sjaja.textContent = jaja ? 'Cancelar o já' : 'Publicar agora';
+  sjaja.className = 'sbtn'+(jaja?' jaja':'');
+  sjaja.onclick = agir(jaja?'desjaja':'jaja', sjaja);
+  sarq.style.display = ja ? 'none' : '';
+  sarq.textContent = arq ? 'Reaproveitar' : 'Arquivar';
+  sarq.className = 'sbtn';
+  sarq.onclick = agir(arq?'desarquivar':'arquivar', sarq);
+  if(!dbNs || sc.publicado || arq){ spub.style.display='none'; }
   else {
     spub.style.display='';
     spub.textContent = publicadoState[sc.id] ? 'Desfazer publicado' : 'Marcar publicado';
@@ -622,10 +769,12 @@ FEED.forEach((p,i)=>feedIndexById[p.id]=i);
 STORIES.forEach((s,i)=>storyIndexById[s.id]=i);
 function statusOf(item){
   if(jaPublicado(item)) return 'pub';
+  if(arqState[item.id]) return 'arq';
+  if(jajaState[item.id]) return 'jaja';
   if(aprovadoState[item.id]) return 'aprov';
   return 'pend';
 }
-const STATUS_LABEL={pend:'aguardando aprovação', aprov:'aprovado, na fila', pub:'publicado'};
+const STATUS_LABEL={pend:'aguardando aprovação', aprov:'aprovado, na fila', jaja:'marcada pra publicar agora', pub:'publicado', arq:'arquivada'};
 let calMes = new Date(); calMes.setDate(1);
 function abrirItemDoCalendario(item){
   if(item.tipo==='STORY') abrirS(storyIndexById[item.id]);
@@ -651,7 +800,7 @@ function renderCalendar(){
 
   // agrupa itens por dia (chave YYYY-MM-DD no fuso de SP) só do mês exibido, mas calcula pra qualquer célula
   const porDia = {};
-  ALL_ITEMS.forEach(item=>{
+  ALL_ITEMS.filter(item=>verArquivadas || !arqState[item.id]).forEach(item=>{
     const d = new Date(item.quando);
     const chave = d.toLocaleDateString('en-CA',{timeZone:'America/Sao_Paulo'}); // YYYY-MM-DD
     (porDia[chave] = porDia[chave] || []).push(item);
@@ -705,7 +854,7 @@ $('calHoje').onclick=()=>{ calMes=new Date(); calMes.setDate(1); renderCalendar(
 const ALL_ITEMS = [...FEED, ...STORIES].sort((a,b)=> new Date(a.quando) - new Date(b.quando));
 
 function buildListCard(item){
-  const el = document.createElement('div'); el.className='lcard';
+  const el = document.createElement('div'); el.className='lcard'; el.dataset.id=item.id;
   const d = new Date(item.quando);
   const dia = d.toLocaleDateString('pt-BR',{weekday:'long',timeZone:'America/Sao_Paulo'});
   const dataStr = d.toLocaleDateString('pt-BR',{day:'2-digit',month:'2-digit',timeZone:'America/Sao_Paulo'});
@@ -733,6 +882,8 @@ function buildListCard(item){
         <div class="lstatusrow">
           <span class="lpill pend">aguardando aprovação</span>
           <button class="lapprove-big" type="button">Aprovar</button>
+          <button class="lbtn ljaja" type="button">Publicar agora</button>
+          <button class="lbtn larq" type="button">Arquivar</button>
           <button class="lpub-big" type="button">Marcar como já publicado</button>
         </div>
         <div class="lacts">
@@ -748,7 +899,7 @@ function buildListCard(item){
           <summary>Pedir alteração</summary>
           <textarea placeholder="O que precisa mudar nessa peça?"></textarea>
           <button class="lbtn" type="button">Enviar pedido</button>
-          <p class="lok" hidden>Pedido enviado — eu vejo na próxima sincronização.</p>
+          <p class="lok" hidden>Pedido gravado. Não chega aviso no meu colo: me chama no chat quando for pra valer agora.</p>
         </details>
       </div>
     </div>
@@ -806,18 +957,35 @@ function buildListCard(item){
   const pill = el.querySelector('.lpill');
   const bapprove = el.querySelector('.lapprove-big');
   const bpub = el.querySelector('.lpub-big');
+  const bjaja = el.querySelector('.ljaja');
+  const barq = el.querySelector('.larq');
   function renderApproveL(){
     const ja = jaPublicado(item);
     const ok = !!aprovadoState[item.id];
-    pill.className='lpill '+(ja?'pub':(ok?'ok':'pend')); pill.textContent = ja?'publicado':(ok?'aprovado':'aguardando aprovação');
+    const jaja = !!jajaState[item.id], arq = !!arqState[item.id];
+    const [cls, txt] = rotuloStatus(item.id);
+    pill.className='lpill '+cls; pill.textContent = cls==='pend' ? 'aguardando aprovação' : txt;
+    bapprove.style.display = arq ? 'none' : '';
     bapprove.className='lapprove-big'+(ok?' ok':''); bapprove.textContent = ok?'Desfazer':'Aprovar';
-    if(item.publicado){ bpub.style.display='none'; }
+    bjaja.style.display = (arq || ja) ? 'none' : '';
+    bjaja.textContent = jaja ? 'Cancelar o já' : 'Publicar agora';
+    barq.style.display = ja ? 'none' : '';
+    barq.textContent = arq ? 'Reaproveitar' : 'Arquivar';
+    if(item.publicado || arq){ bpub.style.display='none'; }
     else {
       bpub.style.display='';
       const marcado = !!publicadoState[item.id];
       bpub.className='lpub-big'+(marcado?' ok':''); bpub.textContent = marcado?'Desfazer publicado':'Marcar como já publicado';
     }
   }
+  bjaja.addEventListener('click', async()=>{
+    if(!dbNs){ bjaja.textContent='Indisponível aqui'; return; }
+    await acao(item.id, jajaState[item.id] ? 'desjaja' : 'jaja', bjaja);
+  });
+  barq.addEventListener('click', async()=>{
+    if(!dbNs){ barq.textContent='Indisponível aqui'; return; }
+    await acao(item.id, arqState[item.id] ? 'desarquivar' : 'arquivar', barq);
+  });
   bapprove.addEventListener('click', async()=>{
     if(!dbNs){ bapprove.textContent='Indisponível aqui'; return; }
     bapprove.disabled=true;
@@ -853,6 +1021,8 @@ const LIST_ITEMS = ALL_ITEMS.filter(item =>
   new Date(item.quando).toLocaleDateString('en-CA',{timeZone:'America/Sao_Paulo'}) >= HOJE_CHAVE
 );
 LIST_ITEMS.forEach(item => listEl.appendChild(buildListCard(item)));
+
+$('btnArq').onclick = ()=>{ verArquivadas = !verArquivadas; aplicarArquivadas(); };
 
 initDb();
 </script>
