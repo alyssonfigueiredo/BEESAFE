@@ -1,0 +1,269 @@
+<!doctype html>
+<html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Telas da gamificação</title>
+<!-- Telas de exemplo da gamificação (pingentes, dias acesos, desafios), no visual do app.
+     scripts/gamificacao-telas.mjs exporta cada .ph para docs/gamificacao/tela-*.png (1170×2532) e o .story em 1080×1920. Uso interno. -->
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Urbanist:wght@500&family=Oswald:wght@400;700&family=Space+Grotesk:wght@400;500;600;700&display=swap">
+<style>
+:root{--paper:#F5F4F1;--ink:#141829;--muted:#3D4560;--dim:#7C8296;--night:#141829;--subtle:#ECEAE5;
+  --coral:#FF6964;--orange:#FFA353;--yellow:#FFD066;--turq:#49DCC0;--blue:#59A7FF;--lilac:#A889FF;--amber:#FFAD0F;
+  --coralInk:#C72825;--turqInk:#0A8B7A;--lilacInk:#6037F0;
+  --rb:linear-gradient(90deg,var(--coral),var(--orange),var(--yellow),var(--turq),var(--blue),var(--lilac));
+  --card:0 1px 2px rgba(20,24,41,.04),0 10px 28px rgba(20,24,41,.08)}
+*{box-sizing:border-box}p,h1,h2,h3{margin:0}
+body{margin:0;background:#DCD9D2;font-family:"Space Grotesk",Arial,sans-serif;color:var(--ink);display:flex;flex-wrap:wrap;gap:40px;padding:40px;align-items:flex-start}
+.ph{width:390px;height:844px;position:relative;overflow:hidden;background:var(--paper);flex:none}
+.ph.au:before{content:"";position:absolute;inset:0;background:
+  radial-gradient(70% 34% at -10% -2%,rgba(73,220,192,.34),transparent 64%),radial-gradient(60% 30% at 110% 4%,rgba(255,105,100,.26),transparent 64%),
+  radial-gradient(70% 34% at 108% 100%,rgba(168,137,255,.32),transparent 64%),radial-gradient(60% 30% at -8% 98%,rgba(255,208,102,.3),transparent 64%)}
+.ph>*{position:relative}
+.sb{height:50px;display:flex;justify-content:space-between;align-items:flex-end;padding:0 30px 4px 34px;font-weight:600;font-size:16px}
+.sb i{display:flex;gap:6px;align-items:center}
+.dark .sb{color:#fff}
+.hd{margin:8px 14px 0;height:58px;border-radius:29px;background:rgba(255,255,255,.62);box-shadow:var(--card);display:flex;align-items:center;justify-content:space-between;padding:0 7px 0 14px}
+.logo{display:flex;align-items:center;gap:10px;font-family:Urbanist;font-weight:500;letter-spacing:.2em;font-size:20px}
+.logo b{font-weight:500;color:#E0A32E}
+.sos{width:44px;height:44px;border-radius:50%;background:var(--coral);display:flex;align-items:center;justify-content:center}
+.body{padding:16px 14px 0;display:flex;flex-direction:column;gap:12px}
+h1{font-family:Oswald;font-weight:700;text-transform:uppercase;font-size:34px;line-height:1.05}
+.sub{font-size:15px;color:var(--muted);margin-top:-6px}
+.cd{background:rgba(255,255,255,.66);border-radius:24px;padding:16px;box-shadow:var(--card)}
+.cd.dk{background:#20253A;color:#F1F0EC}
+.lb{font-size:12px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--dim)}
+.dk .lb{color:var(--turq)}
+.tb{position:absolute;left:14px;right:14px;bottom:22px;height:68px;border-radius:34px;background:rgba(255,255,255,.72);box-shadow:var(--card);display:flex;justify-content:space-around;align-items:center;padding:0 4px}
+.tb div{width:64px;height:60px;border-radius:30px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;font-size:12px;color:var(--muted)}
+.tb div.on{background:#fff;box-shadow:0 4px 14px rgba(20,24,41,.1);font-weight:600}
+.tb svg{width:24px;height:24px}
+.chip{display:inline-flex;align-items:center;height:34px;padding:0 14px;border-radius:17px;background:rgba(255,255,255,.7);font-size:14px;font-weight:500;white-space:nowrap}
+.chip.on{background:var(--night);color:#fff}
+.btn{height:52px;border-radius:26px;display:flex;align-items:center;justify-content:center;font-weight:600;font-size:17px;gap:8px}
+.bar{height:10px;border-radius:5px;background:#E4E1DA;overflow:hidden}
+.bar i{display:block;height:100%;border-radius:5px;background:var(--rb)}
+.pill{display:inline-flex;align-items:center;gap:6px;height:26px;padding:0 10px;border-radius:13px;font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase}
+.seg{display:flex;background:var(--subtle);border-radius:16px;padding:4px;gap:4px}
+.seg span{flex:1;text-align:center;height:34px;line-height:34px;border-radius:12px;font-size:14px;font-weight:500;color:var(--muted)}
+.seg span.on{background:#fff;color:var(--ink);font-weight:600;box-shadow:0 2px 6px rgba(20,24,41,.08)}
+.wk{display:flex;justify-content:space-between}
+.wk div{display:flex;flex-direction:column;align-items:center;gap:5px;font-size:11px;font-weight:600;color:var(--dim);letter-spacing:.06em}
+.wk b{width:34px;height:34px;border-radius:50%;display:block}
+.wk b.g{border:2.5px dashed #B9B4AA}
+.wk b.h{background:#fff;box-shadow:inset 0 0 0 4px var(--coral)}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.gi{background:rgba(255,255,255,.7);border-radius:20px;padding:10px 6px 12px;display:flex;flex-direction:column;align-items:center;gap:4px;text-align:center;box-shadow:var(--card)}
+.gi p{font-size:12.5px;font-weight:600;line-height:1.2;min-height:30px;display:flex;align-items:center}
+.gi.lk{background:rgba(255,255,255,.4);box-shadow:none}
+.gi.lk p{color:var(--dim)}
+.gi .mb{width:70%;height:5px;border-radius:3px;background:#E4E1DA;overflow:hidden}
+.gi .mb i{display:block;height:100%;background:var(--coral)}
+.dot{width:8px;height:8px;border-radius:50%;display:inline-block}
+.chain{position:relative;height:92px}
+.chain svg.f{position:absolute;left:0;top:0;width:100%;height:40px}
+.chain .pd{position:absolute;width:58px}
+.tk{display:flex;align-items:center;gap:12px;padding:10px 0;border-top:1px solid rgba(20,24,41,.07)}
+.tk:first-of-type{border-top:0}
+.ck{width:28px;height:28px;border-radius:50%;flex:none;display:flex;align-items:center;justify-content:center}
+.tk p{flex:1;font-size:15px;line-height:1.3}
+/* story */
+.story{width:360px;height:640px;position:relative;overflow:hidden;background:var(--paper);flex:none}
+</style></head><body>
+
+<!-- 1 · Perfil -->
+<div class="ph au" id="tela-01-perfil">
+  <div class="sb"><span>9:41</span><i data-sb></i></div>
+  <div class="hd"><div class="logo"><svg class="ring" data-lit="48" width="30" height="30" viewBox="0 0 100 100"></svg><span>IRIS<b>A</b></span></div><div class="sos" data-sos></div></div>
+  <div class="body">
+    <div><h1>Perfil</h1><p class="sub" style="margin-top:2px">Só você vê o que está aqui.</p></div>
+    <div class="cd" style="display:flex;gap:16px;align-items:center">
+      <svg class="ring" data-lit="30" width="116" height="116" viewBox="0 0 100 100"></svg>
+      <div style="display:flex;flex-direction:column;gap:6px">
+        <p class="lb">Seu nível</p>
+        <p style="font-family:Oswald;font-weight:700;font-size:32px;line-height:1;color:var(--turqInk)">TURQUESA</p>
+        <p style="font-size:14px;color:var(--muted)">30 de 48 gomos</p>
+        <span class="pill" style="background:rgba(89,167,255,.18);color:#1F5FB8;text-transform:none;letter-spacing:0;font-size:13px">Faltam 3 para o Azul</span>
+      </div>
+    </div>
+    <div class="cd">
+      <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:12px"><p class="lb">Dias acesos</p><p style="font-size:13px;color:var(--muted)">1 dia guardado</p></div>
+      <div style="display:flex;align-items:center;gap:16px">
+        <p style="font-family:Oswald;font-weight:700;font-size:44px;line-height:1">12</p>
+        <div class="wk" style="flex:1"><div><b style="background:var(--coral)"></b>S</div><div><b style="background:var(--orange)"></b>T</div><div><b style="background:var(--yellow)"></b>Q</div><div><b style="background:var(--turq)"></b>Q</div><div><b style="background:var(--blue)"></b>S</div><div><b class="g"></b>S</div><div><b class="h"></b>HOJE</div></div>
+      </div>
+    </div>
+    <div class="cd" style="padding-bottom:6px">
+      <div style="display:flex;justify-content:space-between;align-items:baseline"><p class="lb">Sua pulseira</p><p style="font-size:14px;font-weight:600;color:var(--turqInk)">12 de 30 · Ver todos</p></div>
+      <div class="chain" data-chain="deu-o-nome,deu-close,figurinha,inaugurou,mala-pronta,bateu-ponto"></div>
+    </div>
+    <div class="cd">
+      <p class="lb" style="margin-bottom:10px">Como a Irisa te chama nos pingentes</p>
+      <div class="seg"><span>Famosinha</span><span>Famosinho</span><span class="on">Famosinhe</span></div>
+    </div>
+  </div>
+  <div class="tb" data-tab="4"></div>
+</div>
+
+<!-- 2 · Desbloqueio -->
+<div class="ph dark" id="tela-02-conquista" style="background:#141829">
+  <div style="position:absolute;inset:0;background:radial-gradient(60% 40% at 50% 36%,rgba(168,137,255,.42),transparent 70%),radial-gradient(40% 24% at 50% 40%,rgba(255,208,102,.25),transparent 70%)"></div>
+  <div data-confete style="position:absolute;inset:0"></div>
+  <div class="sb"><span>9:41</span><i data-sb></i></div>
+  <div style="display:flex;flex-direction:column;align-items:center;text-align:center;padding:34px 26px 0;gap:14px;color:#F1F0EC">
+    <p class="lb" style="color:var(--turq);font-size:13px">Conquista nova</p>
+    <div style="transform:rotate(-6deg);transform-origin:50% 0;filter:drop-shadow(0 18px 30px rgba(0,0,0,.35))" data-pg="figurinha" data-size="236"></div>
+    <span class="pill" style="background:var(--turq);color:var(--ink)">Incomum</span>
+    <h1 style="font-size:46px;color:#fff;line-height:1.02">Figurinha<br>Conhecida</h1>
+    <p style="font-size:18px;line-height:1.45;color:#C9CDE0">“Se o mapa fosse álbum, você já era figurinha conhecida.”</p>
+    <p style="font-size:13px;color:#8A90AA">15 avaliações em 3 semanas · pingente 12 de 30</p>
+  </div>
+  <div style="position:absolute;left:22px;right:22px;bottom:40px;display:flex;flex-direction:column;gap:10px">
+    <div class="btn" style="background:var(--coral);color:var(--ink)">Compartilhar no story</div>
+    <div class="btn" style="color:#fff;box-shadow:inset 0 0 0 1.5px rgba(255,255,255,.35)">Guardar na pulseira</div>
+  </div>
+</div>
+
+<!-- 3 · Pulseira -->
+<div class="ph au" id="tela-03-pulseira">
+  <div class="sb"><span>9:41</span><i data-sb></i></div>
+  <div class="hd"><div class="logo"><svg class="ring" data-lit="48" width="30" height="30" viewBox="0 0 100 100"></svg><span>IRIS<b>A</b></span></div><div class="sos" data-sos></div></div>
+  <div class="body">
+    <div><h1>Pulseira</h1><p class="sub" style="margin-top:2px">12 de 30 pingentes</p></div>
+    <div class="bar"><i style="width:40%"></i></div>
+    <div style="display:flex;gap:8px;overflow:hidden;margin-right:-14px"><span class="chip on">Todos</span><span class="chip">Trajetória</span><span class="chip">Reconhecimento</span><span class="chip">Cidade</span></div>
+    <div class="grid" data-grid="deu-o-nome,deu-close,figurinha,famosinha:22/30,inaugurou,acendeu-a-luz,utilidade-publica,interesse-municipal:31/50,mala-pronta,bateu-ponto,ja-mora-aqui:12/30,abre-alas"></div>
+  </div>
+  <div class="tb" data-tab="4"></div>
+</div>
+
+<!-- 4 · Detalhe do pingente bloqueado -->
+<div class="ph au" id="tela-04-detalhe">
+  <div class="sb"><span>9:41</span><i data-sb></i></div>
+  <div class="hd"><div class="logo"><svg class="ring" data-lit="48" width="30" height="30" viewBox="0 0 100 100"></svg><span>IRIS<b>A</b></span></div><div class="sos" data-sos></div></div>
+  <div class="body">
+    <div><h1>Pulseira</h1><p class="sub" style="margin-top:2px">12 de 30 pingentes</p></div>
+    <div class="grid" data-grid="deu-o-nome,deu-close,figurinha,famosinha:22/30,inaugurou,acendeu-a-luz"></div>
+  </div>
+  <div style="position:absolute;inset:0;background:rgba(20,24,41,.38)"></div>
+  <div style="position:absolute;left:0;right:0;bottom:0;height:540px;background:#FBFAF8;border-radius:32px 32px 0 0;padding:12px 22px 0;display:flex;flex-direction:column;align-items:center;gap:12px;text-align:center">
+    <i style="width:44px;height:5px;border-radius:3px;background:#D9D5CD"></i>
+    <div data-pg="famosinha" data-size="150" data-lock="1" style="margin-top:6px"></div>
+    <span class="pill" style="background:var(--blue);color:var(--ink)">Rara</span>
+    <h1 style="font-size:38px">Famosinhe</h1>
+    <p style="font-size:15px;color:var(--muted)">Óculos escuros de coração</p>
+    <div style="width:100%;text-align:left;display:flex;flex-direction:column;gap:8px;margin-top:4px">
+      <div style="display:flex;justify-content:space-between"><p class="lb">Como desbloquear</p><p style="font-size:14px;font-weight:700">22 de 30</p></div>
+      <div class="bar" style="height:12px"><i style="width:73%;background:var(--coral)"></i></div>
+      <p style="font-size:15px;line-height:1.4;color:var(--muted)">Faltam 8 avaliações. Quase todos os lugares perto de você ainda estão sem nota.</p>
+    </div>
+    <div class="btn" style="background:var(--turq);width:100%;margin-top:4px">Avaliar um lugar perto</div>
+  </div>
+</div>
+
+<!-- 5 · Logo depois de avaliar -->
+<div class="ph au" id="tela-05-na-hora">
+  <div class="sb"><span>9:41</span><i data-sb></i></div>
+  <div class="hd"><div class="logo"><svg class="ring" data-lit="48" width="30" height="30" viewBox="0 0 100 100"></svg><span>IRIS<b>A</b></span></div><div class="sos" data-sos></div></div>
+  <div class="body">
+    <div class="cd" style="display:flex;gap:14px;align-items:center">
+      <div style="width:76px;height:76px;border-radius:20px;background:rgba(255,163,83,.22);display:flex;align-items:center;justify-content:center"><svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#B5651D" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 8h1a4 4 0 1 1 0 8h-1"/><path d="M3 8h14v9a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4Z"/><path d="M6 2v2M10 2v2M14 2v2"/></svg></div>
+      <div style="flex:1"><p style="font-size:19px;font-weight:700">Café do Largo</p><p style="font-size:14px;color:var(--muted)">Café · 4 avaliações</p>
+        <div style="display:flex;gap:4px;margin-top:8px"><i style="flex:1;height:7px;border-radius:4px;background:var(--coral)"></i><i style="flex:1;height:7px;border-radius:4px;background:var(--orange)"></i><i style="flex:1;height:7px;border-radius:4px;background:var(--yellow)"></i><i style="flex:1;height:7px;border-radius:4px;background:var(--turq)"></i><i style="flex:1;height:7px;border-radius:4px;background:#E4E1DA"></i></div>
+      </div>
+    </div>
+    <p style="font-size:14px;color:var(--muted);padding:0 4px">Falta 1 avaliação para o selo deste lugar aparecer.</p>
+    <div class="cd" style="display:flex;flex-direction:column;gap:10px">
+      <p class="lb">Sua resposta</p>
+      <div style="display:grid;grid-template-columns:96px 1fr;gap:8px 10px;align-items:center;font-size:14px">
+        <span>Atendimento</span><span class="bar" style="height:8px"><i style="width:100%;background:var(--coral)"></i></span>
+        <span>Afeto</span><span class="bar" style="height:8px"><i style="width:75%;background:var(--orange)"></i></span>
+        <span>Banheiro</span><span class="bar" style="height:8px"><i style="width:100%;background:var(--yellow)"></i></span>
+        <span>Clientela</span><span class="bar" style="height:8px"><i style="width:75%;background:var(--turq)"></i></span>
+      </div>
+    </div>
+  </div>
+  <div style="position:absolute;right:20px;top:112px;display:flex;transform:rotate(4deg)"><span style="background:var(--night);color:#fff;font-weight:600;font-size:15px;padding:10px 18px;border-radius:20px;box-shadow:0 10px 24px rgba(20,24,41,.25)">+1 cor no mapa</span></div>
+  <div style="position:absolute;left:12px;right:12px;bottom:28px;background:rgba(255,255,255,.92);border-radius:30px;box-shadow:0 20px 50px rgba(20,24,41,.18);padding:20px;display:flex;flex-direction:column;gap:14px">
+    <div style="display:flex;align-items:center;gap:14px">
+      <svg class="ring" data-lit="31" data-new="30" width="84" height="84" viewBox="0 0 100 100"></svg>
+      <div><p class="lb">Avaliação enviada</p><p style="font-family:Oswald;font-weight:700;font-size:30px;line-height:1.1">+1 GOMO</p><p style="font-size:14px;color:var(--muted)">31 de 48 · faltam 2 para o Azul</p></div>
+    </div>
+    <div class="tk" style="border-top:1px solid rgba(20,24,41,.07)"><span class="ck" style="background:rgba(255,208,102,.35)"><svg width="16" height="16" viewBox="0 0 24 24" fill="#B98500"><path d="M12 2l2.4 7.4H22l-6.2 4.5 2.4 7.4L12 16.8l-6.2 4.5 2.4-7.4L2 9.4h7.6Z"/></svg></span><p><b>+1 faísca</b><br><span style="font-size:13px;color:var(--muted)">7 de 10 para abrir a caixinha</span></p></div>
+    <div style="display:flex;gap:4px;margin-top:-8px"><i style="flex:1;height:6px;border-radius:3px;background:var(--yellow)"></i><i style="flex:1;height:6px;border-radius:3px;background:var(--yellow)"></i><i style="flex:1;height:6px;border-radius:3px;background:var(--yellow)"></i><i style="flex:1;height:6px;border-radius:3px;background:var(--yellow)"></i><i style="flex:1;height:6px;border-radius:3px;background:var(--yellow)"></i><i style="flex:1;height:6px;border-radius:3px;background:var(--yellow)"></i><i style="flex:1;height:6px;border-radius:3px;background:var(--yellow)"></i><i style="flex:1;height:6px;border-radius:3px;background:#E4E1DA"></i><i style="flex:1;height:6px;border-radius:3px;background:#E4E1DA"></i><i style="flex:1;height:6px;border-radius:3px;background:#E4E1DA"></i></div>
+    <div class="tk" style="border-top:1px solid rgba(20,24,41,.07)"><span class="ck" style="background:rgba(255,105,100,.2)"><b style="width:12px;height:12px;border-radius:50%;background:var(--coral)"></b></span><p><b>12 dias acesos</b><br><span style="font-size:13px;color:var(--muted)">Mais 18 e vem o Já Mora Aqui</span></p></div>
+    <div class="btn" style="background:var(--night);color:#fff;height:48px">Continuar</div>
+  </div>
+</div>
+
+<!-- 6 · Início com desafios -->
+<div class="ph au" id="tela-06-desafios">
+  <div class="sb"><span>9:41</span><i data-sb></i></div>
+  <div class="hd"><div class="logo"><svg class="ring" data-lit="48" width="30" height="30" viewBox="0 0 100 100"></svg><span>IRIS<b>A</b></span></div><div class="sos" data-sos></div></div>
+  <div class="body">
+    <div class="cd dk" style="padding:18px">
+      <p class="lb">Sua cidade</p>
+      <p style="font-family:Oswald;font-weight:700;font-size:34px;line-height:1.1;margin-top:4px">CURITIBA</p>
+      <div style="display:flex;justify-content:space-between;align-items:baseline;margin-top:10px"><p style="font-size:15px;color:#C9CDE0">A cidade está <b style="color:#fff">18% colorida</b></p><p style="font-size:13px;color:#8A90AA">desafio da semana</p></div>
+      <div class="bar" style="margin-top:8px;background:#2E3450"><i style="width:18%"></i></div>
+      <p style="font-size:13px;color:#C9CDE0;margin-top:10px">14 lugares ganharam selo esta semana. Faltam 6 para Curitiba bater a meta.</p>
+    </div>
+    <div class="cd">
+      <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:4px"><p class="lb">Desafios de hoje</p><p style="font-size:13px;color:var(--muted)">renova à meia-noite</p></div>
+      <div class="tk"><span class="ck" style="background:var(--turq)"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#141829" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5 9-10"/></svg></span><p style="color:var(--dim);text-decoration:line-through">Consultar um lugar antes de sair</p></div>
+      <div class="tk"><span class="ck" style="box-shadow:inset 0 0 0 2px #CFCAC0"></span><p>Deixar um apoio no mural</p><span class="chip" style="height:30px;background:var(--subtle);font-weight:600">Ir</span></div>
+      <div class="tk"><span class="ck" style="box-shadow:inset 0 0 0 2px #CFCAC0"></span><p>Irisar um lugar sem nota</p><span class="chip" style="height:30px;background:var(--subtle);font-weight:600">Ir</span></div>
+      <div style="display:flex;align-items:center;gap:10px;margin-top:6px;padding:10px 12px;border-radius:16px;background:rgba(168,137,255,.14)"><div data-pg="bandeja" data-size="40"></div><p style="font-size:14px;line-height:1.3"><b>Os três:</b> caixinha extra. Sete dias assim e vem <b>Serviu Tudo</b>.</p></div>
+    </div>
+    <div class="cd" style="display:flex;align-items:center;gap:14px">
+      <p style="font-family:Oswald;font-weight:700;font-size:40px;line-height:1">12</p>
+      <div style="flex:1"><p style="font-weight:700;font-size:15px">dias acesos</p><p style="font-size:13px;color:var(--muted)">Abrir e consultar já conta. Ninguém precisa avaliar todo dia.</p></div>
+    </div>
+  </div>
+  <div class="tb" data-tab="0"></div>
+</div>
+
+<!-- 7 · Cartão para o story (1080×1920) -->
+<div class="story" id="tela-07-story">
+  <div style="position:absolute;inset:0;background:
+    radial-gradient(80% 40% at -10% -4%,rgba(73,220,192,.4),transparent 64%),radial-gradient(70% 34% at 112% 6%,rgba(255,105,100,.3),transparent 64%),
+    radial-gradient(80% 40% at 110% 104%,rgba(168,137,255,.4),transparent 64%),radial-gradient(70% 34% at -10% 100%,rgba(255,208,102,.36),transparent 64%)"></div>
+  <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;text-align:center;padding:52px 30px 0">
+    <div class="logo" style="font-size:17px"><svg class="ring" data-lit="48" width="26" height="26" viewBox="0 0 100 100"></svg><span>IRIS<b>A</b></span></div>
+    <p class="lb" style="margin-top:30px;color:var(--turqInk);font-size:12px">Conquista nova</p>
+    <div style="margin-top:6px;filter:drop-shadow(0 16px 24px rgba(20,24,41,.18))" data-pg="figurinha" data-size="190"></div>
+    <p style="font-family:Oswald;font-weight:400;text-transform:uppercase;font-size:30px;line-height:1;margin-top:6px">Virei</p>
+    <h1 style="font-size:50px;line-height:.98;margin-top:4px">Figurinha<br><span style="background:var(--rb);-webkit-background-clip:text;background-clip:text;color:transparent">Conhecida</span></h1>
+    <p style="font-size:16px;line-height:1.45;color:var(--muted);margin-top:14px;max-width:280px">Se o mapa fosse álbum, eu já era figurinha conhecida.</p>
+  </div>
+  <div style="position:absolute;left:0;right:0;bottom:46px;text-align:center">
+    <p style="font-weight:700;font-size:16px">@appirisa</p>
+    <p style="font-size:13px;color:var(--muted);margin-top:4px">O mapa dos lugares onde a gente é bem-vinde</p>
+  </div>
+</div>
+
+<script src="pingentes.js"></script>
+<script>
+const P=window.PINGENTES;
+const G=['#ff6964','#ff7062','#ff7760','#ff7f5d','#ff875c','#ff8e5a','#ff9558','#ff9c55','#ffa353','#ffa955','#ffae58','#ffb35a','#ffb95d','#ffbf5f','#ffc561','#ffc964','#ffd066','#efd46c','#d7d679','#bed582','#a3d38c','#8bd296','#74d6a4','#5fd9b2','#49dcc0','#4cd7ca','#4fd2d4','#4fcbdc','#50c4e4','#51bcec','#52b4f5','#52aefd','#59a7ff','#63a3ff','#6b9fff','#759aff','#7d96ff','#8791ff','#908dff','#9d8bff','#a889ff','#b684f0','#c681dd','#d37eca','#de78b3','#ea709b','#f56a85','#ff636e'];
+const Pt=(r,a)=>(50+r*Math.cos(a)).toFixed(2)+" "+(50+r*Math.sin(a)).toFixed(2);
+document.querySelectorAll("svg.ring").forEach(s=>{const lit=+s.dataset.lit,nw=s.dataset.new?+s.dataset.new:-1;let h="";
+  for(let i=0;i<48;i++){const a0=(-90+7.5*i)*Math.PI/180,a1=a0+7*Math.PI/180;
+    h+=`<path d="M${Pt(48,a0)}A48 48 0 0 1 ${Pt(48,a1)}L${Pt(35,a1)}A35 35 0 0 0 ${Pt(35,a0)}Z" fill="${i<lit?G[i]:"#DEDAD2"}"${i===nw?' stroke="#141829" stroke-width="2.4"':""}/>`}
+  s.innerHTML=h+`<circle cx="50" cy="50" r="13" fill="#0F1220"/><circle cx="46.1" cy="45.6" r="2.86" fill="#fff"/>`});
+document.querySelectorAll("[data-pg]").forEach(e=>e.innerHTML=P.svg((P.get(e.dataset.pg)||{art:e.dataset.pg}).art,{size:+e.dataset.size||100,locked:!!e.dataset.lock}));
+document.querySelectorAll("[data-sb]").forEach(e=>e.innerHTML=`<svg width="18" height="12" viewBox="0 0 18 12" fill="currentColor"><rect x="0" y="8" width="3" height="4" rx="1"/><rect x="5" y="5" width="3" height="7" rx="1"/><rect x="10" y="2.5" width="3" height="9.5" rx="1"/><rect x="15" y="0" width="3" height="12" rx="1"/></svg><svg width="16" height="12" viewBox="0 0 16 12" fill="currentColor"><path d="M8 2.5c2.3 0 4.4.9 6 2.4l1.2-1.3A10.4 10.4 0 0 0 8 .7 10.4 10.4 0 0 0 .8 3.6L2 4.9a8.6 8.6 0 0 1 6-2.4Zm0 3.6c1.3 0 2.5.5 3.4 1.3l1.2-1.3A6.6 6.6 0 0 0 8 4.3 6.6 6.6 0 0 0 3.4 6.1l1.2 1.3c.9-.8 2.1-1.3 3.4-1.3ZM8 9.6l2-2.1a3 3 0 0 0-4 0Z"/></svg><svg width="27" height="13" viewBox="0 0 27 13"><rect x=".5" y=".5" width="23" height="12" rx="3.5" fill="none" stroke="currentColor" opacity=".4"/><rect x="2" y="2" width="20" height="9" rx="2" fill="currentColor"/><path d="M25 4.5v4a2 2 0 0 0 0-4Z" fill="currentColor" opacity=".5"/></svg>`);
+document.querySelectorAll("[data-sos]").forEach(e=>e.innerHTML=`<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#141829" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 18v-6a5 5 0 0 1 10 0v6"/><path d="M5 21h14v-3H5Z"/><path d="M21 12h1M18.5 4.5l-.7.7M2 12h1M12 2v1M4.9 4.9l.7.7"/></svg>`);
+const IC={"Início":'<path d="M3 10l9-7 9 7v10a2 2 0 0 1-2 2h-4v-7H9v7H5a2 2 0 0 1-2-2Z"/>',"Mapa":'<path d="M9 4L3 6v14l6-2 6 2 6-2V4l-6 2Z"/><path d="M9 4v14M15 6v14"/>',"Lugares":'<path d="M3 9l1.5-5h15L21 9"/><path d="M4 9v11h16V9"/><path d="M3 9h18"/><path d="M10 20v-5h4v5"/>',"Apoio":'<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4"/><path d="M5.6 5.6l3.6 3.6M14.8 14.8l3.6 3.6M18.4 5.6l-3.6 3.6M9.2 14.8l-3.6 3.6"/>',"Perfil":'<circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/>'};
+const TC=["#C72825","#B5651D","#8F6300","#0A8B7A","#6037F0"];
+document.querySelectorAll("[data-tab]").forEach(e=>{const on=+e.dataset.tab;e.innerHTML=Object.entries(IC).map(([n,d],i)=>`<div class="${i===on?"on":""}" style="${i===on?"color:"+TC[i]:""}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${d}</svg>${n}</div>`).join("")});
+const nome=p=>p.flex?p.flex[2]:p.t;
+document.querySelectorAll("[data-grid]").forEach(e=>{e.innerHTML=e.dataset.grid.split(",").map(k=>{const [id,pr]=k.split(":"),p=P.get(id),[rn,rc]=P.RAR[p.rar];
+  if(pr){const [a,b]=pr.split("/");return `<div class="gi lk">${P.svg(p.art,{size:74,locked:true})}<p>${nome(p)}</p><span class="mb"><i style="width:${a/b*100}%"></i></span><span style="font-size:11px;color:var(--dim)">${a} de ${b}</span></div>`}
+  return `<div class="gi">${P.svg(p.art,{size:74})}<p>${nome(p)}</p><span style="font-size:11px;color:var(--dim);display:flex;align-items:center;gap:5px"><i class="dot" style="background:${rc}"></i>${rn}</span></div>`}).join("")});
+document.querySelectorAll("[data-chain]").forEach(e=>{const ids=e.dataset.chain.split(","),W=330;
+  e.innerHTML=`<svg class="f" viewBox="0 0 ${W} 40" preserveAspectRatio="none"><path d="M0 4 Q${W/2} 52 ${W} 4" fill="none" stroke="#B9B4AA" stroke-width="2" stroke-dasharray="1 5" stroke-linecap="round"/></svg>`+
+  ids.map((id,i)=>{const t=(i+.5)/ids.length,x=t*W-29,y=4+48*t*(1-t)-2;return `<div class="pd" style="left:${x}px;top:${y}px;transform:rotate(${(t-.5)*-14}deg);transform-origin:50% 0">${P.svg(P.get(id).art,{size:58})}</div>`}).join("")});
+// confete
+const cf=document.querySelector("[data-confete]");if(cf){const cs=["#FF6964","#FFA353","#FFD066","#49DCC0","#59A7FF","#A889FF"];let s=7,h="";const r=()=>(s=(s*9301+49297)%233280)/233280;
+  for(let i=0;i<46;i++){const x=r()*390,y=60+r()*420,w=4+r()*6,rot=r()*180;h+=`<i style="position:absolute;left:${x}px;top:${y}px;width:${w}px;height:${w*1.8}px;border-radius:2px;background:${cs[i%6]};opacity:${.5+r()*.5};transform:rotate(${rot}deg)"></i>`}cf.innerHTML=h}
+</script>
+</body></html>

@@ -37,17 +37,21 @@ mkdirSync(join(SAIDA, "v"), { recursive: true });
 // Carrossel e post: as lâminas exportadas. Reels: o MP4, e a capa sai de um quadro dele.
 // A arte de uma peça é o que `midias` aponta — nem toda peça tem pasta com o próprio nome
 // (os quatro stories de outubro saem de `stories-2/`, por exemplo). O id serve só de atalho.
+// Arte nem sempre é PNG: a lâmina da eleição (03/10) veio como JPG pronto dele, e aí a
+// peça aparecia sem miniatura porque aqui só olhava .png.
+const EH_IMAGEM = (f) => /\.(png|jpe?g|webp)$/i.test(f);
+
 function laminas(item) {
   const id = typeof item === "string" ? item : item.id;
   const peca = typeof item === "string" ? FILA.find((p) => p.id === id) : item;
   const dir = join(RAIZ, "docs", id);
   if (existsSync(dir)) {
-    const png = readdirSync(dir).filter((f) => f.endsWith(".png")).sort();
-    if (png.length) return png.map((f) => join(dir, f));
+    const imgs = readdirSync(dir).filter(EH_IMAGEM).sort();
+    if (imgs.length) return imgs.map((f) => join(dir, f));
   }
   const doFila = (peca?.midias ?? [])
     .map((u) => u.split("/docs/")[1])
-    .filter((c) => c && c.endsWith(".png"))
+    .filter((c) => c && EH_IMAGEM(c))
     .map((c) => join(RAIZ, "docs", c))
     .filter(existsSync);
   return doFila;
@@ -97,15 +101,16 @@ async function artes(pg) {
 // Chromium só para redimensionar: evita depender de outra biblioteca de imagem.
 async function reduzir(pg, src, destino, largura) {
   const b64 = readFileSync(src).toString("base64");
-  const jpg = await pg.evaluate(async ([dados, w]) => {
+  const tipo = /\.jpe?g$/i.test(src) ? "image/jpeg" : /\.webp$/i.test(src) ? "image/webp" : "image/png";
+  const jpg = await pg.evaluate(async ([dados, w, mime]) => {
     const img = new Image();
-    img.src = "data:image/png;base64," + dados;
+    img.src = "data:" + mime + ";base64," + dados;
     await img.decode();
     const c = document.createElement("canvas");
     c.width = w; c.height = Math.round((img.height * w) / img.width);
     c.getContext("2d").drawImage(img, 0, 0, c.width, c.height);
     return c.toDataURL("image/jpeg", 0.82).split(",")[1];
-  }, [b64, largura]);
+  }, [b64, largura, tipo]);
   writeFileSync(destino, Buffer.from(jpg, "base64"));
 }
 
