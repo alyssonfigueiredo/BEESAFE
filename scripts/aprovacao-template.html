@@ -786,7 +786,11 @@ function buildListCard(item){
 }
 
 const listEl = $('list');
-ALL_ITEMS.forEach(item => listEl.appendChild(buildListCard(item)));
+const HOJE_CHAVE = new Date().toLocaleDateString('en-CA',{timeZone:'America/Sao_Paulo'});
+const LIST_ITEMS = ALL_ITEMS.filter(item =>
+  new Date(item.quando).toLocaleDateString('en-CA',{timeZone:'America/Sao_Paulo'}) >= HOJE_CHAVE
+);
+LIST_ITEMS.forEach(item => listEl.appendChild(buildListCard(item)));
 
 initDb();
 </script>
