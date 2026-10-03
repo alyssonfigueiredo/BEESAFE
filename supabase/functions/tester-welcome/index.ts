@@ -40,27 +40,31 @@ function wrapHtml(opts: {
   // sozinho (o Gmail no Android troca fundo branco por preto e lê mal cor de botão sem isso).
   return `<!doctype html>
 <html><head><meta charset="utf-8"><meta name="color-scheme" content="light only"><meta name="supported-color-schemes" content="light only">
-<style>:root{color-scheme:light only;supported-color-schemes:light only}</style>
+<style>:root{color-scheme:light only;supported-color-schemes:light only}
+@media (prefers-color-scheme: dark){ .irisa-page{background:#F5F4F1 !important} .irisa-card{background:#FFFFFF !important} .irisa-soft{background:#F5F4F1 !important} }
+[data-ogsc] .irisa-page,[data-ogsb] .irisa-page{background:#F5F4F1 !important}
+[data-ogsc] .irisa-card,[data-ogsb] .irisa-card{background:#FFFFFF !important}
+[data-ogsc] .irisa-soft,[data-ogsb] .irisa-soft{background:#F5F4F1 !important}</style>
 </head>
-<body style="margin:0;padding:0;background:#F5F4F1;">
-<table role="presentation" width="100%" cellpadding="0" cellspacing="0" bgcolor="#F5F4F1" style="background:#F5F4F1;padding:32px 16px;">
+<body style="margin:0;padding:0;background:#F5F4F1 !important;">
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" bgcolor="#F5F4F1" class="irisa-page" style="background:#F5F4F1 !important;padding:32px 16px;">
 <tr><td align="center">
-<table role="presentation" width="100%" bgcolor="#FFFFFF" style="max-width:480px;background:#FFFFFF;border-radius:24px;overflow:hidden;">
-<tr><td style="padding:36px 32px 4px;text-align:center;">
+<table role="presentation" width="100%" bgcolor="#FFFFFF" class="irisa-card" style="max-width:480px;background:#FFFFFF !important;border-radius:24px;overflow:hidden;">
+<tr><td bgcolor="#FFFFFF" class="irisa-card" style="background:#FFFFFF !important;padding:36px 32px 4px;text-align:center;">
 <img src="${LOGO_URL}" width="150" alt="Irisa" style="display:block;margin:0 auto;border:0;">
 </td></tr>
-<tr><td style="padding:20px 32px 0;text-align:center;">
+<tr><td bgcolor="#FFFFFF" class="irisa-card" style="background:#FFFFFF !important;padding:20px 32px 0;text-align:center;">
 <p style="margin:0 0 14px;font-family:Arial,Helvetica,sans-serif;font-size:20px;font-weight:700;letter-spacing:.02em;color:#141829 !important;text-transform:uppercase;">${opts.titulo}</p>
 <p style="margin:0 0 22px;font-family:Arial,Helvetica,sans-serif;font-size:15px;line-height:1.6;color:#3D4560 !important;">${opts.corpo}</p>
 </td></tr>
-<tr><td style="padding:0 32px;">
-<table role="presentation" width="100%" bgcolor="#F5F4F1" style="background:#F5F4F1;border-radius:16px;padding:18px 20px;"><tbody>${passos}</tbody></table>
+<tr><td bgcolor="#FFFFFF" class="irisa-card" style="background:#FFFFFF !important;padding:0 32px;">
+<table role="presentation" width="100%" bgcolor="#F5F4F1" class="irisa-soft" style="background:#F5F4F1 !important;border-radius:16px;padding:18px 20px;"><tbody>${passos}</tbody></table>
 </td></tr>
-<tr><td style="padding:16px 32px 0;"><table role="presentation" width="100%"><tbody>${ctas}</tbody></table></td></tr>
-<tr><td style="padding:18px 32px 0;">
+<tr><td bgcolor="#FFFFFF" class="irisa-card" style="background:#FFFFFF !important;padding:16px 32px 0;"><table role="presentation" width="100%"><tbody>${ctas}</tbody></table></td></tr>
+<tr><td bgcolor="#FFFFFF" class="irisa-card" style="background:#FFFFFF !important;padding:18px 32px 0;">
 <p style="margin:0;font-family:Arial,Helvetica,sans-serif;font-size:13px;line-height:1.6;color:#7C8296 !important;">${opts.nota}</p>
 </td></tr>
-<tr><td style="padding:28px 32px 34px;text-align:center;border-top:1px solid #ECEAE5;margin-top:10px;">
+<tr><td bgcolor="#FFFFFF" class="irisa-card" style="background:#FFFFFF !important;padding:28px 32px 34px;text-align:center;border-top:1px solid #ECEAE5;margin-top:10px;">
 <p style="margin:20px 0 4px;font-family:Arial,Helvetica,sans-serif;font-size:13px;color:#7C8296 !important;">O mapa dos lugares onde a gente é bem-vinde, feito por nós.</p>
 <p style="margin:0;font-family:Arial,Helvetica,sans-serif;font-size:13px;font-weight:700;color:#141829 !important;">@appirisa</p>
 </td></tr>
