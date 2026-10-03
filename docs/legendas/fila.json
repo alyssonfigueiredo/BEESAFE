@@ -224,8 +224,19 @@
     ],
     "legenda": "",
     "primeiro_comentario": "",
-    "publicado": false,
-    "nota": "Publicar agora (pedido dele, 03/10): furou a fila pro horário de hoje. STORY é sempre manual."
+    "publicado": true,
+    "nota": "Publicar agora (pedido dele, 03/10): furou a fila pro horário de hoje. STORY é sempre manual.",
+    "publicado_em": "2026-10-03T17:55:28.053Z",
+    "media_id": "18097785689356462",
+    "confirmacao": {
+      "id": "18097785689356462",
+      "media_type": "IMAGE",
+      "permalink": "https://www.instagram.com/stories/appirisa/3999940864180539225",
+      "timestamp": "2026-10-03T17:55:36+0000",
+      "na_lista_de_stories_ativos": true
+    },
+    "confirmado": true,
+    "confirmado_em": "2026-10-03T17:55:39.126Z"
   },
   {
     "id": "carrossel-5",
