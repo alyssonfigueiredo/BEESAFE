@@ -503,7 +503,7 @@ perder as decisões gravadas):
 - `file_path` = `build/aprovacao/index.html`; só manda `root`/`files` (`t/`, `c/`, `v/`) quando a arte
   mudou — se só o texto/aprovação mudou, os nomes dos arquivos de mídia continuam os mesmos e um
   publish só do `index.html` basta.
-- `capabilities: {db: {rules: [{path: "aprovacoes", read: "view", write: "interact"}, {path: "pedidos", read: "view", write: "interact"}]}, user: {}}`
+- `capabilities: {db: {rules: [{path: "aprovacoes", read: "view", write: "interact"}, {path: "pedidos", read: "view", write: "interact"}, {path: "publicados", read: "view", write: "interact"}]}, user: {}}`
   — se o artefato já tiver outras capabilities guardadas (ex. `assets`, `downloads` de uma versão
   antiga) e você mandar só `db`/`user`, o publish é recusado por "revogação silenciosa": manda primeiro
   a união de todas, depois republica só com `db`/`user`.
@@ -512,6 +512,11 @@ perder as decisões gravadas):
 
 A página escreve nas **mesmas coleções de sempre** — `aprovacoes` (doc_id = id da peça, `{aprovado, ts}`)
 e `pedidos` — então republicar não apaga nada do que já foi decidido.
+**Coleção `publicados` (03/10/2026):** botão "Marcar como já publicado" em cada peça (Perfil, Lista
+e Story), pra quando ele publica manualmente e quer registrar sem esperar o `fila.json` trazer
+`publicado: true`. `jaPublicado(item)` no template é `item.publicado || publicadoState[id]`; some sozinho
+quando o repositório passa a trazer `publicado: true`. A aba "Lista, dia a dia" só mostra hoje em diante
+(dias passados saem da lista; o Calendário continua com o histórico completo, tem navegação por mês).
 
 ## Armadilhas já resolvidas (não repetir)
 
