@@ -79,9 +79,31 @@ tr:last-child td{border-bottom:0}
 .ph .card h3{font-family:var(--display);text-transform:uppercase;font-size:46px}
 .tag{align-self:flex-start;font-size:24px;font-weight:600;padding:8px 18px;border-radius:999px}
 .metric{flex:1;background:var(--card);border-radius:28px;padding:48px;box-shadow:var(--shadow);display:flex;flex-direction:column;gap:20px}
-.metric .q{font-family:var(--display);font-weight:700;font-size:56px;line-height:1.1;text-transform:uppercase}
+.metric .q{font-family:var(--display);font-weight:700;font-size:46px;line-height:1.1;text-transform:uppercase}
 .c{text-align:center;align-items:center}
 .note{font-size:26px;color:var(--dim)}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+.grid3 .badge h3{font-size:32px}
+/* pulseira de pingentes */
+.chain{position:relative;height:250px}
+.chain svg.fio{position:absolute;left:0;top:0;width:100%;height:120px}
+.pend{position:absolute;width:118px;display:flex;flex-direction:column;align-items:center;transform-origin:50% 0}
+.pend .hk{width:20px;height:20px;border-radius:50%;border:4px solid #B9B4AA;margin-bottom:-4px}
+.pend .gm{width:112px;height:112px;border-radius:50%;box-shadow:inset 0 0 0 6px rgba(255,255,255,.75),0 10px 24px rgba(20,24,41,.18);display:flex;align-items:center;justify-content:center;font-family:var(--display);font-weight:700;font-size:28px;color:var(--ink);overflow:hidden}
+.pend .nm{font-size:20px;font-weight:600;color:var(--dim);margin-top:10px;white-space:nowrap}
+.pend.lk .gm{background:#E4E1DA;color:#A9A49A;font-size:46px;box-shadow:inset 0 0 0 6px rgba(255,255,255,.6)}
+.s.on .pend{animation:drop 1.1s var(--spring) both;animation-delay:calc(var(--i) * .09s + .35s)}
+@keyframes drop{0%{opacity:0;transform:translateY(-70px) rotate(-16deg)}55%{opacity:1;transform:translateY(0) rotate(7deg)}78%{transform:rotate(-3deg)}100%{opacity:1;transform:none}}
+/* dias acesos */
+.week{display:flex;gap:26px;align-items:flex-end}
+.day{display:flex;flex-direction:column;align-items:center;gap:14px}
+.day .o{width:124px;height:124px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:var(--display);font-weight:700;font-size:40px;color:var(--ink);box-shadow:var(--shadow)}
+.day .d{font-size:24px;font-weight:600;letter-spacing:.12em;color:var(--dim)}
+.day.g .o{background:transparent;box-shadow:none;border:5px dashed #B9B4AA;color:var(--dim);font-size:19px;font-family:var(--body)}
+.day.h .o{background:var(--card);box-shadow:var(--shadow),inset 0 0 0 7px var(--coral)}
+.s.on .day.h .o{animation:pulse 1.6s ease-in-out 1.4s infinite}
+@keyframes pulse{50%{box-shadow:var(--shadow),inset 0 0 0 7px var(--coral),0 0 0 18px color-mix(in srgb,var(--coral) 22%,transparent)}}
+.s.on .day .o{animation-fill-mode:both}
 /* entrada dos elementos de cada slide */
 .s .in{opacity:0;transform:translateY(34px);filter:blur(6px);transition:opacity .8s ease,transform .9s var(--ease),filter .8s ease}
 .s.on .in{opacity:1;transform:none;filter:none}
@@ -90,7 +112,7 @@ tr:last-child td{border-bottom:0}
 .lit .gomo.on{opacity:1}
 #prog{position:fixed;left:0;bottom:0;height:5px;background:var(--rb);transition:width .5s var(--ease);z-index:9}
 #hint{position:fixed;right:18px;bottom:14px;color:#6E7390;font:500 13px var(--body);z-index:9}
-@media (prefers-reduced-motion:reduce){.s,.s .in{transition:none!important}}
+@media (prefers-reduced-motion:reduce){.s,.s .in{transition:none!important}.s.on .pend,.s.on .day.h .o{animation:none!important}}
 </style></head><body>
 <div id="deck">
 
@@ -158,7 +180,7 @@ tr:last-child td{border-bottom:0}
   <div class="row">
     <div class="card in d2"><div class="ic" style="background:rgba(255,105,100,.16)"><svg viewBox="0 0 24 24" fill="none" stroke="#FF6964" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg></div><h3>Relato nunca dá ponto</h3><p>Se registrar violência rendesse medalha, apareceriam relatos inventados, e o mapa de atenção perderia a confiança.</p></div>
     <div class="card in d3"><div class="ic" style="background:rgba(168,137,255,.16)"><svg viewBox="0 0 24 24" fill="none" stroke="#A889FF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg></div><h3>Nada é público</h3><p>Sem ranking com nome, sem perfil aberto. Saber onde alguém costuma ir pode tirar a pessoa do armário. Só ela vê as próprias conquistas.</p></div>
-    <div class="card in d4"><div class="ic" style="background:rgba(73,220,192,.16)"><svg viewBox="0 0 24 24" fill="none" stroke="#49DCC0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s7-6.2 7-12a7 7 0 0 0-14 0c0 5.8 7 12 7 12z"/><path d="M4 4l16 16"/></svg></div><h3>Nada de ponto por presença</h3><p>Nada de check-in. O ponto vem de contribuir com o mapa, nunca de registrar por onde a pessoa anda.</p></div>
+    <div class="card in d4"><div class="ic" style="background:rgba(73,220,192,.16)"><svg viewBox="0 0 24 24" fill="none" stroke="#49DCC0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s7-6.2 7-12a7 7 0 0 0-14 0c0 5.8 7 12 7 12z"/><path d="M4 4l16 16"/></svg></div><h3>Nada de ponto por localização</h3><p>Nada de check-in. Abrir o app conta; estar num lugar, nunca. Nada registra por onde a pessoa anda.</p></div>
   </div>
 </section>
 
@@ -198,10 +220,95 @@ tr:last-child td{border-bottom:0}
   <div class="tl">
     <div class="st in d2" style="--c:var(--coral)"><div class="dot"></div><p class="when">Dia 1</p><p>Irisa o café do bairro, que ainda não tinha nenhuma nota. Os primeiros gomos acendem.</p><span class="got">Pioneire</span></div>
     <div class="st in d3" style="--c:var(--turq)"><div class="dot"></div><p class="when">Dia 6</p><p>Dá a quinta avaliação de um bar. O selo dele aparece para todo mundo.</p><span class="got">Acendeu um selo</span></div>
-    <div class="st in d4" style="--c:var(--yellow)"><div class="dot"></div><p class="when">Semana 3</p><p>Já irisou lugares em 5 bairros. O anel chega na metade.</p><span class="got">Nível Amarelo</span></div>
+    <div class="st in d4" style="--c:var(--yellow)"><div class="dot"></div><p class="when">Semana 3</p><p>Fecha 7 dias acesos, mesmo nos dias em que só consultou. O anel chega no Amarelo e cai um pingente.</p><span class="got">Amarelo · 7 dias acesos</span></div>
     <div class="st in d5" style="--c:var(--lilac)"><div class="dot"></div><p class="when">Dia 30</p><p>Posta no story o cartão “Já irisei 12 lugares”, sem dizer quais. Duas amigas baixam o app.</p><span class="got">Divulgou a Irisa</span></div>
   </div>
   <p class="note in d6">Bia é uma personagem de exemplo.</p>
+</section>
+
+<!-- 9a · todo dia -->
+<section class="s dark" data-n="10">
+  <div class="bg"></div>
+  <div><p class="eb in">Todo dia</p><h2 class="in d1" style="margin-top:18px">Não é só <span class="rb">para avaliar</span></h2></div>
+  <div class="grid4">
+    <div class="card in d2"><span class="tag" style="background:color-mix(in srgb,var(--coral) 30%,var(--night2));color:#fff">Dia aceso</span><h3>Abrir o app</h3><p>Uma vez por dia, o dia acende na sequência. Não precisa fazer mais nada.</p></div>
+    <div class="card in d3"><span class="tag" style="background:color-mix(in srgb,var(--yellow) 30%,var(--night2));color:#fff">+1 faísca</span><h3>Consultar um lugar</h3><p>Abriu a ficha antes de sair de casa? Ganha faísca. Não fica guardado qual lugar foi.</p></div>
+    <div class="card in d4"><span class="tag" style="background:color-mix(in srgb,var(--lilac) 34%,var(--night2));color:#fff">+1 faísca</span><h3>Apoiar no mural</h3><p>Mensagem de apoio publicada vale faísca. Uma por dia, para o mural não virar spam.</p></div>
+    <div class="card in d5"><span class="tag" style="background:color-mix(in srgb,var(--turq) 34%,var(--night2));color:#fff">Gomo + sorteio</span><h3>Irisar um lugar</h3><p>Acende gomo no anel, pinta o mapa e concorre a um pingente raro.</p></div>
+  </div>
+  <p class="lead in d6" style="font-size:32px;max-width:1600px">Duas trilhas: <b style="color:#fff">o anel só cresce com o que ajuda o mapa</b>. O dia a dia enche a pulseira: a cada 10 faíscas, abre um pingente surpresa.</p>
+</section>
+
+<!-- 9b · na hora -->
+<section class="s" data-n="11">
+  <div><p class="eb in">Micro-recompensas</p><h2 class="in d1" style="margin-top:18px">A resposta vem na hora</h2></div>
+  <div class="grid3">
+    <div class="badge in d2"><div class="md" style="background:var(--turq)">+1</div><h3>Irisou</h3><p>O gomo acende com uma vibração curta e o lugar mostra “+1 cor no mapa”.</p></div>
+    <div class="badge in d3"><div class="md" style="background:var(--coral)">5</div><h3>Quinta avaliação</h3><p>O radar varre a tela inteira: “Você acendeu o selo do Bar X”.</p></div>
+    <div class="badge in d4"><div class="md" style="background:var(--yellow)">2</div><h3>Perto do nível</h3><p>O anel pulsa e avisa: faltam 2 gomos para o Turquesa.</p></div>
+    <div class="badge in d5"><div class="md" style="background:var(--lilac)">↑</div><h3>Subiu de nível</h3><p>Uma bandeira cai na pulseira, balançando. Essa é garantida.</p></div>
+    <div class="badge in d6"><div class="md" style="background:var(--rb)">10</div><h3>Dez faíscas</h3><p>A caixinha abre: pingente surpresa. Às vezes vem um raro.</p></div>
+    <div class="badge in d7"><div class="md" style="background:var(--orange)">✦</div><h3>Consultou ou apoiou</h3><p>A faísca voa até o ícone do Perfil. Meio segundo, sem tela no caminho.</p></div>
+  </div>
+  <p class="note in d8">A surpresa é o que prende: o pingente da caixinha nunca é previsível.</p>
+</section>
+
+<!-- 9c · pulseira -->
+<section class="s alt" data-n="12">
+  <div><p class="eb in">Pingentes da comunidade</p><h2 class="in d1" style="margin-top:18px">A pulseira da Irisa</h2></div>
+  <div class="chain">
+    <svg class="fio" viewBox="0 0 1664 120" preserveAspectRatio="none"><path d="M0 8 Q832 150 1664 8" fill="none" stroke="#B9B4AA" stroke-width="4" stroke-dasharray="2 9" stroke-linecap="round"/></svg>
+    <div id="pends"></div>
+  </div>
+  <div class="grid4">
+    <div class="badge in d3"><p class="lbl">Bandeiras</p><h3>A cada nível</h3><p>Orgulho, Trans, Bi, Lésbica, Não-binárie, Pan, Ace, Intersexo. Garantida.</p></div>
+    <div class="badge in d4"><p class="lbl">Cidades</p><h3>A primeira em cada uma</h3><p>Irisou em outra cidade, ganha o pingente dela.</p></div>
+    <div class="badge in d5"><p class="lbl">Datas</p><h3>Só naquele dia</h3><p>29/01, 17/05, 28/06, 29/08, 23/09, 11/10. Perdeu, só no ano que vem.</p></div>
+    <div class="badge in d6"><p class="lbl">Raros</p><h3>Na sorte</h3><p>Radar dourado, gomo arco-íris, coração neon. Saem da caixinha.</p></div>
+  </div>
+</section>
+
+<!-- 9d · dias acesos -->
+<section class="s" data-n="13">
+  <div class="bg"></div>
+  <div><p class="eb in">Constância</p><h2 class="in d1" style="margin-top:18px">Dias acesos</h2></div>
+  <p class="lead in d2" style="font-size:34px;max-width:1500px">Abriu a Irisa, o dia acende. Consultar, apoiar ou irisar contam igual: ninguém precisa avaliar todo dia para manter a sequência.</p>
+  <div class="week in d3">
+    <div class="day"><div class="o" style="background:var(--coral)">1</div><p class="d">SEG</p></div>
+    <div class="day"><div class="o" style="background:var(--orange)">2</div><p class="d">TER</p></div>
+    <div class="day"><div class="o" style="background:var(--yellow)">3</div><p class="d">QUA</p></div>
+    <div class="day"><div class="o" style="background:var(--turq)">4</div><p class="d">QUI</p></div>
+    <div class="day"><div class="o" style="background:var(--blue)">5</div><p class="d">SEX</p></div>
+    <div class="day g"><div class="o">guardado</div><p class="d">SÁB</p></div>
+    <div class="day h"><div class="o">7</div><p class="d">HOJE</p></div>
+  </div>
+  <div class="row">
+    <div class="card in d4" style="padding:32px"><p class="lbl">3 dias</p><h3>Faísca extra</h3><p>O anel brilha por um dia.</p></div>
+    <div class="card in d5" style="padding:32px"><p class="lbl">7 dias</p><h3>Pingente garantido</h3><p>Cai na pulseira na hora.</p></div>
+    <div class="card in d6" style="padding:32px"><p class="lbl">30 dias</p><h3>Um raro à escolha</h3><p>A pessoa escolhe qual.</p></div>
+    <div class="card in d7" style="padding:32px;background:var(--night);color:#F1F0EC"><p class="lbl" style="color:var(--turq)">Sem castigo</p><h3 style="font-size:30px">1 dia guardado por semana, automático. Quebrou? “Recomeçou com 1 dia guardado.”</h3></div>
+  </div>
+</section>
+
+<!-- 9e · desafios -->
+<section class="s alt" data-n="14">
+  <h2 class="in">Desafios</h2>
+  <div class="ph">
+    <div class="card in d1"><span class="tag" style="background:color-mix(in srgb,var(--yellow) 34%,#fff)">Do dia · renova à meia-noite</span><h3>Três pequenos</h3><p>Consultar um lugar antes de sair. Deixar um apoio no mural. Irisar um lugar sem nota.</p><p style="color:var(--ink);font-weight:600">Os três: caixinha extra.</p></div>
+    <div class="card in d2"><span class="tag" style="background:color-mix(in srgb,var(--lilac) 26%,#fff)">Da semana</span><h3>Um maior</h3><p>Irisar em 2 bairros diferentes. Completar as respostas de uma avaliação antiga. Reavaliar um lugar de meses atrás.</p><p style="color:var(--ink);font-weight:600">Pingente garantido.</p></div>
+    <div class="card in d3" style="background:var(--night);color:#F1F0EC"><span class="tag" style="background:color-mix(in srgb,var(--turq) 30%,var(--night2));color:#fff">Da cidade · todo mundo junto</span><h3>Acender Curitiba</h3><p style="color:var(--soft)">“14 lugares ganharam selo esta semana. Faltam 6.”</p><p style="color:#fff;font-weight:600">Bateu a meta: quem ajudou ganha o pingente da cidade.</p></div>
+  </div>
+</section>
+
+<!-- 9f · cuidados -->
+<section class="s dark" data-n="15">
+  <div><p class="eb in" style="color:#FF8A85">O cuidado</p><h2 class="in d1" style="margin-top:18px">Dopamina sem armadilha</h2></div>
+  <div class="grid4">
+    <div class="card in d2"><h3>Aviso neutro</h3><p>“Ainda dá tempo de acender o dia.” Nunca nome de lugar: a tela bloqueada pode tirar alguém do armário.</p></div>
+    <div class="card in d3"><h3>Volume não premia</h3><p>O sorteio vale só nas 3 primeiras avaliações do dia. Avaliar 50 bares de uma vez rende gomo, não prêmio.</p></div>
+    <div class="card in d4"><h3>Sem rastro</h3><p>Consultar conta que você abriu uma ficha hoje, não qual. A pulseira só a pessoa vê.</p></div>
+    <div class="card in d5"><h3>Relato fora</h3><p>Relato e emergência seguem fora de tudo: nem faísca, nem sequência, nem desafio.</p></div>
+  </div>
 </section>
 
 <!-- 10 · a cidade ganhando cor -->
@@ -233,11 +340,11 @@ tr:last-child td{border-bottom:0}
 <section class="s" data-n="12">
   <h2 class="in">Como soltar sem gastar build</h2>
   <div class="ph">
-    <div class="card in d1"><span class="tag" style="background:color-mix(in srgb,var(--turq) 24%,#fff)">Sai por update</span><h3>Fase 1</h3><p>Uma migration que calcula o progresso a partir do que já existe no banco. Anel e nível no Perfil, 10 conquistas e o “% colorida” no Início.</p></div>
-    <div class="card in d2"><span class="tag" style="background:color-mix(in srgb,var(--lilac) 24%,#fff)">Na próxima build</span><h3>Fase 2</h3><p>Cartão para o story, conquistas das datas da comunidade e os ícones alternativos do app.</p></div>
-    <div class="card in d3"><span class="tag" style="background:color-mix(in srgb,var(--coral) 20%,#fff)">Com parceiros</span><h3>Fase 3</h3><p>Desafios por bairro com as ONGs: “vamos acender o Centro de Curitiba neste mês”.</p></div>
+    <div class="card in d1"><span class="tag" style="background:color-mix(in srgb,var(--turq) 24%,#fff)">Sai por update</span><h3>Fase 1</h3><p>Uma migration e tela nova: anel e nível, conquistas, dias acesos, faíscas, pulseira, as animações na hora e o “% colorida” no Início.</p></div>
+    <div class="card in d2"><span class="tag" style="background:color-mix(in srgb,var(--lilac) 24%,#fff)">Na próxima build</span><h3>Fase 2</h3><p>Vibração e aviso da sequência (as duas bibliotecas são nativas), cartão para o story e ícones alternativos do app.</p></div>
+    <div class="card in d3"><span class="tag" style="background:color-mix(in srgb,var(--coral) 20%,#fff)">Depois, por update</span><h3>Fase 3</h3><p>Desafios do dia e da semana. Com as ONGs, os da cidade: “vamos acender o Centro neste mês”.</p></div>
   </div>
-  <p class="in d4" style="font-size:28px;color:var(--muted)">Nenhum dado novo é coletado: o progresso sai das avaliações, lugares e fotos que já estão no banco.</p>
+  <p class="in d4" style="font-size:28px;color:var(--muted)">O progresso sai das avaliações, lugares, fotos e mensagens que já estão no banco. O único dado novo é “abriu o app hoje”, sem hora e sem lugar.</p>
 </section>
 
 <!-- 13 · medir -->
@@ -246,9 +353,10 @@ tr:last-child td{border-bottom:0}
   <div class="row">
     <div class="metric in d1"><p class="lbl">Volta</p><p class="q">Segunda avaliação em até 7 dias</p><p style="font-size:28px;color:var(--muted)">Quantas pessoas voltam para irisar de novo na primeira semana.</p></div>
     <div class="metric in d2"><p class="lbl">Ritmo</p><p class="q">Avaliações por pessoa por mês</p><p style="font-size:28px;color:var(--muted)">Se quem usa passa a contribuir mais vezes.</p></div>
-    <div class="metric in d3"><p class="lbl">Mapa</p><p class="q">Lugares que chegam ao selo</p><p style="font-size:28px;color:var(--muted)">O resultado que importa: mais cor na cidade.</p></div>
+    <div class="metric in d3"><p class="lbl">Hábito</p><p class="q">Dias acesos por semana</p><p style="font-size:28px;color:var(--muted)">Se a pessoa abre o app mesmo quando não vai avaliar.</p></div>
+    <div class="metric in d4"><p class="lbl">Mapa</p><p class="q">Lugares que chegam ao selo</p><p style="font-size:28px;color:var(--muted)">O resultado que importa: mais cor na cidade.</p></div>
   </div>
-  <p class="in d4" style="font-size:28px;color:var(--muted)">Medir as três antes e depois da Fase 1.</p>
+  <p class="in d5" style="font-size:28px;color:var(--muted)">Medir as quatro antes e depois da Fase 1.</p>
 </section>
 
 <!-- 14 · fecho -->
@@ -275,6 +383,19 @@ document.querySelectorAll("svg.ring").forEach(svg=>{
   if(svg.closest(".dark")){c.setAttribute("stroke","#fff");c.setAttribute("stroke-width","1.4")}
   const h=document.createElementNS(NS,"circle");h.setAttribute("cx",46.1);h.setAttribute("cy",45.6);h.setAttribute("r",2.86);h.setAttribute("fill","#fff");svg.appendChild(h);
 });
+// pingentes pendurados no fio da pulseira
+const FL={orgulho:"linear-gradient(#E40303 0 16.6%,#FF8C00 0 33.3%,#FFED00 0 50%,#008026 0 66.6%,#004DFF 0 83.3%,#750787 0)",
+  trans:"linear-gradient(#5BCEFA 0 20%,#F5A9B8 0 40%,#fff 0 60%,#F5A9B8 0 80%,#5BCEFA 0)",
+  bi:"linear-gradient(#D60270 0 40%,#9B4F96 0 60%,#0038A8 0)",
+  lesbica:"linear-gradient(#D52D00 0 20%,#FF9A56 0 40%,#fff 0 60%,#D362A4 0 80%,#A30262 0)",
+  radar:"conic-gradient(from -150deg,#FFE7A3 0 95deg,#E0A32E 0 360deg)"};
+const PD=[["orgulho","Orgulho"],["trans","Trans"],["bi","Bi"],["lesbica","Lésbica"],["cwb","Curitiba"],["d1705","17/05"],["radar","Radar dourado"],[0],[0],[0],[0]];
+const pw=document.getElementById("pends");
+if(pw)PD.forEach(([k,n],i)=>{const x=i/(PD.length-1),cx=28+x*(1664-150),y=8+142*x*(1-x)*2*0.5*2;
+  const d=document.createElement("div");d.className="pend"+(k?"":" lk");d.style.cssText=`left:${cx}px;top:${y-6}px;--i:${i}`;
+  let st="",tx="";if(FL[k])st=`background:${FL[k]}`;else if(k==="cwb"){st="background:var(--turq)";tx="CWB"}else if(k==="d1705"){st="background:var(--coral)";tx="17/05"}else tx="?";
+  if(k==="radar")tx='<span style="width:26px;height:26px;border-radius:50%;background:#0F1220;box-shadow:0 0 0 4px #fff"></span>';
+  d.innerHTML=`<i class="hk"></i><div class="gm" style="${st}">${tx}</div><p class="nm">${n||"…"}</p>`;pw.appendChild(d)});
 const S=[...document.querySelectorAll(".s")],deck=document.getElementById("deck");
 let cur=0;
 function fit(){const z=Math.min(innerWidth/1920,innerHeight/1080);deck.style.transform=`translate(-50%,-50%) scale(${z})`}
