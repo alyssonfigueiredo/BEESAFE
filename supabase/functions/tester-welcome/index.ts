@@ -9,6 +9,66 @@ import { adminClient, json } from "../_shared/supabase.ts";
 // Primeiro o de participação (vira testador), depois o da loja (só abre para quem já é testador).
 const PLAY_TEST_URL = "https://play.google.com/apps/testing/br.com.irisa.app";
 const PLAY_STORE_URL = "https://play.google.com/store/apps/details?id=br.com.irisa.app";
+const LOGO_URL =
+  "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/marca-pack/irisa-horizontal-ink.png";
+
+// E-mail em HTML (tabela + CSS inline, do jeito que clientes de e-mail toleram) na mesma paleta
+// do app e do Instagram (papel, cápsulas coral/turquesa), com o texto puro como alternativa pra
+// quem não carrega HTML. `rows` é a lista de passos numerados; `cta` os botões em cápsula.
+function wrapHtml(opts: {
+  titulo: string;
+  corpo: string;
+  passos: string[];
+  ctas: { texto: string; url: string; cor: string; tinta: string }[];
+  nota: string;
+}) {
+  const passos = opts.passos
+    .map(
+      (p, i) =>
+        `<tr><td style="padding:4px 0;font-size:15px;line-height:1.5;color:#3D4560 !important;font-family:Arial,Helvetica,sans-serif;"><b style="color:#141829 !important;">${i + 1}.</b> ${p}</td></tr>`,
+    )
+    .join("");
+  // Botão "à prova de bala": a cor vive no bgcolor da célula, não no <a> — o Gmail às vezes
+  // apaga background de link em modo escuro, mas respeita bgcolor de tabela.
+  const ctas = opts.ctas
+    .map(
+      (c) =>
+        `<tr><td style="padding:10px 0;text-align:center;"><table role="presentation" align="center" cellpadding="0" cellspacing="0"><tr><td bgcolor="${c.cor}" style="background:${c.cor};border-radius:999px;"><a href="${c.url}" style="display:block;padding:14px 30px;color:${c.tinta} !important;text-decoration:none;font-weight:700;font-size:15px;font-family:Arial,Helvetica,sans-serif;">${c.texto}</a></td></tr></table></td></tr>`,
+    )
+    .join("");
+  // color-scheme/supported-color-schemes pedem pro cliente de e-mail não reescrever as cores
+  // sozinho (o Gmail no Android troca fundo branco por preto e lê mal cor de botão sem isso).
+  return `<!doctype html>
+<html><head><meta charset="utf-8"><meta name="color-scheme" content="light only"><meta name="supported-color-schemes" content="light only">
+<style>:root{color-scheme:light only;supported-color-schemes:light only}</style>
+</head>
+<body style="margin:0;padding:0;background:#F5F4F1;">
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" bgcolor="#F5F4F1" style="background:#F5F4F1;padding:32px 16px;">
+<tr><td align="center">
+<table role="presentation" width="100%" bgcolor="#FFFFFF" style="max-width:480px;background:#FFFFFF;border-radius:24px;overflow:hidden;">
+<tr><td style="padding:36px 32px 4px;text-align:center;">
+<img src="${LOGO_URL}" width="150" alt="Irisa" style="display:block;margin:0 auto;border:0;">
+</td></tr>
+<tr><td style="padding:20px 32px 0;text-align:center;">
+<p style="margin:0 0 14px;font-family:Arial,Helvetica,sans-serif;font-size:20px;font-weight:700;letter-spacing:.02em;color:#141829 !important;text-transform:uppercase;">${opts.titulo}</p>
+<p style="margin:0 0 22px;font-family:Arial,Helvetica,sans-serif;font-size:15px;line-height:1.6;color:#3D4560 !important;">${opts.corpo}</p>
+</td></tr>
+<tr><td style="padding:0 32px;">
+<table role="presentation" width="100%" bgcolor="#F5F4F1" style="background:#F5F4F1;border-radius:16px;padding:18px 20px;"><tbody>${passos}</tbody></table>
+</td></tr>
+<tr><td style="padding:16px 32px 0;"><table role="presentation" width="100%"><tbody>${ctas}</tbody></table></td></tr>
+<tr><td style="padding:18px 32px 0;">
+<p style="margin:0;font-family:Arial,Helvetica,sans-serif;font-size:13px;line-height:1.6;color:#7C8296 !important;">${opts.nota}</p>
+</td></tr>
+<tr><td style="padding:28px 32px 34px;text-align:center;border-top:1px solid #ECEAE5;margin-top:10px;">
+<p style="margin:20px 0 4px;font-family:Arial,Helvetica,sans-serif;font-size:13px;color:#7C8296 !important;">O mapa dos lugares onde a gente é bem-vinde, feito por nós.</p>
+<p style="margin:0;font-family:Arial,Helvetica,sans-serif;font-size:13px;font-weight:700;color:#141829 !important;">@appirisa</p>
+</td></tr>
+</table>
+</td></tr>
+</table>
+</body></html>`;
+}
 
 function androidEmail() {
   return {
@@ -30,6 +90,19 @@ function androidEmail() {
       "Irisa · o mapa dos lugares onde a gente é bem-vinde, feito por nós",
       "@appirisa",
     ].join("\n"),
+    html: wrapHtml({
+      titulo: "Você está no teste da Irisa",
+      corpo: "Oi! Seu e-mail já está na lista de teste. Bem-vinde.",
+      passos: [
+        "Abra este link, no celular Android logado na mesma conta Google deste e-mail, e toque em <b>“Tornar-se testador”</b>.",
+        "Depois abra a Irisa na Play Store e instale.",
+      ],
+      ctas: [
+        { texto: "Tornar-se testador", url: PLAY_TEST_URL, cor: "#FF6964", tinta: "#FFFFFF" },
+        { texto: "Abrir na Play Store", url: PLAY_STORE_URL, cor: "#49DCC0", tinta: "#141829" },
+      ],
+      nota: 'Se aparecer "app não encontrado", espere algumas horas — a Play Store pode demorar para liberar. Deixe o app instalado durante o teste e conte o que achou respondendo este e-mail.',
+    }),
   };
 }
 
@@ -49,6 +122,16 @@ function iosEmail(url: string) {
       "Irisa · o mapa dos lugares onde a gente é bem-vinde, feito por nós",
       "@appirisa",
     ].join("\n"),
+    html: wrapHtml({
+      titulo: "Você está no teste da Irisa no iPhone",
+      corpo: "Oi! A Irisa já pode ser testada no iPhone. Bem-vinde.",
+      passos: [
+        "Instale o app <b>TestFlight</b> da App Store.",
+        "Abra o link abaixo no iPhone e toque em “Aceitar” e depois em “Instalar”.",
+      ],
+      ctas: [{ texto: "Abrir no TestFlight", url, cor: "#FF6964", tinta: "#FFFFFF" }],
+      nota: "Conte o que achou respondendo este e-mail.",
+    }),
   };
 }
 
@@ -86,7 +169,13 @@ Deno.serve(async (req) => {
   for (const row of pending) {
     const mail = row.platform === "ios" ? iosEmail(testflight!) : androidEmail();
     try {
-      await smtp.sendMail({ from: `Irisa <${user}>`, to: row.email, subject: mail.subject, text: mail.text });
+      await smtp.sendMail({
+        from: `Irisa <${user}>`,
+        to: row.email,
+        subject: mail.subject,
+        text: mail.text,
+        html: mail.html,
+      });
       sent.push(row.id);
     } catch (e) {
       console.error("tester-welcome: falhou", row.email, e);
