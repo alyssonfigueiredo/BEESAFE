@@ -8,6 +8,7 @@ import { Chip } from "@/components/Chip";
 import { CityPicker } from "@/components/CityPicker";
 import { DangerRanking } from "@/components/DangerRanking";
 import { AvisoCard, GamiHomeCards } from "@/components/gami/HomeCards";
+import { IriseFab } from "@/components/irise/Irise";
 import { Mark } from "@/components/Mark";
 import { OccurrenceCard } from "@/components/OccurrenceCard";
 import { PlaceCard } from "@/components/PlaceCard";
@@ -282,6 +283,7 @@ export default function HomeScreen() {
 
         <DangerRanking items={ranking} title="Bairros com mais relatos" />
       </ScrollView>
+      <IriseFab cityId={city?.id} cityName={city?.name} userLocation={userLocation} />
     </View>
   );
 }

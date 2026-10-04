@@ -51,7 +51,9 @@ import { colors } from "@/theme/tokens";
 // simplesmente não aparece, então o mesmo código pode chegar por EAS Update sem quebrar nada.
 
 export type Compartilhavel =
-  { tipo: "medalha"; id: string; banho?: Banho | null } | { tipo: "nivel"; k: number };
+  | { tipo: "medalha"; id: string; banho?: Banho | null }
+  | { tipo: "nivel"; k: number }
+  | { tipo: "pilula"; id: number; line1: string; line2: string };
 
 const W = 360;
 const H = 640;
@@ -250,6 +252,42 @@ const ARCO = [
   colors.lilac,
 ];
 
+/** As duas linhas da pílula de acolhimento: a primeira na tinta, a segunda em arco-íris. */
+function FraseArcoIris({ line1, line2 }: { line1: string; line2: string }) {
+  const maior = Math.max(line1.length, line2.length);
+  const fs = Math.min(50, Math.max(26, Math.floor(300 / (maior * 0.52))));
+  const lh = fs * 1.14;
+  return (
+    <View style={{ alignItems: "center", marginTop: 4 }}>
+      <Text
+        className="text-center font-heading uppercase text-ink"
+        style={{ fontSize: fs, lineHeight: lh }}
+      >
+        {line1}
+      </Text>
+      <Svg width={W - 40} height={lh + fs * 0.16}>
+        <Defs>
+          <LinearGradient id="stfrase" x1="0" y1="0" x2="1" y2="0">
+            {ARCO.map((c, i) => (
+              <Stop key={c} offset={i / (ARCO.length - 1)} stopColor={c} />
+            ))}
+          </LinearGradient>
+        </Defs>
+        <SvgText
+          x={(W - 40) / 2}
+          y={fs * 0.98}
+          fontSize={fs}
+          fontFamily="Oswald_700Bold"
+          textAnchor="middle"
+          fill="url(#stfrase)"
+        >
+          {line2}
+        </SvgText>
+      </Svg>
+    </View>
+  );
+}
+
 /** Um brilhinho de quatro pontas que pisca devagar (na tela; a captura pega o quadro do momento). */
 function Brilho({
   x,
@@ -363,7 +401,8 @@ function Destaque({ c }: { c: Compartilhavel }) {
     ) : (
       <MedalView id={c.id} size={176} on banho={c.banho ?? null} />
     );
-  } else corpo = <NivelIcone k={c.k} size={NIVEL_IMG[c.k] ? 178 : 156} />;
+  } else if (c.tipo === "nivel") corpo = <NivelIcone k={c.k} size={NIVEL_IMG[c.k] ? 178 : 156} />;
+  else corpo = null; // pilula: Cartao() nem chega a montar o Destaque
   return <Animated.View style={st}>{corpo}</Animated.View>;
 }
 
@@ -373,6 +412,44 @@ function Destaque({ c }: { c: Compartilhavel }) {
  * stories da marca.
  */
 function Cartao({ c, forma }: { c: Compartilhavel; forma: number }) {
+  if (c.tipo === "pilula") {
+    return (
+      <View style={{ width: W, height: H, overflow: "hidden" }}>
+        <Fundo />
+        <Brilhos />
+        <View
+          style={{
+            flex: 1,
+            paddingTop: 66,
+            paddingBottom: 104,
+            paddingHorizontal: 20,
+            alignItems: "center",
+            justifyContent: "center",
+            gap: 10,
+          }}
+        >
+          <Text
+            className="font-body-bold uppercase"
+            style={{ fontSize: 10.5, letterSpacing: 1.6, color: "#0A8B7A" }}
+          >
+            Pílula de acolhimento
+          </Text>
+          <FraseArcoIris line1={c.line1} line2={c.line2} />
+        </View>
+        <View style={{ position: "absolute", bottom: 40, left: 0, right: 0, alignItems: "center" }}>
+          <Text className="mb-2 text-center font-body text-[11px] text-dim">
+            O mapa dos lugares onde a gente é bem-vinde
+          </Text>
+          <View style={{ flexDirection: "row", alignItems: "center", gap: 6 }}>
+            <RadarMin size={16} />
+            <Text className="font-wordmark uppercase text-ink" style={{ fontSize: 12.5, letterSpacing: 2.5 }}>
+              Iris<Text style={{ color: colors.amber }}>a</Text>
+            </Text>
+          </View>
+        </View>
+      </View>
+    );
+  }
   const medalha = c.tipo === "medalha" ? getMedalha(c.id) : null;
   const nivel = c.tipo === "nivel" ? NIVEIS_EVO[c.k] : null;
   const eyebrow = medalha
@@ -475,7 +552,13 @@ export function CompartilharSheet({
   useFolhaAberta(!!c);
   const escala = Math.min((width - 72) / W, (height - 300) / H, 1);
   // Uma explosão nova cada vez que a prévia abre com outro cartão.
-  const chave = c ? (c.tipo === "medalha" ? c.id : `nivel-${c.k}`) : "";
+  const chave = c
+    ? c.tipo === "medalha"
+      ? c.id
+      : c.tipo === "nivel"
+        ? `nivel-${c.k}`
+        : `pilula-${c.id}`
+    : "";
 
   async function capturar() {
     const { captureRef } =
