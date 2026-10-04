@@ -153,22 +153,67 @@ function RadarMin({ size }: { size: number }) {
 }
 
 /** Linhas do nome escritas para caber (como os títulos dos posts, quebra à mão por palavra). */
-function linhasDoNome(nome: string, max = 13) {
-  const palavras = nome.toUpperCase().split(" ");
-  const linhas: string[] = [];
-  for (const p of palavras) {
-    const ult = linhas[linhas.length - 1];
-    if (ult && (ult + " " + p).length <= max) linhas[linhas.length - 1] = ult + " " + p;
-    else linhas.push(p);
+// Palavras que não podem ficar soltas no fim da linha ("de / pra", "a / gente").
+const CURTAS = new Set(
+  "a o e é as os um uma de da do das dos na no nas nos em pra que se eu".split(" "),
+);
+
+/**
+ * Quebra à mão: o menor número de linhas em que cada uma cabe em `max` letras e, com esse número,
+ * a que corta no fim da frase (ponto, dois-pontos, interrogação; vírgula vale menos), deixa as linhas
+ * parecidas e nunca termina linha em palavra curta. Palavra maior que `max` fica sozinha.
+ */
+function quebrar(texto: string, max: number): string[] {
+  const p = texto.split(/\s+/).filter(Boolean);
+  const n = p.length;
+  const larg = (i: number, j: number) => p.slice(i, j).join(" ").length;
+  const corte = (j: number) => {
+    const ult = p[j - 1];
+    if (/[.:?!]$/.test(ult)) return 0;
+    if (/[,;]$/.test(ult)) return 40;
+    return CURTAS.has(ult.toLowerCase()) ? 500 : 120;
+  };
+  for (let linhas = 1; linhas <= n; linhas++) {
+    const alvo = larg(0, n) / linhas;
+    const memo = new Map<string, [number, number[]] | null>();
+    // [custo, quebras] para as palavras de i em diante em k linhas
+    const melhor = (i: number, k: number): [number, number[]] | null => {
+      const chave = `${i}:${k}`;
+      const visto = memo.get(chave);
+      if (visto !== undefined) return visto;
+      let r: [number, number[]] | null = null;
+      if (k === 1) {
+        const w = larg(i, n);
+        r = w <= max || n - i === 1 ? [(w - alvo) ** 2, []] : null;
+      } else {
+        for (let j = i + 1; j <= n - k + 1; j++) {
+          const w = larg(i, j);
+          if (w > max && j - i > 1) break;
+          const resto = melhor(j, k - 1);
+          if (!resto) continue;
+          const custo = (w - alvo) ** 2 + corte(j) + resto[0];
+          if (!r || custo < r[0]) r = [custo, [j, ...resto[1]]];
+        }
+      }
+      memo.set(chave, r);
+      return r;
+    };
+    const r = melhor(0, linhas);
+    if (r) {
+      const cortes = [0, ...r[1], n];
+      return cortes.slice(0, -1).map((c, i) => p.slice(c, cortes[i + 1]).join(" "));
+    }
   }
-  return linhas.slice(0, 3);
+  return [texto];
 }
+
+const linhasDoNome = (nome: string) => quebrar(nome.toUpperCase(), 13).slice(0, 3);
 
 /** Nome forte em arco-íris (Oswald 700), uma linha por <text>, centralizado. */
 function NomeArcoIris({ nome }: { nome: string }) {
   const linhas = linhasDoNome(nome);
   const maior = Math.max(...linhas.map((l) => l.length));
-  const fs = Math.min(50, Math.floor(296 / (maior * 0.5)));
+  const fs = Math.min(44, Math.floor(296 / (maior * 0.5)));
   const lh = fs * 1.14;
   return (
     <Svg width={W - 40} height={lh * linhas.length + fs * 0.16}>
@@ -314,11 +359,11 @@ function Destaque({ c }: { c: Compartilhavel }) {
   if (c.tipo === "medalha") {
     const img = MEDALHA_IMG[c.id];
     corpo = img ? (
-      <Image source={img} style={{ width: 196, height: 196 }} resizeMode="contain" />
+      <Image source={img} style={{ width: 178, height: 178 }} resizeMode="contain" />
     ) : (
-      <MedalView id={c.id} size={190} on banho={c.banho ?? null} />
+      <MedalView id={c.id} size={176} on banho={c.banho ?? null} />
     );
-  } else corpo = <NivelIcone k={c.k} size={NIVEL_IMG[c.k] ? 196 : 170} />;
+  } else corpo = <NivelIcone k={c.k} size={NIVEL_IMG[c.k] ? 178 : 156} />;
   return <Animated.View style={st}>{corpo}</Animated.View>;
 }
 
@@ -337,7 +382,7 @@ function Cartao({ c, forma }: { c: Compartilhavel; forma: number }) {
       : "";
   const leve = medalha ? "Desbloqueei" : "Agora sou";
   const nome = medalha ? nomeDa(medalha, forma) : nivel ? nomeNivel(nivel, forma) : "";
-  const frase = medalha ? medalha.copy : (nivel?.t ?? "");
+  const frase = medalha ? medalha.story : (nivel?.s ?? "");
   return (
     <View style={{ width: W, height: H, overflow: "hidden" }}>
       <Fundo />
@@ -346,7 +391,7 @@ function Cartao({ c, forma }: { c: Compartilhavel; forma: number }) {
         style={{
           flex: 1,
           paddingTop: 66,
-          paddingBottom: 84,
+          paddingBottom: 104,
           paddingHorizontal: 20,
           alignItems: "center",
           justifyContent: "center",
@@ -368,8 +413,8 @@ function Cartao({ c, forma }: { c: Compartilhavel; forma: number }) {
         <View
           style={{
             marginTop: 14,
-            width: 236,
-            height: 236,
+            width: 212,
+            height: 212,
             borderRadius: 28,
             alignItems: "center",
             justifyContent: "center",
@@ -382,17 +427,10 @@ function Cartao({ c, forma }: { c: Compartilhavel; forma: number }) {
           <Destaque c={c} />
         </View>
         <Text
-          className="text-center font-body"
-          style={{
-            fontSize: 14.5,
-            lineHeight: 20,
-            color: colors.muted,
-            marginTop: 16,
-            maxWidth: 280,
-          }}
-          numberOfLines={3}
+          className="text-center font-body text-ink"
+          style={{ fontSize: 16, lineHeight: 22, marginTop: 14, opacity: 0.82 }}
         >
-          {medalha ? `“${frase}”` : frase}
+          {quebrar(frase, 32).join("\n")}
         </Text>
       </View>
       <View
@@ -401,19 +439,22 @@ function Cartao({ c, forma }: { c: Compartilhavel; forma: number }) {
           bottom: 40,
           left: 0,
           right: 0,
-          flexDirection: "row",
           alignItems: "center",
-          justifyContent: "center",
-          gap: 6,
         }}
       >
-        <RadarMin size={16} />
-        <Text
-          className="font-wordmark uppercase text-ink"
-          style={{ fontSize: 12.5, letterSpacing: 2.5 }}
-        >
-          Iris<Text style={{ color: colors.amber }}>a</Text>
+        {/* Para quem vê o story: o que é a Irisa, em uma linha. */}
+        <Text className="mb-2 text-center font-body text-[11px] text-dim">
+          O mapa dos lugares onde a gente é bem-vinde
         </Text>
+        <View style={{ flexDirection: "row", alignItems: "center", gap: 6 }}>
+          <RadarMin size={16} />
+          <Text
+            className="font-wordmark uppercase text-ink"
+            style={{ fontSize: 12.5, letterSpacing: 2.5 }}
+          >
+            Iris<Text style={{ color: colors.amber }}>a</Text>
+          </Text>
+        </View>
       </View>
     </View>
   );

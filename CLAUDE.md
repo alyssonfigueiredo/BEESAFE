@@ -592,6 +592,12 @@ Nome: **Irisa** (INPI livre; @appirisa livre). Bundle id Android `br.com.irisa.a
   Quando chegar, salvar as duas folhas de 4 em `assets/medalhas/folhas/niveis-1` e `niveis-2` (nível 1 a 8, da
   esquerda para a direita) e rodar `python3 scripts/medalhas-recortar.py`: grava `assets/niveis/nivel-0..7.png`,
   preenche `NIVEL_IMG` e o `NivelIcone` passa a usar a imagem sozinho.
+  **Texto do story para quem lê (mesmo dia, retorno dele):** o cartão não usa mais o `copy` da medalha (que fala com
+  quem ganhou, "você"): cada medalha tem `story` e cada nível tem `s`, em primeira pessoa ("Já avaliei 10 lugares na
+  Irisa. O mapa agradece."), sem aspas. Quebra de linha feita no app (`quebrar()` em `Compartilhar.tsx`): menor número
+  de linhas que cabe, corta de preferência em fim de frase, nunca deixa "de/a/na" no fim da linha; nome com até 13
+  letras por linha, frase com até 32. Rodapé ganhou "O mapa dos lugares onde a gente é bem-vinde" acima da assinatura.
+  Frase nova de medalha: escrever o `story` pensando em quem vê o story e conferir a quebra (cabe em 2 ou 3 linhas).
 
 ## Stack
 

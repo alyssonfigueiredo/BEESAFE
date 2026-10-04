@@ -15,6 +15,8 @@ export type Medalha = {
   cond: string;
   obj: string;
   copy: string;
+  /** Frase do cartão de story, em primeira pessoa: quem lê é quem vê o story, não quem ganhou. */
+  story: string;
 };
 type Art = [number, string];
 
@@ -355,6 +357,7 @@ export const MEDALHAS: Medalha[] = [
     cond: "Primeira avaliação válida.",
     obj: "Crachá de festa “Olá” com o nome rabiscado.",
     copy: "Prazer. Agora o mapa sabe o que você acha.",
+    story: "Dei minha 1ª nota na Irisa. Agora o mapa sabe o que eu acho.",
   },
   {
     id: "deu-close",
@@ -365,6 +368,7 @@ export const MEDALHAS: Medalha[] = [
     cond: "10 avaliações, em pelo menos 2 semanas diferentes.",
     obj: "Câmera com flash e um brilhinho.",
     copy: "Dez lugares, dez closes. O mapa agradece.",
+    story: "Já avaliei 10 lugares na Irisa. O mapa agradece.",
   },
   {
     id: "figurinha",
@@ -375,6 +379,7 @@ export const MEDALHAS: Medalha[] = [
     cond: "15 avaliações, em pelo menos 3 semanas diferentes.",
     obj: "Figurinha de álbum com o canto descolando.",
     copy: "Se o mapa fosse álbum, você já era figurinha conhecida.",
+    story: "15 lugares avaliados. Se o mapa fosse álbum, eu já era figurinha conhecida.",
   },
   {
     id: "famosinha",
@@ -386,6 +391,7 @@ export const MEDALHAS: Medalha[] = [
     cond: "30 avaliações, em pelo menos 4 semanas diferentes.",
     obj: "Óculos escuros de coração.",
     copy: "Óculos escuros, por favor. O flash não para.",
+    story: "30 lugares avaliados. Óculos escuros, por favor: o flash não para.",
   },
   {
     id: "influ-do-vale",
@@ -396,6 +402,7 @@ export const MEDALHAS: Medalha[] = [
     cond: "60 avaliações, e 25 pessoas abriram a ficha de um lugar depois da sua avaliação.",
     obj: "Credencial VIP com cordão.",
     copy: "O que você irisa, a cidade lê.",
+    story: "60 avaliações, e a cidade lê o que eu irisei.",
   },
   // Reconhecimento: pessoas que abriram a ficha de um lugar depois da sua avaliação (place_views, só contagem)
   {
@@ -407,6 +414,7 @@ export const MEDALHAS: Medalha[] = [
     cond: "10 pessoas abriram a ficha de um lugar depois da sua avaliação.",
     obj: "Orelhão em miniatura.",
     copy: "Declarado de utilidade pública. Sem burocracia.",
+    story: "10 pessoas já escolheram onde ir depois de ler minha avaliação.",
   },
   {
     id: "interesse-municipal",
@@ -417,6 +425,7 @@ export const MEDALHAS: Medalha[] = [
     cond: "50 pessoas abriram a ficha de um lugar depois da sua avaliação.",
     obj: "Selo carimbado “DEFERIDO”.",
     copy: "Pedido deferido: você é de interesse municipal.",
+    story: "50 pessoas já escolheram onde ir depois de ler minha avaliação.",
   },
   {
     id: "aclamada",
@@ -428,6 +437,7 @@ export const MEDALHAS: Medalha[] = [
     cond: "150 pessoas abriram a ficha de um lugar depois da sua avaliação.",
     obj: "Buquê jogado no palco.",
     copy: "Aplausos de pé. A comunidade confia no seu olhar.",
+    story: "150 pessoas já escolheram onde ir depois de ler minha avaliação.",
   },
   {
     id: "favorita",
@@ -439,6 +449,7 @@ export const MEDALHAS: Medalha[] = [
     cond: "A avaliação com mais “ajudou” do mês na sua cidade.",
     obj: "Tiara de concurso.",
     copy: "A avaliação mais útil do mês na cidade foi a sua.",
+    story: "A avaliação mais útil do mês na minha cidade foi a minha.",
   },
   // Cidade
   {
@@ -450,6 +461,7 @@ export const MEDALHAS: Medalha[] = [
     cond: "Acendeu o selo (5ª avaliação) de 3 lugares na mesma cidade.",
     obj: "Alfinete de mapa com coroa.",
     copy: "Três selos acesos por você. Já é ícone local.",
+    story: "Acendi o selo de 3 lugares da minha cidade.",
   },
   {
     id: "lenda-local",
@@ -460,6 +472,7 @@ export const MEDALHAS: Medalha[] = [
     cond: "Acendeu o selo de 10 lugares na mesma cidade.",
     obj: "Busto de praça no pedestal.",
     copy: "Já pode encomendar sua estátua na praça.",
+    story: "Acendi o selo de 10 lugares da minha cidade. Pode encomendar a estátua.",
   },
   {
     id: "mala-pronta",
@@ -470,6 +483,7 @@ export const MEDALHAS: Medalha[] = [
     cond: "Avaliou lugares em 3 cidades. Cada cidade nova cola um adesivo na mala.",
     obj: "Mala de viagem com adesivos.",
     copy: "Mala pronta e o mapa na mão.",
+    story: "Já avaliei lugares em 3 cidades. Mala pronta e o mapa na mão.",
   },
   // Mapa
   {
@@ -481,6 +495,7 @@ export const MEDALHAS: Medalha[] = [
     cond: "Primeira avaliação de 3 lugares que não tinham nenhuma, em pelo menos 2 semanas diferentes.",
     obj: "Tesourinha cortando a fita.",
     copy: "Corta a fita: esse lugar estreou no mapa com você.",
+    story: "Fui a primeira pessoa a avaliar 3 lugares na Irisa.",
   },
   {
     id: "acendeu-a-luz",
@@ -491,6 +506,7 @@ export const MEDALHAS: Medalha[] = [
     cond: "Deu a 5ª avaliação, a que acende o selo do lugar.",
     obj: "Lâmpada de camarim.",
     copy: "O selo acendeu. Foi você que apertou o interruptor.",
+    story: "Dei a 5ª avaliação de um lugar e o selo dele acendeu.",
   },
   {
     id: "eu-conheco",
@@ -501,6 +517,7 @@ export const MEDALHAS: Medalha[] = [
     cond: "Cadastrou um lugar que faltava e outra pessoa avaliou.",
     obj: "Mapa dobrado com um X.",
     copy: "Ninguém conhecia. Agora tá no mapa.",
+    story: "Coloquei no mapa um lugar que ninguém conhecia. E já tem gente avaliando.",
   },
   {
     id: "pode-entrar",
@@ -511,6 +528,7 @@ export const MEDALHAS: Medalha[] = [
     cond: "3 fotos aprovadas pela moderação.",
     obj: "Porta entreaberta com luz saindo.",
     copy: "Agora dá pra ver a porta antes de chegar.",
+    story: "Minhas fotos mostram a porta antes de você chegar.",
   },
   // Rolê
   {
@@ -522,6 +540,7 @@ export const MEDALHAS: Medalha[] = [
     cond: "Avaliou 4 categorias diferentes (bar, café, restaurante, hotel, balada).",
     obj: "Bússola.",
     copy: "Bar, café, hotel, restaurante. Sabe onde ir.",
+    story: "Bar, café, restaurante, hotel. Eu sei onde ir.",
   },
   {
     id: "nome-na-lista",
@@ -532,6 +551,7 @@ export const MEDALHAS: Medalha[] = [
     cond: "Avaliou lugares em 6 bairros diferentes.",
     obj: "Pulseirinha de entrada de festa.",
     copy: "Seu nome tá na lista de seis bairros.",
+    story: "Já avaliei lugares em 6 bairros. Meu nome tá na lista.",
   },
   {
     id: "da-casa",
@@ -542,6 +562,7 @@ export const MEDALHAS: Medalha[] = [
     cond: "Reavaliou o mesmo lugar depois de 6 meses. O nome do lugar aparece só no seu Perfil, nunca no cartão do story.",
     obj: "Chave de camarim com plaquinha “Nº 1”.",
     copy: "Da casa. Já pode pedir o de sempre.",
+    story: "Voltei num lugar meses depois e avaliei de novo. Já peço o de sempre.",
   },
   // Constância
   {
@@ -553,6 +574,7 @@ export const MEDALHAS: Medalha[] = [
     cond: "Primeira semana acesa: o app aberto em 4 dias quaisquer da semana.",
     obj: "Cartão de ponto perfurado.",
     copy: "Bateu ponto. E nem precisou ser todo dia.",
+    story: "Primeira semana acesa na Irisa. E nem precisou ser todo dia.",
   },
   {
     id: "ja-mora-aqui",
@@ -563,6 +585,7 @@ export const MEDALHAS: Medalha[] = [
     cond: "4 semanas acesas, seguidas ou não.",
     obj: "Capacho “bem-vinde”.",
     copy: "Quatro semanas acesas. Já pode receber correspondência aqui.",
+    story: "4 semanas acesas na Irisa. Já recebo correspondência aqui.",
   },
   {
     id: "serviu-tudo",
@@ -573,6 +596,7 @@ export const MEDALHAS: Medalha[] = [
     cond: "Completou os 3 desafios do dia em 7 dias diferentes.",
     obj: "Bandeja com taças.",
     copy: "Serviu tudo. Literalmente.",
+    story: "Fechei os desafios do dia sete vezes. Serviu tudo.",
   },
   {
     id: "agenda-cheia",
@@ -583,6 +607,7 @@ export const MEDALHAS: Medalha[] = [
     cond: "Abriu a Irisa nas 6 datas da comunidade do ano: 29/01, 17/05, 28/06, 29/08, 23/09, 11/10.",
     obj: "Calendário com seis dias marcados.",
     copy: "Presente em todas as datas que importam.",
+    story: "Presente em todas as datas que importam pra comunidade.",
   },
   // Apoio
   {
@@ -594,6 +619,7 @@ export const MEDALHAS: Medalha[] = [
     cond: "10 mensagens de apoio no mural, sem denúncia aceita.",
     obj: "Almofadinha de coração.",
     copy: "Dez abraços deixados no mural.",
+    story: "Deixei 10 mensagens de apoio no mural da Irisa.",
   },
   {
     id: "bateu-leque",
@@ -604,6 +630,7 @@ export const MEDALHAS: Medalha[] = [
     cond: "Mensagens de apoio em 10 semanas diferentes.",
     obj: "Leque aberto.",
     copy: "Abriu o leque pra comunidade.",
+    story: "Mandei apoio no mural em 10 semanas diferentes.",
   },
   {
     id: "rede-de-apoio",
@@ -614,6 +641,7 @@ export const MEDALHAS: Medalha[] = [
     cond: "3 pessoas entraram pelo seu convite.",
     obj: "Telefone de lata.",
     copy: "Três pessoas chegaram por você.",
+    story: "Três pessoas chegaram na Irisa por mim.",
   },
   {
     id: "olho-vivo",
@@ -624,6 +652,7 @@ export const MEDALHAS: Medalha[] = [
     cond: "Abriu a ficha de um bairro em 5 dias diferentes.",
     obj: "O olho da Irisa em miniatura.",
     copy: "Antes de sair, você olha. Isso é cuidado.",
+    story: "Antes de sair, eu olho o bairro na Irisa. Isso é cuidado.",
   },
   // Veterania
   {
@@ -635,6 +664,7 @@ export const MEDALHAS: Medalha[] = [
     cond: "Entrou na fase de testes. Depois do lançamento, ninguém mais consegue.",
     obj: "Estandarte de escola de samba.",
     copy: "Você abriu alas. Essa ninguém mais pega.",
+    story: "Entrei na fase de testes. Essa ninguém mais pega.",
   },
   {
     id: "patrimonio-cultural",
@@ -645,6 +675,7 @@ export const MEDALHAS: Medalha[] = [
     cond: "Completou o anel: os 48 gomos acesos.",
     obj: "Placa azul oval de patrimônio.",
     copy: "Oficialmente patrimônio cultural da comunidade.",
+    story: "Acendi a íris inteira: 48 gomos. Virei patrimônio cultural.",
   },
   {
     id: "patrimonio-tombado",
@@ -655,6 +686,7 @@ export const MEDALHAS: Medalha[] = [
     cond: "Um ano de Irisa, contribuindo em 10 meses diferentes.",
     obj: "Placa de bronze com parafusos.",
     copy: "Patrimônio tombado. Agora ninguém mexe.",
+    story: "Um ano de Irisa. Tombado: agora ninguém mexe.",
   },
   // Segunda leva (04/10/2026)
   {
@@ -667,6 +699,7 @@ export const MEDALHAS: Medalha[] = [
     cond: "Avaliou 5 lugares no mesmo bairro.",
     obj: "Vaso de flor na janela.",
     copy: "Cinco lugares no mesmo bairro. A vizinhança já sabe quem manda.",
+    story: "5 lugares no mesmo bairro. A vizinhança sabe quem manda.",
   },
   {
     id: "resenha-boa",
@@ -677,6 +710,7 @@ export const MEDALHAS: Medalha[] = [
     cond: "10 avaliações com comentário de pelo menos 60 letras.",
     obj: "Caderninho de anotação com caneta.",
     copy: "Não deu só nota: contou como foi. Dez vezes.",
+    story: "Não dou só nota: conto como foi. Já foram 10 resenhas.",
   },
   {
     id: "cartografa",
@@ -688,6 +722,7 @@ export const MEDALHAS: Medalha[] = [
     cond: "Cadastrou 5 lugares que faltavam, e outras pessoas avaliaram.",
     obj: "Mapa em rolo, desenrolado.",
     copy: "Cinco lugares no mapa que antes nem existiam pra gente.",
+    story: "Coloquei 5 lugares no mapa que antes nem existiam pra gente.",
   },
   {
     id: "abraco-coletivo",
@@ -698,6 +733,7 @@ export const MEDALHAS: Medalha[] = [
     cond: "Suas mensagens no mural receberam 20 reações.",
     obj: "Braços coloridos em volta de um coração.",
     copy: "Vinte reações. O mural te abraçou de volta.",
+    story: "Minhas mensagens no mural já receberam 20 reações.",
   },
   {
     id: "tem-opiniao",
@@ -708,6 +744,7 @@ export const MEDALHAS: Medalha[] = [
     cond: "Respondeu a pergunta da semana em 4 semanas diferentes.",
     obj: "Balão de pergunta com microfone.",
     copy: "Quatro perguntas, quatro respostas. A comunidade gosta de te ouvir.",
+    story: "Respondi a pergunta da semana 4 vezes. Opinião eu tenho.",
   },
 ];
 

@@ -9,6 +9,8 @@ export type Nivel = {
   /** Gomos para chegar. */
   g: number;
   t: string;
+  /** Frase do cartão de story, em primeira pessoa (quem lê é quem vê o story). */
+  s: string;
   icone: string;
 };
 
@@ -48,18 +50,54 @@ const ICONES = [
 ];
 
 const TEXTO: Omit<Nivel, "icone">[] = [
-  { f: ["Curiosa", "Curioso", "Curiose"], g: 0, t: "Acabou de chegar. Ainda está descobrindo." },
+  {
+    f: ["Curiosa", "Curioso", "Curiose"],
+    g: 0,
+    t: "Acabou de chegar. Ainda está descobrindo.",
+    s: "Cheguei na Irisa e já tô descobrindo onde a gente é bem-vinde.",
+  },
   {
     f: ["Entendida", "Entendido", "Entendide"],
     g: 2,
     t: "Já começou a sacar como as coisas funcionam.",
+    s: "Já saquei como funciona: quem esteve no lugar responde, e o mapa ganha cor.",
   },
-  { f: ["Irisada", "Irisado", "Irisade"], g: 5, t: "Já deixou suas primeiras cores pelo mapa." },
-  { f: ["Close Certo"], g: 10, t: "Já tem propriedade pra falar." },
-  { f: ["Do Babado"], g: 16, t: "Já conhece coisa que muita gente não conhece." },
-  { f: ["Mapa Vivo"], g: 24, t: "Virou praticamente uma fonte da comunidade." },
-  { f: ["Lenda Local"], g: 34, t: "Nome forte, difícil de chegar." },
-  { f: ["Patrimônio LGBTQIA+"], g: 48, t: "O topo. A íris inteira acesa." },
+  {
+    f: ["Irisada", "Irisado", "Irisade"],
+    g: 5,
+    t: "Já deixou suas primeiras cores pelo mapa.",
+    s: "Já deixei minhas primeiras cores no mapa da Irisa.",
+  },
+  {
+    f: ["Close Certo"],
+    g: 10,
+    t: "Já tem propriedade pra falar.",
+    s: "Já avalio lugar com propriedade. Pode perguntar.",
+  },
+  {
+    f: ["Do Babado"],
+    g: 16,
+    t: "Já conhece coisa que muita gente não conhece.",
+    s: "Conheço lugar que muita gente ainda não conhece.",
+  },
+  {
+    f: ["Mapa Vivo"],
+    g: 24,
+    t: "Virou praticamente uma fonte da comunidade.",
+    s: "Virei fonte da comunidade. Quer saber onde ir? Me pergunta.",
+  },
+  {
+    f: ["Lenda Local"],
+    g: 34,
+    t: "Nome forte, difícil de chegar.",
+    s: "Nome forte no mapa da Irisa. Pouca gente chega aqui.",
+  },
+  {
+    f: ["Patrimônio LGBTQIA+"],
+    g: 48,
+    t: "O topo. A íris inteira acesa.",
+    s: "Acendi a íris inteira. Cheguei no topo da Irisa.",
+  },
 ];
 
 export const NIVEIS_EVO: Nivel[] = TEXTO.map((n, i) => ({ ...n, icone: ICONES[i] }));
