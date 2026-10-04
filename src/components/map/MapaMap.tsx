@@ -250,7 +250,8 @@ export function MapaMap({
         />
       </GeoJSONSource>
 
-      {/* Lugares sem nota: agrupados. O grupo é um círculo branco com a contagem e um anel fino. */}
+      {/* Lugares sem nota: agrupados. O grupo é cinza (igual ao ponto solto) — nunca branco/roxo,
+          porque cinza aqui significa "sem avaliação", não uma categoria com cor própria. */}
       <GeoJSONSource
         id="mapa-places"
         ref={clusterRef}
@@ -278,12 +279,12 @@ export function MapaMap({
           type="circle"
           filter={["has", "point_count"]}
           paint={{
-            "circle-color": "#FFFFFF",
+            "circle-color": "#E4E5EA",
             "circle-opacity": on,
             "circle-opacity-transition": fade(250),
             "circle-radius": ["step", ["get", "point_count"], 18, 10, 21, 50, 24, 200, 27],
-            "circle-stroke-color": colors.lilac,
-            "circle-stroke-width": 2.5 * on,
+            "circle-stroke-color": DOT,
+            "circle-stroke-width": 2 * on,
             "circle-stroke-width-transition": fade(400),
             "circle-stroke-opacity": 0.9,
           }}
