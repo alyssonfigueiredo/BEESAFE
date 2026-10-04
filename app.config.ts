@@ -87,7 +87,12 @@ const config: ExpoConfig = {
   // Só código nativo (lib nova, ícone, permissão) continua exigindo build — e a cota do plano
   // Free do EAS é de build, não de update. `runtimeVersion` pela policy `appVersion`: um update
   // só alcança quem está na mesma versão do app, então build velha nunca recebe código novo.
-  updates: { url: "https://u.expo.dev/38a09fd2-63cc-4a90-912d-0f73022944ff" },
+  // O canal vem do eas.json nos builds do EAS; build feita direto no Xcode (Archive) fica no de
+  // produção, para também receber os updates.
+  updates: {
+    url: "https://u.expo.dev/38a09fd2-63cc-4a90-912d-0f73022944ff",
+    requestHeaders: { "expo-channel-name": "production" },
+  },
   runtimeVersion: { policy: "appVersion" },
   extra: {
     eas: { projectId: "38a09fd2-63cc-4a90-912d-0f73022944ff" },
