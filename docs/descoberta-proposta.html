@@ -54,12 +54,17 @@ td b{white-space:nowrap}
   <h1>Descoberta na Home</h1>
   <span class="bar"></span>
   <p class="lead">Uma camada que <b>convida</b> a avaliar lugares que a pessoa provavelmente conhece. Ela não cria um tipo novo de avaliação: o “Já fui” leva para a mesma ficha, com as mesmas quatro perguntas, salvando no mesmo lugar e do mesmo jeito.</p>
-  <div class="flow"><i>Abre a Irisa</i><s>→</s><i>Vê 3 lugares perto</i><s>→</s><i>“Já fui”</i><s>→</s><i>Ficha e formulário de hoje</i><s>→</s><i>Avaliação normal</i><s>→</s><i>Cartão ganha cor</i></div>
-  <a class="cta" href="https://claude.ai/artifact/RtAaAJagiNUDsh3tKFGSrS">Ver no protótipo (passos 2 e 3) →</a>
+  <div class="flow"><i>Usando a Irisa</i><s>→</s><i>Às vezes, um cartão: “Passou por aqui?”</i><s>→</s><i>“Já fui”</i><s>→</s><i>Ficha e formulário de hoje</i><s>→</s><i>Avaliação normal</i><s>→</s><i>Cartão ganha cor</i></div>
+  <a class="cta" href="https://claude.ai/artifact/RtAaAJagiNUDsh3tKFGSrS">Ver no protótipo (passos 2 e 3, versão que aparece às vezes) →</a>
 
   <h2><span>1</span>Onde entra na Home</h2>
   <p>A Home hoje, de cima para baixo: aviso do painel (quando há), <b>painel escuro</b> da cidade com “Avaliar um lugar” e “Registrar relato”, cartões <b>Sua semana</b> e <b>Sua cidade</b>, busca com filtros, <b>Quanta cor já tem aqui</b> e <b>Segurança na cidade</b>.</p>
-  <p>A descoberta entra <b>logo abaixo do painel escuro</b>, antes dos cartões da semana. O botão “Avaliar um lugar” do painel é genérico; os três cartões logo embaixo dão a ele um rosto: “esses aqui, perto de você”. Sem título de seção do tipo desafio. O bloco some sozinho quando não há candidato bom, e nunca vira lista infinita.</p>
+  <p><b>Nada fixo na Home</b> (retorno do Leandro: três cartões fixos ficavam escancarados). A descoberta é um <b>cartão único que sobe acima da barra de abas, às vezes</b>, enquanto a pessoa usa o app, e fecha com um X.</p>
+  <ul>
+    <li><b>Quando aparece:</b> no máximo uma vez por dia, depois de uns segundos no Início ou na volta de uma ficha de lugar. Nunca no primeiro uso (o tour vem antes), nunca com uma folha aberta.</li>
+    <li><b>Onde nunca aparece:</b> durante o registro de relato, na emergência, no Apoio e logo depois de um relato. São momentos em que pedir avaliação seria fora de hora.</li>
+    <li><b>O que mostra:</b> um lugar perto, com foto em cinza, nome, categoria · bairro · distância e quantas avaliações tem. “Já fui”, “Não conheço” e o X.</li>
+  </ul>
 
   <h2><span>2</span>Como funciona hoje o framework de avaliações</h2>
   <div class="card">
@@ -111,7 +116,7 @@ td b{white-space:nowrap}
        + 0,05 · última avaliação há mais de 6 meses
        + 0,08 · sorteio do dia       (fixo por pessoa e dia: muda amanhã, não pisca hoje)
        − repetição                   (ver item 5)</div>
-  <p>Dos mais bem pontuados, saem <b>3</b> com variedade: no máximo 2 da mesma categoria e, quando der, bairros diferentes. Tudo isso numa função do banco, <code>discovery_slate</code>, chamada uma vez por abertura da Home.</p>
+  <p>A função do banco <code>discovery_slate</code> devolve os 2 melhores do dia (o segundo só aparece se a pessoa tocar em “Não conheço”), com variedade de categoria entre os dias.</p>
 
   <h2><span>5</span>Como evitar repetição</h2>
   <div class="tw"><table>
@@ -120,7 +125,8 @@ td b{white-space:nowrap}
     <tr><td>Tocou em “Não conheço”</td><td>Sai por <b class="num">60 dias</b>; o cartão é trocado na hora pelo próximo.</td></tr>
     <tr><td>Tocou em “Já fui” e não terminou</td><td>Volta em <b class="num">3 dias</b>.</td></tr>
     <tr><td>Avaliou</td><td>Nunca mais aparece aqui.</td></tr>
-    <tr><td>Limite do dia</td><td>3 cartões, e no máximo 6 trocas por dia. Acabou, o bloco some até amanhã.</td></tr>
+    <tr><td>Fechou no X</td><td>O cartão some e só volta no dia seguinte, com outro lugar.</td></tr>
+    <tr><td>Limite do dia</td><td>1 aparição por dia; “Não conheço” troca o lugar uma vez e, na segunda, o cartão diz “Tudo bem. Até outro dia.” e some.</td></tr>
   </table></div>
 
   <h2><span>6</span>O que é novo no banco</h2>
@@ -129,6 +135,7 @@ td b{white-space:nowrap}
     <p><code>discovery_events</code>: pessoa, lugar, evento, posição do cartão (1 a 3), dia e hora. Sem policy de leitura: o app só grava por função, e o painel vê só números somados.</p>
     <ul>
       <li><code>discovery_impression</code>: o cartão apareceu na tela.</li>
+      <li><code>discovery_closed</code>: fechou no X.</li>
       <li><code>discovery_place_opened</code>: tocou em “Já fui” e abriu a ficha.</li>
       <li><code>discovery_review_started</code>: respondeu a primeira pergunta, tendo chegado pela descoberta.</li>
       <li><code>discovery_review_completed</code>: salvou uma avaliação nova vinda da descoberta.</li>
@@ -151,13 +158,13 @@ td b{white-space:nowrap}
   </ul>
 
   <h2><span>8</span>Proposta visual</h2>
-  <p>Três cartões lado a lado, roláveis, no mesmo estilo dos cartões da Home. Cada um: foto em <b>cinza</b> (ou o azulejo da categoria), nome, categoria · bairro · distância, e quantas avaliações tem (“1 avaliação · faltam 4 para o selo” ou “Ainda sem avaliação”). Botão escuro <b>Já fui</b> e um <b>Não conheço</b> discreto.</p>
-  <p>Na volta, depois de salvar: a foto do cartão sai do cinza para a cor, a borda arco-íris se desenha em volta e o botão dá lugar a uma frase. Sem moeda, ranking, número grande, “missão concluída” ou pop-up.</p>
+  <p>Um cartão branco que sobe acima da barra de abas: foto em <b>cinza</b> (ou o azulejo da categoria), uma linha curta no topo (“Passou por aqui?”), nome, categoria · bairro · distância e quantas avaliações tem. Botão escuro <b>Já fui</b>, um <b>Não conheço</b> discreto e o X.</p>
+  <p>Na volta, depois de salvar: a foto sai do cinza para a cor, a borda arco-íris se desenha em volta, o botão dá lugar a uma frase e o cartão some sozinho em alguns segundos. Sem moeda, ranking, número grande, “missão concluída” ou pop-up.</p>
   <a class="cta" href="https://claude.ai/artifact/RtAaAJagiNUDsh3tKFGSrS">Abrir o protótipo e tocar em “Já fui” →</a>
 
   <h2><span>9</span>Textos</h2>
-  <h3>Título do bloco (muda de um dia para o outro)</h3>
-  <div class="q"><div>Você conhece algum desses?</div><div>Já passou por algum desses?</div><div>Tem lugar por aqui que ainda é um mistério.</div><div>Esse pedaço da cidade ainda precisa de mais cores.</div></div>
+  <h3>Linha do topo do cartão (muda de um dia para o outro)</h3>
+  <div class="q"><div>Passou por aqui?</div><div>Conhece esse lugar?</div><div>Já foi nesse?</div><div>Esse ainda é um mistério</div></div>
   <h3>No cartão</h3>
   <div class="q"><div>Ainda sem avaliação</div><div>1 avaliação · faltam 4 para o selo</div><div>Já fui<small>botão principal</small></div><div>Não conheço<small>troca o cartão</small></div></div>
   <h3>Na volta</h3>
@@ -183,7 +190,7 @@ td b{white-space:nowrap}
   <div class="card" style="margin-top:40px">
     <h3 style="margin-top:0">O que preciso de você para começar</h3>
     <ul>
-      <li>Ok para a descoberta abaixo do painel escuro, com 3 cartões e “Não conheço”.</li>
+      <li>Ok para o cartão que aparece às vezes (uma vez por dia, com X, fora de relato, emergência e Apoio).</li>
       <li>Ok para registrar a origem só na tabela de eventos (sem coluna nova em <code>place_ratings</code>).</li>
       <li>Ok para o <code>?avaliar=1</code> abrir o formulário que já existe.</li>
       <li>Decisão sobre a folha de recompensa quando a avaliação vem da descoberta (frase em cima, gomo pequeno).</li>

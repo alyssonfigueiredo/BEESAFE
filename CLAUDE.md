@@ -492,6 +492,12 @@ Nome: **Irisa** (INPI livre; @appirisa livre). Bundle id Android `br.com.irisa.a
   pesos, `place_ratings`, cálculo). "Já fui" leva à ficha de sempre; origem só em `discovery_events` (sem coluna nova
   em `place_ratings`, recomendação) e na rota `?origem=home_discovery&avaliar=1`. Pendente decidir a folha de
   recompensa quando a avaliação vem da descoberta.
+  **Ajustes do Leandro (04/10/2026):** descoberta não fica fixa na Home: é um cartão único acima da barra, no máximo
+  1x/dia, com X, nunca no 1º uso nem em relato/emergência/Apoio. Mapa com mais contraste nos cartões da folha. Mural
+  numa coluna só; seis reações da casa com desenho próprio (Te abraço, Arrasou/leque, Tô contigo, Sinto muito,
+  Acendeu, Mais cor/anel da Irisa); sem iniciais de quem respondeu a pergunta da semana; "Publicar como Anônimo"
+  (ligado sozinho em pedido de ajuda); aviso para não pôr telefone/endereço/nome completo; texto que parece relato
+  oferece virar relato anônimo (o mural nunca pode ser atalho para relato com apelido).
 
 ## Stack
 

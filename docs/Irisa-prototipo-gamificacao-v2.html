@@ -238,14 +238,14 @@ h1.t{font-family:var(--display);font-weight:700;text-transform:uppercase;font-si
 .lay.on{border-color:transparent}
 .lay small{font-weight:600;color:var(--dim);font-variant-numeric:tabular-nums}
 .lay.fil{flex:none;width:44px;padding:0}
-.msheet{position:absolute;left:10px;right:10px;bottom:104px;z-index:6;border-radius:28px;background:rgba(255,255,255,.96);box-shadow:0 10px 30px rgba(20,24,41,.18);padding:10px 0 14px;backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px)}
+.msheet{position:absolute;left:10px;right:10px;bottom:104px;z-index:6;border-radius:28px;background:rgba(242,240,235,.97);box-shadow:0 10px 30px rgba(20,24,41,.18);padding:10px 0 14px;backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px)}
 .msheet .h{display:flex;align-items:center;justify-content:space-between;padding:0 16px}
 .msheet h3{font-size:17px;font-weight:700}
 .msheet .sum{font-size:12.5px;color:var(--muted);padding:2px 16px 10px}
 .msheet .sum b{color:var(--coralInk)}
 .car{display:flex;gap:10px;overflow-x:auto;padding:0 16px;scrollbar-width:none;scroll-snap-type:x mandatory}
 .car::-webkit-scrollbar{display:none}
-.pc{flex:none;width:236px;scroll-snap-align:start;display:flex;gap:10px;align-items:center;background:#fff;border-radius:18px;padding:10px;box-shadow:0 1px 2px rgba(20,24,41,.06),0 4px 12px rgba(20,24,41,.06);text-align:left}
+.pc{flex:none;width:236px;scroll-snap-align:start;display:flex;gap:10px;align-items:center;background:#fff;border:1px solid #E1DDD5;border-radius:18px;padding:10px;box-shadow:0 1px 2px rgba(20,24,41,.06),0 4px 12px rgba(20,24,41,.06);text-align:left}
 .pc .tile{flex:none;width:48px;height:48px;border-radius:14px;display:flex;align-items:center;justify-content:center}
 .pc p{font-size:14px;font-weight:700;line-height:1.2}
 .pc small{font-size:11.5px;color:var(--dim)}
@@ -273,7 +273,7 @@ h1.t{font-family:var(--display);font-weight:700;text-transform:uppercase;font-si
 .av span{display:flex;width:100%;height:100%;border-radius:50%;background:#fff;align-items:center;justify-content:center;font-family:var(--display);font-weight:700;font-size:15px}
 .quick{display:flex;gap:6px}
 .quick button{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;padding:10px 4px;border-radius:16px;font-size:12px;font-weight:700;text-align:center}
-.wall{display:grid;grid-template-columns:1fr 1fr;gap:10px;align-items:start}
+.wall{display:flex;flex-direction:column;gap:14px}
 .wall .col{display:flex;flex-direction:column;gap:10px}
 .note{position:relative;border-radius:6px 22px 22px 22px;padding:14px 13px 10px;box-shadow:0 2px 4px rgba(20,24,41,.06),0 8px 18px rgba(20,24,41,.08);text-align:left}
 .note:before{content:"";position:absolute;top:-7px;left:50%;width:44px;height:14px;margin-left:-22px;border-radius:3px;background:rgba(255,255,255,.65);box-shadow:0 1px 2px rgba(20,24,41,.08)}
@@ -326,6 +326,43 @@ h1.t{font-family:var(--display);font-weight:700;text-transform:uppercase;font-si
 .dc .no{font-size:12.5px;font-weight:600;color:var(--dim);padding:8px 4px}
 .dc .thx{font-size:13px;font-weight:600;color:var(--turqInk);line-height:1.35}
 .dc .edge rect{stroke-width:2.5}
+
+/* descoberta: cartão que aparece às vezes, por cima, e fecha */
+#nudge{position:absolute;left:12px;right:12px;bottom:104px;z-index:26;border-radius:24px;background:#fff;box-shadow:0 14px 36px rgba(20,24,41,.22);padding:12px;display:none;gap:12px;align-items:center}
+#nudge.on{display:flex}
+#nudge .ph{flex:none;width:64px;height:64px;border-radius:16px;display:flex;align-items:center;justify-content:center;filter:grayscale(1);transition:filter 1.2s ease}
+#nudge.lit .ph{filter:none}
+#nudge .eb2{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--turqInk)}
+#nudge p.n{font-size:15px;font-weight:700;line-height:1.2;margin-top:2px}
+#nudge small{display:block;font-size:12px;color:var(--dim);line-height:1.35}
+#nudge .acts{display:flex;align-items:center;gap:8px;margin-top:8px}
+#nudge .yes{height:34px;padding:0 15px;border-radius:17px;background:var(--night);color:#fff;font-size:13px;font-weight:700}
+#nudge .no{font-size:12.5px;font-weight:600;color:var(--dim);padding:6px 2px}
+#nudge .x{position:absolute;top:8px;right:8px;width:30px;height:30px;border-radius:50%;background:var(--subtle);display:flex;align-items:center;justify-content:center}
+#nudge .thx{font-size:13px;font-weight:600;color:var(--turqInk);margin-top:6px;line-height:1.35}
+#nudge .edge rect{stroke-width:2.5}
+/* reações do mural */
+.rsum{display:flex;align-items:center;gap:8px;margin-top:10px}
+.rstack{display:flex}
+.rstack span{width:24px;height:24px;border-radius:50%;background:#fff;margin-left:-6px;display:flex;align-items:center;justify-content:center;box-shadow:0 0 0 2px rgba(255,255,255,.9)}
+.rstack span:first-child{margin-left:0}
+.rsum .cnt{font-size:12px;font-weight:700;color:var(--muted);font-variant-numeric:tabular-nums}
+.rgo{margin-left:auto;display:flex;align-items:center;gap:5px;height:30px;padding:0 12px;border-radius:15px;background:rgba(255,255,255,.75);font-size:12px;font-weight:700}
+.rgo.mine{background:var(--night);color:#fff}
+.rsv{display:flex;align-items:center;gap:5px;height:30px;padding:0 12px;border-radius:15px;background:rgba(255,255,255,.75);font-size:12px;font-weight:700;color:var(--coralInk)}
+.tray{display:flex;gap:2px;margin-top:10px;padding:6px;border-radius:20px;background:#fff;box-shadow:0 8px 22px rgba(20,24,41,.16);justify-content:space-between}
+.tray button{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px 2px;border-radius:14px;font-size:10.5px;font-weight:700;color:var(--muted)}
+.tray button.on{background:var(--subtle);color:var(--ink)}
+.anon{display:flex;align-items:center;justify-content:space-between;gap:12px;background:#fff;border-radius:16px;padding:10px 12px;font-size:13px;color:var(--muted)}
+.anon b{color:var(--ink)}
+.sw{flex:none;width:46px;height:28px;border-radius:14px;background:var(--off);position:relative;transition:background .25s}
+.sw i{position:absolute;top:3px;left:3px;width:22px;height:22px;border-radius:50%;background:#fff;box-shadow:0 1px 3px rgba(20,24,41,.2);transition:transform .25s var(--ease)}
+.sw.on{background:var(--turq)}.sw.on i{transform:translateX(18px)}
+.isrel{display:none;flex-direction:column;gap:8px;border-radius:16px;padding:12px 14px;background:#FFE1DF;font-size:13px;color:var(--muted);line-height:1.4}
+.isrel.on{display:flex}
+.isrel b{color:var(--coralInk)}
+.isrel .row{display:flex;gap:8px}
+.isrel button{height:32px;padding:0 12px;border-radius:16px;font-size:12.5px;font-weight:700}
 @media (prefers-reduced-motion:reduce){*,*:before,*:after{animation-duration:.01ms!important;transition-duration:.01ms!important}}
 </style>
 
@@ -349,10 +386,6 @@ h1.t{font-family:var(--display);font-weight:700;text-transform:uppercase;font-si
             <button class="btn" id="goRate" style="background:var(--turq);flex:1;font-size:15px">Avaliar um lugar</button>
             <button class="btn" id="goReport" style="background:var(--coral);flex:1;font-size:15px">Registrar relato</button>
           </div>
-        </div>
-        <div class="disc" id="disc">
-          <div class="dh"><p id="discT">Você conhece algum desses?</p><small>perto de você</small></div>
-          <div class="dcar" id="dcar"></div>
         </div>
         <div class="duo">
           <button class="cd mini2" id="wkCard">
@@ -474,7 +507,7 @@ h1.t{font-family:var(--display);font-weight:700;text-transform:uppercase;font-si
             <p class="lb">Pergunta da semana</p>
             <h3>Qual lugar te fez sentir bem-vinde este mês?</h3>
             <div style="display:flex;align-items:center;justify-content:space-between;margin-top:12px">
-              <span style="display:flex;align-items:center;gap:8px"><span class="avs"><i style="background:#FFD066">M</i><i style="background:#49DCC0">J</i><i style="background:#FF9C55">R</i><i style="background:#A889FF">+</i></span><span style="font-size:12.5px;color:var(--muted)"><b id="qN">14</b> responderam</span></span>
+              <span style="display:flex;align-items:center;gap:8px"><span style="font-size:12.5px;color:var(--muted)"><b id="qN">14</b> pessoas responderam</span></span>
               <button class="chip" id="qGo" style="background:var(--night);color:#fff;height:34px">Responder</button>
             </div>
           </div>
@@ -485,10 +518,10 @@ h1.t{font-family:var(--display);font-weight:700;text-transform:uppercase;font-si
               <button data-cat="di" style="background:#FFF1CC;color:#8F6300"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18h6M10 22h4M12 2a7 7 0 0 0-4 12.7V17h8v-2.3A7 7 0 0 0 12 2Z"/></svg>Dar uma dica</button>
               <button data-cat="pe" style="background:#FFE1DF;color:var(--coralInk)"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4Z"/><path d="M6 1v3M10 1v3M14 1v3"/></svg>Pedir ajuda</button>
             </div>
-            <p style="font-size:11.5px;color:var(--dim);text-align:center">Aparece só o seu apelido. Apoiar alguém no dia vale <b style="color:#8F6300">+1 faísca</b>.</p>
+            <p style="font-size:11.5px;color:var(--dim);text-align:center">Aparece só o seu apelido, ou Anônimo se preferir. Apoiar alguém no dia vale <b style="color:#8F6300">+1 faísca</b>.</p>
           </div>
           <div class="ftabs" id="ftabs"><button class="on" data-f="all">Tudo</button><button data-f="pe">Pedidos de ajuda</button><button data-f="ac">Acolhimento</button><button data-f="di">Dicas</button></div>
-          <div class="wall" id="wall"><div class="col" id="colA"></div><div class="col" id="colB"></div></div>
+          <div class="wall" id="wall"></div>
         </div>
         <div id="apServ" style="display:none;flex-direction:column;gap:12px">
           <p class="sec">Agora</p>
@@ -499,6 +532,7 @@ h1.t{font-family:var(--display);font-weight:700;text-transform:uppercase;font-si
         </div>
       </div>
     </section>
+    <div id="nudge"><svg class="edge"></svg><button class="x" id="nX" aria-label="Fechar"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#3D4560" stroke-width="2.6" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button><span class="ph" id="nPh"></span><span style="flex:1;min-width:0;padding-right:24px"><span class="eb2" id="nEb">Passou por aqui?</span><p class="n" id="nN"></p><small id="nM"></small><span class="acts" id="nActs"><button class="yes" id="nYes">Já fui</button><button class="no" id="nNo">Não conheço</button></span></span></div>
     <div class="tb" id="tabs"></div>
     <div class="veil" id="veil"></div>
 
@@ -569,6 +603,9 @@ h1.t{font-family:var(--display);font-weight:700;text-transform:uppercase;font-si
       <p class="sec" style="margin-top:0">Para começar</p>
       <div class="sugg" id="sugg"></div>
       <div class="ta2" id="ta2" contenteditable="true" data-ph="Escreva aqui (até 1000 caracteres)"></div>
+      <div class="isrel" id="isrel"><span><b>Isso parece um relato.</b> No mural ele fica com o seu apelido. Como relato, fica anônimo e vira aviso no mapa.</span><span class="row"><button id="toRel" style="background:var(--coral)">Virar relato</button><button id="keepPost" style="background:#fff">Publicar assim</button></span></div>
+      <div class="anon"><span><b>Publicar como Anônimo</b><br>Sem apelido. Ligado sozinho em pedido de ajuda.</span><button class="sw" id="anonSw" aria-label="Publicar como Anônimo"><i></i></button></div>
+      <p style="font-size:11.5px;color:var(--dim);line-height:1.45">Não coloque telefone, endereço, nome completo nem foto de outra pessoa. Para falar de um lugar, avalie o lugar.</p>
       <button class="btn" id="cPost" style="background:var(--turq);font-weight:700">Publicar no mural</button>
     </div>
     <!-- tour de boas-vindas do app -->
@@ -828,7 +865,6 @@ function toast(t) { const el = $("#toast"); el.textContent = t;
 
 /* ---------- Início ---------- */
 function homeIn(anim = true) {
-  discIn(anim);
   week($("#wkRing"), 3, { anim, delay: 200 });
   city($("#cityRing"), 12, { anim, delay: 200, step: 45 });
   edge($("#wkEdge"), .75, { d: anim ? 1300 : 1, delay: 300 });
@@ -972,21 +1008,32 @@ $("#mapPins").addEventListener("click", e => {
 
 /* ---------- Apoio ---------- */
 const NOTES = [
-  ["pe", "Pedido de ajuda", "Alguém conhece psicólogo que atende pelo SUS e é de boa com gente trans em Curitiba?", "Ana", "há 2 h", [["Estou contigo", 9], ["Ver serviços", 0]]],
-  ["ac", "Acolhimento", "Pra quem tá saindo do armário essa semana: vai no seu tempo. A gente tá aqui.", "Rafa", "há 40 min", [["Te abraço", 31]]],
-  ["di", "Dica de segurança", "No terminal do Cabral, à noite, prefiram a saída da Paraná. Mais movimento e iluminação.", "Jô", "há 5 h", [["Me ajudou", 18]]],
-  ["ac", "Acolhimento", "Fui com meu namorado no Café do Largo e foi tudo tranquilo. Dá vontade de voltar.", "Theo", "ontem", [["Te abraço", 12]]],
-  ["di", "Dica de segurança", "O Centro de Cidadania faz retificação de nome com acompanhamento. Marquem pelo site.", "Mel", "ontem", [["Me ajudou", 24]]],
-  ["ac", "Acolhimento", "Você não precisa provar nada pra ninguém. Bom domingo, gente.", "Bia", "há 2 dias", [["Te abraço", 40]]],
+  ["pe", "Pedido de ajuda", "Alguém conhece psicólogo que atende pelo SUS e é de boa com gente trans em Curitiba?", "Anônimo", "há 2 h", { contigo: 9, abraco: 4 }],
+  ["ac", "Acolhimento", "Pra quem tá saindo do armário essa semana: vai no seu tempo. A gente tá aqui.", "Rafa", "há 40 min", { abraco: 31, cor: 12, arrasou: 5 }],
+  ["di", "Dica de segurança", "No terminal do Cabral, à noite, prefiram a saída da Paraná. Mais movimento e iluminação.", "Jô", "há 5 h", { acendeu: 18, contigo: 3 }],
+  ["ac", "Acolhimento", "Fui com meu namorado no Café do Largo e foi tudo tranquilo. Dá vontade de voltar.", "Theo", "ontem", { cor: 14, arrasou: 9 }],
+  ["di", "Dica de segurança", "O Centro de Cidadania faz retificação de nome com acompanhamento. Marquem pelo site.", "Mel", "ontem", { acendeu: 24 }],
+  ["ac", "Acolhimento", "Você não precisa provar nada pra ninguém. Bom domingo, gente.", "Bia", "há 2 dias", { abraco: 40, cor: 8 }],
 ];
-const RXI = { "Te abraço": '<path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1-1.1a5.5 5.5 0 0 0-7.8 7.8l1 1.1L12 21l7.8-7.6 1-1.1a5.5 5.5 0 0 0 0-7.7Z"/>', "Me ajudou": '<path d="M9 18h6M10 22h4M12 2a7 7 0 0 0-4 12.7V17h8v-2.3A7 7 0 0 0 12 2Z"/>', "Estou contigo": '<path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.9M16 3.1a4 4 0 0 1 0 7.8"/>', "Ver serviços": '<path d="M5 12h14M13 6l6 6-6 6"/>' };
-const noteHTML = ([k, kl, tx, by, t, rx], fresh) => `<div class="note n-${k}"${fresh ? ' data-fresh="1"' : ""} data-k="${k}"><span class="more2">⋯</span><p class="k">${kl}</p><p class="tx">${tx}</p><p class="by">${by} · ${t}</p><div class="rx">${rx.map(([l, n]) => `<button class="rxb" data-n="${n}"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#141829" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">${RXI[l]}</svg>${l}${n ? ` <span>${n}</span>` : ""}</button>`).join("")}</div></div>`;
+// Reações próprias da Irisa: desenho e nome da casa, nada de emoji genérico.
+const REACT = {
+  abraco: ["Te abraço", '<path d="M12 20.5 4.6 13.4a4.6 4.6 0 0 1 6.5-6.5l.9.9.9-.9a4.6 4.6 0 0 1 6.5 6.5Z" fill="#FF6964"/>'],
+  arrasou: ["Arrasou", '<path d="M12 20 3 9a12 12 0 0 1 18 0Z" fill="#FFD066"/><path d="M12 20 6.2 5.6M12 20l-2-15.6M12 20l2-15.6M12 20l5.8-14.4" stroke="#B98500" stroke-width="1.2"/><circle cx="12" cy="20" r="1.8" fill="#B98500"/>'],
+  contigo: ["Tô contigo", '<circle cx="8.5" cy="7.5" r="3" fill="#A889FF"/><circle cx="15.5" cy="7.5" r="3" fill="#49DCC0"/><path d="M2.5 20a6 6 0 0 1 12 0Z" fill="#A889FF"/><path d="M9.5 20a6 6 0 0 1 12 0Z" fill="#49DCC0"/>'],
+  sinto: ["Sinto muito", '<path d="M7 15a4.5 4.5 0 1 1 1.2-8.8A5.5 5.5 0 0 1 18.6 8 3.6 3.6 0 0 1 18 15Z" fill="#B7C0D8"/><path d="M8.5 18v2M12 18v3M15.5 18v2" stroke="#59A7FF" stroke-width="2" stroke-linecap="round"/>'],
+  acendeu: ["Acendeu", '<path d="M12 2.5a6.5 6.5 0 0 0-3.8 11.8V17h7.6v-2.7A6.5 6.5 0 0 0 12 2.5Z" fill="#FFD066"/><rect x="8.6" y="18.2" width="6.8" height="2.6" rx="1.2" fill="#B98500"/>'],
+  cor: ["Mais cor", (() => { const C = ["#FF6964", "#FFA353", "#FFD066", "#49DCC0", "#59A7FF", "#A889FF"]; let h = ""; for (let i = 0; i < 6; i++) { const a0 = (-90 + 60 * i + 4) * Math.PI / 180, a1 = (-90 + 60 * (i + 1) - 4) * Math.PI / 180, P2 = (r, a) => `${(12 + r * Math.cos(a)).toFixed(2)} ${(12 + r * Math.sin(a)).toFixed(2)}`; h += `<path d="M${P2(10, a0)}A10 10 0 0 1 ${P2(10, a1)}L${P2(6.6, a1)}A6.6 6.6 0 0 0 ${P2(6.6, a0)}Z" fill="${C[i]}"/>`; } return h + '<circle cx="12" cy="12" r="3.2" fill="#141829"/><circle cx="11" cy="10.9" r=".9" fill="#fff"/>'; })()],
+};
+const ric = (k, sz = 16) => `<svg width="${sz}" height="${sz}" viewBox="0 0 24 24">${REACT[k][1]}</svg>`;
+const noteHTML = (n, i) => { const [k, kl, tx, by, t, rx] = n; const top = Object.entries(rx).sort((a, b) => b[1] - a[1]); const tot = top.reduce((a, [, v]) => a + v, 0);
+  return `<div class="note n-${k}"${n.fresh ? ' data-fresh="1"' : ""} data-i="${i}"><span class="more2">⋯</span><p class="k">${kl}</p><p class="tx">${tx}</p><p class="by">${by} · ${t}</p>
+  <div class="rsum">${tot ? `<span class="rstack">${top.slice(0, 3).map(([r]) => `<span>${ric(r, 15)}</span>`).join("")}</span><span class="cnt">${tot}</span>` : ""}
+  ${k === "pe" ? `<button class="rsv">Ver serviços</button>` : ""}<button class="rgo${n.mine ? " mine" : ""}" data-r="${i}">${n.mine ? `${ric(n.mine, 14)} ${REACT[n.mine][0]}` : "Reagir"}</button></div></div>`; };
 let notes = NOTES.slice(), filt = "all";
 function renderWall(anim) {
-  const list = notes.filter(n => filt === "all" || n[0] === filt);
-  const a = [], b = []; list.forEach((n, i) => (i % 2 ? b : a).push(n));
-  $("#colA").innerHTML = a.map(n => noteHTML(n, n.fresh)).join(""); $("#colB").innerHTML = b.map(n => noteHTML(n, n.fresh)).join("");
-  $$("#wall .note").forEach((el, i) => { el.style.transform = `rotate(${[-.8, .7, -.4, .9, -.6, .5][i % 6]}deg)`; if (anim) A(el, [{ opacity: 0, transform: "translateY(12px) rotate(0deg)" }, { opacity: 1, transform: el.style.transform }], { d: 450, delay: 300 + i * 90 }); });
+  const list = notes.map((n, i) => [n, i]).filter(([n]) => filt === "all" || n[0] === filt);
+  $("#wall").innerHTML = list.map(([n, i]) => noteHTML(n, i)).join("");
+  $$("#wall .note").forEach((el, i) => { el.style.transform = `rotate(${[-.5, .45, -.3, .5, -.4, .35][i % 6]}deg)`; if (anim) A(el, [{ opacity: 0, transform: "translateY(12px) rotate(0deg)" }, { opacity: 1, transform: el.style.transform }], { d: 450, delay: 300 + i * 90 }); });
 }
 function apoioIn(anim = true) {
   setApoio("mural"); renderWall(anim);
@@ -1000,11 +1047,24 @@ function setApoio(t) {
 }
 $("#aseg").addEventListener("click", e => { const b = e.target.closest("button"); if (b) setApoio(b.dataset.a); });
 $("#ftabs").addEventListener("click", e => { const b = e.target.closest("button"); if (!b) return; filt = b.dataset.f; $$("#ftabs button").forEach(x => x.classList.toggle("on", x === b)); renderWall(true); });
-$("#wall").addEventListener("click", e => { const r = e.target.closest(".rxb"); if (!r) return;
-  if (r.textContent.includes("Ver serviços")) { setApoio("serv"); return; }
-  const on = r.classList.toggle("on"), sp = $("span", r), n = +r.dataset.n + (on ? 1 : 0); if (sp) sp.textContent = n;
-  A(r, [{ transform: "scale(1)" }, { transform: "scale(1.08)" }, { transform: "scale(1)" }], { d: 260 });
-  if (on) toast("Apoio do dia: +1 faísca"); });
+let supportedToday = false;
+$("#wall").addEventListener("click", e => {
+  if (e.target.closest(".rsv")) { setApoio("serv"); return; }
+  const g = e.target.closest(".rgo"), pick = e.target.closest(".tray button");
+  if (g) { const note = g.closest(".note"), open = $(".tray", note); $$("#wall .tray").forEach(t => t.remove()); if (open) return;
+    const n = notes[+g.dataset.r];
+    note.insertAdjacentHTML("beforeend", `<div class="tray">${Object.keys(REACT).map(r => `<button data-k="${r}" class="${n.mine === r ? "on" : ""}">${ric(r, 26)}${REACT[r][0]}</button>`).join("")}</div>`);
+    const t = $(".tray", note); A(t, [{ opacity: 0, transform: "translateY(6px) scale(.97)" }, { opacity: 1, transform: "none" }], { d: 260 });
+    $$("button", t).forEach((b, i) => A($("svg", b), [{ transform: "scale(.4)", opacity: 0 }, { transform: "scale(1)", opacity: 1 }], { d: 300, delay: 40 * i, e: "cubic-bezier(.3,1.3,.45,1)" }));
+    return; }
+  if (pick) { const note = pick.closest(".note"), i = +note.dataset.i, n = notes[i], r = pick.dataset.k;
+    if (n.mine) n[5][n.mine] = Math.max(0, (n[5][n.mine] || 1) - 1);
+    if (n.mine === r) n.mine = null; else { n.mine = r; n[5][r] = (n[5][r] || 0) + 1; }
+    note.outerHTML = noteHTML(n, i);
+    const nn = $(`#wall .note[data-i="${i}"]`); nn.style.transform = "rotate(0deg)";
+    if (n.mine) { A($(".rgo", nn), [{ transform: "scale(.9)" }, { transform: "scale(1.06)" }, { transform: "scale(1)" }], { d: 320 }); if (!supportedToday) { supportedToday = true; toast("Apoio do dia: +1 faísca"); } }
+  }
+});
 const SUGG = { ac: ["Você não está só.", "Vai no seu tempo.", "Um lugar que me acolheu foi…"], di: ["Evitem…", "Um lugar seguro pra ir é…", "Pra quem precisa de…"], pe: ["Alguém conhece…", "Preciso de ajuda com…", "Onde encontro…"] };
 let ccat = "ac";
 function compose(cat = "ac", seed = "") {
@@ -1013,7 +1073,15 @@ function compose(cat = "ac", seed = "") {
   $$("#cat3 button").forEach(b => { const on = b.dataset.cat === cat; b.style.background = on ? C[cat][0] : ""; b.style.color = on ? C[cat][1] : ""; });
   $("#sugg").innerHTML = SUGG[cat].map(t => `<button>${t}</button>`).join("");
   $("#ta2").textContent = seed;
+  setAnon(cat === "pe"); $("#isrel").classList.remove("on");
 }
+let anon = false;
+function setAnon(v) { anon = v; $("#anonSw").classList.toggle("on", v); }
+$("#anonSw").onclick = () => setAnon(!anon);
+const PARECE_RELATO = /(me agrediram|fui agredid|me bateram|apanhei|me xingaram|fui xingad|me ameaç|ameaçaram|me expulsaram|assedi|me seguiram)/i;
+$("#ta2").addEventListener("input", () => $("#isrel").classList.toggle("on", PARECE_RELATO.test($("#ta2").textContent)));
+$("#toRel").onclick = () => { closeSheets(); toast("Abre o registro de relato, anônimo, com o texto já preenchido"); };
+$("#keepPost").onclick = () => $("#isrel").classList.remove("on");
 $("#cOpen").onclick = () => compose("ac");
 $("#qGo").onclick = () => compose("ac", "Um lugar que me fez sentir bem-vinde foi ");
 $$("#compose .quick button").forEach(b => b.onclick = () => compose(b.dataset.cat));
@@ -1022,8 +1090,7 @@ $("#sugg").addEventListener("click", e => { const b = e.target.closest("button")
 $("#cPost").onclick = () => {
   const tx = $("#ta2").textContent.trim() || "Você não está só. A gente tá aqui.";
   const kl = { ac: "Acolhimento", di: "Dica de segurança", pe: "Pedido de ajuda" }[ccat];
-  const rx = { ac: [["Te abraço", 0]], di: [["Me ajudou", 0]], pe: [["Estou contigo", 0], ["Ver serviços", 0]] }[ccat];
-  const n = [ccat, kl, tx, "Leandro (você)", "agora", rx]; n.fresh = true; notes = [n, ...notes]; filt = "all"; $$("#ftabs button").forEach(x => x.classList.toggle("on", x.dataset.f === "all"));
+  const n = [ccat, kl, tx, anon ? "Anônimo (você)" : "Leandro (você)", "agora", {}]; n.fresh = true; notes = [n, ...notes]; filt = "all"; $$("#ftabs button").forEach(x => x.classList.toggle("on", x.dataset.f === "all"));
   closeSheets(); renderWall(false);
   const el = $('#wall .note[data-fresh="1"]');
   A(el, [{ opacity: 0, transform: "translateY(-30px) rotate(-6deg) scale(1.05)" }, { opacity: 1, transform: el.style.transform }], { d: 650, e: "cubic-bezier(.3,1.2,.45,1)" });
@@ -1054,35 +1121,39 @@ const DISC = [
   ["Restaurante Ipê Roxo", "Restaurante", "Cabral", "1,4 km", 2, "#A889FF"],
   ["Balada Neon", "Balada", "São Francisco", "1,8 km", 0, "#49DCC0"],
 ];
-let discQ = [0, 1, 2], discNext = 3;
 const discCount = k => k === 0 ? "Ainda sem avaliação" : `${k} avaliaç${k > 1 ? "ões" : "ão"} · falta${5 - k > 1 ? "m" : ""} ${5 - k} para o selo`;
-function dcHTML(i) { const [n, cat, b, d, k, c] = DISC[i];
-  return `<div class="dc" data-d="${i}"><svg class="edge"></svg><span class="ph" style="background:${c}33">${tileIc()}</span><p class="n">${n}</p><small>${cat} · ${b} · ${d}<br>${discCount(k)}</small><span class="acts"><button class="yes">Já fui</button><button class="no">Não conheço</button></span></div>`; }
-function discIn(anim = true) {
-  $("#discT").textContent = DISC_T[new Date().getDate() % DISC_T.length];
-  $("#dcar").innerHTML = discQ.map(dcHTML).join("");
-  if (anim) $$("#dcar .dc").forEach((e, i) => A(e, [{ opacity: 0, transform: "translateX(14px)" }, { opacity: 1, transform: "none" }], { d: 420, delay: 150 + i * 90 }));
+let nIdx = 0, nTimer = null, nShownSession = false;
+function showNudge(i = 0) {
+  nIdx = i; const [n, cat, b, d, k, c] = DISC[i], el = $("#nudge");
+  el.classList.remove("lit"); $(".edge", el).innerHTML = "";
+  $("#nPh").style.background = c + "33"; $("#nPh").innerHTML = tileIc();
+  $("#nEb").textContent = ["Passou por aqui?", "Conhece esse lugar?", "Já foi nesse?", "Esse ainda é um mistério"][(new Date().getDate() + i) % 4];
+  $("#nN").textContent = n; $("#nM").innerHTML = `${cat} · ${b} · ${d}<br>${discCount(k)}`;
+  $("#nActs").innerHTML = `<button class="yes" id="nYes">Já fui</button><button class="no" id="nNo">Não conheço</button>`;
+  el.classList.add("on"); nShownSession = true;
+  A(el, [{ opacity: 0, transform: "translateY(24px)" }, { opacity: 1, transform: "none" }], { d: 480 });
 }
-async function discYes(card) {
-  const i = +card.dataset.d, [n, , , , k] = DISC[i];
-  toast("Abre a ficha com as mesmas 4 perguntas de sempre");
-  await wait(1500);
-  // de volta da avaliação: o cartão ganha cor e uma frase, sem pontos nem pop-up
-  card.classList.add("lit");
-  edge($(".edge", card), 1, { d: 1100 });
-  const thx = ["Mais um pedacinho da cidade ganhou cor.", "Agora esse lugar tem um pouco mais de história.", "Valeu. Alguém vai escolher melhor por causa disso."][i % 3];
-  $(".acts", card).outerHTML = `<p class="thx">${thx}</p>`;
-  $("small", card).innerHTML = `${DISC[i][1]} · ${DISC[i][2]} · ${DISC[i][3]}<br>${discCount(k + 1)}`;
-  A($(".thx", card), [{ opacity: 0, transform: "translateY(6px)" }, { opacity: 1, transform: "none" }], { d: 420, delay: 300 });
-}
-function discNo(card) {
-  const i = +card.dataset.d, pos = discQ.indexOf(i);
-  A(card, [{ opacity: 1, transform: "none" }, { opacity: 0, transform: "translateY(10px) scale(.96)" }], { d: 280 }).onfinish = () => {
-    if (discNext < DISC.length) { discQ[pos] = discNext++; card.outerHTML = dcHTML(discQ[pos]); const nc = $(`#dcar .dc[data-d="${discQ[pos]}"]`); A(nc, [{ opacity: 0, transform: "translateY(10px)" }, { opacity: 1, transform: "none" }], { d: 360 }); }
-    else { card.remove(); } };
-}
-$("#dcar").addEventListener("click", e => { const c = e.target.closest(".dc"); if (!c || tourOn) return; if (e.target.closest(".yes")) discYes(c); if (e.target.closest(".no")) discNo(c); });
-
+function hideNudge() { const el = $("#nudge"); if (!el.classList.contains("on")) return; A(el, [{ opacity: 1, transform: "none" }, { opacity: 0, transform: "translateY(24px)" }], { d: 320 }).onfinish = () => el.classList.remove("on"); }
+$("#nudge").addEventListener("click", async e => {
+  if (e.target.closest("#nX")) return hideNudge();
+  if (e.target.closest("#nNo")) { // troca uma vez; na segunda, some até outro dia
+    if (nIdx === 0) { const el = $("#nudge"); A(el, [{ opacity: 1 }, { opacity: 0 }], { d: 200 }).onfinish = () => showNudge(1); }
+    else { $("#nActs").innerHTML = `<p class="thx" style="color:var(--dim)">Tudo bem. Até outro dia.</p>`; setTimeout(hideNudge, 1400); }
+    return; }
+  if (e.target.closest("#nYes")) {
+    toast("Abre a ficha com as mesmas 4 perguntas de sempre");
+    await wait(1500);
+    // de volta da avaliação: o cartão ganha cor, a borda se desenha e aparece uma frase
+    const el = $("#nudge"), [, cat, b, d, k] = DISC[nIdx];
+    el.classList.add("lit"); edge($(".edge", el), 1, { d: 1100 });
+    $("#nM").innerHTML = `${cat} · ${b} · ${d}<br>${discCount(k + 1)}`;
+    $("#nActs").innerHTML = `<p class="thx">${["Mais um pedacinho da cidade ganhou cor.", "Agora esse lugar tem um pouco mais de história.", "Valeu. Alguém vai escolher melhor por causa disso."][nIdx % 3]}</p>`;
+    A($("#nActs"), [{ opacity: 0, transform: "translateY(6px)" }, { opacity: 1, transform: "none" }], { d: 420, delay: 300 });
+    setTimeout(hideNudge, 4200);
+  }
+});
+// às vezes: no protótipo, aparece uma vez por sessão depois de alguns segundos no Início
+function armNudge() { clearTimeout(nTimer); if (nShownSession) return; nTimer = setTimeout(() => { if (cur === "home" && !tourOn && !$("#veil").classList.contains("on")) showNudge(0); }, 9000); }
 /* ---------- navegação ---------- */
 const SCR = { home: "#s-home", perfil: "#s-perfil", conq: "#s-conq", mapa: "#s-mapa", apoio: "#s-apoio" };
 let cur = "home";
@@ -1093,6 +1164,7 @@ function go(name, anim = true) {
   to.className = "scr"; to.scrollTop = 0; cur = name;
   setTab({ home: 0, mapa: 1, apoio: 3, perfil: 4, conq: 4 }[name]);
   $("#tabs").style.transform = name === "conq" ? "translateY(140%)" : "";
+  if (name !== "home") hideNudge(), clearTimeout(nTimer); else armNudge();
   if (name === "home") homeIn(anim); if (name === "perfil") perfilIn(anim); if (name === "conq") conqIn(anim); if (name === "mapa") mapaIn(anim); if (name === "apoio") apoioIn(anim);
 }
 function openSheet(sel) { closeSheets(); $("#veil").classList.add("on"); const s = $(sel); s.scrollTop = 0; s.classList.add("on"); }
@@ -1176,8 +1248,8 @@ $("#bSkip").onclick = () => endTour(false);
 /* ---------- roteiro de aprovação ---------- */
 const STEPS = [
   { eb: "Primeiro acesso", h: "Um tour de verdade, nas telas do app", t: "No lugar das seis telas com ícones pulando, o tour acontece <b>em cima do próprio Início</b>: o anel da marca se desenha gomo a gomo, depois um holofote passa por cada coisa e a <b>borda arco-íris se desenha</b> em volta dela. Toque em <b>Começar</b> dentro do celular.", run: welcome },
-  { eb: "Descoberta", h: "Você conhece algum desses?", t: "Logo abaixo do painel, três lugares perto que ainda têm pouca ou nenhuma avaliação. Sem título de desafio e sem contagem de missão: <b>Já fui</b> abre a ficha com o formulário de sempre, e <b>Não conheço</b> troca o cartão (e o lugar sai da sua lista por um tempo). A frase do topo muda de um dia para o outro.", run: () => { endTour(false); closeSheets(); discQ = [0, 1, 2]; discNext = 3; go("home", false); discIn(true); $("#s-home").scrollTo({ top: 300, behavior: RM ? "auto" : "smooth" }); } },
-  { eb: "Descoberta", h: "A volta é discreta", t: "Depois de avaliar (na ficha de sempre, com as mesmas quatro perguntas), o cartão ganha cor, a borda se desenha e aparece uma frase: <b>“Mais um pedacinho da cidade ganhou cor.”</b> Sem moeda, sem placar, sem pop-up. Experimente tocar em Já fui ou em Não conheço.", run: async () => { endTour(false); closeSheets(); go("home", false); discQ = [0, 1, 2]; discNext = 3; discIn(false); $("#s-home").scrollTo({ top: 300, behavior: RM ? "auto" : "smooth" }); await wait(700); discYes($("#dcar .dc")); } },
+  { eb: "Descoberta", h: "Aparece às vezes, e fecha", t: "Nada fixo na tela. De vez em quando, um cartão sobe acima da barra: <b>“Passou por aqui?”</b> com um lugar perto que tem pouca avaliação. <b>Já fui</b> abre a ficha de sempre; <b>Não conheço</b> troca uma vez e depois some até outro dia; o <b>X</b> fecha. No máximo uma vez por dia, nunca no primeiro uso, nunca durante relato, emergência ou Apoio.", run: async () => { endTour(false); closeSheets(); go("home", false); $("#s-home").scrollTo({ top: 0 }); hideNudge(); await wait(500); showNudge(0); } },
+  { eb: "Descoberta", h: "A volta é discreta", t: "Depois de avaliar (na ficha de sempre, com as mesmas quatro perguntas), o cartão ganha cor, a borda se desenha e aparece uma frase: <b>“Mais um pedacinho da cidade ganhou cor.”</b> Depois some sozinho. Sem moeda, sem placar, sem pop-up.", run: async () => { endTour(false); closeSheets(); go("home", false); hideNudge(); await wait(400); showNudge(0); await wait(900); $("#nYes").click(); } },
   { eb: "Início", h: "A borda conta a semana", t: "O cartão <b>Sua semana</b> ganhou a borda do protótipo: ela percorre o contorno até onde a semana chegou (3 de 4 = três quartos). Os gomos enchem um a um, o número conta. Nada pula.", run: () => { endTour(false); go("home"); homeIn(true); } },
   { eb: "Sua semana", h: "Toque e veja os dias", t: "Abre o detalhe: <b>só os dias que contaram</b>, com o que rendeu em cada um (gomo, faísca). Dia em que a pessoa não abriu não aparece, então nada fica marcado como perdido. Embaixo, como a semana funciona e as semanas anteriores.", run: () => { endTour(false); go("home", false); openWeek(); } },
   { eb: "Sua cidade", h: "Quais são os 12 de 100", t: "O anel de 100 tracinhos se desenha e o número conta. Logo abaixo, os lugares <b>perto do selo</b> (falta 1 ou 2 avaliações) com o botão de avaliar, e os que já têm selo. É o atalho para a pessoa ajudar a cidade.", run: () => { endTour(false); go("home", false); openCity(); } },
@@ -1187,9 +1259,9 @@ const STEPS = [
   { eb: "Conquistas", h: "O Quase lá vira destaque", t: "No topo, um cartão escuro com brilho: a medalha grande enchendo, <b>quantas faltam</b> contando para baixo, a barra de gomos e o botão amarelo para avaliar. Logo abaixo, as duas seguintes. Toque em qualquer medalha para ver o detalhe.", run: () => { endTour(false); closeSheets(); if (cur !== "perfil" && cur !== "conq") go("perfil", false); cur === "conq" ? conqIn(true) : go("conq"); } },
   { eb: "Mapa", h: "Dá para ler o que está no mapa", t: "Os chips soltos por cima do mapa viram um <b>painel sólido</b>: Mapa ou Lista num seletor só, e duas camadas que ligam e desligam (Lugares e Relatos). Mil pinos viram <b>grupos com número</b>, lugar sem nota vira um pontinho discreto, lugar com nota mostra a nota, e relato aparece como <b>área</b>, nunca como pino de lugar. Embaixo, <b>Perto de você</b>.", run: () => { endTour(false); closeSheets(); setMapMode("mapa"); cur === "mapa" ? mapaIn(true) : go("mapa"); } },
   { eb: "Mapa", h: "Toque num grupo ou num lugar", t: "O grupo aproxima o mapa. O lugar com nota vira o cartão de baixo, com <b>Ver ficha</b>. O botão de filtro abre a legenda e os tipos de relato. Em <b>Lista</b>, a área de atenção mais próxima vem primeiro e depois os lugares por distância.", run: () => { endTour(false); closeSheets(); if (cur !== "mapa") go("mapa", false); setMapMode("mapa"); setTimeout(() => $('#mapPins .pin[data-pin="0"]').click(), 400); } },
-  { eb: "Apoio", h: "Um mural de verdade", t: "Recados em <b>papel colado</b>, duas colunas, cor por tipo. A <b>pergunta da semana</b> puxa a primeira mensagem de quem nunca escreveu (o painel troca a pergunta). Três atalhos grandes: <b>abraço, dica, pedir ajuda</b>. Cada recado ganha a reação do tipo dele: Te abraço, Me ajudou, Estou contigo. Pedido de ajuda leva direto aos serviços.", run: () => { endTour(false); closeSheets(); cur === "apoio" ? apoioIn(true) : go("apoio"); } },
-  { eb: "Escrever", h: "Começar fica fácil", t: "Ao tocar num atalho, abre a folha com o tipo já escolhido e <b>frases para começar</b>. Publicou, o recado cola no topo do mural, e a faísca do dia e a Ombro Amigo andam. Experimente: toque em <b>Mandar um abraço</b> e depois em Publicar.", run: () => { endTour(false); closeSheets(); if (cur !== "apoio") go("apoio", false); setTimeout(() => compose("ac"), 350); } },
-  { eb: "Serviços", h: "Ligar sem procurar", t: "Os quatro números de emergência em botões grandes e, abaixo, os serviços da cidade com site e como chegar. <b>O que pede banco novo:</b> reações de três tipos (hoje é só curtir) e a pergunta da semana editável no painel. O resto é só tela.", run: () => { endTour(false); closeSheets(); if (cur !== "apoio") go("apoio", false); setApoio("serv"); } },
+  { eb: "Apoio", h: "Um mural de verdade", t: "Recados em <b>papel colado</b>, numa coluna só, cor por tipo. A <b>pergunta da semana</b> mostra só quantas pessoas responderam, nunca quem. Reações da casa, com desenho próprio: <b>Te abraço, Arrasou</b> (o leque), <b>Tô contigo, Sinto muito, Acendeu</b> (dica que iluminou) e <b>Mais cor</b> (o anel da Irisa). Toque em <b>Reagir</b> num recado.", run: () => { endTour(false); closeSheets(); cur === "apoio" ? apoioIn(true) : go("apoio"); } },
+  { eb: "Escrever", h: "Sem expor ninguém", t: "Frases para começar e o tipo já escolhido. <b>Publicar como Anônimo</b> liga sozinho em pedido de ajuda. Um aviso pede para não pôr telefone, endereço, nome completo nem foto de outra pessoa. E se o texto <b>parecer um relato</b> (“me xingaram”, “fui agredide”), a folha oferece registrar como relato anônimo, que vira aviso no mapa sem apelido. Escreva “me xingaram no ônibus” para ver.", run: () => { endTour(false); closeSheets(); if (cur !== "apoio") go("apoio", false); setTimeout(() => compose("ac"), 350); } },
+  { eb: "Serviços", h: "Ligar sem procurar", t: "Os quatro números de emergência em botões grandes e, abaixo, os serviços da cidade com site e como chegar. <b>O que pede banco novo:</b> as seis reações (hoje é só curtir), a opção Anônimo no mural e a pergunta da semana editável no painel. O resto é só tela.", run: () => { endTour(false); closeSheets(); if (cur !== "apoio") go("apoio", false); setApoio("serv"); } },
 ];
 let gs = -1;
 $("#gSteps").innerHTML = STEPS.map((_, i) => `<button data-g="${i}" aria-label="Passo ${i + 1}"><i></i></button>`).join("");
