@@ -167,6 +167,26 @@ async function busy(btn, fn) {
   }
 }
 
+// CSV com BOM (Excel abre acentuado certo) e aspas escapadas; baixa na hora, sem passar por servidor.
+function campoCSV(v) {
+  if (v == null) return "";
+  const s = String(v);
+  return /[",\n;]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s;
+}
+function baixarCSV(nomeArquivo, colunas, linhas) {
+  const corpo = [colunas.map((c) => campoCSV(c.titulo)).join(";")]
+    .concat(linhas.map((l) => colunas.map((c) => campoCSV(c.valor(l))).join(";")))
+    .join("\r\n");
+  const blob = new Blob(["﻿" + corpo], { type: "text/csv;charset=utf-8;" });
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = nomeArquivo;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+}
+
 // Diálogos: cada um é um <dialog> novo, então dá para abrir uma confirmação por cima de um formulário.
 function openDialog(html, { wide = false, onClose } = {}) {
   const d = document.createElement("dialog");
@@ -1058,7 +1078,7 @@ async function viewFotos(ctx) {
 // ================================================================ 10. Lugares
 const lugaresState = { cidade: null, busca: "", status: null, offset: 0 };
 async function viewLugares(ctx) {
-  ctx.el.innerHTML = headHTML("Lugares", "Lugares do mapa. Corrija nome, categoria e ponto, esconda o que não é lugar e suba foto da equipe.", `<button class="btn" id="lNovo">Novo lugar</button>`) + `
+  ctx.el.innerHTML = headHTML("Lugares", "Lugares do mapa. Corrija nome, categoria e ponto, esconda o que não é lugar e suba foto da equipe.", `<button class="btn ghost" id="lExport">Exportar CSV</button><button class="btn" id="lNovo">Novo lugar</button>`) + `
     <div class="toolbar">
       <div id="lCidade" style="flex:0 1 260px;min-width:200px"></div>
       <input class="input" type="search" id="lBusca" placeholder="Buscar pelo nome" aria-label="Buscar pelo nome" value="${esc(lugaresState.busca)}">
@@ -1097,6 +1117,26 @@ async function viewLugares(ctx) {
   $("#lBusca", ctx.el).addEventListener("input", debounce((ev) => { lugaresState.busca = ev.target.value.trim(); lugaresState.offset = 0; reload(); }));
   $("#lStatus", ctx.el).addEventListener("change", (ev) => { lugaresState.status = ev.target.value || null; lugaresState.offset = 0; reload(); });
   $("#lNovo", ctx.el).addEventListener("click", () => placeEditor(null, reload));
+  $("#lExport", ctx.el).addEventListener("click", (ev) => busy(ev.currentTarget, async () => {
+    const todos = (await rpc("admin_places_export", { p_cidade: lugaresState.cidade?.id ?? null, p_busca: lugaresState.busca || null, p_status: lugaresState.status })) || [];
+    if (!todos.length) { toast("Nenhum lugar com esses filtros."); return; }
+    baixarCSV(`lugares-irisa-${new Date().toISOString().slice(0, 10)}.csv`, [
+      { titulo: "Nome", valor: (p) => p.nome },
+      { titulo: "Categoria", valor: (p) => CATEGORIA[p.categoria] || p.categoria },
+      { titulo: "Endereço", valor: (p) => p.endereco },
+      { titulo: "Cidade", valor: (p) => p.cidade },
+      { titulo: "Bairro", valor: (p) => p.bairro },
+      { titulo: "Latitude", valor: (p) => p.lat },
+      { titulo: "Longitude", valor: (p) => p.lng },
+      { titulo: "Status", valor: (p) => p.status },
+      { titulo: "Verificado", valor: (p) => (p.verificado ? "sim" : "não") },
+      { titulo: "Avaliações", valor: (p) => p.avaliacoes },
+      { titulo: "Nota", valor: (p) => p.nota },
+      { titulo: "Selo", valor: (p) => SELO[p.selo] || p.selo },
+      { titulo: "Entrou em", valor: (p) => fmtD(p.criado_em) },
+    ], todos);
+    toast(`${todos.length} lugares exportados.`);
+  }));
   await reload();
 }
 

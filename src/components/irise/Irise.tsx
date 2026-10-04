@@ -168,6 +168,7 @@ function IriseSheet({
   const [log, setLog] = useState<LogItem[]>([]);
   const [texto, setTexto] = useState("");
   const scrollRef = useRef<ScrollView>(null);
+  const inputRef = useRef<TextInput>(null);
   const suggest = useIriseSuggest();
   const near = useIriseNear();
   const orchestrate = useIriseOrchestrate();
@@ -278,7 +279,7 @@ function IriseSheet({
   }
 
   function flowIntro() {
-    addBubble("E aí, qual vai ser hoje? 🌈");
+    addBubble("E aí, qual vai ser hoje? Me conta com suas palavras, ou escolhe uma ideia: 🌈");
     addChips([
       {
         label: "Quero um lugar",
@@ -342,6 +343,9 @@ function IriseSheet({
 
   function onOpen() {
     if (log.length === 0) flowIntro();
+    // O jeito mais natural de usar isso é digitando — os chips são só um atalho, não a entrada
+    // obrigatória. Focar o campo deixa isso claro na hora que a folha abre (04/10/2026).
+    setTimeout(() => inputRef.current?.focus(), 260);
   }
 
   return (
@@ -377,7 +381,7 @@ function IriseSheet({
                 <View key={item.id} style={{ gap: 6 }}>
                   {item.places.map((p, i) => (
                     <View key={p.id} style={{ gap: 4 }}>
-                      <PlaceCard place={p} index={i} />
+                      <PlaceCard place={p} index={i} onPress={onClose} />
                       {!!p.reason && (
                         <Text className="px-1 font-body text-[11.5px]" style={{ color: colors.turquoiseInk }}>
                           {p.reason}
@@ -392,6 +396,7 @@ function IriseSheet({
           <View className="gap-2 border-t border-border px-[14px] pb-[max(14px,env(safe-area-inset-bottom))] pt-[10px]">
             <View className="h-[46px] flex-row items-center gap-2 rounded-full bg-subtle pl-4 pr-1.5">
               <TextInput
+                ref={inputRef}
                 value={texto}
                 onChangeText={setTexto}
                 placeholder="Ou me conta o que você tá procurando…"
