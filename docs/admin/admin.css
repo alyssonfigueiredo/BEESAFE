@@ -48,6 +48,7 @@ h3 { font-size: 14px; font-weight: 600; }
 p { margin: 0; }
 .muted { color: var(--muted); }
 .dim { color: var(--dim); }
+.ok { color: var(--turq-ink); }
 .small { font-size: 12.5px; }
 .nowrap { white-space: nowrap; }
 .num { font-variant-numeric: tabular-nums; }

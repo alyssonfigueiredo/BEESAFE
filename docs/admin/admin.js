@@ -305,6 +305,7 @@ const ROUTES = {
   lugares: { title: "Lugares", group: "Conteúdo", render: viewLugares },
   servicos: { title: "Serviços de apoio", admin: true, group: "Conteúdo", render: viewServicos },
   config: { title: "Configurações", admin: true, group: "Ajustes", render: viewConfig },
+  chaves: { title: "Chaves de API", admin: true, group: "Ajustes", render: viewChaves },
 };
 const canSee = (key) => !!ROUTES[key] && (!ROUTES[key].admin || me.role === "admin");
 const homeRoute = () => (me.role === "admin" ? "visao" : "denuncias");
@@ -1432,6 +1433,47 @@ async function viewConfig(ctx) {
       $("#aaData", box).value = "";
       aaEstado();
       saveAbre(ev.currentTarget, null);
+    });
+  }, ctx);
+}
+
+// ================================================================ 13. Chaves de API
+const API_KEYS = [
+  { name: "GROQ_API_KEY", label: "Groq", hint: "Conversa e decisão da Irise. console.groq.com → API Keys (grátis)." },
+  { name: "GEMINI_API_KEY", label: "Gemini", hint: "Ranqueia e explica os lugares achados. aistudio.google.com (grátis)." },
+  { name: "HF_API_TOKEN", label: "Hugging Face (TybyrIA)", hint: "Moderação de discurso de ódio. huggingface.co → Settings → Access Tokens, nível \"Read\" (grátis)." },
+];
+
+async function viewChaves(ctx) {
+  ctx.el.innerHTML = headHTML("Chaves de API", "Cole aqui em vez de mexer no painel do Supabase. A chave fica criptografada — nem o painel consegue mostrar de volta, só sobrescrever.") + `<div id="kbox"></div>`;
+  const box = $("#kbox", ctx.el);
+  await load(box, async () => {
+    const status = await rpc("admin_api_keys_status");
+    if (!ctx.alive()) return;
+    const cfg = Object.fromEntries((status || []).map((s) => [s.name, s.configurado]));
+    box.innerHTML = API_KEYS.map((k) => `
+      <form class="card form" data-key="${k.name}" style="margin-bottom:14px">
+        <h2>${esc(k.label)} <span class="small ${cfg[k.name] ? "ok" : "dim"}">${cfg[k.name] ? "· configurada" : "· não configurada"}</span></h2>
+        <p class="small muted">${esc(k.hint)}</p>
+        <div class="row">
+          <input class="input" type="password" autocomplete="off" placeholder="Colar a chave aqui" style="flex:1">
+          <button class="btn" type="submit">Salvar</button>
+        </div>
+      </form>`).join("");
+    $$("form[data-key]", box).forEach((form) => {
+      const name = form.dataset.key;
+      form.addEventListener("submit", (ev) => {
+        ev.preventDefault();
+        const input = $("input", form);
+        const btn = $("button", form);
+        busy(btn, async () => {
+          await rpc("admin_set_api_key", { p_name: name, p_value: input.value });
+          input.value = "";
+          $("h2 .small", form).textContent = "· configurada";
+          $("h2 .small", form).className = "small ok";
+          toast("Salvo");
+        });
+      });
     });
   }, ctx);
 }
