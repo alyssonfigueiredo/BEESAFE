@@ -40,4 +40,13 @@ export const MEDALHA_IMG: Record<string, ImageSourcePropType> = {
 };
 
 /** Nível de Sua evolução (0 a 7) → imagem 3D, quando existir. */
-export const NIVEL_IMG: Record<number, ImageSourcePropType> = {};
+export const NIVEL_IMG: Record<number, ImageSourcePropType> = {
+  0: require("../../assets/niveis/nivel-0.png"),
+  1: require("../../assets/niveis/nivel-1.png"),
+  2: require("../../assets/niveis/nivel-2.png"),
+  3: require("../../assets/niveis/nivel-3.png"),
+  4: require("../../assets/niveis/nivel-4.png"),
+  5: require("../../assets/niveis/nivel-5.png"),
+  6: require("../../assets/niveis/nivel-6.png"),
+  7: require("../../assets/niveis/nivel-7.png"),
+};

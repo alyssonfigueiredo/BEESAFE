@@ -38,11 +38,20 @@ NIVEIS = {
 }
 
 
-def fundo(rgb: np.ndarray) -> np.ndarray:
-    """Máscara do fundo: claro, pouco saturado e ligado à borda."""
+# Folhas dos níveis vieram com sombra e reflexo creme: recorte tolerante, menos o prisma
+# (vidro quase branco, o tolerante come o objeto).
+QUENTES = frozenset(f"nivel-{i}" for i in range(8)) - {"nivel-2"}
+
+
+def fundo(rgb: np.ndarray, quente: bool = False) -> np.ndarray:
+    """Máscara do fundo: claro, pouco saturado e ligado à borda. `quente`: a folha tem sombra e
+    reflexo creme embaixo dos objetos (folhas dos níveis), então aceita um pouco mais de cor."""
     mx = rgb.max(axis=2).astype(int)
     mn = rgb.min(axis=2).astype(int)
-    candidato = (mn > 200) & (mx - mn < 16)
+    if quente:
+        candidato = (mn > 178) & (mx - mn < 70) & (mx > 238)
+    else:
+        candidato = (mn > 200) & (mx - mn < 16)
     rot, _ = ndimage.label(candidato)
     borda = np.unique(np.concatenate([rot[0], rot[-1], rot[:, 0], rot[:, -1]]))
     borda = borda[borda != 0]
@@ -88,25 +97,37 @@ def grupos(obj: np.ndarray, n: int) -> list[tuple[int, int, int, int]]:
     return [tuple(a) for a in ancoras]
 
 
-def recortar(arquivo: Path, ids: list[str], destino: Path = PASTA):
-    im = Image.open(arquivo).convert("RGB")
-    rgb = np.asarray(im)
-    bg = fundo(rgb)
-    obj = ~bg
+def mascara(rgb: np.ndarray, quente: bool) -> np.ndarray:
+    obj = ~fundo(rgb, quente)
     # tira ruído: só componentes com área razoável
     rot, nrot = ndimage.label(obj)
     areas = ndimage.sum(obj, rot, range(1, nrot + 1))
-    keep = np.isin(rot, [i + 1 for i, a in enumerate(areas) if a > 60])
-    obj = keep
+    return np.isin(rot, [i + 1 for i, a in enumerate(areas) if a > 60])
+
+
+def com_alfa(im: Image.Image, obj: np.ndarray) -> Image.Image:
     alpha = Image.fromarray((obj * 255).astype("uint8")).filter(ImageFilter.GaussianBlur(1.1))
     rgba = im.copy()
     rgba.putalpha(alpha)
-    gs = grupos(obj, len(ids))
+    return rgba
+
+
+def recortar(arquivo: Path, ids: list[str], destino: Path = PASTA, quentes: frozenset = frozenset()):
+    """`quentes`: ids recortados com o fundo tolerante (sombra creme); os outros com o estrito.
+    Os objetos são separados sempre pela máscara estrita."""
+    im = Image.open(arquivo).convert("RGB")
+    rgb = np.asarray(im)
+    estrita = mascara(rgb, False)
+    rgba = com_alfa(im, estrita)
+    rgba_q = com_alfa(im, mascara(rgb, True)) if quentes else rgba
+    gs = grupos(estrita, len(ids))
     if len(gs) != len(ids):
         raise SystemExit(f"{arquivo.name}: achei {len(gs)} objetos, esperava {len(ids)}")
     for (x0, x1, y0, y1), mid in zip(gs, ids):
-        # outro objeto pode invadir a caixa (alça, pétala): zera o alfa do que não é desta âncora
-        peca = rgba.crop((x0, y0, x1, y1))
+        peca = (rgba_q if mid in quentes else rgba).crop((x0, y0, x1, y1))
+        caixa = peca.getchannel("A").point(lambda v: 255 if v > 8 else 0).getbbox()
+        if caixa:
+            peca = peca.crop(caixa)
         w, h = peca.size
         lado = int(max(w, h) * 1.08)
         tela = Image.new("RGBA", (lado, lado), (255, 255, 255, 0))
@@ -152,7 +173,7 @@ def main():
         if not arq:
             print(f"{nome}: arquivo não encontrado, pulei")
             continue
-        recortar(arq, ids, PASTA_NIVEIS)
+        recortar(arq, ids, PASTA_NIVEIS, quentes=QUENTES)
     gerar_ts()
 
 
