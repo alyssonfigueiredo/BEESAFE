@@ -1,0 +1,668 @@
+<title>Protótipo Conquistas v2</title>
+<!-- Protótipo da segunda versão (04/10/2026), depois do retorno do Leandro sobre o que entrou no app:
+     tour de boas-vindas dentro do app (holofote nas telas reais, borda que se desenha), animações de
+     preenchimento no lugar de pulos, "Sua semana" e "Sua cidade" que abrem o detalhe, borda de progresso
+     no cartão da semana e "Quase lá" em destaque. Nada grava: é encenado no navegador.
+     Arquivo único: node scripts/gamificacao-unica.mjs docs/prototipo-gamificacao-v2.html docs/Irisa-prototipo-gamificacao-v2.html -->
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Urbanist:wght@500&family=Oswald:wght@400;700&family=Space+Grotesk:wght@400;500;600;700&display=swap">
+<style>
+/* Palco claro com a aurora da marca; celular no centro; roteiro de aprovação ao lado (embaixo no celular).
+   Visual único e claro de propósito, igual ao app: cores todas explícitas. */
+:root{
+  --paper:#F5F4F1;--stage:#ECEAE5;--subtle:#ECEAE5;--night:#141829;--night2:#20253A;
+  --ink:#141829;--muted:#3D4560;--dim:#7C8296;--soft:#C9CDE0;--off:#E4E1DA;
+  --coral:#FF6964;--orange:#FFA353;--yellow:#FFD066;--turq:#49DCC0;--blue:#59A7FF;--lilac:#A889FF;
+  --coralInk:#C72825;--turqInk:#0A8B7A;--amber:#E0A32E;--lilacInk:#6037F0;
+  --rb:linear-gradient(90deg,#FF6964,#FFA353,#FFD066,#49DCC0,#59A7FF,#A889FF);
+  --display:"Oswald","Arial Narrow",Impact,sans-serif;--body:"Space Grotesk","Helvetica Neue",Arial,sans-serif;--mark:"Urbanist","Helvetica Neue",Arial,sans-serif;
+  --shadow:0 1px 2px rgba(20,24,41,.04),0 10px 28px rgba(20,24,41,.08);
+  --ease:cubic-bezier(.2,.7,.2,1);
+  color-scheme:light;
+}
+*{box-sizing:border-box}p,h1,h2,h3{margin:0}
+html,body{height:100%}
+body{margin:0;overflow:hidden;font-family:var(--body);color:var(--ink);background:var(--stage);-webkit-font-smoothing:antialiased}
+body:before{content:"";position:fixed;inset:0;pointer-events:none;background:
+  radial-gradient(50% 45% at 0% 0%,rgba(73,220,192,.30),transparent 65%),radial-gradient(45% 40% at 100% 0%,rgba(255,105,100,.22),transparent 65%),
+  radial-gradient(50% 45% at 100% 100%,rgba(168,137,255,.28),transparent 65%),radial-gradient(45% 40% at 0% 100%,rgba(255,208,102,.26),transparent 65%)}
+button{font:inherit;color:inherit;border:0;background:none;cursor:pointer;padding:0;text-align:inherit}
+button:focus-visible{outline:3px solid var(--turq);outline-offset:3px}
+
+/* ---------- palco ---------- */
+#app{position:relative;height:100%;display:flex;align-items:center;justify-content:center;gap:56px;padding-inline:24px}
+#stageWrap{position:relative;flex:none}
+#phone{position:absolute;left:0;top:0;width:414px;height:868px;border-radius:62px;background:#0E1020;padding:12px;transform-origin:0 0;
+  box-shadow:0 40px 80px rgba(20,24,41,.28),0 0 0 2px #2A2E44 inset}
+#screen{position:relative;width:390px;height:844px;border-radius:50px;overflow:hidden;background:var(--paper);isolation:isolate}
+#screen:before{content:"";position:absolute;inset:0;z-index:0;background:
+  radial-gradient(70% 34% at -10% -2%,rgba(73,220,192,.34),transparent 64%),radial-gradient(60% 30% at 110% 4%,rgba(255,105,100,.26),transparent 64%),
+  radial-gradient(70% 34% at 108% 100%,rgba(168,137,255,.32),transparent 64%),radial-gradient(60% 30% at -8% 98%,rgba(255,208,102,.3),transparent 64%)}
+.island{position:absolute;left:50%;top:11px;width:124px;height:36px;margin-left:-62px;border-radius:20px;background:#000;z-index:80}
+
+/* ---------- roteiro de aprovação (fora do celular) ---------- */
+#guide{width:400px;flex:none;background:rgba(255,255,255,.84);border-radius:30px;padding:26px 28px 22px;box-shadow:var(--shadow);display:flex;flex-direction:column;gap:14px;
+  backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px)}
+#guide .top{display:flex;justify-content:space-between;align-items:center}
+#guide .mk{font-family:var(--mark);font-weight:500;letter-spacing:.2em;font-size:15px;color:var(--muted)}
+#guide .mk b{font-weight:500;color:var(--amber)}
+#guide .count{font-size:13px;font-weight:600;color:var(--dim);font-variant-numeric:tabular-nums}
+#guide .steps{display:flex;gap:6px}
+#guide .steps button{flex:1;height:6px;border-radius:3px;background:var(--subtle);position:relative;overflow:hidden}
+#guide .steps button i{position:absolute;inset:0;background:var(--rb);transform:scaleX(0);transform-origin:left;transition:transform .5s var(--ease)}
+#guide .steps button.done i{transform:none}
+#guide .eb{font-size:12px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--turqInk);margin-top:4px}
+#guide h2{font-family:var(--display);font-weight:700;text-transform:uppercase;font-size:32px;line-height:1.05;text-wrap:balance}
+#guide .txt{font-size:15.5px;line-height:1.55;color:var(--muted);min-height:118px}
+#guide .txt b{color:var(--ink)}
+#guide .nav{display:flex;gap:10px;align-items:center}
+.gbtn{height:48px;border-radius:24px;padding:0 20px;font-weight:600;font-size:15px}
+.gbtn.pri{background:var(--night);color:#fff;flex:1;text-align:center}
+.gbtn.sec{background:var(--subtle)}
+.gbtn:disabled{opacity:.35;cursor:default}
+#guide .again{font-size:13px;font-weight:600;color:var(--turqInk);align-self:flex-start;display:flex;gap:6px;align-items:center}
+#guide .keys{font-size:12px;color:var(--dim)}
+#guide .txt,#guide h2,#guide .eb{transition:opacity .25s ease,transform .35s var(--ease)}
+#guide.swap .txt,#guide.swap h2,#guide.swap .eb{opacity:0;transform:translateY(6px)}
+
+@media (max-width:860px){
+  #app{flex-direction:column;justify-content:flex-start;gap:10px;padding-block:10px 0;overflow:hidden}
+  #guide{position:fixed;left:12px;right:12px;bottom:calc(10px + env(safe-area-inset-bottom,0px));width:auto;padding:14px 16px 12px;gap:7px;border-radius:24px;z-index:4}
+  #guide h2{font-size:22px}
+  #guide .txt{font-size:13.5px;min-height:0}
+  #guide .keys,#guide .mk,#guide .again{display:none}
+  .gbtn{height:42px}
+}
+
+/* ---------- dentro do celular ---------- */
+.scr{position:absolute;inset:0;z-index:1;overflow-y:auto;scrollbar-width:none;transition:transform .5s var(--ease),opacity .4s ease}
+.scr::-webkit-scrollbar{display:none}
+.scr.off{opacity:0;pointer-events:none}
+.scr.left{transform:translateX(-28%);opacity:0;pointer-events:none}
+.scr.right{transform:translateX(100%);pointer-events:none}
+.sb{position:relative;z-index:50;height:54px;display:flex;justify-content:space-between;align-items:flex-end;padding:0 32px 6px 38px;font-weight:600;font-size:16px}
+.sb i{display:flex;gap:6px;align-items:center}
+.hd{position:relative;z-index:5;margin:4px 14px 0;height:58px;border-radius:29px;background:rgba(255,255,255,.66);box-shadow:var(--shadow);display:flex;align-items:center;justify-content:space-between;padding:0 7px 0 14px}
+.logo{display:flex;align-items:center;gap:10px;font-family:var(--mark);font-weight:500;letter-spacing:.2em;font-size:20px}
+.logo b{font-weight:500;color:var(--amber)}
+.sos{width:44px;height:44px;border-radius:50%;background:var(--coral);display:flex;align-items:center;justify-content:center}
+.body{position:relative;z-index:2;padding:14px 14px 120px;display:flex;flex-direction:column;gap:12px}
+.cd{background:rgba(255,255,255,.72);border-radius:24px;padding:16px;box-shadow:var(--shadow);position:relative}
+.cd.dk{background:var(--night2);color:#F1F0EC}
+.lb{font-size:11.5px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--dim)}
+h1.t{font-family:var(--display);font-weight:700;text-transform:uppercase;font-size:34px;line-height:1.05}
+.btn{height:52px;border-radius:26px;display:flex;align-items:center;justify-content:center;font-weight:600;font-size:16px;gap:8px;width:100%}
+.btn:active{transform:scale(.98)}
+.chip{display:inline-flex;align-items:center;height:30px;padding:0 13px;border-radius:15px;background:var(--subtle);font-size:13px;font-weight:600;white-space:nowrap}
+.num{font-family:var(--display);font-weight:700;line-height:1;font-variant-numeric:tabular-nums}
+.hback{position:relative;z-index:5;display:flex;align-items:center;gap:2px;margin:2px 0 0 10px;font-size:17px;color:var(--ink)}
+
+/* dois cartões da home: mesma altura, mesma grade interna; a borda é o progresso */
+.duo{display:grid;grid-template-columns:1fr 1fr;gap:10px;align-items:stretch}
+.mini2{padding:14px;display:flex;flex-direction:column;gap:10px;text-align:left}
+.mini2 .row2{display:flex;align-items:center;gap:9px}
+.mini2 .row2 svg{flex:none}
+.mini2 .lb{display:block}
+.mini2 .big{display:block;font-size:23px;white-space:nowrap}
+.mini2 .cap{font-size:12.5px;line-height:1.35;color:var(--muted)}
+.mini2 .more{display:flex;align-items:center;gap:4px;font-size:12px;font-weight:700;color:var(--turqInk);margin-top:auto}
+.edge{position:absolute;inset:0;pointer-events:none;overflow:visible}
+.edge rect{fill:none;stroke-width:3;vector-effect:non-scaling-stroke}
+
+/* quase lá: compacto no Início, herói nas Conquistas */
+.almost{display:flex;align-items:center;gap:14px;padding:14px 16px;text-align:left;overflow:hidden}
+.almost .ttl{font-size:16px;font-weight:700}
+.segs{display:flex;gap:3px;margin-top:8px}
+.segs i{flex:1;height:7px;border-radius:4px;background:var(--off);position:relative;overflow:hidden}
+.segs i b{position:absolute;inset:0;border-radius:4px;transform:scaleX(0);transform-origin:left}
+.live{display:inline-flex;align-items:center;gap:6px;font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--coralInk)}
+.live:before{content:"";width:7px;height:7px;border-radius:50%;background:var(--coral);animation:breathe 1.8s ease-in-out infinite}
+@keyframes breathe{50%{opacity:.25}}
+.hero{border-radius:30px;padding:20px 20px 18px;background:radial-gradient(90% 70% at 15% 0%,#2F3760 0%,#141829 70%);color:#F1F0EC;overflow:hidden}
+.hero .glow{position:absolute;left:-30px;top:-20px;width:240px;height:240px;border-radius:50%;background:radial-gradient(circle,rgba(255,208,102,.35),transparent 65%);pointer-events:none}
+.hero .live{color:var(--yellow)}.hero .live:before{background:var(--yellow)}
+.hero .segs i{background:rgba(255,255,255,.14)}
+.mwrap{position:relative;flex:none;border-radius:50%}
+.shine{position:absolute;inset:6%;border-radius:50%;overflow:hidden;pointer-events:none}
+.shine:after{content:"";position:absolute;inset:-20%;background:linear-gradient(115deg,transparent 38%,rgba(255,255,255,.75) 50%,transparent 62%);transform:translateX(-120%);animation:shine 3.6s ease-in-out infinite 1.2s}
+@keyframes shine{0%{transform:translateX(-120%)}45%,100%{transform:translateX(120%)}}
+.next{display:flex;gap:10px}
+.next button{flex:1;display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:20px;background:rgba(255,255,255,.72);box-shadow:var(--shadow);text-align:left}
+.next p{font-size:13px;font-weight:700;line-height:1.2}
+.next small{font-size:11.5px;color:var(--dim)}
+
+/* grade de medalhas */
+.mg{display:grid;grid-template-columns:repeat(3,1fr);gap:18px 8px}
+.mg button{display:flex;flex-direction:column;align-items:center;gap:6px;text-align:center}
+.mg p{font-size:12.5px;font-weight:600;line-height:1.2}
+.mg .lk p{color:var(--dim);font-weight:500}
+.mg small{font-size:11px;color:var(--dim);font-variant-numeric:tabular-nums}
+
+/* tab bar */
+.tb{position:absolute;left:14px;right:14px;bottom:24px;z-index:20;height:68px;border-radius:34px;background:rgba(255,255,255,.84);box-shadow:var(--shadow);display:flex;justify-content:space-around;align-items:center;padding:0 4px;backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);transition:transform .45s var(--ease)}
+.tb button{width:64px;height:60px;border-radius:30px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;font-size:11.5px;color:var(--muted);transition:background .3s,color .3s;text-align:center}
+.tb button.on{background:#fff;box-shadow:0 4px 14px rgba(20,24,41,.1);font-weight:600}
+.tb svg{width:24px;height:24px}
+
+/* folhas */
+.veil{position:absolute;inset:0;z-index:30;background:rgba(20,24,41,.38);opacity:0;pointer-events:none;transition:opacity .35s}
+.veil.on{opacity:1;pointer-events:auto}
+.sheet{position:absolute;left:0;right:0;bottom:0;z-index:31;max-height:88%;overflow-y:auto;scrollbar-width:none;background:#FBFAF8;border-radius:34px 34px 0 0;transform:translateY(105%);transition:transform .55s var(--ease);padding:12px 22px 34px;display:flex;flex-direction:column;gap:14px}
+.sheet::-webkit-scrollbar{display:none}
+.sheet.on{transform:none}
+.grab{width:44px;height:5px;border-radius:3px;background:#D9D5CD;align-self:center;flex:none}
+.shd{display:flex;align-items:center;gap:16px}
+.shd h3{font-family:var(--display);font-weight:700;text-transform:uppercase;font-size:28px;line-height:1.05}
+.shd p{font-size:14px;color:var(--muted);line-height:1.4;margin-top:4px}
+.sec{font-size:12px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--dim);margin-top:4px}
+/* linha do tempo da semana: só os dias que contaram, nenhum vazio */
+.tl{position:relative;display:flex;flex-direction:column;gap:12px;padding-left:22px}
+.tl .rail{position:absolute;left:7px;top:8px;bottom:8px;width:2px;border-radius:1px;background:var(--rb);transform-origin:top;transform:scaleY(0)}
+.tl .day{position:relative;background:#fff;border-radius:18px;padding:12px 14px;box-shadow:0 1px 2px rgba(20,24,41,.05)}
+.tl .day:before{content:"";position:absolute;left:-20px;top:16px;width:12px;height:12px;border-radius:50%;background:#fff;border:3px solid var(--c,#49DCC0)}
+.tl .day b{font-size:14px}
+.tl .day ul{list-style:none;margin:6px 0 0;padding:0;display:flex;flex-direction:column;gap:4px}
+.tl .day li{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--muted)}
+.tl .day li em{font-style:normal;margin-left:auto;font-size:12px;font-weight:700;white-space:nowrap}
+.rules{display:flex;flex-direction:column;gap:8px}
+.rules div{display:flex;gap:12px;align-items:center;background:#fff;border-radius:16px;padding:10px 12px;font-size:13px;color:var(--muted);line-height:1.35}
+.rules b{color:var(--ink)}
+.ico{flex:none;width:34px;height:34px;border-radius:12px;display:flex;align-items:center;justify-content:center}
+.weeks{display:flex;justify-content:space-between;background:#fff;border-radius:18px;padding:12px 14px}
+.weeks span{display:flex;flex-direction:column;align-items:center;gap:4px;font-size:11px;color:var(--dim);font-variant-numeric:tabular-nums}
+/* lugares da cidade */
+.pl{display:flex;align-items:center;gap:12px;background:#fff;border-radius:18px;padding:10px 12px}
+.pl .ph{flex:none;width:44px;height:44px;border-radius:14px;display:flex;align-items:center;justify-content:center}
+.pl p{font-size:14px;font-weight:700}
+.pl small{font-size:12px;color:var(--dim)}
+.pips{display:flex;gap:3px;margin-top:5px}
+.pips i{width:16px;height:6px;border-radius:3px;background:var(--off);position:relative;overflow:hidden}
+.pips i b{position:absolute;inset:0;transform:scaleX(0);transform-origin:left;border-radius:3px}
+.mini-go{flex:none;height:34px;padding:0 13px;border-radius:17px;background:var(--night);color:#fff;font-size:13px;font-weight:700}
+
+/* tour de boas-vindas do app: holofote, borda que se desenha e balão */
+#cveil{position:absolute;inset:0;z-index:60;pointer-events:none}
+#cveil.on{pointer-events:auto}
+#spot{position:absolute;z-index:61;pointer-events:none;border-radius:26px;box-shadow:0 0 0 2000px rgba(20,24,41,.55);opacity:0;transition:left .55s var(--ease),top .55s var(--ease),width .55s var(--ease),height .55s var(--ease),border-radius .55s,opacity .35s}
+#trace{position:absolute;z-index:62;pointer-events:none;overflow:visible;opacity:0;transition:opacity .3s}
+#trace rect{fill:none;stroke:url(#rbg);stroke-width:3;stroke-linecap:round}
+#bub{position:absolute;z-index:63;left:20px;right:20px;background:#fff;border-radius:24px;padding:16px 18px 14px;box-shadow:0 18px 40px rgba(20,24,41,.28);opacity:0;pointer-events:none;transition:top .55s var(--ease),opacity .3s}
+#bub.on{pointer-events:auto}
+#bub .arw{position:absolute;width:16px;height:16px;background:#fff;border-radius:3px;transform:rotate(45deg)}
+#bub .bt{font-family:var(--display);font-weight:700;text-transform:uppercase;font-size:22px;line-height:1.08}
+#bub .bx{font-size:14px;line-height:1.45;color:var(--muted);margin-top:6px}
+#bub .bf{display:flex;align-items:center;gap:10px;margin-top:12px}
+#bub .dots{display:flex;gap:5px;flex:1}
+#bub .dots i{width:6px;height:6px;border-radius:3px;background:var(--off);transition:width .35s var(--ease),background .35s}
+#bub .dots i.on{width:18px;background:var(--ink)}
+#bub .skip{font-size:13px;font-weight:600;color:var(--dim);padding:8px 4px}
+#bub .go{height:38px;padding:0 16px;border-radius:19px;background:var(--night);color:#fff;font-size:14px;font-weight:700}
+#bub .in{transition:opacity .25s ease,transform .3s var(--ease)}
+#bub.swap .in{opacity:0;transform:translateY(6px)}
+/* abertura do tour: o anel da marca se desenha gomo a gomo */
+#welcome{position:absolute;inset:0;z-index:64;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:0 34px;background:rgba(245,244,241,.94);opacity:0;pointer-events:none;transition:opacity .4s}
+#welcome.on{opacity:1;pointer-events:auto}
+#welcome h2{font-family:var(--display);font-weight:700;text-transform:uppercase;font-size:38px;line-height:1.05;margin-top:22px}
+#welcome p{font-size:16px;line-height:1.5;color:var(--muted);margin-top:10px}
+#welcome .acts{display:flex;flex-direction:column;gap:6px;width:100%;margin-top:28px}
+.reveal{clip-path:inset(0 100% 0 0)}
+
+#toast{position:absolute;left:50%;top:118px;z-index:70;transform:translate(-50%,-20px);opacity:0;background:var(--night);color:#fff;font-weight:600;font-size:14px;padding:10px 16px;border-radius:20px;white-space:nowrap;box-shadow:0 10px 24px rgba(20,24,41,.25);pointer-events:none}
+@media (prefers-reduced-motion:reduce){*,*:before,*:after{animation-duration:.01ms!important;transition-duration:.01ms!important}}
+</style>
+
+<div id="app">
+  <div id="stageWrap"><div id="phone"><div id="screen">
+    <div class="island"></div>
+    <svg width="0" height="0" style="position:absolute"><defs><linearGradient id="rbg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#FF6964"/><stop offset=".25" stop-color="#FFA353"/><stop offset=".45" stop-color="#FFD066"/><stop offset=".65" stop-color="#49DCC0"/><stop offset=".82" stop-color="#59A7FF"/><stop offset="1" stop-color="#A889FF"/></linearGradient></defs></svg>
+
+    <!-- Início: painel igual ao de hoje + os dois cartões (agora com detalhe) + Quase lá -->
+    <section class="scr" id="s-home">
+      <div class="sb"><span>9:41</span><i data-sb></i></div>
+      <div class="hd"><div class="logo"><svg class="ring" data-lit="48" width="30" height="30" viewBox="0 0 100 100"></svg><span>IRIS<b>A</b></span></div><div class="sos" id="sos" data-sos></div></div>
+      <div class="body">
+        <div class="cd dk" id="panel" style="padding:20px 20px 18px;border-radius:30px">
+          <div style="display:flex;align-items:center;gap:10px"><span style="width:40px;height:40px;border-radius:12px;background:#2C3250;display:flex;align-items:center;justify-content:center"><svg class="ring" data-lit="48" width="24" height="24" viewBox="0 0 100 100"></svg></span><p class="lb" style="color:var(--soft)">Sua cidade</p></div>
+          <p style="font-family:var(--display);font-weight:700;font-size:38px;line-height:1.05;margin-top:10px">CURITIBA</p>
+          <p style="font-size:15px;color:#E6E7EF;margin-top:2px">Curitiba · PR ⌄</p>
+          <i style="display:block;width:96px;height:4px;border-radius:2px;background:var(--rb);margin:12px 0"></i>
+          <p style="font-size:14.5px;line-height:1.5;color:#E6E7EF">O mapa dos lugares onde a gente é <b style="color:var(--yellow)">bem-vinde</b>, feito por nós. Diga quanta cor tem os lugares por onde você passa. E registre, sem se identificar, o que não deveria ter acontecido.</p>
+          <div style="display:flex;gap:10px;margin-top:16px">
+            <button class="btn" id="goRate" style="background:var(--turq);flex:1;font-size:15px">Avaliar um lugar</button>
+            <button class="btn" id="goReport" style="background:var(--coral);flex:1;font-size:15px">Registrar relato</button>
+          </div>
+        </div>
+        <div class="duo">
+          <button class="cd mini2" id="wkCard">
+            <svg class="edge" id="wkEdge"></svg>
+            <span class="row2"><svg id="wkRing" width="40" height="40" viewBox="0 0 100 100"></svg><span><span class="lb">Sua semana</span><span class="num big"><span id="wkN">3</span> de 4</span></span></span>
+            <span class="cap" id="wkMsg">Mais 1 dia com a Irisa aberta e a semana acende.</span>
+            <span class="more">Ver os dias <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M9 6l6 6-6 6"/></svg></span>
+          </button>
+          <button class="cd mini2" id="cityCard">
+            <svg class="edge" id="cityEdge"></svg>
+            <span class="row2"><svg id="cityRing" width="40" height="40" viewBox="0 0 100 100"></svg><span><span class="lb">Curitiba</span><span class="num big"><span id="cityN">12</span> de 100</span></span></span>
+            <span class="cap">dos lugares mais conhecidos já têm selo.</span>
+            <span class="more">Ver quais <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M9 6l6 6-6 6"/></svg></span>
+          </button>
+        </div>
+        <button class="cd almost" id="almostHome" data-open="figurinha">
+          <span class="mwrap"><span id="almostHomeMd"></span><i class="shine"></i></span>
+          <span style="flex:1;min-width:0"><span class="live">Quase lá</span><span class="ttl" style="display:block;margin-top:3px">Figurinha Conhecida</span>
+            <span style="display:block;font-size:13px;color:var(--muted)"><b class="num" style="font-size:15px;color:var(--ink)">Faltam 2</b> avaliações</span>
+            <span class="segs" id="segsHome"></span></span>
+        </button>
+        <div style="display:flex;align-items:center;gap:10px;height:52px;border-radius:26px;background:rgba(255,255,255,.7);padding:0 18px;font-size:15px;color:var(--dim);box-shadow:var(--shadow)"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#7C8296" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg>Buscar um lugar em Curitiba</div>
+        <p style="font-size:18px;font-weight:700;margin-top:4px">Quanta cor já tem aqui</p>
+        <div class="cd" style="display:flex;gap:12px;align-items:center"><span style="width:62px;height:62px;border-radius:18px;background:rgba(255,105,100,.16);display:flex;align-items:center;justify-content:center"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#C72825" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 3h14l-7 9z"/><path d="M12 12v8M8 21h8"/></svg></span><span style="flex:1"><span style="display:block;font-size:17px;font-weight:700">Bar Folia</span><span style="display:block;font-size:12.5px;color:var(--dim);margin-top:4px">4 avaliações de 5 necessárias · São Francisco</span></span></div>
+      </div>
+    </section>
+
+    <!-- Perfil: tudo o que existe continua; anel e conquistas em dois cartões -->
+    <section class="scr off" id="s-perfil">
+      <div class="sb"><span>9:41</span><i data-sb></i></div>
+      <div class="hd"><div class="logo"><svg class="ring" data-lit="48" width="30" height="30" viewBox="0 0 100 100"></svg><span>IRIS<b>A</b></span></div><div class="sos" data-sos></div></div>
+      <div class="body" style="padding-inline:18px;gap:14px">
+        <div class="cd" style="border-radius:30px;padding:20px;display:flex;align-items:center;gap:16px">
+          <span style="width:72px;height:72px;flex:none;border-radius:50%;padding:3px;background:var(--rb)"><span style="display:flex;width:100%;height:100%;border-radius:50%;background:#fff;align-items:center;justify-content:center;font-family:var(--display);font-weight:700;font-size:30px">L</span></span>
+          <span style="min-width:0"><span style="display:block;font-family:var(--display);font-weight:700;font-size:22px">LEANDRO</span><span style="display:block;font-size:13px;color:var(--dim)">Curitiba · PR</span></span>
+        </div>
+        <div class="cd" id="anelCard" style="border-radius:30px;padding:16px 18px;display:flex;align-items:center;gap:16px">
+          <svg id="anelRing" width="86" height="86" viewBox="0 0 100 100"></svg>
+          <span style="flex:1;min-width:0"><span class="lb" style="display:block">Seu anel</span>
+            <span style="display:block;font-family:var(--display);font-weight:700;font-size:24px;text-transform:uppercase;color:var(--turqInk)">Laranja</span>
+            <span style="display:block;font-size:13px;color:var(--muted)"><b id="anelN">9</b> de 48 gomos</span>
+            <span style="display:flex;align-items:center;gap:6px;margin-top:6px;font-size:12px;color:var(--dim)">Esta semana <span class="segs" id="segsWk" style="margin:0;width:70px"></span> 3 de 4</span></span>
+        </div>
+        <button class="cd" id="conqCard" style="border-radius:30px;padding:16px 18px;display:flex;flex-direction:column;gap:12px;text-align:left">
+          <span style="display:flex;justify-content:space-between;align-items:baseline;width:100%"><span style="font-size:17px;font-weight:500">Suas conquistas</span><span style="font-size:13px;font-weight:600;color:var(--turqInk)">5 de 12 · Ver todas</span></span>
+          <span id="conqRow" style="display:flex;justify-content:space-between;width:100%"></span>
+        </button>
+        <div class="cd" style="border-radius:30px;padding:24px 22px;display:flex;flex-direction:column;gap:12px">
+          <p style="font-size:17px;font-weight:500">Seu perfil</p>
+          <p style="font-size:13px;color:var(--dim)">Apelido, cidade e o resto do Perfil continuam iguais.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Conquistas -->
+    <section class="scr right" id="s-conq">
+      <div class="sb"><span>9:41</span><i data-sb></i></div>
+      <button class="hback" id="conqBack"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#141829" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>Perfil</button>
+      <div class="body" style="gap:14px;padding-top:4px">
+        <div><h1 class="t">Conquistas</h1><p style="font-size:15px;color:var(--muted);margin-top:2px">5 de 12 desbloqueadas</p></div>
+        <div class="cd hero" id="hero">
+          <i class="glow"></i>
+          <div style="position:relative;display:flex;align-items:center;gap:16px">
+            <span class="mwrap"><span id="heroMd"></span><i class="shine"></i></span>
+            <span style="flex:1;min-width:0"><span class="live">Quase lá</span>
+              <span style="display:block;font-family:var(--display);font-weight:700;text-transform:uppercase;font-size:26px;line-height:1.05;margin-top:6px">Figurinha Conhecida</span>
+              <span style="display:block;font-size:13px;color:var(--soft);margin-top:4px">15 avaliações em 3 semanas</span></span>
+          </div>
+          <div style="position:relative;display:flex;align-items:baseline;gap:8px;margin-top:16px"><span class="num" style="font-size:46px;color:#fff" id="heroLeft">2</span><span style="font-size:15px;color:var(--soft)">avaliações para desbloquear</span></div>
+          <div class="segs" id="segsHero" style="position:relative;margin-top:10px"></div>
+          <div style="position:relative;display:flex;justify-content:space-between;font-size:12px;color:var(--soft);margin-top:6px;font-variant-numeric:tabular-nums"><span>13 de 15</span><span>3 de 3 semanas</span></div>
+          <button class="btn" id="heroGo" style="position:relative;background:var(--yellow);color:var(--night);font-weight:700;margin-top:16px">Avaliar um lugar perto</button>
+        </div>
+        <p class="sec">Depois dela</p>
+        <div class="next">
+          <button data-open="nome-na-lista"><span id="nx1"></span><span><p>Nome na Lista</p><small>3 de 5 bairros</small></span></button>
+          <button data-open="ombro-amigo"><span id="nx2"></span><span><p>Ombro Amigo</p><small>2 de 10 mensagens</small></span></button>
+        </div>
+        <p class="sec">Todas</p>
+        <div class="mg" id="mg"></div>
+      </div>
+    </section>
+
+    <div class="tb" id="tabs"></div>
+    <div class="veil" id="veil"></div>
+
+    <!-- detalhe da semana -->
+    <div class="sheet" id="shWeek">
+      <div class="grab"></div>
+      <div class="shd"><svg id="wkBig" width="96" height="96" viewBox="0 0 100 100"></svg><div><h3>Sua semana</h3><p><b>3 de 4</b> dias com a Irisa aberta. Mais 1 e a semana acende.</p></div></div>
+      <p class="sec">Os dias que contaram</p>
+      <div class="tl" id="tl"><i class="rail"></i>
+        <div class="day" style="--c:#FF6964"><b>Segunda, 29/09</b><ul><li>Abriu a Irisa</li><li>Consultou 2 lugares<em style="color:#B98500">+1 faísca</em></li></ul></div>
+        <div class="day" style="--c:#FFD066"><b>Quarta, 01/10</b><ul><li>Abriu a Irisa</li><li>Avaliou o Bar Folia<em style="color:var(--turqInk)">+1 gomo</em></li><li>Escreveu no mural<em style="color:#B98500">+1 faísca</em></li></ul></div>
+        <div class="day" style="--c:#49DCC0"><b>Hoje</b><ul><li>Abriu a Irisa</li></ul></div>
+      </div>
+      <p class="sec">Como a semana funciona</p>
+      <div class="rules">
+        <div><span class="ico" style="background:rgba(73,220,192,.18)"><svg id="ruleRing" width="24" height="24" viewBox="0 0 100 100"></svg></span><span><b>4 dias quaisquer</b> acendem a semana e abrem uma caixinha.</span></div>
+        <div><span class="ico" style="background:rgba(255,208,102,.25)"><svg width="18" height="18" viewBox="0 0 24 24"><path d="M12 1l2.6 8.4L23 12l-8.4 2.6L12 23l-2.6-8.4L1 12l8.4-2.6Z" fill="#FFD066" stroke="#B98500"/></svg></span><span>Cada dia a mais (5º, 6º e 7º) dá <b>uma faísca</b>.</span></div>
+        <div><span class="ico" style="background:rgba(168,137,255,.2)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#6037F0" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/></svg></span><span>Na segunda começa outra. <b>Nada do que você ganhou some.</b></span></div>
+      </div>
+      <p class="sec">Semanas anteriores</p>
+      <div class="weeks" id="weeks"></div>
+      <p style="font-size:13px;color:var(--muted);text-align:center"><b>3 semanas acesas.</b> Com 4, chega a Já Mora Aqui.</p>
+    </div>
+
+    <!-- detalhe da cidade -->
+    <div class="sheet" id="shCity">
+      <div class="grab"></div>
+      <div class="shd"><svg id="cityBig" width="104" height="104" viewBox="0 0 100 100"></svg><div><h3><span id="cityBigN">0</span> de 100</h3><p>dos lugares mais conhecidos de Curitiba já têm selo (5 avaliações).</p><span class="chip" style="margin-top:8px;background:rgba(73,220,192,.2);color:var(--turqInk)">+4 esta semana</span></div></div>
+      <p class="sec">Perto do selo</p>
+      <div style="display:flex;flex-direction:column;gap:8px" id="nearList"></div>
+      <p class="sec">Já têm selo</p>
+      <div style="display:flex;flex-direction:column;gap:8px" id="doneList"></div>
+      <p style="font-size:12.5px;color:var(--dim);line-height:1.45">A meta usa os 100 lugares mais conhecidos da cidade, não os 10 mil do mapa, para o número andar toda semana.</p>
+    </div>
+
+    <!-- detalhe da medalha -->
+    <div class="sheet" id="shMedal" style="align-items:center;text-align:center">
+      <div class="grab"></div>
+      <div id="detMedal" style="margin-top:10px"></div>
+      <h1 class="t" style="font-size:36px" id="detT"></h1>
+      <p style="font-size:15px;color:var(--muted);max-width:300px" id="detC"></p>
+      <div id="detNum" style="display:flex;align-items:baseline;gap:6px"><span class="num" style="font-size:44px" id="detA"></span><span style="font-size:17px;color:var(--dim)" id="detB"></span></div>
+      <div class="segs" id="detSegs" style="width:100%;max-width:300px;margin-top:0"></div>
+      <button class="btn" id="detGo" style="background:var(--night);color:#fff;margin-top:6px">Avaliar um lugar perto</button>
+    </div>
+
+    <!-- tour de boas-vindas do app -->
+    <div id="welcome">
+      <svg id="wRing" width="150" height="150" viewBox="0 0 100 100"></svg>
+      <h2 class="reveal" id="wT">Bem-vinde à Irisa</h2>
+      <p class="reveal" id="wP">O mapa dos lugares onde a gente é bem-vinde, feito por nós. Em 30 segundos te mostramos onde fica cada coisa.</p>
+      <div class="acts"><button class="btn" id="wGo" style="background:var(--night);color:#fff">Começar</button><button class="btn" id="wSkip" style="height:44px;font-size:14px;color:var(--dim)">Agora não</button></div>
+    </div>
+    <div id="cveil"></div>
+    <div id="spot"></div>
+    <svg id="trace"><rect id="traceR" pathLength="100" stroke-dasharray="100" stroke-dashoffset="100"/></svg>
+    <div id="bub"><i class="arw" id="arw"></i>
+      <div class="in"><p class="bt" id="bT"></p><p class="bx" id="bX"></p></div>
+      <div class="bf"><span class="dots" id="bDots"></span><button class="skip" id="bSkip">Pular</button><button class="go" id="bGo">Próximo</button></div>
+    </div>
+    <div id="toast"></div>
+  </div></div></div>
+
+  <aside id="guide" aria-live="polite">
+    <div class="top"><span class="mk">IRIS<b>A</b> · PROTÓTIPO V2</span><span class="count" id="gCount">1 de 7</span></div>
+    <div class="steps" id="gSteps"></div>
+    <p class="eb" id="gEb"></p>
+    <h2 id="gH"></h2>
+    <p class="txt" id="gTxt"></p>
+    <div class="nav"><button class="gbtn sec" id="gPrev">Voltar</button><button class="gbtn pri" id="gNext">Próximo</button></div>
+    <button class="again" id="gAgain"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/></svg>Ver a animação de novo</button>
+    <p class="keys">Setas do teclado também passam. Dá para tocar em tudo no celular.</p>
+  </aside>
+</div>
+
+<script src="pingentes.js"></script>
+<script>
+const P = window.PINGENTES;
+const $ = (s, r = document) => r.querySelector(s), $$ = (s, r = document) => [...r.querySelectorAll(s)];
+const RM = matchMedia("(prefers-reduced-motion: reduce)").matches;
+const A = (el, kf, o) => el.animate(kf, { duration: RM ? 1 : (o?.d ?? 500), delay: RM ? 0 : (o?.delay ?? 0), easing: o?.e ?? "cubic-bezier(.2,.7,.2,1)", fill: "both" });
+const wait = ms => new Promise(r => setTimeout(r, RM ? 0 : ms));
+const EASE = "cubic-bezier(.3,.8,.3,1)";
+
+/* ---------- desenho: tudo que tem progresso nasce vazio e enche ---------- */
+const G = ['#ff6964','#ff7062','#ff7760','#ff7f5d','#ff875c','#ff8e5a','#ff9558','#ff9c55','#ffa353','#ffa955','#ffae58','#ffb35a','#ffb95d','#ffbf5f','#ffc561','#ffc964','#ffd066','#efd46c','#d7d679','#bed582','#a3d38c','#8bd296','#74d6a4','#5fd9b2','#49dcc0','#4cd7ca','#4fd2d4','#4fcbdc','#50c4e4','#51bcec','#52b4f5','#52aefd','#59a7ff','#63a3ff','#6b9fff','#759aff','#7d96ff','#8791ff','#908dff','#9d8bff','#a889ff','#b684f0','#c681dd','#d37eca','#de78b3','#ea709b','#f56a85','#ff636e'];
+const OFF = "#E4E1DA";
+const Pt = (r, a) => (50 + r * Math.cos(a)).toFixed(2) + " " + (50 + r * Math.sin(a)).toFixed(2);
+const PUPIL = `<circle cx="50" cy="50" r="13" fill="#0F1220"/><circle cx="46.1" cy="45.6" r="2.86" fill="#fff"/>`;
+// anel de N fatias; `lit` acesas. Com `anim`, as acesas enchem uma a uma, como o radar da marca.
+function slices(svg, n, lit, { ro = 48, ri = 35, gap = .5, colors, anim = false, step = 22, delay = 0 } = {}) {
+  const deg = 360 / n; let h = "";
+  for (let i = 0; i < n; i++) {
+    const a0 = (-90 + deg * i + gap) * Math.PI / 180, a1 = (-90 + deg * (i + 1) - gap) * Math.PI / 180;
+    const c = colors ? colors[i] : G[Math.round(i / Math.max(lit - 1, 1) * 47) % 48];
+    h += `<path d="M${Pt(ro, a0)}A${ro} ${ro} 0 0 1 ${Pt(ro, a1)}L${Pt(ri, a1)}A${ri} ${ri} 0 0 0 ${Pt(ri, a0)}Z" fill="${i < lit && !anim ? c : OFF}" data-c="${c}"/>`;
+  }
+  svg.innerHTML = h + PUPIL;
+  if (anim) [...svg.querySelectorAll("path")].slice(0, lit).forEach((p, i) => A(p, [{ fill: OFF }, { fill: p.dataset.c }], { d: 260, delay: delay + i * step, e: "linear" }));
+}
+const ring48 = (svg, lit, o) => slices(svg, 48, lit, { colors: G, gap: .25, ...o });
+const WKC = ["#FF6964", "#FFD066", "#49DCC0", "#A889FF"];
+const week = (svg, lit, o) => slices(svg, 4, lit, { ro: 48, ri: 32, gap: 5, colors: WKC, step: 260, ...o });
+const city = (svg, lit, o) => slices(svg, 100, lit, { ro: 48, ri: 34, gap: .5, step: 40, ...o });
+// número que conta até o valor
+function countUp(el, to, d = 900, delay = 0, from = 0) {
+  if (RM) { el.textContent = to; return; }
+  const t0 = performance.now() + delay;
+  const tick = t => { const k = Math.min(1, Math.max(0, (t - t0) / d)); el.textContent = Math.round(from + (to - from) * (1 - Math.pow(1 - k, 3))); if (k < 1) requestAnimationFrame(tick); };
+  el.textContent = from; requestAnimationFrame(tick);
+}
+// barra em gomos que acendem da esquerda
+function segs(el, n, lit, { anim = true, delay = 0, step = 60, colorful = true } = {}) {
+  el.innerHTML = Array.from({ length: n }, (_, i) => `<i><b style="background:${colorful ? G[Math.round(i / Math.max(n - 1, 1) * 40)] : "#49DCC0"}"></b></i>`).join("");
+  [...el.querySelectorAll("b")].slice(0, lit).forEach((b, i) => anim ? A(b, [{ transform: "scaleX(0)" }, { transform: "scaleX(1)" }], { d: 320, delay: delay + i * step, e: EASE }) : (b.style.transform = "none"));
+}
+// borda de progresso em volta de um cartão: o traço arco-íris percorre o contorno até a fração
+function edge(svg, frac, { from = 0, d = 1200, delay = 0, full = false } = {}) {
+  const host = svg.parentElement, w = host.offsetWidth, h = host.offsetHeight, r = parseFloat(getComputedStyle(host).borderTopLeftRadius) || 24;
+  svg.setAttribute("viewBox", `0 0 ${w} ${h}`); svg.setAttribute("width", w); svg.setAttribute("height", h);
+  svg.innerHTML = `<rect x="1.5" y="1.5" width="${w - 3}" height="${h - 3}" rx="${r - 1.5}" stroke="${OFF}" opacity=".7"/><rect x="1.5" y="1.5" width="${w - 3}" height="${h - 3}" rx="${r - 1.5}" stroke="url(#rbg)" stroke-linecap="round" pathLength="100" stroke-dasharray="${frac * 100} 100"/>`;
+  const p = svg.lastElementChild;
+  A(p, [{ strokeDasharray: `${from * 100} 100` }, { strokeDasharray: `${frac * 100} 100` }], { d, delay, e: EASE });
+  if (full) A(host, [{ boxShadow: "var(--shadow)" }, { boxShadow: "0 0 0 0 rgba(168,137,255,0), 0 12px 34px rgba(168,137,255,.45)" }], { d: 900, delay: delay + d });
+}
+// medalha (silhueta ou cor) com o anel de progresso enchendo
+const L = 2 * Math.PI * 55;
+const medal = (id, o = {}) => { const p = P.get(id); return P.medal(p.art, { cat: p.cat, ...o }); };
+function medalInto(host, id, { size = 96, prog = 0, on = false, lockIcon = false, anim = true, delay = 200, d = 1300 } = {}) {
+  host.innerHTML = medal(id, { size, state: on ? "on" : "lock", prog: on ? 0 : prog, lockIcon });
+  const c = host.querySelector("circle[stroke-dasharray]");
+  if (c && anim) A(c, [{ strokeDasharray: `0 999` }, { strokeDasharray: `${(L * prog).toFixed(1)} 999` }], { d, delay, e: EASE });
+}
+
+/* ---------- peças fixas ---------- */
+$$("svg.ring").forEach(s => ring48(s, 48));
+const SB = `<svg width="18" height="12" viewBox="0 0 18 12" fill="currentColor"><rect x="0" y="8" width="3" height="4" rx="1"/><rect x="5" y="5" width="3" height="7" rx="1"/><rect x="10" y="2.5" width="3" height="9.5" rx="1"/><rect x="15" y="0" width="3" height="12" rx="1"/></svg><svg width="16" height="12" viewBox="0 0 16 12" fill="currentColor"><path d="M8 2.5c2.3 0 4.4.9 6 2.4l1.2-1.3A10.4 10.4 0 0 0 8 .7 10.4 10.4 0 0 0 .8 3.6L2 4.9a8.6 8.6 0 0 1 6-2.4Zm0 3.6c1.3 0 2.5.5 3.4 1.3l1.2-1.3A6.6 6.6 0 0 0 8 4.3 6.6 6.6 0 0 0 3.4 6.1l1.2 1.3c.9-.8 2.1-1.3 3.4-1.3ZM8 9.6l2-2.1a3 3 0 0 0-4 0Z"/></svg><svg width="27" height="13" viewBox="0 0 27 13"><rect x=".5" y=".5" width="23" height="12" rx="3.5" fill="none" stroke="currentColor" opacity=".4"/><rect x="2" y="2" width="20" height="9" rx="2" fill="currentColor"/></svg>`;
+$$("[data-sb]").forEach(e => e.innerHTML = SB);
+$$("[data-sos]").forEach(e => e.innerHTML = `<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#141829" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 18v-6a5 5 0 0 1 10 0v6"/><path d="M5 21h14v-3H5Z"/><path d="M21 12h1M18.5 4.5l-.7.7M2 12h1M12 2v1M4.9 4.9l.7.7"/></svg>`);
+const IC = { "Início": '<path d="M3 10l9-7 9 7v10a2 2 0 0 1-2 2h-4v-7H9v7H5a2 2 0 0 1-2-2Z"/>', "Mapa": '<path d="M9 4L3 6v14l6-2 6 2 6-2V4l-6 2Z"/><path d="M9 4v14M15 6v14"/>', "Lugares": '<path d="M3 9l1.5-5h15L21 9"/><path d="M4 9v11h16V9"/><path d="M3 9h18"/><path d="M10 20v-5h4v5"/>', "Apoio": '<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4"/><path d="M5.6 5.6l3.6 3.6M14.8 14.8l3.6 3.6M18.4 5.6l-3.6 3.6M9.2 14.8l-3.6 3.6"/>', "Perfil": '<circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/>' };
+const TC = ["#C72825", "#0A8B7A", "#B5651D", "#6037F0", "#141829"];
+$("#tabs").innerHTML = Object.entries(IC).map(([n, d], i) => `<button data-tab="${i}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${d}</svg>${n}</button>`).join("");
+function setTab(i) { $$("#tabs button").forEach((b, k) => { b.classList.toggle("on", k === i); b.style.color = k === i ? TC[k] : ""; }); }
+setTab(0);
+function toast(t) { const el = $("#toast"); el.textContent = t;
+  A(el, [{ opacity: 0, transform: "translate(-50%,-12px)" }, { opacity: 1, transform: "translate(-50%,0)", offset: .15 }, { opacity: 1, transform: "translate(-50%,0)", offset: .85 }, { opacity: 0, transform: "translate(-50%,-6px)" }], { d: 2400, e: "ease" }); }
+
+/* ---------- Início ---------- */
+function homeIn(anim = true) {
+  week($("#wkRing"), 3, { anim, delay: 200 });
+  city($("#cityRing"), 12, { anim, delay: 200, step: 45 });
+  edge($("#wkEdge"), .75, { d: anim ? 1300 : 1, delay: 300 });
+  edge($("#cityEdge"), .12, { d: anim ? 900 : 1, delay: 300 });
+  if (anim) { countUp($("#wkN"), 3, 800, 200); countUp($("#cityN"), 12, 900, 200); }
+  medalInto($("#almostHomeMd"), "figurinha", { size: 62, prog: 13 / 15, anim, delay: 400 });
+  segs($("#segsHome"), 15, 13, { anim, delay: 500, step: 45 });
+}
+
+/* ---------- detalhe da semana ---------- */
+function openWeek() {
+  openSheet("#shWeek");
+  week($("#wkBig"), 3, { anim: true, delay: 450, step: 300 });
+  week($("#ruleRing"), 4);
+  const rail = $("#tl .rail");
+  A(rail, [{ transform: "scaleY(0)" }, { transform: "scaleY(1)" }], { d: 1000, delay: 500, e: EASE });
+  $$("#tl .day").forEach((d, i) => A(d, [{ opacity: 0, transform: "translateY(8px)" }, { opacity: 1, transform: "none" }], { d: 420, delay: 600 + i * 260 }));
+  const past = [4, 4, 2, 4, 1];
+  $("#weeks").innerHTML = past.map((n, i) => `<span><svg width="38" height="38" viewBox="0 0 100 100" data-w="${n}"></svg>${["01/09", "08/09", "15/09", "22/09", "29/09"][i]}</span>`).join("");
+  $$("#weeks svg").forEach((s, i) => week(s, +s.dataset.w, { anim: true, delay: 1300 + i * 140, step: 120 }));
+}
+/* ---------- detalhe da cidade ---------- */
+const NEAR = [["Café do Largo", "Café · Centro", 4, "#FFA353"], ["Bar Folia", "Bar · São Francisco", 4, "#FF6964"], ["James Bar", "Balada · Centro", 3, "#A889FF"]];
+const DONE = [["Bar Aquarela", "Bar · São Francisco", "Acolhedor"], ["Hotel Lumen", "Hotel · Batel", "Acolhedor"], ["Restaurante Ipê", "Restaurante · Mercês", "Bem avaliado"]];
+const IPH = '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#141829" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 3h14l-7 9z"/><path d="M12 12v8M8 21h8"/></svg>';
+function openCity() {
+  openSheet("#shCity");
+  city($("#cityBig"), 12, { anim: true, delay: 450, step: 55 });
+  countUp($("#cityBigN"), 12, 1100, 450);
+  $("#nearList").innerHTML = NEAR.map(([n, s, k, c]) => `<div class="pl"><span class="ph" style="background:${c}2E">${IPH}</span><span style="flex:1;min-width:0"><p>${n}</p><small>${s} · falta${5 - k > 1 ? "m" : ""} ${5 - k}</small><span class="pips" data-k="${k}">${"<i><b></b></i>".repeat(5)}</span></span><button class="mini-go" data-rate>Avaliar</button></div>`).join("");
+  $$("#nearList .pips").forEach((p, j) => $$("b", p).slice(0, +p.dataset.k).forEach((b, i) => { b.style.background = ["#FF6964", "#FFA353", "#FFD066", "#49DCC0", "#A889FF"][i]; A(b, [{ transform: "scaleX(0)" }, { transform: "scaleX(1)" }], { d: 300, delay: 700 + j * 160 + i * 70, e: EASE }); }));
+  $("#doneList").innerHTML = DONE.map(([n, s, b]) => `<div class="pl"><span class="ph" style="background:rgba(73,220,192,.18)">${IPH}</span><span style="flex:1;min-width:0"><p>${n}</p><small>${s}</small></span><span class="chip" style="background:rgba(73,220,192,.2);color:var(--turqInk)">${b}</span></div>`).join("");
+  $$("#shCity .pl").forEach((r, i) => A(r, [{ opacity: 0, transform: "translateY(8px)" }, { opacity: 1, transform: "none" }], { d: 400, delay: 550 + i * 90 }));
+}
+
+/* ---------- Perfil e Conquistas ---------- */
+const MEDALS = [["deu-o-nome"], ["deu-close"], ["inaugurou"], ["bateu-ponto"], ["abre-alas"], ["figurinha", 13, 15, "avaliações"], ["famosinha", 13, 30, "avaliações"], ["acendeu-a-luz", 0, 1, ""], ["nome-na-lista", 3, 5, "bairros"], ["mala-pronta", 1, 3, "cidades"], ["ombro-amigo", 2, 10, "mensagens"], ["eu-conheco", 0, 1, ""]];
+function perfilIn(anim = true) {
+  ring48($("#anelRing"), 9, { anim, delay: 250, step: 60 });
+  if (anim) countUp($("#anelN"), 9, 700, 250);
+  segs($("#segsWk"), 4, 3, { anim, delay: 500, step: 160, colorful: false });
+  const row = [...MEDALS.slice(0, 4), MEDALS[5], MEDALS[8]];
+  $("#conqRow").innerHTML = row.map((_, i) => `<span data-i="${i}"></span>`).join("");
+  $$("#conqRow span").forEach((s, i) => { const [id, v, t] = row[i]; medalInto(s, id, { size: 48, on: v === undefined, prog: v ? v / t : 0, anim, delay: 400 + i * 80, d: 900 }); });
+}
+function conqIn(anim = true) {
+  medalInto($("#heroMd"), "figurinha", { size: 104, prog: 13 / 15, anim, delay: 350, d: 1500 });
+  segs($("#segsHero"), 15, 13, { anim, delay: 600, step: 55 });
+  if (anim) { countUp($("#heroLeft"), 2, 900, 600, 15); A($("#hero .glow"), [{ opacity: 0, transform: "scale(.7)" }, { opacity: 1, transform: "scale(1)" }], { d: 1400, delay: 200 }); }
+  medalInto($("#nx1"), "nome-na-lista", { size: 44, prog: .6, anim, delay: 900, d: 900 });
+  medalInto($("#nx2"), "ombro-amigo", { size: 44, prog: .2, anim, delay: 1000, d: 900 });
+  $("#mg").innerHTML = MEDALS.map(([id, v, t, u], i) => { const o = P.get(id), lk = v !== undefined;
+    return `<button class="${lk ? "lk" : ""}" data-open="${id}"><span data-host></span><p>${o.flex ? o.flex[2] : o.t}</p>${lk && t > 1 ? `<small>${v} de ${t}</small>` : ""}</button>`; }).join("");
+  $$("#mg button").forEach((b, i) => { const [id, v, t] = MEDALS[i]; medalInto($("[data-host]", b), id, { size: 92, on: v === undefined, prog: v ? v / t : 0, lockIcon: v !== undefined && !v, anim, delay: 500 + i * 70, d: 1000 }); });
+}
+
+/* ---------- detalhe da medalha ---------- */
+function openDetail(id) {
+  const row = MEDALS.find(r => r[0] === id) || [id]; const [, v, t, u] = row; const o = P.get(id), lk = v !== undefined;
+  openSheet("#shMedal");
+  medalInto($("#detMedal"), id, { size: 190, on: !lk, prog: lk ? v / t : 0, lockIcon: false, delay: 500, d: 1400 });
+  $("#detT").textContent = o.flex ? o.flex[2] : o.t;
+  $("#detC").textContent = lk ? o.cond : "“" + o.copy + "”";
+  const showN = lk && t > 1;
+  $("#detNum").hidden = !showN; $("#detSegs").hidden = !showN;
+  if (showN) { countUp($("#detA"), v, 900, 500); $("#detB").textContent = `de ${t} ${u}`; segs($("#detSegs"), Math.min(t, 30), Math.round(v / t * Math.min(t, 30)), { delay: 650, step: Math.max(25, 600 / t) }); }
+  $("#detGo").textContent = lk ? "Avaliar um lugar perto" : "Compartilhar no story";
+}
+
+/* ---------- navegação ---------- */
+const SCR = { home: "#s-home", perfil: "#s-perfil", conq: "#s-conq" };
+let cur = "home";
+function go(name, anim = true) {
+  if (cur === name) return;
+  const from = $(SCR[cur]), to = $(SCR[name]);
+  from.className = "scr " + (name === "conq" ? "left" : cur === "conq" ? "right" : "off");
+  to.className = "scr"; to.scrollTop = 0; cur = name;
+  setTab(name === "home" ? 0 : 4);
+  $("#tabs").style.transform = name === "conq" ? "translateY(140%)" : "";
+  if (name === "home") homeIn(anim); if (name === "perfil") perfilIn(anim); if (name === "conq") conqIn(anim);
+}
+function openSheet(sel) { closeSheets(); $("#veil").classList.add("on"); const s = $(sel); s.scrollTop = 0; s.classList.add("on"); }
+function closeSheets() { $("#veil").classList.remove("on"); $$(".sheet").forEach(s => s.classList.remove("on")); }
+$("#veil").onclick = closeSheets;
+$("#wkCard").onclick = openWeek;
+$("#cityCard").onclick = openCity;
+$("#conqCard").onclick = () => go("conq");
+$("#conqBack").onclick = () => go("perfil");
+$("#goRate").onclick = $("#heroGo").onclick = () => toast("Abre a ficha de um lugar perto");
+$("#goReport").onclick = () => toast("Relato fica fora do jogo: não pontua");
+$("#sos").onclick = () => toast("190 · 192 · 100 · 188");
+$("#detGo").onclick = () => { closeSheets(); toast("Abre a ficha de um lugar perto"); };
+document.addEventListener("click", e => { const b = e.target.closest("[data-open]"); if (b && $("#screen").contains(b) && !tourOn) openDetail(b.dataset.open); const r = e.target.closest("[data-rate]"); if (r) toast("Abre a ficha desse lugar"); });
+$("#tabs").addEventListener("click", e => { const b = e.target.closest("button"); if (!b || tourOn) return; const i = +b.dataset.tab;
+  if (i === 0) go("home"); else if (i === 4) go("perfil"); else toast("Fora deste protótipo"); });
+
+/* ---------- tour de boas-vindas dentro do app ---------- */
+const COACH = [
+  { sel: "#goRate", t: "Avaliar um lugar", x: "Quatro perguntas sobre como você foi recebide. Leva um minuto, e com 5 avaliações o lugar ganha selo." },
+  { sel: "#goReport", t: "Registrar relato", x: "Se algo aconteceu, registre sem se identificar. Vira aviso na rua, nunca nota do lugar." },
+  { sel: "#sos", t: "Emergência", x: "Em qualquer tela. Liga direto para 190, 192, 100 ou 188.", r: 24 },
+  { sel: "#wkCard", t: "Sua semana", x: "Cada dia que você abre a Irisa acende um pedaço. Quatro dias quaisquer acendem a semana.", run: () => { week($("#wkRing"), 3, { anim: true, delay: 300 }); edge($("#wkEdge"), .75, { d: 1300, delay: 300 }); } },
+  { sel: "#cityCard", t: "Sua cidade", x: "Quantos dos 100 lugares mais conhecidos já têm selo. Cada avaliação ajuda a acender.", run: () => city($("#cityRing"), 12, { anim: true, delay: 300, step: 45 }) },
+  { sel: '#tabs button[data-tab="1"]', t: "Mapa", x: "Lugares com cor e as áreas onde já houve relato.", r: 30 },
+  { sel: '#tabs button[data-tab="3"]', t: "Apoio", x: "Mural da comunidade e os serviços de acolhimento da sua cidade.", r: 30 },
+  { sel: '#tabs button[data-tab="4"]', t: "Seu anel e suas conquistas", x: "Ficam no Perfil. Só você vê, e relato nunca conta ponto.", r: 30 },
+];
+let tourOn = false, ci = -1;
+function rectOf(el) { const s = $("#screen").getBoundingClientRect(), z = s.width / 390, r = el.getBoundingClientRect();
+  return { x: (r.left - s.left) / z, y: (r.top - s.top) / z, w: r.width / z, h: r.height / z }; }
+async function welcome() {
+  tourOn = true; closeSheets(); go("home", false);
+  $("#s-home").scrollTop = 0;
+  const w = $("#welcome"); w.classList.add("on");
+  ring48($("#wRing"), 48, { anim: true, delay: 250, step: 24 });
+  A($("#wRing"), [{ transform: "rotate(-30deg)" }, { transform: "rotate(0)" }], { d: 1600, delay: 200, e: EASE });
+  A($("#wT"), [{ clipPath: "inset(0 100% 0 0)" }, { clipPath: "inset(0 0 0 0)" }], { d: 800, delay: 900, e: EASE });
+  A($("#wP"), [{ clipPath: "inset(0 100% 0 0)" }, { clipPath: "inset(0 0 0 0)" }], { d: 900, delay: 1300, e: EASE });
+  $$("#welcome .btn").forEach((b, i) => A(b, [{ opacity: 0, transform: "translateY(8px)" }, { opacity: 1, transform: "none" }], { d: 400, delay: 1800 + i * 100 }));
+}
+function startCoach() { $("#welcome").classList.remove("on"); $("#cveil").classList.add("on"); $("#bDots").innerHTML = COACH.map(() => "<i></i>").join(""); ci = -1; coach(0); }
+async function coach(n) {
+  if (n >= COACH.length) return endTour(true);
+  ci = n; const c = COACH[n], el = $(c.sel);
+  // rola até o alvo, se precisar
+  const host = el.closest(".scr");
+  if (host) { const r0 = rectOf(el); if (r0.y < 110 || r0.y + r0.h > 640) { host.scrollTo({ top: Math.max(0, host.scrollTop + r0.y - 200), behavior: RM ? "auto" : "smooth" }); await wait(450); } }
+  const r = rectOf(el), pad = 6, rad = (c.r ?? (parseFloat(getComputedStyle(el).borderTopLeftRadius) || 20)) + pad;
+  const sp = $("#spot"); Object.assign(sp.style, { left: r.x - pad + "px", top: r.y - pad + "px", width: r.w + pad * 2 + "px", height: r.h + pad * 2 + "px", borderRadius: rad + "px", opacity: 1 });
+  // a borda arco-íris se desenha em volta do alvo
+  const tr = $("#trace"), tw = r.w + pad * 2, th = r.h + pad * 2;
+  Object.assign(tr.style, { left: r.x - pad + "px", top: r.y - pad + "px", opacity: 1 }); tr.setAttribute("width", tw); tr.setAttribute("height", th); tr.setAttribute("viewBox", `0 0 ${tw} ${th}`);
+  const rr = $("#traceR"); rr.setAttribute("x", 1.5); rr.setAttribute("y", 1.5); rr.setAttribute("width", tw - 3); rr.setAttribute("height", th - 3); rr.setAttribute("rx", Math.min(rad - 1.5, th / 2 - 1.5));
+  A(rr, [{ strokeDashoffset: 100 }, { strokeDashoffset: 0 }], { d: 900, delay: 350, e: EASE });
+  // balão acima ou abaixo do alvo
+  const b = $("#bub"); b.classList.add("swap");
+  await wait(220);
+  $("#bT").textContent = c.t; $("#bX").textContent = c.x;
+  $$("#bDots i").forEach((d, k) => d.classList.toggle("on", k === n));
+  $("#bGo").textContent = n === COACH.length - 1 ? "Começar a usar" : "Próximo";
+  const bh = b.offsetHeight || 150, below = r.y + r.h + pad + 16 + bh < 800;
+  b.style.top = (below ? r.y + r.h + pad + 14 : r.y - pad - 14 - bh) + "px";
+  const arw = $("#arw"), ax = Math.min(330, Math.max(14, r.x + r.w / 2 - 20 - 8));
+  Object.assign(arw.style, { left: ax + "px", top: below ? "-7px" : "", bottom: below ? "" : "-7px" });
+  b.classList.add("on"); b.style.opacity = 1; b.classList.remove("swap");
+  if (c.run) c.run();
+}
+function endTour(done) {
+  tourOn = false; ci = -1;
+  $("#welcome").classList.remove("on"); $("#cveil").classList.remove("on");
+  $("#spot").style.opacity = 0; $("#trace").style.opacity = 0; const b = $("#bub"); b.style.opacity = 0; b.classList.remove("on");
+  $("#s-home").scrollTo({ top: 0, behavior: RM ? "auto" : "smooth" });
+  if (done) toast("Pronto. O tour fica em Perfil, se quiser rever");
+}
+$("#wGo").onclick = startCoach;
+$("#wSkip").onclick = () => endTour(false);
+$("#bGo").onclick = () => coach(ci + 1);
+$("#bSkip").onclick = () => endTour(false);
+
+/* ---------- roteiro de aprovação ---------- */
+const STEPS = [
+  { eb: "Primeiro acesso", h: "Um tour de verdade, nas telas do app", t: "No lugar das seis telas com ícones pulando, o tour acontece <b>em cima do próprio Início</b>: o anel da marca se desenha gomo a gomo, depois um holofote passa por cada coisa e a <b>borda arco-íris se desenha</b> em volta dela. Toque em <b>Começar</b> dentro do celular.", run: welcome },
+  { eb: "Início", h: "A borda conta a semana", t: "O cartão <b>Sua semana</b> ganhou a borda do protótipo: ela percorre o contorno até onde a semana chegou (3 de 4 = três quartos). Os gomos enchem um a um, o número conta. Nada pula.", run: () => { endTour(false); go("home"); homeIn(true); } },
+  { eb: "Sua semana", h: "Toque e veja os dias", t: "Abre o detalhe: <b>só os dias que contaram</b>, com o que rendeu em cada um (gomo, faísca). Dia em que a pessoa não abriu não aparece, então nada fica marcado como perdido. Embaixo, como a semana funciona e as semanas anteriores.", run: () => { endTour(false); go("home", false); openWeek(); } },
+  { eb: "Sua cidade", h: "Quais são os 12 de 100", t: "O anel de 100 tracinhos se desenha e o número conta. Logo abaixo, os lugares <b>perto do selo</b> (falta 1 ou 2 avaliações) com o botão de avaliar, e os que já têm selo. É o atalho para a pessoa ajudar a cidade.", run: () => { endTour(false); go("home", false); openCity(); } },
+  { eb: "Quase lá", h: "Mais visível no Início", t: "O cartão mostra a medalha em silhueta com o anel enchendo, um brilho que passa por ela de tempos em tempos, <b>“Faltam 2”</b> em destaque e a barra de gomos com o que falta.", run: () => { endTour(false); closeSheets(); go("home"); $("#s-home").scrollTo({ top: 330, behavior: RM ? "auto" : "smooth" }); } },
+  { eb: "Perfil", h: "Anel separado das conquistas", t: "Dois cartões: <b>Seu anel</b> (gomos, nível e os 4 da semana) e <b>Suas conquistas</b>. O anel enche gomo a gomo e as medalhas bloqueadas enchem o próprio contorno.", run: () => { endTour(false); closeSheets(); go("perfil"); } },
+  { eb: "Conquistas", h: "O Quase lá vira destaque", t: "No topo, um cartão escuro com brilho: a medalha grande enchendo, <b>quantas faltam</b> contando para baixo, a barra de gomos e o botão amarelo para avaliar. Logo abaixo, as duas seguintes. Toque em qualquer medalha para ver o detalhe.", run: () => { endTour(false); closeSheets(); if (cur !== "perfil" && cur !== "conq") go("perfil", false); cur === "conq" ? conqIn(true) : go("conq"); } },
+];
+let gs = -1;
+$("#gSteps").innerHTML = STEPS.map((_, i) => `<button data-g="${i}" aria-label="Passo ${i + 1}"><i></i></button>`).join("");
+$("#gSteps").addEventListener("click", e => { const b = e.target.closest("button"); if (b) show(+b.dataset.g); });
+async function show(n, force = false) {
+  n = Math.max(0, Math.min(STEPS.length - 1, n)); if (n === gs && !force) return;
+  gs = n; const s = STEPS[n], T = $("#guide");
+  T.classList.add("swap"); await wait(200);
+  $("#gEb").textContent = s.eb; $("#gH").textContent = s.h; $("#gTxt").innerHTML = s.t;
+  $("#gCount").textContent = `${n + 1} de ${STEPS.length}`;
+  $$("#gSteps button").forEach((b, k) => b.classList.toggle("done", k <= n));
+  $("#gPrev").disabled = n === 0; $("#gNext").textContent = n === STEPS.length - 1 ? "Do início" : "Próximo";
+  T.classList.remove("swap"); fit();
+  s.run();
+}
+$("#gNext").onclick = () => show(gs === STEPS.length - 1 ? 0 : gs + 1);
+$("#gPrev").onclick = () => show(gs - 1);
+$("#gAgain").onclick = () => show(gs, true);
+addEventListener("keydown", e => { if (e.key === "ArrowRight") { e.preventDefault(); $("#gNext").click(); } if (e.key === "ArrowLeft") { e.preventDefault(); show(gs - 1); } });
+
+/* ---------- escala do celular ---------- */
+function fit() {
+  const narrow = innerWidth <= 860, g = $("#guide");
+  const gH = narrow ? g.offsetHeight + 16 : 0;
+  const availH = innerHeight - (narrow ? gH + 16 : 48), availW = narrow ? innerWidth - 32 : innerWidth - (400 + 56 + 48);
+  const z = Math.max(.3, Math.min(availH / 868, availW / 414, 1.05));
+  $("#phone").style.transform = `scale(${z})`;
+  $("#stageWrap").style.width = 414 * z + "px"; $("#stageWrap").style.height = 868 * z + "px";
+}
+addEventListener("resize", () => { fit(); if (tourOn && ci >= 0) coach(ci); });
+addEventListener("scroll", () => { if (scrollY) scrollTo(0, 0); });
+fit();
+homeIn(false);
+(document.fonts?.ready || Promise.resolve()).then(() => { fit(); homeIn(false); show(0); });
+</script>

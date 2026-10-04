@@ -470,6 +470,13 @@ Nome: **Irisa** (INPI livre; @appirisa livre). Bundle id Android `br.com.irisa.a
   uma vez por aparelho (AsyncStorage `irisa.tour.v1`; trocar para v2 faz todo mundo ver de novo), depois do login e do
   splash. O pedido de notificação e a celebração de medalha esperam o tour fechar. Perfil ganhou a linha "Como a Irisa
   funciona → Rever o tour". Só JS: sai por EAS Update (para quem tem 0.1.2).
+  **Protótipo v2 para aprovar (04/10/2026, retorno do Leandro):** o tour de seis telas com ícones pulando não agradou.
+  `docs/prototipo-gamificacao-v2.html` → `docs/Irisa-prototipo-gamificacao-v2.html` (artefato
+  https://claude.ai/artifact/RtAaAJagiNUDsh3tKFGSrS): tour dentro do Início (anel da marca se desenha gomo a gomo,
+  holofote + borda arco-íris que se desenha em volta de cada alvo, balão com Pular/Próximo), animações só de
+  preenchimento (gomos, borda, barras, contagem; nada de pulo grande), borda de progresso no cartão Sua semana,
+  Sua semana e Sua cidade abrem detalhe (só os dias que contaram; perto do selo e já com selo), Quase lá em destaque
+  no Início e herói escuro nas Conquistas. **Nada disso está no app ainda: esperando aprovação.**
 
 ## Stack
 
