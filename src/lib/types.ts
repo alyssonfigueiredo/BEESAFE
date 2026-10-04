@@ -70,6 +70,8 @@ export type PublicPlace = {
   photo_source: "mapillary" | "usuario" | "wikimedia" | null;
   photo_credit: string | null;
   photo_credit_uri: string | null;
+  // Resumo escrito por nós (nunca raspado, nunca gerado por IA sem revisão). Opcional.
+  description: string | null;
 };
 
 export type PublicPlaceRating = {
@@ -109,4 +111,5 @@ export type WelcomingPlace = Pick<
   | "photo_source"
   | "photo_credit"
   | "photo_credit_uri"
+  | "description"
 >;

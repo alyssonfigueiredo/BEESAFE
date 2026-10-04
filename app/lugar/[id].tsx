@@ -231,6 +231,9 @@ export default function PlaceScreen() {
             {!!place.address && (
               <Text className="font-body text-sm text-muted">{place.address}</Text>
             )}
+            {!!place.description && (
+              <Text className="font-body text-sm leading-5 text-muted">{place.description}</Text>
+            )}
 
             {/* Segurança antes da nota: quem abre a ficha decidindo se vai precisa disto primeiro.
               Dois avisos distintos e nessa ordem: a região (sobre a rua) e, só se existir, o relato

@@ -119,6 +119,9 @@ type Candidato = {
   score_affection: number | null;
   score_restroom: number | null;
   score_crowd: number | null;
+  // Resumo escrito por nós (migration 53) — nunca raspado, nunca gerado sem revisão. Ajuda o
+  // Gemini a dar um motivo real pra lugar sem nota, que é a maioria.
+  description: string | null;
 };
 type Ranking = { place_id: string; reasons: string[] }[];
 
@@ -134,8 +137,9 @@ ${JSON.stringify(candidatos)}
 
 Ranqueie do que melhor combina com o pedido para o que menos combina. Para cada um, até 2 motivos
 curtos (3 a 6 palavras), baseados SOMENTE nos campos dados (categoria, eixos de acolhimento, selo,
-bairro, nº de avaliações) — nunca invente nada que não esteja nos dados. Sem nota (score null)
-nunca pode ter motivo inventado; use algo como "ainda sem avaliação" se for o único coerente.
+bairro, nº de avaliações, e a "description" quando existir — um resumo escrito por nós, pode citar
+com confiança) — nunca invente nada que não esteja nos dados. Sem nota (score null) e sem
+description, use algo como "ainda sem avaliação" se for o único motivo coerente.
 
 Responda SOMENTE com JSON: {"ranking": [{"place_id": "...", "reasons": ["...", "..."]}]}
 `.trim();
