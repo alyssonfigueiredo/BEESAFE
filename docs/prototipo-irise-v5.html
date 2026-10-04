@@ -1,0 +1,505 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Protótipo Irise — integrado à cena</title>
+<!-- Protótipo de alta fidelidade: Irise sem fundo (recorte por segmentação), integrado às telas
+     reais do app (Aurora, vidro, cards, cores da marca) em vez de preso numa foto quadrada.
+     Proposta para aprovação — nada implementado em produção, nenhuma regra de negócio alterada. -->
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Urbanist:wght@500&family=Oswald:wght@400;700&family=Space+Grotesk:wght@400;500;600;700&display=swap">
+<style>
+:root{
+  --paper:#F5F4F1;--stage:#ECEAE5;--subtle:#F1F5FA;--border:#E6ECF3;--night:#141829;--night2:#20253A;
+  --ink:#141829;--muted:#3D4560;--dim:#7C8296;--soft:#C9CDE0;
+  --coral:#FF6964;--orange:#FFA353;--yellow:#FFD066;--turq:#49DCC0;--blue:#59A7FF;--lilac:#A889FF;
+  --coralInk:#C72825;--turqInk:#0A8B7A;--amber:#E0A32E;
+  --rb:linear-gradient(90deg,#FF6964,#FFA353,#FFD066,#49DCC0,#59A7FF,#A889FF);
+  --display:"Oswald","Arial Narrow",Impact,sans-serif;--body:"Space Grotesk","Helvetica Neue",Arial,sans-serif;--mark:"Urbanist","Helvetica Neue",Arial,sans-serif;
+  --shadow:0 2px 6px rgba(20,24,41,.05),0 18px 40px rgba(20,24,41,.12);
+  --shadowSm:0 1px 2px rgba(20,24,41,.05),0 8px 18px rgba(20,24,41,.08);
+  --ease:cubic-bezier(.2,.7,.2,1);--spring:cubic-bezier(.3,1.4,.45,1);
+}
+*{box-sizing:border-box}p,h1,h2,h3{margin:0}
+html,body{height:100%}
+body{margin:0;overflow:hidden;font-family:var(--body);color:var(--ink);background:var(--stage);-webkit-font-smoothing:antialiased}
+body:before{content:"";position:fixed;inset:0;pointer-events:none;background:
+  radial-gradient(50% 45% at 0% 0%,rgba(73,220,192,.28),transparent 65%),radial-gradient(45% 40% at 100% 0%,rgba(255,105,100,.2),transparent 65%),
+  radial-gradient(50% 45% at 100% 100%,rgba(168,137,255,.26),transparent 65%),radial-gradient(45% 40% at 0% 100%,rgba(255,208,102,.24),transparent 65%)}
+button{font:inherit;color:inherit;border:0;background:none;cursor:pointer;padding:0}
+button:focus-visible{outline:3px solid var(--turq);outline-offset:3px}
+img{display:block;max-width:none}
+
+#app{position:relative;height:100%;display:flex;align-items:center;justify-content:center;gap:48px;padding-inline:24px}
+#stageWrap{position:relative;flex:none}
+#phone{position:relative;width:390px;height:844px;border-radius:62px;background:#0E1020;padding:12px;box-shadow:0 40px 90px rgba(20,24,41,.32),0 0 0 2px #2A2E44 inset}
+#screen{position:relative;width:100%;height:100%;border-radius:50px;overflow:hidden;background:var(--paper);isolation:isolate}
+#screen:before{content:"";position:absolute;inset:0;z-index:0;background:
+  radial-gradient(70% 34% at -10% -2%,rgba(73,220,192,.34),transparent 64%),radial-gradient(60% 30% at 110% 4%,rgba(255,105,100,.26),transparent 64%),
+  radial-gradient(70% 34% at 108% 100%,rgba(168,137,255,.32),transparent 64%),radial-gradient(60% 30% at -8% 98%,rgba(255,208,102,.3),transparent 64%)}
+.island{position:absolute;left:50%;top:11px;width:120px;height:34px;margin-left:-60px;border-radius:20px;background:#000;z-index:60}
+.sb{position:relative;z-index:50;height:48px;display:flex;justify-content:space-between;align-items:flex-end;padding:0 30px 6px 36px;font-weight:600;font-size:14px}
+.hd{position:relative;z-index:5;margin:4px 14px 0;height:54px;border-radius:27px;background:rgba(255,255,255,.66);box-shadow:var(--shadowSm);display:flex;align-items:center;justify-content:space-between;padding:0 7px 0 14px;backdrop-filter:blur(14px)}
+.logo{display:flex;align-items:center;gap:9px;font-family:var(--mark);font-weight:500;letter-spacing:.2em;font-size:18px}
+.logo b{font-weight:500;color:var(--amber)}
+.sos{width:40px;height:40px;border-radius:50%;background:var(--coral);display:flex;align-items:center;justify-content:center;flex:none}
+#stageBody{position:absolute;inset:0;z-index:1}
+.pad{position:relative;padding:12px 14px 120px;display:flex;flex-direction:column;gap:12px;height:calc(100% - 52px);overflow-y:auto;scrollbar-width:none}
+.cd{background:rgba(255,255,255,.76);border-radius:22px;padding:16px;box-shadow:var(--shadowSm)}
+.cd.dk{background:var(--night2);color:#F1F0EC}
+.cd.flat{background:#fff}
+.btn{height:50px;border-radius:25px;display:flex;align-items:center;justify-content:center;font-weight:600;font-size:15px;gap:8px;width:100%}
+.btn:active{transform:scale(.97)}
+.chip{display:inline-flex;align-items:center;height:38px;padding:0 15px;border-radius:19px;background:var(--subtle);font-size:13.5px;font-weight:600;gap:6px}
+.chip.on{background:var(--night);color:#fff}
+.chiprow{display:flex;flex-wrap:wrap;gap:8px}
+.tb{position:absolute;left:14px;right:14px;bottom:20px;z-index:20;height:64px;border-radius:32px;background:rgba(255,255,255,.82);box-shadow:var(--shadowSm);display:flex;justify-content:space-around;align-items:center;backdrop-filter:blur(18px)}
+.tb button{width:58px;height:56px;border-radius:28px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;font-size:10.5px;color:var(--muted)}
+.tb button.on{background:#fff;box-shadow:0 4px 14px rgba(20,24,41,.1);font-weight:600;color:var(--coralInk)}
+
+/* ---------- Irise integrado, sem caixa ---------- */
+.ir-cut{display:block;filter:drop-shadow(0 10px 14px rgba(20,24,41,.22))}
+.ir-shadow{border-radius:50%;background:radial-gradient(closest-side,rgba(20,24,41,.28),transparent 72%)}
+.ir-bust{border-radius:50%;flex:none;overflow:hidden;box-shadow:0 4px 10px rgba(20,24,41,.18),0 0 0 2px #fff}
+.ir-stage{position:relative}
+.ir-pin{position:absolute}
+
+.ir-say{display:flex;gap:10px;align-items:flex-end}
+.ir-bubble{background:#fff;border-radius:18px 18px 18px 5px;padding:11px 14px;font-size:14px;line-height:1.4;box-shadow:var(--shadowSm);max-width:200px}
+.ir-bubble b{font-weight:700}
+
+/* fundo full-bleed cheio (onboarding) */
+.full{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;text-align:center;padding:76px 26px 34px;gap:8px}
+.full .eb{font-size:11px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--turqInk)}
+.full h1{font-family:var(--display);font-weight:700;text-transform:uppercase;font-size:27px;line-height:1.08;flex:none}
+.full h1 .rb{background:var(--rb);-webkit-background-clip:text;background-clip:text;color:transparent}
+.full p{font-size:13.5px;line-height:1.5;color:var(--muted);max-width:270px;flex:none}
+.full .stagewrap{flex:1;width:100%;display:flex;align-items:center;justify-content:center;position:relative;min-height:0}
+.full .btn{flex:none}
+
+/* conic sweep (transição / celebração) */
+.sweep{position:absolute;left:50%;top:50%;width:300px;height:300px;margin:-150px 0 0 -150px;border-radius:50%;
+  background:conic-gradient(from 0deg,#FF6964,#FFA353,#FFD066,#49DCC0,#59A7FF,#A889FF,#FF6964);
+  -webkit-mask:radial-gradient(closest-side,transparent 60%,#000 62%,#000 78%,transparent 80%);
+  mask:radial-gradient(closest-side,transparent 60%,#000 62%,#000 78%,transparent 80%);
+  animation:spin 6s linear infinite;opacity:.9}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+.optlist{display:flex;flex-direction:column;gap:8px;width:100%;max-width:300px}
+.optbtn{height:46px;border-radius:17px;background:#fff;box-shadow:var(--shadowSm);display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:600;transition:background .2s,color .2s}
+.optbtn.on{background:var(--night);color:#fff}
+
+/* seletor de personagem: peeking nas bordas, sem cartão */
+.pickstage{position:relative;flex:1;width:100%;display:flex;align-items:flex-end;justify-content:center;min-height:0}
+.pickside{position:absolute;bottom:0;opacity:.38;filter:drop-shadow(0 10px 14px rgba(20,24,41,.18)) grayscale(.15);transition:transform .4s var(--spring),opacity .3s}
+.pickside.l{left:-6%}
+.pickside.r{right:-6%}
+.navc{width:38px;height:38px;border-radius:50%;background:#fff;box-shadow:var(--shadowSm);display:flex;align-items:center;justify-content:center;flex:none;position:absolute;bottom:40%;z-index:6}
+.navc.prev{left:4px}.navc.next{right:4px}
+.dots7{display:flex;gap:6px;justify-content:center;flex-wrap:wrap;max-width:200px}
+.dots7 i{width:7px;height:7px;border-radius:50%;background:var(--border);transition:all .25s}
+.dots7 i.on{background:var(--night);width:16px;border-radius:4px}
+
+.lr{display:flex;flex-direction:column;gap:3px;padding:14px 0;border-bottom:1px dashed rgba(20,24,41,.15)}
+.lr b{font-size:15px}.lr small{font-size:12.5px;line-height:1.4;color:var(--dim)}
+.tonebtn{border-radius:16px;padding:12px 14px;background:#fff;box-shadow:var(--shadowSm);text-align:left;transition:background .2s,color .2s}
+.tonebtn.on{background:var(--night);color:#fff}
+.tonebtn b{display:block;font-size:14px}
+.tonebtn span{display:block;font-size:12px;color:var(--dim);margin-top:2px}
+.tonebtn.on span{color:var(--soft)}
+
+.ovl{position:absolute;inset:0;z-index:40;background:var(--night);color:#F1F0EC;display:flex;flex-direction:column;overflow:hidden}
+.ovl .top{padding:58px 26px 0;text-align:center}
+.ovl h1{font-family:var(--display);font-weight:700;text-transform:uppercase;font-size:30px;line-height:1.05;color:#fff}
+.ovl p{font-size:14px;line-height:1.5;color:var(--soft);max-width:260px;margin:8px auto 0}
+.ovl .stagewrap{flex:1;position:relative;display:flex;align-items:flex-end;justify-content:center}
+
+#tour{width:400px;flex:none;background:rgba(255,255,255,.88);border-radius:30px;padding:26px 26px 20px;box-shadow:var(--shadow);display:flex;flex-direction:column;gap:12px;backdrop-filter:blur(22px)}
+#tour .top{display:flex;justify-content:space-between;align-items:center}
+#tour .mark{font-family:var(--mark);font-weight:500;letter-spacing:.2em;font-size:14px;color:var(--muted)}
+#tour .mark b{color:var(--amber);font-weight:500}
+#tour .count{font-size:13px;font-weight:600;color:var(--dim);font-variant-numeric:tabular-nums}
+#tour .bar{height:6px;border-radius:3px;background:var(--subtle);overflow:hidden}
+#tour .bar i{display:block;height:100%;width:0;background:var(--rb);border-radius:3px;transition:width .4s var(--ease)}
+#tour .eb{font-size:11.5px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--turqInk)}
+#tour h2{font-family:var(--display);font-weight:700;text-transform:uppercase;font-size:25px;line-height:1.08}
+#tour .txt{font-size:14.5px;line-height:1.5;color:var(--muted);min-height:66px}
+#tour .nav{display:flex;gap:10px;margin-top:4px}
+.tbtn{height:46px;border-radius:23px;padding:0 20px;font-weight:600;font-size:14px}
+.tbtn.pri{background:var(--night);color:#fff;flex:1}
+.tbtn.sec{background:var(--subtle)}
+.tbtn:disabled{opacity:.35}
+#tour .note{font-size:11.5px;color:var(--dim);line-height:1.5;border-top:1px solid var(--border);padding-top:10px;margin-top:2px}
+#tour .note b{color:var(--muted)}
+
+@media (max-width:900px){
+  #app{flex-direction:column;gap:10px;padding-top:10px;overflow:auto}
+  #tour{width:auto;margin:0 16px 20px}
+}
+@media (prefers-reduced-motion:reduce){*,*:before,*:after{animation-duration:.01ms!important;transition-duration:.01ms!important}}
+</style>
+</head>
+<body>
+<div id="app">
+  <div id="stageWrap"><div id="phone"><div id="screen">
+    <div class="island"></div>
+    <div id="stageBody"></div>
+  </div></div></div>
+
+  <aside id="tour">
+    <div class="top"><span class="mark">IRIS<b>A</b> · IRISE</span><span class="count" id="tCount">1 / 24</span></div>
+    <div class="bar"><i id="tBar"></i></div>
+    <p class="eb" id="tEb"></p>
+    <h2 id="tH"></h2>
+    <p class="txt" id="tTxt"></p>
+    <div class="nav"><button class="tbtn sec" id="tPrev">Voltar</button><button class="tbtn pri" id="tNext">Próximo</button></div>
+    <p class="note"><b>v5:</b> personagem bem maior nas telas com espaço (escolha, transição,
+    conquista, nível), e busto em círculo nos usos pequenos (bolha de chat, header, Home) em vez de
+    corpo inteiro minúsculo. Imagens como arquivos externos, não mais base64 — resolve a tela em
+    branco sem perder qualidade.</p>
+  </aside>
+</div>
+
+<script>
+const $=(s,r=document)=>r.querySelector(s), $$=(s,r=document)=>[...r.querySelectorAll(s)];
+const stage=$("#stageBody");
+function posePath(vid,pose){ return `irise-web/irise-cutouts/${vid}/${pose}.webp`; }
+function bustPath(vid){ return `irise-web/irise-busts/${vid}.webp`; }
+
+const RB=['#FF6964','#FFA353','#FFD066','#49DCC0','#59A7FF','#A889FF'];
+function ringSVG(size){
+  let h=""; const n=24;
+  for(let i=0;i<n;i++){const a0=(-90+15*i)*Math.PI/180,a1=a0+13*Math.PI/180;
+    const pt=(r,a)=>(50+r*Math.cos(a)).toFixed(1)+" "+(50+r*Math.sin(a)).toFixed(1);
+    h+=`<path d="M${pt(48,a0)}A48 48 0 0 1 ${pt(48,a1)}L${pt(38,a1)}A38 38 0 0 0 ${pt(38,a0)}Z" fill="${RB[i%6]}"/>`;}
+  return `<svg width="${size}" height="${size}" viewBox="0 0 100 100">${h}</svg>`;
+}
+
+const VARIANTS=[
+  {id:"irise_08", label:"Irise 08", note:"trans-masculino"},
+  {id:"irise_09", label:"Irise 09", note:"mulher trans"},
+  {id:"irise_01", label:"Irise 01", note:""},
+  {id:"irise_03", label:"Irise 03", note:""},
+  {id:"irise_04", label:"Irise 04", note:""},
+  {id:"irise_05", label:"Irise 05", note:""},
+  {id:"irise_06", label:"Irise 06", note:""},
+];
+let SELECTED=0;
+
+/** Personagem recortado (sem fundo), com sombra de contato no "chão". height = altura em px. */
+function char(variantIdx, pose, {height=200, shadow=true}={}){
+  const v=VARIANTS[variantIdx];
+  const sw = Math.round(height*0.5), sh = Math.round(height*0.1);
+  return `<div style="display:inline-flex;flex-direction:column;align-items:center">
+    <img class="ir-cut" src="${posePath(v.id,pose)}" style="height:${height}px;width:auto">
+    ${shadow?`<div class="ir-shadow" style="width:${sw}px;height:${sh}px;margin-top:-6px"></div>`:""}
+  </div>`;
+}
+/** Busto em círculo — pra ícone de chat, bolha da Home, cabeçalho: nunca corpo inteiro minúsculo. */
+function bust(variantIdx, size){
+  const v=VARIANTS[variantIdx]; size=size||48;
+  return `<div class="ir-bust" style="width:${size}px;height:${size}px"><img src="${bustPath(v.id)}" style="width:100%;height:100%;object-fit:cover"></div>`;
+}
+function sayRow(variantIdx,text,size){
+  return `<div class="ir-say">${bust(variantIdx,size||52)}<div class="ir-bubble">${text}</div></div>`;
+}
+
+/* ===================== MOCKUPS DE TELA ===================== */
+function chromeTop(){
+  return `<div class="sb"><span>9:41</span><i></i></div>
+  <div class="hd"><div class="logo">${ringSVG(22)}<span>IRIS<b>A</b></span></div><div class="sos"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#141829" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 18v-6a5 5 0 0 1 10 0v6"/><path d="M5 21h14v-3H5Z"/></svg></div></div>`;
+}
+function tabs(active){
+  return `<div class="tb">${["Início","Mapa","Lugares","Apoio","Perfil"].map(n=>`<button class="${n===active?"on":""}">${n}</button>`).join("")}</div>`;
+}
+function chrome(active, padInner){
+  return chromeTop() + `<div class="pad">${padInner}</div>` + tabs(active);
+}
+const MAP_CARD=`<div class="cd flat" style="height:210px;background:linear-gradient(135deg,rgba(73,220,192,.25),rgba(255,105,100,.2));position:relative;padding:0;overflow:hidden">
+  <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#141829" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" style="position:absolute;left:16px;top:16px"><path d="M9 4L3 6v14l6-2 6 2 6-2V4l-6 2Z"/><path d="M9 4v14M15 6v14"/></svg>
+  <span style="position:absolute;left:30%;top:30%;width:12px;height:12px;border-radius:50%;background:var(--coral);box-shadow:0 0 0 6px rgba(255,105,100,.25)"></span>
+  <span style="position:absolute;right:20%;bottom:34%;width:12px;height:12px;border-radius:50%;background:var(--turq);box-shadow:0 0 0 6px rgba(73,220,192,.25)"></span>
+</div>`;
+const RATING_CARD=`<div class="cd flat" style="display:flex;flex-direction:column;gap:9px">
+  <p style="font-weight:700;font-size:14px">Como foi lá?</p>
+  ${["A equipe te tratou bem?","Dava pra ficar à vontade com quem você ama?","E o banheiro?"].map(q=>`<div><p style="font-size:12.5px;font-weight:500">${q}</p><div style="display:flex;gap:4px;margin-top:4px">${[1,2,3,4,5].map(i=>`<span style="width:20px;height:13px;border-radius:7px;background:${i<=4?"var(--turq)":"#E6E3DD"}"></span>`).join("")}</div></div>`).join("")}
+</div>`;
+function ringMini(lit,total,colors,size){
+  size=size||84;
+  let h=""; const n=total;
+  for(let i=0;i<n;i++){const a0=(-90+360/n*i+4)*Math.PI/180,a1=(-90+360/n*(i+1)-4)*Math.PI/180;
+    const pt=(r,a)=>(50+r*Math.cos(a)).toFixed(1)+" "+(50+r*Math.sin(a)).toFixed(1);
+    h+=`<path d="M${pt(48,a0)}A48 48 0 0 1 ${pt(48,a1)}L${pt(32,a1)}A32 32 0 0 0 ${pt(32,a0)}Z" fill="${i<lit?colors[i%colors.length]:"#E4E1DA"}"/>`;}
+  return `<svg width="${size}" height="${size}" viewBox="0 0 100 100">${h}<circle cx="50" cy="50" r="13" fill="#0F1220"/></svg>`;
+}
+function placeCard(icon,name,why,meta,tag){
+  return `<div class="cd flat" style="display:flex;gap:12px;align-items:flex-start">
+    <span style="width:44px;height:44px;border-radius:14px;flex:none;display:flex;align-items:center;justify-content:center;background:rgba(255,105,100,.14)">${icon}</span>
+    <span style="flex:1"><b style="display:block;font-size:14.5px">${name}</b><span style="display:block;font-size:12px;color:var(--muted);margin-top:3px">${why}</span><span style="display:block;font-size:10.5px;color:var(--dim);margin-top:4px">${meta}</span></span>
+    ${tag?`<span class="chip" style="height:24px;font-size:10.5px">${tag}</span>`:""}
+  </div>`;
+}
+const ICO_BAR='<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#C72825" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 3h14l-7 9z"/><path d="M12 12v8M8 21h8"/></svg>';
+const ICO_CAFE='<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#8A6512" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 8h1a4 4 0 1 1 0 8h-1"/><path d="M3 8h14v9a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4Z"/></svg>';
+const ICO_REST='<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1B7A6E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 2v8M11 2v8M7 10a4 4 0 0 0 4 0M9 10v12"/></svg>';
+
+/* ===================== ONBOARDING ===================== */
+let PRONOUN=null, TONE=1;
+const PRON_LABELS=["ela/dela","ele/dele","elu/delu","uso mais de um","outro","prefiro não dizer"];
+const TONE_LABELS=["De boa","Equilibrado","Solta a franga"];
+const TONE_LINE=[
+  "Separei três lugares que combinam com o que você pediu.",
+  "Peguei a vibe. Tenho três ideias pra você. 👀",
+  "Finalmente um briefing decente. 💅 Tenho três.",
+];
+
+function renderPronoun(){
+  stage.innerHTML=`<div class="full" style="justify-content:center">
+    <span class="eb">Antes de começar</span>
+    <h1>Antes da gente<br>sair por aí… 🌈</h1>
+    <p>Como você prefere que a gente fale com você?</p>
+    <div class="optlist" id="pOpts">
+      ${PRON_LABELS.map((o,i)=>`<button class="optbtn ${PRONOUN===i?"on":""}" data-i="${i}">${o}</button>`).join("")}
+    </div>
+    <p style="font-size:12px;color:var(--dim)">Você pode mudar isso quando quiser.</p>
+  </div>`;
+  $$("#pOpts button").forEach(b=>b.onclick=()=>{ PRONOUN=+b.dataset.i; renderPronoun(); });
+}
+
+function renderVariantPicker(){
+  stage.innerHTML=`<div class="full">
+    <span class="eb">Agora vem a parte boa</span>
+    <h1>Escolhe seu <span class="rb">Irise</span> ✨</h1>
+    <div class="pickstage" id="pickstage">
+      <button class="navc prev" id="vPrev"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#141829" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg></button>
+      <button class="navc next" id="vNext"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#141829" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg></button>
+      <div id="pickSlots" style="position:relative;display:flex;align-items:flex-end;justify-content:center;width:100%;height:100%"></div>
+    </div>
+    <p style="font-weight:700;font-size:12.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--dim)" id="pickLabel"></p>
+    <div class="dots7">${VARIANTS.map((_,i)=>`<i class="${i===SELECTED?"on":""}" data-i="${i}"></i>`).join("")}</div>
+    <button class="btn" id="vGo" style="background:var(--night);color:#fff;max-width:220px">Esse é o meu ✨</button>
+  </div>`;
+  drawPicker();
+  $("#vPrev").onclick=()=>{ SELECTED=(SELECTED+VARIANTS.length-1)%VARIANTS.length; drawPicker(); };
+  $("#vNext").onclick=()=>{ SELECTED=(SELECTED+1)%VARIANTS.length; drawPicker(); };
+  $$(".dots7 i").forEach(d=>d.onclick=()=>{ SELECTED=+d.dataset.i; drawPicker(); });
+  $("#vGo").onclick=()=>{ CUR++; renderStep(); };
+}
+function drawPicker(){
+  const host=$("#pickSlots"); if(!host) return;
+  const prevI=(SELECTED+VARIANTS.length-1)%VARIANTS.length;
+  const nextI=(SELECTED+1)%VARIANTS.length;
+  host.innerHTML = `
+    <div class="pickside l">${char(prevI,"icon_neutral",{height:200,shadow:false})}</div>
+    <div style="position:relative;z-index:3">${char(SELECTED,"icon_wave",{height:320})}</div>
+    <div class="pickside r">${char(nextI,"icon_neutral",{height:200,shadow:false})}</div>
+  `;
+  $$(".dots7 i").forEach((d,i)=>d.classList.toggle("on",i===SELECTED));
+  const v=VARIANTS[SELECTED];
+  $("#pickLabel").textContent = v.label + (v.note?` · ${v.note}`:"");
+}
+
+function renderTransition(){
+  stage.innerHTML=`<div class="full">
+    <h1>Ganhando vida…</h1>
+    <p>O arco-íris da Irisa circula o personagem escolhido.</p>
+    <div class="stagewrap"><div class="sweep"></div>${char(SELECTED,"icon_wave",{height:300})}</div>
+  </div>`;
+}
+function renderGreeting(){
+  stage.innerHTML=`<div class="full">
+    <h1>Oi. Eu sou<br>Irise. 🌈</h1>
+    <p>Agora vem comigo que eu te mostro rapidinho como isso funciona.</p>
+    <div class="stagewrap">${char(SELECTED,"icon_wave",{height:300})}</div>
+    <button class="btn" style="background:var(--night);color:#fff;max-width:160px;margin-top:4px">Bora</button>
+  </div>`;
+}
+/* card + personagem sobreposto no canto + fala abaixo */
+function sceneWithChar(active, cardHtml, pose, text, {side="right", charH=180, mt=18}={}){
+  stage.innerHTML = chrome(active, `
+    <div style="position:relative">
+      ${cardHtml}
+      <div style="position:absolute;${side}:-6px;bottom:-22px;z-index:3">${char(SELECTED,pose,{height:charH})}</div>
+    </div>
+    <div class="ir-bubble" style="margin-top:${mt}px;align-self:flex-start">${text}</div>
+  `);
+}
+function renderFinalTour(){
+  stage.innerHTML=`<div class="full">
+    <h1>Pronto.</h1>
+    <p>Agora bora irisar essa cidade? 🌈</p>
+    <div class="stagewrap">${char(SELECTED,"pose_point_forward",{height:300})}</div>
+    <button class="btn" style="background:var(--night);color:#fff;max-width:200px;margin-top:4px">Abrir o mapa</button>
+  </div>`;
+}
+function renderHomeDiscrete(){
+  stage.innerHTML = chrome("Início", `
+    <div class="cd dk" style="padding:18px 18px 16px;border-radius:28px">
+      <p style="font-size:11px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:#C9CDE0">Sua cidade</p>
+      <p style="font-family:var(--display);font-weight:700;font-size:30px;margin-top:6px">CURITIBA</p>
+      <div style="display:flex;gap:10px;margin-top:12px">
+        <button class="btn" style="background:var(--turq);flex:1;font-size:13.5px">Avaliar um lugar</button>
+        <button class="btn" style="background:var(--coral);flex:1;font-size:13.5px">Registrar relato</button>
+      </div>
+    </div>
+    ${placeCard(ICO_BAR,"Bar Aquarela","","12 avaliações · São Francisco","Acolhedor")}
+  `);
+  const wrap=document.createElement("div");
+  wrap.style.cssText="position:absolute;right:16px;bottom:86px;z-index:19";
+  wrap.innerHTML = bust(SELECTED,58);
+  stage.appendChild(wrap);
+}
+function renderDiscoverySheet(){
+  stage.innerHTML = chrome("Início", `<div class="cd flat">
+    <div style="display:flex;align-items:center;gap:10px">${bust(SELECTED,40)}<b style="font-size:15px">Irise</b></div>
+    <p style="margin-top:12px;font-weight:700;font-size:16px">E aí, qual vai ser hoje?</p>
+    <div class="chiprow" style="margin-top:10px">${["💘 Date","🍽️ Comer","💃 Fervo","☕ De boa","📍 Perto de mim","✨ Me surpreende"].map(o=>`<span class="chip">${o}</span>`).join("")}</div>
+    <p style="margin-top:12px;font-size:12.5px;color:var(--dim)">Ou me conta o que você tá procurando…</p>
+  </div>`);
+}
+function renderSuggestions(){
+  stage.innerHTML = chrome("Início", `
+    ${sayRow(SELECTED,"Peguei a vibe. Separei esses pra você:")}
+    ${placeCard(ICO_CAFE,"Café do Largo","Mais tranquilo e bom pra conversar.","Café · 18 avaliações · Centro")}
+    ${placeCard(ICO_BAR,"Bar da Esquina","Boa se a ideia for ficar horas sem gastar fortuna.","Bar · 9 avaliações · São Francisco")}
+  `);
+}
+function renderNoData(){
+  stage.innerHTML = chrome("Lugares", `
+    <div style="position:relative">
+      ${placeCard(ICO_REST,"Jardim Secreto","Esse combina com o que você pediu.","Restaurante · 3 avaliações · Batel","Poucas")}
+      <div style="position:absolute;right:-8px;bottom:-34px;z-index:3">${char(SELECTED,"pose_shrug_question",{height:150})}</div>
+    </div>
+    <div class="ir-bubble" style="margin-top:20px">👀 Desse eu ainda sei pouco.<br>A comunidade quase não irisou por aqui.</div>
+  `);
+}
+function renderInviteReview(){
+  stage.innerHTML = chrome("Lugares", `
+    ${sayRow(SELECTED,"Já foi num lugar? Irisa. 🌈<br>Sua experiência pode ajudar alguém que vai amanhã.")}
+    <button class="btn" style="background:var(--yellow);color:var(--night);font-weight:700">Já fui</button>
+    <p style="font-size:11px;color:var(--dim);text-align:center">Abre o formulário de avaliação que já existe — mesmos 4 eixos, mesmo cálculo.</p>
+    ${RATING_CARD}
+  `);
+}
+function renderAchievement(){
+  stage.innerHTML = `<div class="ovl">
+    <div class="top"><p style="color:var(--turq);font-size:11.5px;font-weight:700;letter-spacing:.14em;text-transform:uppercase">👀 Tem coisa nova por aqui…</p>
+    <h1 style="margin-top:10px">FIGURINHA<br>CARIMBADA</h1></div>
+    <div class="stagewrap"><div class="sweep" style="opacity:.5"></div>${char(SELECTED,"pose_medal",{height:290})}</div>
+  </div>`;
+}
+function renderLevelUp(){
+  stage.innerHTML=`<div class="ovl">
+    <div class="top"><h1>OLHA ELA! 🌈</h1><p>Você subiu de nível.<br><b style="color:#fff">DO BABADO</b><br>${TONE_LINE[TONE]}</p></div>
+    <div class="stagewrap"><div class="sweep" style="opacity:.55"></div>${char(SELECTED,"pose_fistpump",{height:290})}</div>
+  </div>`;
+}
+function renderAlmost(){
+  stage.innerHTML = chrome("Perfil", `
+    <div style="position:relative;padding-top:10px;display:flex;justify-content:center">${ringMini(47,48,RB,96)}
+      <div style="position:absolute;right:30px;bottom:-26px;z-index:3">${char(SELECTED,"pose_wink_finger",{height:150})}</div>
+    </div>
+    <div class="ir-bubble" style="margin-top:22px">Eu não quero pressionar ninguém…<br>mas falta 1 gomo. 👀</div>
+  `);
+}
+function renderLoading(){
+  stage.innerHTML = chrome("Mapa", `<div class="full" style="position:absolute;inset:0;background:var(--paper);justify-content:center">
+    <div class="stagewrap" style="flex:none">${char(SELECTED,"pose_phone_puzzled",{height:260})}</div>
+    <p style="font-size:13.5px;color:var(--muted)">Peraí que eu tô fofocando com o mapa…</p>
+  </div>`);
+}
+function renderError(){
+  stage.innerHTML = chrome("Mapa", `
+    ${sayRow(SELECTED,"Meu sexto sentido deu uma cochilada. 😭<br>Mas ainda dá pra procurar do jeito clássico.")}
+    <div class="chiprow">${["Balada","Restaurante","Café","Perto de mim"].map(o=>`<span class="chip">${o}</span>`).join("")}</div>
+  `);
+}
+function renderProfileMeuIrise(onTrocar){
+  stage.innerHTML = chrome("Perfil", `
+    <div class="cd flat" style="display:flex;flex-direction:column;gap:6px;align-items:center;padding:14px 20px 20px">
+      <p style="font-weight:700;font-size:15px;align-self:flex-start">Meu Irise 🌈</p>
+      ${char(SELECTED,"icon_wave",{height:180})}
+      <button class="chip" id="trocarBtn">Trocar meu Irise</button>
+    </div>
+    <div class="cd flat"><div class="lr"><b>Como falar comigo</b><small>${PRONOUN!==null?PRON_LABELS[PRONOUN]:"não definido"} · <u>Editar</u></small></div>
+    <div class="lr" style="border:0"><b>Tom do Irise</b><small>${TONE_LABELS[TONE]} · <u>Editar</u></small></div></div>
+  `);
+  $("#trocarBtn").onclick=onTrocar;
+}
+function renderPronounConfig(){
+  stage.innerHTML = chrome("Perfil", `
+    <div class="cd flat"><p style="font-weight:700;font-size:15px;margin-bottom:10px">Como falar com você</p>
+    <div class="optlist" id="pOpts2">${PRON_LABELS.map((o,i)=>`<button class="optbtn ${PRONOUN===i?"on":""}" data-i="${i}" style="height:42px;font-size:13.5px">${o}</button>`).join("")}</div></div>
+  `);
+  $$("#pOpts2 button").forEach(b=>b.onclick=()=>{ PRONOUN=+b.dataset.i; renderPronounConfig(); });
+}
+function renderToneConfig(){
+  stage.innerHTML = chrome("Perfil", `
+    <div class="cd flat"><p style="font-weight:700;font-size:15px">Como você quer seu Irise?</p>
+    <div id="toneOpts" style="margin-top:10px;display:flex;flex-direction:column;gap:8px">
+      <button class="tonebtn ${TONE===0?"on":""}" data-i="0"><b>De boa</b><span>Mais objetivo e tranquilo.</span></button>
+      <button class="tonebtn ${TONE===1?"on":""}" data-i="1"><b>Equilibrado</b><span>Deboche equilibrado — padrão.</span></button>
+      <button class="tonebtn ${TONE===2?"on":""}" data-i="2"><b>Solta a franga</b><span>Mais irreverente e debochado.</span></button>
+    </div></div>
+    <div class="ir-say">${bust(SELECTED,52)}<div class="ir-bubble" id="tonePreview">${TONE_LINE[TONE]}</div></div>
+    <p style="font-size:11px;color:var(--dim)">O tom muda. A nota, a recomendação e os dados do lugar continuam exatamente iguais.</p>
+  `);
+  $$("#toneOpts button").forEach(b=>b.onclick=()=>{ TONE=+b.dataset.i; renderToneConfig(); });
+}
+function renderSummary(){
+  stage.innerHTML=`<div class="full">
+    <h1>Esse é o<br><span class="rb">seu</span> Irise.</h1>
+    <p>Mesmo personagem do onboarding até a gamificação — sem mudar nenhuma regra do IRISA por baixo.</p>
+    <div class="stagewrap">${char(SELECTED,"icon_wave",{height:300})}</div>
+  </div>`;
+}
+
+/* ===================== 24 PASSOS ===================== */
+const STEPS=[
+  {eb:"1 · Primeiro acesso", h:"Pronome", t:"Tela de pronomes: rápida, sem parecer formulário.", r:renderPronoun},
+  {eb:"2 · Escolha", h:"Escolha do Irise", t:"Os 7 Irisis de pé na própria cena, sem caixa — os vizinhos espiam em opacidade baixa nas bordas, sem gênero no rótulo.", r:renderVariantPicker},
+  {eb:"3 · Transição", h:"Ganha vida", t:"O arco-íris da marca (agora um anel cônico girando em CSS) circula o personagem de verdade, sem fundo.", r:renderTransition},
+  {eb:"4 · Apresentação", h:"Oi, eu sou Irise", t:"Personagem de corpo inteiro em pé na própria aurora do app, sem moldura.", r:renderGreeting},
+  {eb:"5 · Tour · passo 1", h:"Mapa", t:"Irise aparece encostado no canto do card do mapa, como se estivesse na cena.", r:()=>sceneWithChar("Mapa", MAP_CARD, "pose_point_phone", "Aqui é onde a cidade começa a ganhar cor.")},
+  {eb:"6 · Tour · passo 2", h:"Dado da comunidade", t:"\"O mapa não tira informação do além, viu? 👀\"", r:()=>sceneWithChar("Mapa", MAP_CARD, "pose_point_phone", "O mapa não tira informação do além, viu? 👀", {side:"left"})},
+  {eb:"7 · Tour · passo 3", h:"Avaliações", t:"Framework de avaliação JÁ EXISTENTE — mesmos 4 eixos.", r:()=>sceneWithChar("Lugares", RATING_CARD, "pose_thumbsup_phone", "Já foi num lugar? Irisa. 🌈", {charH:180})},
+  {eb:"8 · Tour · passo 4", h:"Radar / progressão", t:"Só visual: a lógica do anel não muda.", r:()=>{ stage.innerHTML = chrome("Perfil", `<div style="position:relative;display:flex;justify-content:center;padding-top:10px">${ringMini(18,48,RB,110)}<div style="position:absolute;right:50px;bottom:-30px;z-index:3">${char(SELECTED,"pose_thinking_phone",{height:160})}</div></div><div class="ir-bubble" style="margin-top:24px">E quanto mais você participa, mais isso aqui ganha cor.</div>`); }},
+  {eb:"9 · Tour · passo 5", h:"Conquistas", t:"Irise segura a medalha de verdade, sem caixa ao redor.", r:()=>{ stage.innerHTML = chrome("Perfil", `<div class="full" style="position:absolute;inset:14px auto auto 14px;position:relative;justify-content:center;padding:30px 10px"><div class="stagewrap" style="flex:none">${char(SELECTED,"pose_medal",{height:240})}</div></div>`); }},
+  {eb:"10 · Fim do tour", h:"Pronto", t:"Pose clássica, personagem inteiro na cena.", r:renderFinalTour},
+  {eb:"11 · Depois do onboarding", h:"Entrada discreta na Home", t:"Irise espia por trás da barra de abas, pequeno — sem bolha redonda, sem caixa.", r:renderHomeDiscrete},
+  {eb:"12 · Descoberta", h:"Qual vai ser hoje?", t:"Irise aparece \"saindo\" de cima do próprio card do chat.", r:renderDiscoverySheet},
+  {eb:"13 · Sugestões", h:"Recomendação com motivo", t:"Cada card vem com uma frase a partir de dado real.", r:renderSuggestions},
+  {eb:"14 · Poucos dados", h:"Transparência", t:"Irise encostado no canto do card, reagindo ao que vê.", r:renderNoData},
+  {eb:"15 · Motor de contribuição", h:"Convite pra avaliar", t:"Abre o framework de avaliação ATUAL, sem tabela nova.", r:renderInviteReview},
+  {eb:"16 · Gamificação", h:"Conquista desbloqueada", t:"Tela cheia, Irise real segurando a medalha, anel de luz em CSS atrás dele.", r:renderAchievement},
+  {eb:"17 · Gamificação", h:"Subida de nível", t:"A fala respeita o tom configurado no Perfil.", r:renderLevelUp},
+  {eb:"18 · Gamificação", h:"Quase lá", t:"Aparição discreta, encostado no anel.", r:renderAlmost},
+  {eb:"19 · Estado", h:"Loading", t:"\"Peraí que eu tô fofocando com o mapa…\"", r:renderLoading},
+  {eb:"20 · Estado", h:"Erro / fallback", t:"Se a IA cair, o Irise reconhece com humor.", r:renderError},
+  {eb:"21 · Perfil", h:"Meu Irise", t:"Card no Perfil, personagem real sem moldura.", r:()=>renderProfileMeuIrise(()=>{ CUR=1; renderStep(); })},
+  {eb:"22 · Perfil", h:"Configurar pronome", t:"Pronome do USUÁRIO — separado da escolha do Irise.", r:renderPronounConfig},
+  {eb:"23 · Perfil", h:"Configurar o tom", t:"De boa / Equilibrado / Solta a franga muda só o TOM.", r:renderToneConfig},
+  {eb:"24 · Fechamento", h:"Esse é o seu Irise", t:"Mesmo personagem do início ao fim.", r:renderSummary},
+];
+
+let CUR=0;
+function renderStep(){
+  const s=STEPS[CUR];
+  $("#tEb").textContent=s.eb; $("#tH").textContent=s.h; $("#tTxt").textContent=s.t;
+  $("#tCount").textContent=(CUR+1)+" / "+STEPS.length;
+  $("#tBar").style.width=((CUR+1)/STEPS.length*100)+"%";
+  $("#tPrev").disabled=CUR===0;
+  s.r();
+}
+$("#tPrev").onclick=()=>{ if(CUR>0){ CUR--; renderStep(); } };
+$("#tNext").onclick=()=>{ if(CUR<STEPS.length-1){ CUR++; renderStep(); } };
+document.addEventListener("keydown",e=>{
+  if(e.target.tagName==="INPUT") return;
+  if(e.key==="ArrowRight") $("#tNext").click();
+  if(e.key==="ArrowLeft") $("#tPrev").click();
+});
+renderStep();
+</script>
+</body>
+</html>
