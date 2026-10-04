@@ -400,6 +400,12 @@ Nome: **Irisa** (INPI livre; @appirisa livre). Bundle id Android `br.com.irisa.a
   depois de mexer na apresentação ou nas telas, `node scripts/gamificacao-unica.mjs` gera de novo. O `gamificacao.html`
   avulso só abre com `pingentes.js` e `gamificacao/` na mesma pasta.
   Regras: relato nunca pontua, nada público, nada de check-in, "Da Casa" nunca mostra o lugar no cartão do story.
+  **V3 (04/10/2026, `docs/gamificacao-v3.html` → `docs/Irisa-gamificacao-v3.html`):** resposta à V2 que o ChatGPT fez.
+  Fica a cadeia única, os quatro tempos e o lançamento com 12 pingentes; corrige: nome de lugar nunca no pingente,
+  missão nunca por horário/região de alerta, denominador da cidade = os 100 lugares mais conhecidos (`prominence`),
+  gomo provisório na hora e confirmado em 48 h, dia guardado na sequência. Os 12: Deu o Nome, Deu Close, Figurinha,
+  Famosinha, Inaugurou, Acendeu a Luz, Eu Conheço um Lugar, Nome na Lista, Mala Pronta, Bateu Ponto, Ombro Amigo,
+  Abre-Alas (este só vale para quem entrou no teste fechado do Android, então tem que sair antes da produção).
 
 ## Stack
 

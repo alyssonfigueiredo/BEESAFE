@@ -1,0 +1,390 @@
+<!doctype html>
+<html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Irisa · Gamificação V3</title>
+<!-- Gamificação V3: resposta à V2 (feita no ChatGPT) e proposta final. Mesmo CSS/JS de gamificacao.html; gerar o arquivo único com
+     node scripts/gamificacao-unica.mjs docs/gamificacao-v3.html docs/Irisa-gamificacao-v3.html. Setas ← → ou clique para avançar, F para tela cheia.
+     Mesma linguagem da landing e do Instagram: papel, vidro, Oswald + Space Grotesk, anel de 48 gomos da marca. -->
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Urbanist:wght@500&family=Oswald:wght@400;700&family=Space+Grotesk:wght@400;500;600;700&display=swap">
+<style>
+:root{--paper:#F5F4F1;--paper2:#ECEAE5;--card:#FFFFFF;--night:#141829;--night2:#1F2440;--ink:#141829;--muted:#3D4560;--dim:#7C8296;--soft:#B9BED3;
+  --coral:#FF6964;--orange:#FFA353;--yellow:#FFD066;--turq:#49DCC0;--blue:#59A7FF;--lilac:#A889FF;--amber:#FFAD0F;
+  --coralInk:#C72825;--turqInk:#0A8B7A;--lilacInk:#6037F0;--yellowInk:#8F6300;
+  --display:"Oswald","Arial Narrow",Impact,sans-serif;--body:"Space Grotesk","Helvetica Neue",Arial,sans-serif;--mark:"Urbanist","Helvetica Neue",Arial,sans-serif;
+  --rb:linear-gradient(90deg,var(--coral),var(--orange),var(--yellow),var(--turq),var(--blue),var(--lilac));
+  --shadow:0 2px 4px rgba(20,24,41,.03),0 16px 40px rgba(20,24,41,.08);--ease:cubic-bezier(.2,.7,.2,1);--spring:cubic-bezier(.3,1.4,.4,1)}
+*{box-sizing:border-box}p,h1,h2,h3{margin:0}
+html,body{margin:0;height:100%;background:#0B0D18;overflow:hidden;font-family:var(--body)}
+#deck{position:absolute;left:50%;top:50%;width:1920px;height:1080px;transform-origin:center;}
+.s{position:absolute;inset:0;padding:120px 128px 150px;display:flex;flex-direction:column;justify-content:center;gap:44px;background:var(--paper);color:var(--ink);
+  opacity:0;visibility:hidden;transition:opacity .6s ease,visibility 0s .6s;overflow:hidden}
+.s.on{opacity:1;visibility:visible;transition:opacity .6s ease,visibility 0s}
+.s.dark{background:var(--night);color:#F1F0EC}
+.s.alt{background:var(--paper2)}
+.bg{position:absolute;inset:0;pointer-events:none;background:
+  radial-gradient(60% 40% at -6% -4%,color-mix(in srgb,var(--turq) 32%,transparent),transparent 62%),
+  radial-gradient(50% 36% at 106% 6%,color-mix(in srgb,var(--coral) 24%,transparent),transparent 62%),
+  radial-gradient(55% 40% at 104% 104%,color-mix(in srgb,var(--lilac) 30%,transparent),transparent 62%),
+  radial-gradient(45% 34% at -4% 102%,color-mix(in srgb,var(--yellow) 28%,transparent),transparent 62%)}
+.dark .bg{opacity:.35}
+.s>*{position:relative}
+.s>.bg{position:absolute}
+.eb{font-size:28px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--turqInk)}
+.dark .eb{color:var(--turq)}
+h1,h2{font-family:var(--display);font-weight:700;text-transform:uppercase;line-height:1.1;letter-spacing:.01em}
+h1{font-size:150px}h2{font-size:92px}
+h2 .lt,h1 .lt{font-weight:400}
+.big{font-size:124px}
+.lead{font-size:40px;line-height:1.42;color:var(--muted);max-width:1300px}
+.dark .lead{color:var(--soft)}
+.rb{background:var(--rb);-webkit-background-clip:text;background-clip:text;color:transparent;padding:.18em 0 .12em;margin:-.18em 0 -.12em}
+.rule{height:12px;width:420px;border-radius:6px;background:var(--rb)}
+.gray{color:#8A8F9E}
+.foot{position:absolute;left:128px;right:128px;bottom:56px;display:flex;justify-content:space-between;font-size:24px;color:var(--dim)}
+.dark .foot{color:#8A90AA}
+.foot b{font-family:var(--mark);font-weight:500;letter-spacing:.2em}
+.foot b i{font-style:normal;color:var(--amber)}
+.row{display:flex;gap:32px}
+.card{flex:1;background:var(--card);border-radius:28px;padding:44px;box-shadow:var(--shadow);display:flex;flex-direction:column;gap:18px;min-width:0}
+.dark .card{background:var(--night2);box-shadow:none}
+.card h3{font-size:40px;font-weight:700;line-height:1.2}
+.card p{font-size:30px;line-height:1.45;color:var(--muted)}
+.dark .card p{color:var(--soft)}
+.lbl{font-size:24px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--dim)}
+.ic{width:64px;height:64px;border-radius:18px;display:flex;align-items:center;justify-content:center}
+.ic svg{width:34px;height:34px}
+.pill{display:inline-flex;align-items:center;padding:12px 26px;border-radius:999px;font-weight:600;font-size:28px;color:var(--ink)}
+.pills{display:flex;flex-wrap:wrap;gap:14px}
+table{width:100%;border-collapse:separate;border-spacing:0;background:var(--card);border-radius:24px;box-shadow:var(--shadow);overflow:hidden;font-size:31px}
+th,td{text-align:left;padding:20px 30px;border-bottom:1px solid #EAE7E1}
+th{font-size:24px;letter-spacing:.14em;text-transform:uppercase;color:var(--dim);font-weight:600}
+tr:last-child td{border-bottom:0}
+.w{display:inline-flex;align-items:center;gap:10px;font-weight:600}
+.w i{width:14px;height:14px;border-radius:50%}
+.ring{display:block}
+.split{display:grid;grid-template-columns:1fr 640px;gap:90px;align-items:center}
+.grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:24px}
+.badge{background:var(--card);border-radius:26px;padding:32px;box-shadow:var(--shadow);display:flex;flex-direction:column;gap:14px}
+.badge .md{width:76px;height:76px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:var(--display);font-weight:700;font-size:34px;color:var(--ink);box-shadow:inset 0 0 0 6px rgba(255,255,255,.55)}
+.badge h3{font-size:34px;font-weight:700}
+.badge p{font-size:26px;line-height:1.4;color:var(--muted)}
+.tl{display:grid;grid-template-columns:repeat(4,1fr);gap:28px;position:relative}
+.tl:before{content:"";position:absolute;left:30px;right:30px;top:30px;height:6px;border-radius:3px;background:var(--rb);opacity:.9}
+.st{display:flex;flex-direction:column;gap:16px}
+.dot{width:66px;height:66px;border-radius:50%;background:var(--card);box-shadow:var(--shadow),inset 0 0 0 6px var(--c);position:relative}
+.st .when{font-family:var(--display);font-weight:700;font-size:40px;text-transform:uppercase}
+.st p{font-size:28px;line-height:1.42;color:var(--muted)}
+.st .got{align-self:flex-start;font-size:24px;font-weight:600;padding:8px 18px;border-radius:999px;background:color-mix(in srgb,var(--c) 24%,#fff);color:var(--ink)}
+.num{font-family:var(--display);font-weight:700;font-size:220px;line-height:1}
+.ph{display:grid;grid-template-columns:repeat(3,1fr);gap:28px}
+.ph .card h3{font-family:var(--display);text-transform:uppercase;font-size:46px}
+.tag{align-self:flex-start;font-size:24px;font-weight:600;padding:8px 18px;border-radius:999px}
+.metric{flex:1;background:var(--card);border-radius:28px;padding:48px;box-shadow:var(--shadow);display:flex;flex-direction:column;gap:20px}
+.metric .q{font-family:var(--display);font-weight:700;font-size:46px;line-height:1.1;text-transform:uppercase}
+.c{text-align:center;align-items:center}
+.note{font-size:26px;color:var(--dim)}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+.grid3 .badge h3{font-size:32px}
+/* pulseira de pingentes */
+.chain{position:relative;height:250px}
+.chain svg.fio{position:absolute;left:0;top:0;width:100%;height:120px}
+.pend{position:absolute;width:118px;display:flex;flex-direction:column;align-items:center;transform-origin:50% 0}
+.pend .hk{width:20px;height:20px;border-radius:50%;border:4px solid #B9B4AA;margin-bottom:-4px}
+.pend .gm{width:112px;height:112px;border-radius:50%;box-shadow:inset 0 0 0 6px rgba(255,255,255,.75),0 10px 24px rgba(20,24,41,.18);display:flex;align-items:center;justify-content:center;font-family:var(--display);font-weight:700;font-size:28px;color:var(--ink);overflow:hidden}
+.pend .nm{font-size:20px;font-weight:600;color:var(--dim);margin-top:10px;white-space:nowrap}
+.pend.lk .gm{background:#E4E1DA;color:#A9A49A;font-size:46px;box-shadow:inset 0 0 0 6px rgba(255,255,255,.6)}
+.s.on .pend{animation:drop 1.1s var(--spring) both;animation-delay:calc(var(--i) * .09s + .35s)}
+@keyframes drop{0%{opacity:0;transform:translateY(-70px) rotate(-16deg)}55%{opacity:1;transform:translateY(0) rotate(7deg)}78%{transform:rotate(-3deg)}100%{opacity:1;transform:none}}
+/* dias acesos */
+.week{display:flex;gap:26px;align-items:flex-end}
+.day{display:flex;flex-direction:column;align-items:center;gap:14px}
+.day .o{width:124px;height:124px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:var(--display);font-weight:700;font-size:40px;color:var(--ink);box-shadow:var(--shadow)}
+.day .d{font-size:24px;font-weight:600;letter-spacing:.12em;color:var(--dim)}
+.day.g .o{background:transparent;box-shadow:none;border:5px dashed #B9B4AA;color:var(--dim);font-size:19px;font-family:var(--body)}
+.day.h .o{background:var(--card);box-shadow:var(--shadow),inset 0 0 0 7px var(--coral)}
+.s.on .day.h .o{animation:pulse 1.6s ease-in-out 1.4s infinite}
+@keyframes pulse{50%{box-shadow:var(--shadow),inset 0 0 0 7px var(--coral),0 0 0 18px color-mix(in srgb,var(--coral) 22%,transparent)}}
+.s.on .day .o{animation-fill-mode:both}
+.pg{display:flex;justify-content:center}
+.pgrow{display:flex;align-items:flex-start;gap:14px}
+.pgrow .it{display:flex;flex-direction:column;align-items:center;gap:6px;width:190px;text-align:center}
+.pgrow .it b{font-size:26px;line-height:1.15}
+.pgrow .it span{font-size:20px;color:var(--dim)}
+.pgrow .ar{font-family:var(--display);font-size:44px;color:#C9C4BA;margin-top:60px}
+.lnh{display:grid;grid-template-columns:250px 1fr;align-items:center;gap:24px}
+.lnh .lbl{font-size:22px}
+.phones{display:flex;justify-content:center;gap:56px;align-items:flex-start}
+.phones figure{margin:0;display:flex;flex-direction:column;align-items:center;gap:18px}
+.phones img{height:640px;border-radius:44px;box-shadow:0 30px 60px rgba(20,24,41,.22),0 0 0 10px #141829}
+.phones figcaption{font-size:26px;font-weight:600;color:var(--muted)}
+.cat5{display:grid;grid-template-columns:repeat(5,1fr);gap:18px}
+.cc{background:var(--card);border-radius:24px;padding:18px 20px 20px;box-shadow:var(--shadow);display:flex;flex-direction:column;gap:6px;min-height:338px}
+.cc .tp{display:flex;justify-content:space-between;align-items:flex-start}
+.cc h3{font-size:26px;font-weight:700;line-height:1.15}
+.cc .fx{font-size:17px;color:var(--dim)}
+.cc .cd{font-size:19px;line-height:1.35;color:var(--muted)}
+.cc .cp{margin-top:auto;font-size:18px;line-height:1.35;color:var(--ink);font-style:italic}
+.rr{font-size:15px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:5px 11px;border-radius:999px}
+.cat6{display:grid;grid-template-columns:repeat(6,1fr);gap:16px}
+.cat6 .it{background:var(--card);border-radius:24px;padding:16px 12px 18px;box-shadow:var(--shadow);display:flex;flex-direction:column;align-items:center;gap:4px;text-align:center}
+.cat6 .it b{font-size:24px;line-height:1.15}
+.cat6 .it span{font-size:18px;color:var(--dim);line-height:1.3}
+/* entrada dos elementos de cada slide */
+.s .in{opacity:0;transform:translateY(34px);filter:blur(6px);transition:opacity .8s ease,transform .9s var(--ease),filter .8s ease}
+.s.on .in{opacity:1;transform:none;filter:none}
+.s.on .d1{transition-delay:.12s}.s.on .d2{transition-delay:.24s}.s.on .d3{transition-delay:.36s}.s.on .d4{transition-delay:.48s}.s.on .d5{transition-delay:.6s}.s.on .d6{transition-delay:.72s}.s.on .d7{transition-delay:.84s}.s.on .d8{transition-delay:.96s}
+.gomo{opacity:.18;transition:opacity .25s ease}
+.lit .gomo.on{opacity:1}
+#prog{position:fixed;left:0;bottom:0;height:5px;background:var(--rb);transition:width .5s var(--ease);z-index:9}
+#hint{position:fixed;right:18px;bottom:14px;color:#6E7390;font:500 13px var(--body);z-index:9}
+@media (prefers-reduced-motion:reduce){.s,.s .in{transition:none!important}.s.on .pend,.s.on .day.h .o{animation:none!important}}
+</style></head><body>
+<div id="deck">
+
+<!-- 1 · capa -->
+<section class="s on" data-n="1">
+  <div class="bg"></div>
+  <div style="position:absolute;right:120px;top:50%;transform:translateY(-50%)" class="in d3"><svg class="ring" data-lit="48" width="560" height="560" viewBox="0 0 100 100"></svg></div>
+  <p class="in" style="font-family:var(--mark);font-weight:500;letter-spacing:.2em;font-size:32px;color:var(--muted)">IRIS<span style="color:#C98A00">A</span> · GAMIFICAÇÃO · V3</p>
+  <h1 class="in d1">A cadeia<br><span class="rb">com travas</span></h1>
+  <div class="rule in d2"></div>
+  <p class="lead in d3" style="max-width:1000px">A V2 acertou a estrutura. Esta versão fica com ela, corrige os cinco pontos em que ela põe gente ou o mapa em risco, e diz o que sai no primeiro update.</p>
+</section>
+
+<!-- 2 · o que a V2 acertou -->
+<section class="s" data-n="2">
+  <div><p class="eb in">O que a V2 acertou</p><h2 class="in d1" style="margin-top:18px">Fica tudo isso</h2></div>
+  <div class="grid3">
+    <div class="badge in d2"><div class="md" style="background:var(--turq)">1</div><h3>Uma cadeia só</h3><p>Abriu, explorou, contribuiu, conquistou, coloriu. A V1 tinha sistemas demais lado a lado.</p></div>
+    <div class="badge in d3"><div class="md" style="background:var(--yellow)">2</div><h3>Quatro tempos</h3><p>Segundos, dias, semanas, meses. Cada um com uma recompensa de tamanho diferente.</p></div>
+    <div class="badge in d4"><div class="md" style="background:var(--lilac)">3</div><h3>Faísca é expectativa</h3><p>“7 de 10” e, às vezes, “opa, caiu uma agora”. Ninguém precisa entender economia de pontos.</p></div>
+    <div class="badge in d5"><div class="md" style="background:var(--coral)">4</div><h3>Missão nasce do mapa</h3><p>“37 lugares do Centro ainda estão cinza.” Tarefa real, nada inventado.</p></div>
+    <div class="badge in d6"><div class="md" style="background:var(--blue)">5</div><h3>12 pingentes, não 30</h3><p>Lançar com poucos e fortes. Os outros entram depois, como novidade.</p></div>
+    <div class="badge in d7"><div class="md" style="background:var(--orange)">6</div><h3>“Ontem ficou cinza”</h3><p>Perder o dia sem culpa. A frase é boa e entra.</p></div>
+  </div>
+</section>
+
+<!-- 3 · onde erra -->
+<section class="s dark c" data-n="3">
+  <div class="bg"></div>
+  <h2 class="big in" style="text-align:center">Onde ela <span class="rb">erra</span></h2>
+  <p class="lead in d1" style="text-align:center;max-width:1300px">Cinco pontos. Três deles expõem alguém ou mandam gente para a rua atrás de recompensa. Os outros dois quebram a conta ou o lançamento.</p>
+  <div class="pills in d2" style="justify-content:center;margin-top:10px">
+    <span class="pill" style="background:var(--coral)">1 · Bar no pingente</span><span class="pill" style="background:var(--coral)">2 · Missão de madrugada</span><span class="pill" style="background:var(--orange)">3 · 23% de Curitiba</span><span class="pill" style="background:var(--yellow)">4 · Recompensa antes da checagem</span><span class="pill" style="background:var(--yellow)">5 · Sequência sem proteção</span>
+  </div>
+</section>
+
+<!-- 4 · erro 1 -->
+<section class="s" data-n="4">
+  <div class="split" style="grid-template-columns:1fr 560px">
+    <div style="display:flex;flex-direction:column;gap:30px">
+      <p class="eb in" style="color:var(--coralInk)">Erro 1 · o mais grave</p>
+      <h2 class="in d1">“Da Casa · Bar X”<br><span class="lt">é o mapa da rotina de alguém</span></h2>
+      <p class="lead in d2" style="font-size:34px">Pulseira privada não é segredo: tem print, celular emprestado, alguém olhando por cima do ombro. Um pingente com o nome do bar que a pessoa frequenta diz onde encontrá-la.</p>
+      <div class="card in d3" style="background:var(--night);color:#F1F0EC;flex:none"><p class="lbl" style="color:var(--turq)">V3</p><p style="font-size:30px;color:#F1F0EC">O pingente diz só “Da Casa”. O lugar não aparece na pulseira nem no cartão do story. Aparece só quando a própria pessoa toca no pingente, dentro do Perfil.</p></div>
+    </div>
+    <div class="in d2" style="display:flex;flex-direction:column;align-items:center;gap:26px">
+      <div style="display:flex;gap:40px;align-items:flex-start">
+        <div style="display:flex;flex-direction:column;align-items:center;gap:10px;opacity:.55"><div data-pg="da-casa" data-size="190"></div><p style="font-size:26px;font-weight:700;text-decoration:line-through;text-decoration-color:var(--coral);text-decoration-thickness:4px">Da Casa · Bar X</p><p class="note">V2</p></div>
+        <div style="display:flex;flex-direction:column;align-items:center;gap:10px"><div data-pg="da-casa" data-size="190"></div><p style="font-size:26px;font-weight:700">Da Casa</p><p class="note">V3</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 5 · erro 2 -->
+<section class="s dark" data-n="5">
+  <div class="bg"></div>
+  <p class="eb in" style="color:#FF8A85">Erro 2</p>
+  <h2 class="in d1">“Depois da meia-noite”<br><span class="lt">não pode ser missão</span></h2>
+  <div class="row">
+    <div class="card in d2"><h3>Manda gente para a rua</h3><p>Missão com prêmio puxa a pessoa para o lugar, de madrugada, para cumprir uma tarefa. É exatamente a hora em que mais chega relato.</p></div>
+    <div class="card in d3"><h3>Toca no lado do relato</h3><p>“Madrugada” e “noite” são campos do relato de violência. Missão sobre a noite mistura os dois lados que a Irisa separa de propósito.</p></div>
+    <div class="card in d4"><h3>Pede dado de horário</h3><p>A gamificação só sabe “abriu hoje”, sem hora e sem lugar. Missão por horário obrigaria a guardar quando a pessoa estava onde.</p></div>
+  </div>
+  <p class="lead in d5" style="font-size:32px"><b style="color:#fff">V3:</b> missão só fala de lugar cinza, categoria e bairro. Nunca de horário, nunca de região com alerta, nunca de relato.</p>
+</section>
+
+<!-- 6 · erro 3 -->
+<section class="s" data-n="6">
+  <p class="eb in" style="color:var(--coralInk)">Erro 3</p>
+  <h2 class="in d1">“Curitiba 23,1% irisada” <span class="lt">não fecha a conta</span></h2>
+  <div class="row" style="align-items:stretch">
+    <div class="metric in d2"><p class="lbl">No mapa hoje</p><p class="q" style="font-size:80px">+10 mil</p><p style="font-size:28px;color:var(--muted)">lugares em Curitiba depois do Overture.</p></div>
+    <div class="metric in d3"><p class="lbl">Para chegar a 23%</p><p class="q" style="font-size:80px">11.500</p><p style="font-size:28px;color:var(--muted)">avaliações válidas: 2.300 lugares com 5 cada.</p></div>
+    <div class="metric in d4" style="background:var(--night);color:#F1F0EC"><p class="lbl" style="color:var(--turq)">O que a pessoa veria</p><p class="q" style="font-size:80px;color:#8A8F9E">0,1%</p><p style="font-size:28px;color:var(--soft)">por meses. Um número que não sai do lugar desanima em vez de chamar.</p></div>
+  </div>
+  <p class="lead in d5" style="font-size:32px"><b style="color:var(--ink)">V3:</b> o denominador é <b style="color:var(--ink)">os 100 lugares mais conhecidos da cidade</b> (a coluna de relevância já existe no banco) e, dentro dele, o bairro. “12 dos 100 mais conhecidos de Curitiba já têm selo” anda toda semana.</p>
+</section>
+
+<!-- 7 · erros 4 e 5 -->
+<section class="s alt" data-n="7">
+  <h2 class="in">Erros 4 e 5: <span class="lt">a recompensa e a sequência</span></h2>
+  <div class="row">
+    <div class="card in d1"><p class="lbl" style="color:var(--coralInk)">Erro 4 · “Opa, caiu uma agora”</p><h3>A surpresa chega antes da checagem</h3><p>Avaliação só vale depois de 48 h sem a moderação esconder. Dar prêmio na hora, sem trava, paga quem avalia lixo em série.</p>
+      <p style="color:var(--ink);font-weight:600">V3: na hora o gomo acende com brilho de “provisório” e a faísca cai. O pingente só confirma depois das 48 h. Se a avaliação for escondida, o gomo apaga sem alarde. Surpresa só nas 3 primeiras do dia.</p></div>
+    <div class="card in d2"><p class="lbl" style="color:var(--coralInk)">Erro 5 · “Ontem ficou cinza. Acontece.”</p><h3>Frase boa, perda igual</h3><p>Sem proteção, quem perde 23 dias seguidos sente a perda do mesmo jeito, com ou sem frase carinhosa. É o que faz gente largar o app.</p>
+      <p style="color:var(--ink);font-weight:600">V3: um dia guardado por semana, automático. A frase entra para quando passar disso: “Ontem ficou cinza. Acontece. Você recomeça com 1 dia guardado.”</p></div>
+  </div>
+</section>
+
+<!-- 8 · detalhes -->
+<section class="s" data-n="8">
+  <h2 class="in">E três detalhes</h2>
+  <div class="row">
+    <div class="card in d1"><h3>Famosinha, Aclamada</h3><p>Só no feminino. A marca fala “bem-vinde”. A pessoa escolhe no Perfil: Famosinha, Famosinho ou Famosinhe.</p></div>
+    <div class="card in d2"><h3>Influ do Vale e Aclamada no lançamento</h3><p>Dependem de alguém marcar “ajudou” nas avaliações, um botão que ainda não existe. Ficam para a segunda leva.</p></div>
+    <div class="card in d3"><h3>O que precisa de build</h3><p>A vibração precisa de build. O aviso de sequência usa o push que entra na 0.1.2. O resto sai por update.</p></div>
+  </div>
+</section>
+
+<!-- 9 · a cadeia V3 -->
+<section class="s dark" data-n="9">
+  <div class="bg"></div>
+  <div><p class="eb in">A proposta</p><h2 class="in d1" style="margin-top:18px">Uma cadeia, <span class="rb">seis elos</span></h2></div>
+  <div class="grid3" style="grid-template-columns:repeat(6,1fr);gap:18px">
+    <div class="card in d2" style="padding:30px"><p class="num" style="font-size:64px;color:var(--coral)">1</p><h3 style="font-size:32px">Abriu</h3><p style="font-size:24px">O dia acende.</p></div>
+    <div class="card in d3" style="padding:30px"><p class="num" style="font-size:64px;color:var(--orange)">2</p><h3 style="font-size:32px">Explorou</h3><p style="font-size:24px">Consultou um lugar ou apoiou no mural: faísca.</p></div>
+    <div class="card in d4" style="padding:30px"><p class="num" style="font-size:64px;color:var(--yellow)">3</p><h3 style="font-size:32px">Contribuiu</h3><p style="font-size:24px">Irisou: gomo provisório e “+1 cor no mapa”.</p></div>
+    <div class="card in d5" style="padding:30px"><p class="num" style="font-size:64px;color:var(--turq)">4</p><h3 style="font-size:32px">Confirmou</h3><p style="font-size:24px">48 h depois, o gomo firma. Ninguém precisa fazer nada.</p></div>
+    <div class="card in d6" style="padding:30px"><p class="num" style="font-size:64px;color:var(--blue)">5</p><h3 style="font-size:32px">Conquistou</h3><p style="font-size:24px">Pingente com título e frase.</p></div>
+    <div class="card in d7" style="padding:30px"><p class="num" style="font-size:64px;color:var(--lilac)">6</p><h3 style="font-size:32px">Coloriu</h3><p style="font-size:24px">“Você ajudou: 13 dos 100 de Curitiba.”</p></div>
+  </div>
+  <p class="lead in d8" style="font-size:30px">O elo 4 é o que a V2 não tinha. Ele deixa a resposta na hora sem pagar quem tenta burlar.</p>
+</section>
+
+<!-- 10 · quatro tempos -->
+<section class="s" data-n="10">
+  <h2 class="in">Quatro tempos, <span class="lt">com o que entra em cada um</span></h2>
+  <table class="in d1">
+    <tr><th style="width:20%">Tempo</th><th style="width:44%">O que acontece</th><th>Vem de</th></tr>
+    <tr><td><b>Segundos</b></td><td>Gomo provisório, faísca voando, “+1 cor no mapa”</td><td>Avaliar, consultar, apoiar</td></tr>
+    <tr><td><b>Dias</b></td><td>Caixinha a cada 10 faíscas: um banho surpresa num pingente seu</td><td>Faíscas; às vezes antes, nas 3 primeiras avaliações do dia</td></tr>
+    <tr><td><b>Semanas</b></td><td>Pingente novo, com título e frase para o story</td><td>Avaliações confirmadas, dias acesos, apoio</td></tr>
+    <tr><td><b>Meses</b></td><td>Anel completo, Patrimônio, a cidade acendendo</td><td>Só contribuição real</td></tr>
+  </table>
+  <p class="in d2" style="font-size:28px;color:var(--muted)">Abrir o app nunca acende gomo. O anel é só de quem ajuda o mapa; o dia a dia enche faísca e sequência.</p>
+</section>
+
+<!-- 11 · os 12 -->
+<section class="s alt" data-n="11">
+  <div><p class="eb in">Lançamento</p><h2 class="in d1" style="margin-top:18px">Os 12 que entram primeiro</h2></div>
+  <div class="cat6" data-twelve="deu-o-nome,deu-close,figurinha,famosinha,inaugurou,acendeu-a-luz,eu-conheco,nome-na-lista,mala-pronta,bateu-ponto,ombro-amigo,abre-alas"></div>
+  <p class="in d8" style="font-size:26px;color:var(--muted)">Nenhum depende do botão “ajudou”. <b style="color:var(--ink)">Abre-Alas tem prazo:</b> é de quem entrou durante o teste fechado do Android, então precisa estar no update antes da produção.</p>
+</section>
+
+<!-- 12 · o mapa responde -->
+<section class="s dark" data-n="12">
+  <div class="bg"></div>
+  <div class="split" style="grid-template-columns:600px 1fr">
+    <div class="in" style="display:flex;justify-content:center"><svg class="ring" data-lit="6" data-dim="#2A3050" data-anim="1" width="540" height="540" viewBox="0 0 100 100"></svg></div>
+    <div style="display:flex;flex-direction:column;gap:28px">
+      <p class="eb in d1">O mapa responde</p>
+      <h2 class="in d2" style="font-size:84px"><span class="num rb" style="font-size:200px">12</span><br>dos 100 mais<br>conhecidos</h2>
+      <p class="lead in d3" style="font-size:32px">“Curitiba: 12 dos 100 lugares mais conhecidos já têm selo. Esta semana foram 3, e um foi você.” Por bairro também: “o Centro está em 5 de 20”.</p>
+      <p class="note in d4" style="color:#8A90AA">Números ilustrativos. O anel da cidade enche um gomo a cada 2 lugares com selo.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 13 · missões -->
+<section class="s" data-n="13">
+  <h2 class="in">Missões que o mapa pede</h2>
+  <div class="ph">
+    <div class="card in d1"><span class="tag" style="background:color-mix(in srgb,var(--turq) 24%,#fff)">Bairro</span><h3>Acender o Centro</h3><p>“8 dos 20 mais conhecidos do Centro ainda estão cinza.”</p><p style="color:var(--ink);font-weight:600">Quem ajudou leva o adesivo da missão na Mala Pronta.</p></div>
+    <div class="card in d2"><span class="tag" style="background:color-mix(in srgb,var(--yellow) 34%,#fff)">Categoria</span><h3>Semana dos hotéis</h3><p>“Hotel é o que mais tem no mapa e o que menos tem nota.”</p><p style="color:var(--ink);font-weight:600">Caixinha garantida para quem irisar 2.</p></div>
+    <div class="card in d3"><span class="tag" style="background:color-mix(in srgb,var(--lilac) 26%,#fff)">Data</span><h3>Semana do Orgulho</h3><p>Em junho, a cidade inteira tenta acender os 100.</p><p style="color:var(--ink);font-weight:600">Pingente de data, só naquela semana.</p></div>
+  </div>
+  <p class="in d4" style="font-size:28px;color:var(--muted)">Toda missão sai de um buraco real do mapa. Nenhuma fala de horário, de região com alerta ou de relato.</p>
+</section>
+
+<!-- 14 · regras -->
+<section class="s dark" data-n="14">
+  <div><p class="eb in" style="color:#FF8A85">Sem exceção</p><h2 class="in d1" style="margin-top:18px">As travas</h2></div>
+  <div class="grid3">
+    <div class="card in d2"><h3>Relato fora</h3><p>Nem ponto, nem faísca, nem sequência, nem missão.</p></div>
+    <div class="card in d3"><h3>Sem lugar no pingente</h3><p>Nome de estabelecimento nunca aparece na pulseira nem no story.</p></div>
+    <div class="card in d4"><h3>Sem horário</h3><p>A gamificação só sabe “abriu hoje”. Nunca a hora, nunca onde.</p></div>
+    <div class="card in d5"><h3>Confirma em 48 h</h3><p>Na hora é provisório. Avaliação escondida apaga o gomo.</p></div>
+    <div class="card in d6"><h3>Volume não premia</h3><p>Surpresa só nas 3 primeiras avaliações do dia.</p></div>
+    <div class="card in d7"><h3>Aviso neutro</h3><p>“Ainda dá tempo de acender o dia.” Nada que tire alguém do armário na tela bloqueada.</p></div>
+  </div>
+</section>
+
+<!-- 15 · roteiro -->
+<section class="s" data-n="15">
+  <h2 class="in">O que sai quando</h2>
+  <div class="ph">
+    <div class="card in d1"><span class="tag" style="background:color-mix(in srgb,var(--turq) 24%,#fff)">Update 1 · sem build</span><h3>A cadeia</h3><p>Anel com o elo de 48 h, dias acesos com dia guardado, faíscas e caixinha, os 12 pingentes, “12 dos 100” no Início.</p></div>
+    <div class="card in d2"><span class="tag" style="background:color-mix(in srgb,var(--lilac) 24%,#fff)">Com a 0.1.2</span><h3>O toque</h3><p>Aviso neutro da sequência pelo push que já está pronto, vibração no gomo, cartão para o story.</p></div>
+    <div class="card in d3"><span class="tag" style="background:color-mix(in srgb,var(--coral) 20%,#fff)">Depois, por update</span><h3>A comunidade</h3><p>Botão “ajudou” e a linha Reconhecimento, missões com as ONGs, os outros 18 pingentes em levas.</p></div>
+  </div>
+  <p class="in d4" style="font-size:28px;color:var(--muted)">Medir: segunda avaliação em 7 dias, dias acesos por semana e lugares que chegam ao selo, antes e depois do Update 1.</p>
+</section>
+
+<!-- 16 · fecho -->
+<section class="s dark c" data-n="16">
+  <div class="bg"></div>
+  <div class="in"><svg class="ring" data-lit="48" width="260" height="260" viewBox="0 0 100 100"></svg></div>
+  <h2 class="big in d1" style="text-align:center">A cadeia da V2.<br><span class="rb">As travas da Irisa.</span></h2>
+  <p class="lead in d2" style="text-align:center;max-width:1300px">Recompensa toda vez que a pessoa volta. A maior fica para quem deixa o mapa mais útil, e nenhuma põe alguém em risco.</p>
+  <p class="in d3" style="font-size:32px;font-weight:600;padding:16px 34px;border-radius:999px;background:var(--coral);color:var(--ink)">Próximo passo: fechar os 12 pingentes e começar o Update 1</p>
+</section>
+
+</div>
+<div id="prog"></div><div id="hint">← → para navegar · F tela cheia</div>
+<script src="pingentes.js"></script>
+<script>
+const G=['#ff6964','#ff7062','#ff7760','#ff7f5d','#ff875c','#ff8e5a','#ff9558','#ff9c55','#ffa353','#ffa955','#ffae58','#ffb35a','#ffb95d','#ffbf5f','#ffc561','#ffc964','#ffd066','#efd46c','#d7d679','#bed582','#a3d38c','#8bd296','#74d6a4','#5fd9b2','#49dcc0','#4cd7ca','#4fd2d4','#4fcbdc','#50c4e4','#51bcec','#52b4f5','#52aefd','#59a7ff','#63a3ff','#6b9fff','#759aff','#7d96ff','#8791ff','#908dff','#9d8bff','#a889ff','#b684f0','#c681dd','#d37eca','#de78b3','#ea709b','#f56a85','#ff636e'];
+const NS="http://www.w3.org/2000/svg",P=(r,a)=>[50+r*Math.cos(a),50+r*Math.sin(a)];
+// desenha o anel de 48 gomos da marca em cada <svg class="ring">
+document.querySelectorAll("svg.ring").forEach(svg=>{
+  const lit=+svg.dataset.lit,dim=svg.dataset.dim||"#DEDAD2";
+  for(let i=0;i<48;i++){const a0=(-90+7.5*i)*Math.PI/180,a1=a0+7*Math.PI/180,[x0,y0]=P(48,a0),[x1,y1]=P(48,a1),[x2,y2]=P(35,a1),[x3,y3]=P(35,a0);
+    const bgp=document.createElementNS(NS,"path");bgp.setAttribute("d",`M${x0} ${y0}A48 48 0 0 1 ${x1} ${y1}L${x2} ${y2}A35 35 0 0 0 ${x3} ${y3}Z`);bgp.setAttribute("fill",dim);svg.appendChild(bgp);
+    if(i<lit){const p=bgp.cloneNode();p.setAttribute("fill",G[i]);p.classList.add("gomo","on");if(!svg.dataset.anim)p.style.opacity=1;p.style.transitionDelay=(0.5+i*0.045)+"s";svg.appendChild(p)}}
+  const c=document.createElementNS(NS,"circle");c.setAttribute("cx",50);c.setAttribute("cy",50);c.setAttribute("r",13);c.setAttribute("fill","#0F1220");svg.appendChild(c);
+  if(svg.closest(".dark")){c.setAttribute("stroke","#fff");c.setAttribute("stroke-width","1.4")}
+  const h=document.createElementNS(NS,"circle");h.setAttribute("cx",46.1);h.setAttribute("cy",45.6);h.setAttribute("r",2.86);h.setAttribute("fill","#fff");svg.appendChild(h);
+});
+// pingentes do catálogo (pingentes.js) pendurados no fio da pulseira e nos slides
+const PG=window.PINGENTES;
+const PD=["deu-o-nome","deu-close","figurinha","inaugurou","acendeu-a-luz","mala-pronta","bateu-ponto","ombro-amigo","abre-alas",0,0];
+const pw=document.getElementById("pends");
+if(pw)PD.forEach((id,i)=>{const x=i/(PD.length-1),cx=28+x*(1664-150),y=8+284*x*(1-x);const p=id&&PG.get(id);
+  const d=document.createElement("div");d.className="pend";d.style.cssText=`left:${cx-10}px;top:${y-14}px;--i:${i};width:140px`;
+  d.innerHTML=(p?PG.svg(p.art,{size:140}):PG.svg("figurinha",{size:140,locked:true}))+`<p class="nm" style="margin-top:-6px;white-space:normal;text-align:center;line-height:1.15;font-size:18px">${p?p.t:"…"}</p>`;pw.appendChild(d)});
+document.querySelectorAll("[data-pgs]").forEach((e,k)=>{e.innerHTML=e.dataset.pgs.split(",").map((id,i)=>{const p=PG.get(id),[rn,rc]=PG.RAR[p.rar];
+  return `<div class="badge in d${i+1}" style="padding:22px 26px;flex-direction:row;align-items:center;gap:18px">${PG.svg(p.art,{size:110})}<div style="display:flex;flex-direction:column;gap:6px"><h3 style="font-size:28px;line-height:1.15">${p.t}</h3><p style="font-size:21px">${p.obj}</p></div></div>`}).join("")});
+document.querySelectorAll("[data-cat]").forEach(e=>{const [a,b]=e.dataset.cat.split("-").map(Number);
+  e.innerHTML=PG.lista.slice(a,b).map((p,i)=>{const [rn,rc]=PG.RAR[p.rar];
+    return `<div class="cc in d${Math.min(8,i+1)}"><div class="tp">${PG.svg(p.art,{size:96})}<span class="rr" style="background:${rc}">${rn}</span></div><h3>${p.t}</h3>${p.flex?`<p class="fx">${p.flex.slice(1).join(" · ")}</p>`:""}<p class="cd">${p.cond}</p><p class="cp">“${p.copy}”</p></div>`}).join("")});
+document.querySelectorAll("[data-pg]").forEach(e=>e.innerHTML=PG.svg(PG.get(e.dataset.pg).art,{size:+e.dataset.size||120}));
+document.querySelectorAll("[data-twelve]").forEach(e=>{e.innerHTML=e.dataset.twelve.split(",").map((id,i)=>{const p=PG.get(id);
+  return `<div class="it in d${Math.min(8,Math.floor(i/2)+2)}">${PG.svg(p.art,{size:130})}<b>${p.flex?p.flex[0]+"/o/e":p.t}</b><span>${p.cond.split(". ")[0].replace(/\.$/,"")}</span></div>`}).join("")});
+document.querySelectorAll("[data-line]").forEach(e=>{e.innerHTML=e.dataset.line.split(",").map((k,i)=>{const [id,q]=k.split(":"),p=PG.get(id);
+  return (i?'<span class="ar">→</span>':"")+`<div class="it">${PG.svg(p.art,{size:118})}<b>${p.t}</b><span>${q}</span></div>`}).join("")});
+const S=[...document.querySelectorAll(".s")],deck=document.getElementById("deck");
+let cur=0;
+function fit(){const z=Math.min(innerWidth/1920,innerHeight/1080);deck.style.transform=`translate(-50%,-50%) scale(${z})`}
+function count(el){const alvo=+el.dataset.count,t0=performance.now();(function f(t){const p=Math.min(1,(t-t0)/1400),e=1-Math.pow(1-p,3);el.textContent=Math.round(alvo*e)+"%";if(p<1)requestAnimationFrame(f)})(t0+600)}
+function go(n){
+  n=Math.max(0,Math.min(S.length-1,n));
+  S[cur].classList.remove("on");S[cur].querySelectorAll("svg.ring[data-anim]").forEach(s=>s.classList.remove("lit"));
+  cur=n;const s=S[cur];s.classList.add("on");
+  requestAnimationFrame(()=>s.querySelectorAll("svg.ring[data-anim]").forEach(r=>r.classList.add("lit")));
+  s.querySelectorAll("[data-count]").forEach(count);
+  document.getElementById("prog").style.width=((cur+1)/S.length*100)+"%";
+  try{history.replaceState(null,"","#"+(cur+1))}catch(e){}
+}
+addEventListener("keydown",e=>{if(["ArrowRight","PageDown"," ","Enter"].includes(e.key)){e.preventDefault();go(cur+1)}
+  else if(["ArrowLeft","PageUp","Backspace"].includes(e.key)){e.preventDefault();go(cur-1)}
+  else if(e.key==="Home")go(0);else if(e.key==="End")go(S.length-1);
+  else if(e.key.toLowerCase()==="f"){document.fullscreenElement?document.exitFullscreen():document.documentElement.requestFullscreen?.()}});
+addEventListener("click",e=>{go(e.clientX<innerWidth*0.3?cur-1:cur+1)});
+let tx=0;addEventListener("touchstart",e=>{tx=e.touches[0].clientX},{passive:true});
+addEventListener("touchend",e=>{const d=e.changedTouches[0].clientX-tx;if(Math.abs(d)>40)go(d<0?cur+1:cur-1)},{passive:true});
+fit();addEventListener("resize",fit);
+const h=parseInt(location.hash.slice(1));go(isNaN(h)?0:h-1);
+</script>
+</body></html>

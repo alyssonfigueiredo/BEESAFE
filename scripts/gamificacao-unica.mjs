@@ -1,6 +1,7 @@
 // Junta a apresentação da gamificação num HTML só, que abre sozinho em qualquer lugar (celular, e-mail, Drive):
 // pingentes.js entra no próprio arquivo e as telas viram imagens embutidas (WebP).
 // node scripts/gamificacao-unica.mjs  →  docs/Irisa-gamificacao.html
+// node scripts/gamificacao-unica.mjs docs/gamificacao-v3.html docs/Irisa-gamificacao-v3.html  (outra apresentação)
 import { chromium } from "playwright-core";
 import { readFileSync, writeFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
@@ -8,7 +9,8 @@ import path from "node:path";
 
 const raiz = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const docs = path.join(raiz, "docs");
-let html = readFileSync(path.join(docs, "gamificacao.html"), "utf8");
+const [entrada = "docs/gamificacao.html", alvo = "docs/Irisa-gamificacao.html"] = process.argv.slice(2);
+let html = readFileSync(path.join(raiz, entrada), "utf8");
 const js = readFileSync(path.join(docs, "pingentes.js"), "utf8");
 html = html.replace('<script src="pingentes.js"></script>', () => `<script>\n${js}</script>`);
 
@@ -30,6 +32,6 @@ for (const src of imgs) {
   html = html.replaceAll(`src="${src}"`, `src="${webp}"`);
 }
 await browser.close();
-const saida = path.join(docs, "Irisa-gamificacao.html");
+const saida = path.join(raiz, alvo);
 writeFileSync(saida, html);
-console.log(`docs/Irisa-gamificacao.html (${(html.length / 1024).toFixed(0)} KB, ${imgs.length} telas embutidas)`);
+console.log(`${alvo} (${(html.length / 1024).toFixed(0)} KB, ${imgs.length} telas embutidas)`);
