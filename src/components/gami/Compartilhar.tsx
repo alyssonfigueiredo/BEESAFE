@@ -1,8 +1,9 @@
 import { requireOptionalNativeModule } from "expo";
 import { Camera, Share2 } from "lucide-react-native";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   Alert,
+  Image,
   Modal,
   NativeModules,
   Platform,
@@ -12,13 +13,31 @@ import {
   useWindowDimensions,
   View,
 } from "react-native";
-import Svg, { Defs, Path, RadialGradient, Rect, Stop } from "react-native-svg";
+import Animated, {
+  Easing,
+  useAnimatedStyle,
+  useReducedMotion,
+  useSharedValue,
+  withDelay,
+  withRepeat,
+  withSequence,
+  withTiming,
+} from "react-native-reanimated";
+import Svg, {
+  Defs,
+  LinearGradient,
+  Path,
+  RadialGradient,
+  Rect,
+  Stop,
+  Text as SvgText,
+} from "react-native-svg";
 
 import { FadeUp } from "@/components/gami/Anim";
 import { Confete } from "@/components/gami/Confete";
 import { NivelIcone } from "@/components/gami/NivelIcone";
 import { MedalView } from "@/components/gami/MedalView";
-import { Mark } from "@/components/Mark";
+import { MEDALHA_IMG } from "@/lib/medalImagens";
 import { useFolhaAberta } from "@/hooks/useDiscovery";
 import { useForma } from "@/hooks/useGamification";
 import { getMedalha, nomeDa, type Banho } from "@/lib/medals";
@@ -36,8 +55,8 @@ export type Compartilhavel =
 
 const W = 360;
 const H = 640;
-/** Centro vertical da medalha no cartão (o halo do fundo acompanha). */
-const HALO_Y = 232;
+/** Centro vertical do cartão de vidro (de onde o confete sai). */
+const HALO_Y = 360;
 
 // ID público do app Irisa na Meta: o Instagram exige no compartilhamento direto para o story.
 const META_APP_ID = "2296597601132815";
@@ -83,15 +102,96 @@ function Fundo() {
       {manchas.map(([, x, y], i) => (
         <Rect key={i} x={x - 230} y={y - 230} width={460} height={460} fill={`url(#stm${i})`} />
       ))}
-      {/* Halo claro atrás da medalha: dá o destaque sem moldura. */}
+    </Svg>
+  );
+}
+
+// Cartão na identidade dos posts do Instagram (skill irisa-posts): papel com as quatro manchas,
+// eyebrow em cor Ink, título Oswald com uma parte leve e o nome forte em arco-íris, o objeto 3D num
+// cartão de vidro, frase em corpo e a assinatura #radarmin + IRISa centralizada embaixo.
+
+const GOMOS16 = [
+  "#ff6964",
+  "#ff8e5a",
+  "#ffa353",
+  "#ffbf5f",
+  "#ffd066",
+  "#bed582",
+  "#74d6a4",
+  "#49dcc0",
+  "#4fcbdc",
+  "#52b4f5",
+  "#59a7ff",
+  "#7d96ff",
+  "#a889ff",
+  "#c681dd",
+  "#ea709b",
+  "#ff636e",
+];
+
+function arco(r1: number, r2: number, a0: number, a1: number) {
+  const p = (r: number, a: number) =>
+    [50 + r * Math.cos(a), 50 + r * Math.sin(a)].map((v) => v.toFixed(2));
+  const [x1, y1] = p(r2, a0),
+    [x2, y2] = p(r2, a1),
+    [x3, y3] = p(r1, a1),
+    [x4, y4] = p(r1, a0);
+  return `M${x1} ${y1}A${r2} ${r2} 0 0 1 ${x2} ${y2}L${x3} ${y3}A${r1} ${r1} 0 0 0 ${x4} ${y4}Z`;
+}
+
+/** #radarmin: só o anel de gomos, centro vazio (a assinatura dos posts). */
+function RadarMin({ size }: { size: number }) {
+  return (
+    <Svg width={size} height={size} viewBox="0 0 100 100">
+      {Array.from({ length: 48 }, (_, i) => {
+        const a0 = ((-90 + 7.5 * i + 0.8) * Math.PI) / 180;
+        const a1 = ((-90 + 7.5 * (i + 1) - 0.8) * Math.PI) / 180;
+        return <Path key={i} d={arco(30, 48, a0, a1)} fill={GOMOS16[Math.floor(i / 3)]} />;
+      })}
+    </Svg>
+  );
+}
+
+/** Linhas do nome escritas para caber (como os títulos dos posts, quebra à mão por palavra). */
+function linhasDoNome(nome: string, max = 13) {
+  const palavras = nome.toUpperCase().split(" ");
+  const linhas: string[] = [];
+  for (const p of palavras) {
+    const ult = linhas[linhas.length - 1];
+    if (ult && (ult + " " + p).length <= max) linhas[linhas.length - 1] = ult + " " + p;
+    else linhas.push(p);
+  }
+  return linhas.slice(0, 3);
+}
+
+/** Nome forte em arco-íris (Oswald 700), uma linha por <text>, centralizado. */
+function NomeArcoIris({ nome }: { nome: string }) {
+  const linhas = linhasDoNome(nome);
+  const maior = Math.max(...linhas.map((l) => l.length));
+  const fs = Math.min(50, Math.floor(296 / (maior * 0.5)));
+  const lh = fs * 1.14;
+  return (
+    <Svg width={W - 40} height={lh * linhas.length + fs * 0.16}>
       <Defs>
-        <RadialGradient id="sthalo" cx="50%" cy="50%" r="50%">
-          <Stop offset="0" stopColor="#FFFFFF" stopOpacity={0.95} />
-          <Stop offset="0.55" stopColor="#FFFFFF" stopOpacity={0.55} />
-          <Stop offset="1" stopColor="#FFFFFF" stopOpacity={0} />
-        </RadialGradient>
+        <LinearGradient id="stnome" x1="0" y1="0" x2="1" y2="0">
+          {ARCO.map((c, i) => (
+            <Stop key={c} offset={i / (ARCO.length - 1)} stopColor={c} />
+          ))}
+        </LinearGradient>
       </Defs>
-      <Rect x={W / 2 - 170} y={HALO_Y - 170} width={340} height={340} fill="url(#sthalo)" />
+      {linhas.map((l, i) => (
+        <SvgText
+          key={i}
+          x={(W - 40) / 2}
+          y={fs * 0.98 + i * lh}
+          fontSize={fs}
+          fontFamily="Oswald_700Bold"
+          textAnchor="middle"
+          fill="url(#stnome)"
+        >
+          {l}
+        </SvgText>
+      ))}
     </Svg>
   );
 }
@@ -105,134 +205,215 @@ const ARCO = [
   colors.lilac,
 ];
 
-/** Brilhinhos de quatro pontas em volta da medalha (parados: a imagem é estática). */
-function Brilhos() {
-  const pts: [number, number, number, string][] = [
-    [72, 196, 9, colors.yellow],
-    [292, 176, 7, colors.coral],
-    [300, 318, 10, colors.turquoise],
-    [62, 330, 6, colors.lilac],
-  ];
+/** Um brilhinho de quatro pontas que pisca devagar (na tela; a captura pega o quadro do momento). */
+function Brilho({
+  x,
+  y,
+  r,
+  c,
+  atraso,
+}: {
+  x: number;
+  y: number;
+  r: number;
+  c: string;
+  atraso: number;
+}) {
+  const reduce = useReducedMotion();
+  const k = useSharedValue(reduce ? 1 : 0);
+  useEffect(() => {
+    if (reduce) return;
+    k.set(
+      withDelay(
+        atraso,
+        withSequence(
+          withTiming(1, { duration: 420, easing: Easing.out(Easing.cubic) }),
+          withRepeat(
+            withSequence(
+              withTiming(0.55, { duration: 1100, easing: Easing.inOut(Easing.sin) }),
+              withTiming(1, { duration: 1100, easing: Easing.inOut(Easing.sin) }),
+            ),
+            -1,
+          ),
+        ),
+      ),
+    );
+  }, [reduce, atraso, k]);
+  const st = useAnimatedStyle(() => ({
+    opacity: Math.min(1, k.get() * 1.6),
+    transform: [{ scale: k.get() }, { rotate: `${(1 - k.get()) * 45}deg` }],
+  }));
+  const d = r * 2;
   return (
-    <Svg width={W} height={H} style={{ position: "absolute", top: 0, left: 0 }}>
-      {pts.map(([x, y, r, c], i) => (
+    <Animated.View
+      style={[{ position: "absolute", left: x - r, top: y - r, width: d, height: d }, st]}
+    >
+      <Svg width={d} height={d}>
         <Path
-          key={i}
-          d={`M${x} ${y - r}Q${x} ${y} ${x + r} ${y}Q${x} ${y} ${x} ${y + r}Q${x} ${y} ${x - r} ${y}Q${x} ${y} ${x} ${y - r}Z`}
+          d={`M${r} 0Q${r} ${r} ${d} ${r}Q${r} ${r} ${r} ${d}Q${r} ${r} 0 ${r}Q${r} ${r} ${r} 0Z`}
           fill={c}
         />
+      </Svg>
+    </Animated.View>
+  );
+}
+
+/** Brilhinhos de quatro pontas em volta do cartão de vidro. */
+function Brilhos() {
+  const pts: [number, number, number, string][] = [
+    [62, 268, 9, colors.yellow],
+    [302, 250, 7, colors.coral],
+    [306, 420, 10, colors.turquoise],
+    [54, 432, 6, colors.lilac],
+  ];
+  return (
+    <View
+      pointerEvents="none"
+      style={{ position: "absolute", top: 0, left: 0, width: W, height: H }}
+    >
+      {pts.map(([x, y, r, c], i) => (
+        <Brilho key={i} x={x} y={y} r={r} c={c} atraso={500 + i * 160} />
       ))}
-    </Svg>
+    </View>
   );
 }
 
 /**
- * O cartão em si, no tamanho lógico 360 × 640 (a captura sai em 1080 × 1920). Blocos empilhados em
- * coluna (nunca posicionados por cima um do outro), dentro da área que o Instagram não cobre:
- * ~90 px no topo e ~110 px embaixo ficam para a interface do story.
+ * O objeto em destaque: a imagem 3D solta no vidro, ou o desenho quando não há imagem. Na tela
+ * entra crescendo de leve e depois flutua devagar.
+ */
+function Destaque({ c }: { c: Compartilhavel }) {
+  const reduce = useReducedMotion();
+  const k = useSharedValue(reduce ? 1 : 0);
+  const f = useSharedValue(0);
+  useEffect(() => {
+    if (reduce) return;
+    k.set(withDelay(260, withTiming(1, { duration: 620, easing: Easing.out(Easing.back(1.4)) })));
+    f.set(
+      withDelay(
+        900,
+        withRepeat(
+          withSequence(
+            withTiming(1, { duration: 1800, easing: Easing.inOut(Easing.sin) }),
+            withTiming(0, { duration: 1800, easing: Easing.inOut(Easing.sin) }),
+          ),
+          -1,
+        ),
+      ),
+    );
+  }, [reduce, k, f]);
+  const st = useAnimatedStyle(() => ({
+    opacity: Math.min(1, k.get() * 1.5),
+    transform: [
+      { translateY: (1 - k.get()) * 14 - f.get() * 5 },
+      { scale: 0.82 + 0.18 * k.get() },
+      { rotate: `${(f.get() - 0.5) * 3}deg` },
+    ],
+  }));
+  let corpo;
+  if (c.tipo === "medalha") {
+    const img = MEDALHA_IMG[c.id];
+    corpo = img ? (
+      <Image source={img} style={{ width: 196, height: 196 }} resizeMode="contain" />
+    ) : (
+      <MedalView id={c.id} size={190} on banho={c.banho ?? null} />
+    );
+  } else corpo = <NivelIcone k={c.k} size={170} />;
+  return <Animated.View style={st}>{corpo}</Animated.View>;
+}
+
+/**
+ * O cartão em si, no tamanho lógico 360 × 640 (a captura sai em 1080 × 1920). Coluna centralizada
+ * fora das faixas que o Instagram cobre; a assinatura fica a 40 (120 em 1080) do fundo, como nos
+ * stories da marca.
  */
 function Cartao({ c, forma }: { c: Compartilhavel; forma: number }) {
   const medalha = c.tipo === "medalha" ? getMedalha(c.id) : null;
   const nivel = c.tipo === "nivel" ? NIVEIS_EVO[c.k] : null;
-  const rotulo = medalha ? "Desbloqueei na Irisa" : "Meu nível na Irisa";
+  const eyebrow = medalha
+    ? "Conquista na Irisa"
+    : nivel && c.tipo === "nivel"
+      ? `Nível ${c.k + 1} de 8`
+      : "";
+  const leve = medalha ? "Desbloqueei" : "Agora sou";
   const nome = medalha ? nomeDa(medalha, forma) : nivel ? nomeNivel(nivel, forma) : "";
   const frase = medalha ? medalha.copy : (nivel?.t ?? "");
-  const extra = nivel && c.tipo === "nivel" ? `Nível ${c.k + 1} de 8` : null;
   return (
     <View style={{ width: W, height: H, overflow: "hidden" }}>
       <Fundo />
       <Brilhos />
-      <View style={{ flex: 1, paddingTop: 92, paddingBottom: 104, paddingHorizontal: 30 }}>
-        <View style={{ alignItems: "center" }}>
-          <View
-            style={{
-              paddingHorizontal: 14,
-              paddingVertical: 7,
-              borderRadius: 999,
-              backgroundColor: "rgba(255,255,255,0.72)",
-            }}
-          >
-            <Text
-              className="font-body-bold uppercase"
-              style={{ fontSize: 11, letterSpacing: 2.2, color: colors.ink }}
-            >
-              {rotulo}
-            </Text>
-          </View>
+      <View
+        style={{
+          flex: 1,
+          paddingTop: 66,
+          paddingBottom: 84,
+          paddingHorizontal: 20,
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
+        <Text
+          className="font-body-bold uppercase"
+          style={{ fontSize: 10.5, letterSpacing: 1.6, color: "#0A8B7A" }}
+        >
+          {eyebrow}
+        </Text>
+        <Text
+          className="mt-2 font-heading uppercase text-ink"
+          style={{ fontSize: 26, lineHeight: 30, letterSpacing: 0.3 }}
+        >
+          {leve}
+        </Text>
+        <NomeArcoIris nome={nome} />
+        <View
+          style={{
+            marginTop: 14,
+            width: 236,
+            height: 236,
+            borderRadius: 28,
+            alignItems: "center",
+            justifyContent: "center",
+            backgroundColor: "rgba(255,255,255,0.62)",
+            borderWidth: 1,
+            borderColor: "rgba(255,255,255,0.9)",
+            boxShadow: "0 2px 4px rgba(20,24,41,0.04), 0 18px 40px rgba(20,24,41,0.10)",
+          }}
+        >
+          <Destaque c={c} />
         </View>
-
-        <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
-          {medalha ? (
-            <MedalView
-              id={medalha.id}
-              size={200}
-              on
-              banho={c.tipo === "medalha" ? (c.banho ?? null) : null}
-            />
-          ) : nivel && c.tipo === "nivel" ? (
-            <View
-              className="items-center justify-center rounded-full bg-solid"
-              style={{ width: 188, height: 188, boxShadow: "0 18px 40px rgba(20,24,41,0.14)" }}
-            >
-              <NivelIcone k={c.k} size={142} />
-            </View>
-          ) : null}
-          {extra && (
-            <Text
-              className="mt-4 font-body-bold uppercase"
-              style={{ fontSize: 11, letterSpacing: 2, color: colors.turquoiseInk }}
-            >
-              {extra}
-            </Text>
-          )}
-          <Text
-            className="text-center font-display uppercase text-ink"
-            style={{ fontSize: 40, lineHeight: 43, marginTop: extra ? 6 : 22 }}
-            numberOfLines={2}
-            adjustsFontSizeToFit
-          >
-            {nome}
-          </Text>
-          <View style={{ flexDirection: "row", gap: 3, marginTop: 14 }}>
-            {ARCO.map((cor) => (
-              <View
-                key={cor}
-                style={{ width: 14, height: 4, borderRadius: 2, backgroundColor: cor }}
-              />
-            ))}
-          </View>
-          <Text
-            className="text-center font-body"
-            style={{
-              fontSize: 15.5,
-              lineHeight: 22,
-              color: colors.muted,
-              marginTop: 14,
-              maxWidth: 270,
-            }}
-            numberOfLines={3}
-          >
-            {medalha ? `“${frase}”` : frase}
-          </Text>
-        </View>
-
-        <View style={{ alignItems: "center", gap: 6 }}>
-          <View className="flex-row items-center gap-2">
-            <Mark size={26} />
-            <Text
-              className="font-wordmark uppercase text-ink"
-              style={{ fontSize: 19, letterSpacing: 2.9 }}
-            >
-              Iris<Text style={{ color: colors.amber }}>a</Text>
-            </Text>
-          </View>
-          <Text
-            className="text-center font-body"
-            style={{ fontSize: 11.5, lineHeight: 16, color: colors.muted, maxWidth: 250 }}
-          >
-            O mapa dos lugares onde a gente é bem-vinde, feito por nós.
-          </Text>
-        </View>
+        <Text
+          className="text-center font-body"
+          style={{
+            fontSize: 14.5,
+            lineHeight: 20,
+            color: colors.muted,
+            marginTop: 16,
+            maxWidth: 280,
+          }}
+          numberOfLines={3}
+        >
+          {medalha ? `“${frase}”` : frase}
+        </Text>
+      </View>
+      <View
+        style={{
+          position: "absolute",
+          bottom: 40,
+          left: 0,
+          right: 0,
+          flexDirection: "row",
+          alignItems: "center",
+          justifyContent: "center",
+          gap: 6,
+        }}
+      >
+        <RadarMin size={16} />
+        <Text
+          className="font-wordmark uppercase text-ink"
+          style={{ fontSize: 12.5, letterSpacing: 2.5 }}
+        >
+          Iris<Text style={{ color: colors.amber }}>a</Text>
+        </Text>
       </View>
     </View>
   );

@@ -576,6 +576,17 @@ Nome: **Irisa** (INPI livre; @appirisa livre). Bundle id Android `br.com.irisa.a
   logo e frase da marca embaixo), dentro das faixas que o Instagram cobre (92 px em cima, 104 embaixo). A prévia ganhou
   uma explosão de confete uma vez ao abrir (`src/components/gami/Confete.tsx`, Reanimated, fora da imagem capturada,
   nada com "reduzir movimento") — exceção pedida por ele à regra de comemoração calma, só nesta tela.
+  **Ícones 3D nas conquistas (04/10/2026, folhas do Leandro):** as 35 medalhas (as 32 do app + Favorita do Público,
+  Serviu Tudo e Rede de Apoio, para quando tiverem dado) são objetos 3D. Fontes em `assets/medalhas/folhas/folha-1..7.webp`
+  (5 por folha, ordem em `FOLHAS` de `scripts/medalhas-recortar.py`); `python3 scripts/medalhas-recortar.py` tira o fundo
+  claro, recorta e grava `assets/medalhas/<id>.png` (384 px) e gera `src/lib/medalImagens.ts`. `MedalView` desenha o
+  disco e o anel em SVG (`medalXml(..., {semArte: true})`) e o objeto por cima como imagem: entra subindo de leve e,
+  com `flutua` (comemoração, caixinha, detalhe, prévia do story), flutua devagar; bloqueada é a mesma imagem tingida de
+  cinza (`tintColor`) com cadeado. Medalha sem imagem cai no desenho SVG de sempre. Só imagem no JS: sai por EAS Update.
+  **Cartão do story na identidade do Instagram (mesmo dia):** papel com as quatro manchas, eyebrow turqInk
+  ("Conquista na Irisa" / "Nível N de 8"), linha leve "Desbloqueei"/"Agora sou", nome em Oswald com arco-íris (SVG),
+  objeto 3D num cartão de vidro com brilhinhos que piscam, frase, e assinatura `#radarmin` + IRISa centralizada a 40
+  (120 em 1080) do fundo. Na prévia o objeto entra crescendo e flutua; o confete segue fora da captura.
 
 ## Stack
 

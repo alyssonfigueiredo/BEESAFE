@@ -83,6 +83,7 @@ function Caixa({ onClose }: { onClose: () => void }) {
             reveal
             delay={100}
             duration={1100}
+            flutua
           />
         ) : (
           <FadeUp

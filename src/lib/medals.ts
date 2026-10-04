@@ -283,12 +283,15 @@ export function medalXml(
     cat = "Trajetória",
     lockIcon = true,
     banho = null,
+    semArte = false,
   }: {
     state?: "on" | "lock";
     prog?: number;
     cat?: string;
     lockIcon?: boolean;
     banho?: Banho | null;
+    /** Só disco e anel: o objeto vem por cima como imagem 3D (medalImagens.ts). */
+    semArte?: boolean;
   } = {},
 ): string {
   const fn = ART[art];
@@ -334,7 +337,10 @@ export function medalXml(
     (on ? "" : `<circle cx="60" cy="60" r="55" fill="none" stroke="#E7E3DC" stroke-width="4.5"/>`) +
     arc +
     `<circle cx="60" cy="60" r="47" fill="url(#${id}t)"/><circle cx="60" cy="60" r="46" fill="none" stroke="#fff" stroke-width="2" stroke-opacity=".9"/>` +
-    `<g transform="translate(${(23 - 8 * s).toFixed(2)} ${(23 - 14 * s).toFixed(2)}) scale(${s.toFixed(4)})">${body}</g>${lk}</svg>`
+    (semArte
+      ? ""
+      : `<g transform="translate(${(23 - 8 * s).toFixed(2)} ${(23 - 14 * s).toFixed(2)}) scale(${s.toFixed(4)})">${body}</g>`) +
+    `${lk}</svg>`
   );
 }
 

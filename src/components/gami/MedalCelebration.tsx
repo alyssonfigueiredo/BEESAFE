@@ -84,6 +84,7 @@ export function MedalCelebration() {
               reveal
               delay={ATRASO}
               duration={ANEL}
+              flutua
             />
           </View>
           <FadeUp key={`n-${m.id}`} delay={reduce ? 0 : T_NOME} duration={450}>

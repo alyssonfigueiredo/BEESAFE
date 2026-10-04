@@ -53,6 +53,7 @@ function Conteudo({ id, g, onClose }: { id: string; g: Gamificacao; onClose: () 
           banho={c?.banho ?? null}
           delay={500}
           duration={1400}
+          flutua
         />
       </View>
       <FadeUp delay={250}>
