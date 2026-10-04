@@ -279,8 +279,8 @@ export function MapaMap({
           type="circle"
           filter={["has", "point_count"]}
           paint={{
-            "circle-color": "#E4E5EA",
-            "circle-opacity": on,
+            "circle-color": DOT,
+            "circle-opacity": 0.5 * on,
             "circle-opacity-transition": fade(250),
             "circle-radius": ["step", ["get", "point_count"], 18, 10, 21, 50, 24, 200, 27],
             "circle-stroke-color": DOT,
