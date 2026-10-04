@@ -14,7 +14,7 @@
 //
 // Secrets: GROQ_API_KEY (obrigatório) e GEMINI_API_KEY (opcional — sem ela, os resultados vêm na
 // ordem que o banco já devolve, só sem o "porquê" por lugar).
-import { adminClient, json, userFromRequest } from "../_shared/supabase.ts";
+import { adminClient, getApiKey, json, userFromRequest } from "../_shared/supabase.ts";
 
 const GROQ_MODEL = Deno.env.get("GROQ_MODEL") ?? "llama-3.3-70b-versatile";
 const GEMINI_MODEL = Deno.env.get("GEMINI_MODEL") ?? "gemini-1.5-flash";
@@ -88,9 +88,9 @@ type GroqMessage = {
   tool_call_id?: string;
 };
 
-async function chamarGroq(messages: GroqMessage[], comFerramenta: boolean) {
-  const key = Deno.env.get("GROQ_API_KEY");
-  if (!key) throw new Error("GROQ_API_KEY não configurada nos secrets da função.");
+async function chamarGroq(db: ReturnType<typeof adminClient>, messages: GroqMessage[], comFerramenta: boolean) {
+  const key = await getApiKey(db, "GROQ_API_KEY");
+  if (!key) throw new Error("GROQ_API_KEY não configurada (secrets da função ou painel admin).");
   const res = await fetch("https://api.groq.com/openai/v1/chat/completions", {
     method: "POST",
     headers: { "Content-Type": "application/json", Authorization: `Bearer ${key}` },
@@ -125,8 +125,12 @@ type Candidato = {
 };
 type Ranking = { place_id: string; reasons: string[] }[];
 
-async function chamarGemini(texto: string, candidatos: Candidato[]): Promise<Ranking> {
-  const key = Deno.env.get("GEMINI_API_KEY");
+async function chamarGemini(
+  db: ReturnType<typeof adminClient>,
+  texto: string,
+  candidatos: Candidato[],
+): Promise<Ranking> {
+  const key = await getApiKey(db, "GEMINI_API_KEY");
   if (!key || candidatos.length === 0) return candidatos.map((c) => ({ place_id: c.id, reasons: [] }));
 
   const prompt = `
@@ -189,7 +193,7 @@ Deno.serve(async (req) => {
       { role: "system", content: SYSTEM_PROMPT },
       { role: "user", content: `Cidade da pessoa: ${cidade}. Mensagem: "${texto}"` },
     ];
-    const primeira = await chamarGroq(messages, true);
+    const primeira = await chamarGroq(db, messages, true);
     const chamada = primeira.tool_calls?.[0];
 
     if (!chamada) {
@@ -229,7 +233,7 @@ Deno.serve(async (req) => {
 
     let ranking: Ranking = candidatos.map((c) => ({ place_id: c.id, reasons: [] }));
     try {
-      ranking = await chamarGemini(texto, candidatos);
+      ranking = await chamarGemini(db, texto, candidatos);
     } catch (e) {
       console.error("irise-orchestrator: Gemini falhou, seguindo sem ranking:", e);
     }
@@ -250,7 +254,7 @@ Deno.serve(async (req) => {
       tool_call_id: chamada.id,
       content: JSON.stringify({ encontrados: top.length, resumo }),
     });
-    const segunda = await chamarGroq(messages, false);
+    const segunda = await chamarGroq(db, messages, false);
 
     return json(200, { message: segunda.content ?? "Separei esses pra você:", places: top });
   } catch (err) {

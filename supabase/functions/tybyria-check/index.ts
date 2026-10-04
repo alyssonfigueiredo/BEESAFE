@@ -4,7 +4,7 @@
 // sozinha: score ≥ 0,40 (limiar do próprio modelo) vira denúncia automática, que cai na mesma fila
 // de moderação de sempre — revisão continua sendo humana.
 // Secret: HF_API_TOKEN (grátis, huggingface.co → Settings → Access Tokens, nível "read" basta).
-import { adminClient, json } from "../_shared/supabase.ts";
+import { adminClient, getApiKey, json } from "../_shared/supabase.ts";
 
 const HF_URL = "https://api-inference.huggingface.co/models/Veronyka/tybyria-v2.2";
 const LIMIAR = 0.4;
@@ -37,8 +37,8 @@ Deno.serve(async (req) => {
   const { data: ok } = await db.rpc("tybyria_autorizado", { p_secret: req.headers.get("x-cron-secret") ?? "" });
   if (!ok) return json(401, { error: "não autorizado" });
 
-  const token = Deno.env.get("HF_API_TOKEN");
-  if (!token) return json(500, { error: "HF_API_TOKEN não configurada nos secrets da função." });
+  const token = await getApiKey(db, "HF_API_TOKEN");
+  if (!token) return json(500, { error: "HF_API_TOKEN não configurada (secrets da função ou painel admin)." });
 
   const { data: pendentes, error } = await db.rpc("tybyria_pendentes", { p_limit: 30 });
   if (error) return json(500, { error: error.message });
