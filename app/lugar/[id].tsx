@@ -2,7 +2,7 @@ import { formatDistanceToNow, parseISO } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { Link, Stack, useLocalSearchParams } from "expo-router";
 import { AlertTriangle, BadgeCheck, Navigation } from "lucide-react-native";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Alert,
   Linking,
@@ -15,6 +15,8 @@ import {
 } from "react-native";
 
 import { Aurora } from "@/components/Aurora";
+import { RewardSheet } from "@/components/gami/RewardSheet";
+import { trackDay, useGamification } from "@/hooks/useGamification";
 import { useScreenInsets } from "@/hooks/useScreenInsets";
 import { AreaLevel } from "@/components/AreaLevel";
 import { AxisBars } from "@/components/AxisBars";
@@ -44,6 +46,12 @@ export default function PlaceScreen() {
   const mine = ratings.find((r) => r.is_mine);
   const [draft, setDraft] = useState<Draft | null>(null);
   const [abrirForm, setAbrirForm] = useState(false);
+  // Gamificação: abrir a ficha conta como consulta do dia; avaliação nova abre a folha de recompensa.
+  const { data: gami, refetch: refetchGami } = useGamification();
+  const [recompensa, setRecompensa] = useState<{ antes: number | null } | null>(null);
+  useEffect(() => {
+    if (id) trackDay("consult");
+  }, [id]);
   const mineKey = mine ? `${mine.id}:${mine.updated_at}` : "none";
   // Reinicia o rascunho quando a avaliação própria muda (padrão "derive state from props").
   const current: Draft =
@@ -71,10 +79,13 @@ export default function PlaceScreen() {
         crowd: current.crowd,
         comment: current.comment,
       });
-      Alert.alert(
-        mine ? "Avaliação atualizada" : "Avaliação registrada",
-        "Obrigado por ajudar a comunidade.",
-      );
+      if (mine) {
+        Alert.alert("Avaliação atualizada", "Obrigado por ajudar a comunidade.");
+      } else {
+        // A folha mostra o agradecimento de sempre se a gamificação ainda não estiver no banco.
+        setRecompensa({ antes: gami?.gomos ?? null });
+        refetchGami();
+      }
     } catch (e) {
       Alert.alert("Não deu certo", e instanceof Error ? e.message : "Tente de novo.");
     }
@@ -359,6 +370,11 @@ export default function PlaceScreen() {
           </View>
         </ScrollView>
       </View>
+      <RewardSheet
+        visible={!!recompensa}
+        antes={recompensa?.antes ?? null}
+        onClose={() => setRecompensa(null)}
+      />
     </>
   );
 }

@@ -429,6 +429,25 @@ Nome: **Irisa** (INPI livre; @appirisa livre). Bundle id Android `br.com.irisa.a
   só enchem ("3 de 4"), para nada parecer dia perdido. **Dias 5, 6 e 7:** uma faísca cada, sem prêmio de 7 de 7
   (decisão de produto: ninguém pode sentir que precisa abrir todo dia).
 
+- **Gamificação no app + painel (migration 39, 04/10/2026):** só acréscimos. Banco: `user_days` (dia em que abriu,
+  só a data; `consulted`/`supported`), `user_medals`, `user_boxes`, `app_settings` (aviso no Início, data do Abre-Alas),
+  `push_aberturas`, `profiles.medal_form`. `my_gamification(p_city)` calcula tudo e grava medalha nova; `track_day`,
+  `open_box`, `set_medal_form`, `mark_medals_seen`, `app_config`. Regras do anel: 1 gomo por avaliação no ar + 1 se foi
+  a primeira do lugar + 1 se foi a 5ª + 1 por lugar cadastrado + 1 por foto aprovada (teto 48; nível = gomos/8).
+  Faísca: consulta do dia, apoio no mural do dia, dias 5–7 da semana; caixinha a cada 10 faíscas e a cada semana acesa.
+  Abre-Alas: conta criada até `app_settings.abre_alas_ate` (null = todo mundo, enquanto o Android está em teste:
+  **gravar a data no painel no dia em que for para produção**). App (só JS, sai por EAS Update): `src/lib/medals.ts`
+  (mesmo desenho do `docs/pingentes.js`, via `SvgXml`), `src/hooks/useGamification.ts`, `src/components/gami/*`,
+  `app/pulseira.tsx`; Início ganhou `AvisoCard` em cima e `GamiHomeCards` embaixo do painel; Perfil ganhou só
+  `PulseiraCard`; ficha do lugar marca consulta e mostra `RewardSheet` em avaliação nova (atualização segue com o
+  alerta de sempre); `MedalCelebration` no layout raiz. Sem a migration no banco, tudo isso some calado.
+  Push: `send-push` manda o id do envio e o app grava a abertura — **republicar a função** (`npx supabase functions
+  deploy send-push --project-ref ntjirpqulrnieeglpiei`) para o painel contar quem abriu.
+  **Painel web:** `docs/admin/` → https://appirisa.com.br/admin/ (funções `admin_*`, papel conferido em cada uma;
+  moderação vê moderação/lugares/fotos, admin vê tudo). Relatos nunca aparecem ligados a uma pessoa, nem no painel.
+  Foto da equipe: Storage `fotos-lugares/equipe/<lugar>/…` + `admin_place_photo` (origem `equipe`).
+  **Aba ativa quadrada nas pontas (corrigido):** a lente virou camada própria com raio medido (`onLayout`).
+
 ## Stack
 
 Expo SDK 57, Expo Router, NativeWind v4, TypeScript, TanStack Query, MapLibre React Native v11 com tiles Esri

@@ -7,6 +7,7 @@ import { Aurora } from "@/components/Aurora";
 import { Chip } from "@/components/Chip";
 import { CityPicker } from "@/components/CityPicker";
 import { DangerRanking } from "@/components/DangerRanking";
+import { AvisoCard, GamiHomeCards } from "@/components/gami/HomeCards";
 import { Mark } from "@/components/Mark";
 import { OccurrenceCard } from "@/components/OccurrenceCard";
 import { PlaceCard } from "@/components/PlaceCard";
@@ -86,6 +87,8 @@ export default function HomeScreen() {
         contentContainerStyle={insets}
         keyboardShouldPersistTaps="handled"
       >
+        <AvisoCard />
+
         {/* Cartão principal escuro: a marca em azulejo, a cidade, o fio arco-íris e as duas ações
             do mesmo tamanho (avaliar é o uso de toda semana, registrar é o que ninguém quer
             precisar — nenhum dos dois pode parecer secundário). */}
@@ -134,6 +137,9 @@ export default function HomeScreen() {
             </Link>
           </View>
         </View>
+
+        {/* Gamificação: semana, cidade, caixinha e a medalha mais perto. Some se o banco não tiver. */}
+        <GamiHomeCards />
 
         <View className="gap-2">
           <SearchField

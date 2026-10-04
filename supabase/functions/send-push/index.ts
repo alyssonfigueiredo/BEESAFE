@@ -34,7 +34,8 @@ async function mandarLote(tokens: string[], envio: Envio): Promise<Ticket[]> {
     body: envio.corpo,
     sound: "default",
     channelId: "default",
-    data: envio.url ? { url: envio.url } : {},
+    // envio: o app grava a abertura (push_aberto) para o painel contar quem abriu
+    data: envio.url ? { url: envio.url, envio: envio.id } : { envio: envio.id },
   }));
   const res = await fetch(EXPO_URL, { method: "POST", headers, body: JSON.stringify(mensagens) });
   const corpo = await res.json().catch(() => null);

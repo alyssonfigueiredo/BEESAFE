@@ -19,6 +19,8 @@ import { SafeAreaProvider } from "react-native-safe-area-context";
 import { queryClient } from "@/lib/query";
 import { AuthProvider, useAuth } from "@/providers/AuthProvider";
 import { Splash } from "@/components/Splash";
+import { MedalCelebration } from "@/components/gami/MedalCelebration";
+import { useTrackOpen } from "@/hooks/useGamification";
 import { usePush } from "@/hooks/usePush";
 import { CityProvider } from "@/providers/CityProvider";
 import { colors } from "@/theme/tokens";
@@ -29,21 +31,29 @@ function RootNavigator({ pronto }: { pronto: boolean }) {
   const { session, loading } = useAuth();
   // Pedido de notificação só depois da abertura animada, para não aparecer por cima dela.
   usePush(session?.user.id, pronto);
+  // Gamificação: marca o dia em que a pessoa abriu o app (só a data) e celebra medalha nova.
+  useTrackOpen();
   if (loading) return null;
   return (
-    <Stack screenOptions={{ headerShown: false, contentStyle: { backgroundColor: colors.paper } }}>
-      <Stack.Protected guard={!!session}>
-        <Stack.Screen name="(tabs)" />
-        <Stack.Screen name="lugar/[id]" />
-        <Stack.Screen name="moderacao" />
-      </Stack.Protected>
-      <Stack.Protected guard={!session}>
-        <Stack.Screen name="(auth)" />
-      </Stack.Protected>
-      {/* Fora dos guards (o retorno do login chega sem sessão), mas por último: a primeira tela da
+    <>
+      <Stack
+        screenOptions={{ headerShown: false, contentStyle: { backgroundColor: colors.paper } }}
+      >
+        <Stack.Protected guard={!!session}>
+          <Stack.Screen name="(tabs)" />
+          <Stack.Screen name="lugar/[id]" />
+          <Stack.Screen name="moderacao" />
+          <Stack.Screen name="pulseira" />
+        </Stack.Protected>
+        <Stack.Protected guard={!session}>
+          <Stack.Screen name="(auth)" />
+        </Stack.Protected>
+        {/* Fora dos guards (o retorno do login chega sem sessão), mas por último: a primeira tela da
           lista vira a rota inicial, e esta nunca pode ser a de abertura do app. */}
-      <Stack.Screen name="auth/callback" />
-    </Stack>
+        <Stack.Screen name="auth/callback" />
+      </Stack>
+      {session && pronto && <MedalCelebration />}
+    </>
   );
 }
 
