@@ -10,12 +10,21 @@ import { useCity } from "@/providers/CityProvider";
 // Gamificação (migration 39). Tudo aqui é acréscimo: se a migration ainda não estiver no banco, as
 // chamadas falham caladas e os cartões novos simplesmente não aparecem — o resto do app segue igual.
 
-export type MedalhaProgresso = { id: string; valor: number; alvo: number; ok: boolean };
+export type MedalhaProgresso = {
+  id: string;
+  valor: number;
+  alvo: number;
+  ok: boolean;
+  unidade?: string;
+};
 export type Conquistada = { id: string; em: string; visto: boolean; banho: Banho | null };
 export type Gamificacao = {
   gomos: number;
   nivel: number;
   avaliacoes: number;
+  /** Gomos acesos nesta semana (migration 40; cada semana acende no máximo `gomos_semana_max`). */
+  gomos_semana?: number;
+  gomos_semana_max?: number;
   semana: { dias: number; acesa: boolean; extra: number };
   semanas_acesas: number;
   faiscas: { total: number; rumo: number };
@@ -42,12 +51,17 @@ export function useGamification() {
   });
 }
 
+/** "3 de 15 avaliações", "2 de 3 semanas". */
+export function progressoTexto(m: MedalhaProgresso) {
+  return `${m.valor} de ${m.alvo}${m.unidade ? ` ${m.unidade}` : ""}`;
+}
+
 /** A medalha bloqueada mais perto de sair, para o cartão "Quase lá". */
 export function quaseLa(g: Gamificacao | null | undefined) {
   if (!g) return null;
   return (
     g.medalhas
-      .filter((m) => !m.ok && m.valor > 0 && m.alvo > 1)
+      .filter((m) => !m.ok && m.valor > 0 && m.valor < m.alvo && m.alvo > 1)
       .sort((a, b) => b.valor / b.alvo - a.valor / a.alvo)[0] ?? null
   );
 }

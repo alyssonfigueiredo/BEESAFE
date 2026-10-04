@@ -6,15 +6,15 @@ import Animated, { FadeInDown, ZoomIn, useReducedMotion } from "react-native-rea
 import { Aurora } from "@/components/Aurora";
 import { BoxModal } from "@/components/gami/BoxModal";
 import { MedalView } from "@/components/gami/MedalView";
-import { SliceRing } from "@/components/gami/Rings";
 import {
+  progressoTexto,
   quaseLa,
   useGamification,
   useSetMedalForm,
   type Gamificacao,
 } from "@/hooks/useGamification";
 import { useScreenInsets } from "@/hooks/useScreenInsets";
-import { getMedalha, LANCAMENTO, NIVEIS, nomeDa } from "@/lib/medals";
+import { getMedalha, LANCAMENTO, nomeDa } from "@/lib/medals";
 import { colors, shadow } from "@/theme/tokens";
 
 const FORMAS = [0, 1, 2] as const;
@@ -65,7 +65,10 @@ function Detalhe({ id, g, onClose }: { id: string | null; g: Gamificacao; onClos
           {!ok && p && p.alvo > 1 && (
             <View className="mt-4 flex-row items-baseline gap-1.5">
               <Text className="font-display text-[44px] text-ink">{p.valor}</Text>
-              <Text className="font-body text-[17px] text-dim">de {p.alvo}</Text>
+              <Text className="font-body text-[17px] text-dim">
+                de {p.alvo}
+                {p.unidade ? ` ${p.unidade}` : ""}
+              </Text>
             </View>
           )}
           {ok && c && (
@@ -92,7 +95,7 @@ function Detalhe({ id, g, onClose }: { id: string | null; g: Gamificacao; onClos
   );
 }
 
-export default function PulseiraScreen() {
+export default function ConquistasScreen() {
   const insets = useScreenInsets({ tabs: false });
   const { data: g, isLoading } = useGamification();
   const setForma = useSetMedalForm();
@@ -124,39 +127,18 @@ export default function PulseiraScreen() {
           contentContainerStyle={insets}
         >
           <View>
-            <Text className="font-display text-[34px] uppercase text-ink">Pulseira</Text>
+            <Text className="font-display text-[34px] uppercase text-ink">Conquistas</Text>
             <Text className="font-body text-[15px] text-muted">
               {g
                 ? `${LANCAMENTO.filter((id) => feitas.has(id)).length} de ${LANCAMENTO.length} desbloqueadas`
                 : isLoading
                   ? "Carregando…"
-                  : "A pulseira chega na próxima atualização do servidor."}
+                  : "As conquistas chegam na próxima atualização do servidor."}
             </Text>
           </View>
 
           {g && (
             <>
-              <View
-                className="flex-row items-center gap-4 rounded-3xl bg-surface p-4"
-                style={shadow.card}
-              >
-                <SliceRing lit={g.gomos} size={86} />
-                <View className="flex-1 gap-0.5">
-                  <Text className="font-body-medium text-[11px] uppercase tracking-wider text-dim">
-                    Seu anel
-                  </Text>
-                  <Text
-                    className="font-display text-[26px] uppercase"
-                    style={{ color: colors.turquoiseInk }}
-                  >
-                    {NIVEIS[g.nivel]}
-                  </Text>
-                  <Text className="font-body text-[13px] text-muted">
-                    {g.gomos} de 48 gomos · {g.faiscas.rumo} de 10 faíscas
-                  </Text>
-                </View>
-              </View>
-
               <View className="gap-2.5 rounded-3xl bg-surface p-4" style={shadow.card}>
                 <Text className="font-body-medium text-[11px] uppercase tracking-wider text-dim">
                   Como as medalhas te chamam
@@ -232,7 +214,7 @@ export default function PulseiraScreen() {
                       {nomeDa(qm, g.forma)}
                     </Text>
                     <Text className="font-body text-[13px] text-muted">
-                      {quase.valor} de {quase.alvo}
+                      {progressoTexto(quase)}
                     </Text>
                   </View>
                   <Text className="font-display text-[22px] text-ink">
@@ -274,7 +256,7 @@ export default function PulseiraScreen() {
                 })}
               </View>
               <Text className="pb-2 text-center font-body text-[12px] text-dim">
-                Só você vê a sua pulseira. Relato nunca conta para nada aqui.
+                Só você vê as suas conquistas. Relato nunca conta para nada aqui.
               </Text>
             </>
           )}

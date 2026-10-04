@@ -455,6 +455,16 @@ Nome: **Irisa** (INPI livre; @appirisa livre). Bundle id Android `br.com.irisa.a
   em Supabase → Authentication → URL Configuration → Redirect URLs. O painel é JS puro (`docs/admin/admin.js`),
   sem build; a chave `sb_publishable_` entra pelo `build-site.mjs` igual à da landing.
   **Aba ativa quadrada nas pontas (corrigido):** a lente virou camada própria com raio medido (`onLayout`).
+  **Ajuste depois do 1º dia (migration 40, 04/10/2026, retorno dele):** o anel enchia rápido demais (com quase todo
+  lugar sem nota, cada avaliação valia 2 gomos e o Leandro fechou os 48 no primeiro dia). Agora **cada semana acende no
+  máximo 4 gomos** (avaliação, 5ª avaliação do lugar, lugar cadastrado, foto aprovada; a "primeira do lugar" não soma
+  mais, ela é a medalha Inaugurou): 48 gomos = 12 semanas no mínimo. `my_gamification` devolve `gomos_semana` e
+  `gomos_semana_max`. Figurinha/Famosinha mostravam 15/15 trancada (faltava a trava das semanas): com as avaliações
+  feitas, o progresso passa a contar semanas; toda medalha de contagem tem `unidade`. **"Pulseira" virou
+  "Conquistas"** (rota `/conquistas`, `ConquistasCard`), e o anel saiu dela: no Perfil são dois cartões, `AnelCard`
+  (gomos) e `ConquistasCard` (medalhas). Os dois cartões do Início colapsavam (`flex-1` em filho de altura automática):
+  agora `flexGrow`. **EAS Update só chega em quem tem a mesma versão do app** (`runtimeVersion` = `appVersion`): com o
+  app.config em 0.1.2, update não alcança a 0.1.1.
 
 ## Stack
 

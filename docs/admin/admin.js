@@ -49,7 +49,7 @@ const TELAS = [
   ["/mapa", "Mapa"],
   ["/apoio", "Mural de apoio"],
   ["/perfil", "Perfil"],
-  ["/pulseira", "Pulseira (medalhas)"],
+  ["/conquistas", "Conquistas (medalhas)"],
 ];
 const UFS = "AC AL AM AP BA CE DF ES GO MA MG MS MT PA PB PE PI PR RJ RN RO RR RS SC SE SP TO".split(" ");
 const GOMOS = ["#ff6964", "#ff8e5a", "#ffa353", "#ffbf5f", "#ffd066", "#bed582", "#74d6a4", "#49dcc0", "#4fcbdc", "#52b4f5", "#59a7ff", "#7d96ff", "#a889ff", "#c681dd", "#ea709b", "#ff636e"];

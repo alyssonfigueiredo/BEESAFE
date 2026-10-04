@@ -43,7 +43,7 @@ function RootNavigator({ pronto }: { pronto: boolean }) {
           <Stack.Screen name="(tabs)" />
           <Stack.Screen name="lugar/[id]" />
           <Stack.Screen name="moderacao" />
-          <Stack.Screen name="pulseira" />
+          <Stack.Screen name="conquistas" />
         </Stack.Protected>
         <Stack.Protected guard={!session}>
           <Stack.Screen name="(auth)" />

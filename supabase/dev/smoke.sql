@@ -154,6 +154,10 @@ select count(*) as um_dia_1, bool_and(consulted) as consultou from public.user_d
 set role authenticated;
 select (public.my_gamification()) ? 'medalhas' as tem_medalhas;
 select jsonb_array_length(public.my_gamification()->'conquistadas') > 0 as abre_alas_desbloqueada;
+-- migration 40: gomos da semana e unidade em toda medalha de contagem
+select (public.my_gamification()->>'gomos_semana_max')::int = 4 as teto_semana_4;
+select bool_and(m ? 'unidade') as figurinha_tem_unidade
+  from jsonb_array_elements(public.my_gamification()->'medalhas') m where m->>'id' in ('figurinha', 'famosinha');
 select public.set_medal_form(0::smallint);
 select public.mark_medals_seen(array['abre-alas']);
 select public.app_config() ? 'aviso' as tem_aviso;

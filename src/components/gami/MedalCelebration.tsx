@@ -89,10 +89,10 @@ export function MedalCelebration() {
     return () => clearTimeout(t);
   }, [novas, aberta, rewardOpen]);
 
-  function fechar(irPulseira: boolean) {
+  function fechar(irConquistas: boolean) {
     if (aberta) marcar.mutate(aberta);
     setAberta(null);
-    if (irPulseira) router.push("/pulseira");
+    if (irConquistas) router.push("/conquistas");
   }
 
   const id = aberta?.[0];
@@ -139,7 +139,7 @@ export function MedalCelebration() {
           </Animated.Text>
           {resto > 0 && (
             <Text className="mt-3 text-center font-body text-[13px]" style={{ color: "#8A90AA" }}>
-              E mais {resto} na pulseira.
+              E mais {resto} nas suas conquistas.
             </Text>
           )}
           <View className="absolute bottom-12 left-6 right-6 gap-2">
@@ -147,7 +147,7 @@ export function MedalCelebration() {
               onPress={() => fechar(true)}
               className="items-center rounded-full bg-paper py-3.5 active:opacity-80"
             >
-              <Text className="font-body-bold text-[15px] text-night">Ver a pulseira</Text>
+              <Text className="font-body-bold text-[15px] text-night">Ver conquistas</Text>
             </Pressable>
             <Pressable
               onPress={() => fechar(false)}

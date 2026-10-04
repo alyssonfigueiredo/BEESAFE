@@ -35,6 +35,7 @@ export function RewardSheet({
   }, [visible]);
 
   const ganhou = g && antes != null ? Math.max(0, g.gomos - antes) : null;
+  const semanaCheia = !!g && g.gomos_semana != null && g.gomos_semana >= (g.gomos_semana_max ?? 4);
   const quase = quaseLa(g);
   const qm = quase ? getMedalha(quase.id) : null;
 
@@ -71,6 +72,11 @@ export function RewardSheet({
             <Text className="font-body text-[14px] text-muted">
               Já está no mapa. {g.gomos} de 48{g.nivel > 0 ? ` · ${NIVEIS[g.nivel]}` : ""}.
             </Text>
+            {!ganhou && semanaCheia && (
+              <Text className="mt-1 text-center font-body text-[13px] text-dim">
+                Os gomos desta semana já acenderam. Segunda tem mais.
+              </Text>
+            )}
             <View className="mt-4 w-full flex-row gap-2">
               <Animated.View
                 entering={reduce ? undefined : FadeInDown.delay(350)}

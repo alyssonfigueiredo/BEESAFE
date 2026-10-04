@@ -7,7 +7,7 @@ import Animated, { FadeInDown } from "react-native-reanimated";
 import { BoxModal } from "@/components/gami/BoxModal";
 import { MedalView } from "@/components/gami/MedalView";
 import { SliceRing, WeekRing } from "@/components/gami/Rings";
-import { quaseLa, useAppConfig, useGamification } from "@/hooks/useGamification";
+import { progressoTexto, quaseLa, useAppConfig, useGamification } from "@/hooks/useGamification";
 import { getMedalha, nomeDa } from "@/lib/medals";
 import { colors, shadow } from "@/theme/tokens";
 
@@ -64,11 +64,15 @@ export function GamiHomeCards() {
   return (
     <View className="gap-3">
       <View className="flex-row gap-2.5">
-        <Animated.View entering={FadeInDown.duration(420)} className="flex-1">
+        <Animated.View entering={FadeInDown.duration(420)} style={{ flex: 1, minWidth: 0 }}>
           <Pressable
             onPress={() => g.caixinhas > 0 && setCaixa(true)}
-            className="flex-1 gap-2.5 rounded-3xl bg-surface p-3.5"
-            style={[shadow.card, g.semana.acesa && { borderWidth: 2, borderColor: colors.lilac }]}
+            className="gap-2.5 rounded-3xl bg-surface p-3.5"
+            style={[
+              { flexGrow: 1 },
+              shadow.card,
+              g.semana.acesa && { borderWidth: 2, borderColor: colors.lilac },
+            ]}
           >
             <View className="flex-row items-center gap-2.5">
               <WeekRing dias={Math.min(4, g.semana.dias)} />
@@ -87,8 +91,14 @@ export function GamiHomeCards() {
           </Pressable>
         </Animated.View>
         {cidade && (
-          <Animated.View entering={FadeInDown.duration(420).delay(80)} className="flex-1">
-            <View className="flex-1 gap-2.5 rounded-3xl bg-surface p-3.5" style={shadow.card}>
+          <Animated.View
+            entering={FadeInDown.duration(420).delay(80)}
+            style={{ flex: 1, minWidth: 0 }}
+          >
+            <View
+              className="gap-2.5 rounded-3xl bg-surface p-3.5"
+              style={[{ flexGrow: 1 }, shadow.card]}
+            >
               <View className="flex-row items-center gap-2.5">
                 <SliceRing lit={cidade.com_selo} n={cidade.total} inner={34} gap={0.8} />
                 <View>
@@ -130,7 +140,7 @@ export function GamiHomeCards() {
       {quase && qm && (
         <Animated.View entering={FadeInDown.duration(420).delay(160)}>
           <Pressable
-            onPress={() => router.push("/pulseira")}
+            onPress={() => router.push("/conquistas")}
             className="flex-row items-center gap-3.5 rounded-3xl bg-surface px-4 py-3"
             style={shadow.card}
           >
@@ -149,9 +159,7 @@ export function GamiHomeCards() {
                 Quase lá
               </Text>
               <Text className="font-body-bold text-[15px] text-ink">{nomeDa(qm, g.forma)}</Text>
-              <Text className="font-body text-[13px] text-muted">
-                {quase.valor} de {quase.alvo}
-              </Text>
+              <Text className="font-body text-[13px] text-muted">{progressoTexto(quase)}</Text>
             </View>
             <View className="rounded-full bg-subtle px-3.5 py-1.5">
               <Text className="font-body-bold text-[13px] text-ink">Ver</Text>

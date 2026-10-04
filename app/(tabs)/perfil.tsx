@@ -8,7 +8,7 @@ import { Alert, Image, Pressable, ScrollView, StyleSheet, Text, View } from "rea
 
 import { Aurora } from "@/components/Aurora";
 import { Field, FieldShell } from "@/components/Field";
-import { PulseiraCard } from "@/components/gami/PulseiraCard";
+import { AnelCard, ConquistasCard } from "@/components/gami/ConquistasCard";
 import { useScreenInsets } from "@/hooks/useScreenInsets";
 import { CityPicker } from "@/components/CityPicker";
 import { useAvatarUrl, useChangeAvatar, useRemoveAvatar } from "@/hooks/useAvatar";
@@ -146,7 +146,8 @@ export default function PerfilScreen() {
           </View>
         </View>
 
-        <PulseiraCard />
+        <AnelCard />
+        <ConquistasCard />
 
         <View className="gap-4 rounded-[30px] bg-surface px-6 py-7" style={shadow.card}>
           <Text className="font-body-medium text-[17px] text-ink">Seu perfil</Text>
