@@ -73,6 +73,9 @@ insert into public.support_likes (message_id) select id from public.public_suppo
 set request.jwt.claim.sub = '33333333-3333-3333-3333-333333333333';
 insert into public.support_likes (message_id) select id from public.public_support_messages where nickname = 'Lu';
 select nickname, category, likes, liked from public.public_support_messages order by created_at;
+-- reações (migration 43): a curtida virou "Te abraço"; trocar de reação não soma duas
+select public.react_support((select id from public.public_support_messages where nickname = 'Lu'), 'arrasou');
+select likes as reacoes_2, my_reaction, reactions from public.public_support_messages where nickname = 'Lu';
 select name, kind, phone from public.support_services_for((select id from public.cities limit 1)) limit 3;
 select count(*) as services_total from public.support_services_for((select id from public.cities limit 1));
 select public.update_my_profile('  Cacau ', (select id from public.cities limit 1));
@@ -154,6 +157,12 @@ select count(*) as um_dia_1, bool_and(consulted) as consultou from public.user_d
 set role authenticated;
 select (public.my_gamification()) ? 'medalhas' as tem_medalhas;
 select jsonb_array_length(public.my_gamification()->'conquistadas') > 0 as abre_alas_desbloqueada;
+-- migration 43: reações, pergunta da semana e descoberta
+select (public.app_config() ? 'pergunta_semana') as tem_pergunta;
+select count(*) >= 0 as slate_ok from public.discovery_slate(-25.43, -49.27, null);
+select count(*) >= 0 as slate_sem_gps from public.discovery_slate(null, null, null);
+select public.my_week() ? 'dias' as semana_ok;
+select count(*) >= 0 as top_ok from public.city_top_places((select id from public.cities limit 1));
 -- migration 42: Deu Close pede 10 e Nome na Lista 6
 select (select (m->>'alvo')::int from jsonb_array_elements(public.my_gamification()->'medalhas') m where m->>'id' = 'nome-na-lista') = 6 as bairros_6;
 -- migration 41: lugares perto de um ponto, de qualquer cidade
