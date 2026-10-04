@@ -1,7 +1,6 @@
 import { useMutation } from "@tanstack/react-query";
 
 import { supabase } from "@/lib/supabase";
-import type { IriseIntent } from "@/lib/iriseRouter";
 import type { PlaceCategory } from "@/theme/domain";
 import type { WelcomingPlace } from "@/lib/types";
 
@@ -39,35 +38,31 @@ export function useIriseNear() {
   });
 }
 
-type IriseIntentResponse = {
-  categories: string[] | null;
-  sem_nota: boolean;
-  mensagem: string;
-  provider?: string;
-  error?: string;
-};
+export type OrchestratedPlace = WelcomingPlace & { reason: string | null };
+type OrchestratorResponse = { message: string; places: OrchestratedPlace[] | null; error?: string };
 
 /**
- * Camada 2: só chamada quando o roteador (camada 1, sem IA) não entende o texto. Manda pro
- * Groq ou Gemini pela Edge Function irise-intent, que devolve só a intenção — nunca um lugar.
- * Nunca manda a localização exata da pessoa, só o nome da cidade.
+ * Irise Orchestrator: um único assistente, por fora. Por dentro, o Groq decide se o pedido precisa
+ * buscar lugar (e escreve a resposta final) e, quando precisa, o Gemini ranqueia e explica os
+ * candidatos reais que o banco já achou — a pessoa nunca vê "Groq" nem "Gemini". Nunca manda a
+ * localização exata da pessoa pra fora, só o nome da cidade (coordenada vai só pro places_near,
+ * no próprio banco).
  */
-export function useIriseIntent() {
+export function useIriseOrchestrate() {
   return useMutation({
-    mutationFn: async (args: { texto: string; cidade: string }) => {
-      const { data, error } = await supabase.functions.invoke<IriseIntentResponse>("irise-intent", {
-        body: { texto: args.texto, cidade: args.cidade },
+    mutationFn: async (args: {
+      texto: string;
+      cidade: string;
+      cityId: number | undefined;
+      perto: { lat: number; lng: number } | null;
+    }) => {
+      const { data, error } = await supabase.functions.invoke<OrchestratorResponse>("irise-orchestrator", {
+        body: { texto: args.texto, cidade: args.cidade, cityId: args.cityId, perto: args.perto },
       });
       if (error || !data || data.error) {
         throw new Error(data?.error ?? error?.message ?? "A Irise não conseguiu entender agora.");
       }
-      const intent: IriseIntent = {
-        categories: (data.categories as PlaceCategory[] | null) ?? null,
-        semNota: data.sem_nota === true,
-        perto: false,
-        mensagem: data.mensagem || "Separei esses pra você:",
-      };
-      return { intent, provider: data.provider ?? "groq" };
+      return { message: data.message, places: data.places ?? null };
     },
   });
 }
