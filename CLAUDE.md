@@ -498,6 +498,9 @@ Nome: **Irisa** (INPI livre; @appirisa livre). Bundle id Android `br.com.irisa.a
   Acendeu, Mais cor/anel da Irisa); sem iniciais de quem respondeu a pergunta da semana; "Publicar como Anônimo"
   (ligado sozinho em pedido de ajuda); aviso para não pôr telefone/endereço/nome completo; texto que parece relato
   oferece virar relato anônimo (o mural nunca pode ser atalho para relato com apelido).
+  **Bege saiu (pedido dele, 04/10/2026):** o tom areia de fundos tonais (folha do mapa, chips, seletores, trilhos
+  vazios) vira azul-claro frio no estilo iOS: `subtle` #EAF0F8, vazio #DFE6F0, alça #C9D3E1, folha do mapa em vidro
+  rgba(238,244,252,.8) com blur. Ao implementar, trocar `subtle` em `src/theme/tokens.js` (o papel #F5F4F1 fica).
 
 ## Stack
 
