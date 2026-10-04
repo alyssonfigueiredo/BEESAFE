@@ -73,6 +73,11 @@ writeFileSync("site/seguranca-infantil.html", page("Padrões de segurança infan
 const pubKey = process.env.SUPABASE_PUBLISHABLE_KEY ?? "";
 if (pubKey && !pubKey.startsWith("sb_publishable_")) throw new Error("SUPABASE_PUBLISHABLE_KEY precisa ser a chave sb_publishable_ (nunca a secreta)");
 writeFileSync("site/index.html", readFileSync("docs/index.html", "utf8").replace("__SUPABASE_PUBLISHABLE_KEY__", pubKey || "__SUPABASE_PUBLISHABLE_KEY__"));
+// Painel da equipe (docs/admin → /admin/), com a mesma chave publishable e os desenhos das medalhas.
+mkdirSync("site/admin", { recursive: true });
+for (const f of readdirSync("docs/admin")) copyFileSync(`docs/admin/${f}`, `site/admin/${f}`);
+copyFileSync("docs/pingentes.js", "site/admin/pingentes.js");
+writeFileSync("site/admin/admin.js", readFileSync("docs/admin/admin.js", "utf8").replace("__SUPABASE_PUBLISHABLE_KEY__", pubKey || "__SUPABASE_PUBLISHABLE_KEY__"));
 copyFileSync("docs/og.png", "site/og.png");
 // Telas reais do app usadas na landing (docs/telas/*.webp, 600 px de largura).
 mkdirSync("site/telas", { recursive: true });

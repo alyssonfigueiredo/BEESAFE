@@ -446,6 +446,9 @@ Nome: **Irisa** (INPI livre; @appirisa livre). Bundle id Android `br.com.irisa.a
   **Painel web:** `docs/admin/` → https://appirisa.com.br/admin/ (funções `admin_*`, papel conferido em cada uma;
   moderação vê moderação/lugares/fotos, admin vê tudo). Relatos nunca aparecem ligados a uma pessoa, nem no painel.
   Foto da equipe: Storage `fotos-lugares/equipe/<lugar>/…` + `admin_place_photo` (origem `equipe`).
+  Login do painel com e-mail/senha ou Google; para o Google funcionar, `https://appirisa.com.br/admin/` tem que estar
+  em Supabase → Authentication → URL Configuration → Redirect URLs. O painel é JS puro (`docs/admin/admin.js`),
+  sem build; a chave `sb_publishable_` entra pelo `build-site.mjs` igual à da landing.
   **Aba ativa quadrada nas pontas (corrigido):** a lente virou camada própria com raio medido (`onLayout`).
 
 ## Stack
