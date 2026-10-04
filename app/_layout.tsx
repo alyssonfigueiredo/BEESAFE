@@ -20,8 +20,10 @@ import { queryClient } from "@/lib/query";
 import { AuthProvider, useAuth } from "@/providers/AuthProvider";
 import { Splash } from "@/components/Splash";
 import { MedalCelebration } from "@/components/gami/MedalCelebration";
+import { Tour } from "@/components/Tour";
 import { useTrackOpen } from "@/hooks/useGamification";
 import { usePush } from "@/hooks/usePush";
+import { useTour } from "@/hooks/useTour";
 import { CityProvider } from "@/providers/CityProvider";
 import { colors } from "@/theme/tokens";
 
@@ -29,8 +31,10 @@ SplashScreen.preventAutoHideAsync();
 
 function RootNavigator({ pronto }: { pronto: boolean }) {
   const { session, loading } = useAuth();
-  // Pedido de notificação só depois da abertura animada, para não aparecer por cima dela.
-  usePush(session?.user.id, pronto);
+  // Tour de boas-vindas uma vez por aparelho, depois do login e da abertura animada.
+  const tour = useTour(!!session && pronto);
+  // Pedido de notificação só depois da abertura animada e do tour, para não aparecer por cima deles.
+  usePush(session?.user.id, pronto && tour === "fechado");
   // Gamificação: marca o dia em que a pessoa abriu o app (só a data) e celebra medalha nova.
   useTrackOpen();
   if (loading) return null;
@@ -52,7 +56,8 @@ function RootNavigator({ pronto }: { pronto: boolean }) {
           lista vira a rota inicial, e esta nunca pode ser a de abertura do app. */}
         <Stack.Screen name="auth/callback" />
       </Stack>
-      {session && pronto && <MedalCelebration />}
+      {session && pronto && tour === "fechado" && <MedalCelebration />}
+      <Tour visible={!!session && pronto && tour === "aberto"} />
     </>
   );
 }

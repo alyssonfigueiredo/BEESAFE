@@ -465,6 +465,11 @@ Nome: **Irisa** (INPI livre; @appirisa livre). Bundle id Android `br.com.irisa.a
   (gomos) e `ConquistasCard` (medalhas). Os dois cartões do Início colapsavam (`flex-1` em filho de altura automática):
   agora `flexGrow`. **EAS Update só chega em quem tem a mesma versão do app** (`runtimeVersion` = `appVersion`): com o
   app.config em 0.1.2, update não alcança a 0.1.1.
+  **Tour de boas-vindas (04/10/2026, pedido dele):** `src/components/Tour.tsx` + `src/hooks/useTour.ts`. Seis telas
+  deslizáveis (boas-vindas, quatro perguntas, relato anônimo, emergência, apoio, conquistas) com Pular/Próximo/Começar,
+  uma vez por aparelho (AsyncStorage `irisa.tour.v1`; trocar para v2 faz todo mundo ver de novo), depois do login e do
+  splash. O pedido de notificação e a celebração de medalha esperam o tour fechar. Perfil ganhou a linha "Como a Irisa
+  funciona → Rever o tour". Só JS: sai por EAS Update (para quem tem 0.1.2).
 
 ## Stack
 

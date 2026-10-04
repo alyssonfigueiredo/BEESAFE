@@ -1,7 +1,7 @@
 import { format, parseISO } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { Link } from "expo-router";
-import { Ban, Camera, LogOut, Trash2, MapPin, ShieldCheck, User, type LucideIcon } from "lucide-react-native";
+import { Ban, Camera, Compass, LogOut, Trash2, MapPin, ShieldCheck, User, type LucideIcon } from "lucide-react-native";
 import { useState, type ReactNode } from "react";
 import Svg, { Circle, Defs, LinearGradient, Stop } from "react-native-svg";
 import { Alert, Image, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
@@ -10,6 +10,7 @@ import { Aurora } from "@/components/Aurora";
 import { Field, FieldShell } from "@/components/Field";
 import { AnelCard, ConquistasCard } from "@/components/gami/ConquistasCard";
 import { useScreenInsets } from "@/hooks/useScreenInsets";
+import { abrirTour } from "@/hooks/useTour";
 import { CityPicker } from "@/components/CityPicker";
 import { useAvatarUrl, useChangeAvatar, useRemoveAvatar } from "@/hooks/useAvatar";
 import { useBlockedUsers, useUnblockUser } from "@/hooks/useBlocks";
@@ -181,7 +182,7 @@ export default function PerfilScreen() {
               aparece no mural e nas avaliações.
             </Text>
           </ListRow>
-          <ListRow icon={Ban} color={colors.coralInk} title="Pessoas bloqueadas" last>
+          <ListRow icon={Ban} color={colors.coralInk} title="Pessoas bloqueadas">
             {blocked.length === 0 ? (
               <Text className="font-body text-[12.5px] leading-[17px] text-dim">
                 Ninguém por aqui. Bloqueie pelo ícone em uma mensagem do mural ou avaliação.
@@ -208,6 +209,11 @@ export default function PerfilScreen() {
                 </View>
               ))
             )}
+          </ListRow>
+          <ListRow icon={Compass} color={colors.turquoiseInk} title="Como a Irisa funciona" last>
+            <Pressable onPress={abrirTour} hitSlop={8}>
+              <Text className="font-body-bold text-[13px] text-turquoiseInk">Rever o tour</Text>
+            </Pressable>
           </ListRow>
         </View>
 
