@@ -150,6 +150,8 @@ p { margin: 0; }
 .btn.block { width: 100%; }
 .btn.google { background: #fff; color: var(--ink); border-color: var(--line); }
 .btn.google:hover { background: var(--paper); }
+.btn.apple { background: #000; color: #fff; border-color: #000; display: inline-flex; align-items: center; justify-content: center; gap: 10px; }
+.btn.apple:hover { background: #1a1a1a; }
 .btn .spin { width: 13px; height: 13px; border: 2px solid currentColor; border-right-color: transparent; border-radius: 50%; animation: spin .7s linear infinite; }
 @keyframes spin { to { transform: rotate(360deg); } }
 .actions { display: flex; gap: 6px; flex-wrap: wrap; }
