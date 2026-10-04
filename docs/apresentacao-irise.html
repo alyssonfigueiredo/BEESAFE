@@ -1,0 +1,221 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Apresentação Irise</title>
+<!-- Apresentação da proposta do assistente Irise (não implementado). Mesma estética da Irisa.
+     Setas do teclado / clique nas bordas / pontos navegam. Não é publicada no site. -->
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Urbanist:wght@500&family=Oswald:wght@400;700&family=Space+Grotesk:wght@400;500;600;700&display=swap">
+<style>
+:root{
+  --paper:#F5F4F1;--subtle:#F1F5FA;--border:#E6ECF3;--night:#141829;--night2:#20253A;
+  --ink:#141829;--muted:#3D4560;--dim:#7C8296;
+  --coral:#FF6964;--orange:#FFA353;--yellow:#FFD066;--turq:#49DCC0;--blue:#59A7FF;--lilac:#A889FF;
+  --coralInk:#C72825;--turqInk:#0A8B7A;--amber:#E0A32E;
+  --rb:linear-gradient(90deg,#FF6964,#FFA353,#FFD066,#49DCC0,#59A7FF,#A889FF);
+  --display:"Oswald","Arial Narrow",Impact,sans-serif;--body:"Space Grotesk","Helvetica Neue",Arial,sans-serif;--mark:"Urbanist","Helvetica Neue",Arial,sans-serif;
+  --shadow:0 2px 4px rgba(20,24,41,.04),0 16px 40px rgba(20,24,41,.1);
+  --ease:cubic-bezier(.2,.7,.2,1);
+}
+*{box-sizing:border-box}p,h1,h2,h3{margin:0}
+html,body{height:100%}
+body{margin:0;overflow:hidden;font-family:var(--body);color:var(--ink);background:var(--paper);-webkit-font-smoothing:antialiased}
+button{font:inherit;color:inherit;border:0;background:none;cursor:pointer;padding:0}
+
+#stage{position:relative;height:100%;display:flex;align-items:center;justify-content:center}
+.slide{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:60px 10vw;opacity:0;transform:translateY(16px);transition:opacity .45s var(--ease),transform .5s var(--ease);pointer-events:none}
+.slide.on{opacity:1;transform:none;pointer-events:auto}
+.slide:before{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none}
+.slide .eb{font-size:13px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--turqInk)}
+.slide h1{font-family:var(--display);font-weight:700;text-transform:uppercase;font-size:clamp(32px,6vw,64px);line-height:1.04;margin-top:14px;max-width:900px}
+.slide h1 .rb{background:var(--rb);-webkit-background-clip:text;background-clip:text;color:transparent}
+.slide p.lead{font-size:clamp(16px,2vw,21px);line-height:1.5;color:var(--muted);margin-top:20px;max-width:680px}
+.dark{background:var(--night);color:#F1F0EC}
+.dark .eb{color:var(--turq)}
+.dark p.lead{color:#C9CDE0}
+
+.aurora{position:absolute;inset:0;z-index:-1;background:
+  radial-gradient(60% 40% at 0% 0%,rgba(73,220,192,.26),transparent 65%),radial-gradient(55% 36% at 100% 0%,rgba(255,105,100,.2),transparent 65%),
+  radial-gradient(60% 40% at 100% 100%,rgba(168,137,255,.24),transparent 65%),radial-gradient(55% 36% at 0% 100%,rgba(255,208,102,.22),transparent 65%)}
+
+.cards{display:grid;gap:16px;margin-top:30px;width:100%;max-width:980px}
+.c3{grid-template-columns:repeat(3,1fr)}
+.c2{grid-template-columns:repeat(2,1fr)}
+.card{background:rgba(255,255,255,.75);border-radius:22px;padding:24px 20px;box-shadow:var(--shadow);text-align:left}
+.dark .card{background:rgba(255,255,255,.08)}
+.card .tag{font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;padding:4px 10px;border-radius:12px;display:inline-block}
+.tag.l0{background:rgba(73,220,192,.22);color:#0A8B7A}
+.tag.l2{background:rgba(255,208,102,.3);color:#8A6512}
+.tag.l3{background:rgba(168,137,255,.24);color:#6D4FD8}
+.card h3{font-family:var(--display);font-weight:700;text-transform:uppercase;font-size:19px;margin-top:10px}
+.card p{font-size:14px;line-height:1.5;color:var(--muted);margin-top:8px}
+.dark .card p{color:#C9CDE0}
+.card ul{margin:10px 0 0;padding-left:18px;font-size:13.5px;line-height:1.5;color:var(--muted);text-align:left}
+.dark .card ul{color:#C9CDE0}
+
+.chat{background:#fff;border-radius:24px;box-shadow:var(--shadow);padding:20px 22px;margin-top:26px;max-width:460px;text-align:left;display:flex;flex-direction:column;gap:10px}
+.bub{background:var(--subtle);border-radius:16px 16px 16px 5px;padding:10px 14px;font-size:14px;align-self:flex-start;max-width:85%}
+.bub.me{background:var(--night);color:#fff;border-radius:16px 16px 5px 16px;align-self:flex-end}
+.bub b{font-weight:700}
+
+.flow{display:flex;align-items:center;gap:10px;margin-top:30px;flex-wrap:wrap;justify-content:center;max-width:900px}
+.flow .step{background:rgba(255,255,255,.8);border-radius:16px;padding:12px 18px;font-size:14px;font-weight:600;box-shadow:var(--shadow)}
+.flow .arrow{color:var(--dim);font-size:18px}
+
+.num{font-family:var(--display);font-weight:700;font-size:40px}
+.stats{display:flex;gap:28px;margin-top:28px;flex-wrap:wrap;justify-content:center}
+.stat{text-align:center}
+.stat span{display:block;font-size:12.5px;color:var(--muted);margin-top:4px;max-width:140px}
+
+#dots{position:fixed;left:50%;bottom:22px;transform:translateX(-50%);display:flex;gap:7px;z-index:10}
+#dots button{width:8px;height:8px;border-radius:50%;background:rgba(20,24,41,.18)}
+#dots button.on{background:var(--night);width:22px;border-radius:4px;transition:width .3s}
+.navbtn{position:fixed;top:50%;transform:translateY(-50%);width:46px;height:46px;border-radius:50%;background:rgba(255,255,255,.7);box-shadow:var(--shadow);display:flex;align-items:center;justify-content:center;z-index:10}
+.navbtn.prev{left:18px}.navbtn.next{right:18px}
+.counter{position:fixed;top:20px;right:24px;font-size:13px;color:var(--dim);font-weight:600;z-index:10}
+.counter b{color:var(--ink)}
+@media (max-width:760px){.c3,.c2{grid-template-columns:1fr}.navbtn{display:none}}
+@media (prefers-reduced-motion:reduce){*{transition-duration:.01ms!important}}
+</style>
+</head>
+<body>
+<div class="aurora"></div>
+<div id="stage">
+
+<section class="slide on">
+  <span class="eb">IRISA · PROPOSTA</span>
+  <h1>O <span class="rb">Irise</span><br>guia da cidade</h1>
+  <p class="lead">Um personagem que já é da identidade da marca ganha uma função dentro do app:
+  ajudar a comunidade a descobrir onde ir — sem parecer um chatbot.</p>
+</section>
+
+<section class="slide dark">
+  <span class="eb">A sensação certa</span>
+  <h1>"O Irise conhece<br>o mapa e me ajuda<br>a descobrir onde ir."</h1>
+  <p class="lead">Não é ChatGPT dentro do app. Não é suporte. Não é chat infinito.<br>
+  É sessões curtas de descoberta: intenção → resultado → próxima intenção.</p>
+</section>
+
+<section class="slide">
+  <span class="eb">O que ele NÃO é</span>
+  <h1>Zero destas coisas</h1>
+  <div class="cards c3">
+    <div class="card"><h3>Chatbot genérico</h3><p>Não responde qualquer assunto. Fora do escopo, ele deixa isso fazer parte da piada.</p></div>
+    <div class="card"><h3>Chat infinito</h3><p>Sem histórico acumulando. Cada rolê é um contexto novo.</p></div>
+    <div class="card"><h3>Fonte da verdade</h3><p>Nunca inventa lugar, nota, selo, endereço ou relato. Isso sempre vem do banco.</p></div>
+  </div>
+</section>
+
+<section class="slide">
+  <span class="eb">Conversa de exemplo</span>
+  <h1>Pedido real, resposta real</h1>
+  <div class="chat">
+    <div class="bub me">Quero levar um cara que eu tô conhecendo, mas nenhum dos dois bebe e queria um lugar tranquilo.</div>
+    <div class="bub"><b>Irise</b> — Tá apaixonade? Meus pêsames. 💅<br>Peguei a vibe. Separei esses pra você:</div>
+    <div class="bub">🪴 <b>Jardim Secreto</b> — esse combina com o que você pediu, mas a comunidade ainda falou pouco dele. Já foi? 👀</div>
+  </div>
+</section>
+
+<section class="slide">
+  <span class="eb">Arquitetura</span>
+  <h1>Três camadas</h1>
+  <div class="cards c3">
+    <div class="card"><span class="tag l0">Camada 1</span><h3>Zero IA</h3><p>Chips, filtros, proximidade, "me surpreende", gamificação, respostas prontas.</p></div>
+    <div class="card"><span class="tag l2">Camada 2</span><h3>IA leve · Groq</h3><p>Só quando o texto livre não cai em nenhuma regra. Linguagem natural → JSON estruturado.</p></div>
+    <div class="card"><span class="tag l3">Camada 3</span><h3>IA contextual</h3><p>Refinamento ("mais barato", "gostei do 2º"). Contexto mínimo, nunca o histórico todo.</p></div>
+  </div>
+</section>
+
+<section class="slide">
+  <span class="eb">Router antes do LLM</span>
+  <h1>A maior parte nunca<br>chega a chamar IA</h1>
+  <div class="flow">
+    <span class="step">"balada"</span><span class="arrow">→</span><span class="step">filtro categoria</span>
+  </div>
+  <div class="flow">
+    <span class="step">"perto de mim"</span><span class="arrow">→</span><span class="step">places_near()</span>
+  </div>
+  <div class="flow">
+    <span class="step">"me surpreende"</span><span class="arrow">→</span><span class="step">algoritmo interno</span>
+  </div>
+  <div class="flow">
+    <span class="step">frase não reconhecida</span><span class="arrow">→</span><span class="step" style="background:rgba(255,208,102,.3)">Groq</span>
+  </div>
+</section>
+
+<section class="slide">
+  <span class="eb">Regra crítica</span>
+  <h1>O LLM nunca é<br>a fonte da verdade</h1>
+  <p class="lead">Ele interpreta intenção e escreve na persona do Irise. Toda nota, selo, endereço
+  e característica do lugar vem sempre do banco do Irisa. Nenhum card é texto livre do modelo.</p>
+</section>
+
+<section class="slide">
+  <span class="eb">Pouco dado, muita transparência</span>
+  <h1>A limitação do banco<br>vira convite</h1>
+  <div class="cards c2">
+    <div class="card"><h3>Lugar com poucas notas</h3><p>"👀 Desse eu ainda sei pouco. A comunidade quase não irisou por aqui."</p></div>
+    <div class="card"><h3>"Já fui?"</h3><p>Abre direto o formulário de avaliação <b>que já existe</b> — mesmos 4 eixos, mesmo cálculo, zero mudança.</p></div>
+  </div>
+</section>
+
+<section class="slide dark">
+  <span class="eb">O que não muda</span>
+  <h1>O framework de<br>avaliações é o mesmo</h1>
+  <p class="lead">Sem quick_review, sem ai_review, sem nova escala. O Irise é só uma nova porta de
+  entrada para o formulário de sempre — a nota, o selo e o cálculo bayesiano continuam intocados.</p>
+</section>
+
+<section class="slide">
+  <span class="eb">Economia de tokens</span>
+  <h1>Inteligência percebida<br>&gt;&gt; consumo real de IA</h1>
+  <div class="stats">
+    <div class="stat"><span class="num">~70–90</span><span>chamadas Groq/dia por 1.000 usuários ativos</span></div>
+    <div class="stat"><span class="num">~70%</span><span>das sessões resolvidas sem gastar 1 token</span></div>
+    <div class="stat"><span class="num">0</span><span>lugares, notas ou relatos inventados</span></div>
+  </div>
+</section>
+
+<section class="slide">
+  <span class="eb">Se a IA cair</span>
+  <h1>O app nunca depende<br>do LLM pra funcionar</h1>
+  <p class="lead">"Meu sexto sentido deu uma cochilada 😭 Mas ainda consigo procurar do jeito clássico."<br>
+  Fallback automático pros chips e filtros — a busca de lugar nunca para.</p>
+</section>
+
+<section class="slide dark">
+  <span class="eb">Próximo passo</span>
+  <h1>Aprovar a arquitetura,<br>depois implementar<br>em etapas pequenas</h1>
+  <p class="lead">Proposta completa em PROPOSTA-IRISE.md · protótipo navegável em prototipo-irise.html<br>
+  Nada foi implementado ainda.</p>
+</section>
+
+</div>
+<span class="counter"><b id="cN">1</b> / <span id="cT">12</span></span>
+<button class="navbtn prev" id="prevB"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#141829" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg></button>
+<button class="navbtn next" id="nextB"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#141829" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg></button>
+<div id="dots"></div>
+<script>
+const slides=[...document.querySelectorAll(".slide")];
+let i=0;
+const dots=document.getElementById("dots");
+slides.forEach((_,k)=>{ const b=document.createElement("button"); b.onclick=()=>go(k); dots.appendChild(b); });
+document.getElementById("cT").textContent=slides.length;
+function go(n){
+  i=Math.max(0,Math.min(slides.length-1,n));
+  slides.forEach((s,k)=>s.classList.toggle("on",k===i));
+  [...dots.children].forEach((d,k)=>d.classList.toggle("on",k===i));
+  document.getElementById("cN").textContent=i+1;
+}
+document.getElementById("prevB").onclick=()=>go(i-1);
+document.getElementById("nextB").onclick=()=>go(i+1);
+document.addEventListener("keydown",e=>{
+  if(e.key==="ArrowRight"||e.key===" ") go(i+1);
+  if(e.key==="ArrowLeft") go(i-1);
+});
+go(0);
+</script>
+</body>
+</html>
