@@ -298,8 +298,19 @@
   ],
   "legenda": "",
   "primeiro_comentario": "",
-  "publicado": false,
-  "nota": "Dia da eleição (pedido e aprovado por ele no chat, 03/10). Arte da urna com arco-íris, enviada por ele em 03/10 — substitui a lâmina gerada em stories-2.html. Sem citar partido/candidato. Sem adesivo, publicação automática pelo robô igual as outras stories-2."
+  "publicado": true,
+  "nota": "Dia da eleição (pedido e aprovado por ele no chat, 03/10). Arte da urna com arco-íris, enviada por ele em 03/10 — substitui a lâmina gerada em stories-2.html. Sem citar partido/candidato. Sem adesivo, publicação automática pelo robô igual as outras stories-2.",
+  "publicado_em": "2026-10-04T13:17:18.452Z",
+  "media_id": "18040767230831938",
+  "confirmacao": {
+   "id": "18040767230831938",
+   "media_type": "IMAGE",
+   "permalink": "https://www.instagram.com/stories/appirisa/4000525629631885551",
+   "timestamp": "2026-10-04T13:17:23+0000",
+   "na_lista_de_stories_ativos": true
+  },
+  "confirmado": true,
+  "confirmado_em": "2026-10-04T13:17:27.075Z"
  },
  {
   "id": "reels-9",
