@@ -1,6 +1,6 @@
 <title>Protótipo Acender o arco-íris</title>
 <!-- Protótipo navegável da gamificação (proposta final, 04/10/2026), para aprovar com o Aly.
-     Tour guiado de 14 passos + navegação livre. Nada grava: é tudo encenado no navegador.
+     Tour guiado de 15 passos + navegação livre. Nada grava: é tudo encenado no navegador.
      Medalhas e objetos vêm de pingentes.js; o arquivo único sai com
      node scripts/gamificacao-unica.mjs docs/prototipo-gamificacao.html docs/Irisa-prototipo-gamificacao.html -->
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -136,6 +136,11 @@ h1.t{font-family:var(--display);font-weight:700;text-transform:uppercase;font-si
 .fld{display:flex;flex-direction:column;gap:6px}.fld small{font-size:13px;color:var(--dim)}.fld span{height:48px;border-radius:16px;background:#fff;display:flex;align-items:center;padding:0 16px;font-size:15px;box-shadow:0 1px 2px rgba(20,24,41,.05)}
 .lr{display:flex;flex-direction:column;gap:3px;padding:16px 0;border-bottom:1px dashed rgba(20,24,41,.15)}.lr b{font-size:15px}.lr small{font-size:12.5px;line-height:1.4;color:var(--dim)}
 .cd.new:after{content:"Novo";position:absolute;top:-8px;right:16px;background:var(--night);color:#fff;font-size:11px;font-weight:700;padding:3px 9px;border-radius:10px}
+/* seletor de flexão */
+.seg{position:relative;display:flex;background:var(--subtle);border-radius:16px;padding:4px}
+.seg button{position:relative;z-index:1;flex:1;height:36px;border-radius:12px;font-size:14px;font-weight:500;color:var(--muted);transition:color .3s}
+.seg button.on{color:var(--ink);font-weight:700}
+.segpill{position:absolute;top:4px;bottom:4px;left:4px;width:calc((100% - 8px) / 3);border-radius:12px;background:#fff;box-shadow:0 2px 8px rgba(20,24,41,.1);transition:transform .45s cubic-bezier(.3,1.3,.45,1);transform:translateX(200%)}
 /* folhas e camadas */
 .veil{position:absolute;inset:0;z-index:30;background:rgba(20,24,41,.38);opacity:0;pointer-events:none;transition:opacity .35s}
 .veil.on{opacity:1;pointer-events:auto}
@@ -218,7 +223,7 @@ h1.t{font-family:var(--display);font-weight:700;text-transform:uppercase;font-si
         </div>
         <button class="cd" id="almostCard" style="display:flex;align-items:center;gap:14px;padding:12px 16px;text-align:left" data-open="famosinha">
           <span data-md="famosinha" data-s="lock" data-p=".73" data-size="58" data-nolock="1" id="almostMedal"></span>
-          <span style="flex:1"><span style="display:block;font-size:11px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--coralInk)">Quase lá</span><span style="display:block;font-size:15px;font-weight:700">Famosinhe</span><span style="display:block;font-size:13px;color:var(--muted)" id="almostTxt">Faltam 8 avaliações</span></span>
+          <span style="flex:1"><span style="display:block;font-size:11px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--coralInk)">Quase lá</span><span style="display:block;font-size:15px;font-weight:700" class="nm-fam">Famosinhe</span><span style="display:block;font-size:13px;color:var(--muted)" id="almostTxt">Faltam 8 avaliações</span></span>
           <span class="chip">Ver</span>
         </button>
         <div class="srch"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#7C8296" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg>Buscar um lugar em Curitiba</div>
@@ -288,9 +293,13 @@ h1.t{font-family:var(--display);font-weight:700;text-transform:uppercase;font-si
       <button class="hback" id="pulBack"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#141829" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>Perfil</button>
       <div class="body" style="gap:16px;padding-top:4px">
         <div><h1 class="t">Pulseira</h1><p class="sub" style="margin-top:2px" id="pulCount">5 de 12 desbloqueadas</p></div>
+        <div class="cd" id="flexCard" style="padding:14px 16px;display:flex;flex-direction:column;gap:10px">
+          <span><span class="lb" style="display:block">Como as medalhas te chamam</span><span style="display:block;font-size:12.5px;color:var(--dim);margin-top:3px">Vale para todo título que muda com o gênero. Dá para trocar quando quiser.</span></span>
+          <div class="seg" id="flexSeg"><i class="segpill"></i><button data-f="0">Famosinha</button><button data-f="1">Famosinho</button><button data-f="2" class="on">Famosinhe</button></div>
+        </div>
         <button class="cd" id="pulAlmost" style="display:flex;align-items:center;gap:14px;padding:14px 16px;text-align:left" data-open="famosinha">
           <span data-md="famosinha" data-s="lock" data-p=".77" data-size="70" data-nolock="1"></span>
-          <span style="flex:1"><span style="display:block;font-size:12px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--coralInk)">Quase lá</span><span style="display:block;font-size:16px;font-weight:700">Famosinhe</span><span style="display:block;font-size:13px;color:var(--muted)">23 de 30 avaliações</span></span>
+          <span style="flex:1"><span style="display:block;font-size:12px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--coralInk)">Quase lá</span><span style="display:block;font-size:16px;font-weight:700" class="nm-fam">Famosinhe</span><span style="display:block;font-size:13px;color:var(--muted)">23 de 30 avaliações</span></span>
           <span class="num" style="font-size:22px">77%</span>
         </button>
         <div class="mg" id="mg"></div>
@@ -310,7 +319,7 @@ h1.t{font-family:var(--display);font-weight:700;text-transform:uppercase;font-si
       <div style="display:flex;gap:8px;margin-top:16px;width:100%">
         <div class="mini" id="mFa"><p class="num" id="faN">7</p><p>faíscas de 10</p></div>
         <div class="mini" id="mCor"><p class="num">+1</p><p>cor no mapa</p></div>
-        <div class="mini" id="mFam"><p class="num" id="famN">22</p><p>de 30 · Famosinhe</p></div>
+        <div class="mini" id="mFam"><p class="num" id="famN">22</p><p>de 30 · <span class="nm-fam">Famosinhe</span></p></div>
       </div>
       <button class="btn" id="rwGo" style="background:var(--night);color:#fff;margin-top:16px">Continuar</button>
     </div>
@@ -379,7 +388,7 @@ h1.t{font-family:var(--display);font-weight:700;text-transform:uppercase;font-si
   </div></div></div>
 
   <aside id="tour" aria-live="polite">
-    <div class="top"><span class="mark">IRIS<b>A</b> · PROTÓTIPO</span><span class="count" id="tCount">1 de 14</span></div>
+    <div class="top"><span class="mark">IRIS<b>A</b> · PROTÓTIPO</span><span class="count" id="tCount">1 de 15</span></div>
     <div class="bar"><i id="tBar"></i></div>
     <p class="eb" id="tEb"></p>
     <h2 id="tH"></h2>
@@ -452,6 +461,16 @@ $("#tabs").innerHTML = Object.entries(IC).map(([n, d], i) => `<button data-tab="
 function setTab(i) { $$("#tabs button").forEach((b, k) => { b.classList.toggle("on", k === i); b.style.color = k === i ? TC[k] : ""; }); }
 
 /* ---------- estado ---------- */
+let FLEX = 2;
+const nameOf = o => o.flex ? o.flex[FLEX] : o.t;
+function setFlex(f) {
+  FLEX = f;
+  $$("#flexSeg button").forEach(b => b.classList.toggle("on", +b.dataset.f === f));
+  $("#flexSeg .segpill").style.transform = `translateX(${f * 100}%)`;
+  const nome = P.get("famosinha").flex[f];
+  $$(".nm-fam").forEach(e => { e.textContent = nome; A(e, [{ opacity: .2, transform: "translateY(6px)" }, { opacity: 1, transform: "none" }], { d: 380 }); });
+  $$("#mg button").forEach(b => { const o = P.get(b.dataset.open); if (o.flex) { const t = $("p", b); t.textContent = nameOf(o); A(t, [{ opacity: .2 }, { opacity: 1 }], { d: 380 }); } });
+}
 const S = { today: false, rated: false, unlocked: false, week4: false, neon: false, scr: "home", celStep: 0 };
 const PUL = () => [
   ["deu-o-nome"], ["deu-close"], ["inaugurou"], ["bateu-ponto"], ["abre-alas"],
@@ -468,7 +487,7 @@ function renderPul(anim) {
   const n = PUL().filter(([, p]) => p === undefined).length;
   $("#pulCount").textContent = `${n} de 12 desbloqueadas`;
   $("#mg").innerHTML = PUL().map(([id, p], i) => { const o = P.get(id), lk = p !== undefined;
-    return `<button class="${lk ? "lk" : ""}" data-open="${id}" data-i="${i}"><span data-host>${medal(id, { size: 94, state: lk ? "lock" : "on", prog: p || 0 })}</span><p>${o.flex ? o.flex[2] : o.t}</p></button>`; }).join("");
+    return `<button class="${lk ? "lk" : ""}" data-open="${id}" data-i="${i}"><span data-host>${medal(id, { size: 94, state: lk ? "lock" : "on", prog: p || 0 })}</span><p>${nameOf(o)}</p></button>`; }).join("");
   if (S.neon) $("#mg [data-open='deu-close'] [data-host]").classList.add("neon");
   if (anim) $$("#mg button").forEach((b, i) => { A(b, [{ opacity: 0, transform: "translateY(18px) scale(.9)" }, { opacity: 1, transform: "none" }], { d: 520, delay: 60 * i, e: "cubic-bezier(.3,1.4,.45,1)" });
     const id = b.dataset.open, p = PUL()[i][1]; if (p) animProg(b, 0, p, 900, 300 + 60 * i); });
@@ -609,7 +628,7 @@ function openDetail(id) {
   const nums = { famosinha: [S.rated ? 23 : 22, 30], figurinha: [7, 15], "nome-na-lista": [3, 5], "mala-pronta": [1, 3], "ombro-amigo": [2, 10], "eu-conheco": [0, 1], "acendeu-a-luz": [4, 5] }[id];
   $("#detMedal").innerHTML = medal(id, { size: 196, state: lk ? "lock" : "on", prog: p || 0 });
   if (S.neon && id === "deu-close") $("#detMedal").classList.add("neon"); else $("#detMedal").classList.remove("neon");
-  $("#detT").textContent = o.flex ? o.flex[2] : o.t;
+  $("#detT").textContent = nameOf(o);
   $("#detC").textContent = lk ? o.cond : "“" + o.copy + "”";
   $("#detNum").hidden = !lk || !nums;
   if (nums) { $("#detA").textContent = nums[0]; $("#detB").textContent = "de " + nums[1]; }
@@ -682,6 +701,7 @@ $("#rwGo").onclick = () => { if (!S.unlocked) celebrate(); else closeSheets(); }
 $("#celShare").onclick = showStory;
 $("#celPul").onclick = () => { closeCel(); go("pul"); };
 $("#pulCard").onclick = () => go("pul");
+$("#flexSeg").addEventListener("click", e => { const b = e.target.closest("button"); if (b) setFlex(+b.dataset.f); });
 $("#pulBack").onclick = () => go("perfil");
 $("#storyX").onclick = closeStory;
 $("#boxGo").onclick = closeBox;
@@ -703,6 +723,7 @@ const STEPS = [
   { eb: "Divulgação", h: "O print que a pessoa quer postar", t: "O cartão leva a medalha e a frase. <b>O nome do lugar nunca aparece</b>, nem aqui nem na pulseira.", spot: null, run: async () => { if (!$("#cel").classList.contains("on") && !S.unlocked) { await celebrate(); await wait(1500); } showStory(); } },
   { eb: "Perfil", h: "O Perfil continua o mesmo", t: "Foto, apelido, cidade, privacidade, bloqueios, sair e excluir conta ficam onde estão. Entra <b>um cartão só</b>: a pulseira.", scr: "perfil", spot: "#pulCard", run: () => { closeStory(); closeCel(); S.unlocked = true; renderPulRow(); } },
   { eb: "Pulseira", h: "Todas as medalhas num lugar só", t: "Desbloqueadas em cor, as outras em silhueta com o anel de progresso. Sem argola, sem selo de raridade, sem texto em volta.", scr: "pul", spot: "#mg" },
+  { eb: "Como te chamar", h: "Famosinha, Famosinho ou Famosinhe", t: "A pessoa escolhe <b>uma vez</b> como quer ser chamade, e todo título que muda com o gênero acompanha: Famosinha, Aclamada, Favorita do Público. Dá para trocar quando quiser.", scr: "pul", spot: "#flexCard", run: async () => { await wait(500); setFlex(0); await wait(1100); setFlex(1); await wait(1100); setFlex(2); } },
   { eb: "Detalhe", h: "Toque para ver quanto falta", t: "Uma medalha, um número e um botão que leva direto a avaliar. Toque em qualquer outra para ver a dela.", scr: "pul", spot: "#det", run: () => openDetail("famosinha") },
   { eb: "Caixinha", h: "Semana acesa abre a caixinha", t: "Quando o quarto pedaço acende, a caixinha abre: um <b>banho surpresa</b> numa medalha que a pessoa já tem.", scr: "home", spot: null, run: () => { closeSheets(); weekComplete(); } },
   { eb: "E se abrir os 7 dias?", h: "Ganha faísca, não obrigação", t: "Depois que a semana acende, cada dia a mais dá <b>uma faísca</b> (até três). Não existe prêmio de 7 de 7, de propósito: ninguém deve sentir que precisa abrir todo dia.", scr: "home", spot: "#wkCard", run: async () => { closeBox(); await wait(400); await extraDay(); await wait(1300); await extraDay(); } },
