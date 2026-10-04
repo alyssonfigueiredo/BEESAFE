@@ -1447,10 +1447,16 @@ async function viewChaves(ctx) {
   ctx.el.innerHTML = headHTML("Chaves de API", "Cole aqui em vez de mexer no painel do Supabase. A chave fica criptografada — nem o painel consegue mostrar de volta, só sobrescrever.") + `<div id="kbox"></div>`;
   const box = $("#kbox", ctx.el);
   await load(box, async () => {
-    const status = await rpc("admin_api_keys_status");
+    const [status, settings] = await Promise.all([rpc("admin_api_keys_status"), rpc("admin_settings")]);
     if (!ctx.alive()) return;
     const cfg = Object.fromEntries((status || []).map((s) => [s.name, s.configurado]));
-    box.innerHTML = API_KEYS.map((k) => `
+    const iriseAtiva = !!(settings || {}).irise_ativa;
+    box.innerHTML = `
+      <form class="card form" id="iriseForm" style="margin-bottom:14px">
+        <h2>Botão da Irise no app</h2>
+        <p class="small muted">Enquanto desligado, o botão não aparece pra ninguém — o código já está publicado, só escondido. Ligue depois de colar as chaves e testar com calma.</p>
+        <label class="check"><input type="checkbox" id="iriseAtiva" ${iriseAtiva ? "checked" : ""}> Mostrar o botão da Irise no app</label>
+      </form>` + API_KEYS.map((k) => `
       <form class="card form" data-key="${k.name}" style="margin-bottom:14px">
         <h2>${esc(k.label)} <span class="small ${cfg[k.name] ? "ok" : "dim"}">${cfg[k.name] ? "· configurada" : "· não configurada"}</span></h2>
         <p class="small muted">${esc(k.hint)}</p>
@@ -1459,6 +1465,19 @@ async function viewChaves(ctx) {
           <button class="btn" type="submit">Salvar</button>
         </div>
       </form>`).join("");
+    $("#iriseAtiva", box).addEventListener("change", async (ev) => {
+      const input = ev.currentTarget;
+      input.disabled = true;
+      try {
+        await rpc("admin_setting_set", { p_key: "irise_ativa", p_value: input.checked });
+        toast("Salvo");
+      } catch (e) {
+        input.checked = !input.checked;
+        toast(ptErr(e), true);
+      } finally {
+        input.disabled = false;
+      }
+    });
     $$("form[data-key]", box).forEach((form) => {
       const name = form.dataset.key;
       form.addEventListener("submit", (ev) => {

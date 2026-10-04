@@ -339,7 +339,7 @@ export function useAppConfig() {
     queryFn: async () => {
       const { data, error } = await supabase.rpc("app_config");
       if (error) throw error;
-      return (data ?? {}) as { aviso?: Aviso };
+      return (data ?? {}) as { aviso?: Aviso; irise_ativa?: boolean };
     },
   });
 }
