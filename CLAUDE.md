@@ -482,6 +482,16 @@ Nome: **Irisa** (INPI livre; @appirisa livre). Bundle id Android `br.com.irisa.a
   nunca), e a lista era o lote de 1.000 da cidade escolhida ordenado por distância. Agora `locate()` no provider lê a
   posição sempre (sem pedir permissão na abertura; a aba Lugares pede), e com posição a lista vem de `places_near`
   (índice espacial, até 30 km, 200 lugares, qualquer município). Sem posição ou sem a migration, volta ao lote da cidade.
+  **Protótipo v2 ampliado (04/10/2026, 15 passos):** entraram Mapa (painel sólido com Mapa/Lista e camadas Lugares/
+  Relatos, pinos agrupados com número, lugar sem nota como pontinho, relato como área, folha "Perto de você"), Apoio
+  (mural em papel colado com pergunta da semana, atalhos abraço/dica/pedir ajuda, reação por tipo, aba Serviços com os
+  4 números grandes), **pronome no Perfil valendo para o app todo** (a frase da marca "onde a gente é bem-vinde" não
+  muda) e a **descoberta na Home**. Reação por tipo e pergunta da semana pedem banco novo.
+  **Descoberta na Home (proposta, NÃO implementar sem ok dele):** `docs/descoberta-proposta.html` → artefato
+  https://claude.ai/artifact/BpjJ4FLBXBCP3GLBLsyuyh. Regra dele: o framework de avaliações não muda (perguntas, escalas,
+  pesos, `place_ratings`, cálculo). "Já fui" leva à ficha de sempre; origem só em `discovery_events` (sem coluna nova
+  em `place_ratings`, recomendação) e na rota `?origem=home_discovery&avaliar=1`. Pendente decidir a folha de
+  recompensa quando a avaliação vem da descoberta.
 
 ## Stack
 

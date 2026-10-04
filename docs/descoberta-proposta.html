@@ -1,0 +1,192 @@
+<title>Descoberta na Home</title>
+<!-- Análise e proposta da camada de descoberta (04/10/2026), para aprovar antes de qualquer código.
+     Nada aqui altera o framework de avaliações. Visual no protótipo v2 (passos 2 e 3). -->
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;700&family=Space+Grotesk:wght@400;500;700&display=swap">
+<style>
+/* Documento de leitura na estética da Irisa: papel com as manchas da marca, coluna única, cartões só onde há dado. */
+:root{
+  --paper:#F5F4F1;--card:#FFFFFF;--ink:#141829;--muted:#3D4560;--dim:#6E7489;--line:#E2DFD8;
+  --turq:#0A8B7A;--coral:#C72825;--lilac:#6037F0;--amber:#8F6300;
+  --rb:linear-gradient(90deg,#FF6964,#FFA353,#FFD066,#49DCC0,#59A7FF,#A889FF);
+  --display:"Oswald","Arial Narrow",Impact,sans-serif;--body:"Space Grotesk","Helvetica Neue",Arial,sans-serif;
+  color-scheme:light;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--paper:#12141F;--card:#1C2030;--ink:#F1F0EC;--muted:#C9CDE0;--dim:#9096AE;--line:#2C3146;--turq:#49DCC0;--coral:#FF8A85;--lilac:#B9A3FF;--amber:#FFD066;color-scheme:dark}}
+:root[data-theme="dark"]{--paper:#12141F;--card:#1C2030;--ink:#F1F0EC;--muted:#C9CDE0;--dim:#9096AE;--line:#2C3146;--turq:#49DCC0;--coral:#FF8A85;--lilac:#B9A3FF;--amber:#FFD066;color-scheme:dark}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.6 var(--body);-webkit-font-smoothing:antialiased}
+body:before{content:"";position:fixed;inset:0;pointer-events:none;opacity:.6;background:radial-gradient(40% 30% at 0% 0%,rgba(73,220,192,.25),transparent 65%),radial-gradient(40% 30% at 100% 0%,rgba(255,105,100,.18),transparent 65%),radial-gradient(40% 30% at 100% 100%,rgba(168,137,255,.22),transparent 65%)}
+main{position:relative;max-width:760px;margin:0 auto;padding-inline:20px;padding-block:40px 80px}
+h1{font-family:var(--display);font-weight:700;text-transform:uppercase;font-size:clamp(34px,6vw,52px);line-height:1.02;margin:10px 0 0;text-wrap:balance}
+.bar{display:block;width:110px;height:5px;border-radius:3px;background:var(--rb);margin:18px 0}
+.lead{font-size:18px;color:var(--muted);max-width:62ch;margin:0}
+.eb{font-size:12px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--turq)}
+h2{font-family:var(--display);font-weight:700;text-transform:uppercase;font-size:26px;line-height:1.1;margin:52px 0 12px;display:flex;gap:12px;align-items:baseline;text-wrap:balance}
+h2 span{font-family:var(--body);font-size:13px;font-weight:700;color:var(--dim);letter-spacing:.08em;min-width:24px}
+h3{font-size:16px;margin:22px 0 6px}
+p,li{color:var(--muted);max-width:66ch}
+b,strong{color:var(--ink)}
+ul{padding-left:20px;margin:8px 0}li{margin:4px 0}
+code{font:13px/1.4 ui-monospace,Menlo,monospace;background:var(--card);border:1px solid var(--line);border-radius:6px;padding:1px 6px;color:var(--ink)}
+.card{background:var(--card);border-radius:20px;padding:18px 20px;margin:14px 0;box-shadow:0 1px 2px rgba(20,24,41,.04),0 8px 24px rgba(20,24,41,.06)}
+.flow{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:14px 0}
+.flow i{font-style:normal;background:var(--card);border:1px solid var(--line);border-radius:999px;padding:6px 12px;font-size:13.5px;font-weight:600;color:var(--ink)}
+.flow s{text-decoration:none;color:var(--dim)}
+.ok{border-left:4px solid var(--turq)}.warn{border-left:4px solid #E0A32E}.no{border-left:4px solid var(--coral)}
+.tw{overflow-x:auto;margin:12px 0}
+table{border-collapse:collapse;width:100%;min-width:520px;font-size:14px}
+th,td{text-align:left;padding:9px 10px;border-bottom:1px solid var(--line);vertical-align:top;color:var(--muted)}
+th{font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--dim)}
+td b{white-space:nowrap}
+.num{font-variant-numeric:tabular-nums;white-space:nowrap}
+.formula{font:14px/1.7 ui-monospace,Menlo,monospace;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px 16px;color:var(--ink);overflow-x:auto;white-space:pre}
+.cta{display:inline-flex;align-items:center;gap:8px;margin-top:14px;font-weight:700;color:var(--lilac);text-decoration:none}
+.cta:focus-visible{outline:3px solid var(--turq);outline-offset:3px;border-radius:6px}
+.q{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+@media (max-width:560px){.q{grid-template-columns:1fr}}
+.q div{background:var(--card);border-radius:16px;padding:12px 14px;font-size:14.5px;color:var(--ink)}
+.q small{display:block;font-size:12px;color:var(--dim);margin-top:2px}
+</style>
+
+<main>
+  <p class="eb">Irisa · proposta para aprovar</p>
+  <h1>Descoberta na Home</h1>
+  <span class="bar"></span>
+  <p class="lead">Uma camada que <b>convida</b> a avaliar lugares que a pessoa provavelmente conhece. Ela não cria um tipo novo de avaliação: o “Já fui” leva para a mesma ficha, com as mesmas quatro perguntas, salvando no mesmo lugar e do mesmo jeito.</p>
+  <div class="flow"><i>Abre a Irisa</i><s>→</s><i>Vê 3 lugares perto</i><s>→</s><i>“Já fui”</i><s>→</s><i>Ficha e formulário de hoje</i><s>→</s><i>Avaliação normal</i><s>→</s><i>Cartão ganha cor</i></div>
+  <a class="cta" href="https://claude.ai/artifact/RtAaAJagiNUDsh3tKFGSrS">Ver no protótipo (passos 2 e 3) →</a>
+
+  <h2><span>1</span>Onde entra na Home</h2>
+  <p>A Home hoje, de cima para baixo: aviso do painel (quando há), <b>painel escuro</b> da cidade com “Avaliar um lugar” e “Registrar relato”, cartões <b>Sua semana</b> e <b>Sua cidade</b>, busca com filtros, <b>Quanta cor já tem aqui</b> e <b>Segurança na cidade</b>.</p>
+  <p>A descoberta entra <b>logo abaixo do painel escuro</b>, antes dos cartões da semana. O botão “Avaliar um lugar” do painel é genérico; os três cartões logo embaixo dão a ele um rosto: “esses aqui, perto de você”. Sem título de seção do tipo desafio. O bloco some sozinho quando não há candidato bom, e nunca vira lista infinita.</p>
+
+  <h2><span>2</span>Como funciona hoje o framework de avaliações</h2>
+  <div class="card">
+    <h3 style="margin-top:0">Banco: tabela <code>place_ratings</code></h3>
+    <ul>
+      <li>Uma linha por pessoa por lugar (<code>unique (place_id, user_id)</code>). Avaliar de novo atualiza a mesma linha.</li>
+      <li>Quatro eixos de 1 a 5, obrigatórios juntos: <code>welcome</code> (a equipe te tratou bem?), <code>affection</code> (dava para ficar à vontade com quem você ama?), <code>restroom</code> (e o banheiro?), <code>crowd</code> (e as outras pessoas?).</li>
+      <li><code>overall</code> calculado por trigger: 0,30 · atendimento + 0,30 · afeto + 0,25 · banheiro + 0,15 · clientela. <code>stars</code> é legado, derivado.</li>
+      <li>Comentário opcional (até 500), <code>status</code> da moderação, datas. Desde a migration 27 a avaliação fica se a conta for apagada.</li>
+    </ul>
+    <h3>Nota e selo: <code>place_scores</code></h3>
+    <ul>
+      <li>Média bayesiana (m = 5, prior por categoria), meia-vida de 6 meses, penalidade só por relato que aponta o lugar.</li>
+      <li>Selo (acolhedor, dividido, atenção…) só com 5 avaliações. O relato no entorno é contexto da região e não desconta nota.</li>
+    </ul>
+    <h3>App</h3>
+    <ul>
+      <li>Ficha <code>/lugar/[id]</code>: as quatro perguntas de <code>AXES</code> com o marcador <code>Rainbow</code> de cinco faixas, comentário, foto opcional, “Enviar avaliação”.</li>
+      <li><code>useRatePlace</code> faz <code>upsert</code> em <code>place_ratings</code>. Avaliação nova abre a folha de recompensa; atualização mostra o alerta de sempre.</li>
+      <li>O formulário já vem aberto quando o lugar não tem nota ou a pessoa já avaliou. Com nota, fica atrás de um botão.</li>
+      <li>Limite de 50 avaliações por dia (equipe sem limite).</li>
+    </ul>
+  </div>
+
+  <h2><span>3</span>O que é reaproveitado</h2>
+  <ul>
+    <li><b>A ficha e o formulário inteiros</b>, sem mudar uma linha da lógica de salvar.</li>
+    <li><code>places_near</code> (migration 41, que já subiu): lugares perto de qualquer cidade, pelo índice espacial.</li>
+    <li><code>PlacePhoto</code> com <code>muted</code> (foto cinza que ganha cor), <code>Rainbow</code>, a borda que se desenha do protótipo e os cartões de lugar.</li>
+    <li><code>places.prominence</code> (quanto o lugar é conhecido) e <code>place_scores.rating_count</code>, que já existem.</li>
+  </ul>
+  <div class="card warn">
+    <h3 style="margin-top:0">Três limitações que achei (nenhuma pede mexer no framework)</h3>
+    <ul>
+      <li><b>Lugar que já tem nota mostra o formulário atrás de um botão.</b> Proposta: a rota recebe <code>?avaliar=1</code> e só abre o formulário que já existe. É mudança de tela, não de dado.</li>
+      <li><b>O <code>upsert</code> não devolve o id da avaliação.</b> Para registrar a conclusão, o banco acha a avaliação pelo par lugar + pessoa, que já é único.</li>
+      <li><b>A folha de recompensa de hoje abre com “+1 gomo” grande.</b> Na entrada pela descoberta, proponho a frase da descoberta como título e o gomo numa linha pequena embaixo. <b>Precisa do seu ok</b>, porque toca a tela que fecha toda avaliação nova.</li>
+    </ul>
+  </div>
+
+  <h2><span>4</span>Como os lugares são escolhidos</h2>
+  <p>Sem IA. Candidatos: até 5 km de quem usa (com localização) ou os mais conhecidos da cidade escolhida (sem). Ficam de fora: lugar que a pessoa já avaliou, escondido pela moderação, com denúncia aberta e os que a pessoa tirou com “Não conheço”.</p>
+  <div class="formula">pontos = 0,30 · falta de avaliação   (0 avaliações = 1; com n de 1 a 4: (5 − n) / 5)
+       + 0,25 · relevância          (prominence / 100)
+       + 0,25 · proximidade         (e^(−distância / 1,5 km); sem GPS = 0,5)
+       + 0,10 · categoria pouco coberta na cidade
+       + 0,10 · bairro pouco coberto
+       + 0,10 · perto do selo        (já tem 3 ou 4: falta pouco para a nota valer)
+       + 0,05 · última avaliação há mais de 6 meses
+       + 0,08 · sorteio do dia       (fixo por pessoa e dia: muda amanhã, não pisca hoje)
+       − repetição                   (ver item 5)</div>
+  <p>Dos mais bem pontuados, saem <b>3</b> com variedade: no máximo 2 da mesma categoria e, quando der, bairros diferentes. Tudo isso numa função do banco, <code>discovery_slate</code>, chamada uma vez por abertura da Home.</p>
+
+  <h2><span>5</span>Como evitar repetição</h2>
+  <div class="tw"><table>
+    <tr><th>Situação</th><th>O que acontece</th></tr>
+    <tr><td>Lugar apareceu e a pessoa não tocou</td><td>Pode voltar depois de <b class="num">7 dias</b>, e só se ainda for dos melhores.</td></tr>
+    <tr><td>Tocou em “Não conheço”</td><td>Sai por <b class="num">60 dias</b>; o cartão é trocado na hora pelo próximo.</td></tr>
+    <tr><td>Tocou em “Já fui” e não terminou</td><td>Volta em <b class="num">3 dias</b>.</td></tr>
+    <tr><td>Avaliou</td><td>Nunca mais aparece aqui.</td></tr>
+    <tr><td>Limite do dia</td><td>3 cartões, e no máximo 6 trocas por dia. Acabou, o bloco some até amanhã.</td></tr>
+  </table></div>
+
+  <h2><span>6</span>O que é novo no banco</h2>
+  <div class="card ok">
+    <h3 style="margin-top:0">Uma tabela de eventos, separada das avaliações</h3>
+    <p><code>discovery_events</code>: pessoa, lugar, evento, posição do cartão (1 a 3), dia e hora. Sem policy de leitura: o app só grava por função, e o painel vê só números somados.</p>
+    <ul>
+      <li><code>discovery_impression</code>: o cartão apareceu na tela.</li>
+      <li><code>discovery_place_opened</code>: tocou em “Já fui” e abriu a ficha.</li>
+      <li><code>discovery_review_started</code>: respondeu a primeira pergunta, tendo chegado pela descoberta.</li>
+      <li><code>discovery_review_completed</code>: salvou uma avaliação nova vinda da descoberta.</li>
+      <li><code>discovery_dismissed</code>: tocou em “Não conheço”.</li>
+    </ul>
+    <p>Duas funções: <code>discovery_slate</code> (escolhe os 3) e <code>discovery_log</code> (grava o evento). Eventos com mais de 180 dias são apagados.</p>
+  </div>
+  <div class="card warn">
+    <h3 style="margin-top:0"><code>review_source = home_discovery</code>: minha recomendação</h3>
+    <p><b>Não pôr nenhuma coluna nova em <code>place_ratings</code>.</b> O evento <code>discovery_review_completed</code> já diz qual pessoa avaliou qual lugar vindo da descoberta, e o par lugar + pessoa aponta para uma avaliação só. Assim a tabela de avaliações fica intocada, inclusive as views, os triggers e o cálculo.</p>
+    <p>A alternativa é uma coluna <code>review_source</code> nula por padrão em <code>place_ratings</code>. Funciona, mas mexe na tabela. Só faço se você preferir.</p>
+  </div>
+
+  <h2><span>7</span>Compatibilidade com as avaliações de hoje</h2>
+  <ul>
+    <li>Mesma tabela, mesmo <code>upsert</code>, mesmas perguntas, escalas, pesos, trigger e cálculo de nota e selo.</li>
+    <li>A origem só existe na rota (<code>?origem=home_discovery</code>) e na tabela de eventos. Sem esse parâmetro, a ficha se comporta exatamente como hoje.</li>
+    <li>Uma avaliação que veio da descoberta é indistinguível de qualquer outra em <code>place_ratings</code>.</li>
+    <li>Para desligar: esconder o bloco da Home. Nada no histórico de avaliações precisa ser desfeito.</li>
+  </ul>
+
+  <h2><span>8</span>Proposta visual</h2>
+  <p>Três cartões lado a lado, roláveis, no mesmo estilo dos cartões da Home. Cada um: foto em <b>cinza</b> (ou o azulejo da categoria), nome, categoria · bairro · distância, e quantas avaliações tem (“1 avaliação · faltam 4 para o selo” ou “Ainda sem avaliação”). Botão escuro <b>Já fui</b> e um <b>Não conheço</b> discreto.</p>
+  <p>Na volta, depois de salvar: a foto do cartão sai do cinza para a cor, a borda arco-íris se desenha em volta e o botão dá lugar a uma frase. Sem moeda, ranking, número grande, “missão concluída” ou pop-up.</p>
+  <a class="cta" href="https://claude.ai/artifact/RtAaAJagiNUDsh3tKFGSrS">Abrir o protótipo e tocar em “Já fui” →</a>
+
+  <h2><span>9</span>Textos</h2>
+  <h3>Título do bloco (muda de um dia para o outro)</h3>
+  <div class="q"><div>Você conhece algum desses?</div><div>Já passou por algum desses?</div><div>Tem lugar por aqui que ainda é um mistério.</div><div>Esse pedaço da cidade ainda precisa de mais cores.</div></div>
+  <h3>No cartão</h3>
+  <div class="q"><div>Ainda sem avaliação</div><div>1 avaliação · faltam 4 para o selo</div><div>Já fui<small>botão principal</small></div><div>Não conheço<small>troca o cartão</small></div></div>
+  <h3>Na volta</h3>
+  <div class="q"><div>Mais um pedacinho da cidade ganhou cor.</div><div>Agora esse lugar tem um pouco mais de história.</div><div>Valeu. Alguém vai escolher melhor por causa disso.</div><div>Você deixou o mapa um pouquinho mais útil.</div></div>
+  <h3>Cobertura (nunca segurança)</h3>
+  <div class="q"><div>42 lugares deste bairro já receberam avaliações da comunidade.</div><div>Esse pedaço do mapa ainda tem pouca informação.</div><div>Curitiba está ganhando mais cores.</div><div>Nunca: “70% deste bairro é seguro”.<small>Ausência de relato não é segurança.</small></div></div>
+
+  <h2><span>10</span>Como medir</h2>
+  <div class="tw"><table>
+    <tr><th>Métrica</th><th>Conta</th></tr>
+    <tr><td><b>Reconhecimento</b></td><td>abertas ÷ impressões, por posição do cartão</td></tr>
+    <tr><td><b>Início</b></td><td>avaliações começadas ÷ abertas</td></tr>
+    <tr><td><b>Conclusão</b></td><td>concluídas ÷ começadas</td></tr>
+    <tr><td><b>Funil completo</b></td><td>concluídas ÷ impressões</td></tr>
+    <tr><td><b>Peso da descoberta</b></td><td>avaliações novas vindas da descoberta ÷ todas as avaliações novas da semana</td></tr>
+    <tr><td><b>Rejeição</b></td><td>“Não conheço” ÷ impressões (alta = a escolha está errando)</td></tr>
+    <tr><td><b>Selos acesos</b></td><td>lugares que chegaram à 5ª avaliação com uma avaliação vinda da descoberta</td></tr>
+    <tr><td><b>Cobertura</b></td><td>dos 100 mais conhecidos de cada cidade, quantos têm selo, semana a semana</td></tr>
+    <tr><td><b>Volta</b></td><td>quem avaliou pela descoberta e abriu o app de novo em 7 dias</td></tr>
+  </table></div>
+  <p>Tudo isso entra num cartão novo “Descoberta” no painel em <code>appirisa.com.br/admin</code>, só com números somados.</p>
+
+  <div class="card" style="margin-top:40px">
+    <h3 style="margin-top:0">O que preciso de você para começar</h3>
+    <ul>
+      <li>Ok para a descoberta abaixo do painel escuro, com 3 cartões e “Não conheço”.</li>
+      <li>Ok para registrar a origem só na tabela de eventos (sem coluna nova em <code>place_ratings</code>).</li>
+      <li>Ok para o <code>?avaliar=1</code> abrir o formulário que já existe.</li>
+      <li>Decisão sobre a folha de recompensa quando a avaliação vem da descoberta (frase em cima, gomo pequeno).</li>
+    </ul>
+  </div>
+</main>
