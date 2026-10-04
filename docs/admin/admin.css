@@ -338,3 +338,21 @@ a.tile::after { content: "→"; position: absolute; top: 12px; right: 12px; colo
 @keyframes rise { from { transform: translateY(8px); opacity: 0; } }
 
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; } }
+
+/* descoberta (visão geral) */
+.disc-grid { margin-bottom: 18px; }
+.funnel-row { display: grid; gap: 4px; margin-bottom: 10px; }
+.funnel-lb { display: flex; align-items: baseline; gap: 8px; font-size: 13px; color: var(--muted); }
+.funnel-lb span { flex: 1; min-width: 0; }
+.funnel-lb b { font: 700 18px/1 Oswald, Impact, sans-serif; color: var(--ink); font-variant-numeric: tabular-nums; }
+.funnel-lb em { font-style: normal; font-weight: 600; font-size: 12px; color: var(--turq-ink); min-width: 38px; text-align: right; font-variant-numeric: tabular-nums; }
+.funnel-bar { height: 8px; border-radius: 4px; background: var(--line-2); overflow: hidden; }
+.funnel-bar i { display: block; height: 100%; border-radius: 4px; background: var(--turq-ink); }
+.disc-foot { display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 10px; margin-top: 14px; padding-top: 12px; border-top: 1px solid var(--line-2); }
+.disc-foot div { display: grid; gap: 2px; }
+.disc-foot b { font: 700 20px/1.1 Oswald, Impact, sans-serif; font-variant-numeric: tabular-nums; }
+.disc-foot span { font-size: 12px; color: var(--muted); }
+.q-prev { border-radius: 18px; padding: 16px; background: linear-gradient(135deg, rgba(168, 137, 255, .22), rgba(73, 220, 192, .2)); }
+.q-prev .eb { font-size: 11px; font-weight: 600; letter-spacing: .14em; text-transform: uppercase; color: var(--lilac-ink); }
+.q-prev .q { font: 700 22px/1.1 Oswald, Impact, sans-serif; text-transform: uppercase; margin-top: 6px; }
+.q-prev .n { font-size: 12.5px; color: var(--muted); margin-top: 10px; }

@@ -28,7 +28,13 @@ const SEV_KEYS = Object.keys(SEVERITIES) as Severity[];
 const SETTING_KEYS = Object.keys(OCCURRENCE_SETTINGS) as OccurrenceSetting[];
 const PERIOD_KEYS = Object.keys(DAY_PERIODS) as DayPeriod[];
 
-export function ReportForm({ onDone }: { onDone: () => void }) {
+export function ReportForm({
+  onDone,
+  initialDescription,
+}: {
+  onDone: () => void;
+  initialDescription?: string;
+}) {
   const { city, userLocation } = useCity();
   const create = useCreateOccurrence();
   const [type, setType] = useState<OccurrenceType>("verbal");
@@ -36,7 +42,7 @@ export function ReportForm({ onDone }: { onDone: () => void }) {
   const [date, setDate] = useState(new Date());
   const [showPicker, setShowPicker] = useState(Platform.OS === "ios");
   const [point, setPoint] = useState<{ lat: number; lng: number } | null>(null);
-  const [description, setDescription] = useState("");
+  const [description, setDescription] = useState(initialDescription ?? "");
   const [place, setPlace] = useState<PickedPlace>(null);
   // Começam vazios e assim podem ficar: são opcionais, e um toque a mais no pior momento da
   // vida de alguém é atrito que não vale o dado.

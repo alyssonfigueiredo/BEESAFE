@@ -13,7 +13,8 @@ export default function RegistrarScreen() {
   const router = useRouter();
   // ?modo=lugar abre direto na aba do cadastro: quem veio do "Cadastre um lugar" da aba Lugares
   // já sabe o que quer, e não deve ter que achar o seletor.
-  const { modo } = useLocalSearchParams<{ modo?: string }>();
+  // ?texto=... vem do "Virar relato" do mural: a descrição do relato já começa escrita.
+  const { modo, texto } = useLocalSearchParams<{ modo?: string; texto?: string }>();
   const [mode, setMode] = useState<"relato" | "lugar">(modo === "lugar" ? "lugar" : "relato");
   // A tela fica montada no fundo (é uma aba escondida), então o useState só valeria na primeira
   // abertura. Ajuste durante o render — o padrão do React para reagir a prop nova sem effect.
@@ -21,6 +22,12 @@ export default function RegistrarScreen() {
   if (modo !== modoVisto) {
     setModoVisto(modo);
     setMode(modo === "lugar" ? "lugar" : "relato");
+  }
+  // Mesmo padrão: texto novo remonta o formulário do relato já preenchido (a key troca).
+  const [textoVisto, setTextoVisto] = useState(texto ?? "");
+  if (texto && texto !== textoVisto) {
+    setTextoVisto(texto);
+    setMode("relato");
   }
 
   return (
@@ -63,7 +70,11 @@ export default function RegistrarScreen() {
         </View>
 
         {mode === "relato" ? (
-          <ReportForm onDone={() => router.replace("/mapa")} />
+          <ReportForm
+            key={textoVisto}
+            initialDescription={textoVisto}
+            onDone={() => router.replace("/mapa")}
+          />
         ) : (
           // push, nunca replace: a ficha do lugar vive no stack de cima: replace trocava a
           // própria aba por ela, e aí não havia botão de voltar nem barra de abas — só fechar

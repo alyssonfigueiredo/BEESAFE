@@ -124,6 +124,7 @@ function ptErr(e) {
   if (/Failed to fetch|NetworkError|Load failed/i.test(msg)) return "Sem conexão com o servidor. Confira a internet e tente de novo.";
   if (/JWT expired|invalid JWT/i.test(msg)) return "Sua sessão venceu. Saia e entre de novo.";
   if (/Could not find the function/i.test(msg)) return `Essa função ainda não existe no banco. Detalhe: ${msg}`;
+  if (/Configuração desconhecida/i.test(msg)) return `O banco ainda não aceita salvar essa configuração (falta liberar a chave em admin_setting_set). Detalhe: ${msg}`;
   if (/Invalid login credentials/i.test(msg)) return "E-mail ou senha não conferem.";
   if (/Email not confirmed/i.test(msg)) return "Esse e-mail ainda não foi confirmado. Abra o link que chegou na caixa de entrada.";
   return msg;
@@ -395,7 +396,12 @@ async function viewVisao(ctx) {
   ctx.el.innerHTML = headHTML("Visão geral", "Como a Irisa está agora, no Brasil todo. Dias contados no horário de Brasília.") + `<div id="vbox"></div>`;
   const box = $("#vbox", ctx.el);
   await load(box, async () => {
-    const [o, medals] = await Promise.all([rpc("admin_overview"), rpc("admin_medals").catch((e) => ({ erro: e }))]);
+    const [o, medals, d7, d30] = await Promise.all([
+      rpc("admin_overview"),
+      rpc("admin_medals").catch((e) => ({ erro: e })),
+      rpc("admin_discovery", { p_days: 7 }).catch((e) => ({ erro: e })),
+      rpc("admin_discovery", { p_days: 30 }).catch((e) => ({ erro: e })),
+    ]);
     if (!ctx.alive()) return;
     const tile = (k, label, href, alert) => {
       const v = Number(o?.[k] ?? 0);
@@ -440,9 +446,14 @@ async function viewVisao(ctx) {
         ${tile("lugares_com_selo", "Lugares com selo (5 avaliações ou mais)")}
         ${tile("medalhas_7d", "Medalhas conquistadas em 7 dias")}
       </div>
+      <h2 class="sec-title">Descoberta <span class="small dim" style="font-weight:400">· cartão “Passou por aqui?” do Início</span></h2>
+      <div id="discBox"></div>
       <h2 class="sec-title">Medalhas mais conquistadas</h2>
       <div id="medalsTop"></div>`;
     bindCharts(box);
+    const db = $("#discBox", box);
+    if (d7?.erro && d30?.erro) { db.innerHTML = errorHTML(d7.erro); bindRetry(db, route); }
+    else db.innerHTML = `<div class="grid2 disc-grid">${discoveryCard(d7, 7)}${discoveryCard(d30, 30)}</div>`;
     const mt = $("#medalsTop", box);
     if (medals && medals.erro) { mt.innerHTML = errorHTML(medals.erro); bindRetry(mt, route); }
     else if (!medals || !medals.length) mt.innerHTML = `<div class="card empty">Ninguém conquistou medalha ainda.</div>`;
@@ -452,6 +463,37 @@ async function viewVisao(ctx) {
         <div class="n"><b>${num(m.pessoas)}</b><span class="small dim">${Number(m.pessoas) === 1 ? "pessoa" : "pessoas"}</span></div>
       </div>`).join("")}</div>`;
   }, ctx);
+}
+
+// Funil da descoberta: viram → abriram a ficha → começaram a avaliar → concluíram.
+// Cada etapa mostra o % sobre a anterior; a barra é sempre proporcional a quem viu.
+function discoveryCard(d, dias) {
+  if (!d || d.erro) return `<div class="card">${errorHTML(d?.erro || new Error("Sem dados."))}</div>`;
+  const n = (k) => Number(d[k] || 0);
+  const pct = (a, b) => (b ? `${Math.round((a / b) * 100)}%` : "—");
+  const base = n("impressoes");
+  const etapas = [
+    ["impressoes", "Viram o cartão", null],
+    ["abertas", "Abriram a ficha", "impressoes"],
+    ["comecadas", "Começaram a avaliar", "abertas"],
+    ["concluidas", "Concluíram a avaliação", "comecadas"],
+  ];
+  const rows = etapas.map(([k, label, prev]) => {
+    const w = base ? Math.max(2, Math.round((n(k) / base) * 100)) : 0;
+    return `<div class="funnel-row">
+      <div class="funnel-lb"><span>${esc(label)}</span><b>${num(n(k))}</b>${prev ? `<em title="sobre a etapa anterior">${pct(n(k), n(prev))}</em>` : "<em></em>"}</div>
+      <div class="funnel-bar"><i style="width:${w}%"></i></div></div>`;
+  }).join("");
+  const novas = n("avaliacoes_novas");
+  return `<div class="card disc-card">
+    <div class="card-head" style="margin-bottom:10px"><h3>Últimos ${dias} dias</h3><span class="small dim">${plural(n("pessoas"), "pessoa viu", "pessoas viram")}</span></div>
+    ${base ? rows : `<p class="small muted">Ninguém viu o cartão nesse período.</p>`}
+    <div class="disc-foot">
+      <div><b>${pct(n("concluidas"), base)}</b><span>de quem viu avaliou</span></div>
+      <div><b>${num(n("nao_conheco"))}</b><span>“Não conheço”</span></div>
+      <div><b>${num(n("fechadas"))}</b><span>fecharam no X</span></div>
+      <div><b>${pct(n("concluidas"), novas)}</b><span>das ${num(novas)} avaliações novas vieram daqui</span></div>
+    </div></div>`;
 }
 
 // Gráfico de barras pequeno, uma série por gráfico (nada de dois eixos). Passar o mouse mostra o dia.
@@ -1268,8 +1310,11 @@ async function viewConfig(ctx) {
   ctx.el.innerHTML = headHTML("Configurações", "Ajustes que mudam o app na hora, sem versão nova.") + `<div id="cbox"></div>`;
   const box = $("#cbox", ctx.el);
   await load(box, async () => {
-    const cfg = (await rpc("admin_settings")) || {};
+    const [cfg0, pub] = await Promise.all([rpc("admin_settings"), rpc("app_config").catch(() => null)]);
+    const cfg = cfg0 || {};
     if (!ctx.alive()) return;
+    const pq = { ativa: false, id: "", texto: "", ...(cfg.pergunta_semana || {}) };
+    const pqN = Number(pub?.pergunta_respostas ?? 0);
     const av = { ativo: false, titulo: "", texto: "", url: null, ...(cfg.aviso || {}) };
     const abre = typeof cfg.abre_alas_ate === "string" ? cfg.abre_alas_ate.slice(0, 10) : "";
     box.innerHTML = `
@@ -1286,6 +1331,19 @@ async function viewConfig(ctx) {
           <div><button class="btn" type="submit" id="avSave">Salvar aviso</button></div>
         </form>
         <div class="card"><h2>Como aparece</h2><p class="small muted" style="margin:4px 0 14px" id="avEstado"></p><div class="aviso-prev" id="avPrev"><div class="tt"></div><div class="bd muted"></div><div class="go"></div></div></div>
+      </div>
+      <div class="grid2" style="margin-top:14px">
+        <form class="card form" id="pqForm" novalidate>
+          <h2>Pergunta da semana</h2>
+          <p class="small muted">Aparece no topo do mural de apoio. O app mostra só quantas pessoas responderam, nunca quem. Trocar o texto começa uma pergunta nova e zera a contagem.</p>
+          <label class="check"><input type="checkbox" id="pqAtiva" ${pq.ativa ? "checked" : ""}> Mostrar a pergunta no app</label>
+          <label class="f">Pergunta <textarea class="input" id="pqTexto" maxlength="120" rows="2">${esc(pq.texto)}</textarea></label>
+          <span class="counter" id="cPq"></span>
+          <div><button class="btn" type="submit" id="pqSave">Salvar pergunta</button></div>
+          <p class="small dim" id="pqId"></p>
+        </form>
+        <div class="card"><h2>Como aparece</h2><p class="small muted" style="margin:4px 0 14px" id="pqEstado"></p>
+          <div class="q-prev" id="pqPrev"><div class="eb">Pergunta da semana</div><div class="q"></div><div class="n"></div></div></div>
       </div>
       <form class="card form" id="aaForm" novalidate>
         <h2>Abre-Alas</h2>
@@ -1314,6 +1372,46 @@ async function viewConfig(ctx) {
       busy($("#avSave", box), async () => {
         if (at.checked && (!t.value.trim() || !x.value.trim())) throw new Error("Para ligar o aviso, escreva o título e o texto.");
         await rpc("admin_setting_set", { p_key: "aviso", p_value: { ativo: at.checked, titulo: t.value.trim(), texto: x.value.trim(), url: u.value || null } });
+        toast("Salvo");
+      });
+    });
+    // Pergunta da semana: o id muda quando o texto muda (o recado guarda o id em support_messages.prompt).
+    const pt = $("#pqTexto", box), pa = $("#pqAtiva", box);
+    let pqSalva = { ...pq };
+    let pqNAtual = pqN;
+    counter(pt, $("#cPq", box), 120);
+    const novoId = () => {
+      const d = todaySP();
+      if (!pqSalva.id || !String(pqSalva.id).startsWith(d)) return d;
+      const m = String(pqSalva.id).slice(d.length).match(/^-([a-z])$/);
+      return `${d}-${String.fromCharCode((m ? m[1].charCodeAt(0) : 96) + 1)}`;
+    };
+    const mudouTexto = () => pt.value.trim() !== String(pqSalva.texto || "").trim();
+    const pqPrev = () => {
+      const pv = $("#pqPrev", box);
+      $(".q", pv).textContent = pt.value.trim() || "Escreva a pergunta";
+      const n = mudouTexto() ? 0 : pqNAtual;
+      $(".n", pv).innerHTML = `<b>${num(n)}</b> ${n === 1 ? "pessoa respondeu" : "pessoas responderam"}`;
+      pv.style.opacity = pa.checked ? "1" : ".5";
+      $("#pqEstado", box).textContent = pa.checked ? "Ligada: aparece no mural depois de salvar." : "Desligada: o cartão some do mural.";
+      $("#pqId", box).textContent = mudouTexto()
+        ? `Pergunta nova ao salvar (id ${novoId()}). As respostas da anterior continuam no mural.`
+        : pqSalva.id ? `Id da pergunta: ${pqSalva.id}` : "";
+    };
+    pt.addEventListener("input", pqPrev);
+    pa.addEventListener("change", pqPrev);
+    pqPrev();
+    $("#pqForm", box).addEventListener("submit", (ev) => {
+      ev.preventDefault();
+      busy($("#pqSave", box), async () => {
+        const texto = pt.value.trim();
+        if (pa.checked && !texto) throw new Error("Para ligar a pergunta, escreva o texto.");
+        const id = mudouTexto() || !pqSalva.id ? novoId() : pqSalva.id;
+        const valor = { ativa: pa.checked, id, texto };
+        await rpc("admin_setting_set", { p_key: "pergunta_semana", p_value: valor });
+        if (id !== pqSalva.id) pqNAtual = 0;
+        pqSalva = valor;
+        pqPrev();
         toast("Salvo");
       });
     });

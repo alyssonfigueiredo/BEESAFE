@@ -1,217 +1,222 @@
-import { formatDistanceToNow, parseISO } from "date-fns";
-import { ptBR } from "date-fns/locale";
-import { ExternalLink, Heart, Phone } from "lucide-react-native";
-import { useState } from "react";
-import { Alert, Linking, Pressable, ScrollView, Text, TextInput, View } from "react-native";
+import { useRef, useState } from "react";
+import { ScrollView, Text, View } from "react-native";
+import Animated, { FadeInDown, useReducedMotion } from "react-native-reanimated";
 
 import { Aurora } from "@/components/Aurora";
+import { Chip } from "@/components/Chip";
+import { ComposerCard } from "@/components/mural/ComposerCard";
+import { ComposerSheet, type ComposeRequest } from "@/components/mural/ComposerSheet";
+import { NoteCard } from "@/components/mural/NoteCard";
+import { Segmented } from "@/components/mural/Segmented";
+import { ServicesPanel } from "@/components/mural/ServicesPanel";
+import { WeeklyQuestion } from "@/components/mural/WeeklyQuestion";
 import { useProfile } from "@/hooks/useProfile";
 import { useScreenInsets } from "@/hooks/useScreenInsets";
-import { authMessage } from "@/lib/authErrors";
-import { BlockButton } from "@/components/BlockButton";
-import { Chip } from "@/components/Chip";
-import { ReportButton } from "@/components/ReportButton";
 import {
-  usePostSupportMessage,
+  useReactSupport,
   useSupportMessages,
   useSupportServices,
-  useToggleLike,
+  useWeeklyQuestion,
+  useWeekMessageCount,
 } from "@/hooks/useSupport";
 import { useCity } from "@/providers/CityProvider";
-import { SUPPORT_CATEGORIES, type SupportCategory } from "@/theme/domain";
-import { colors, shadow } from "@/theme/tokens";
+import type { SupportCategory } from "@/theme/domain";
+import { colors } from "@/theme/tokens";
 
-const CATEGORY_KEYS = Object.keys(SUPPORT_CATEGORIES) as SupportCategory[];
-const KIND_LABEL: Record<string, string> = {
-  policia: "Polícia",
-  saude: "Saúde",
-  direitos: "Direitos humanos",
-  acolhimento: "Acolhimento",
-  ong: "ONG",
-  juridico: "Jurídico",
-};
+type Tab = "mural" | "servicos";
+type Filter = "all" | SupportCategory;
 
-function abrir(url: string, aviso: string) {
-  Linking.openURL(url).catch(() => Alert.alert("Não deu certo", aviso));
+const TABS = [
+  { key: "mural", label: "Mural" },
+  { key: "servicos", label: "Serviços" },
+] as const;
+
+const FILTERS: { key: Filter; label: string }[] = [
+  { key: "all", label: "Tudo" },
+  { key: "pedido_ajuda", label: "Pedidos de ajuda" },
+  { key: "acolhimento", label: "Acolhimento" },
+  { key: "dica", label: "Dicas" },
+];
+
+function rise(i: number, reduce: boolean) {
+  return reduce
+    ? undefined
+    : FadeInDown.duration(420)
+        .delay(i * 80)
+        .withInitialValues({ opacity: 0, transform: [{ translateY: 10 }] });
 }
 
 export default function ApoioScreen() {
   const insets = useScreenInsets();
+  const reduce = useReducedMotion();
   const { city } = useCity();
-  const { data: messages = [] } = useSupportMessages();
+  const { data: messages = [], isSuccess } = useSupportMessages();
+  const { data: weekCount } = useWeekMessageCount();
+  const { data: weekly } = useWeeklyQuestion();
   const { data: services = [] } = useSupportServices(city?.id);
-  const post = usePostSupportMessage();
-  const toggle = useToggleLike();
-  // O apelido do mural começa com o do Perfil; a pessoa pode trocar só para esta mensagem.
   const { data: profile } = useProfile();
-  const [typed, setTyped] = useState<string | null>(null);
-  const nickname = typed ?? profile?.nickname ?? "";
-  const setNickname = setTyped;
-  const [category, setCategory] = useState<SupportCategory>("acolhimento");
-  const [content, setContent] = useState("");
+  const react = useReactSupport();
+  const nickname = profile?.nickname?.trim() ?? "";
 
-  async function submit() {
-    if (!content.trim()) return Alert.alert("Escreva a mensagem.");
-    try {
-      await post.mutateAsync({ nickname, category, content, cityId: city?.id });
-      setContent("");
-    } catch (e) {
-      Alert.alert("Não deu certo", authMessage(e) ?? "Tente de novo.");
-    }
+  const scroll = useRef<ScrollView>(null);
+  const [wallY, setWallY] = useState(0);
+  const [tab, setTab] = useState<Tab>("mural");
+  const [filter, setFilter] = useState<Filter>("all");
+  const [trayFor, setTrayFor] = useState<string | null>(null);
+  const [compose, setCompose] = useState<ComposeRequest | null>(null);
+  // Ids que já estavam no mural quando a pessoa publicou: o recado dela que não está aqui é o
+  // novo, e é ele que desce do topo.
+  const [before, setBefore] = useState<Set<string> | null>(null);
+  const freshId = before ? messages.find((m) => m.is_mine && !before.has(m.id))?.id : undefined;
+
+  const shown = messages.filter((m) => filter === "all" || m.category === filter);
+
+  function seeServices() {
+    setTab("servicos");
+    setTrayFor(null);
+    scroll.current?.scrollTo({ y: 0, animated: !reduce });
+  }
+
+  function posted() {
+    setBefore(new Set(messages.map((m) => m.id)));
+    setFilter("all");
+    setTrayFor(null);
+    scroll.current?.scrollTo({ y: Math.max(0, wallY - insets.paddingTop), animated: !reduce });
   }
 
   return (
     <View className="flex-1">
       <Aurora />
       <ScrollView
+        ref={scroll}
         className="flex-1"
-        contentContainerClassName="gap-4 px-4"
+        contentContainerClassName="gap-3 px-4"
         contentContainerStyle={insets}
         keyboardShouldPersistTaps="handled"
       >
-        <View>
-          <Text className="font-display text-2xl uppercase tracking-wide text-ink">Apoio</Text>
-          <Text className="font-body text-sm text-dim">
-            Mural da comunidade e serviços de apoio
-          </Text>
-        </View>
-
-        <View className="gap-3 rounded-3xl bg-surface p-4" style={shadow.card}>
-          <Text className="font-body-bold text-base text-ink">Deixe uma mensagem</Text>
-          <TextInput
-            className="rounded-2xl bg-solid px-4 py-3 font-body text-base text-ink"
-            style={shadow.field}
-            placeholder="Apelido (opcional, vira Anônimo)"
-            placeholderTextColor={colors.dim}
-            maxLength={40}
-            value={nickname}
-            onChangeText={setNickname}
-          />
-          <View className="flex-row flex-wrap gap-2">
-            {CATEGORY_KEYS.map((k) => {
-              const c = SUPPORT_CATEGORIES[k];
-              const active = category === k;
-              return (
-                <Chip
-                  key={k}
-                  label={c.label}
-                  color={c.color}
-                  active={active}
-                  onPress={() => setCategory(k)}
-                />
-              );
-            })}
-          </View>
-          <TextInput
-            className="min-h-24 rounded-2xl bg-solid px-4 py-3 font-body text-base text-ink"
-            style={shadow.field}
-            placeholder="Uma palavra de acolhimento, uma dica ou um pedido de ajuda (até 1000 caracteres)"
-            placeholderTextColor={colors.dim}
-            multiline
-            textAlignVertical="top"
-            maxLength={1000}
-            value={content}
-            onChangeText={setContent}
-          />
-          <Pressable
-            disabled={post.isPending}
-            onPress={submit}
-            className="items-center rounded-full bg-turquoise py-3 active:opacity-80 disabled:opacity-50"
-            style={shadow.turquoise}
-          >
-            <Text className="font-body-bold text-base text-night">
-              {post.isPending ? "Enviando…" : "Publicar"}
+        <View className="flex-row items-end justify-between gap-3">
+          <View className="min-w-0 flex-1">
+            <Text className="font-display text-2xl uppercase tracking-wide text-ink">Apoio</Text>
+            <Text className="font-body text-sm text-muted">
+              A comunidade da Irisa, junta
             </Text>
-          </Pressable>
-        </View>
-
-        <View className="gap-2">
-          {messages.map((m) => {
-            const c = SUPPORT_CATEGORIES[m.category];
-            return (
-              <View key={m.id} className="gap-2 rounded-3xl bg-surface p-4" style={shadow.card}>
-                <View className="flex-row items-center justify-between">
-                  <View className="rounded-full px-3 py-1" style={{ backgroundColor: c.color }}>
-                    <Text className="font-body-bold text-xs uppercase tracking-wider text-night">
-                      {c.label}
-                    </Text>
-                  </View>
-                  <Text className="font-body text-xs text-dim">
-                    {formatDistanceToNow(parseISO(m.created_at), { locale: ptBR, addSuffix: true })}
-                  </Text>
-                </View>
-                <Text className="font-body text-base text-ink">{m.content}</Text>
-                <View className="flex-row items-center justify-between">
-                  <Text className="font-body-medium text-xs text-dim">
-                    {m.nickname}
-                    {m.is_mine ? " (você)" : ""}
-                  </Text>
-                  {!m.is_mine && (
-                    <View className="flex-row items-center gap-3">
-                      <ReportButton type="message" id={m.id} compact />
-                      <BlockButton type="message" id={m.id} compact />
-                    </View>
-                  )}
-                  <Pressable
-                    onPress={() => toggle.mutate({ id: m.id, liked: m.liked })}
-                    className="flex-row items-center gap-1"
-                    hitSlop={8}
-                  >
-                    <Heart
-                      size={16}
-                      color={colors.coralInk}
-                      fill={m.liked ? colors.coralInk : "transparent"}
-                    />
-                    <Text className="font-body-medium text-xs text-muted">{m.likes}</Text>
-                  </Pressable>
-                </View>
-              </View>
-            );
-          })}
-        </View>
-
-        <View className="gap-3 rounded-3xl bg-surface p-4" style={shadow.card}>
-          <Text className="font-body-bold text-base text-ink">
-            Serviços de apoio{city ? ` · ${city.name}` : ""}
-          </Text>
-          {services.map((s) => (
-            <View key={s.id} className="gap-1 border-b border-border pb-3">
-              <View className="flex-row items-center justify-between gap-2">
-                <Text className="min-w-0 flex-1 font-body-bold text-sm text-ink">{s.name}</Text>
-                <Text className="font-body text-xs text-turquoiseInk">{KIND_LABEL[s.kind]}</Text>
-              </View>
-              {!!s.description && (
-                <Text className="font-body text-xs text-muted">{s.description}</Text>
-              )}
-              <View className="flex-row gap-3">
-                {!!s.phone && (
-                  <Pressable
-                    onPress={() =>
-                      abrir(
-                        `tel:${s.phone}`,
-                        `Não foi possível ligar daqui. Disque ${s.phone} manualmente.`,
-                      )
-                    }
-                    className="flex-row items-center gap-1"
-                  >
-                    <Phone size={14} color={colors.coralInk} />
-                    <Text className="font-body-bold text-sm text-coralInk">{s.phone}</Text>
-                  </Pressable>
-                )}
-                {!!s.url && (
-                  <Pressable
-                    onPress={() => abrir(s.url!, "Não foi possível abrir o site agora.")}
-                    className="flex-row items-center gap-1"
-                  >
-                    <ExternalLink size={14} color={colors.turquoiseInk} />
-                    <Text className="font-body text-sm text-turquoiseInk">Site</Text>
-                  </Pressable>
-                )}
-              </View>
+          </View>
+          {weekCount != null && weekCount > 0 && (
+            <View
+              className="h-[30px] justify-center rounded-full px-3"
+              style={{ backgroundColor: colors.lilac + "2E" }}
+            >
+              <Text className="font-body-bold text-[12.5px] text-lilacInk">
+                {weekCount} {weekCount === 1 ? "recado" : "recados"} esta semana
+              </Text>
             </View>
-          ))}
+          )}
         </View>
+
+        <Segmented
+          options={TABS}
+          value={tab}
+          onChange={(t) => {
+            setTab(t);
+            setTrayFor(null);
+          }}
+        />
+
+        {tab === "mural" ? (
+          <>
+            {weekly?.pergunta && (
+              <Animated.View entering={rise(1, reduce)}>
+                <WeeklyQuestion
+                  question={weekly.pergunta}
+                  answers={weekly.respostas}
+                  onAnswer={() =>
+                    setCompose({ category: "acolhimento", question: weekly.pergunta })
+                  }
+                />
+              </Animated.View>
+            )}
+
+            <Animated.View entering={rise(2, reduce)}>
+              <ComposerCard nickname={nickname} onOpen={(category) => setCompose({ category })} />
+            </Animated.View>
+
+            <Animated.View
+              entering={rise(3, reduce)}
+              onLayout={(e) => setWallY(e.nativeEvent.layout.y)}
+            >
+              <ScrollView
+                horizontal
+                showsHorizontalScrollIndicator={false}
+                contentContainerClassName="gap-1.5"
+                className="-mx-4"
+                contentContainerStyle={{ paddingHorizontal: 16 }}
+              >
+                {FILTERS.map((f) => (
+                  <Chip
+                    key={f.key}
+                    label={f.label}
+                    active={filter === f.key}
+                    onPress={() => {
+                      setFilter(f.key);
+                      setTrayFor(null);
+                    }}
+                  />
+                ))}
+              </ScrollView>
+            </Animated.View>
+
+            {isSuccess && messages.length === 0 ? (
+              <EmptyWall hasQuestion={!!weekly?.pergunta} />
+            ) : isSuccess && shown.length === 0 ? (
+              <Text className="px-1 py-4 text-center font-body text-sm text-muted">
+                Nada aqui por enquanto. Que tal ser a primeira pessoa?
+              </Text>
+            ) : (
+              <View className="gap-3.5 pt-2">
+                {shown.map((m, i) => (
+                  <NoteCard
+                    key={m.id}
+                    message={m}
+                    index={i}
+                    fresh={m.id === freshId}
+                    trayOpen={trayFor === m.id}
+                    onToggleTray={() => setTrayFor((v) => (v === m.id ? null : m.id))}
+                    onReact={(kind) => {
+                      react.mutate({ id: m.id, kind });
+                      setTrayFor(null);
+                    }}
+                    onSeeServices={seeServices}
+                  />
+                ))}
+              </View>
+            )}
+          </>
+        ) : (
+          <ServicesPanel services={services} cityName={city?.name} />
+        )}
       </ScrollView>
+
+      <ComposerSheet
+        request={compose}
+        nickname={nickname}
+        cityId={city?.id}
+        onClose={() => setCompose(null)}
+        onPosted={posted}
+      />
+    </View>
+  );
+}
+
+function EmptyWall({ hasQuestion }: { hasQuestion: boolean }) {
+  return (
+    <View className="items-center gap-1.5 rounded-3xl bg-surface px-5 py-6">
+      <Text className="text-center font-display text-xl uppercase text-ink">
+        O mural está esperando
+      </Text>
+      <Text className="text-center font-body text-sm leading-5 text-muted">
+        {hasQuestion ? "Responda a pergunta da semana ou toque" : "Toque"} em um dos botões acima:
+        mande um abraço, dê uma dica ou peça ajuda. O primeiro recado puxa os outros.
+      </Text>
     </View>
   );
 }
