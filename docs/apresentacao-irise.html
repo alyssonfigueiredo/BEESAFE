@@ -1,221 +1,168 @@
 <!doctype html>
-<html lang="pt-BR">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Apresentação Irise</title>
-<!-- Apresentação da proposta do assistente Irise (não implementado). Mesma estética da Irisa.
-     Setas do teclado / clique nas bordas / pontos navegam. Não é publicada no site. -->
-<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Urbanist:wght@500&family=Oswald:wght@400;700&family=Space+Grotesk:wght@400;500;600;700&display=swap">
+<html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Irise — Assistente de Descoberta</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Urbanist:wght@500;600&family=Oswald:wght@500;700&family=Space+Grotesk:wght@400;500;700&display=swap">
 <style>
-:root{
-  --paper:#F5F4F1;--subtle:#F1F5FA;--border:#E6ECF3;--night:#141829;--night2:#20253A;
-  --ink:#141829;--muted:#3D4560;--dim:#7C8296;
-  --coral:#FF6964;--orange:#FFA353;--yellow:#FFD066;--turq:#49DCC0;--blue:#59A7FF;--lilac:#A889FF;
-  --coralInk:#C72825;--turqInk:#0A8B7A;--amber:#E0A32E;
-  --rb:linear-gradient(90deg,#FF6964,#FFA353,#FFD066,#49DCC0,#59A7FF,#A889FF);
-  --display:"Oswald","Arial Narrow",Impact,sans-serif;--body:"Space Grotesk","Helvetica Neue",Arial,sans-serif;--mark:"Urbanist","Helvetica Neue",Arial,sans-serif;
-  --shadow:0 2px 4px rgba(20,24,41,.04),0 16px 40px rgba(20,24,41,.1);
-  --ease:cubic-bezier(.2,.7,.2,1);
-}
-*{box-sizing:border-box}p,h1,h2,h3{margin:0}
-html,body{height:100%}
-body{margin:0;overflow:hidden;font-family:var(--body);color:var(--ink);background:var(--paper);-webkit-font-smoothing:antialiased}
-button{font:inherit;color:inherit;border:0;background:none;cursor:pointer;padding:0}
+  :root{
+    --paper:#FAF9F6;--surface:#FFFFFF;--subtle:#F1EDE7;--border:#E4DED5;--night:#1E2340;--ink:#1E2340;--muted:#4F576F;--dim:#8A90A2;
+    --coral:#FF6964;--orange:#FFA353;--yellow:#FFD066;--turq:#49DCC0;--lilac:#A889FF;--blue:#59A7FF;
+    --coralInk:#C72825;--orangeInk:#AB6207;--yellowInk:#9C6C00;--turqInk:#0A8B7A;--lilacInk:#6037F0;--amber:#FFAD0F;
+    --wordmark:"Urbanist","Helvetica Neue",Arial,sans-serif;--display:"Oswald",Impact,"Arial Narrow",sans-serif;--body:"Space Grotesk","Helvetica Neue",Arial,sans-serif;
+  }
+  *{box-sizing:border-box}
+  html{scroll-snap-type:y mandatory}
+  @media (max-width:900px),(max-height:720px),(pointer:coarse){html{scroll-snap-type:none}.slide{min-height:auto;padding-block:64px}}
+  body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.45}
+  .slide{min-height:100vh;scroll-snap-align:start;padding:56px clamp(16px,6vw,96px) 96px;display:flex;flex-direction:column;justify-content:center;gap:28px;position:relative;border-bottom:1px solid var(--border)}
+  .slide.dark{background:var(--night);color:#fff}
+  .slide.dark p,.slide.dark .muted{color:#C9CDDD}
+  .num{position:absolute;top:22px;right:clamp(16px,6vw,96px);font-family:var(--display);font-size:13px;letter-spacing:.2em;color:var(--dim)}
+  .slide.dark .num{color:#8A90A2}
+  .eyebrow{font-family:var(--display);text-transform:uppercase;letter-spacing:.2em;font-size:14px;color:var(--turqInk)}
+  .slide.dark .eyebrow{color:var(--turq)}
+  h1{font-family:var(--display);text-transform:uppercase;letter-spacing:.04em;font-size:clamp(44px,8vw,120px);line-height:.98;margin:0;text-wrap:balance}
+  h2{font-family:var(--display);text-transform:uppercase;letter-spacing:.04em;font-size:clamp(32px,4.6vw,64px);line-height:1.08;margin:0;text-wrap:balance;max-width:20ch}
+  h3{font-family:var(--display);text-transform:uppercase;letter-spacing:.08em;font-size:20px;margin:0}
+  p{margin:0;max-width:62ch;color:var(--muted);font-size:clamp(16px,1.6vw,20px);line-height:1.55}
+  .lead{font-size:clamp(20px,2.4vw,26px);color:var(--ink)}
+  .slide.dark .lead{color:#fff}
+  .wordmark{font-family:var(--wordmark);font-weight:500;text-transform:uppercase;letter-spacing:.2em;font-size:clamp(36px,6vw,64px);line-height:1}
+  .wordmark b{font-weight:500;color:var(--yellow)}
+  .rb{display:flex;width:120px;height:8px;border-radius:4px;overflow:hidden}
+  .rb i{flex:1}
+  .grid{display:grid;gap:18px}
+  .g3{grid-template-columns:repeat(auto-fit,minmax(240px,1fr))}
+  .g4{grid-template-columns:repeat(auto-fit,minmax(200px,1fr))}
+  .card{background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:28px;display:flex;flex-direction:column;gap:10px}
+  .slide.dark .card{background:rgba(255,255,255,.07);border-color:rgba(255,255,255,.14)}
+  .card b{font-family:var(--display);font-size:22px;text-transform:uppercase;letter-spacing:.02em}
+  .card span{color:var(--muted);font-size:17px;line-height:1.5}
+  .slide.dark .card span{color:#C9CDDD}
+  .bubble{background:var(--surface);border-radius:18px 18px 18px 4px;padding:16px 22px;max-width:620px;box-shadow:0 2px 4px rgba(20,24,41,.03),0 12px 30px rgba(20,24,41,.08);align-self:flex-start;font-size:19px;color:var(--ink)}
+  .bubble.you{background:var(--turq);color:#0A1F1B;border-radius:18px 18px 4px 18px;align-self:flex-end;font-weight:600}
+  .chipset{display:flex;gap:10px;flex-wrap:wrap}
+  .chip{background:var(--subtle);border-radius:999px;padding:10px 18px;font-size:16px;font-weight:600;color:var(--ink)}
+  .arrow-step{display:flex;align-items:stretch;gap:0}
+  .arrow-step .card{flex:1}
+  .arrow-step .arr{width:56px;display:flex;align-items:center;justify-content:center;color:var(--orangeInk);font-size:28px}
+  .brand-foot{position:absolute;bottom:28px;left:clamp(16px,6vw,96px);display:flex;align-items:center;gap:10px;font-family:var(--wordmark);font-weight:500;text-transform:uppercase;letter-spacing:.2em;font-size:16px;color:var(--ink)}
+  .slide.dark .brand-foot{color:#fff}
+  .brand-foot b{font-weight:500;color:var(--amber)}
+  .nav{position:fixed;bottom:16px;right:16px;display:flex;gap:8px;z-index:20}
+  .nav button{width:40px;height:40px;border-radius:50%;border:1px solid var(--border);background:var(--surface);color:var(--ink);font-size:18px;cursor:pointer}
+  .kbd{position:fixed;bottom:16px;left:16px;font-size:11px;color:var(--dim);background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:5px 9px;z-index:20}
+  @media(max-width:700px){.nav,.kbd{display:none}}
+</style></head><body>
 
-#stage{position:relative;height:100%;display:flex;align-items:center;justify-content:center}
-.slide{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:60px 10vw;opacity:0;transform:translateY(16px);transition:opacity .45s var(--ease),transform .5s var(--ease);pointer-events:none}
-.slide.on{opacity:1;transform:none;pointer-events:auto}
-.slide:before{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none}
-.slide .eb{font-size:13px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--turqInk)}
-.slide h1{font-family:var(--display);font-weight:700;text-transform:uppercase;font-size:clamp(32px,6vw,64px);line-height:1.04;margin-top:14px;max-width:900px}
-.slide h1 .rb{background:var(--rb);-webkit-background-clip:text;background-clip:text;color:transparent}
-.slide p.lead{font-size:clamp(16px,2vw,21px);line-height:1.5;color:var(--muted);margin-top:20px;max-width:680px}
-.dark{background:var(--night);color:#F1F0EC}
-.dark .eb{color:var(--turq)}
-.dark p.lead{color:#C9CDE0}
+<section class="slide dark">
+  <div class="num">1/8</div>
+  <p class="eyebrow">Irisa · proposta interna</p>
+  <h1>Irise</h1>
+  <p class="lead" style="max-width:40ch">O assistente de descoberta da Irisa — só conversa, sem personagem, sem inventar nada.</p>
+  <div class="rb"><i style="background:var(--coral)"></i><i style="background:var(--orange)"></i><i style="background:var(--yellow)"></i><i style="background:var(--turq)"></i><i style="background:var(--blue)"></i><i style="background:var(--lilac)"></i></div>
+  <p>Chips → router → IA só quando precisa.</p>
+</section>
 
-.aurora{position:absolute;inset:0;z-index:-1;background:
-  radial-gradient(60% 40% at 0% 0%,rgba(73,220,192,.26),transparent 65%),radial-gradient(55% 36% at 100% 0%,rgba(255,105,100,.2),transparent 65%),
-  radial-gradient(60% 40% at 100% 100%,rgba(168,137,255,.24),transparent 65%),radial-gradient(55% 36% at 0% 100%,rgba(255,208,102,.22),transparent 65%)}
+<section class="slide">
+  <div class="num">2/8</div>
+  <p class="eyebrow" style="color:var(--coralInk)">O problema</p>
+  <h2>Hoje, achar o lugar certo dá trabalho</h2>
+  <div class="grid g3">
+    <div class="card"><b>1. Abre o mapa</b><span>Precisa já saber a região e sair catando pino por pino.</span></div>
+    <div class="card"><b>2. Filtra por categoria</b><span>Bar, café, balada — mas "quero um date tranquilo" não é uma categoria.</span></div>
+    <div class="card"><b>3. Abre ficha por ficha</b><span>Só pra descobrir, lendo nota e selo um a um, qual combina com a ocasião.</span></div>
+  </div>
+  <p class="lead" style="max-width:56ch">A pessoa já diz, numa frase, o que quer: <b>"um lugar tranquilo pra um date"</b>. Hoje isso não existe como atalho — a Irise é esse atalho.</p>
+</section>
 
-.cards{display:grid;gap:16px;margin-top:30px;width:100%;max-width:980px}
-.c3{grid-template-columns:repeat(3,1fr)}
-.c2{grid-template-columns:repeat(2,1fr)}
-.card{background:rgba(255,255,255,.75);border-radius:22px;padding:24px 20px;box-shadow:var(--shadow);text-align:left}
-.dark .card{background:rgba(255,255,255,.08)}
-.card .tag{font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;padding:4px 10px;border-radius:12px;display:inline-block}
-.tag.l0{background:rgba(73,220,192,.22);color:#0A8B7A}
-.tag.l2{background:rgba(255,208,102,.3);color:#8A6512}
-.tag.l3{background:rgba(168,137,255,.24);color:#6D4FD8}
-.card h3{font-family:var(--display);font-weight:700;text-transform:uppercase;font-size:19px;margin-top:10px}
-.card p{font-size:14px;line-height:1.5;color:var(--muted);margin-top:8px}
-.dark .card p{color:#C9CDE0}
-.card ul{margin:10px 0 0;padding-left:18px;font-size:13.5px;line-height:1.5;color:var(--muted);text-align:left}
-.dark .card ul{color:#C9CDE0}
-
-.chat{background:#fff;border-radius:24px;box-shadow:var(--shadow);padding:20px 22px;margin-top:26px;max-width:460px;text-align:left;display:flex;flex-direction:column;gap:10px}
-.bub{background:var(--subtle);border-radius:16px 16px 16px 5px;padding:10px 14px;font-size:14px;align-self:flex-start;max-width:85%}
-.bub.me{background:var(--night);color:#fff;border-radius:16px 16px 5px 16px;align-self:flex-end}
-.bub b{font-weight:700}
-
-.flow{display:flex;align-items:center;gap:10px;margin-top:30px;flex-wrap:wrap;justify-content:center;max-width:900px}
-.flow .step{background:rgba(255,255,255,.8);border-radius:16px;padding:12px 18px;font-size:14px;font-weight:600;box-shadow:var(--shadow)}
-.flow .arrow{color:var(--dim);font-size:18px}
-
-.num{font-family:var(--display);font-weight:700;font-size:40px}
-.stats{display:flex;gap:28px;margin-top:28px;flex-wrap:wrap;justify-content:center}
-.stat{text-align:center}
-.stat span{display:block;font-size:12.5px;color:var(--muted);margin-top:4px;max-width:140px}
-
-#dots{position:fixed;left:50%;bottom:22px;transform:translateX(-50%);display:flex;gap:7px;z-index:10}
-#dots button{width:8px;height:8px;border-radius:50%;background:rgba(20,24,41,.18)}
-#dots button.on{background:var(--night);width:22px;border-radius:4px;transition:width .3s}
-.navbtn{position:fixed;top:50%;transform:translateY(-50%);width:46px;height:46px;border-radius:50%;background:rgba(255,255,255,.7);box-shadow:var(--shadow);display:flex;align-items:center;justify-content:center;z-index:10}
-.navbtn.prev{left:18px}.navbtn.next{right:18px}
-.counter{position:fixed;top:20px;right:24px;font-size:13px;color:var(--dim);font-weight:600;z-index:10}
-.counter b{color:var(--ink)}
-@media (max-width:760px){.c3,.c2{grid-template-columns:1fr}.navbtn{display:none}}
-@media (prefers-reduced-motion:reduce){*{transition-duration:.01ms!important}}
-</style>
-</head>
-<body>
-<div class="aurora"></div>
-<div id="stage">
-
-<section class="slide on">
-  <span class="eb">IRISA · PROPOSTA</span>
-  <h1>O <span class="rb">Irise</span><br>guia da cidade</h1>
-  <p class="lead">Um personagem que já é da identidade da marca ganha uma função dentro do app:
-  ajudar a comunidade a descobrir onde ir — sem parecer um chatbot.</p>
+<section class="slide">
+  <div class="num">3/8</div>
+  <p class="eyebrow" style="color:var(--lilacInk)">O que é a Irise</p>
+  <h2>Um botão de chat. Só isso.</h2>
+  <div class="grid g3">
+    <div class="card"><b style="color:var(--turqInk)">Sem personagem</b><span>Um ícone redondo com brilho em arco-íris no canto da Home — atalho, não bichinho de estimação.</span></div>
+    <div class="card"><b style="color:var(--orangeInk)">Atalho, não app novo</b><span>Abre, responde em 2 ou 3 toques, mostra o resultado e fecha.</span></div>
+    <div class="card"><b style="color:var(--coralInk)">Nunca inventa dado</b><span>Toda resposta é um lugar, nota ou selo que já existe no banco da Irisa.</span></div>
+  </div>
+  <div class="bubble">"Me conta o que você tá procurando…"</div>
 </section>
 
 <section class="slide dark">
-  <span class="eb">A sensação certa</span>
-  <h1>"O Irise conhece<br>o mapa e me ajuda<br>a descobrir onde ir."</h1>
-  <p class="lead">Não é ChatGPT dentro do app. Não é suporte. Não é chat infinito.<br>
-  É sessões curtas de descoberta: intenção → resultado → próxima intenção.</p>
-</section>
-
-<section class="slide">
-  <span class="eb">O que ele NÃO é</span>
-  <h1>Zero destas coisas</h1>
-  <div class="cards c3">
-    <div class="card"><h3>Chatbot genérico</h3><p>Não responde qualquer assunto. Fora do escopo, ele deixa isso fazer parte da piada.</p></div>
-    <div class="card"><h3>Chat infinito</h3><p>Sem histórico acumulando. Cada rolê é um contexto novo.</p></div>
-    <div class="card"><h3>Fonte da verdade</h3><p>Nunca inventa lugar, nota, selo, endereço ou relato. Isso sempre vem do banco.</p></div>
+  <div class="num">4/8</div>
+  <p class="eyebrow">Como funciona por dentro</p>
+  <h2 style="max-width:26ch">IA é o último recurso, não o primeiro</h2>
+  <div class="arrow-step">
+    <div class="card" style="border-color:var(--turq)"><b style="color:var(--turq)">1 · zero IA</b><span>Chips e router: botões prontos e um filtro de texto simples ("perto", "balada", "barato") resolvem a maioria dos casos sem gastar IA.</span></div>
+    <div class="arr">→</div>
+    <div class="card" style="border-color:var(--yellow)"><b style="color:var(--yellow)">2 · Groq / Gemini</b><span>Só quando o router não entende, o texto vai pra IA, que devolve a intenção estruturada — nunca um lugar.</span></div>
+    <div class="arr">→</div>
+    <div class="card" style="background:rgba(168,137,255,.18);border-color:var(--lilac)"><b style="color:var(--lilac)">3 · banco real</b><span>A intenção filtra lugares reais, com nota e selo de sempre — o card que a pessoa vê é igual ao da Home.</span></div>
   </div>
+  <p>Resultado: a maioria das conversas nunca chega a custar uma chamada de IA, e nenhuma resposta sai de um dado que a Irisa não tem.</p>
 </section>
 
 <section class="slide">
-  <span class="eb">Conversa de exemplo</span>
-  <h1>Pedido real, resposta real</h1>
-  <div class="chat">
-    <div class="bub me">Quero levar um cara que eu tô conhecendo, mas nenhum dos dois bebe e queria um lugar tranquilo.</div>
-    <div class="bub"><b>Irise</b> — Tá apaixonade? Meus pêsames. 💅<br>Peguei a vibe. Separei esses pra você:</div>
-    <div class="bub">🪴 <b>Jardim Secreto</b> — esse combina com o que você pediu, mas a comunidade ainda falou pouco dele. Já foi? 👀</div>
-  </div>
-</section>
-
-<section class="slide">
-  <span class="eb">Arquitetura</span>
-  <h1>Três camadas</h1>
-  <div class="cards c3">
-    <div class="card"><span class="tag l0">Camada 1</span><h3>Zero IA</h3><p>Chips, filtros, proximidade, "me surpreende", gamificação, respostas prontas.</p></div>
-    <div class="card"><span class="tag l2">Camada 2</span><h3>IA leve · Groq</h3><p>Só quando o texto livre não cai em nenhuma regra. Linguagem natural → JSON estruturado.</p></div>
-    <div class="card"><span class="tag l3">Camada 3</span><h3>IA contextual</h3><p>Refinamento ("mais barato", "gostei do 2º"). Contexto mínimo, nunca o histórico todo.</p></div>
+  <div class="num">5/8</div>
+  <p class="eyebrow" style="color:var(--yellowInk)">Na prática</p>
+  <h2>Três toques até o lugar certo</h2>
+  <div style="display:flex;flex-direction:column;gap:14px;max-width:640px">
+    <div class="bubble">E aí, qual vai ser hoje? 🌈</div>
+    <div class="chipset"><span class="chip">Quero um lugar</span><span class="chip">Me surpreende</span></div>
+    <div class="bubble">Qual a intenção?</div>
+    <div class="chipset"><span class="chip">💘 Date</span><span class="chip">💃 Fervo</span><span class="chip">☕ Café</span></div>
+    <div class="bubble you">Peguei a vibe. Separei esses pra você: Café do Largo (4.2 · Bem avaliado) e mais 2 opções — todos lugares reais da Irisa.</div>
   </div>
 </section>
 
 <section class="slide">
-  <span class="eb">Router antes do LLM</span>
-  <h1>A maior parte nunca<br>chega a chamar IA</h1>
-  <div class="flow">
-    <span class="step">"balada"</span><span class="arrow">→</span><span class="step">filtro categoria</span>
+  <div class="num">6/8</div>
+  <p class="eyebrow" style="color:var(--coralInk)">Inegociável</p>
+  <h2>O que a Irise nunca faz</h2>
+  <div class="grid g4">
+    <div class="card"><b style="color:var(--coralInk)">Nunca inventa</b><span>Lugar, nota ou endereço — toda resposta vem de uma busca real no banco.</span></div>
+    <div class="card"><b style="color:var(--turqInk)">Nunca expõe localização exata</b><span>Manda cidade ou bairro pro provedor de IA, nunca a coordenada da pessoa.</span></div>
+    <div class="card"><b style="color:var(--yellowInk)">Não muda o cálculo de nota</b><span>Mesma média bayesiana, mesmos quatro eixos de sempre.</span></div>
+    <div class="card"><b style="color:var(--lilacInk)">Relato fica fora</b><span>Registrar continua sendo um fluxo próprio, anônimo, fora do chat.</span></div>
   </div>
-  <div class="flow">
-    <span class="step">"perto de mim"</span><span class="arrow">→</span><span class="step">places_near()</span>
-  </div>
-  <div class="flow">
-    <span class="step">"me surpreende"</span><span class="arrow">→</span><span class="step">algoritmo interno</span>
-  </div>
-  <div class="flow">
-    <span class="step">frase não reconhecida</span><span class="arrow">→</span><span class="step" style="background:rgba(255,208,102,.3)">Groq</span>
-  </div>
-</section>
-
-<section class="slide">
-  <span class="eb">Regra crítica</span>
-  <h1>O LLM nunca é<br>a fonte da verdade</h1>
-  <p class="lead">Ele interpreta intenção e escreve na persona do Irise. Toda nota, selo, endereço
-  e característica do lugar vem sempre do banco do Irisa. Nenhum card é texto livre do modelo.</p>
-</section>
-
-<section class="slide">
-  <span class="eb">Pouco dado, muita transparência</span>
-  <h1>A limitação do banco<br>vira convite</h1>
-  <div class="cards c2">
-    <div class="card"><h3>Lugar com poucas notas</h3><p>"👀 Desse eu ainda sei pouco. A comunidade quase não irisou por aqui."</p></div>
-    <div class="card"><h3>"Já fui?"</h3><p>Abre direto o formulário de avaliação <b>que já existe</b> — mesmos 4 eixos, mesmo cálculo, zero mudança.</p></div>
-  </div>
+  <p>Se a IA do provedor cair, o chat continua funcionando com chips — só o texto livre para de responder.</p>
 </section>
 
 <section class="slide dark">
-  <span class="eb">O que não muda</span>
-  <h1>O framework de<br>avaliações é o mesmo</h1>
-  <p class="lead">Sem quick_review, sem ai_review, sem nova escala. O Irise é só uma nova porta de
-  entrada para o formulário de sempre — a nota, o selo e o cálculo bayesiano continuam intocados.</p>
-</section>
-
-<section class="slide">
-  <span class="eb">Economia de tokens</span>
-  <h1>Inteligência percebida<br>&gt;&gt; consumo real de IA</h1>
-  <div class="stats">
-    <div class="stat"><span class="num">~70–90</span><span>chamadas Groq/dia por 1.000 usuários ativos</span></div>
-    <div class="stat"><span class="num">~70%</span><span>das sessões resolvidas sem gastar 1 token</span></div>
-    <div class="stat"><span class="num">0</span><span>lugares, notas ou relatos inventados</span></div>
+  <div class="num">7/8</div>
+  <p class="eyebrow">O ganho</p>
+  <h2 style="max-width:20ch">Por que vale a pena</h2>
+  <div class="grid g4">
+    <div class="card"><b style="color:var(--turq)">3x menos toques</b><span>De "abrir mapa → filtrar → ler 5 fichas" pra "responder 2 chips e ver o card".</span></div>
+    <div class="card"><b style="color:var(--yellow)">Custo sob controle</b><span>A maioria resolve na camada sem IA; Groq/Gemini só entra quando o texto livre não casa com nenhuma regra.</span></div>
+    <div class="card"><b style="color:var(--coral)">Zero alucinação</b><span>A IA nunca descreve um lugar — só escolhe um filtro. O dado é sempre real.</span></div>
+    <div class="card"><b style="color:var(--lilac)">Não compete com o app</b><span>É atalho pra Home, Mapa e Lugares — não substitui nada, só reduz o caminho.</span></div>
   </div>
 </section>
 
 <section class="slide">
-  <span class="eb">Se a IA cair</span>
-  <h1>O app nunca depende<br>do LLM pra funcionar</h1>
-  <p class="lead">"Meu sexto sentido deu uma cochilada 😭 Mas ainda consigo procurar do jeito clássico."<br>
-  Fallback automático pros chips e filtros — a busca de lugar nunca para.</p>
+  <div class="num">8/8</div>
+  <p class="eyebrow" style="color:var(--turqInk)">Próximos passos</p>
+  <h2>Do protótipo ao app</h2>
+  <div class="grid g3">
+    <div class="card"><b style="color:var(--turqInk)">1 · Feito</b><span>Protótipo navegável, fiel à Home real, com o fluxo de chips e a simulação de IA.</span></div>
+    <div class="card"><b style="color:var(--yellowInk)">2 · Decidir</b><span>Escolher o provedor de IA (Groq ou Gemini) e confirmar o custo por conversa.</span></div>
+    <div class="card"><b style="color:var(--coralInk)">3 · Construir</b><span>Router de intenções, Edge Function pro provedor, botão e folha no app — só JS, sai por EAS Update.</span></div>
+  </div>
+  <div class="brand-foot" style="position:static;margin-top:20px"><svg class="mark" viewBox="0 0 100 100" width="28" height="28"><use href="#radarmin"></use></svg><span>Iris<b>a</b></span></div>
 </section>
 
-<section class="slide dark">
-  <span class="eb">Próximo passo</span>
-  <h1>Aprovar a arquitetura,<br>depois implementar<br>em etapas pequenas</h1>
-  <p class="lead">Proposta completa em PROPOSTA-IRISE.md · protótipo navegável em prototipo-irise.html<br>
-  Nada foi implementado ainda.</p>
-</section>
+<svg style="position:absolute;width:0;height:0" aria-hidden="true"><defs><symbol id="radarmin" viewBox="0 0 100 100"><path d="M50.00 1.00A49 49 0 0 1 58.82 1.80L55.58 19.51A31 31 0 0 0 50.00 19.00Z" fill="#ff6964"/><path d="M56.40 1.42A49 49 0 0 1 65.03 3.36L59.51 20.49A31 31 0 0 0 54.05 19.27Z" fill="#ff7062"/><path d="M62.68 2.67A49 49 0 0 1 70.99 5.72L63.28 21.99A31 31 0 0 0 58.02 20.06Z" fill="#ff7760"/><path d="M68.75 4.73A49 49 0 0 1 76.59 8.84L66.82 23.96A31 31 0 0 0 61.86 21.36Z" fill="#ff7f5d"/><path d="M74.50 7.56A49 49 0 0 1 81.73 12.67L70.08 26.38A31 31 0 0 0 65.50 23.15Z" fill="#ff875c"/><path d="M79.83 11.13A49 49 0 0 1 86.34 17.13L72.99 29.20A31 31 0 0 0 68.87 25.41Z" fill="#ff8e5a"/><path d="M84.65 15.35A49 49 0 0 1 90.32 22.15L75.51 32.38A31 31 0 0 0 71.92 28.08Z" fill="#ff9558"/><path d="M88.87 20.17A49 49 0 0 1 93.61 27.65L77.59 35.86A31 31 0 0 0 74.59 31.13Z" fill="#ff9c55"/><path d="M92.44 25.50A49 49 0 0 1 96.15 33.53L79.20 39.58A31 31 0 0 0 76.85 34.50Z" fill="#ffa353"/><path d="M95.27 31.25A49 49 0 0 1 97.91 39.70L80.31 43.48A31 31 0 0 0 78.64 38.14Z" fill="#ffa955"/><path d="M97.33 37.32A49 49 0 0 1 98.84 46.04L80.90 47.49A31 31 0 0 0 79.94 41.98Z" fill="#ffae58"/><path d="M98.58 43.60A49 49 0 0 1 98.94 52.45L80.96 51.55A31 31 0 0 0 80.73 45.95Z" fill="#ffb35a"/><path d="M99.00 50.00A49 49 0 0 1 98.20 58.82L80.49 55.58A31 31 0 0 0 81.00 50.00Z" fill="#ffb95d"/><path d="M98.58 56.40A49 49 0 0 1 96.64 65.03L79.51 59.51A31 31 0 0 0 80.73 54.05Z" fill="#ffbf5f"/><path d="M97.33 62.68A49 49 0 0 1 94.28 70.99L78.01 63.28A31 31 0 0 0 79.94 58.02Z" fill="#ffc561"/><path d="M95.27 68.75A49 49 0 0 1 91.16 76.59L76.04 66.82A31 31 0 0 0 78.64 61.86Z" fill="#ffc964"/><path d="M92.44 74.50A49 49 0 0 1 87.33 81.73L73.62 70.08A31 31 0 0 0 76.85 65.50Z" fill="#ffd066"/><path d="M88.87 79.83A49 49 0 0 1 82.87 86.34L70.80 72.99A31 31 0 0 0 74.59 68.87Z" fill="#efd46c"/><path d="M84.65 84.65A49 49 0 0 1 77.85 90.32L67.62 75.51A31 31 0 0 0 71.92 71.92Z" fill="#d7d679"/><path d="M79.83 88.87A49 49 0 0 1 72.35 93.61L64.14 77.59A31 31 0 0 0 68.87 74.59Z" fill="#bed582"/><path d="M74.50 92.44A49 49 0 0 1 66.47 96.15L60.42 79.20A31 31 0 0 0 65.50 76.85Z" fill="#a3d38c"/><path d="M68.75 95.27A49 49 0 0 1 60.30 97.91L56.52 80.31A31 31 0 0 0 61.86 78.64Z" fill="#8bd296"/><path d="M62.68 97.33A49 49 0 0 1 53.96 98.84L52.51 80.90A31 31 0 0 0 58.02 79.94Z" fill="#74d6a4"/><path d="M56.40 98.58A49 49 0 0 1 47.55 98.94L48.45 80.96A31 31 0 0 0 54.05 80.73Z" fill="#5fd9b2"/><path d="M50.00 99.00A49 49 0 0 1 41.18 98.20L44.42 80.49A31 31 0 0 0 50.00 81.00Z" fill="#49dcc0"/><path d="M43.60 98.58A49 49 0 0 1 34.97 96.64L40.49 79.51A31 31 0 0 0 45.95 80.73Z" fill="#4cd7ca"/><path d="M37.32 97.33A49 49 0 0 1 29.01 94.28L36.72 78.01A31 31 0 0 0 41.98 79.94Z" fill="#4fd2d4"/><path d="M31.25 95.27A49 49 0 0 1 23.41 91.16L33.18 76.04A31 31 0 0 0 38.14 78.64Z" fill="#4fcbdc"/><path d="M25.50 92.44A49 49 0 0 1 18.27 87.33L29.92 73.62A31 31 0 0 0 34.50 76.85Z" fill="#50c4e4"/><path d="M20.17 88.87A49 49 0 0 1 13.66 82.87L27.01 70.80A31 31 0 0 0 31.13 74.59Z" fill="#51bcec"/><path d="M15.35 84.65A49 49 0 0 1 9.68 77.85L24.49 67.62A31 31 0 0 0 28.08 71.92Z" fill="#52b4f5"/><path d="M11.13 79.83A49 49 0 0 1 6.39 72.35L22.41 64.14A31 31 0 0 0 25.41 68.87Z" fill="#52aefd"/><path d="M7.56 74.50A49 49 0 0 1 3.85 66.47L20.80 60.42A31 31 0 0 0 23.15 65.50Z" fill="#59a7ff"/><path d="M4.73 68.75A49 49 0 0 1 2.09 60.30L19.69 56.52A31 31 0 0 0 21.36 61.86Z" fill="#63a3ff"/><path d="M2.67 62.68A49 49 0 0 1 1.16 53.96L19.10 52.51A31 31 0 0 0 20.06 58.02Z" fill="#6b9fff"/><path d="M1.42 56.40A49 49 0 0 1 1.06 47.55L19.04 48.45A31 31 0 0 0 19.27 54.05Z" fill="#759aff"/><path d="M1.00 50.00A49 49 0 0 1 1.80 41.18L19.51 44.42A31 31 0 0 0 19.00 50.00Z" fill="#7d96ff"/><path d="M1.42 43.60A49 49 0 0 1 3.36 34.97L20.49 40.49A31 31 0 0 0 19.27 45.95Z" fill="#8791ff"/><path d="M2.67 37.32A49 49 0 0 1 5.72 29.01L21.99 36.72A31 31 0 0 0 20.06 41.98Z" fill="#908dff"/><path d="M4.73 31.25A49 49 0 0 1 8.84 23.41L23.96 33.18A31 31 0 0 0 21.36 38.14Z" fill="#9d8bff"/><path d="M7.56 25.50A49 49 0 0 1 12.67 18.27L26.38 29.92A31 31 0 0 0 23.15 34.50Z" fill="#a889ff"/><path d="M11.13 20.17A49 49 0 0 1 17.13 13.66L29.20 27.01A31 31 0 0 0 25.41 31.13Z" fill="#b684f0"/><path d="M15.35 15.35A49 49 0 0 1 22.15 9.68L32.38 24.49A31 31 0 0 0 28.08 28.08Z" fill="#c681dd"/><path d="M20.17 11.13A49 49 0 0 1 27.65 6.39L35.86 22.41A31 31 0 0 0 31.13 25.41Z" fill="#d37eca"/><path d="M25.50 7.56A49 49 0 0 1 33.53 3.85L39.58 20.80A31 31 0 0 0 34.50 23.15Z" fill="#de78b3"/><path d="M31.25 4.73A49 49 0 0 1 39.70 2.09L43.48 19.69A31 31 0 0 0 38.14 21.36Z" fill="#ea709b"/><path d="M37.32 2.67A49 49 0 0 1 46.04 1.16L47.49 19.10A31 31 0 0 0 41.98 20.06Z" fill="#f56a85"/><path d="M43.60 1.42A49 49 0 0 1 52.45 1.06L51.55 19.04A31 31 0 0 0 45.95 19.27Z" fill="#ff636e"/></symbol></defs></svg>
 
-</div>
-<span class="counter"><b id="cN">1</b> / <span id="cT">12</span></span>
-<button class="navbtn prev" id="prevB"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#141829" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg></button>
-<button class="navbtn next" id="nextB"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#141829" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg></button>
-<div id="dots"></div>
+<div class="nav"><button id="prev">↑</button><button id="next">↓</button></div>
+<div class="kbd">↑ ↓ pra navegar</div>
 <script>
-const slides=[...document.querySelectorAll(".slide")];
-let i=0;
-const dots=document.getElementById("dots");
-slides.forEach((_,k)=>{ const b=document.createElement("button"); b.onclick=()=>go(k); dots.appendChild(b); });
-document.getElementById("cT").textContent=slides.length;
-function go(n){
-  i=Math.max(0,Math.min(slides.length-1,n));
-  slides.forEach((s,k)=>s.classList.toggle("on",k===i));
-  [...dots.children].forEach((d,k)=>d.classList.toggle("on",k===i));
-  document.getElementById("cN").textContent=i+1;
-}
-document.getElementById("prevB").onclick=()=>go(i-1);
-document.getElementById("nextB").onclick=()=>go(i+1);
-document.addEventListener("keydown",e=>{
-  if(e.key==="ArrowRight"||e.key===" ") go(i+1);
-  if(e.key==="ArrowLeft") go(i-1);
+const slides=[...document.querySelectorAll('.slide')];
+function cur(){const y=window.scrollY+10;let i=0;slides.forEach((s,idx)=>{if(s.offsetTop<=y)i=idx});return i;}
+function go(i){i=Math.max(0,Math.min(slides.length-1,i));slides[i].scrollIntoView({behavior:'smooth'});}
+document.getElementById('next').onclick=()=>go(cur()+1);
+document.getElementById('prev').onclick=()=>go(cur()-1);
+window.addEventListener('keydown',e=>{
+  if(e.key==='ArrowDown'||e.key==='PageDown'){e.preventDefault();go(cur()+1);}
+  if(e.key==='ArrowUp'||e.key==='PageUp'){e.preventDefault();go(cur()-1);}
 });
-go(0);
 </script>
-</body>
-</html>
+</body></html>
