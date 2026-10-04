@@ -4,6 +4,11 @@ import { Modal, Pressable, Text, View } from "react-native";
 import { useReducedMotion } from "react-native-reanimated";
 
 import { FadeUp } from "@/components/gami/Anim";
+import {
+  BotaoCompartilhar,
+  CompartilharSheet,
+  type Compartilhavel,
+} from "@/components/gami/Compartilhar";
 import { AnimatedMedal } from "@/components/gami/MedalView";
 import { useGamification, useMarkSeen, useRewardOpen } from "@/hooks/useGamification";
 import { getMedalha, nomeDa } from "@/lib/medals";
@@ -27,6 +32,7 @@ export function MedalCelebration() {
   const marcar = useMarkSeen();
   const reduce = useReducedMotion();
   const [aberta, setAberta] = useState<string[] | null>(null);
+  const [story, setStory] = useState<Compartilhavel | null>(null);
 
   const novas = useMemo(
     () => (g?.conquistadas ?? []).filter((c) => !c.visto && getMedalha(c.id)).map((c) => c.id),
@@ -101,6 +107,10 @@ export function MedalCelebration() {
             </FadeUp>
           )}
           <View className="absolute bottom-12 left-6 right-6 gap-2">
+            <BotaoCompartilhar
+              escuro
+              onPress={() => setStory({ tipo: "medalha", id: m.id, banho })}
+            />
             <Pressable
               onPress={() => fechar(true)}
               className="items-center rounded-full bg-paper py-3.5 active:opacity-80"
@@ -114,6 +124,7 @@ export function MedalCelebration() {
               <Text className="font-body-bold text-[15px] text-paper">Fechar</Text>
             </Pressable>
           </View>
+          <CompartilharSheet c={story} onClose={() => setStory(null)} />
         </View>
       )}
     </Modal>

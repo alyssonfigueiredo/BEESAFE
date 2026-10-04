@@ -1,7 +1,13 @@
 import { router, type Href } from "expo-router";
+import { useState } from "react";
 import { Pressable, Text, View } from "react-native";
 
 import { Counter, FadeUp, Segs } from "@/components/gami/Anim";
+import {
+  BotaoCompartilhar,
+  CompartilharSheet,
+  type Compartilhavel,
+} from "@/components/gami/Compartilhar";
 import { AnimatedMedal } from "@/components/gami/MedalView";
 import { Sheet } from "@/components/gami/Sheet";
 import { ctaDa, unidadeTexto, type Gamificacao } from "@/hooks/useGamification";
@@ -34,6 +40,7 @@ function Conteudo({ id, g, onClose }: { id: string; g: Gamificacao; onClose: () 
   const mostrarNumero = !ok && !!p && p.alvo > 1;
   const nSegs = p ? Math.min(p.alvo, 30) : 0;
   const cta = ok ? null : ctaDa(id);
+  const [story, setStory] = useState<Compartilhavel | null>(null);
 
   return (
     <>
@@ -85,6 +92,12 @@ function Conteudo({ id, g, onClose }: { id: string; g: Gamificacao; onClose: () 
           {c.banho ? ` · banho ${c.banho === "holo" ? "holográfico" : c.banho}` : ""}
         </Text>
       )}
+      {ok && c && (
+        <View className="mt-4 w-full">
+          <BotaoCompartilhar onPress={() => setStory({ tipo: "medalha", id, banho: c.banho })} />
+        </View>
+      )}
+      <CompartilharSheet c={story} onClose={() => setStory(null)} />
       {cta && (
         <Pressable
           onPress={() => {

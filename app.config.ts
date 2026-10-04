@@ -26,6 +26,9 @@ const config: ExpoConfig = {
     infoPlist: {
       NSLocationWhenInUseUsageDescription:
         "A Irisa usa sua localização para mostrar a cidade ao redor e marcar o ponto de um relato ou lugar.",
+      // "Salvar imagem" no menu de compartilhar do cartão de conquista: sem esta frase o iOS fecha o app.
+      NSPhotoLibraryAddUsageDescription:
+        "A Irisa salva na sua galeria o cartão da conquista que você escolheu compartilhar.",
       ITSAppUsesNonExemptEncryption: false,
     },
   },

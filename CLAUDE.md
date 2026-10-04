@@ -560,6 +560,12 @@ Nome: **Irisa** (INPI livre; @appirisa livre). Bundle id Android `br.com.irisa.a
   `AnelCard` e o `NIVEIS` de cores saíram. A medalha Lenda Local virou **Estátua na Praça** (id `lenda-local` igual).
   **Roteiro de lançamento da 0.1.2: `SUBIR-0.1.2.md` na raiz** (teste pelo TestFlight + EAS Update, build nova dos dois
   lados, textos das lojas).
+  **Compartilhar no story (04/10/2026, pedido do Leandro):** `src/components/gami/Compartilhar.tsx`. Prévia em tela cheia
+  do cartão 1080 × 1920 (medalha ou nível, frase da marca, sem apelido, sem lugar, sem relato) e "Compartilhar" pelo
+  menu do celular (Instagram → Story). Botão no detalhe da medalha, na comemoração de medalha, na subida de nível e na
+  trilha. Peças nativas novas (`react-native-view-shot`, `expo-sharing` sem o plugin, que é de receber compartilhamento)
+  e `NSPhotoLibraryAddUsageDescription` no app.config (sem ela "Salvar imagem" fecha o app): **precisa de build nova**.
+  `podeCompartilhar()` esconde o botão em build antiga, então o JS segue seguro por EAS Update na build 10.
 
 ## Stack
 

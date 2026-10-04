@@ -16,6 +16,9 @@ do Mac, na pasta BEESAFE.
 - Visual igual no app todo (seletores, campos, botões).
 - Cadastro de lugar confere o endereço escrito antes de gravar (o caso do Na Feira Bar).
 - Notificações (push).
+- Compartilhar conquista e nível no story do Instagram (cartão 1080 × 1920, sem nome e sem lugar).
+  **Peça nativa nova:** o botão só aparece em build nova. Quem recebe o código por atualização em cima da
+  build 10 não vê o botão (de propósito, para não quebrar).
 
 ## 1. Leandro testar hoje (sem build nova)
 
@@ -34,6 +37,13 @@ npx eas-cli update --branch production --message "0.1.2: evolução, 32 conquist
    atualização baixa na primeira abertura e entra na segunda.
 3. Confira: Perfil → cartão **Sua evolução** → toque para ver a trilha; Início → **Suas cores**;
    avaliar um lugar mostra a comemoração calma.
+
+O botão de compartilhar no story não aparece por esse caminho (precisa de build nova). Para testar ele
+só no seu iPhone, pelo cabo, sem mandar nada para os outros:
+
+```bash
+git pull origin claude/laughing-keller-my8t7c && npm install && cd ios && pod install && cd .. && npx expo run:ios --device --configuration Release
+```
 
 A mesma atualização chega em quem já tem a 0.1.2 instalada. Quem está na 0.1.1 só recebe depois de
 atualizar pela loja.
@@ -88,14 +98,15 @@ do Abre-Alas, para a medalha parar de ser dada a quem entrar depois.
 > Início novo, com a sua semana e as cores que você deixou pelo mapa.
 > Mapa e lista mais fáceis de ler, e lugares perto de onde você está.
 > Mural de apoio renovado: reações da casa, pergunta da semana e opção de publicar como Anônimo.
+> Compartilhe suas conquistas e seu nível no story, sem seu nome e sem nenhum lugar.
 > Notificações para as novidades da sua cidade.
 > Relato continua anônimo e nunca conta ponto.
 
 **Google Play (Notas da versão, até 500 caracteres):**
 
 > Sua evolução: cada contribuição acende um gomo da sua íris e você sobe de nível. 32 conquistas, só
-> suas. Início, mapa e mural renovados, lugares perto de você e notificações. Relato continua anônimo
-> e nunca conta ponto.
+> suas, para compartilhar no story. Início, mapa e mural renovados, lugares perto de você e
+> notificações. Relato continua anônimo e nunca conta ponto.
 
 ## 4. Depois de aprovado
 

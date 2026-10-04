@@ -1,26 +1,28 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { router } from "expo-router";
 import { ChevronRight } from "lucide-react-native";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { Modal, Pressable, Text, View } from "react-native";
-import { SvgXml } from "react-native-svg";
 
 import { FadeUp, ProgressEdge, Segs } from "@/components/gami/Anim";
 import { SliceRing } from "@/components/gami/Rings";
+import {
+  BotaoCompartilhar,
+  CompartilharSheet,
+  type Compartilhavel,
+} from "@/components/gami/Compartilhar";
+import { NivelIcone } from "@/components/gami/NivelIcone";
 import { Sheet } from "@/components/gami/Sheet";
 import { useFolhaAberta } from "@/hooks/useDiscovery";
 import { useForma, useGamification, useRewardOpen } from "@/hooks/useGamification";
 import { getMedalha } from "@/lib/medals";
-import { iconeXml, nivelDe, nomeNivel, NIVEIS_EVO } from "@/lib/niveis";
+import { nivelDe, nomeNivel, NIVEIS_EVO } from "@/lib/niveis";
 import { colors, shadow } from "@/theme/tokens";
 
 // Sua evolução: a íris de 48 gomos com o nível em título e ícone (8 degraus, de Curiose a Patrimônio
 // LGBTQIA+). Cartão no Perfil, trilha numa folha e a comemoração calma quando a pessoa sobe.
 
-export function NivelIcone({ k, size = 36 }: { k: number; size?: number }) {
-  const xml = useMemo(() => iconeXml(k), [k]);
-  return <SvgXml xml={xml} width={size} height={size} />;
-}
+export { NivelIcone };
 
 function faltaTexto(n: number) {
   return `Falta${n > 1 ? "m" : ""} ${n} gomo${n > 1 ? "s" : ""}`;
@@ -177,6 +179,7 @@ function Passo({
 export function TrilhaSheet({ visible, onClose }: { visible: boolean; onClose: () => void }) {
   const { data: g } = useGamification();
   const forma = useForma();
+  const [story, setStory] = useState<Compartilhavel | null>(null);
   if (!g) return null;
   const i = nivelDe(g.gomos);
   return (
@@ -204,6 +207,11 @@ export function TrilhaSheet({ visible, onClose }: { visible: boolean; onClose: (
           aprovada. No máximo 4 por semana. Relato nunca conta.
         </Text>
       </View>
+      <BotaoCompartilhar
+        label="Compartilhar meu nível"
+        onPress={() => setStory({ tipo: "nivel", k: i })}
+      />
+      <CompartilharSheet c={story} onClose={() => setStory(null)} />
     </Sheet>
   );
 }
@@ -222,6 +230,7 @@ export function SubiuDeNivel() {
   const rewardOpen = useRewardOpen();
   const [visto, setVisto] = useState<number | null | undefined>(undefined);
   const [mostrar, setMostrar] = useState<number | null>(null);
+  const [story, setStory] = useState<Compartilhavel | null>(null);
 
   useEffect(() => {
     AsyncStorage.getItem(NIVEL_KEY)
@@ -357,6 +366,7 @@ export function SubiuDeNivel() {
               </FadeUp>
             </View>
           </FadeUp>
+          <CompartilharSheet c={story} onClose={() => setStory(null)} />
         </View>
       )}
     </Modal>
