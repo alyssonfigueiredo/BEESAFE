@@ -157,6 +157,9 @@ select count(*) as um_dia_1, bool_and(consulted) as consultou from public.user_d
 set role authenticated;
 select (public.my_gamification()) ? 'medalhas' as tem_medalhas;
 select jsonb_array_length(public.my_gamification()->'conquistadas') > 0 as abre_alas_desbloqueada;
+-- migration 48: segunda leva, 32 medalhas
+select public.track_day('bairro');
+select jsonb_array_length(public.my_gamification()->'medalhas') as medalhas_n;
 -- migration 47: suas cores e aberturas de ficha
 select public.log_place_view((select id from public.places limit 1));
 select (public.my_cores() ? 'ajudou') and (public.my_cores() ? 'itens') as cores_ok;

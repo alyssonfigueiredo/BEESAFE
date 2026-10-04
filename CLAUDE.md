@@ -542,6 +542,15 @@ Nome: **Irisa** (INPI livre; @appirisa livre). Bundle id Android `br.com.irisa.a
   **Cadastro de lugar confere o endereço (migration 46):** o Na Feira Bar entrou com o alfinete no GPS do Leandro
   (Rebouças) e o endereço certo no texto (Princesa Izabel 465, Mercês). Agora o envio busca o endereço escrito que não
   foi conferido e, se ficar a mais de 150 m do alfinete, pergunta "No endereço / No alfinete / Ajustar". A 46 moveu a ficha.
+  **Segunda leva de conquistas (migration 48, 04/10/2026, pedido do Leandro): 32 medalhas no ar.** +15 do catálogo que
+  cabem nos dados (Sabe Onde Ir, Pode Entrar, Ícone Local, Lenda Local, Utilidade Pública, Interesse Municipal, Aclamada,
+  Influ do Vale, Da Casa, Já Mora Aqui, Olho Vivo, Agenda Cheia, Bateu Leque, Patrimônio Cultural, Patrimônio Tombado) e
+  +5 novas desenhadas em `src/lib/medals.ts` (Dona do Pedaço: 5 lugares no mesmo bairro; Resenha Boa: 10 avaliações com
+  comentário de 60+ letras; Cartógrafa: 5 lugares cadastrados que outras pessoas avaliaram; Abraço Coletivo: 20 reações
+  nas suas mensagens; Tem Opinião: pergunta da semana respondida em 4 semanas). "Ajudou" das medalhas de reconhecimento =
+  pessoas que abriram a ficha depois da sua avaliação (`place_views`). Olho Vivo usa `user_days.bairro` (só o dia, via
+  `trackDay("bairro")` na ficha do bairro). De fora, sem dado: Favorita do Público, Serviu Tudo, Rede de Apoio.
+  `LANCAMENTO` (nome mantido) virou a lista das 32 na ordem da grade. As 5 novas ainda não estão no `docs/pingentes.js`.
 
 ## Stack
 

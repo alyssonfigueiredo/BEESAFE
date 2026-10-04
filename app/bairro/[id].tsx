@@ -1,4 +1,5 @@
 import { Stack, useLocalSearchParams } from "expo-router";
+import { useEffect } from "react";
 import { ScrollView, Text, View } from "react-native";
 
 import { Aurora } from "@/components/Aurora";
@@ -18,6 +19,7 @@ import {
   type OccurrenceSetting,
   type OccurrenceType,
 } from "@/theme/domain";
+import { trackDay } from "@/hooks/useGamification";
 import { useScreenInsets } from "@/hooks/useScreenInsets";
 import { colors, shadow } from "@/theme/tokens";
 
@@ -29,6 +31,10 @@ export default function BairroScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const bairroId = Number(id);
   const insets = useScreenInsets({ tabs: false });
+  // Olho Vivo: só o dia em que abriu a ficha de um bairro, nunca qual bairro.
+  useEffect(() => {
+    if (bairroId) trackDay("bairro");
+  }, [bairroId]);
   const header = {
     headerShown: true,
     headerBackTitle: "Voltar",

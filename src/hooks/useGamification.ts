@@ -119,7 +119,7 @@ export function hojeSP() {
   return new Date().toLocaleDateString("en-CA", { timeZone: "America/Sao_Paulo" });
 }
 const hoje = hojeSP;
-export function trackDay(kind: "open" | "consult") {
+export function trackDay(kind: "open" | "consult" | "bairro") {
   const chave = `${kind}:${hoje()}`;
   if (marcados.has(chave)) return;
   marcados.add(chave);

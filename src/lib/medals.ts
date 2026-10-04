@@ -65,6 +65,27 @@ const GOMOS = [
 ];
 
 const ART: Record<string, (G: string) => Art> = {
+  // Segunda leva (04/10/2026)
+  vasoJanela: (G: string): Art => [
+    30,
+    `<rect x="24" y="30" width="52" height="34" rx="4" fill="#C4F3E9" ${R}/><path d="M50 30v34M24 47h52" stroke="${C.rim}" stroke-width="2"/><rect x="20" y="64" width="60" height="7" rx="2" fill="${C.white}" ${R}/><path d="M36 71h28l-4 14H40Z" fill="${C.coral}" ${R}/><path d="M50 71V56" stroke="#2F9E6E" stroke-width="2.6" stroke-linecap="round"/><path d="${heart(44, 54, 5)}" fill="${C.lilac}" ${R.replace('2"', '1.4"')}/><path d="${heart(56, 50, 5)}" fill="${C.yellow}" ${R.replace('2"', '1.4"')}/><circle cx="50" cy="45" r="4.5" fill="${G}" ${R.replace('2"', '1.4"')}/>`,
+  ],
+  caderninho: (G: string): Art => [
+    28,
+    `<g transform="rotate(-5 50 60)"><rect x="28" y="28" width="44" height="58" rx="5" fill="${C.white}" ${R}/><rect x="28" y="28" width="9" height="58" rx="4" fill="${C.lilac}" ${R}/><path d="M43 42h21M43 50h21M43 58h16M43 66h19" stroke="${C.night}" stroke-width="2.2" stroke-linecap="round"/><path d="M43 74h12" stroke="${C.coral}" stroke-width="2.6" stroke-linecap="round"/></g><path d="M66 70l14-26 5 3-14 26-6 3Z" fill="${G}" ${R}/><path d="M80 44l2-4 5 3-2 4Z" fill="${C.coral}" ${R.replace('2"', '1.4"')}/>`,
+  ],
+  rolo: (G: string): Art => [
+    30,
+    `<path d="M26 36h48v40H26Z" fill="${C.white}" ${R}/><path d="M26 44c8-6 14 6 22-2s16 6 26-2" fill="none" stroke="#7FD6C4" stroke-width="2"/><path d="M30 70c6-12 12-2 16-12s10-4 14-12 8-2 10-6" fill="none" stroke="${C.coral}" stroke-width="2.4" stroke-dasharray="1 4" stroke-linecap="round"/><circle cx="70" cy="40" r="3.6" fill="${C.coral}" ${R.replace('2"', '1.2"')}/><rect x="20" y="30" width="10" height="52" rx="5" fill="${G}" ${R}/><rect x="70" y="30" width="10" height="52" rx="5" fill="${G}" ${R}/>`,
+  ],
+  bracos: (G: string): Art => [
+    30,
+    `<path d="M30 82C14 66 18 40 40 36" fill="none" stroke="${C.coral}" stroke-width="8" stroke-linecap="round"/><path d="M70 82C86 66 82 40 60 36" fill="none" stroke="${C.lilac}" stroke-width="8" stroke-linecap="round"/><path d="M38 86C30 74 30 60 40 52" fill="none" stroke="${C.yellow}" stroke-width="6" stroke-linecap="round"/><path d="M62 86C70 74 70 60 60 52" fill="none" stroke="${C.turq}" stroke-width="6" stroke-linecap="round"/><path d="${heart(50, 60, 14)}" fill="${G}" ${R}/><path d="${heart(50, 59, 6.5)}" fill="${C.white}"/>`,
+  ],
+  microfone: (G: string): Art => [
+    28,
+    `<path d="M24 34h30a6 6 0 0 1 6 6v12a6 6 0 0 1-6 6H40l-8 8v-8h-8a6 6 0 0 1-6-6V40a6 6 0 0 1 6-6Z" fill="${C.white}" ${R}/>${T(39, 54, 17, "?", C.coral)}<rect x="58" y="44" width="16" height="24" rx="8" fill="${G}" ${R}/><path d="M54 62a12 12 0 0 0 24 0" fill="none" stroke="${C.rim}" stroke-width="2.4"/><path d="M66 74v10M58 84h16" stroke="${C.night}" stroke-width="2.6" stroke-linecap="round"/>`,
+  ],
   cracha: (G: string): Art => [
     21,
     `<rect x="22" y="30" width="56" height="44" rx="7" fill="${C.white}" ${R}/><path d="M22 45v-8a7 7 0 0 1 7-7h42a7 7 0 0 1 7 7v8Z" fill="${C.coral}" ${R}/>${T(50, 42, 10, "OLÁ")}<path d="M31 61c4-7 8 5 12-2s6 5 10-1 6 4 13-2" fill="none" stroke="${C.night}" stroke-width="2.6" stroke-linecap="round"/><rect x="44" y="21" width="12" height="12" rx="3" fill="${G}" ${R}/>`,
@@ -366,18 +387,18 @@ export const MEDALHAS: Medalha[] = [
     art: "credencial",
     cat: "Trajetória",
     rar: "epica",
-    cond: "60 avaliações e 25 “ajudou” recebidos.",
+    cond: "60 avaliações, e 25 pessoas abriram a ficha de um lugar depois da sua avaliação.",
     obj: "Credencial VIP com cordão.",
     copy: "O que você irisa, a cidade lê.",
   },
-  // Reconhecimento: “ajudou” nas avaliações (novo, anônimo) + curtidas no mural (já existem)
+  // Reconhecimento: pessoas que abriram a ficha de um lugar depois da sua avaliação (place_views, só contagem)
   {
     id: "utilidade-publica",
     t: "Utilidade Pública",
     art: "orelhao",
     cat: "Reconhecimento",
     rar: "incomum",
-    cond: "10 “ajudou” ou curtidas recebidos.",
+    cond: "10 pessoas abriram a ficha de um lugar depois da sua avaliação.",
     obj: "Orelhão em miniatura.",
     copy: "Declarado de utilidade pública. Sem burocracia.",
   },
@@ -387,7 +408,7 @@ export const MEDALHAS: Medalha[] = [
     art: "carimbo",
     cat: "Reconhecimento",
     rar: "rara",
-    cond: "50 “ajudou” ou curtidas recebidos.",
+    cond: "50 pessoas abriram a ficha de um lugar depois da sua avaliação.",
     obj: "Selo carimbado “DEFERIDO”.",
     copy: "Pedido deferido: você é de interesse municipal.",
   },
@@ -398,7 +419,7 @@ export const MEDALHAS: Medalha[] = [
     art: "buque",
     cat: "Reconhecimento",
     rar: "epica",
-    cond: "150 “ajudou” ou curtidas recebidos.",
+    cond: "150 pessoas abriram a ficha de um lugar depois da sua avaliação.",
     obj: "Buquê jogado no palco.",
     copy: "Aplausos de pé. A comunidade confia no seu olhar.",
   },
@@ -594,7 +615,7 @@ export const MEDALHAS: Medalha[] = [
     art: "olho",
     cat: "Apoio",
     rar: "incomum",
-    cond: "Consultou a ficha do bairro em 5 dias diferentes.",
+    cond: "Abriu a ficha de um bairro em 5 dias diferentes.",
     obj: "O olho da Irisa em miniatura.",
     copy: "Antes de sair, você olha. Isso é cuidado.",
   },
@@ -629,24 +650,101 @@ export const MEDALHAS: Medalha[] = [
     obj: "Placa de bronze com parafusos.",
     copy: "Patrimônio tombado. Agora ninguém mexe.",
   },
+  // Segunda leva (04/10/2026)
+  {
+    id: "dona-do-pedaco",
+    t: "Dona do Pedaço",
+    flex: ["Dona do Pedaço", "Dono do Pedaço", "Done do Pedaço"],
+    art: "vasoJanela",
+    cat: "Rolê",
+    rar: "incomum",
+    cond: "Avaliou 5 lugares no mesmo bairro.",
+    obj: "Vaso de flor na janela.",
+    copy: "Cinco lugares no mesmo bairro. A vizinhança já sabe quem manda.",
+  },
+  {
+    id: "resenha-boa",
+    t: "Resenha Boa",
+    art: "caderninho",
+    cat: "Trajetória",
+    rar: "incomum",
+    cond: "10 avaliações com comentário de pelo menos 60 letras.",
+    obj: "Caderninho de anotação com caneta.",
+    copy: "Não deu só nota: contou como foi. Dez vezes.",
+  },
+  {
+    id: "cartografa",
+    t: "Cartógrafa",
+    flex: ["Cartógrafa", "Cartógrafo", "Cartógrafe"],
+    art: "rolo",
+    cat: "Cidade",
+    rar: "rara",
+    cond: "Cadastrou 5 lugares que faltavam, e outras pessoas avaliaram.",
+    obj: "Mapa em rolo, desenrolado.",
+    copy: "Cinco lugares no mapa que antes nem existiam pra gente.",
+  },
+  {
+    id: "abraco-coletivo",
+    t: "Abraço Coletivo",
+    art: "bracos",
+    cat: "Comunidade",
+    rar: "incomum",
+    cond: "Suas mensagens no mural receberam 20 reações.",
+    obj: "Braços coloridos em volta de um coração.",
+    copy: "Vinte reações. O mural te abraçou de volta.",
+  },
+  {
+    id: "tem-opiniao",
+    t: "Tem Opinião",
+    art: "microfone",
+    cat: "Comunidade",
+    rar: "incomum",
+    cond: "Respondeu a pergunta da semana em 4 semanas diferentes.",
+    obj: "Balão de pergunta com microfone.",
+    copy: "Quatro perguntas, quatro respostas. A comunidade gosta de te ouvir.",
+  },
 ];
 
 export const getMedalha = (id: string) => MEDALHAS.find((m) => m.id === id);
 /** Nome com a flexão escolhida no Perfil (0 = a, 1 = o, 2 = e). */
 export const nomeDa = (m: Medalha, forma: number) => (m.flex ? (m.flex[forma] ?? m.flex[2]) : m.t);
-/** As 12 que entram no lançamento, na ordem da pulseira. */
+/**
+ * As medalhas no ar, na ordem da grade de Conquistas: as 12 do lançamento e as 20 da segunda leva
+ * (migration 48), agrupadas por avaliar, descobrir, contribuir, comunidade e constância. Favorita do
+ * Público, Serviu Tudo e Rede de Apoio seguem só no catálogo: o app ainda não guarda o dado delas.
+ */
 export const LANCAMENTO = [
   "deu-o-nome",
   "deu-close",
   "figurinha",
   "famosinha",
+  "influ-do-vale",
+  "resenha-boa",
   "inaugurou",
   "acendeu-a-luz",
-  "eu-conheco",
+  "icone-local",
+  "lenda-local",
+  "da-casa",
+  "sabe-onde-ir",
   "nome-na-lista",
+  "dona-do-pedaco",
   "mala-pronta",
-  "bateu-ponto",
+  "olho-vivo",
+  "eu-conheco",
+  "cartografa",
+  "pode-entrar",
+  "utilidade-publica",
+  "interesse-municipal",
+  "aclamada",
   "ombro-amigo",
+  "bateu-leque",
+  "abraco-coletivo",
+  "tem-opiniao",
+  "bateu-ponto",
+  "ja-mora-aqui",
+  "agenda-cheia",
+  "patrimonio-cultural",
+  "patrimonio-tombado",
   "abre-alas",
 ];
 export const NIVEIS = ["Cinza", "Coral", "Laranja", "Amarelo", "Turquesa", "Azul", "Arco-íris"];
