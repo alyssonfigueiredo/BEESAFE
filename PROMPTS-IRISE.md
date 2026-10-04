@@ -1,8 +1,14 @@
 # Prompts de imagem — Irise (arte final, pronta pra publicar)
 
-Objetivo: gerar o Irise **dentro da cena**, não recortado colado do lado. Cada estado é uma
-ilustração única e completa (fundo, luz, elementos do app todos desenhados juntos), no mesmo
-padrão de qualidade do moodboard que você mandou.
+> **Correção de rumo (depois de testar):** as cenas com brilho/fio de luz/fundo composto abaixo
+> (seção 3) **não é o que você quer**. O caminho certo é o personagem limpo, fundo neutro, poses
+> simples — tipo asset de jogo/sticker — pra colar dentro de caixinha, ícone de chat e card do app.
+> Use **`PROMPTS-IRISE-PRONTOS.md`** pra isso (já pronto, sem placeholder). Esta seção 3 fica só
+> como registro do que NÃO deu certo.
+
+Objetivo: ter o Irise como um personagem consistente — a mesma "pessoa" aparecendo em ícone de
+chat, bolha de fala e card, no mesmo padrão de qualidade do moodboard que você mandou, sem efeito
+nem cena composta por cima.
 
 ## 0. Caminho recomendado pra consistência
 
@@ -61,7 +67,11 @@ neutral standing pose, plain light gray studio background, consistent lighting,
 [PROMPT-BASE DE ESTILO]
 ```
 
-## 3. Cenas integradas, por estado (o personagem DENTRO da cena, fundo pintado junto)
+## 3. [DESCARTADO] Cenas integradas, por estado — não usar, ficou com brilho/cena demais
+
+> Testado e reprovado: saiu cheio de efeito de luz e fundo narrativo, mais "ilustração de capa" do
+> que personagem de app. Pulei pro formato limpo em `PROMPTS-IRISE-PRONTOS.md`. Mantido aqui só de
+> histórico.
 
 Cada uma já é a ilustração completa — não um recorte colado. Troque `[IRISE X]` pela ficha fixa do
 personagem escolhido. Formato recomendado: vertical 1080×1920 (tela cheia) ou 1200×1500 (cartão).
