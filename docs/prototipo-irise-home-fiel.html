@@ -1,0 +1,470 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Protótipo Irise — Home fiel</title>
+<!-- Protótipo do assistente Irise (chips → router → Groq/Gemini), sem personagem/mascote,
+     construído traduzindo 1:1 o código real: app/(tabs)/index.tsx, app/(tabs)/_layout.tsx,
+     src/components/{Mark,Logo,Chip,SearchField,StatCard,PlaceCard,AxisBars,Rainbow,Aurora,Glass}.tsx,
+     src/theme/{tokens.js,domain.ts}. Nada inventado na Home: cada texto, cor e ícone vem de uma
+     linha específica do código. A parte nova (só isso) é a entrada do Irise e a folha de
+     descoberta, seguindo o pedido original: chips sem IA → router → Groq só quando precisa. -->
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Urbanist:wght@500&family=Oswald:wght@400;700&family=Space+Grotesk:wght@400;500;600;700&display=swap">
+<style>
+/* Tokens copiados de src/theme/tokens.js (mesmos valores, SATURATION=1.35 já aplicada nos hex). */
+:root{
+  --paper:#F5F4F1;--surface:rgba(255,255,255,.4);--solid:#FFFFFF;
+  --subtle:#F1F5FA;--border:#E6ECF3;--night:#141829;--ink:#141829;--muted:#3D4560;--dim:#7C8296;
+  --coral:#FF6964;--orange:#FFA353;--yellow:#FFD066;--turquoise:#49DCC0;--lilac:#A889FF;
+  --coralInk:#C72825;--orangeInk:#96601C;--yellowInk:#8A6512;--turquoiseInk:#0A8B7A;--lilacInk:#6D4FD8;
+  --amber:#E0A32E;
+  --display:"Oswald","Arial Narrow",Impact,sans-serif;
+  --body:"Space Grotesk","Helvetica Neue",Arial,sans-serif;
+  --mark:"Urbanist","Helvetica Neue",Arial,sans-serif;
+  --shadowCard:0 2px 4px rgba(20,24,41,.03),0 12px 32px rgba(20,24,41,.06);
+  --ease:cubic-bezier(.2,.7,.2,1);
+}
+*{box-sizing:border-box}p,h1,h2,h3{margin:0}
+html,body{height:100%}
+body{margin:0;overflow:hidden;font-family:var(--body);color:var(--ink);background:#ECEAE5;-webkit-font-smoothing:antialiased}
+button{font:inherit;color:inherit;border:0;background:none;cursor:pointer;padding:0}
+button:focus-visible{outline:3px solid var(--turquoise);outline-offset:2px}
+img,svg{display:block}
+
+/* ---------- palco ---------- */
+#app{position:relative;height:100%;display:flex;align-items:center;justify-content:center;gap:48px;padding-inline:24px}
+#phone{position:relative;width:390px;height:844px;border-radius:62px;background:#0E1020;padding:12px;box-shadow:0 40px 90px rgba(20,24,41,.32),0 0 0 2px #2A2E44 inset}
+#screen{position:relative;width:100%;height:100%;border-radius:50px;overflow:hidden;background:var(--paper);isolation:isolate}
+.island{position:absolute;left:50%;top:11px;width:120px;height:34px;margin-left:-60px;border-radius:20px;background:#000;z-index:60}
+
+/* Aurora: réplica exata das posições/cores de src/components/Aurora.tsx + aurora[] de tokens.js */
+#aurora{position:absolute;inset:0;z-index:0}
+
+/* ---------- cabeçalho de vidro (Glass.tsx: blur + véu branco) ---------- */
+.sb{position:relative;z-index:50;height:40px;display:flex;justify-content:space-between;align-items:flex-end;padding:0 30px 4px 36px;font-weight:600;font-size:14px;color:#111}
+.hd{position:relative;z-index:30;margin:2px 16px 0;height:52px;border-radius:26px;background:rgba(255,255,255,.66);backdrop-filter:blur(14px);box-shadow:0 1px 2px rgba(20,24,41,.03),0 12px 32px rgba(20,24,41,.06);display:flex;align-items:center;justify-content:space-between;padding:0 10px 0 16px}
+.logo-row{display:flex;align-items:center;gap:10px}
+.wordmark{font-family:var(--mark);font-weight:500;text-transform:uppercase;font-size:20px;letter-spacing:.14em;color:var(--ink)}
+.wordmark b{font-weight:500;color:var(--yellow)}
+.sos{width:40px;height:40px;border-radius:50%;background:var(--coral);display:flex;align-items:center;justify-content:center;flex:none}
+
+/* ---------- conteúdo rolável ---------- */
+#scroll{position:relative;z-index:1;height:calc(100% - 54px);overflow-y:auto;scrollbar-width:none;padding:12px 16px 110px;display:flex;flex-direction:column;gap:16px}
+#scroll::-webkit-scrollbar{display:none}
+
+/* Cartão principal escuro: copiado 1:1 do JSX de index.tsx */
+.hero{border-radius:28px;padding:20px;background:var(--night);box-shadow:0 2px 4px rgba(20,24,41,.08),0 14px 36px rgba(20,24,41,.16);display:flex;flex-direction:column;gap:12px}
+.hero .tag-row{display:flex;align-items:center;gap:12px}
+.hero .tag-tile{width:36px;height:36px;border-radius:12px;background:rgba(255,255,255,.1);display:flex;align-items:center;justify-content:center}
+.hero .eb{font-family:var(--body);font-weight:500;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:rgba(245,244,241,.6)}
+.hero h1{font-family:var(--display);font-weight:700;text-transform:uppercase;font-size:30px;letter-spacing:.01em;color:var(--paper)}
+.city-picker{display:flex;align-items:center;gap:4px;align-self:flex-start}
+.city-picker span{font-family:var(--body);font-weight:500;font-size:14px;color:var(--paper)}
+.rb-line{display:flex;width:72px;height:4px;border-radius:2px;overflow:hidden}
+.rb-line i{flex:1}
+.hero p{font-family:var(--body);font-size:14px;line-height:1.5;color:rgba(245,244,241,.75)}
+.hero p b{font-family:var(--body);font-weight:700;color:var(--yellow)}
+.hero .actions{display:flex;gap:8px;padding-top:4px}
+.btn{height:46px;border-radius:999px;display:flex;align-items:center;justify-content:center;font-family:var(--body);font-weight:700;font-size:14px;flex:1}
+.btn.turq{background:var(--turquoise);color:var(--night)}
+.btn.coral{background:var(--coral);color:var(--night)}
+.btn:active{opacity:.8}
+
+/* Gamificação: duo simples (Sua semana / Suas cores), mesma grade que GamiHomeCards usa */
+.duo{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.mini{background:var(--surface);border-radius:20px;padding:14px;box-shadow:var(--shadowCard);display:flex;flex-direction:column;gap:6px}
+.mini .lb{font-family:var(--body);font-weight:500;font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--dim)}
+.mini .num{font-family:var(--display);font-weight:700;font-size:20px;color:var(--ink)}
+.mini .cap{font-family:var(--body);font-size:11.5px;line-height:1.3;color:var(--muted)}
+
+/* Busca + chips: SearchField.tsx (vidro) + Chip.tsx (tonal) */
+.search{display:flex;align-items:center;gap:10px;height:48px;border-radius:999px;padding:0 14px;background:rgba(255,255,255,.66);backdrop-filter:blur(14px);box-shadow:var(--shadowCard)}
+.search input{flex:1;border:0;background:none;font:inherit;font-size:15px;color:var(--ink);outline:0}
+.search input::placeholder{color:var(--dim)}
+.chiprow{display:flex;gap:8px;overflow-x:auto;padding-bottom:2px;scrollbar-width:none}
+.chiprow::-webkit-scrollbar{display:none}
+.chip{flex:none;height:34px;padding:0 12px;border-radius:999px;background:var(--subtle);display:flex;align-items:center;font-family:var(--body);font-weight:500;font-size:12px;color:var(--muted)}
+.chip.on{background:var(--ink);color:#fff}
+
+/* PlaceCard.tsx: foto/azulejo, nome, categoria, Rainbow (5 faixas), badge, AxisStrip (4 traços), contagem */
+.section-title{font-family:var(--body);font-weight:700;font-size:16px;color:var(--ink)}
+.place{display:flex;gap:12px;border-radius:24px;background:var(--surface);padding:12px;box-shadow:var(--shadowCard);opacity:0;animation:fadeInDown .45s var(--ease) forwards}
+.place .photo{width:64px;height:64px;border-radius:16px;flex:none;display:flex;align-items:center;justify-content:center}
+.place .body{flex:1;min-width:0;display:flex;flex-direction:column;gap:6px}
+.place .top-row{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.place .name{font-family:var(--body);font-weight:700;font-size:15px;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.place .cat{font-family:var(--body);font-size:11.5px;color:var(--dim);flex:none}
+.place .score-row{display:flex;align-items:center;gap:8px}
+.rainbow{display:flex;gap:3px}
+.rainbow i{width:17px;height:8px;border-radius:4px;background:var(--border);overflow:hidden;position:relative}
+.rainbow i b{position:absolute;inset:0;border-radius:4px;transform-origin:left}
+.score-num{font-family:var(--body);font-weight:700;font-size:13px}
+.badge{align-self:flex-start;border-radius:999px;padding:3px 8px;font-family:var(--body);font-weight:500;font-size:10.5px}
+.axis-strip{display:flex;gap:5px}
+.axis-strip i{flex:1;height:4px;border-radius:2px;background:var(--border);overflow:hidden}
+.axis-strip i b{display:block;height:100%;border-radius:2px;width:0;animation:fillBar .7s var(--ease) forwards}
+.place .meta{font-family:var(--body);font-size:11px;color:var(--dim)}
+@keyframes fadeInDown{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+@keyframes fillBar{to{width:var(--w)}}
+
+/* StatCard.tsx */
+.stat{flex:1;min-width:0;border-radius:24px;background:var(--surface);padding:14px;box-shadow:var(--shadowCard);display:flex;flex-direction:column;gap:8px}
+.stat .row{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.stat .lb{font-family:var(--body);font-weight:500;font-size:12px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.stat .tile{width:28px;height:28px;border-radius:9px;flex:none;display:flex;align-items:center;justify-content:center}
+.stat .num{font-family:var(--display);font-weight:700;font-size:22px;color:var(--ink)}
+.stat-row{display:flex;gap:8px}
+
+.sub{font-family:var(--body);font-size:12px;color:var(--dim)}
+
+/* ---------- barra de abas (Tabs.tsx: cápsula de vidro, lente branca na ativa) ---------- */
+.tb{position:absolute;left:16px;right:16px;bottom:16px;z-index:25;height:62px;border-radius:31px;background:rgba(255,255,255,.7);backdrop-filter:blur(16px);box-shadow:0 1px 2px rgba(20,24,41,.03),0 12px 32px rgba(20,24,41,.1);display:flex;align-items:center;padding:5px 4px}
+.tb button{flex:1;height:100%;border-radius:26px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;font-family:var(--body);font-weight:500;font-size:10.5px;color:var(--dim)}
+.tb button.on{background:#fff}
+
+/* ---------- Irise: entrada discreta (sem personagem) ---------- */
+#irisefab{position:absolute;right:18px;bottom:94px;z-index:24;width:52px;height:52px;border-radius:50%;background:var(--night);box-shadow:0 10px 22px rgba(20,24,41,.3);display:flex;align-items:center;justify-content:center}
+#irisefab .ring{position:absolute;inset:-3px;border-radius:50%;padding:3px;background:conic-gradient(#FF6964,#FFA353,#FFD066,#49DCC0,#6AA8EE,#AE96F2,#FF6964);
+  -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;animation:spin 7s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* ---------- folha de descoberta (gami/Sheet.tsx: scrim .38, 34px, alça 44x5) ---------- */
+.veil{position:absolute;inset:0;z-index:40;background:rgba(20,24,41,.38);opacity:0;pointer-events:none;transition:opacity .3s}
+.veil.on{opacity:1;pointer-events:auto}
+#sheet{position:absolute;left:0;right:0;bottom:0;height:82%;z-index:41;background:#FBFCFE;border-radius:34px 34px 0 0;transform:translateY(100%);transition:transform .36s cubic-bezier(.2,.8,.2,1);display:flex;flex-direction:column;overflow:hidden}
+#sheet.on{transform:none}
+.grab{width:44px;height:5px;border-radius:3px;background:#D9D5CD;margin:10px auto 6px}
+.sheet-head{flex:none;padding:0 18px 12px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border)}
+.sheet-title{display:flex;align-items:center;gap:8px;font-family:var(--body);font-weight:700;font-size:15px}
+.sheet-title .dot{width:26px;height:26px;border-radius:50%;background:conic-gradient(#FF6964,#FFA353,#FFD066,#49DCC0,#6AA8EE,#AE96F2)}
+.xclose{width:30px;height:30px;border-radius:50%;background:var(--subtle);display:flex;align-items:center;justify-content:center}
+.sheet-body{flex:1;min-height:0;overflow-y:auto;padding:16px 18px;display:flex;flex-direction:column;gap:12px;scrollbar-width:none}
+.sheet-body::-webkit-scrollbar{display:none}
+.bubble{background:#fff;border-radius:18px 18px 18px 5px;padding:11px 14px;font-family:var(--body);font-size:14px;line-height:1.45;max-width:85%;box-shadow:var(--shadowCard);align-self:flex-start;opacity:0;animation:fadeInDown .3s var(--ease) forwards}
+.bubble.you{background:var(--ink);color:#fff;border-radius:18px 18px 5px 18px;align-self:flex-end}
+.chipset{display:flex;flex-wrap:wrap;gap:8px;opacity:0;animation:fadeInDown .3s var(--ease) forwards}
+.chipbig{height:38px;padding:0 15px;border-radius:19px;background:var(--subtle);font-family:var(--body);font-weight:600;font-size:13.5px;color:var(--ink)}
+.chipbig:active{transform:scale(.96)}
+.layer-badge{align-self:flex-start;font-family:var(--body);font-size:10.5px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;padding:3px 9px;border-radius:10px;opacity:0;animation:fadeInDown .3s var(--ease) forwards}
+.layer-badge.l0{background:rgba(73,220,192,.18);color:var(--turquoiseInk)}
+.layer-badge.l2{background:rgba(255,208,102,.3);color:var(--yellowInk)}
+.typing{display:flex;gap:4px;align-self:flex-start;background:#fff;border-radius:18px;padding:11px 15px;box-shadow:var(--shadowCard)}
+.typing i{width:6px;height:6px;border-radius:50%;background:var(--dim);animation:bounce 1.1s infinite ease-in-out}
+.typing i:nth-child(2){animation-delay:.15s}.typing i:nth-child(3){animation-delay:.3s}
+@keyframes bounce{0%,80%,100%{transform:translateY(0);opacity:.4}40%{transform:translateY(-4px);opacity:1}}
+.sheet-foot{flex:none;padding:10px 14px calc(14px + env(safe-area-inset-bottom,0px));border-top:1px solid var(--border);display:flex;flex-direction:column;gap:8px;background:#FBFCFE}
+.again{align-self:center;font-family:var(--body);font-size:12.5px;color:var(--dim);text-decoration:underline;text-underline-offset:3px}
+.inputrow{display:flex;align-items:center;gap:8px;height:46px;border-radius:23px;background:var(--subtle);padding:0 6px 0 16px}
+.inputrow input{flex:1;border:0;background:none;font:inherit;font-size:13.5px;outline:0;color:var(--ink)}
+.inputrow input::placeholder{color:var(--dim)}
+.sendbtn{width:36px;height:36px;border-radius:50%;background:var(--ink);display:flex;align-items:center;justify-content:center;flex:none}
+
+/* ---------- painel lateral (ferramenta de navegação do protótipo, não é parte do app) ---------- */
+#panel{width:380px;flex:none;background:rgba(255,255,255,.9);border-radius:28px;padding:26px;box-shadow:0 2px 6px rgba(20,24,41,.05),0 18px 40px rgba(20,24,41,.12);backdrop-filter:blur(20px)}
+#panel .mark{font-family:var(--mark);font-weight:500;letter-spacing:.2em;font-size:13px;color:var(--muted)}
+#panel .mark b{color:var(--amber);font-weight:500}
+#panel h2{font-family:var(--display);font-weight:700;text-transform:uppercase;font-size:22px;margin-top:10px}
+#panel p{font-family:var(--body);font-size:13.5px;line-height:1.55;color:var(--muted);margin-top:10px}
+#panel .leg{display:flex;gap:9px;align-items:flex-start;margin-top:10px}
+#panel .leg i{width:9px;height:9px;border-radius:50%;margin-top:4px;flex:none}
+#panel .leg i.l0{background:var(--turquoise)}
+#panel .leg i.l2{background:var(--yellow)}
+@media (max-width:900px){#app{flex-direction:column;overflow:auto;padding-block:16px}#panel{width:auto}}
+@media (prefers-reduced-motion:reduce){*,*:before,*:after{animation-duration:.01ms!important;transition-duration:.01ms!important}}
+</style>
+</head>
+<body>
+<div id="app">
+  <div id="phone"><div id="screen">
+    <div class="island"></div>
+    <svg id="aurora" width="100%" height="100%" viewBox="0 0 100 100" preserveAspectRatio="none"></svg>
+
+    <div class="sb"><span>9:41</span><span>●●●</span></div>
+    <div class="hd">
+      <div class="logo-row"><svg id="mark" width="28" height="28" viewBox="0 0 100 100"></svg>
+        <span class="wordmark">Iris<b>a</b></span></div>
+      <div class="sos"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#141829" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 18v-6a5 5 0 0 1 10 0v6"/><path d="M5 21h14v-3H5Z"/></svg></div>
+    </div>
+
+    <div id="scroll"></div>
+
+    <div class="tb" id="tabbar"></div>
+
+    <button id="irisefab" aria-label="Irise"><span class="ring"></span>
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v3M12 18v3M4.2 4.2l2.1 2.1M17.7 17.7l2.1 2.1M3 12h3M18 12h3M4.2 19.8l2.1-2.1M17.7 6.3l2.1-2.1"/><circle cx="12" cy="12" r="3"/></svg>
+    </button>
+
+    <div class="veil" id="veil"></div>
+    <div id="sheet">
+      <div class="grab"></div>
+      <div class="sheet-head">
+        <span class="sheet-title"><span class="dot"></span>Irise</span>
+        <button class="xclose" id="closeSheet"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#141829" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+      </div>
+      <div class="sheet-body" id="sheetBody"></div>
+      <div class="sheet-foot">
+        <button class="again" id="againBtn" hidden>Quer procurar outra coisa?</button>
+        <div class="inputrow">
+          <input id="freeText" placeholder="Ou me conta o que você tá procurando…" />
+          <button class="sendbtn" id="sendFree"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
+        </div>
+      </div>
+    </div>
+  </div></div>
+
+  <aside id="panel">
+    <span class="mark">IRIS<b>A</b> · IRISE</span>
+    <h2>Guia de descoberta</h2>
+    <p>Home traduzida linha a linha do código real (<code>app/(tabs)/index.tsx</code> e seus
+    componentes) — mesmo texto, cor, ícone e animação de entrada dos cards. A única parte nova é o
+    botão do Irise (canto inferior direito) e a folha que ele abre: chips primeiro, Groq só quando
+    o texto livre não cai em nenhuma regra do router.</p>
+    <p class="leg"><i class="l0"></i> Resolvido sem IA (chips, filtro, banco).</p>
+    <p class="leg"><i class="l2"></i> Groq interpretou o texto livre.</p>
+    <p>Sem personagem/mascote de propósito — foi tirado do escopo.</p>
+  </aside>
+</div>
+
+<script>
+const $=(s,r=document)=>r.querySelector(s), $$=(s,r=document)=>[...r.querySelectorAll(s)];
+// #screen nunca deve ser scrollável (só #scroll e #sheetBody são) — alguns navegadores tentam
+// rolar o ancestral com overflow:hidden ao focar um botão dentro da folha, o que deslocava o #sheet
+// (position:absolute) porque bottom:0 passa a valer a partir do novo scrollTop. Trava em 0.
+$("#screen").addEventListener("scroll", function(){ this.scrollTop = 0; this.scrollLeft = 0; });
+
+/* ===== Mark.tsx — mesma geometria/algoritmo, portado pra JS ===== */
+const RING = ["#FF6964","#FFA353","#FFD066","#49DCC0","#6AA8EE","#AE96F2"]; // mark.ring (tokens.js)
+function lerp(a,b,t){let o="#";for(let i=1;i<7;i+=2){const x=parseInt(a.slice(i,i+2),16),y=parseInt(b.slice(i,i+2),16);o+=Math.round(x+(y-x)*t).toString(16).padStart(2,"0");}return o;}
+function ringColor(t){const p=t*RING.length,i=Math.floor(p)%RING.length;return lerp(RING[i],RING[(i+1)%RING.length],p-Math.floor(p));}
+function pt(r,a){return{x:50+r*Math.cos(a),y:50+r*Math.sin(a)};}
+function slicePath(ro,ri,a0,a1){const o0=pt(ro,a0),o1=pt(ro,a1),i1=pt(ri,a1),i0=pt(ri,a0);return `M ${o0.x} ${o0.y} A ${ro} ${ro} 0 0 1 ${o1.x} ${o1.y} L ${i1.x} ${i1.y} A ${ri} ${ri} 0 0 0 ${i0.x} ${i0.y} Z`;}
+function drawMark(el){
+  const N=48; let h="";
+  for(let i=0;i<N;i++){
+    const a0=(i/N)*2*Math.PI-Math.PI/2, a1=((i+1)/N)*2*Math.PI-Math.PI/2+0.05;
+    h+=`<path d="${slicePath(48,35,a0,a1)}" fill="${ringColor(i/N)}"/>`;
+  }
+  const sweepStart=pt(33,(-150*Math.PI)/180), sweepEnd=pt(33,(-55*Math.PI)/180);
+  h+=`<path d="${slicePath(33,0,(-150*Math.PI)/180,(-55*Math.PI)/180)}" fill="rgba(73,220,192,.35)"/>`;
+  h+=`<circle cx="50" cy="50" r="13" fill="#0F1220"/><circle cx="46.1" cy="45.6" r="2.86" fill="#fff"/>`;
+  el.innerHTML=h;
+}
+drawMark($("#mark"));
+
+/* ===== Aurora.tsx — mesmas 4 manchas (aurora[] de tokens.js) ===== */
+const AURORA=[
+  {x:-0.08,y:-0.04,r:0.7,color:"#49DCC0",alpha:.42},
+  {x:1.08,y:0.06,r:0.55,color:"#FF6964",alpha:.34},
+  {x:1.06,y:1.04,r:0.6,color:"#A889FF",alpha:.4},
+  {x:-0.06,y:1.02,r:0.5,color:"#FFD066",alpha:.38},
+];
+(function(){
+  const defs=AURORA.map((a,i)=>`<radialGradient id="au${i}" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="${a.color}" stop-opacity="${a.alpha}"/><stop offset="1" stop-color="${a.color}" stop-opacity="0"/></radialGradient>`).join("");
+  const ell=AURORA.map((a,i)=>`<ellipse cx="${a.x*100}" cy="${a.y*100}" rx="${a.r*60}" ry="${a.r*42}" fill="url(#au${i})"/>`).join("");
+  $("#aurora").innerHTML=`<defs>${defs}</defs>${ell}`;
+})();
+
+/* ===== barra de abas — Home/Map/Store/LifeBuoy/User (lucide), tabColors de tokens.js ===== */
+const TABS=[
+  {name:"Início",color:"#C72825",on:true, icon:'<path d="M3 10l9-7 9 7v10a2 2 0 0 1-2 2h-4v-7H9v7H5a2 2 0 0 1-2-2Z"/>'},
+  {name:"Mapa",color:"#0A8B7A",on:false, icon:'<path d="M9 4L3 6v14l6-2 6 2 6-2V4l-6 2Z"/><path d="M9 4v14M15 6v14"/>'},
+  {name:"Lugares",color:"#96601C",on:false, icon:'<path d="M3 9l1.5-5h15L21 9"/><path d="M4 9v11h16V9"/><path d="M3 9h18"/><path d="M10 20v-5h4v5"/>'},
+  {name:"Apoio",color:"#6D4FD8",on:false, icon:'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>'},
+  {name:"Perfil",color:"#141829",on:false, icon:'<circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/>'},
+];
+$("#tabbar").innerHTML = TABS.map(t=>`<button class="${t.on?"on":""}" style="${t.on?`color:${t.color}`:""}">
+  <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="${t.on?t.color:"#7C8296"}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${t.icon}</svg>${t.name}</button>`).join("");
+
+/* ===== Rainbow.tsx — marcador de nota em 5 faixas ===== */
+const SCALE=["#FF6964","#FFA353","#FFD066","#49DCC0","#A889FF"];
+function rainbow(value){
+  return `<span class="rainbow">${SCALE.map((c,i)=>{const fill=Math.max(0,Math.min(1,value-i));return `<i><b style="background:${c};transform:scaleX(${fill})"></b></i>`;}).join("")}</span>`;
+}
+function scoreColor(score){ if(score>=4.5) return "#49DCC0"; if(score>=3.5) return "#8A6512"; if(score>=2.5) return "#96601C"; return "#C72825"; }
+const AXES=[["Atendimento"],["Afeto"],["Banheiro"],["Clientela"]];
+function axisStrip(scores){
+  if(!scores) return "";
+  return `<span class="axis-strip">${scores.map((v,i)=>`<i><b style="--w:${Math.max(6,v/5*100)}%;background:${SCALE[i]};animation-delay:${.12+i*.06}s"></b></i>`).join("")}</span>`;
+}
+const BADGES={
+  acolhedor:{label:"Acolhedor",bg:"rgba(73,220,192,.18)",ink:"#0A8B7A"},
+  bem:{label:"Bem avaliado",bg:"rgba(255,208,102,.18)",ink:"#8A6512"},
+  dividido:{label:"Opiniões divididas",bg:"rgba(168,137,255,.18)",ink:"#6D4FD8"},
+  atencao:{label:"Atenção",bg:"rgba(255,105,100,.18)",ink:"#C72825"},
+  poucas:{label:"Poucas avaliações",bg:"#F1F5FA",ink:"#3D4560"},
+};
+function badge(key){ if(!key) return ""; const b=BADGES[key]; return `<span class="badge" style="background:${b.bg};color:${b.ink}">${b.label}</span>`; }
+
+const ICO_BAR='<svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#C72825" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 3h14l-7 9z"/><path d="M12 12v8M8 21h8"/></svg>';
+const ICO_CAFE='<svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#8A6512" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 8h1a4 4 0 1 1 0 8h-1"/><path d="M3 8h14v9a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4Z"/></svg>';
+const ICO_REST='<svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#1B7A6E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 2v8M11 2v8M7 10a4 4 0 0 0 4 0M9 10v12"/><path d="M17 2c-2 2-2 6 0 8s4-1 4-4"/></svg>';
+const ICO_FILE='<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#C72825" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg>';
+const ICO_CLOCK='<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#8A6512" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>';
+const ICO_MSG='<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#96601C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>';
+const ICO_PIN='<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#C72825" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>';
+
+function placeCard({icon,iconBg,name,category,score,badgeKey,axes,ratingCount,neighborhood,noScore,why,index}){
+  const body = noScore
+    ? `<p class="sub">Quanta cor tem esse lugar? Seja a primeira pessoa a dizer.</p>${neighborhood?`<p class="meta">${neighborhood}</p>`:""}`
+    : `<div class="score-row">${rainbow(score)}<span class="score-num" style="color:${scoreColor(score)}">${score.toFixed(1)}</span>${badge(badgeKey)}</div>
+       ${axisStrip(axes)}
+       <p class="meta">${ratingCount} avaliaç${ratingCount===1?"ão":"ões"}${neighborhood?` · ${neighborhood}`:""}</p>`;
+  return `<div class="place" style="animation-delay:${Math.min(index??0,9)*0.055}s">
+    <span class="photo" style="background:${iconBg}">${icon}</span>
+    <div class="body">
+      <div class="top-row"><span class="name">${name}</span><span class="cat">${category}</span></div>
+      ${body}
+      ${why?`<p class="meta" style="color:#0A8B7A">${why}</p>`:""}
+    </div>
+  </div>`;
+}
+
+function statCard(label, value, color, icon){
+  return `<div class="stat"><div class="row"><span class="lb">${label}</span>
+    <span class="tile" style="background:${color}33">${icon}</span></div>
+    <span class="num">${value}</span></div>`;
+}
+
+/* ===== Home — tradução de app/(tabs)/index.tsx ===== */
+function renderHome(){
+  $("#scroll").innerHTML = `
+    <div class="hero">
+      <div class="tag-row"><span class="tag-tile"><svg width="20" height="20" viewBox="0 0 100 100" id="markMini"></svg></span>
+        <span class="eb">Sua cidade</span></div>
+      <h1>CURITIBA</h1>
+      <span class="city-picker"><span>Curitiba · PR</span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#F5F4F1" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></span>
+      <span class="rb-line">${RING.map(c=>`<i style="background:${c}"></i>`).join("")}</span>
+      <p>O mapa dos lugares onde a gente é <b>bem-vinde</b>, feito por nós. Diga quanta cor tem os lugares por onde você passa. E registre, sem se identificar, o que não deveria ter acontecido.</p>
+      <div class="actions">
+        <button class="btn turq">Avaliar um lugar</button>
+        <button class="btn coral">Registrar relato</button>
+      </div>
+    </div>
+
+    <div class="duo">
+      <div class="mini"><span class="lb">Sua semana</span><span class="num">2 de 4</span><span class="cap">Cada dia que você abre a Irisa acende um pedaço.</span></div>
+      <div class="mini"><span class="lb">Curitiba</span><span class="num">12 de 100</span><span class="cap">dos lugares mais conhecidos já têm selo.</span></div>
+    </div>
+
+    <div style="display:flex;flex-direction:column;gap:8px">
+      <div class="search"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#7C8296" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg>
+        <input placeholder="Buscar um lugar em Curitiba" /></div>
+      <div class="chiprow">
+        <span class="chip on">Perto de você</span>
+        <span class="chip">Já avaliados</span>
+        <span class="chip">Bar</span><span class="chip">Café</span><span class="chip">Restaurante</span><span class="chip">Balada</span>
+      </div>
+    </div>
+
+    <div style="display:flex;flex-direction:column;gap:10px">
+      <span class="section-title">Lugares mais acolhedores</span>
+      ${placeCard({icon:ICO_BAR,iconBg:"rgba(255,105,100,.14)",name:"Bar Aquarela",category:"Bar",score:4.7,badgeKey:"acolhedor",axes:[4.8,4.6,4.7,4.5],ratingCount:12,neighborhood:"São Francisco",index:0})}
+      ${placeCard({icon:ICO_CAFE,iconBg:"rgba(255,208,102,.16)",name:"Café do Largo",category:"Café",score:4.2,badgeKey:"bem",axes:[4.3,4.0,4.4,4.0],ratingCount:18,neighborhood:"Centro",index:1})}
+      ${placeCard({icon:ICO_REST,iconBg:"#EEEBE4",name:"Jardim Secreto",category:"Restaurante",noScore:true,neighborhood:"Batel",index:2})}
+    </div>
+
+    <div style="display:flex;flex-direction:column;gap:2px;padding-top:4px">
+      <span class="section-title">Segurança na cidade</span>
+      <span class="sub">Relatos anônimos da comunidade. Ponto no mapa, nunca nome de quem escreveu.</span>
+    </div>
+    <div class="stat-row">${statCard("Relatos","32","#49DCC0",ICO_FILE)}${statCard("Últimos 30 dias","6","#FFD066",ICO_CLOCK)}</div>
+    <div class="stat-row">${statCard("Mais frequente","Verbal","#FFA353",ICO_MSG)}${statCard("Área crítica","Centro","#FF6964",ICO_PIN)}</div>
+  `;
+  drawMark($("#markMini"));
+}
+renderHome();
+
+/* ===================================================================
+   IRISE — descoberta (chips → router → Groq). Sem personagem/mascote.
+   =================================================================== */
+const body=$("#sheetBody"), veil=$("#veil"), sheet=$("#sheet"), again=$("#againBtn");
+function scrollEnd(){ body.scrollTop=body.scrollHeight; }
+function addBubble(text,mine){ const d=document.createElement("div"); d.className="bubble"+(mine?" you":""); d.textContent=text; body.appendChild(d); scrollEnd(); return d; }
+function addBadgeLayer(kind){ const d=document.createElement("div"); d.className="layer-badge "+kind; d.textContent=kind==="l0"?"Zero IA":"Groq interpretou"; body.appendChild(d); scrollEnd(); }
+function addChips(options,onPick){
+  const row=document.createElement("div"); row.className="chipset";
+  options.forEach(o=>{ const b=document.createElement("button"); b.className="chipbig"; b.textContent=o;
+    b.onclick=()=>{ addBubble(o,true); setTimeout(()=>onPick(o),140); };
+    row.appendChild(b); });
+  body.appendChild(row); scrollEnd();
+}
+function typingThen(fn,ms){ const t=document.createElement("div"); t.className="typing"; t.innerHTML="<i></i><i></i><i></i>"; body.appendChild(t); scrollEnd();
+  setTimeout(()=>{ t.remove(); fn(); }, ms??650); }
+function resultCard(opts){ const d=document.createElement("div"); d.innerHTML=placeCard(opts); body.appendChild(d.firstElementChild); scrollEnd(); }
+
+const SETS={
+  date_tranquilo:[
+    {icon:ICO_CAFE,iconBg:"rgba(255,208,102,.16)",name:"Café do Largo",category:"Café",score:4.2,badgeKey:"bem",axes:[4.3,4.0,4.4,4.0],ratingCount:18,neighborhood:"Centro",why:"Mais tranquilo e bom pra conversar."},
+    {icon:ICO_BAR,iconBg:"rgba(255,105,100,.14)",name:"Bar da Esquina",category:"Bar",score:3.9,badgeKey:"bem",axes:[4.0,3.8,4.1,3.7],ratingCount:9,neighborhood:"São Francisco",why:"Boa se a ideia for ficar horas sem gastar fortuna."},
+    {icon:ICO_REST,iconBg:"#EEEBE4",name:"Jardim Secreto",category:"Restaurante",noScore:true,neighborhood:"Batel",why:"Esse combina com o que você pediu, mas a comunidade ainda falou pouco dele."},
+  ],
+  fervo:[
+    {icon:ICO_BAR,iconBg:"rgba(168,137,255,.16)",name:"Clube Aurora",category:"Balada",score:4.4,badgeKey:"acolhedor",axes:[4.5,4.3,4.4,4.3],ratingCount:31,neighborhood:"Centro",why:"Pista cheia e a galera costuma elogiar o clima."},
+  ],
+  perto:[
+    {icon:ICO_CAFE,iconBg:"rgba(255,208,102,.16)",name:"Café da Praça",category:"Café",score:4.1,badgeKey:"bem",axes:[4.2,4.0,4.1,4.0],ratingCount:10,neighborhood:"perto de você",why:"A 400m de você, pela localização atual."},
+  ],
+  surpreende:[
+    {icon:ICO_REST,iconBg:"#EEEBE4",name:"Mesa Redonda",category:"Restaurante",score:4.3,badgeKey:"bem",axes:[4.4,4.2,4.3,4.1],ratingCount:22,neighborhood:"Batel",why:"Ainda não tinha aparecido pra você — e está bem avaliado."},
+  ],
+};
+function showResults(key,intro){
+  typingThen(()=>{
+    addBubble(intro);
+    (SETS[key]||SETS.date_tranquilo).forEach(c=>resultCard({...c,index:0}));
+    again.hidden=false;
+  });
+}
+function flowIntencao(){
+  addBubble("Qual a intenção?");
+  addChips(["🍽️ Comer","🍸 Beber","☕ Café","💃 Fervo","💘 Date","🌳 Passear","✨ Outra coisa"],(c)=>{
+    if(c==="💘 Date") return flowDate();
+    if(c==="💃 Fervo") return showResults("fervo","Ah. Finalmente uma pergunta séria. Separei esses:");
+    showResults("date_tranquilo","Peguei a vibe. Separei esses pra você:");
+  });
+}
+function flowDate(){
+  typingThen(()=>{
+    addBubble("Tá, temos um date 👀 Qual a energia?");
+    addChips(["Romântico","Casual","Baratinho","Impressionar","Tranquilo","Me surpreende"],()=>{
+      showResults("date_tranquilo","Peguei a vibe. Separei esses pra você:");
+    });
+  });
+}
+function flowIntro(){
+  body.innerHTML=""; again.hidden=true;
+  typingThen(()=>{
+    addBubble("E aí, qual vai ser hoje? 🌈");
+    addChips(["Quero um lugar","Quero irisar","Me surpreende","O que tem por perto?"],(c)=>{
+      if(c==="Quero um lugar") return typingThen(flowIntencao);
+      if(c==="Quero irisar") return typingThen(()=>showResults("date_tranquilo","👀 Esses aqui a comunidade quase não irisou ainda — topa ser quem conta como é?"));
+      if(c==="Me surpreende") return typingThen(()=>{ addBadgeLayer("l0"); showResults("surpreende","Ah, deixa comigo então."); });
+      if(c==="O que tem por perto?") return typingThen(()=>{ addBadgeLayer("l0"); showResults("perto","Pelo que vejo daqui, perto de você:"); });
+    });
+  },280);
+}
+const ROUTER=[
+  {rx:/perto|proxim/,run:()=>{ addBadgeLayer("l0"); showResults("perto","Resolvido sem precisar de IA — pelo que vejo daqui, perto de você:"); }},
+  {rx:/balad|fervo/,run:()=>{ addBadgeLayer("l0"); showResults("fervo","Ah. Finalmente uma pergunta séria."); }},
+  {rx:/barato|em conta|economic/,run:()=>{ addBadgeLayer("l0"); showResults("date_tranquilo","Peguei a vibe (reconheci \"barato\" sem IA):"); }},
+  {rx:/surpreend/,run:()=>{ addBadgeLayer("l0"); showResults("surpreende","Ah, deixa comigo então."); }},
+];
+function handleFreeText(text){
+  addBubble(text,true);
+  const hit=ROUTER.find(r=>r.rx.test(text.toLowerCase()));
+  if(hit) return typingThen(hit.run,480);
+  typingThen(()=>{ addBadgeLayer("l2"); addBubble('Interpretei como: { intent: "find_place", occasion: "date", alcohol: false, vibe: ["quiet"] }'); },620);
+  setTimeout(()=>typingThen(()=>showResults("date_tranquilo","Peguei a vibe. Separei esses pra você:"),480),1250);
+}
+$("#irisefab").onclick=()=>{ veil.classList.add("on"); sheet.classList.add("on"); if(!body.children.length) flowIntro(); };
+$("#closeSheet").onclick=close; veil.onclick=close;
+function close(){ veil.classList.remove("on"); sheet.classList.remove("on"); }
+again.onclick=flowIntro;
+$("#sendFree").onclick=sendFree;
+$("#freeText").addEventListener("keydown",e=>{ if(e.key==="Enter") sendFree(); });
+function sendFree(){ const i=$("#freeText"); const v=i.value.trim(); if(!v) return; i.value=""; handleFreeText(v); }
+</script>
+</body>
+</html>
