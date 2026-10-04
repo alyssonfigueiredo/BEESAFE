@@ -1,0 +1,1100 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Irisa · protótipo</title>
+<!-- Protótipo navegável do app inteiro (04/10/2026): entrada, Início, Lugares, ficha do lugar com as
+     quatro perguntas, Mapa, relato, emergência, Apoio, Perfil, Sua evolução, Conquistas e o cartão do
+     story, no visual de hoje e com os ícones 3D. Nada grava: é encenado no navegador.
+     Arquivo único: python3 scripts/prototipo-app.py → docs/Irisa-prototipo-app.html -->
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Urbanist:wght@500&family=Oswald:wght@400;700&family=Space+Grotesk:wght@400;500;600;700&display=swap">
+<style>
+:root{
+  --paper:#F5F4F1;--stage:#ECEAE5;--subtle:#F1F5FA;--off:#E6ECF3;--line:#D3DBE6;
+  --night:#141829;--night2:#20253A;--ink:#141829;--muted:#3D4560;--dim:#7C8296;
+  --coral:#FF6964;--orange:#FFA353;--yellow:#FFD066;--turq:#49DCC0;--blue:#59A7FF;--lilac:#A889FF;
+  --coralInk:#C72825;--orangeInk:#AB6207;--yellowInk:#9C6C00;--turqInk:#0A8B7A;--lilacInk:#6037F0;--amber:#E0A32E;
+  --rb:linear-gradient(90deg,#FF6964,#FFA353,#FFD066,#49DCC0,#59A7FF,#A889FF);
+  --display:"Oswald","Arial Narrow",Impact,sans-serif;--body:"Space Grotesk","Helvetica Neue",Arial,sans-serif;--mark:"Urbanist","Helvetica Neue",Arial,sans-serif;
+  --shadow:0 1px 2px rgba(20,24,41,.04),0 10px 28px rgba(20,24,41,.08);
+  --ease:cubic-bezier(.2,.7,.2,1);
+  color-scheme:light;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+p,h1,h2,h3{margin:0}
+html,body{height:100%}
+body{margin:0;overflow:hidden;font-family:var(--body);color:var(--ink);background:var(--stage);-webkit-font-smoothing:antialiased}
+body:before{content:"";position:fixed;inset:0;pointer-events:none;background:
+  radial-gradient(50% 45% at 0% 0%,rgba(73,220,192,.30),transparent 65%),radial-gradient(45% 40% at 100% 0%,rgba(255,105,100,.22),transparent 65%),
+  radial-gradient(50% 45% at 100% 100%,rgba(168,137,255,.28),transparent 65%),radial-gradient(45% 40% at 0% 100%,rgba(255,208,102,.26),transparent 65%)}
+button{font:inherit;color:inherit;border:0;background:none;cursor:pointer;padding:0;text-align:inherit}
+button:focus-visible{outline:3px solid var(--turq);outline-offset:2px}
+svg{display:block}
+
+/* ---------- palco ---------- */
+#app{position:relative;height:100%;display:flex;align-items:center;justify-content:center;gap:48px;padding-inline:24px}
+#stageWrap{position:relative;flex:none}
+#phone{position:absolute;left:0;top:0;width:414px;height:868px;border-radius:62px;background:#0E1020;padding:12px;transform-origin:0 0;
+  box-shadow:0 40px 80px rgba(20,24,41,.28),0 0 0 2px #2A2E44 inset}
+#screen{position:relative;width:390px;height:844px;border-radius:50px;overflow:hidden;background:var(--paper);isolation:isolate}
+.aurora{position:absolute;inset:0;pointer-events:none;background:
+  radial-gradient(70% 34% at -10% -2%,rgba(73,220,192,.34),transparent 64%),radial-gradient(60% 30% at 110% 4%,rgba(255,105,100,.26),transparent 64%),
+  radial-gradient(70% 34% at 108% 100%,rgba(168,137,255,.32),transparent 64%),radial-gradient(60% 30% at -8% 98%,rgba(255,208,102,.3),transparent 64%)}
+.island{position:absolute;left:50%;top:11px;width:124px;height:36px;margin-left:-62px;border-radius:20px;background:#000;z-index:90}
+.sbar{position:absolute;left:0;right:0;top:0;height:50px;z-index:85;display:flex;justify-content:space-between;align-items:center;padding:4px 34px 0 40px;font-weight:600;font-size:15.5px;pointer-events:none}
+.sbar.light{color:#fff}
+.sbar i{display:flex;gap:6px;align-items:center}
+
+/* painel lateral */
+#side{width:360px;flex:none;max-height:calc(100% - 48px);overflow:auto;background:rgba(255,255,255,.84);border-radius:30px;padding:24px 24px 20px;box-shadow:var(--shadow);
+  backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px)}
+#side .mk{font-family:var(--mark);font-weight:500;letter-spacing:.2em;font-size:15px;color:var(--muted)}
+#side .mk b{font-weight:500;color:var(--amber)}
+#side h1{font-family:var(--display);font-weight:700;text-transform:uppercase;font-size:30px;line-height:1.08;margin:10px 0 6px}
+#side p.lead{font-size:14px;line-height:1.5;color:var(--muted)}
+#side h3{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--turqInk);margin:18px 0 8px}
+#side .grid{display:flex;flex-wrap:wrap;gap:6px}
+#side .grid button{height:34px;padding:0 13px;border-radius:17px;background:var(--subtle);font-size:13.5px;font-weight:600;color:var(--muted)}
+#side .grid button:hover{background:#fff;box-shadow:var(--shadow);color:var(--ink)}
+#side .row{display:flex;gap:8px;margin-top:6px;align-items:center}
+#side .seg{display:flex;background:var(--subtle);border-radius:17px;padding:3px}
+#side .seg button{height:28px;padding:0 12px;border-radius:14px;font-size:13px;font-weight:600;color:var(--dim)}
+#side .seg button.on{background:#fff;color:var(--ink);box-shadow:0 1px 3px rgba(20,24,41,.12)}
+#side .foot{font-size:12px;color:var(--dim);margin-top:18px;line-height:1.5}
+#menuBtn{display:none}
+@media (max-width:900px){
+  #app{padding:0;gap:0}
+  #side{position:fixed;left:10px;right:10px;bottom:10px;width:auto;max-height:70%;z-index:200;transform:translateY(110%);transition:transform .35s var(--ease)}
+  #side.open{transform:none}
+  #menuBtn{display:flex;position:fixed;right:14px;top:14px;z-index:210;height:40px;padding:0 16px;border-radius:20px;background:var(--night);color:#fff;font-weight:600;font-size:14px;align-items:center;box-shadow:var(--shadow)}
+}
+
+/* ---------- dentro do celular ---------- */
+#views{position:absolute;inset:0;z-index:1}
+.page{position:absolute;inset:0;overflow-y:auto;overflow-x:hidden;scrollbar-width:none;background:transparent}
+.page::-webkit-scrollbar{display:none}
+.page.solid{background:var(--paper)}
+.pad{padding:60px 18px 120px}
+.pad.np{padding-bottom:40px}
+.page.anim-in{animation:pin .38s var(--ease) both}
+.page.anim-out{animation:pout .38s var(--ease) both}
+.page.anim-back-in{animation:pbin .38s var(--ease) both}
+.page.anim-back-out{animation:pbout .38s var(--ease) both}
+.page.anim-fade{animation:pfade .28s ease both}
+@keyframes pin{from{transform:translateX(100%)}to{transform:none}}
+@keyframes pout{to{transform:translateX(-28%);opacity:.6}}
+@keyframes pbin{from{transform:translateX(-28%);opacity:.6}to{transform:none;opacity:1}}
+@keyframes pbout{to{transform:translateX(100%)}}
+@keyframes pfade{from{opacity:0}to{opacity:1}}
+.fu{animation:fu .55s var(--ease) both;animation-delay:var(--d,0ms)}
+@keyframes fu{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+
+/* tipografia */
+.eb{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--dim)}
+.h-big{font-family:var(--display);font-weight:700;text-transform:uppercase;font-size:34px;line-height:1.02;letter-spacing:.01em}
+.h-mid{font-family:var(--display);font-weight:700;text-transform:uppercase;font-size:24px;line-height:1.08}
+.sec{display:flex;justify-content:space-between;align-items:baseline;margin:26px 2px 10px}
+.sec h2{font-size:17px;font-weight:700}
+.sec a{font-size:13px;font-weight:600;color:var(--turqInk);cursor:pointer}
+.mut{color:var(--muted)}.dim{color:var(--dim)}
+.rbt{background:var(--rb);-webkit-background-clip:text;background-clip:text;color:transparent;padding:.18em 0 .12em;margin:-.18em 0 -.12em}
+
+/* superfícies */
+.card{background:rgba(255,255,255,.78);border-radius:26px;box-shadow:var(--shadow);padding:16px;position:relative}
+.card.solid{background:#fff}
+.dark{background:var(--night);color:#fff;border-radius:30px;padding:20px;position:relative;overflow:hidden}
+.btn{height:50px;border-radius:25px;display:flex;align-items:center;justify-content:center;gap:8px;font-weight:700;font-size:15px;width:100%}
+.btn.turq{background:var(--turq);color:var(--night)}
+.btn.coral{background:var(--coral);color:var(--night)}
+.btn.yellow{background:var(--yellow);color:var(--night)}
+.btn.night{background:var(--night);color:#fff}
+.btn.white{background:#fff;color:var(--ink);box-shadow:var(--shadow)}
+.btn.ghost{background:transparent;color:#fff;border:1.5px solid rgba(255,255,255,.35)}
+.btn:active{transform:scale(.98)}
+.chips{display:flex;gap:7px;overflow-x:auto;scrollbar-width:none;padding:2px}
+.chips::-webkit-scrollbar{display:none}
+.chip{flex:none;height:36px;padding:0 15px;border-radius:18px;background:var(--subtle);font-size:13.5px;font-weight:600;color:var(--muted);display:flex;align-items:center;gap:6px;transition:background .2s,color .2s}
+.chip.on{background:var(--night);color:#fff}
+.chip.wrap{flex:none}
+.wraps{display:flex;flex-wrap:wrap;gap:7px}
+.seg{position:relative;display:flex;background:var(--off);border-radius:20px;padding:4px}
+.seg button{position:relative;z-index:1;flex:1;height:34px;border-radius:17px;font-size:14px;font-weight:600;color:var(--dim);text-align:center;transition:color .25s}
+.seg button.on{color:var(--ink)}
+.seg i{position:absolute;top:4px;bottom:4px;left:4px;border-radius:17px;background:#fff;box-shadow:0 1px 3px rgba(20,24,41,.14);transition:transform .35s var(--ease),width .35s var(--ease)}
+.field{display:flex;align-items:center;gap:10px;height:48px;border-radius:24px;background:#fff;box-shadow:var(--shadow);padding:0 16px;color:var(--dim);font-size:15px}
+.field input{border:0;outline:0;font:inherit;color:var(--ink);background:none;flex:1;min-width:0}
+textarea.ta{width:100%;min-height:96px;border:0;outline:0;border-radius:20px;background:#fff;box-shadow:var(--shadow);padding:14px 16px;font:inherit;font-size:15px;color:var(--ink);resize:none}
+.pill{display:inline-flex;align-items:center;gap:5px;height:24px;padding:0 10px;border-radius:12px;font-size:12px;font-weight:700}
+.lbl{font-size:13px;font-weight:700;margin:20px 2px 8px;display:flex;justify-content:space-between}
+.lbl span{font-weight:500;color:var(--dim)}
+.icn{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex:none}
+
+/* cabeçalho das telas de aba */
+.topbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}
+.city{display:flex;align-items:center;gap:6px;height:36px;padding:0 14px 0 10px;border-radius:18px;background:rgba(255,255,255,.8);box-shadow:var(--shadow);font-weight:600;font-size:14px}
+.sos{width:40px;height:40px;border-radius:20px;background:var(--coral);color:var(--night);font-weight:800;font-size:11px;letter-spacing:.04em;display:flex;align-items:center;justify-content:center;box-shadow:0 6px 16px rgba(255,105,100,.4)}
+.back{position:absolute;left:14px;top:54px;z-index:20;width:40px;height:40px;border-radius:20px;background:rgba(255,255,255,.86);box-shadow:var(--shadow);display:flex;align-items:center;justify-content:center;backdrop-filter:blur(12px)}
+.navtitle{position:sticky;top:0;z-index:15;height:98px;padding:58px 64px 0;display:flex;justify-content:center;font-weight:700;font-size:16px;background:linear-gradient(var(--paper) 70%,rgba(245,244,241,0))}
+
+/* barra de abas */
+#tabs{position:absolute;left:14px;right:14px;bottom:24px;height:66px;border-radius:33px;z-index:40;display:flex;align-items:center;padding:0 6px;
+  background:rgba(255,255,255,.72);backdrop-filter:blur(22px) saturate(1.6);-webkit-backdrop-filter:blur(22px) saturate(1.6);
+  box-shadow:0 1px 0 rgba(255,255,255,.9) inset,0 12px 30px rgba(20,24,41,.14);transition:transform .35s var(--ease),opacity .3s}
+#tabs.hide{transform:translateY(130%);opacity:0}
+#tabs .lens{position:absolute;top:6px;bottom:6px;left:6px;border-radius:27px;background:#fff;box-shadow:0 2px 8px rgba(20,24,41,.12);transition:transform .42s var(--ease)}
+#tabs button{position:relative;z-index:1;flex:1;height:54px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;font-size:10.5px;font-weight:600;color:var(--dim);transition:color .3s}
+#tabs button .icn{width:22px;height:22px}
+#tabs button.on{color:var(--c)}
+
+/* camada de folhas e sobreposições */
+#layer{position:absolute;inset:0;z-index:60;pointer-events:none}
+.bd{position:absolute;inset:0;background:rgba(20,24,41,.42);opacity:0;transition:opacity .3s;pointer-events:auto}
+.bd.on{opacity:1}
+.sheet{position:absolute;left:0;right:0;bottom:0;max-height:88%;overflow:auto;scrollbar-width:none;background:var(--paper);border-radius:34px 34px 0 0;padding:12px 20px 34px;
+  transform:translateY(100%);transition:transform .42s var(--ease);pointer-events:auto;box-shadow:0 -10px 40px rgba(20,24,41,.18)}
+.sheet.on{transform:none}
+.sheet .grab{width:40px;height:5px;border-radius:3px;background:var(--line);margin:0 auto 14px}
+.sheet .x{position:absolute;right:16px;top:14px;width:34px;height:34px;border-radius:17px;background:var(--subtle);display:flex;align-items:center;justify-content:center}
+.full{position:absolute;inset:0;pointer-events:auto;opacity:0;transition:opacity .35s}
+.full.on{opacity:1}
+
+/* íris, nota, medalhas */
+.iris path{transition:fill .35s ease}
+.score{position:relative;flex:none}
+.score b{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:var(--display);font-weight:700}
+.medal{position:relative;flex:none}
+.medal svg{position:absolute;inset:0}
+.medal img{position:absolute;left:15%;top:14%;width:70%;height:70%;object-fit:contain;animation:mobj .52s var(--ease) both;animation-delay:var(--d,0ms)}
+.medal.lock img{filter:grayscale(1) brightness(1.55) contrast(.42);opacity:.85}
+.medal.float img{animation:mobj .52s var(--ease) both,flt 3.6s ease-in-out .6s infinite}
+.medal .lk{position:absolute;right:2%;bottom:2%;width:26%;height:26%}
+@keyframes mobj{from{opacity:0;transform:translateY(6%) scale(.9)}to{opacity:1;transform:none}}
+@keyframes flt{0%,100%{transform:translateY(0)}50%{transform:translateY(-3.5%)}}
+.float3d{animation:flt 3.6s ease-in-out infinite}
+.shine{position:absolute;inset:0;border-radius:50%;overflow:hidden;pointer-events:none}
+.shine:after{content:"";position:absolute;top:-20%;bottom:-20%;width:40%;left:-60%;background:linear-gradient(100deg,transparent,rgba(255,255,255,.55),transparent);transform:skewX(-18deg);animation:sh 1.2s ease .9s 1 both}
+@keyframes sh{to{left:130%}}
+.edge{position:absolute;inset:0;pointer-events:none;overflow:visible}
+.edge rect{fill:none;stroke-width:2.5;stroke-linecap:round}
+
+/* lugares */
+.plc{display:flex;gap:12px;align-items:center;padding:12px;border-radius:24px;background:rgba(255,255,255,.8);box-shadow:var(--shadow);cursor:pointer;margin-bottom:10px}
+.tile{flex:none;width:64px;height:64px;border-radius:18px;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden}
+.tile .icn{width:28px;height:28px;stroke-width:1.8}
+.plc .nm{font-weight:700;font-size:15.5px;line-height:1.2}
+.plc .mt{font-size:12.5px;color:var(--dim);margin-top:2px}
+.ctx{display:inline-flex;align-items:center;gap:5px;margin-top:6px;font-size:11.5px;font-weight:600;color:var(--coralInk)}
+.hero{position:relative;height:300px;overflow:hidden}
+.hero .ph{position:absolute;inset:0;transition:filter 1s ease}
+.axis{display:grid;grid-template-columns:96px 1fr 30px;gap:10px;align-items:center;font-size:13px;margin-top:9px}
+.axis .bar{height:8px;border-radius:4px;background:var(--off);overflow:hidden}
+.axis .bar i{display:block;height:100%;border-radius:4px;width:0;transition:width 1s var(--ease)}
+.axis b{font-variant-numeric:tabular-nums;text-align:right}
+.q{padding:16px;border-radius:24px;background:#fff;box-shadow:var(--shadow);margin-bottom:10px}
+.q h4{margin:0;font-size:15.5px}
+.q p{font-size:13px;color:var(--dim);margin-top:3px}
+.rbw{display:flex;gap:6px;margin-top:12px}
+.rbw button{flex:1;height:40px;border-radius:12px;background:var(--off);position:relative;overflow:hidden;font-weight:700;font-size:13px;color:var(--dim);transition:background .25s,color .25s,transform .2s}
+.rbw button.on{color:var(--night)}
+.rbw-l{display:flex;justify-content:space-between;font-size:11px;color:var(--dim);margin-top:6px}
+
+/* mapa */
+.map{position:absolute;inset:0;background:#E9EDF1;overflow:hidden}
+.pinp{position:absolute;transform:translate(-50%,-100%);display:flex;flex-direction:column;align-items:center;cursor:pointer;animation:pinin .5s var(--ease) both;animation-delay:var(--d,0ms)}
+@keyframes pinin{from{opacity:0;transform:translate(-50%,-70%) scale(.6)}to{opacity:1;transform:translate(-50%,-100%)}}
+.pinp .bub{min-width:38px;height:30px;border-radius:15px;padding:0 9px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;color:var(--night);box-shadow:0 4px 12px rgba(20,24,41,.2);border:2px solid #fff}
+.pinp .tip{width:10px;height:10px;transform:rotate(45deg);margin-top:-6px;border-right:2px solid #fff;border-bottom:2px solid #fff}
+.dot{position:absolute;width:9px;height:9px;border-radius:5px;background:#AEB6C4;border:2px solid #fff;transform:translate(-50%,-50%)}
+.clu{position:absolute;transform:translate(-50%,-50%);width:42px;height:42px;border-radius:21px;background:rgba(20,24,41,.86);color:#fff;font-weight:700;font-size:14px;display:flex;align-items:center;justify-content:center;border:3px solid #fff;box-shadow:0 4px 12px rgba(20,24,41,.25)}
+.area{position:absolute;border-radius:50%;transform:translate(-50%,-50%);animation:areain 1s var(--ease) both}
+@keyframes areain{from{opacity:0;transform:translate(-50%,-50%) scale(.6)}}
+
+/* mural */
+.post{background:#FFFDF8;border-radius:22px;padding:16px;box-shadow:0 1px 2px rgba(20,24,41,.05),0 8px 20px rgba(20,24,41,.06);margin-bottom:12px;position:relative}
+.post .who{display:flex;align-items:center;gap:8px;font-size:13px;font-weight:700}
+.post .av{width:30px;height:30px;border-radius:15px;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:var(--night)}
+.post p{font-size:15px;line-height:1.5;margin-top:10px}
+.reacts{display:flex;gap:6px;margin-top:12px;flex-wrap:wrap}
+.reacts button{height:32px;border-radius:16px;background:var(--subtle);padding:0 10px 0 7px;display:flex;align-items:center;gap:5px;font-size:12.5px;font-weight:700;color:var(--muted);transition:background .2s,transform .2s}
+.reacts button.on{background:var(--night);color:#fff}
+.reacts button svg{width:20px;height:20px}
+.big4{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.big4 button{border-radius:24px;padding:16px;background:#fff;box-shadow:var(--shadow);text-align:left}
+.big4 b{display:block;font-family:var(--display);font-size:38px;line-height:1}
+.big4 span{font-size:13px;color:var(--muted);font-weight:600}
+
+/* perfil */
+.row-l{display:flex;align-items:center;gap:12px;padding:15px 16px;font-size:15px;font-weight:600;border-bottom:1px solid var(--off);cursor:pointer}
+.row-l:last-child{border-bottom:0}
+.row-l .icn{color:var(--dim)}
+.row-l span{flex:1}
+.toggle{width:46px;height:28px;border-radius:14px;background:var(--off);position:relative;transition:background .25s;flex:none}
+.toggle:after{content:"";position:absolute;left:3px;top:3px;width:22px;height:22px;border-radius:11px;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.2);transition:transform .25s var(--ease)}
+.toggle.on{background:var(--turq)}
+.toggle.on:after{transform:translateX(18px)}
+
+/* conquistas */
+.mgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px 6px}
+.mgrid button{display:flex;flex-direction:column;align-items:center;gap:7px;text-align:center}
+.mgrid .nm{font-size:12px;font-weight:700;line-height:1.2;min-height:29px}
+.prog{height:8px;border-radius:4px;background:rgba(255,255,255,.18);overflow:hidden}
+.prog i{display:block;height:100%;background:var(--rb);width:0;transition:width 1.2s var(--ease)}
+.prog.l{background:var(--off)}
+
+/* story */
+.story-wrap{position:absolute;inset:0;background:var(--night);display:flex;flex-direction:column;align-items:center;padding-top:58px}
+.sc{position:relative;width:360px;height:640px;overflow:hidden;background:#F5F4F1;transform-origin:top center}
+.sc .blob{position:absolute;inset:0;background:
+  radial-gradient(60% 34% at 0% 0%,rgba(73,220,192,.42),transparent 70%),radial-gradient(55% 30% at 100% 0%,rgba(255,105,100,.32),transparent 70%),
+  radial-gradient(60% 34% at 100% 100%,rgba(168,137,255,.4),transparent 70%),radial-gradient(55% 30% at 0% 100%,rgba(255,208,102,.4),transparent 70%)}
+.sc .col{position:absolute;inset:0;padding:66px 20px 104px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center}
+.sc .nome{font-family:var(--display);font-weight:700;text-transform:uppercase;line-height:1.14;letter-spacing:.01em}
+.sc .pane{margin-top:14px;width:212px;height:212px;border-radius:28px;background:rgba(255,255,255,.62);border:1px solid rgba(255,255,255,.9);box-shadow:0 2px 4px rgba(20,24,41,.04),0 18px 40px rgba(20,24,41,.1);display:flex;align-items:center;justify-content:center}
+.sc .frase{font-size:16px;line-height:22px;margin-top:14px;white-space:pre-line;color:rgba(20,24,41,.82)}
+.sc .foot{position:absolute;left:0;right:0;bottom:40px;display:flex;flex-direction:column;align-items:center;gap:8px}
+.spark{position:absolute;animation:tw 2.2s ease-in-out infinite;animation-delay:var(--d)}
+@keyframes tw{0%,100%{transform:scale(1) rotate(0)}50%{transform:scale(.55) rotate(30deg)}}
+.conf{position:absolute;left:0;top:0;pointer-events:none}
+
+/* tour */
+.spot{position:absolute;border-radius:26px;box-shadow:0 0 0 2000px rgba(20,24,41,.62);transition:all .45s var(--ease);pointer-events:none}
+.balloon{position:absolute;left:18px;right:18px;background:#fff;border-radius:24px;padding:16px 18px;box-shadow:0 18px 40px rgba(20,24,41,.25);transition:top .45s var(--ease);pointer-events:auto}
+.balloon h4{margin:0;font-size:17px}
+.balloon p{font-size:14px;line-height:1.5;color:var(--muted);margin-top:4px}
+.balloon .nv{display:flex;justify-content:space-between;align-items:center;margin-top:12px}
+.dots{display:flex;gap:5px}.dots i{width:6px;height:6px;border-radius:3px;background:var(--off)}.dots i.on{background:var(--night);width:16px}
+
+/* splash */
+.splash{position:absolute;inset:0;background:var(--paper);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:22px;z-index:70}
+.splash .wm{font-family:var(--mark);font-weight:500;letter-spacing:.32em;font-size:30px;animation:fu .6s var(--ease) 1.5s both}
+.splash .wm b{font-weight:500;color:var(--amber)}
+.toast{position:absolute;left:50%;top:60px;transform:translate(-50%,-20px);background:var(--night);color:#fff;font-size:13.5px;font-weight:600;padding:10px 16px;border-radius:20px;opacity:0;transition:all .35s var(--ease);z-index:95;white-space:nowrap;pointer-events:none}
+.toast.on{opacity:1;transform:translate(-50%,0)}
+.nudge{position:absolute;left:14px;right:14px;bottom:100px;z-index:45;background:#fff;border-radius:24px;padding:14px;box-shadow:0 14px 34px rgba(20,24,41,.2);display:flex;gap:12px;align-items:center;transform:translateY(30px);opacity:0;transition:all .45s var(--ease)}
+.nudge.on{transform:none;opacity:1}
+</style>
+</head>
+<body>
+<div id="app">
+  <div id="stageWrap"><div id="phone"><div id="screen">
+    <div class="aurora"></div>
+    <div class="island"></div>
+    <div class="sbar" id="sbar"><span>9:41</span><i><svg width="18" height="12" viewBox="0 0 18 12"><path d="M1 9h2v2H1zM5 7h2v4H5zM9 4h2v7H9zM13 1h2v10h-2z" fill="currentColor"/></svg><svg width="26" height="12" viewBox="0 0 26 12"><rect x=".5" y=".5" width="22" height="11" rx="3" fill="none" stroke="currentColor" opacity=".5"/><rect x="2" y="2" width="17" height="8" rx="2" fill="currentColor"/><path d="M24 4v4" stroke="currentColor" opacity=".5"/></svg></i></div>
+    <div id="views"></div>
+    <nav id="tabs" class="hide"></nav>
+    <div id="layer"></div>
+    <div class="toast" id="toast"></div>
+  </div></div></div>
+  <aside id="side">
+    <div class="mk">IRIS<b>a</b></div>
+    <h1>O app inteiro, para navegar</h1>
+    <p class="lead">Toque nas telas como no celular. Os atalhos abaixo levam direto a cada parte. Nada grava: é tudo encenado.</p>
+    <h3>Entrada</h3>
+    <div class="grid"><button data-j="splash">Abertura</button><button data-j="login">Entrar</button><button data-j="tour">Tour</button></div>
+    <h3>Lugares</h3>
+    <div class="grid"><button data-j="inicio">Início</button><button data-j="lugares">Lugares</button><button data-j="lugar:sem">Avaliar um lugar</button><button data-j="lugar:aquarela">Ficha com nota</button><button data-j="mapa">Mapa</button><button data-j="bairro">Ficha do bairro</button><button data-j="nudge">Passou por aqui?</button></div>
+    <h3>Segurança</h3>
+    <div class="grid"><button data-j="registrar">Registrar relato</button><button data-j="sos">Emergência</button><button data-j="apoio">Apoio</button><button data-j="servicos">Serviços</button></div>
+    <h3>Você</h3>
+    <div class="grid"><button data-j="perfil">Perfil</button><button data-j="trilha">Sua evolução</button><button data-j="conquistas">Conquistas</button><button data-j="medalha">Conquista nova</button><button data-j="nivel">Subiu de nível</button><button data-j="story">Story</button><button data-j="semana">Sua semana</button><button data-j="cores">Suas cores</button></div>
+    <h3>Pronome no app</h3>
+    <div class="row"><div class="seg" id="formaSeg"><button data-f="0">a</button><button data-f="1">o</button><button data-f="2" class="on">e</button></div><span class="dim" style="font-size:12.5px">Famosinha, Famosinho, Famosinhe</span></div>
+    <p class="foot">Lugares, nomes e relatos são de exemplo. A ordem das telas e os textos seguem o app de hoje.</p>
+  </aside>
+  <button id="menuBtn">Telas</button>
+</div>
+
+<script>
+/*__DADOS__*/
+</script>
+<script>
+"use strict";
+const $ = (s, r = document) => r.querySelector(s);
+const $$ = (s, r = document) => [...r.querySelectorAll(s)];
+const RB = ["#FF6964", "#FFA353", "#FFD066", "#49DCC0", "#59A7FF", "#A889FF"];
+const C = { coral: "#FF6964", orange: "#FFA353", yellow: "#FFD066", turq: "#49DCC0", blue: "#59A7FF", lilac: "#A889FF", night: "#141829" };
+const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+/* ---------- ícones ---------- */
+const P = {
+  home: '<path d="M3 10.5 12 3l9 7.5V21h-6v-6H9v6H3z"/>',
+  store: '<path d="M4 9.5 5.2 4h13.6L20 9.5M4 9.5h16V20H4zM9.5 20v-5h5v5"/>',
+  map: '<path d="M9 4 3 6v14l6-2 6 2 6-2V4l-6 2-6-2zM9 4v14M15 6v14"/>',
+  heart: '<path d="M12 20s-7-4.4-9-8.5C1.5 8 4 5 7 5c2 0 3.5 1.2 5 3 1.5-1.8 3-3 5-3 3 0 5.5 3 4 6.5-2 4.1-9 8.5-9 8.5z"/>',
+  user: '<circle cx="12" cy="8" r="4"/><path d="M4 21c1-4 4.5-6 8-6s7 2 8 6"/>',
+  back: '<path d="M15 5l-7 7 7 7"/>', chev: '<path d="M9 5l7 7-7 7"/>', down: '<path d="M6 9l6 6 6-6"/>',
+  search: '<circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/>', x: '<path d="M6 6l12 12M18 6 6 18"/>',
+  phone: '<path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2"/>',
+  camera: '<path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/>',
+  share: '<path d="M12 3v12M7 8l5-5 5 5M5 14v6h14v-6"/>', plus: '<path d="M12 5v14M5 12h14"/>',
+  nav: '<path d="M3 11l18-8-8 18-2-8z"/>', alert: '<path d="M12 3 2 20h20zM12 10v4M12 17v.5"/>',
+  flag: '<path d="M5 21V4h11l-2 4 2 4H5"/>', ban: '<circle cx="12" cy="12" r="8"/><path d="M6.5 6.5l11 11"/>',
+  pin: '<path d="M12 21s-7-6.5-7-12a7 7 0 0 1 14 0c0 5.5-7 12-7 12z"/><circle cx="12" cy="9" r="2.5"/>',
+  shield: '<path d="M12 3 4 6v6c0 5 3.5 8 8 9 4.5-1 8-4 8-9V6z"/>', eye: '<path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/>',
+  book: '<path d="M4 5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2zM4 5v16"/>', out: '<path d="M15 4h4v16h-4M10 8l-4 4 4 4M6 12h11"/>',
+  trash: '<path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13"/>', clock: '<circle cx="12" cy="12" r="8"/><path d="M12 8v4l3 2"/>',
+  bed: '<path d="M3 18V7M3 13h18v5M21 18v-5a3 3 0 0 0-3-3h-7v3"/><circle cx="7" cy="10.5" r="1.8"/>',
+  cup: '<path d="M5 8h11v6a5 5 0 0 1-5 5h-1a5 5 0 0 1-5-5zM16 10h2a2 2 0 0 1 0 4h-2M8 3v2M11 3v2"/>',
+  glass: '<path d="M6 3h12l-6 8zM12 11v8M8 21h8"/>', fork: '<path d="M7 3v8a2 2 0 0 0 2 2v8M5 3v6M9 3v6M16 3c-1.5 0-3 2-3 6s1.5 4 3 4v8"/>',
+  music: '<path d="M9 18V5l11-2v13"/><circle cx="6.5" cy="18" r="2.5"/><circle cx="17.5" cy="16" r="2.5"/>',
+  spark: '<path d="M12 3l1.8 6.2L20 12l-6.2 1.8L12 20l-1.8-6.2L4 12l6.2-2.8z"/>', check: '<path d="M5 12.5l4.5 4.5L19 7"/>',
+  img: '<rect x="3" y="5" width="18" height="14" rx="3"/><circle cx="9" cy="10" r="2"/><path d="M21 16l-5-5-8 8"/>',
+};
+const ic = (n, s = 22, extra = "") => `<svg class="icn" viewBox="0 0 24 24" style="width:${s}px;height:${s}px" ${extra}>${P[n]}</svg>`;
+
+/* ---------- desenhos da marca ---------- */
+function corDoArco(t) {
+  const x = Math.max(0, Math.min(.9999, t)) * (RB.length - 1), i = Math.floor(x), f = x - i;
+  const a = RB[i], b = RB[i + 1], h = s => parseInt(s, 16);
+  const m = k => Math.round(h(a.substr(k, 2)) * (1 - f) + h(b.substr(k, 2)) * f).toString(16).padStart(2, "0");
+  return "#" + m(1) + m(3) + m(5);
+}
+function arcPath(cx, cy, r0, r1, a0, a1) {
+  const p = (r, a) => [cx + r * Math.cos(a), cy + r * Math.sin(a)].map(v => v.toFixed(2)).join(" ");
+  return `M${p(r1, a0)}A${r1} ${r1} 0 0 1 ${p(r1, a1)}L${p(r0, a1)}A${r0} ${r0} 0 0 0 ${p(r0, a0)}Z`;
+}
+/** Íris de 48 gomos (o anel da marca). lit = quantos acesos; anim = acende um a um. */
+function iris(lit, size, { inner = .62, anim = false, delay = 0, step = 40, off = "#E6ECF3", pupil = null } = {}) {
+  const n = 48, gap = .022;
+  let s = `<svg class="iris" width="${size}" height="${size}" viewBox="0 0 100 100">`;
+  for (let i = 0; i < n; i++) {
+    const a0 = -Math.PI / 2 + (i / n) * 2 * Math.PI + gap, a1 = -Math.PI / 2 + ((i + 1) / n) * 2 * Math.PI - gap;
+    const on = i < lit, c = corDoArco(i / n);
+    s += `<path d="${arcPath(50, 50, 50 * inner, 49, a0, a1)}" fill="${on && !anim ? c : off}" ${on ? `data-c="${c}" data-i="${i}"` : ""}/>`;
+  }
+  if (pupil) s += `<circle cx="50" cy="50" r="${50 * inner - 6}" fill="${pupil}"/>`;
+  s += "</svg>";
+  if (anim && !reduce) queueMicrotask(() => setTimeout(() => $$('.iris path[data-c]').forEach(p => {
+    if (p.getAttribute("fill") !== p.dataset.c && !p.dataset.done) { p.dataset.done = 1; setTimeout(() => p.setAttribute("fill", p.dataset.c), delay + (+p.dataset.i) * step); }
+  }), 30));
+  else if (anim) queueMicrotask(() => $$('.iris path[data-c]').forEach(p => p.setAttribute("fill", p.dataset.c)));
+  return s;
+}
+const radarmin = s => iris(48, s, { inner: .6 });
+const wordmark = (s = 13, c = "var(--ink)") => `<span style="font-family:var(--mark);font-weight:500;letter-spacing:.2em;font-size:${s}px;color:${c}">IRIS<b style="font-weight:500;color:var(--amber)">a</b></span>`;
+function score(v, size = 54) {
+  const r = 22, L = 2 * Math.PI * r, id = "sg" + Math.random().toString(36).slice(2, 7);
+  const f = v ? v / 5 : 0;
+  return `<div class="score" style="width:${size}px;height:${size}px"><svg width="${size}" height="${size}" viewBox="0 0 50 50"><defs><linearGradient id="${id}" x1="0" y1="0" x2="1" y2="1">${RB.map((c, i) => `<stop offset="${i / 5}" stop-color="${c}"/>`).join("")}</linearGradient></defs>
+    <circle cx="25" cy="25" r="${r}" fill="none" stroke="#E6ECF3" stroke-width="5"/>
+    <circle cx="25" cy="25" r="${r}" fill="none" stroke="url(#${id})" stroke-width="5" stroke-linecap="round" stroke-dasharray="${L}" stroke-dashoffset="${L}" transform="rotate(-90 25 25)" data-to="${L * (1 - f)}" class="sc-arc" style="transition:stroke-dashoffset 1.2s var(--ease)"/></svg>
+    <b style="font-size:${size * .32}px">${v ? v.toFixed(1).replace(".", ",") : "–"}</b></div>`;
+}
+const TINT = { "Trajetória": "#FFE1DF", "Reconhecimento": "#ECE5FF", "Cidade": "#D9F7F0", "Mapa": "#FFF2CF", "Rolê": "#FFE8D3", "Constância": "#DEEDFF", "Apoio": "#FFE3EC", "Veterania": "#FBEFD0" };
+let gid = 0;
+/** Medalha: disco tingido, anel arco-íris (ou progresso), objeto 3D por cima. */
+function medal(id, { size = 92, on = true, prog = 0, lock = true, float = false, d = 0, shine = false } = {}) {
+  const m = MED[id], k = ++gid, L = 2 * Math.PI * 55;
+  const disc = on ? (TINT[m.cat] || "#F3F0EA") : "#ECE9E3";
+  const stops = RB.map((c, i) => `<stop offset="${i / 5}" stop-color="${c}"/>`).join("");
+  const ring = on ? `<circle cx="60" cy="60" r="55" fill="none" stroke="url(#mr${k})" stroke-width="4.5"/>`
+    : `<circle cx="60" cy="60" r="55" fill="none" stroke="#E7E3DC" stroke-width="4.5"/>` + (prog > 0 ? `<circle cx="60" cy="60" r="55" fill="none" stroke="url(#mr${k})" stroke-width="4.5" stroke-linecap="round" stroke-dasharray="${L}" stroke-dashoffset="${L}" data-to="${L * (1 - Math.min(prog, 1))}" class="sc-arc" transform="rotate(-90 60 60)" style="transition:stroke-dashoffset 1.3s var(--ease) ${d + 200}ms"/>` : "");
+  return `<div class="medal ${on ? "" : "lock"} ${float ? "float" : ""}" style="width:${size}px;height:${size}px;--d:${d}ms"><svg viewBox="0 0 120 120"><defs><linearGradient id="mr${k}" x1="0" y1="0" x2="1" y2="1">${stops}</linearGradient><radialGradient id="mt${k}" cx=".35" cy=".3" r=".8"><stop offset="0" stop-color="#fff"/><stop offset="1" stop-color="${disc}"/></radialGradient></defs>${ring}<circle cx="60" cy="60" r="47" fill="url(#mt${k})"/><circle cx="60" cy="60" r="46" fill="none" stroke="#fff" stroke-width="2" stroke-opacity=".9"/></svg>
+    <img src="${DADOS.img[id] || ""}" alt="">
+    ${!on && lock ? `<svg class="lk" viewBox="0 0 30 30"><circle cx="15" cy="15" r="13" fill="#141829" stroke="#fff" stroke-width="3"/><rect x="9.5" y="14" width="11" height="8.5" rx="2" fill="#fff"/><path d="M11.8 14v-2.6a3.2 3.2 0 0 1 6.4 0V14" fill="none" stroke="#fff" stroke-width="1.8"/></svg>` : ""}
+    ${shine ? '<div class="shine"></div>' : ""}</div>`;
+}
+const nivelImg = (k, s, float = false) => `<img src="${DADOS.nimg[k]}" alt="" style="width:${s}px;height:${s}px;object-fit:contain" class="${float ? "float3d" : ""}">`;
+function edge(w, h, r, { dur = 1300, d = 200, frac = 1 } = {}) {
+  const id = "eg" + (++gid);
+  return `<svg class="edge" width="100%" height="100%" preserveAspectRatio="none"><defs><linearGradient id="${id}" x1="0" y1="0" x2="1" y2="1">${RB.map((c, i) => `<stop offset="${i / 5}" stop-color="${c}"/>`).join("")}</linearGradient></defs><rect x="1.25" y="1.25" rx="${r}" style="width:calc(100% - 2.5px);height:calc(100% - 2.5px);transition:stroke-dashoffset ${dur}ms var(--ease) ${d}ms" stroke="url(#${id})" pathLength="100" stroke-dasharray="100" stroke-dashoffset="100" data-to="${100 - frac * 100}" class="sc-arc"/></svg>`;
+}
+function armar(el) { // dispara as animações de preenchimento depois de montar
+  requestAnimationFrame(() => requestAnimationFrame(() => {
+    $$(".sc-arc", el).forEach(a => a.style.strokeDashoffset = a.dataset.to);
+    $$(".bar i[data-w], .prog i[data-w]", el).forEach(b => b.style.width = b.dataset.w);
+    $$("[data-count]", el).forEach(contar);
+  }));
+}
+function contar(n) {
+  const to = +n.dataset.count, dec = +(n.dataset.dec || 0), t0 = performance.now(), dur = 1100;
+  if (reduce) { n.textContent = dec ? to.toFixed(dec).replace(".", ",") : to.toLocaleString("pt-BR"); return; }
+  const fmt = v => dec ? v.toFixed(dec).replace(".", ",") : Math.round(v).toLocaleString("pt-BR");
+  const f = t => { const k = Math.min(1, (t - t0) / dur), e = 1 - Math.pow(1 - k, 3); n.textContent = fmt(to * e); if (k < 1) requestAnimationFrame(f); };
+  requestAnimationFrame(f);
+}
+
+/* ---------- dados de exemplo ---------- */
+const MED = Object.fromEntries(DADOS.medalhas.map(m => [m.id, m]));
+const ST = {
+  forma: 2, apelido: "Lê", gomos: 7, semana: 3, gomosSemana: 1,
+  ganhas: new Set(["deu-o-nome", "inaugurou", "acendeu-a-luz", "bateu-ponto", "abre-alas", "eu-conheco", "sabe-onde-ir", "ombro-amigo", "utilidade-publica"]),
+  prog: { "deu-close": [9, 10], "figurinha": [9, 15], "famosinha": [9, 30], "influ-do-vale": [9, 60], "resenha-boa": [4, 10], "icone-local": [1, 3], "lenda-local": [1, 10], "da-casa": [0, 1], "nome-na-lista": [4, 6], "dona-do-pedaco": [3, 5], "mala-pronta": [1, 3], "olho-vivo": [2, 5], "cartografa": [1, 5], "pode-entrar": [1, 3], "interesse-municipal": [14, 50], "aclamada": [14, 150], "bateu-leque": [3, 10], "abraco-coletivo": [11, 20], "tem-opiniao": [2, 4], "ja-mora-aqui": [2, 4], "agenda-cheia": [2, 6], "patrimonio-cultural": [7, 48], "patrimonio-tombado": [1, 10] },
+  nudgeVisto: false, reacoes: {}, anon: false,
+};
+const nomeM = m => m.flex ? m.flex[ST.forma] : m.t;
+const flex = b => b + ["a", "o", "e"][ST.forma];
+const NIV = DADOS.niveis;
+const nivelDe = g => NIV.reduce((a, n, i) => g >= n.g ? i : a, 0);
+const nomeN = n => n.f.length === 3 ? n.f[ST.forma] : n.f[0];
+
+const CAT = { bar: ["Bar", "glass", C.lilac], cafe: ["Café", "cup", C.orange], restaurante: ["Restaurante", "fork", C.coral], balada: ["Balada", "music", C.blue], hotel: ["Hotel", "bed", C.turq] };
+const BADGE = { acolhedor: ["Acolhedor", C.turq, "#0A8B7A"], bem: ["Bem avaliado", C.yellow, "#9C6C00"], dividido: ["Opiniões divididas", C.lilac, "#6037F0"], atencao: ["Atenção", C.coral, "#C72825"], poucas: ["Poucas avaliações", "#F1F5FA", "#3D4560"] };
+const LUGARES = [
+  { id: "aquarela", nome: "Café Aquarela", cat: "cafe", bairro: "São Francisco", dist: "300 m", nota: 4.7, badge: "acolhedor", n: 14, ax: [4.8, 4.7, 4.5, 4.6], end: "Rua das Flores, 120" },
+  { id: "lilas", nome: "Bar Lilás", cat: "bar", bairro: "Mercês", dist: "650 m", nota: 4.3, badge: "bem", n: 9, ax: [4.5, 4.4, 3.9, 4.1], end: "Alameda Central, 465" },
+  { id: "prisma", nome: "Balada Prisma", cat: "balada", bairro: "Rebouças", dist: "1,9 km", nota: 4.5, badge: "acolhedor", n: 21, ax: [4.6, 4.7, 4.3, 4.2], end: "Rua do Trilho, 88" },
+  { id: "mirante", nome: "Hotel Mirante", cat: "hotel", bairro: "Centro", dist: "1,1 km", nota: 3.1, badge: "dividido", n: 7, ax: [3.6, 2.8, 3.2, 2.9], end: "Praça Maior, 10", alerta: "atencao" },
+  { id: "sem", nome: "Restaurante Quintal", cat: "restaurante", bairro: "Batel", dist: "1,4 km", nota: null, badge: "poucas", n: 2, end: "Rua do Pomar, 300" },
+  { id: "sol", nome: "Padaria Sol", cat: "cafe", bairro: "Água Verde", dist: "2,3 km", nota: null, badge: null, n: 0, end: "Avenida Leste, 1500" },
+];
+const LUG = Object.fromEntries(LUGARES.map(l => [l.id, l]));
+
+function tile(l, s = 64) {
+  const [, icon, cor] = CAT[l.cat], cinza = !l.nota;
+  return `<div class="tile" style="width:${s}px;height:${s}px;background:${cinza ? "#ECEEF2" : cor + "33"};color:${cinza ? "#9AA1B1" : cor}">${ic(icon, s * .44)}</div>`;
+}
+function badge(b) { if (!b) return ""; const [t, bg, ink] = BADGE[b]; return `<span class="pill" style="background:${b === "poucas" ? bg : bg + "38"};color:${ink}">${t}</span>`; }
+function placeCard(l, i = 0) {
+  return `<div class="plc fu" style="--d:${i * 60}ms" data-go="lugar:${l.id}">${tile(l)}<div style="flex:1;min-width:0">
+    <div class="nm">${l.nome}</div><div class="mt">${CAT[l.cat][0]} · ${l.bairro} · ${l.dist}</div>
+    <div style="margin-top:6px;display:flex;gap:6px;align-items:center">${l.nota ? badge(l.badge) : l.n ? badge("poucas") : `<span class="pill" style="background:#F1F5FA;color:#3D4560">Sem nota ainda</span>`}</div>
+    ${l.alerta ? `<div class="ctx">${ic("alert", 14)} Relato de LGBTIfobia por perto</div>` : ""}</div>${score(l.nota, 50)}</div>`;
+}
+
+/* ---------- navegação ---------- */
+const TABS = [["inicio", "Início", "home", C.coral], ["lugares", "Lugares", "store", C.orange], ["mapa", "Mapa", "map", C.turq], ["apoio", "Apoio", "heart", C.lilac], ["perfil", "Perfil", "user", C.blue]];
+const SCR = {};
+let pilha = [];
+const views = $("#views"), tabsEl = $("#tabs"), layer = $("#layer");
+tabsEl.innerHTML = '<div class="lens"></div>' + TABS.map(([k, t, i, c]) => `<button data-tab="${k}" style="--c:${c}">${ic(i)}<span>${t}</span></button>`).join("");
+$$("#tabs button").forEach(b => b.onclick = () => irAba(b.dataset.tab));
+function lente(k) {
+  const i = TABS.findIndex(t => t[0] === k), lens = $(".lens", tabsEl);
+  if (i < 0) return;
+  const w = (tabsEl.clientWidth - 12) / TABS.length;
+  lens.style.width = w + "px"; lens.style.transform = `translateX(${i * w}px)`;
+  $$("#tabs button").forEach(b => b.classList.toggle("on", b.dataset.tab === k));
+}
+function montar(nome, arg) {
+  const s = SCR[nome], el = document.createElement("div");
+  el.className = "page" + (s.solid ? " solid" : "");
+  el.innerHTML = s.html(arg);
+  el.dataset.nome = nome;
+  ligar(el);
+  s.mount && s.mount(el, arg);
+  armar(el);
+  return el;
+}
+function ligar(el) {
+  $$("[data-go]", el).forEach(b => b.onclick = e => { e.stopPropagation(); const [n, a] = b.dataset.go.split(":"); ir(n, a); });
+  $$("[data-act]", el).forEach(b => b.onclick = e => { e.stopPropagation(); ACT[b.dataset.act](b, e); });
+  $$("[data-back]", el).forEach(b => b.onclick = () => voltar());
+}
+function barra() {
+  const top = pilha[pilha.length - 1], aba = SCR[top.nome].tab;
+  tabsEl.classList.toggle("hide", !aba);
+  if (aba) lente(top.nome);
+  $("#sbar").classList.toggle("light", !!SCR[top.nome].light);
+}
+function ir(nome, arg) {
+  if (SCR[nome].tab) return irAba(nome);
+  fecharTudo();
+  const velho = pilha[pilha.length - 1], el = montar(nome, arg);
+  pilha.push({ nome, arg, el });
+  views.appendChild(el);
+  el.classList.add("anim-in");
+  if (velho) { velho.el.classList.add("anim-out"); setTimeout(() => { velho.el.style.display = "none"; velho.el.classList.remove("anim-out"); }, 380); }
+  barra();
+}
+function voltar() {
+  if (pilha.length < 2) return;
+  const atual = pilha.pop(), prev = pilha[pilha.length - 1];
+  prev.el.style.display = ""; prev.el.classList.add("anim-back-in");
+  atual.el.classList.add("anim-back-out");
+  setTimeout(() => { atual.el.remove(); prev.el.classList.remove("anim-back-in"); }, 380);
+  barra();
+}
+function irAba(nome, semAnim) {
+  fecharTudo();
+  pilha.forEach(p => p.el.remove());
+  const el = montar(nome);
+  pilha = [{ nome, el }];
+  views.appendChild(el);
+  if (!semAnim) el.classList.add("anim-fade");
+  barra();
+  if (nome === "inicio") agendarNudge();
+}
+function toast(t) { const e = $("#toast"); e.textContent = t; e.classList.add("on"); clearTimeout(toast.t); toast.t = setTimeout(() => e.classList.remove("on"), 1900); }
+
+/* folhas e telas por cima */
+function folha(html, { onClose, cls = "" } = {}) {
+  const bd = document.createElement("div"), sh = document.createElement("div");
+  bd.className = "bd"; sh.className = "sheet " + cls;
+  sh.innerHTML = `<div class="grab"></div><button class="x" aria-label="Fechar">${ic("x", 18)}</button>` + html;
+  layer.append(bd, sh);
+  const fechar = () => { bd.classList.remove("on"); sh.classList.remove("on"); setTimeout(() => { bd.remove(); sh.remove(); }, 420); onClose && onClose(); };
+  bd.onclick = fechar; $(".x", sh).onclick = fechar;
+  sh._fechar = fechar;
+  ligar(sh);
+  requestAnimationFrame(() => { bd.classList.add("on"); sh.classList.add("on"); armar(sh); });
+  return sh;
+}
+function telaCheia(html, { light = true } = {}) {
+  const el = document.createElement("div");
+  el.className = "full"; el.innerHTML = html;
+  layer.appendChild(el);
+  ligar(el);
+  const fechar = () => { el.classList.remove("on"); setTimeout(() => el.remove(), 360); $("#sbar").classList.toggle("light", !!SCR[pilha[pilha.length - 1].nome].light); };
+  el._fechar = fechar;
+  requestAnimationFrame(() => { el.classList.add("on"); armar(el); });
+  if (light) $("#sbar").classList.add("light");
+  return el;
+}
+function fecharTudo() { $$(".sheet,.full", layer).forEach(s => s._fechar ? s._fechar() : s.remove()); $(".nudge")?.remove(); }
+
+/* ---------- telas ---------- */
+SCR.splash = {
+  light: false, solid: true,
+  html: () => `<div class="splash" data-act="pularSplash"><div id="spIris">${iris(48, 168, { inner: .6, anim: true, step: 22, pupil: "#0F1220" })}</div><div class="wm">IRIS<b>a</b></div></div>`,
+  mount: () => { clearTimeout(SCR.splash.t); SCR.splash.t = setTimeout(() => pilha[0]?.nome === "splash" && irAba("login"), 2900); },
+};
+SCR.login = {
+  tab: false, html: () => `<div class="pad np" style="min-height:100%;display:flex;flex-direction:column;justify-content:space-between;padding-top:110px">
+    <div class="fu" style="text-align:center;display:flex;flex-direction:column;align-items:center;gap:18px">
+      ${iris(48, 92, { inner: .6, pupil: "#0F1220" })}${wordmark(26)}
+      <p class="h-big" style="font-size:36px;margin-top:14px"><span style="font-weight:400">Quanta</span> <span class="rbt">cor</span><br><span style="font-weight:400">tem esse</span> lugar?</p>
+      <p class="mut" style="font-size:15px;line-height:1.5;max-width:290px">O mapa dos lugares onde a gente é bem-vinde, feito por nós.</p>
+    </div>
+    <div class="fu" style="--d:200ms;display:flex;flex-direction:column;gap:10px">
+      <button class="btn night" data-act="entrar"><svg width="18" height="18" viewBox="0 0 24 24" fill="#fff"><path d="M16.4 12.6c0-2.6 2.1-3.8 2.2-3.9-1.2-1.8-3.1-2-3.7-2-1.6-.2-3.1.9-3.9.9-.8 0-2-.9-3.4-.9-1.7 0-3.3 1-4.2 2.6-1.8 3.1-.5 7.7 1.3 10.2.9 1.2 1.9 2.6 3.2 2.6 1.3-.1 1.8-.8 3.3-.8 1.6 0 2 .8 3.4.8 1.4 0 2.3-1.3 3.1-2.5 1-1.4 1.4-2.8 1.4-2.9-.1 0-2.7-1-2.7-4.1zM13.9 4.9c.7-.9 1.2-2 1.1-3.2-1 0-2.3.7-3 1.6-.7.8-1.2 2-1.1 3.1 1.2.1 2.3-.6 3-1.5z"/></svg>Continuar com a Apple</button>
+      <button class="btn white" data-act="entrar"><svg width="18" height="18" viewBox="0 0 24 24"><path d="M21.6 12.2c0-.7-.1-1.4-.2-2H12v3.8h5.4a4.6 4.6 0 0 1-2 3v2.5h3.2c1.9-1.7 3-4.3 3-7.3z" fill="#4285F4"/><path d="M12 22c2.7 0 5-.9 6.6-2.4l-3.2-2.5c-.9.6-2 1-3.4 1-2.6 0-4.8-1.8-5.6-4.1H3.1v2.6A10 10 0 0 0 12 22z" fill="#34A853"/><path d="M6.4 14c-.2-.6-.3-1.3-.3-2s.1-1.4.3-2V7.4H3.1a10 10 0 0 0 0 9.2z" fill="#FBBC05"/><path d="M12 5.9c1.5 0 2.8.5 3.8 1.5l2.9-2.9A10 10 0 0 0 3.1 7.4L6.4 10C7.2 7.7 9.4 5.9 12 5.9z" fill="#EA4335"/></svg>Continuar com o Google</button>
+      <button class="btn" style="color:var(--muted)" data-act="entrar">Entrar com e-mail</button>
+      <p class="dim" style="font-size:11.5px;text-align:center;line-height:1.5;margin-top:4px">Só pedimos e-mail para entrar. Relato é sempre anônimo.</p>
+    </div></div>`,
+};
+function painelHome() {
+  return `<div class="dark fu" data-tour="painel" style="--d:40ms">
+    <div style="position:absolute;right:-50px;top:-50px;opacity:.16">${iris(48, 190, { inner: .6 })}</div>
+    <p class="eb" style="color:#8E96AE">Irisa em Curitiba</p>
+    <p class="h-big" style="margin-top:10px;font-size:33px"><span style="font-weight:400">Quanta</span> <span class="rbt">cor</span><br><span style="font-weight:400">tem esse</span> lugar?</p>
+    <p style="font-size:13.5px;line-height:1.5;color:#C8CCDC;margin-top:8px;max-width:270px">O mapa dos lugares onde a gente é bem-vinde, feito por nós.</p>
+    <div style="display:flex;gap:8px;margin-top:16px">
+      <button class="btn turq" style="height:48px;font-size:14px" data-go="lugares" data-tour="avaliar">${ic("spark", 18)}Avaliar um lugar</button>
+      <button class="btn coral" style="height:48px;font-size:14px" data-go="registrar" data-tour="relato">${ic("alert", 18)}Registrar relato</button>
+    </div>
+    <div style="display:flex;justify-content:space-between;margin-top:16px;padding-top:14px;border-top:1px solid rgba(255,255,255,.1);font-size:12px;color:#C8CCDC">
+      <span><b style="color:#fff;font-size:15px" data-count="10712">0</b><br>lugares</span><span><b style="color:#fff;font-size:15px" data-count="38">0</b><br>avaliados</span><span><b style="color:#fff;font-size:15px" data-count="12">0</b><br>relatos em 180 dias</span>
+    </div></div>`;
+}
+function semanaCard() {
+  const s = ST.semana;
+  return `<button class="card fu" style="--d:120ms;flex:1;flex-grow:1;display:flex;flex-direction:column;gap:10px;text-align:left" data-act="semana" data-tour="semana">${edge(0, 0, 26, { frac: s / 4, d: 400 })}
+    <span class="eb">Sua semana</span>
+    <div style="display:flex;gap:5px">${[0, 1, 2, 3].map(i => `<i style="flex:1;height:26px;border-radius:9px;background:${i < s ? corDoArco(i / 4 + .05) : "#E6ECF3"};transition:background .4s ${300 + i * 140}ms"></i>`).join("")}</div>
+    <span style="font-size:13px;font-weight:600"><b style="font-size:20px;font-family:var(--display)">${s} de 4</b> dias</span>
+    <span class="dim" style="font-size:12px;line-height:1.35">Mais 1 dia e a semana acende.</span></button>`;
+}
+function coresCard() {
+  return `<button class="card fu" style="--d:180ms;flex:1;flex-grow:1;display:flex;flex-direction:column;gap:8px;text-align:left" data-act="cores">
+    <span class="eb">Suas cores</span>
+    <div style="display:flex;align-items:center;gap:10px">${iris(16, 46, { inner: .55, anim: true, delay: 500, step: 30 })}<b style="font-family:var(--display);font-size:30px" data-count="7">0</b></div>
+    <span style="font-size:13px;font-weight:600;line-height:1.3">lugares coloridos por você</span>
+    <span class="dim" style="font-size:12px;line-height:1.35">3 pessoas abriram a ficha depois da sua avaliação.</span></button>`;
+}
+function quaseLa() {
+  const id = "deu-close", [v, a] = ST.prog[id] || [10, 10];
+  if (ST.ganhas.has(id)) return quaseLaGen("figurinha");
+  return quaseLaGen(id);
+}
+function quaseLaGen(id) {
+  const [v, a] = ST.prog[id];
+  return `<button class="card solid fu" style="--d:240ms;display:flex;gap:14px;align-items:center;width:100%;margin-top:10px;text-align:left" data-act="medDet" data-id="${id}">
+    ${medal(id, { size: 76, on: false, prog: v / a, lock: false, d: 300, shine: true })}
+    <div style="flex:1"><span class="eb" style="color:#9C6C00">Quase lá</span><div style="font-weight:700;font-size:17px;margin-top:2px">${nomeM(MED[id])}</div>
+    <div class="dim" style="font-size:12.5px;margin-top:2px">${v} de ${a} · ${MED[id].cond}</div></div></button>`;
+}
+SCR.inicio = {
+  tab: true, html: () => `<div class="pad">
+    <div class="topbar"><button class="city" data-act="cidade">${ic("pin", 17)}Curitiba ${ic("down", 15)}</button><button class="sos" data-act="sos" data-tour="sos">SOS</button></div>
+    ${painelHome()}
+    <div style="display:flex;gap:10px;margin-top:10px">${semanaCard()}${coresCard()}</div>
+    ${quaseLa()}
+    <div class="sec"><h2>Mais acolhedores perto</h2><a data-go="lugares">Ver todos</a></div>
+    ${["aquarela", "prisma", "lilas"].map((k, i) => placeCard(LUG[k], i + 4)).join("")}
+    <div class="sec"><h2>Segurança na cidade</h2><a data-go="mapa">Mapa</a></div>
+    <div class="card fu" style="padding:6px 16px">
+      ${[["Centro", 6, "alerta"], ["Rebouças", 3, "atencao"], ["São Francisco", 2, "atencao"]].map(([b, n, l]) => `<div class="row-l" data-go="bairro:${b}" style="padding:13px 0">${areaLevel(l)}<span>${b}</span><b class="dim" style="font-size:13px">${n} relatos</b>${ic("chev", 18)}</div>`).join("")}
+    </div>
+    <p class="dim" style="font-size:12px;line-height:1.5;margin:10px 4px 0">Sem relato não quer dizer área segura: quer dizer que ninguém registrou.</p>
+  </div>`,
+};
+function areaLevel(l) { return l === "alerta" ? `<span class="pill" style="background:#FF696433;color:#C72825">${ic("alert", 13)} Alerta</span>` : `<span class="pill" style="background:#FFD06640;color:#9C6C00">${ic("alert", 13)} Atenção</span>`; }
+
+SCR.lugares = {
+  tab: true, html: () => `<div class="pad">
+    <div class="topbar"><div><p class="h-big">Lugares</p><p class="dim" style="font-size:13px;margin-top:2px"><span data-count="10712">0</span> em Curitiba · perto de você</p></div><button class="sos" data-act="sos">SOS</button></div>
+    <label class="field fu">${ic("search", 19)}<input placeholder="Buscar pelo nome" data-act-input="busca"></label>
+    <div class="chips fu" style="--d:60ms;margin:12px 0 14px" id="catChips">${["Todos", "Bar", "Café", "Restaurante", "Balada", "Hotel"].map((c, i) => `<button class="chip ${i ? "" : "on"}" data-act="cat">${c}</button>`).join("")}</div>
+    <div id="lista">${LUGARES.map(placeCard).join("")}</div>
+    <button class="btn white fu" style="--d:400ms;margin-top:6px" data-act="novoLugar">${ic("plus", 18)}Cadastrar um lugar que falta</button>
+  </div>`,
+  mount: el => { $("input", el).oninput = e => { const q = e.target.value.toLowerCase(); $("#lista", el).innerHTML = LUGARES.filter(l => l.nome.toLowerCase().includes(q)).map(placeCard).join("") || `<p class="dim" style="text-align:center;padding:30px">Nada com esse nome por aqui.</p>`; ligar($("#lista", el)); }; },
+};
+
+SCR.lugar = {
+  solid: true, html: id => {
+    const l = LUG[id || "sem"], [cat, icon, cor] = CAT[l.cat];
+    const resp = ST.resp = [0, 0, 0, 0];
+    return `<button class="back" data-back>${ic("back", 20)}</button>
+    <div class="hero"><div class="ph" id="ph" style="background:radial-gradient(80% 70% at 30% 30%,${cor}88,${cor}22 70%),linear-gradient(160deg,${cor}55,#F5F4F1);filter:grayscale(${l.nota ? 0 : 1})">
+      <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:${cor};opacity:.5">${ic(icon, 120)}</div></div>
+      <div style="position:absolute;left:0;right:0;bottom:0;height:120px;background:linear-gradient(transparent,var(--paper))"></div></div>
+    <div style="padding:0 18px 60px;margin-top:-34px;position:relative">
+      <p class="eb fu">${cat} · ${l.bairro}</p>
+      <h1 class="h-big fu" style="--d:60ms;margin-top:6px">${l.nome}</h1>
+      <p class="dim fu" style="--d:90ms;font-size:13.5px;margin-top:4px">${l.end} · ${l.dist}</p>
+      ${l.alerta ? `<div class="card fu" style="--d:120ms;margin-top:14px;display:flex;gap:10px;align-items:flex-start;background:#FFF1EF"><span style="color:#C72825">${ic("alert", 20)}</span><div><b style="font-size:14px">Relato de LGBTIfobia por perto</b><p class="mut" style="font-size:12.5px;line-height:1.45;margin-top:2px">Aconteceu na região, a até 100 m. Não desconta a nota do lugar.</p><button data-go="bairro:${l.bairro}" style="font-size:12.5px;font-weight:700;color:#C72825;margin-top:6px">Ver a ficha do bairro</button></div></div>` : ""}
+      ${l.nota ? `<div class="card solid fu" style="--d:160ms;margin-top:14px">
+        <div style="display:flex;gap:14px;align-items:center">${score(l.nota, 78)}<div>${badge(l.badge)}<p style="font-weight:700;margin-top:6px">${l.n} avaliações</p><p class="dim" style="font-size:12.5px">${BADGE[l.badge][0] === "Acolhedor" ? "Nota alta e consistente entre quem frequenta." : "As experiências variam."}</p></div></div>
+        ${["Atendimento", "Afeto", "Banheiro", "Clientela"].map((a, i) => `<div class="axis"><span class="mut">${a}</span><div class="bar"><i data-w="${l.ax[i] / 5 * 100}%" style="background:${[C.coral, C.orange, C.yellow, C.turq][i]};transition-delay:${300 + i * 120}ms"></i></div><b>${l.ax[i].toFixed(1).replace(".", ",")}</b></div>`).join("")}
+      </div>` : `<div class="card fu" style="--d:160ms;margin-top:14px;display:flex;gap:12px;align-items:center">${score(null, 60)}<div><b>${l.n ? l.n + " avaliações, ainda sem selo" : "Ainda sem nenhuma cor"}</b><p class="dim" style="font-size:12.5px;line-height:1.4;margin-top:2px">O selo aparece com 5 avaliações. ${l.n ? "Faltam " + (5 - l.n) + "." : "A sua pode ser a primeira."}</p></div></div>`}
+      <div style="display:flex;gap:8px;margin-top:12px" class="fu"><button class="btn white" style="height:44px;font-size:14px" data-act="chegar">${ic("nav", 17)}Como chegar</button><button class="btn white" style="height:44px;font-size:14px" data-act="abrirForm">${ic("spark", 17)}Avaliar</button></div>
+      <div id="form" style="${l.nota ? "display:none" : ""}">
+      <p class="h-mid" style="margin:28px 2px 4px"><span style="font-weight:400">Quanta</span> <span class="rbt">cor</span> <span style="font-weight:400">tem esse</span> lugar?</p>
+      <p class="dim" style="font-size:13px;margin:0 2px 12px">Quatro perguntas, de 1 a 5. Quem esteve lá responde.</p>
+      ${[["A equipe te tratou bem?", "Sem constrangimento, sem olhar torto, sem insistir no “senhor”.", "Atendimento"], ["Dava para ficar à vontade com quem você ama?", "De mãos dadas, um beijo, sem plateia.", "Afeto"], ["E o banheiro?", `Usou o que quis, sem ser ${flex("questionad")}.`, "Banheiro"], ["E as outras pessoas no ambiente?", "Quem estava em volta, não a equipe.", "Clientela"]].map(([q, h, a], qi) => `
+        <div class="q"><span class="eb" style="color:${["#C72825", "#AB6207", "#9C6C00", "#0A8B7A"][qi]}">${a}</span><h4 style="margin-top:4px">${q}</h4><p>${h}</p>
+        <div class="rbw" data-q="${qi}">${[1, 2, 3, 4, 5].map(v => `<button data-act="nota" data-v="${v}">${v}</button>`).join("")}</div>
+        <div class="rbw-l"><span>Nada</span><span>Muito</span></div></div>`).join("")}
+      <textarea class="ta" placeholder="Quer contar como foi? (opcional)" style="margin-top:4px"></textarea>
+      <button class="btn white" style="margin-top:10px;height:44px;font-size:14px" data-act="foto">${ic("camera", 17)}Adicionar foto</button>
+      <button class="btn yellow" style="margin-top:14px" data-act="enviarAval" data-id="${l.id}">Enviar avaliação</button>
+      <p class="dim" style="font-size:11.5px;text-align:center;margin-top:8px">Aparece na hora, com seu apelido. Dá para denunciar e bloquear.</p>
+      </div>
+      ${l.nota ? `<div class="sec"><h2>Quem esteve lá</h2></div>
+      ${[["Duda", "Fui com minha namorada e ninguém olhou torto. O banheiro é sem gênero.", "há 2 dias"], ["Anônimo", "Atendimento ótimo, mas no sábado à noite a clientela muda.", "há 1 semana"]].map(([n, t, q]) => `<div class="post"><div class="who"><span class="av" style="background:${C.yellow}">${n[0]}</span>${n}<span class="dim" style="font-weight:500;margin-left:auto">${q}</span></div><p>${t}</p><div style="display:flex;gap:14px;margin-top:10px;font-size:12px;font-weight:600;color:var(--dim)"><button data-act="denunciar">${ic("flag", 14, 'style="display:inline;vertical-align:-2px"')} Denunciar</button><button data-act="bloquear">${ic("ban", 14, 'style="display:inline;vertical-align:-2px"')} Bloquear</button></div></div>`).join("")}` : ""}
+    </div>`;
+  },
+};
+
+SCR.mapa = {
+  tab: true, light: false, html: () => {
+    const pins = [[120, 300, 4.7, C.turq, "aquarela"], [250, 260, 4.3, C.yellow, "lilas"], [300, 430, 4.5, C.turq, "prisma"], [175, 470, 3.1, C.lilac, "mirante"]];
+    const dots = [[80, 380], [210, 350], [330, 330], [150, 560], [260, 520], [90, 230], [340, 220], [230, 620], [60, 480], [310, 580], [190, 210], [120, 640]];
+    return `<div class="map">${mapaSvg()}
+      <div class="area" style="left:190px;top:500px;width:150px;height:150px;background:radial-gradient(circle,rgba(255,105,100,.38),rgba(255,105,100,.12) 60%,transparent 70%)"></div>
+      <div class="area" style="left:285px;top:300px;width:110px;height:110px;background:radial-gradient(circle,rgba(255,208,102,.45),rgba(255,208,102,.14) 60%,transparent 70%);animation-delay:.2s"></div>
+      ${dots.map(([x, y]) => `<i class="dot" style="left:${x}px;top:${y}px"></i>`).join("")}
+      <div class="clu" style="left:70px;top:300px">12</div><div class="clu" style="left:330px;top:640px">8</div>
+      ${pins.map(([x, y, n, c, id], i) => `<div class="pinp" style="left:${x}px;top:${y}px;--d:${200 + i * 120}ms" data-act="pin" data-id="${id}"><div class="bub" style="background:${c}">${n.toFixed(1).replace(".", ",")}</div><div class="tip" style="background:${c}"></div></div>`).join("")}
+      <div style="position:absolute;left:14px;right:14px;top:56px;display:flex;gap:8px;align-items:center">
+        <div class="seg" style="flex:1;background:rgba(255,255,255,.85);box-shadow:var(--shadow)"><i style="width:calc(50% - 4px)"></i><button class="on" data-act="seg">Lugares</button><button data-act="seg">Relatos</button></div>
+        <button class="sos" data-act="sos">SOS</button></div>
+      <div class="chips" style="position:absolute;left:14px;right:14px;top:106px">${["Com nota", "Bar", "Café", "Hotel", "Balada"].map((c, i) => `<button class="chip" style="background:rgba(255,255,255,.88);box-shadow:var(--shadow)${i ? "" : ";background:var(--night);color:#fff"}">${c}</button>`).join("")}</div>
+      <div style="position:absolute;left:0;right:0;bottom:0;height:250px;border-radius:30px 30px 0 0;background:rgba(245,244,241,.94);backdrop-filter:blur(20px);box-shadow:0 -8px 30px rgba(20,24,41,.12);padding:10px 16px">
+        <div class="grab" style="width:40px;height:5px;border-radius:3px;background:var(--line);margin:0 auto 10px"></div>
+        <div style="display:flex;justify-content:space-between;align-items:center"><b style="font-size:16px">Perto de você</b><button class="pill" style="background:var(--coral);color:var(--night);height:30px;padding:0 12px" data-go="registrar">${ic("alert", 14)} Registrar relato</button></div>
+        <div class="chips" style="margin-top:10px;gap:10px">${["aquarela", "lilas", "prisma"].map(k => { const l = LUG[k]; return `<button style="flex:none;width:200px;background:#fff;border-radius:20px;padding:10px;box-shadow:var(--shadow);display:flex;gap:10px;align-items:center;text-align:left" data-go="lugar:${k}">${tile(l, 48)}<div style="min-width:0"><b style="font-size:14px;display:block">${l.nome}</b><span class="dim" style="font-size:12px">${l.dist} · ${l.nota.toFixed(1).replace(".", ",")}</span></div></button>`; }).join("")}</div>
+      </div></div>`;
+  },
+};
+function mapaSvg() {
+  return `<svg width="390" height="844" viewBox="0 0 390 844" style="position:absolute;inset:0">
+    <rect width="390" height="844" fill="#ECEFF2"/>
+    <path d="M-20 700 C 80 640 140 720 230 660 S 360 600 420 640 L420 760 L-20 780Z" fill="#CFE5F3"/>
+    <rect x="40" y="410" width="110" height="80" rx="18" fill="#D6EBD9"/><circle cx="300" cy="170" r="46" fill="#D6EBD9"/>
+    <g stroke="#fff" stroke-width="14" fill="none" stroke-linecap="round"><path d="M-10 250 L 400 330"/><path d="M-10 540 L400 470"/><path d="M110 -10 L 170 860"/><path d="M260 -10 L 230 860"/></g>
+    <g stroke="#fff" stroke-width="7" fill="none"><path d="M-10 160 L400 200"/><path d="M-10 400 L400 390"/><path d="M-10 620 L400 600"/><path d="M40 -10 L 60 860"/><path d="M340 -10 L 330 860"/><path d="M190 -10 L 200 860"/></g>
+    <g stroke="#E1E5EA" stroke-width="3"><path d="M0 300 L390 310"/><path d="M0 450 L390 440"/><path d="M290 0 L280 844"/><path d="M80 0 L90 844"/></g></svg>`;
+}
+
+SCR.bairro = {
+  solid: true, html: b => {
+    b = b || "Centro";
+    return `<button class="back" data-back>${ic("back", 20)}</button><div class="pad np" style="padding-top:108px">
+      <p class="eb fu">Ficha do bairro · Curitiba</p><h1 class="h-big fu" style="margin-top:6px">${b}</h1>
+      <div class="dark fu" style="--d:80ms;margin-top:14px"><div style="display:flex;justify-content:space-between;align-items:flex-start">${areaLevel(b === "Centro" ? "alerta" : "atencao").replace("background:#FF696433;color:#C72825", "background:rgba(255,105,100,.22);color:#FF8D89").replace("background:#FFD06640;color:#9C6C00", "background:rgba(255,208,102,.2);color:#FFDE95")}<span style="font-size:12px;color:#8E96AE">últimos 180 dias</span></div>
+        <div style="display:flex;gap:22px;margin-top:14px"><div><b style="font-family:var(--display);font-size:44px" data-count="${b === "Centro" ? 6 : 3}">0</b><p style="font-size:12px;color:#C8CCDC">relatos</p></div><div><b style="font-family:var(--display);font-size:44px" data-count="${b === "Centro" ? 2 : 0}">0</b><p style="font-size:12px;color:#C8CCDC">graves</p></div></div>
+        ${[["Agressão verbal", 3, C.yellow], ["Discriminação", 2, C.turq], ["Ameaça", 1, C.orange]].map(([t, n, c], i) => `<div class="axis" style="grid-template-columns:120px 1fr 20px;color:#C8CCDC"><span>${t}</span><div class="bar" style="background:rgba(255,255,255,.12)"><i data-w="${n / 3 * 100}%" style="background:${c};transition-delay:${300 + i * 120}ms"></i></div><b style="color:#fff">${n}</b></div>`).join("")}
+        <div class="wraps" style="margin-top:14px">${["Rua ou calçada · 4", "Transporte · 1", "Noite · 4", "Madrugada · 2"].map(t => `<span class="pill" style="background:rgba(255,255,255,.1);color:#fff">${t}</span>`).join("")}</div>
+      </div>
+      <p class="dim" style="font-size:12.5px;line-height:1.5;margin:10px 4px 0">O alerta é da rua, não dos lugares. Sem relato não quer dizer área segura: quer dizer que ninguém registrou.</p>
+      <div class="sec"><h2>Lugares no bairro</h2></div>${[LUG.mirante, LUG.aquarela].map(placeCard).join("")}
+      <div class="sec"><h2>Relatos no bairro</h2></div>
+      ${[["Agressão verbal", "Rua ou calçada · noite", "há 3 dias", C.yellow], ["Discriminação", "Transporte · tarde", "há 2 semanas", C.turq]].map(([t, w, q, c]) => `<div class="card" style="margin-bottom:10px;display:flex;gap:12px;align-items:center"><i style="width:10px;height:44px;border-radius:5px;background:${c}"></i><div style="flex:1"><b style="font-size:14.5px">${t}</b><p class="dim" style="font-size:12.5px;margin-top:2px">${w} · ${q}</p></div><span class="pill" style="background:var(--subtle);color:var(--dim)">anônimo</span></div>`).join("")}
+    </div>`;
+  },
+};
+
+SCR.registrar = {
+  solid: true, html: () => `<button class="back" data-back>${ic("back", 20)}</button><div class="pad np" style="padding-top:108px">
+    <p class="eb fu" style="color:#C72825">Registrar relato</p><h1 class="h-big fu" style="margin-top:6px">O que aconteceu?</h1>
+    <div class="card fu" style="--d:60ms;margin-top:12px;display:flex;gap:10px;align-items:center;background:#EFFBF8">${ic("shield", 20, 'style="color:#0A8B7A"')}<p style="font-size:13px;line-height:1.45"><b>Anônimo.</b> Ninguém vê quem registrou, nem a equipe. Relato nunca conta ponto.</p></div>
+    <div class="lbl">Tipo</div><div class="wraps" data-grp="tipo">${[["Agressão verbal", C.yellow], ["Violência física", C.coral], ["Ameaça", C.orange], ["Discriminação", C.turq], ["Vandalismo", C.lilac]].map(([t, c], i) => `<button class="chip" data-act="pick" data-c="${c}" ${i ? "" : 'style="background:' + c + ';color:#141829"'}>${t}</button>`).join("")}</div>
+    <div class="lbl">Gravidade</div><div class="seg" data-segw><i style="width:calc(33.33% - 2.7px)"></i>${["Baixa", "Média", "Alta"].map((t, i) => `<button class="${i ? "" : "on"}" data-act="seg">${t}</button>`).join("")}</div>
+    <div class="lbl">Onde <span>opcional</span></div><div class="wraps" data-grp="onde">${["Rua ou calçada", "Praça ou parque", "Transporte", "Dentro de um lugar", "Serviço público", "Outro"].map(t => `<button class="chip" data-act="pick" data-c="#141829">${t}</button>`).join("")}</div>
+    <div class="lbl">Quando <span>opcional</span></div><div class="wraps" data-grp="quando">${["Madrugada", "Manhã", "Tarde", "Noite"].map(t => `<button class="chip" data-act="pick" data-c="#141829">${t}</button>`).join("")}</div>
+    <div class="lbl">Conte o que quiser <span>opcional</span></div><textarea class="ta" placeholder="Sem nome de ninguém, sem telefone, sem endereço de pessoa."></textarea>
+    <div class="lbl">Local</div>
+    <div style="position:relative;height:150px;border-radius:24px;overflow:hidden;box-shadow:var(--shadow)">${mapaSvg().replace('width="390" height="844"', 'width="390" height="844" style="position:absolute;left:-60px;top:-260px"')}
+      <div class="pinp" style="left:50%;top:58%"><div class="bub" style="background:var(--coral);min-width:30px;height:30px;padding:0">${ic("alert", 16)}</div><div class="tip" style="background:var(--coral)"></div></div></div>
+    <p class="dim" style="font-size:12px;line-height:1.45;margin:8px 4px 0">Em relato de hoje e de ontem, o ponto aparece deslocado uns 100 m para ninguém ser identificade.</p>
+    <button class="btn coral" style="margin-top:18px" data-act="enviarRelato">Registrar relato</button>
+  </div>`,
+};
+
+SCR.apoio = {
+  tab: true, html: () => `<div class="pad">
+    <div class="topbar"><p class="h-big">Apoio</p><button class="sos" data-act="sos">SOS</button></div>
+    <div class="seg fu" id="apSeg"><i style="width:calc(50% - 4px)"></i><button class="on" data-act="apSeg" data-v="mural">Mural</button><button data-act="apSeg" data-v="serv">Serviços</button></div>
+    <div id="apBody" style="margin-top:14px">${muralHtml()}</div></div>`,
+  mount: (el, a) => { if (a === "serv") ACT.apSeg($$("#apSeg button", el)[1]); },
+};
+const REACOES = [["abraco", "Te abraço"], ["leque", "Arrasou"], ["contigo", "Tô contigo"], ["sinto", "Sinto muito"], ["acendeu", "Acendeu"], ["cor", "Mais cor"]];
+function reacIcon(k) {
+  const g = {
+    abraco: `<circle cx="12" cy="12" r="10" fill="#FFE3EC"/><path d="M7 13c1.5 2.5 3 3.5 5 3.5s3.5-1 5-3.5M8.5 9.5c.8-.8 2-.8 2.8 0M12.7 9.5c.8-.8 2-.8 2.8 0" stroke="#C72825" stroke-width="1.6" fill="none" stroke-linecap="round"/>`,
+    leque: `<path d="M12 20 3 9a12 12 0 0 1 18 0z" fill="url(#lq)"/><defs><linearGradient id="lq" x1="0" x2="1">${RB.map((c, i) => `<stop offset="${i / 5}" stop-color="${c}"/>`).join("")}</linearGradient></defs><circle cx="12" cy="19" r="1.6" fill="#E0A32E"/>`,
+    contigo: `<circle cx="12" cy="12" r="10" fill="#D9F7F0"/><path d="M8 13V9a1 1 0 0 1 2 0v3M10 12V8a1 1 0 0 1 2 0v4M12 12V8.5a1 1 0 0 1 2 0V13M14 12a1 1 0 0 1 2 0v2c0 2-1.5 4-4 4s-4-1.5-4-3.5V12" stroke="#0A8B7A" stroke-width="1.4" fill="none" stroke-linecap="round"/>`,
+    sinto: `<circle cx="12" cy="12" r="10" fill="#ECE5FF"/><path d="M12 6c2 3 3 4.5 3 6a3 3 0 0 1-6 0c0-1.5 1-3 3-6z" fill="#A889FF"/>`,
+    acendeu: `<circle cx="12" cy="12" r="10" fill="#FFF2CF"/><path d="M12 5c1 3 4 4 4 8a4 4 0 0 1-8 0c0-2 1-3 2-4 0 1.5.5 2.5 1.5 2.5C11.5 9 11 7 12 5z" fill="#FFA353"/>`,
+    cor: iris(48, 24, { inner: .55 }).replace('<svg class="iris"', "<g").replace("</svg>", "</g>").replace(/width="24" height="24" viewBox="0 0 100 100"/, 'transform="scale(.24)"'),
+  }[k];
+  return `<svg viewBox="0 0 24 24">${g}</svg>`;
+}
+const POSTS = [
+  { n: "Anônimo", cat: ["Pedido de ajuda", C.coral], t: "Primeira vez saindo com meu namorado aqui. Alguém indica um café tranquilo pra um primeiro encontro?", q: "há 20 min", r: { abraco: 4, contigo: 6 } },
+  { n: "Duda", cat: ["Dica de segurança", C.yellow], t: "No Café Aquarela o banheiro é sem gênero e a equipe é um amor. Pode ir sem medo de olhar torto.", q: "há 2 h", r: { leque: 11, cor: 7, acendeu: 3 } },
+  { n: "Rafa", cat: ["Acolhimento", C.turq], t: "Pra quem tá passando por coisa difícil em casa: você não está sozinhe. Esse mural existe por isso.", q: "ontem", r: { abraco: 18, sinto: 2, contigo: 9 } },
+];
+function muralHtml() {
+  return `<div class="card solid fu" style="background:var(--night);color:#fff"><p class="eb" style="color:#6FE7D0">Pergunta da semana</p><p style="font-family:var(--display);font-weight:700;text-transform:uppercase;font-size:23px;line-height:1.1;margin-top:8px">Qual lugar te fez sentir bem-vinde essa semana?</p>
+    <button class="btn" style="background:#fff;color:var(--ink);height:42px;margin-top:14px;font-size:14px" data-act="postar" data-p="1">Responder</button></div>
+    <div style="display:flex;gap:8px;margin:12px 0" class="fu">${[["abraco", "Mandar um abraço"], ["contigo", "Dar uma dica"], ["sinto", "Pedir ajuda"]].map(([k, t]) => `<button class="card" style="flex:1;padding:12px 8px;display:flex;flex-direction:column;align-items:center;gap:6px;font-size:12px;font-weight:700" data-act="postar"><span style="width:30px;height:30px">${reacIcon(k)}</span>${t}</button>`).join("")}</div>
+    ${POSTS.map((p, i) => `<div class="post fu" style="--d:${120 + i * 80}ms"><div class="who"><span class="av" style="background:${p.n === "Anônimo" ? "#E6ECF3" : p.cat[1]}">${p.n === "Anônimo" ? ic("eye", 15) : p.n[0]}</span>${p.n}<span class="pill" style="background:${p.cat[1]}33;color:var(--ink);height:22px;margin-left:4px">${p.cat[0]}</span><span class="dim" style="font-weight:500;margin-left:auto;font-size:12px">${p.q}</span></div><p>${p.t}</p>
+      <div class="reacts">${REACOES.map(([k, t]) => { const n = (p.r[k] || 0); return `<button data-act="reagir" data-k="${k}" data-n="${n}" title="${t}">${reacIcon(k)}${n ? `<span>${n}</span>` : ""}</button>`; }).join("")}</div>
+      <div style="display:flex;gap:14px;margin-top:10px;font-size:12px;font-weight:600;color:var(--dim)"><button data-act="denunciar">Denunciar</button>${p.n === "Anônimo" ? "" : '<button data-act="bloquear">Bloquear</button>'}</div></div>`).join("")}
+    <button class="btn night" style="position:sticky;bottom:104px;box-shadow:0 10px 26px rgba(20,24,41,.3)" data-act="postar">${ic("plus", 18)}Escrever no mural</button>`;
+}
+function servHtml() {
+  return `<div class="big4 fu">${[["190", "Polícia Militar", C.blue], ["192", "SAMU", C.coral], ["100", "Direitos Humanos", C.turq], ["188", "CVV · conversar", C.lilac]].map(([n, t, c]) => `<button data-act="ligar" data-n="${n}"><b style="color:${c === C.yellow ? "#9C6C00" : "var(--ink)"}">${n}</b><span>${t}</span><div style="height:5px;border-radius:3px;background:${c};margin-top:10px"></div></button>`).join("")}</div>
+    <div class="sec"><h2>Em Curitiba</h2></div>
+    <div class="card fu" style="padding:4px 16px">${[["Centro de referência LGBTQIA+", "Acolhimento, orientação jurídica e psicológica"], ["Defensoria Pública", "Atendimento gratuito em casos de discriminação"], ["Coletivo de acolhimento", "Rodas de conversa toda semana"]].map(([t, s]) => `<div class="row-l" data-act="ligar" data-n="" style="padding:14px 0;align-items:flex-start">${ic("phone", 19)}<span><b style="display:block;font-size:14.5px">${t}</b><span class="dim" style="font-size:12.5px;font-weight:500">${s}</span></span>${ic("chev", 18)}</div>`).join("")}</div>
+    <p class="dim" style="font-size:12px;line-height:1.5;margin:10px 4px">Contatos conferidos pela equipe. Achou um número errado? Avise pelo Perfil.</p>`;
+}
+
+SCR.perfil = {
+  tab: true, html: () => {
+    const k = nivelDe(ST.gomos), n = NIV[k];
+    return `<div class="pad">
+    <div class="topbar"><p class="h-big">Perfil</p><button class="sos" data-act="sos">SOS</button></div>
+    <div class="fu" style="display:flex;gap:14px;align-items:center"><div style="width:68px;height:68px;border-radius:34px;background:var(--rb);padding:3px"><div style="width:100%;height:100%;border-radius:50%;background:#fff;display:flex;align-items:center;justify-content:center;font-family:var(--display);font-weight:700;font-size:26px">${ST.apelido[0]}</div></div>
+      <div><b style="font-size:20px">${ST.apelido}</b><p class="dim" style="font-size:13.5px">Curitiba · ${["ela/dela", "ele/dele", "elu/delu"][ST.forma]}</p></div></div>
+    <button class="card solid fu" style="--d:60ms;width:100%;margin-top:16px;text-align:left" data-act="trilha" data-tour="evolucao">${edge(0, 0, 26, { d: 300 })}
+      <div style="display:flex;gap:16px;align-items:center"><div style="position:relative;width:92px;height:92px">${iris(ST.gomos, 92, { anim: true, delay: 250, step: 45 })}
+        <div style="position:absolute;right:-6px;bottom:-4px;width:42px;height:42px;border-radius:21px;background:#fff;box-shadow:var(--shadow);display:flex;align-items:center;justify-content:center">${nivelImg(k, 34)}</div></div>
+      <div style="flex:1"><span class="eb">Sua evolução · nível ${k + 1} de 8</span><p class="h-mid" style="margin-top:2px;font-size:26px">${nomeN(n)}</p><p class="mut" style="font-size:13px;line-height:1.4;margin-top:2px">${n.t}</p></div></div>
+      <div style="display:flex;justify-content:space-between;font-size:12px;color:var(--dim);margin-top:12px"><span>${ST.gomos} de 48 gomos</span><span>Esta semana: ${ST.gomosSemana} de 4</span></div></button>
+    <button class="card solid fu" style="--d:120ms;width:100%;margin-top:10px;text-align:left;display:flex;align-items:center;gap:12px" data-go="conquistas">
+      <div style="display:flex">${[...ST.ganhas].slice(0, 3).map((id, i) => `<div style="margin-left:${i ? -16 : 0}px">${medal(id, { size: 54, d: 200 + i * 100 })}</div>`).join("")}</div>
+      <div style="flex:1"><span class="eb">Conquistas</span><p style="font-weight:700;font-size:17px;margin-top:2px">${ST.ganhas.size} de 32</p><p class="dim" style="font-size:12.5px">Quase lá: ${nomeM(MED[ST.ganhas.has("deu-close") ? "figurinha" : "deu-close"])}</p></div>${ic("chev", 20)}</button>
+    <div class="lbl" style="margin-top:22px">Como o app fala com você</div>
+    <div class="seg" id="pfForma"><i></i>${["a", "o", "e"].map((t, i) => `<button class="${i === ST.forma ? "on" : ""}" data-act="forma" data-f="${i}">${["Curiosa", "Curioso", "Curiose"][i]}</button>`).join("")}</div>
+    <div class="card fu" style="margin-top:16px;padding:0 4px">
+      <div class="row-l">${ic("eye")}<span>Aparecer com apelido no mural</span><button class="toggle on" data-act="tog"></button></div>
+      <div class="row-l" data-act="bloqueados">${ic("ban")}<span>Pessoas bloqueadas</span><span class="dim" style="flex:none">1</span>${ic("chev", 18)}</div>
+      <div class="row-l" data-act="tour">${ic("book")}<span>Como a Irisa funciona</span><span class="dim" style="flex:none;font-size:13px">Rever o tour</span>${ic("chev", 18)}</div>
+      <div class="row-l" data-act="sair">${ic("out")}<span>Sair</span></div>
+      <div class="row-l" data-act="excluir" style="color:var(--coralInk)">${ic("trash", 22, 'style="color:#C72825"')}<span>Excluir conta</span></div>
+    </div>
+    <p class="dim" style="font-size:11.5px;text-align:center;margin-top:14px">Irisa 0.1.2</p></div>`;
+  },
+  mount: el => requestAnimationFrame(() => posSeg($("#pfForma", el), ST.forma)),
+};
+function posSeg(seg, i) { const b = $$("button", seg), lens = $("i", seg); if (!lens) return; const w = seg.clientWidth > 20 ? (seg.clientWidth - 8) / b.length : 342 / b.length; lens.style.width = w + "px"; lens.style.transform = `translateX(${i * w}px)`; }
+
+SCR.conquistas = {
+  solid: true, html: () => {
+    const prox = ST.ganhas.has("deu-close") ? "figurinha" : "deu-close", [v, a] = ST.prog[prox];
+    const ordem = DADOS.ordem;
+    return `<button class="back" data-back>${ic("back", 20)}</button>
+    <div class="dark" style="border-radius:0 0 36px 36px;padding:110px 20px 24px"><div style="position:absolute;left:-60px;bottom:-90px;opacity:.12">${iris(48, 260, { inner: .6 })}</div>
+      <p class="eb" style="color:#8E96AE">Conquistas</p><p class="h-big" style="margin-top:6px"><span data-count="${ST.ganhas.size}">0</span> <span style="font-weight:400">de 32</span></p>
+      <button style="display:flex;gap:14px;align-items:center;margin-top:16px;width:100%;text-align:left" data-act="medDet" data-id="${prox}">${medal(prox, { size: 96, on: false, prog: v / a, lock: false, d: 300, shine: true })}
+        <div style="flex:1"><span class="eb" style="color:#FFDE95">Quase lá</span><p style="font-weight:700;font-size:19px;margin-top:2px">${nomeM(MED[prox])}</p><p style="font-size:12.5px;color:#C8CCDC;margin-top:2px">${MED[prox].cond}</p>
+        <div class="prog" style="margin-top:10px"><i data-w="${v / a * 100}%"></i></div><p style="font-size:12px;color:#C8CCDC;margin-top:5px">${v} de ${a}</p></div></button></div>
+    <div class="pad np" style="padding-top:22px"><div class="mgrid">${ordem.map((id, i) => {
+      const on = ST.ganhas.has(id), p = ST.prog[id];
+      return `<button data-act="medDet" data-id="${id}" class="fu" style="--d:${Math.min(i * 30, 600)}ms">${medal(id, { size: 92, on, prog: p ? p[0] / p[1] : 0, lock: !on && (!p || p[0] === 0), d: 200 + Math.min(i * 30, 600) })}<span class="nm" style="color:${on ? "var(--ink)" : "var(--dim)"}">${nomeM(MED[id])}</span></button>`;
+    }).join("")}</div></div>`;
+  },
+};
+
+/* ---------- folhas ---------- */
+function folhaMedalha(id) {
+  const m = MED[id], on = ST.ganhas.has(id), p = ST.prog[id];
+  folha(`<div style="display:flex;flex-direction:column;align-items:center;text-align:center;padding-top:8px">
+    ${medal(id, { size: 190, on, prog: p ? p[0] / p[1] : 0, float: on, d: 100, lock: !on && (!p || !p[0]) })}
+    <span class="eb" style="margin-top:14px">${m.cat}</span><p class="h-big" style="margin-top:4px;font-size:32px">${nomeM(m)}</p>
+    <p class="mut" style="font-size:15px;line-height:1.5;margin-top:8px;max-width:300px">${on ? m.copy : m.cond}</p>
+    ${!on && p ? `<div style="width:100%;margin-top:14px"><div class="prog l"><i data-w="${p[0] / p[1] * 100}%"></i></div><p class="dim" style="font-size:12.5px;margin-top:6px">${p[0]} de ${p[1]}</p></div>` : ""}
+    ${on ? `<p class="dim" style="font-size:12.5px;margin-top:8px">${m.cond}</p><button class="btn night" style="margin-top:18px" data-act="story" data-id="${id}">${ic("share", 18)}Compartilhar no story</button>` : ""}
+  </div>`);
+}
+function folhaTrilha() {
+  const atual = nivelDe(ST.gomos);
+  folha(`<p class="eb">Sua evolução</p><p class="h-big" style="margin-top:4px;font-size:30px">${nomeN(NIV[atual])}</p>
+    <p class="mut" style="font-size:13.5px;line-height:1.5;margin-top:6px">Cada semana acende até 4 gomos da sua íris: avaliar, acender o selo de um lugar, cadastrar um lugar que falta, foto aprovada. Relato nunca conta ponto.</p>
+    <div style="margin-top:14px">${NIV.map((n, k) => {
+      const agora = k === atual, fut = k > atual;
+      return `<div class="fu" style="--d:${150 + k * 70}ms;display:flex;gap:12px;align-items:center;padding:7px 0">
+        <div style="width:54px;height:54px;border-radius:27px;flex:none;display:flex;align-items:center;justify-content:center;background:${fut ? "#F1F5FA" : "#fff"};opacity:${fut ? .5 : 1};${agora ? "box-shadow:0 0 0 3px #fff,0 0 0 5.5px var(--turq)" : fut ? "" : "box-shadow:var(--shadow)"}">${nivelImg(k, 42)}</div>
+        <div style="flex:1"><b style="font-size:15px;color:${fut ? "var(--dim)" : "var(--ink)"}">${nomeN(n)}</b><p class="dim" style="font-size:12.5px">${n.t}</p></div>
+        <span class="pill" style="background:${agora ? "#49DCC033" : "#F1F5FA"};color:${agora ? "#0A8B7A" : "var(--dim)"}">${agora ? "Você" : n.g + " gomos"}</span></div>`;
+    }).join("")}</div>
+    <button class="btn night" style="margin-top:14px" data-act="storyNivel">${ic("share", 18)}Compartilhar meu nível</button>`);
+}
+function folhaSemana() {
+  folha(`<p class="eb">Sua semana</p><p class="h-big" style="margin-top:4px;font-size:30px">${ST.semana} de 4 dias</p>
+    <p class="mut" style="font-size:13.5px;line-height:1.5;margin-top:6px">Abrir o app em 4 dias quaisquer acende a semana e dá uma caixinha. Recomeça na segunda, sem perder nada. Não precisa ser todo dia.</p>
+    <div style="display:flex;gap:8px;margin-top:18px">${[0, 1, 2, 3].map(i => `<div style="flex:1;text-align:center"><i style="display:block;height:64px;border-radius:18px;background:${i < ST.semana ? corDoArco(i / 4 + .05) : "#E6ECF3"}"></i><span class="dim" style="font-size:12px;display:block;margin-top:6px">${i < ST.semana ? ["seg", "qua", "sex"][i] : "falta 1"}</span></div>`).join("")}</div>
+    <div class="card" style="margin-top:16px;display:flex;gap:12px;align-items:center"><span style="width:40px;height:40px;border-radius:20px;background:#FFF2CF;display:flex;align-items:center;justify-content:center;color:#9C6C00">${ic("spark", 20)}</span><div><b>Faíscas: 7 de 10</b><p class="dim" style="font-size:12.5px">A cada 10, uma caixinha com um banho para uma medalha.</p></div></div>`);
+}
+function folhaCores() {
+  folha(`<p class="eb">Suas cores</p><p class="h-big" style="margin-top:4px;font-size:30px">7 lugares</p>
+    <p class="mut" style="font-size:13.5px;line-height:1.5;margin-top:6px">O que você coloriu no mapa. Ninguém vê essa lista além de você.</p>
+    <div class="big4" style="margin-top:14px">${[["3", "pessoas abriram a ficha depois da sua avaliação"], ["1", "selo acendeu com a sua avaliação"], ["4", "bairros de 6 da Nome na Lista"], ["2", "lugares que ninguém tinha avaliado"]].map(([n, t]) => `<div style="border-radius:22px;padding:14px;background:#fff;box-shadow:var(--shadow)"><b style="font-family:var(--display);font-size:34px;display:block" data-count="${n}">0</b><span class="mut" style="font-size:12.5px;line-height:1.35">${t}</span></div>`).join("")}</div>
+    <div class="sec"><h2>Ainda sem nenhuma cor</h2></div>${[LUG.sol, LUG.sem].map(placeCard).join("")}`);
+}
+function folhaSOS() {
+  folha(`<p class="eb" style="color:#C72825">Emergência</p><p class="h-big" style="margin-top:4px;font-size:30px">Quem chamar agora</p>
+    <div class="big4" style="margin-top:14px">${[["190", "Polícia Militar", C.blue], ["192", "SAMU", C.coral], ["100", "Direitos Humanos", C.turq], ["188", "CVV · conversar", C.lilac]].map(([n, t, c]) => `<button data-act="ligar" data-n="${n}" style="background:${c}"><b>${n}</b><span style="color:var(--night)">${t}</span></button>`).join("")}</div>
+    <button class="btn white" style="margin-top:12px" data-act="servicos">Serviços de apoio em Curitiba</button>
+    <button class="btn" style="margin-top:4px;color:#C72825" data-act="relatoSOS">Registrar relato depois</button>`);
+}
+function folhaPostar(pergunta) {
+  const sh = folha(`<p class="eb">${pergunta ? "Pergunta da semana" : "Escrever no mural"}</p><p class="h-mid" style="margin-top:4px">${pergunta ? "Qual lugar te fez sentir bem-vinde essa semana?" : "O que você quer dizer?"}</p>
+    ${pergunta ? "" : `<div class="wraps" style="margin-top:12px" data-grp="cat">${[["Acolhimento", C.turq], ["Dica de segurança", C.yellow], ["Pedido de ajuda", C.coral]].map(([t, c], i) => `<button class="chip" data-act="pickCat" data-c="${c}" ${i ? "" : 'style="background:' + c + ';color:#141829"'}>${t}</button>`).join("")}</div>`}
+    <textarea class="ta" style="margin-top:12px" placeholder="Escreva aqui"></textarea>
+    <div class="card" style="margin-top:10px;display:flex;gap:10px;align-items:center;padding:12px 14px"><span style="flex:1;font-size:14px;font-weight:600">Publicar como Anônimo</span><button class="toggle" id="tgAnon" data-act="tog"></button></div>
+    <p class="dim" style="font-size:12px;line-height:1.45;margin-top:10px">Não coloque telefone, endereço ou nome completo de ninguém. Se for um relato de LGBTIfobia, ele vai para o lugar certo e fica anônimo.</p>
+    <button class="btn" style="margin-top:6px;color:#C72825;height:40px;font-size:14px" data-act="virarRelato">Isso é um relato? Registrar anônimo</button>
+    <button class="btn night" style="margin-top:8px" data-act="publicar">Publicar</button>`);
+}
+
+/* ---------- comemorações ---------- */
+function recompensa(lugarId) {
+  ST.gomos += 1; ST.gomosSemana = Math.min(4, ST.gomosSemana + 1);
+  const ia = !ST.ganhas.has("deu-close");
+  const sh = folha(`<div style="text-align:center;padding-top:6px;position:relative">
+    <p class="eb" style="color:#0A8B7A">Avaliação no ar</p><p class="h-big" style="margin-top:6px;font-size:30px"><span style="font-weight:400">Mais</span> <span class="rbt">cor</span> <span style="font-weight:400">no</span> mapa</p>
+    <p class="mut" style="font-size:14px;margin-top:6px">${LUG[lugarId].nome} ganhou a sua cor.</p>
+    <div style="display:flex;justify-content:center;margin-top:18px;position:relative">${iris(ST.gomos, 150, { anim: true, delay: 200, step: 26 })}<div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center"><b style="font-family:var(--display);font-size:34px" data-count="${ST.gomos}">0</b><span class="dim" style="font-size:11px">de 48 gomos</span></div></div>
+    <p style="font-size:13.5px;font-weight:600;margin-top:12px">+1 gomo · esta semana ${ST.gomosSemana} de 4</p>
+    ${ia ? `<div class="card solid" style="margin-top:16px;display:flex;gap:12px;align-items:center;text-align:left">${medal("deu-close", { size: 62, on: false, prog: 1, lock: false, d: 600 })}<div><b>${nomeM(MED["deu-close"])}</b><p class="dim" style="font-size:12.5px">10 de 10 · desbloqueada</p></div></div>
+    <button class="btn night" style="margin-top:14px" data-act="celebrar">Ver conquista nova</button>` : `<button class="btn night" style="margin-top:16px" data-act="fecharFolha">Fechar</button>`}
+  </div>`);
+  sh.style.overflow = "hidden";
+  const e = edge(0, 0, 34, { dur: 1400, d: 150 }); sh.insertAdjacentHTML("afterbegin", e.replace('class="edge"', 'class="edge" style="position:absolute;inset:0"')); armar(sh);
+}
+function celebrar(id) {
+  ST.ganhas.add(id);
+  fecharTudo();
+  const m = MED[id];
+  setTimeout(() => {
+    const el = telaCheia(`<div style="position:absolute;inset:0;background:var(--night);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:30px;text-align:center;color:#fff">
+      <div style="position:absolute;inset:0;opacity:.5;background:radial-gradient(60% 40% at 50% 38%,rgba(168,137,255,.35),transparent 70%)"></div>
+      <p class="eb fu" style="color:#6FE7D0">Conquista nova</p>
+      <div style="margin-top:22px;position:relative" id="celM">${medal(id, { size: 228, on: false, prog: 1, lock: false, d: 100 })}</div>
+      <p class="h-big fu" style="--d:1500ms;font-size:42px;margin-top:22px">${nomeM(m)}</p>
+      <p class="fu" style="--d:1650ms;color:#C8CCDC;font-size:15px;line-height:1.5;margin-top:8px;max-width:300px">${m.copy}</p>
+      <div class="fu" style="--d:1800ms;width:100%;display:flex;flex-direction:column;gap:8px;margin-top:26px"><button class="btn" style="background:#fff;color:var(--night)" data-act="story" data-id="${id}">${ic("share", 18)}Compartilhar no story</button><button class="btn ghost" data-act="fecharTela">Agora não</button></div></div>`);
+    setTimeout(() => { const c = $("#celM", el); if (c) c.innerHTML = medal(id, { size: 228, on: true, float: true, shine: true }); }, 1400);
+  }, 300);
+}
+function subiuNivel() {
+  const k = Math.min(7, nivelDe(ST.gomos) + 1); ST.gomos = Math.max(ST.gomos, NIV[k].g);
+  fecharTudo();
+  telaCheia(`<div style="position:absolute;inset:0;background:var(--paper)"><div class="aurora"></div><div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:30px;text-align:center">
+    <p class="eb fu" style="color:#0A8B7A">Subiu de nível</p><p class="h-mid fu" style="margin-top:6px;font-weight:400">Agora você é</p>
+    <div style="position:relative;width:180px;height:180px;margin-top:16px">${iris(ST.gomos, 180, { anim: true, delay: 300, step: 30 })}<div class="fu" style="--d:1200ms;position:absolute;inset:0;display:flex;align-items:center;justify-content:center"><div style="width:100px;height:100px;border-radius:50px;background:#fff;display:flex;align-items:center;justify-content:center;box-shadow:var(--shadow)">${nivelImg(k, 82, true)}</div></div></div>
+    <p class="h-big fu" style="--d:1500ms;margin-top:18px;font-size:40px">${nomeN(NIV[k])}</p><p class="mut fu" style="--d:1600ms;font-size:15px;margin-top:6px">${NIV[k].t}</p>
+    <div class="fu" style="--d:1800ms;width:100%;display:flex;flex-direction:column;gap:8px;margin-top:24px"><button class="btn night" data-act="storyNivel">${ic("share", 18)}Compartilhar meu nível</button><button class="btn" data-act="fecharTela">Continuar</button></div></div></div>`, { light: false });
+}
+
+/* ---------- cartão do story (mesma regra do app) ---------- */
+const CURTAS = new Set("a o e é as os um uma de da do das dos na no nas nos em pra que se eu".split(" "));
+function quebrar(texto, max) {
+  const p = texto.split(/\s+/).filter(Boolean), n = p.length, larg = (i, j) => p.slice(i, j).join(" ").length;
+  const corte = j => { const u = p[j - 1]; if (/[.:?!]$/.test(u)) return 0; if (/[,;]$/.test(u)) return 40; return CURTAS.has(u.toLowerCase()) ? 500 : 120; };
+  for (let L = 1; L <= n; L++) {
+    const alvo = larg(0, n) / L, memo = new Map();
+    const mel = (i, k) => {
+      const ch = i + ":" + k; if (memo.has(ch)) return memo.get(ch);
+      let r = null;
+      if (k === 1) { const w = larg(i, n); r = w <= max || n - i === 1 ? [(w - alvo) ** 2, []] : null; }
+      else for (let j = i + 1; j <= n - k + 1; j++) { const w = larg(i, j); if (w > max && j - i > 1) break; const rs = mel(j, k - 1); if (!rs) continue; const c = (w - alvo) ** 2 + corte(j) + rs[0]; if (!r || c < r[0]) r = [c, [j, ...rs[1]]]; }
+      memo.set(ch, r); return r;
+    };
+    const r = mel(0, L);
+    if (r) { const cs = [0, ...r[1], n]; return cs.slice(0, -1).map((c, i) => p.slice(c, cs[i + 1]).join(" ")); }
+  }
+  return [texto];
+}
+function story(tipo, id) {
+  fecharTudo();
+  let eb, leve, nome, frase, obj;
+  if (tipo === "medalha") { const m = MED[id]; eb = "Conquista na Irisa"; leve = "Desbloqueei"; nome = nomeM(m); frase = m.story; obj = `<img src="${DADOS.img[id]}" style="width:178px;height:178px;object-fit:contain" class="float3d">`; }
+  else { const k = nivelDe(ST.gomos), n = NIV[k]; eb = `Nível ${k + 1} de 8`; leve = "Agora sou"; nome = nomeN(n); frase = n.s; obj = nivelImg(k, 178, true); }
+  const linhas = quebrar(nome.toUpperCase(), 13).slice(0, 3), maior = Math.max(...linhas.map(l => l.length)), fs = Math.min(44, Math.floor(296 / (maior * .5)));
+  const esc = .74;
+  const el = telaCheia(`<div class="story-wrap"><p class="eb" style="color:#8A90AA;margin-bottom:12px">Prévia do seu story</p>
+    <div style="width:${360 * esc}px;height:${640 * esc}px;border-radius:24px;overflow:hidden;box-shadow:0 30px 80px rgba(0,0,0,.45);position:relative" class="fu">
+      <div class="sc" style="transform:scale(${esc});transform-origin:top left"><div class="blob"></div>
+        ${[[62, 268, 9, C.yellow, 0], [302, 250, 7, C.coral, .3], [306, 420, 10, C.turq, .6], [54, 432, 6, C.lilac, .9]].map(([x, y, r, c, d]) => `<svg class="spark" style="left:${x - r}px;top:${y - r}px;--d:${d}s" width="${r * 2}" height="${r * 2}" viewBox="0 0 20 20"><path d="M10 0Q10 10 20 10Q10 10 10 20Q10 10 0 10Q10 10 10 0Z" fill="${c}"/></svg>`).join("")}
+        <div class="col"><p style="font-size:10.5px;font-weight:700;letter-spacing:1.6px;text-transform:uppercase;color:#0A8B7A">${eb}</p>
+          <p style="font-family:var(--display);font-size:26px;line-height:30px;text-transform:uppercase;margin-top:8px">${leve}</p>
+          <p class="nome" style="font-size:${fs}px;margin-top:2px"><span class="rbt">${linhas.join("<br>")}</span></p>
+          <div class="pane">${obj}</div>
+          <p class="frase">${quebrar(frase, 32).join("\n")}</p></div>
+        <div class="foot"><span style="font-size:11px;color:#7C8296">O mapa dos lugares onde a gente é bem-vinde</span><span style="display:flex;align-items:center;gap:6px">${radarmin(16)}${wordmark(12.5)}</span></div>
+      </div></div>
+    <div style="width:100%;padding:18px 30px 0;display:flex;flex-direction:column;gap:8px">
+      <button class="btn" style="background:#F5F4F1;color:var(--night)" data-act="ig">${ic("camera", 18)}Story do Instagram</button>
+      <button class="btn ghost" data-act="outros">${ic("share", 17)}Outros apps</button>
+      <button class="btn" style="color:#fff;height:40px" data-act="fecharTela">Fechar</button>
+      <p style="font-size:11.5px;color:#8A90AA;text-align:center">Sem seu nome e sem nenhum lugar.</p></div></div>`);
+  setTimeout(() => confete(el, 195, 58 + 30 + 360 * esc * .56), 350);
+}
+function confete(el, x, y) {
+  if (reduce) return;
+  const box = document.createElement("div"); box.className = "conf"; el.appendChild(box);
+  for (let i = 0; i < 56; i++) {
+    const p = document.createElement("i"), r = i % 5 === 0, ang = (-90 + (Math.random() - .5) * 150) * Math.PI / 180, f = 170 + Math.random() * 230;
+    Object.assign(p.style, { position: "absolute", left: x + "px", top: y + "px", width: (r ? 7 : 6 + Math.random() * 4) + "px", height: (r ? 7 : 10 + Math.random() * 6) + "px", borderRadius: r ? "50%" : "1.5px", background: RB[i % 6] });
+    box.appendChild(p);
+    const vx = Math.cos(ang) * f, vy = Math.sin(ang) * f, g = (Math.random() < .5 ? -1 : 1) * (240 + Math.random() * 480);
+    const kf = []; for (let t = 0; t <= 1.0001; t += .1) { const s = 1 - Math.pow(1 - t, 2.2); kf.push({ transform: `translate(${vx * s}px,${vy * s + 520 * t * t}px) rotate(${g * t}deg)`, opacity: t > .75 ? 1 - (t - .75) / .25 : 1 }); }
+    p.animate(kf, { duration: 1800, delay: Math.random() * 120, fill: "forwards", easing: "linear" });
+  }
+  setTimeout(() => box.remove(), 2200);
+}
+
+/* ---------- tour ---------- */
+const TOUR = [
+  ["painel", "Quanta cor tem esse lugar?", "Lugares são avaliados em quatro perguntas por quem esteve lá. O selo aparece com 5 avaliações."],
+  ["relato", "Relato é anônimo", "Registrou, ninguém vê quem foi. O relato vira aviso na rua, não desconta a nota do bar da esquina."],
+  ["sos", "Emergência a um toque", "190, 192, 100 e 188, de qualquer tela."],
+  ["semana", "Sua semana e suas cores", "Abrir o app em 4 dias acende a semana. Suas cores mostram o que você coloriu no mapa."],
+];
+function tour() {
+  irAba("inicio", true);
+  const lay = document.createElement("div"); lay.className = "full on"; lay.style.zIndex = 70; layer.appendChild(lay);
+  lay._fechar = () => lay.remove();
+  lay.innerHTML = `<div class="spot"></div><div class="balloon"></div>`;
+  let i = 0;
+  const passo = () => {
+    const [alvo, t, txt] = TOUR[i], tg = $(`[data-tour="${alvo}"]`, views), sc = $("#screen").getBoundingClientRect(), esc = sc.width / 390;
+    const r = tg.getBoundingClientRect(), x = (r.left - sc.left) / esc, y = (r.top - sc.top) / esc, w = r.width / esc, h = r.height / esc;
+    const spot = $(".spot", lay); Object.assign(spot.style, { left: x - 6 + "px", top: y - 6 + "px", width: w + 12 + "px", height: h + 12 + "px", borderRadius: (alvo === "sos" ? 26 : alvo === "relato" ? 30 : 32) + "px" });
+    const b = $(".balloon", lay);
+    b.innerHTML = `<h4>${t}</h4><p>${txt}</p><div class="nv"><div class="dots">${TOUR.map((_, k) => `<i class="${k === i ? "on" : ""}"></i>`).join("")}</div><div style="display:flex;gap:6px"><button class="btn" style="height:38px;width:auto;padding:0 14px;font-size:14px;color:var(--dim)" id="tPular">Pular</button><button class="btn night" style="height:38px;width:auto;padding:0 18px;font-size:14px" id="tProx">${i === TOUR.length - 1 ? "Começar" : "Próximo"}</button></div></div>`;
+    b.style.top = (y + h + 22 + 170 > 820 ? y - 190 : y + h + 22) + "px";
+    $("#tProx", b).onclick = () => { i++; i < TOUR.length ? passo() : lay.remove(); };
+    $("#tPular", b).onclick = () => lay.remove();
+  };
+  setTimeout(passo, 450);
+}
+
+/* ---------- nudge "Passou por aqui?" ---------- */
+function agendarNudge() { clearTimeout(agendarNudge.t); if (ST.nudgeVisto) return; agendarNudge.t = setTimeout(() => { if (pilha[pilha.length - 1]?.nome === "inicio" && !layer.children.length) nudge(); }, 7000); }
+function nudge() {
+  ST.nudgeVisto = true; $(".nudge")?.remove();
+  const n = document.createElement("div"); n.className = "nudge";
+  n.innerHTML = `${tile(LUG.sem, 52)}<div style="flex:1"><b style="font-size:14.5px">Passou pelo Restaurante Quintal?</b><p class="dim" style="font-size:12.5px;margin-top:2px">Fica no Batel. Conta como foi.</p></div><button class="btn turq" style="width:auto;height:38px;padding:0 14px;font-size:13.5px" id="njf">Já fui</button><button style="width:30px;height:30px;display:flex;align-items:center;justify-content:center;color:var(--dim)" id="njx">${ic("x", 16)}</button>`;
+  $("#screen").appendChild(n);
+  requestAnimationFrame(() => n.classList.add("on"));
+  $("#njf", n).onclick = () => { n.remove(); ir("lugar", "sem"); };
+  $("#njx", n).onclick = () => { n.classList.remove("on"); setTimeout(() => n.remove(), 400); };
+}
+
+/* ---------- ações ---------- */
+const ACT = {
+  pularSplash: () => irAba("login"),
+  entrar: () => { irAba("inicio"); setTimeout(tour, 700); },
+  sos: () => folhaSOS(),
+  cidade: () => toast("Cidade escolhida pelo GPS ou na lista"),
+  semana: () => folhaSemana(), cores: () => folhaCores(), trilha: () => folhaTrilha(),
+  medDet: b => folhaMedalha(b.dataset.id),
+  cat: b => { $$("#catChips .chip").forEach(c => c.classList.toggle("on", c === b)); const m = { Bar: "bar", Café: "cafe", Restaurante: "restaurante", Balada: "balada", Hotel: "hotel" }[b.textContent]; const lst = $("#lista"); lst.innerHTML = LUGARES.filter(l => !m || l.cat === m).map(placeCard).join(""); ligar(lst); },
+  novoLugar: () => toast("Cadastro confere o endereço antes de gravar"),
+  chegar: () => toast("Abre no app de mapas do celular"),
+  abrirForm: () => { const f = $("#form"); f.style.display = ""; f.scrollIntoView({ behavior: "smooth", block: "start" }); },
+  nota: b => {
+    const row = b.parentElement, q = +row.dataset.q, v = +b.dataset.v;
+    ST.resp[q] = v;
+    $$("button", row).forEach((x, i) => { const on = i < v; x.classList.toggle("on", on); x.style.background = on ? RB[i] : ""; x.style.transitionDelay = (i * 40) + "ms"; });
+    const feitas = ST.resp.filter(Boolean).length, ph = $("#ph");
+    if (ph) ph.style.filter = `grayscale(${1 - feitas / 4})`;
+  },
+  foto: () => toast("Foto passa pela moderação antes de aparecer"),
+  enviarAval: b => { if (ST.resp.filter(Boolean).length < 4) return toast("Responda as quatro perguntas"); recompensa(b.dataset.id); },
+  celebrar: () => celebrar("deu-close"),
+  fecharFolha: () => fecharTudo(),
+  fecharTela: b => { const t = b.closest(".full"); t && t._fechar(); },
+  story: b => story("medalha", b.dataset.id), storyNivel: () => story("nivel"),
+  ig: () => toast("Abre o story do Instagram com a imagem"), outros: () => toast("WhatsApp, salvar imagem e o resto"),
+  pin: b => { const l = LUG[b.dataset.id]; folha(`${placeCard(l)}<button class="btn night" data-go="lugar:${l.id}">Abrir a ficha</button>`); },
+  seg: b => { const seg = b.parentElement, bs = $$("button", seg), i = bs.indexOf(b); bs.forEach(x => x.classList.toggle("on", x === b)); const lens = $("i", seg); lens.style.width = `calc(${100 / bs.length}% - ${8 / bs.length}px)`; lens.style.transform = `translateX(${i * 100}%)`; },
+  pick: b => { const g = b.parentElement, multi = false; $$(".chip", g).forEach(c => { c.style.background = ""; c.style.color = ""; }); b.style.background = b.dataset.c; b.style.color = b.dataset.c === "#141829" ? "#fff" : "#141829"; },
+  pickCat: b => ACT.pick(b),
+  enviarRelato: () => {
+    folha(`<div style="text-align:center;padding:10px 0"><div style="width:76px;height:76px;border-radius:38px;background:#D9F7F0;color:#0A8B7A;display:flex;align-items:center;justify-content:center;margin:0 auto">${ic("check", 36)}</div>
+      <p class="h-big" style="margin-top:14px;font-size:30px">Relato registrado</p><p class="mut" style="font-size:14.5px;line-height:1.5;margin-top:8px">${flex("Obrigad")} por contar. Ele já aparece como aviso na região, sem nada que identifique você.</p>
+      <button class="btn night" style="margin-top:18px" data-act="servicos">Ver serviços de apoio</button><button class="btn" style="margin-top:4px" data-act="verMapa">Voltar ao mapa</button></div>`);
+  },
+  verMapa: () => irAba("mapa"),
+  servicos: () => { fecharTudo(); irAba("apoio"); setTimeout(() => ACT.apSeg($$("#apSeg button")[1]), 50); },
+  relatoSOS: () => ir("registrar"),
+  apSeg: b => { ACT.seg(b); const body = $("#apBody"); body.innerHTML = b.dataset.v === "serv" ? servHtml() : muralHtml(); ligar(body); armar(body); },
+  reagir: b => { const on = b.classList.toggle("on"); const n = +b.dataset.n + (on ? 1 : 0); b.innerHTML = reacIcon(b.dataset.k) + (n ? `<span>${n}</span>` : ""); b.animate([{ transform: "scale(1)" }, { transform: "scale(1.12)" }, { transform: "scale(1)" }], { duration: 260 }); },
+  postar: b => folhaPostar(b.dataset.p),
+  publicar: () => { fecharTudo(); toast("Publicado no mural"); },
+  virarRelato: () => { fecharTudo(); ir("registrar"); },
+  denunciar: () => toast("Denúncia enviada para a moderação"), bloquear: () => toast("Você não vai mais ver o que essa pessoa publica"),
+  ligar: b => toast(b.dataset.n ? "Ligando para " + b.dataset.n : "Abre o telefone do serviço"),
+  forma: b => { ST.forma = +b.dataset.f; sincForma(); irAba("perfil", true); },
+  tog: b => b.classList.toggle("on"),
+  bloqueados: () => folha(`<p class="h-mid">Pessoas bloqueadas</p><div class="card" style="margin-top:12px;display:flex;align-items:center;gap:10px"><span class="av" style="width:34px;height:34px;border-radius:17px;background:#E6ECF3;display:flex;align-items:center;justify-content:center;font-weight:700">M</span><b style="flex:1">Mi</b><button class="pill" style="background:var(--night);color:#fff;height:32px;padding:0 14px" data-act="fecharFolha">Desbloquear</button></div>`),
+  tour: () => tour(),
+  sair: () => irAba("login"),
+  excluir: () => folha(`<p class="h-mid" style="color:#C72825">Excluir conta</p><p class="mut" style="font-size:14px;line-height:1.5;margin-top:8px">Apaga sua conta. Suas avaliações ficam no mapa sem o seu nome; suas fotos são apagadas.</p><button class="btn coral" style="margin-top:16px" data-act="fecharFolha">Excluir de vez</button>`),
+};
+
+/* ---------- painel lateral ---------- */
+function sincForma() { $$("#formaSeg button").forEach(b => b.classList.toggle("on", +b.dataset.f === ST.forma)); }
+$$("#formaSeg button").forEach(b => b.onclick = () => { ST.forma = +b.dataset.f; sincForma(); const t = pilha[pilha.length - 1]; if (SCR[t.nome].tab) irAba(t.nome, true); else { const a = t.arg, n = t.nome; pilha.pop().el.remove(); ir(n, a); } });
+const JUMP = {
+  splash: () => irAba("splash"), login: () => irAba("login"), tour: () => tour(),
+  inicio: () => irAba("inicio"), lugares: () => irAba("lugares"), mapa: () => irAba("mapa"), apoio: () => irAba("apoio"), perfil: () => irAba("perfil"),
+  bairro: () => { irAba("inicio", true); ir("bairro", "Centro"); }, registrar: () => { irAba("inicio", true); ir("registrar"); },
+  sos: () => { if (!SCR[pilha[pilha.length - 1].nome].tab) irAba("inicio", true); folhaSOS(); },
+  servicos: () => ACT.servicos(), nudge: () => { irAba("inicio", true); setTimeout(nudge, 300); },
+  trilha: () => { irAba("perfil", true); setTimeout(folhaTrilha, 200); }, conquistas: () => { irAba("perfil", true); ir("conquistas"); },
+  medalha: () => { irAba("perfil", true); celebrar(ST.ganhas.has("deu-close") ? "figurinha" : "deu-close"); }, nivel: () => { irAba("perfil", true); subiuNivel(); },
+  story: () => { irAba("perfil", true); story("medalha", "deu-o-nome"); },
+  semana: () => { irAba("inicio", true); setTimeout(folhaSemana, 200); }, cores: () => { irAba("inicio", true); setTimeout(folhaCores, 200); },
+};
+$$("#side [data-j]").forEach(b => b.onclick = () => {
+  $("#side").classList.remove("open");
+  const [k, a] = b.dataset.j.split(":");
+  if (k === "lugar") { irAba("lugares", true); ir("lugar", a); } else JUMP[k]();
+});
+$("#menuBtn").onclick = () => $("#side").classList.toggle("open");
+
+/* ---------- escala do celular ---------- */
+function escalar() {
+  const wrap = $("#stageWrap"), ph = $("#phone"), narrow = innerWidth <= 900;
+  const s = narrow ? Math.min(innerWidth / 414, innerHeight / 868) : Math.min(1, (innerHeight - 40) / 868, (innerWidth - 460) / 414);
+  ph.style.transform = `scale(${s})`;
+  wrap.style.width = 414 * s + "px"; wrap.style.height = 868 * s + "px";
+  if (narrow && innerWidth / innerHeight < .62) { ph.style.transform = `scale(${innerWidth / 390})`; ph.style.padding = 0; ph.style.borderRadius = 0; ph.style.background = "transparent"; $("#screen").style.borderRadius = 0; wrap.style.width = innerWidth + "px"; wrap.style.height = 844 * innerWidth / 390 + "px"; }
+}
+addEventListener("resize", escalar); escalar();
+irAba("splash", true);
+</script>
+</body>
+</html>

@@ -607,6 +607,13 @@ Nome: **Irisa** (INPI livre; @appirisa livre). Bundle id Android `br.com.irisa.a
   de linhas que cabe, corta de preferência em fim de frase, nunca deixa "de/a/na" no fim da linha; nome com até 13
   letras por linha, frase com até 32. Rodapé ganhou "O mapa dos lugares onde a gente é bem-vinde" acima da assinatura.
   Frase nova de medalha: escrever o `story` pensando em quem vê o story e conferir a quebra (cabe em 2 ou 3 linhas).
+  **Protótipo navegável do app inteiro (04/10/2026, pedido do Leandro):** `docs/prototipo-app.html` (molde) →
+  `python3 scripts/prototipo-app.py` → `docs/Irisa-prototipo-app.html` (arquivo único, ~600 KB, ícones 3D e dados das
+  conquistas/níveis embutidos a partir de `medals.ts`/`niveis.ts`). Abertura, entrar, tour, Início, Lugares, ficha
+  com nota e avaliação (as quatro perguntas → recompensa → conquista nova → story), Mapa, bairro, relato, emergência,
+  Apoio (mural e serviços), Perfil, Sua evolução, Conquistas, subiu de nível, Sua semana, Suas cores e "Passou por
+  aqui?". Painel ao lado com atalhos e o pronome (a/o/e); no celular, botão "Telas". Lugares e pessoas são fictícios.
+  Mudou texto de medalha/nível ou ícone: rodar o script de novo.
 
 ## Stack
 
