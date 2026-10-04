@@ -2,186 +2,179 @@
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Urbanist:wght@500&family=Oswald:wght@400;700&family=Space+Grotesk:wght@400;500;600;700&display=swap">
 <style>
-/* Protótipo no visual do app (claro de propósito: o app é claro). Palco com o celular à esquerda e o
-   roteiro de aprovação à direita; no celular, o roteiro desce para baixo do aparelho. */
+/* Página de aprovação: cada peça aberta ao mesmo tempo, uma seção por coisa, telas no visual do app
+   (claro de propósito, o app é claro). Telas lado a lado no computador, uma embaixo da outra no celular. */
 :root{
-  --paper:#F5F4F1;--stage:#ECEEF2;--subtle:#F1F5FA;--line:#E6ECF3;--night:#141829;--night2:#20253A;
-  --ink:#141829;--muted:#3D4560;--dim:#7C8296;--solid:#FFFFFF;--surface:rgba(255,255,255,.72);
+  --stage:#ECEEF2;--paper:#F5F4F1;--subtle:#F1F5FA;--line:#E6ECF3;--night:#141829;
+  --ink:#141829;--muted:#3D4560;--dim:#7C8296;--solid:#FFFFFF;--surface:rgba(255,255,255,.74);
   --coral:#FF6964;--orange:#FFA353;--yellow:#FFD066;--turq:#49DCC0;--blue:#59A7FF;--lilac:#A889FF;
-  --coralInk:#B23C3A;--turqInk:#1B7A6E;--lilacInk:#6D4FD8;--rim:#8A6418;
+  --turqInk:#1B7A6E;--warn:#FFF6E3;--warnInk:#5A4410;
   --display:"Oswald","Arial Narrow",sans-serif;--body:"Space Grotesk",system-ui,sans-serif;--mark:"Urbanist",system-ui,sans-serif;
   color-scheme:light;
 }
+*{box-sizing:border-box}
 body{background:var(--stage);color:var(--ink);font-family:var(--body);margin:0}
-.stage{display:flex;gap:32px;justify-content:center;align-items:flex-start;padding-block:28px;padding-inline:16px;flex-wrap:wrap}
-.phone{flex:none;width:390px;max-width:100%;height:844px;border-radius:50px;overflow:hidden;position:relative;background:var(--paper);box-shadow:0 0 0 10px #111,0 30px 80px rgba(20,24,41,.25);isolation:isolate}
-.aurora{position:absolute;inset:0;z-index:-1;background:
-  radial-gradient(60% 40% at 0% 0%,rgba(73,220,192,.28),transparent 70%),
-  radial-gradient(55% 35% at 100% 8%,rgba(255,105,100,.22),transparent 70%),
-  radial-gradient(60% 40% at 100% 100%,rgba(168,137,255,.22),transparent 70%),
-  radial-gradient(50% 30% at 0% 90%,rgba(255,208,102,.22),transparent 70%)}
-.scroll{position:absolute;inset:0;overflow-y:auto;padding:58px 16px 120px;display:flex;flex-direction:column;gap:14px}
-.status{position:absolute;top:0;left:0;right:0;height:48px;display:flex;justify-content:space-between;align-items:center;padding:0 30px;font-weight:600;font-size:15px;z-index:5}
-.head{display:flex;align-items:center;justify-content:space-between;background:rgba(255,255,255,.8);border-radius:28px;padding:10px 12px 10px 18px;box-shadow:0 2px 4px rgba(20,24,41,.03),0 12px 32px rgba(20,24,41,.06)}
-.brand{font-family:var(--mark);letter-spacing:.32em;font-size:22px;display:flex;align-items:center;gap:10px}
-.brand b{color:var(--yellow);font-weight:500}
-.sos{width:46px;height:46px;border-radius:50%;background:var(--coral);box-shadow:0 0 0 6px rgba(255,105,100,.22)}
-.card{background:var(--surface);border-radius:28px;padding:18px;box-shadow:0 2px 4px rgba(20,24,41,.03),0 12px 32px rgba(20,24,41,.06);position:relative}
-.eyebrow{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--dim);font-weight:500}
-.disp{font-family:var(--display);text-transform:uppercase;font-weight:700;line-height:1}
-.muted{color:var(--muted)}.dim{color:var(--dim)}
-.tabbar{position:absolute;left:10px;right:10px;bottom:22px;height:70px;border-radius:35px;background:rgba(255,255,255,.88);box-shadow:0 10px 30px rgba(20,24,41,.12);display:flex;justify-content:space-around;align-items:center;font-size:12px;color:var(--dim)}
-.tabbar .on{color:var(--ink);font-weight:600}
-
-/* cartão Sua evolução */
-.evo{display:flex;gap:16px;align-items:center}
-.ringwrap{position:relative;flex:none;width:112px;height:112px}
-.lvbadge{position:absolute;right:-6px;bottom:-4px;width:46px;height:46px;border-radius:50%;background:var(--solid);box-shadow:0 4px 14px rgba(20,24,41,.16);display:grid;place-items:center}
-.lvbadge svg{width:36px;height:36px}
-.evo h2{margin:4px 0 2px;font-size:30px}
-.next{margin-top:10px;display:flex;gap:3px}
-.next i{flex:1;height:7px;border-radius:4px;background:var(--line);position:relative;overflow:hidden}
-.next i::after{content:"";position:absolute;inset:0;background:var(--c,var(--turq));transform:scaleX(0);transform-origin:left;transition:transform .32s cubic-bezier(.3,.8,.3,1)}
-.next i.lit::after{transform:scaleX(1)}
-.week{display:flex;align-items:center;gap:8px;margin-top:12px;font-size:13px;color:var(--muted)}
-.week span{display:flex;gap:4px}.week span i{width:20px;height:7px;border-radius:4px;background:var(--turq)}
-.go{margin-top:12px;font-size:13px;font-weight:700;color:var(--turqInk)}
-.edge{position:absolute;inset:0;pointer-events:none}
-
-/* trilha */
-.sheet{position:absolute;left:0;right:0;bottom:0;top:96px;background:#FBFCFE;border-radius:34px 34px 0 0;box-shadow:0 -10px 40px rgba(20,24,41,.18);padding:12px 18px 40px;overflow-y:auto;transform:translateY(12px);opacity:0;transition:opacity .36s ease-out,transform .36s cubic-bezier(.2,.7,.2,1);z-index:10}
-.sheet.open{transform:none;opacity:1}
-.veil{position:absolute;inset:0;background:rgba(20,24,41,.32);opacity:0;transition:opacity .3s;z-index:9;pointer-events:none}
-.veil.open{opacity:1;pointer-events:auto}
-.grab{width:44px;height:5px;border-radius:3px;background:#D3DBE6;margin:0 auto 14px}
-.trail{display:flex;flex-direction:column;gap:0;margin-top:16px}
-.step{display:grid;grid-template-columns:56px 1fr auto;gap:12px;align-items:center;padding:8px 0;position:relative}
-.step .ic{width:56px;height:56px;border-radius:50%;display:grid;place-items:center;background:var(--solid);box-shadow:0 2px 8px rgba(20,24,41,.08);position:relative;z-index:1}
-.step .ic svg{width:42px;height:42px}
-.step.lock .ic{background:var(--subtle);box-shadow:none}
-.step.lock .ic svg{filter:grayscale(1) opacity(.45)}
-.step.now .ic{box-shadow:0 0 0 3px #fff,0 0 0 6px var(--turq),0 8px 22px rgba(73,220,192,.35)}
-.step .nm{font-weight:700;font-size:15px}
-.step .tx{font-size:12.5px;color:var(--muted);line-height:1.35}
-.step.lock .nm,.step.lock .tx{color:var(--dim)}
-.step .gm{font-size:12px;color:var(--dim);font-variant-numeric:tabular-nums;text-align:right;white-space:nowrap}
-.step.now .gm{color:var(--turqInk);font-weight:700}
-.rail{position:absolute;left:27px;top:44px;bottom:-12px;width:2px;background:var(--line)}
-.rail b{position:absolute;inset:0 0 auto 0;background:linear-gradient(var(--coral),var(--orange),var(--yellow),var(--turq),var(--blue),var(--lilac));height:var(--h,0);transition:height .5s cubic-bezier(.3,.8,.3,1)}
-.how{margin-top:18px;background:var(--subtle);border-radius:20px;padding:14px 16px;font-size:13px;color:var(--muted);line-height:1.45}
-.how b{color:var(--ink)}
-
-/* subiu de nível */
-.lvup{position:absolute;inset:0;z-index:20;display:grid;place-items:center;background:rgba(20,24,41,.38);opacity:0;pointer-events:none;transition:opacity .3s}
-.lvup.open{opacity:1;pointer-events:auto}
-.lvcard{width:310px;background:#FBFCFE;border-radius:30px;padding:26px 22px 20px;text-align:center;position:relative;transform:translateY(12px);opacity:0;transition:transform .36s cubic-bezier(.2,.7,.2,1),opacity .36s}
-.lvup.open .lvcard{transform:none;opacity:1}
-.lvcard .big{width:120px;height:120px;margin:4px auto 10px;position:relative}
-.lvcard .big svg.icon{position:absolute;inset:18px;width:84px;height:84px;opacity:0;transition:opacity .5s .9s}
-.lvup.open .lvcard .big svg.icon{opacity:1}
-.lvcard h3{font-size:34px;margin:6px 0 4px}
-.lvcard p{margin:0;font-size:14px;color:var(--muted);line-height:1.45}
-.btn{display:block;width:100%;height:50px;border-radius:25px;border:0;background:var(--night);color:#fff;font:700 15px var(--body);margin-top:18px;cursor:pointer}
-.fade{opacity:0;transform:translateY(8px);transition:opacity .4s,transform .4s}
-.lvup.open .fade{opacity:1;transform:none}
-.lvup.open .f1{transition-delay:.25s}.lvup.open .f2{transition-delay:1.2s}.lvup.open .f3{transition-delay:1.45s}
-
-/* roteiro */
-.notes{width:420px;max-width:100%;display:flex;flex-direction:column;gap:14px;min-width:0}
-.notes h1{font-family:var(--display);text-transform:uppercase;font-size:34px;margin:0;line-height:1}
-.notes p{margin:0;line-height:1.5;color:var(--muted);font-size:14.5px}
-.ctl{display:flex;flex-wrap:wrap;gap:8px}
+.wrap{max-width:1180px;margin:0 auto;padding-block:28px 60px;padding-inline:16px;display:flex;flex-direction:column;gap:34px}
+header h1{font-family:var(--display);text-transform:uppercase;font-size:clamp(32px,6vw,46px);margin:0;line-height:1}
+header p{max-width:62ch;color:var(--muted);line-height:1.5;margin:10px 0 0}
+.ctl{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
 .ctl button{border:0;border-radius:20px;padding:10px 14px;font:600 13.5px var(--body);background:var(--solid);color:var(--ink);box-shadow:0 2px 8px rgba(20,24,41,.08);cursor:pointer}
 .ctl button[aria-pressed="true"]{background:var(--night);color:#fff}
-.ctl button:focus-visible{outline:2px solid var(--turqInk);outline-offset:2px}
-.box{background:var(--solid);border-radius:22px;padding:16px 18px;box-shadow:0 2px 8px rgba(20,24,41,.06)}
-.box h4{margin:0 0 8px;font-size:13px;letter-spacing:.1em;text-transform:uppercase;color:var(--dim)}
-.gal{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
-.gal div{text-align:center;font-size:11.5px;color:var(--muted);min-width:0}
-.gal svg{width:58px;height:58px;display:block;margin:0 auto 4px;background:var(--subtle);border-radius:50%;padding:6px;box-sizing:border-box}
-table{width:100%;border-collapse:collapse;font-size:13px;font-variant-numeric:tabular-nums}
-td{padding:6px 0;border-bottom:1px solid var(--line);vertical-align:top}
-td:last-child{text-align:right;color:var(--dim);white-space:nowrap;padding-left:8px}
-.warn{background:#FFF6E3;border-radius:16px;padding:12px 14px;font-size:13px;line-height:1.45;color:#5A4410}
-@media (max-width:860px){.notes{width:390px}}
+button:focus-visible{outline:2px solid var(--turqInk);outline-offset:2px}
+section h2{font-family:var(--display);text-transform:uppercase;font-size:24px;margin:0;display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+section h2 small{font-family:var(--body);text-transform:none;font-size:14px;color:var(--dim);font-weight:500}
+section > p{color:var(--muted);line-height:1.5;margin:6px 0 14px;max-width:70ch}
+.row{display:flex;flex-wrap:wrap;gap:20px;align-items:flex-start}
+.tela{width:360px;max-width:100%;border-radius:32px;background:var(--paper);position:relative;overflow:hidden;isolation:isolate;padding:16px;display:flex;flex-direction:column;gap:12px;box-shadow:0 20px 50px rgba(20,24,41,.12)}
+.tela::before{content:"";position:absolute;inset:0;z-index:-1;background:
+  radial-gradient(60% 40% at 0% 0%,rgba(73,220,192,.26),transparent 70%),
+  radial-gradient(55% 35% at 100% 8%,rgba(255,105,100,.2),transparent 70%),
+  radial-gradient(60% 40% at 100% 100%,rgba(168,137,255,.2),transparent 70%),
+  radial-gradient(50% 30% at 0% 90%,rgba(255,208,102,.2),transparent 70%)}
+.cap{font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--dim);font-weight:600}
+.card{background:var(--surface);border-radius:26px;padding:16px;box-shadow:0 2px 4px rgba(20,24,41,.03),0 12px 32px rgba(20,24,41,.06);position:relative}
+.eyebrow{font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--dim);font-weight:500}
+.disp{font-family:var(--display);text-transform:uppercase;font-weight:700;line-height:1}
+.muted{color:var(--muted)}.dim{color:var(--dim)}
+.evo{display:flex;gap:14px;align-items:center}
+.ringwrap{position:relative;flex:none;width:100px;height:100px}
+.ringwrap svg.ring{width:100px;height:100px;display:block}
+.lvbadge{position:absolute;right:-6px;bottom:-4px;width:42px;height:42px;border-radius:50%;background:var(--solid);box-shadow:0 4px 14px rgba(20,24,41,.16);display:grid;place-items:center}
+.lvbadge svg{width:33px;height:33px}
+.evo h3{margin:4px 0 3px;font-size:27px}
+.next{margin-top:12px;display:flex;gap:3px}
+.next i{flex:1;height:7px;border-radius:4px;background:var(--line);position:relative;overflow:hidden}
+.next i::after{content:"";position:absolute;inset:0;background:var(--c);transform:scaleX(0);transform-origin:left;transition:transform .32s cubic-bezier(.3,.8,.3,1)}
+.next i.lit::after{transform:scaleX(1)}
+.foot{display:flex;justify-content:space-between;gap:8px;margin-top:6px;font-size:12.5px}
+.week{display:flex;align-items:center;gap:8px;margin-top:10px;font-size:12.5px;color:var(--muted);flex-wrap:wrap}
+.week span{display:flex;gap:4px}.week span i{width:18px;height:7px;border-radius:4px;background:var(--turq)}
+.go{margin-top:10px;font-size:13px;font-weight:700;color:var(--turqInk)}
+.edge{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;overflow:visible}
+.sheet{background:#FBFCFE;border-radius:28px;padding:12px 16px 18px;box-shadow:0 -6px 30px rgba(20,24,41,.10)}
+.grab{width:44px;height:5px;border-radius:3px;background:#D3DBE6;margin:0 auto 12px}
+.step{display:grid;grid-template-columns:50px 1fr auto;gap:12px;align-items:center;padding:7px 0;position:relative}
+.step .ic{width:50px;height:50px;border-radius:50%;display:grid;place-items:center;background:var(--solid);box-shadow:0 2px 8px rgba(20,24,41,.08);position:relative;z-index:1}
+.step .ic svg{width:38px;height:38px}
+.step.lock .ic{background:var(--subtle);box-shadow:none}
+.step.lock .ic svg{filter:grayscale(1) opacity(.45)}
+.step.now .ic{box-shadow:0 0 0 3px #fff,0 0 0 5.5px var(--turq),0 8px 22px rgba(73,220,192,.35)}
+.step .nm{font-weight:700;font-size:14.5px}
+.step .tx{font-size:12px;color:var(--muted);line-height:1.35}
+.step.lock .nm,.step.lock .tx{color:var(--dim)}
+.step .gm{font-size:11.5px;color:var(--dim);font-variant-numeric:tabular-nums;text-align:right;white-space:nowrap}
+.step.now .gm{color:var(--turqInk);font-weight:700}
+.rail{position:absolute;left:24px;top:40px;bottom:-10px;width:2px;background:var(--line)}
+.rail b{position:absolute;left:0;right:0;top:0;background:linear-gradient(var(--coral),var(--yellow),var(--turq),var(--lilac));height:0;transition:height .5s cubic-bezier(.3,.8,.3,1)}
+.how{margin-top:12px;background:var(--subtle);border-radius:18px;padding:12px 14px;font-size:12.5px;color:var(--muted);line-height:1.45}
+.how b{color:var(--ink)}
+.lvcard{background:#FBFCFE;border-radius:28px;padding:22px 18px 18px;text-align:center}
+.big{width:128px;height:128px;margin:8px auto 10px;position:relative}
+.big svg.ring{width:128px;height:128px}
+.big .icon{position:absolute;inset:22px;width:84px;height:84px;transition:opacity .5s}
+.lvcard h3{font-size:32px;margin:6px 0 4px}
+.lvcard p{margin:0;font-size:13.5px;color:var(--muted);line-height:1.45}
+.btn{display:block;width:100%;height:48px;border-radius:24px;border:0;background:var(--night);color:#fff;font:700 15px var(--body);margin-top:16px}
+.fade{transition:opacity .4s,transform .4s}
+.hide .fade{opacity:0;transform:translateY(8px)}
+.hide .big .icon{opacity:0}
+.replay{border:0;background:var(--solid);border-radius:16px;padding:7px 12px;font:600 12.5px var(--body);color:var(--turqInk);cursor:pointer;box-shadow:0 2px 8px rgba(20,24,41,.08)}
+.grid8{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(300px,100%),1fr));gap:16px}
+.grid8 .card{background:#fff}
+.grid8 .evo h3{font-size:22px;overflow-wrap:anywhere}
+.evo h3{overflow-wrap:anywhere}
+.trio{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(360px,100%),1fr));gap:34px 28px;align-items:start}
+.trio section > p{min-height:4.5em}
+.mini{transform-origin:top left}
+.icons{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:12px}
+.icons div{background:var(--solid);border-radius:20px;padding:14px 10px;text-align:center;font-size:12.5px;color:var(--muted);min-width:0}
+.icons svg{width:64px;height:64px;display:block;margin:0 auto 6px}
+.icons b{display:block;color:var(--ink);font-size:13.5px}
+.box{background:var(--solid);border-radius:22px;padding:16px 18px;max-width:760px}
+table{width:100%;border-collapse:collapse;font-size:13.5px;font-variant-numeric:tabular-nums}
+th{text-align:left;font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--dim);font-weight:600;padding:0 0 8px}
+td{padding:8px 0;border-top:1px solid var(--line);vertical-align:top}
+td+td,th+th{padding-left:12px}
+.warn{background:var(--warn);color:var(--warnInk);border-radius:18px;padding:14px 16px;font-size:13.5px;line-height:1.5;max-width:760px}
+.home{display:flex;gap:10px}
+.home .card{flex:1;min-width:0;padding:13px}
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
 </style>
 
-<div class="stage">
-  <div class="phone" id="phone">
-    <div class="aurora"></div>
-    <div class="status"><span>13:36</span><span>93%</span></div>
-    <div class="scroll" id="scroll">
-      <div class="head"><span class="brand"><svg width="30" height="30" viewBox="0 0 100 100" id="logo"></svg>IRIS<b>A</b></span><span class="sos"></span></div>
-
-      <div class="card" style="display:flex;gap:16px;align-items:center">
-        <div style="width:84px;height:84px;border-radius:50%;background:conic-gradient(var(--coral),var(--orange),var(--yellow),var(--turq),var(--blue),var(--lilac),var(--coral));padding:4px;flex:none"><div style="width:100%;height:100%;border-radius:50%;background:#C9B8A6"></div></div>
-        <div style="min-width:0"><div class="disp" style="font-size:26px">Leandro</div><div class="dim" style="font-size:14px;margin-top:4px">Curitiba · PR</div></div>
-      </div>
-
-      <!-- Sua evolução: a íris continua; o nível aparece no selinho e no nome -->
-      <div class="card" id="evoCard" role="button" tabindex="0" aria-label="Sua evolução, abrir a trilha">
-        <svg class="edge" id="edge"></svg>
-        <div class="evo">
-          <div class="ringwrap"><svg id="ring" width="112" height="112" viewBox="0 0 100 100"></svg><div class="lvbadge" id="badge"></div></div>
-          <div style="min-width:0;flex:1">
-            <div class="eyebrow" id="evoEyebrow">Sua evolução · nível 3 de 8</div>
-            <h2 class="disp" id="evoName">Irisade</h2>
-            <div class="muted" style="font-size:13.5px;line-height:1.4" id="evoText">Já deixou suas primeiras cores pelo mapa.</div>
-          </div>
-        </div>
-        <div class="next" id="next"></div>
-        <div style="display:flex;justify-content:space-between;margin-top:6px;font-size:12.5px"><span class="muted" id="nextText">Faltam 5 gomos para Close Certo</span><span class="dim" id="gomosText">5 de 48</span></div>
-        <div class="week">Esta semana <span><i></i><i></i><i></i><i></i></span> 4 de 4 · segunda tem mais</div>
-        <div class="go">Ver a trilha ›</div>
-      </div>
-
-      <div class="card"><div style="display:flex;justify-content:space-between"><b>Suas conquistas</b><span style="color:var(--turqInk);font-weight:700;font-size:14px">4 de 32 · Ver todas</span></div>
-        <div style="display:flex;gap:10px;margin-top:12px" id="medals"></div></div>
-    </div>
-    <div class="tabbar"><span>Início</span><span>Mapa</span><span>Lugares</span><span>Apoio</span><span class="on">Perfil</span></div>
-
-    <div class="veil" id="veil"></div>
-    <div class="sheet" id="sheet" aria-hidden="true">
-      <div class="grab"></div>
-      <div class="eyebrow">Sua evolução</div>
-      <div class="disp" style="font-size:28px;margin-top:4px" id="sheetTitle">Você é Irisade</div>
-      <div class="muted" style="font-size:14px;margin-top:4px">Cada gomo da íris é uma contribuição sua. A íris enche e você sobe de nível.</div>
-      <div class="trail" id="trail"></div>
-      <div class="how"><b>Como os gomos acendem:</b> uma avaliação, a 5ª avaliação de um lugar (a do selo), um lugar cadastrado, uma foto aprovada. No máximo 4 por semana, então ninguém chega ao topo num dia só. Relato nunca conta: é anônimo e não é pontuação.</div>
-    </div>
-
-    <div class="lvup" id="lvup">
-      <div class="lvcard">
-        <div class="eyebrow fade f1">Você subiu de nível</div>
-        <div class="big"><svg id="lvRing" width="120" height="120" viewBox="0 0 100 100"></svg><svg class="icon" id="lvIcon" viewBox="0 0 100 100"></svg></div>
-        <h3 class="disp fade f2" id="lvName">Close Certo</h3>
-        <p class="fade f2" id="lvText">Já tem propriedade pra falar.</p>
-        <p class="fade f3 dim" style="margin-top:8px;font-size:13px" id="lvNext">Próximo: Do Babado, com 16 gomos.</p>
-        <button class="btn fade f3" id="lvOk">Continuar</button>
-      </div>
-    </div>
-  </div>
-
-  <div class="notes">
+<div class="wrap">
+  <header>
     <h1>Sua evolução</h1>
-    <p>O cartão "Seu anel · Coral" vira <b>Sua evolução</b>. A íris de 48 gomos fica igual; o que muda é o nome do nível. Em vez de uma cor, a pessoa tem um título com ícone, e a trilha mostra os 8 de uma vez.</p>
-    <div class="ctl" role="group" aria-label="Telas">
-      <button id="bPerfil" aria-pressed="true">Perfil</button>
-      <button id="bTrilha" aria-pressed="false">Trilha</button>
-      <button id="bSubiu" aria-pressed="false">Subiu de nível</button>
-    </div>
+    <p>O cartão "Seu anel · Coral" vira <b>Sua evolução</b>. A íris de 48 gomos fica igual. O que muda é o nível: em vez de uma cor, um título com ícone, em 8 degraus. Abaixo, cada peça aberta, do jeito que apareceria no app.</p>
     <div class="ctl" role="group" aria-label="Como o app fala com a pessoa">
-      <button data-f="0" aria-pressed="false">Curiosa</button>
-      <button data-f="1" aria-pressed="false">Curioso</button>
-      <button data-f="2" aria-pressed="true">Curiose</button>
+      <button data-f="0" aria-pressed="false">Ela (Curiosa)</button>
+      <button data-f="1" aria-pressed="false">Ele (Curioso)</button>
+      <button data-f="2" aria-pressed="true">Neutro (Curiose)</button>
     </div>
-    <p style="font-size:13px">Os títulos com flexão seguem o pronome do Perfil, como já acontece com as medalhas (Famosinha, Famosinho, Famosinhe).</p>
-    <div class="box"><h4>Os 8 níveis</h4><div class="gal" id="gal"></div></div>
-    <div class="box"><h4>Quantos gomos para cada um</h4><table id="tab"></table>
-      <p style="font-size:12.5px;margin-top:10px">Com no máximo 4 gomos por semana, o topo leva pelo menos 12 semanas. Os primeiros níveis chegam rápido de propósito: quem acabou de entrar sobe na primeira semana.</p></div>
-    <div class="warn"><b>Dois nomes repetem medalhas que já existem.</b> "Lenda Local" é também a medalha de quem deu o selo em 10 lugares da cidade. Sugestão: a medalha passa a se chamar <b>Estátua na Praça</b> (o desenho já é um busto de praça). E o nível 8 chega no mesmo momento da medalha <b>Patrimônio Cultural</b> (os 48 gomos): os dois saem juntos, na mesma comemoração.</div>
+  </header>
+
+  <div class="trio">
+  <section>
+    <h2>1. No Perfil <small>no lugar do cartão "Seu anel"</small></h2>
+    <p>A íris continua com os 48 gomos. O ícone do nível fica num selinho encostado nela, e o título é o nível. A barrinha mostra quanto falta para o próximo. Exemplo: você hoje, com 5 gomos.</p>
+    <div class="row">
+      <div class="tela" id="telaPerfil">
+        <div class="card" style="display:flex;gap:14px;align-items:center">
+          <div style="width:72px;height:72px;border-radius:50%;background:conic-gradient(var(--coral),var(--orange),var(--yellow),var(--turq),var(--blue),var(--lilac),var(--coral));padding:4px;flex:none"><div style="width:100%;height:100%;border-radius:50%;background:#C9B8A6"></div></div>
+          <div style="min-width:0"><div class="disp" style="font-size:24px">Leandro</div><div class="dim" style="font-size:13px;margin-top:4px">Curitiba · PR</div></div>
+        </div>
+        <div id="perfilCard"></div>
+        <div class="card"><div style="display:flex;justify-content:space-between;gap:8px"><b style="font-size:14.5px">Suas conquistas</b><span style="color:var(--turqInk);font-weight:700;font-size:13px">4 de 32 · Ver todas</span></div>
+          <div style="display:flex;gap:8px;margin-top:10px" id="medals"></div></div>
+      </div>
+    </div>
+    <div style="margin-top:12px"><button class="replay" data-replay="perfil">Ver a animação de novo</button></div>
+  </section>
+
+  <section>
+    <h2>2. A trilha <small>abre ao tocar no cartão</small></h2>
+    <p>Os 8 níveis numa linha. O que já passou fica colorido, o atual fica destacado e os próximos aparecem apagados, com quantos gomos faltam.</p>
+    <div class="row"><div class="tela" style="padding:0;background:transparent;box-shadow:none"><div class="sheet" id="trail"></div></div></div>
+    <div style="margin-top:12px"><button class="replay" data-replay="trilha">Ver a animação de novo</button></div>
+  </section>
+
+  <section>
+    <h2>3. Quando sobe de nível</h2>
+    <p>Aparece uma vez, por cima da tela em que a pessoa estiver. A íris enche gomo a gomo até o novo nível, o ícone acende e o texto entra. Nada pula. Exemplo: chegando a Close Certo, com 10 gomos.</p>
+    <div class="row"><div class="tela" style="background:rgba(20,24,41,.38)"><div class="lvcard hide" id="lvcard">
+      <div class="eyebrow fade">Você subiu de nível</div>
+      <div class="big"><svg class="ring" id="lvRing" viewBox="0 0 100 100"></svg><svg class="icon" id="lvIcon" viewBox="0 0 100 100"></svg></div>
+      <h3 class="disp fade" id="lvName"></h3>
+      <p class="fade" id="lvText"></p>
+      <p class="fade dim" style="margin-top:8px;font-size:12.5px" id="lvNext"></p>
+      <div class="btn fade" style="display:grid;place-items:center">Continuar</div>
+    </div></div></div>
+    <div style="margin-top:12px"><button class="replay" data-replay="subiu">Ver a animação de novo</button></div>
+  </section>
+
   </div>
+
+  <section>
+    <h2>4. O cartão em cada nível</h2>
+    <p>Como o cartão do Perfil fica em cada um dos 8 degraus, no momento em que a pessoa chega nele.</p>
+    <div class="grid8" id="grid8"></div>
+  </section>
+
+  <section>
+    <h2>5. Os ícones</h2>
+    <p>Desenhados no mesmo traço das medalhas, com as cores da marca. Sem emoji e sem bandeira, como os pingentes.</p>
+    <div class="icons" id="icons"></div>
+  </section>
+
+  <section>
+    <h2>6. Quantos gomos cada nível pede</h2>
+    <p>Cada semana acende no máximo 4 gomos, então o topo leva pelo menos 12 semanas. Os primeiros chegam rápido de propósito: quem acabou de entrar já sobe na primeira semana.</p>
+    <div class="box"><table><thead><tr><th>Nível</th><th>Gomos</th><th>Mais cedo possível</th></tr></thead><tbody id="tab"></tbody></table></div>
+  </section>
+
+  <section>
+    <h2>7. Dois nomes que já existem</h2>
+    <div class="warn"><b>Lenda Local</b> também é a medalha de quem deu o selo em 10 lugares da mesma cidade. Proposta: o nível fica com o nome, e a medalha vira <b>Estátua na Praça</b> (o desenho dela já é um busto de praça).<br><br><b>Patrimônio LGBTQIA+</b> chega no mesmo momento da medalha <b>Patrimônio Cultural</b>, que é a íris completa. Proposta: os dois saem juntos, na mesma comemoração.</div>
+  </section>
 </div>
 
 <script>
@@ -189,7 +182,6 @@ td:last-child{text-align:right;color:var(--dim);white-space:nowrap;padding-left:
 const C={coral:"#FF6964",orange:"#FFA353",yellow:"#FFD066",turq:"#49DCC0",blue:"#59A7FF",lilac:"#A889FF",night:"#1E2340",white:"#FFFDF8",rim:"#8A6418",green:"#3DBE8B"};
 const R=`stroke="${C.rim}" stroke-width="2.2" stroke-linejoin="round"`;
 const star=(cx,cy,ro,ri,n=4)=>{let d="";for(let i=0;i<n*2;i++){const r=i%2?ri:ro,a=(-90+180/n*i)*Math.PI/180;d+=(i?"L":"M")+(cx+r*Math.cos(a)).toFixed(1)+" "+(cy+r*Math.sin(a)).toFixed(1)}return d+"Z"};
-// Ícones no traço das medalhas (contorno dourado, cores da marca). Sem emoji, sem bandeira.
 const ICON=[
  `<path d="M26 78h48l-5 12H31Z" fill="#C98A5B" ${R}/><path d="M50 78V54" stroke="${C.green}" stroke-width="4" stroke-linecap="round"/><path d="M50 60C36 60 28 50 28 38c14 0 22 8 22 22Z" fill="${C.turq}" ${R}/><path d="M50 54c0-14 8-24 24-24 0 14-8 24-24 24Z" fill="#7FE3A8" ${R}/><path d="${star(78,22,7,2)}" fill="${C.yellow}" ${R}/>`,
  `<ellipse cx="33" cy="54" rx="17" ry="13" fill="${C.white}" ${R}/><ellipse cx="67" cy="54" rx="17" ry="13" fill="${C.white}" ${R}/><circle cx="36" cy="55" r="7" fill="${C.night}"/><circle cx="70" cy="55" r="7" fill="${C.night}"/><circle cx="38.5" cy="52.5" r="2.3" fill="#fff"/><circle cx="72.5" cy="52.5" r="2.3" fill="#fff"/><path d="M20 36l5 5M33 31v7M46 36l-5 5M54 36l5 5M67 31v7M80 36l-5 5" stroke="${C.night}" stroke-width="2.6" stroke-linecap="round"/>`,
@@ -211,63 +203,80 @@ const LV=[
  {f:["Patrimônio LGBTQIA+"],g:48,t:"O topo. A íris inteira acesa."},
 ];
 const GOMOS=["#ff6964","#ff8e5a","#ffa353","#ffbf5f","#ffd066","#bed582","#74d6a4","#49dcc0","#4fcbdc","#52b4f5","#59a7ff","#7d96ff","#a889ff","#c681dd","#ea709b","#ff636e"];
-let forma=2,gomos=5;
-const nm=(l)=>l.f[forma]??l.f[0];
-const lvOf=(g)=>{let i=0;LV.forEach((l,k)=>{if(g>=l.g)i=k});return i};
 const reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
 const $=(id)=>document.getElementById(id);
+let forma=2;
+const nm=(l)=>l.f[forma]??l.f[0];
+const lvOf=(g)=>{let i=0;LV.forEach((l,k)=>{if(g>=l.g)i=k});return i};
+const later=(fn,ms)=>reduce?fn():setTimeout(fn,ms);
+// Ícones com gradiente precisam de id único por cópia.
+let seq=0;const icon=(k)=>{const id="d"+(++seq);return ICON[k].replace(/dropG/g,id)};
 
-function arc(r1,r2,a0,a1){const p=(r,a)=>[50+r*Math.cos(a),50+r*Math.sin(a)];const[x1,y1]=p(r2,a0),[x2,y2]=p(r2,a1),[x3,y3]=p(r1,a1),[x4,y4]=p(r1,a0);return`M${x1} ${y1}A${r2} ${r2} 0 0 1 ${x2} ${y2}L${x3} ${y3}A${r1} ${r1} 0 0 0 ${x4} ${y4}Z`}
-// A íris: 48 gomos que acendem um a um; a pupila no meio é a da marca.
-function iris(svg,lit,{n=48,step=45,delay=150}={}){
-  let h="";for(let i=0;i<n;i++){const s=360/n,a0=(-90+s*i+.6)*Math.PI/180,a1=(-90+s*(i+1)-.6)*Math.PI/180;h+=`<path d="${arc(33,48,a0,a1)}" fill="#E6ECF3" data-c="${GOMOS[Math.floor(i/n*16)]}"/>`}
-  h+=`<circle cx="50" cy="50" r="30" fill="#fff"/><circle cx="50" cy="50" r="13" fill="#141829"/><circle cx="54.5" cy="45.5" r="3.6" fill="#fff"/>`;
-  svg.innerHTML=h;const ps=svg.querySelectorAll("path");
-  ps.forEach((p,i)=>{if(i>=lit)return;if(reduce){p.setAttribute("fill",p.dataset.c);return}setTimeout(()=>p.setAttribute("fill",p.dataset.c),delay+i*step)});
+function arc(r1,r2,a0,a1){const p=(r,a)=>[50+r*Math.cos(a),50+r*Math.sin(a)];const[x1,y1]=p(r2,a0),[x2,y2]=p(r2,a1),[x3,y3]=p(r1,a1),[x4,y4]=p(r1,a0);return`M${x1.toFixed(2)} ${y1.toFixed(2)}A${r2} ${r2} 0 0 1 ${x2.toFixed(2)} ${y2.toFixed(2)}L${x3.toFixed(2)} ${y3.toFixed(2)}A${r1} ${r1} 0 0 0 ${x4.toFixed(2)} ${y4.toFixed(2)}Z`}
+// A íris: 48 gomos; acendem um a um quando anima, ou já acesos.
+function iris(svg,lit,{animate=true,step=45,delay=150}={}){
+  let h="";for(let i=0;i<48;i++){const s=7.5,a0=(-90+s*i+.6)*Math.PI/180,a1=(-90+s*(i+1)-.6)*Math.PI/180;h+=`<path d="${arc(33,48,a0,a1)}" fill="#E6ECF3" data-c="${GOMOS[Math.floor(i/3)]}"/>`}
+  svg.innerHTML=h+`<circle cx="50" cy="50" r="30" fill="#fff"/><circle cx="50" cy="50" r="13" fill="#141829"/><circle cx="54.5" cy="45.5" r="3.6" fill="#fff"/>`;
+  svg.querySelectorAll("path").forEach((p,i)=>{if(i>=lit)return;if(!animate||reduce)p.setAttribute("fill",p.dataset.c);else setTimeout(()=>p.setAttribute("fill",p.dataset.c),delay+i*step)});
 }
-function logo(){const s=$("logo");let h="";for(let i=0;i<16;i++){const a0=(-90+22.5*i+1)*Math.PI/180,a1=(-90+22.5*(i+1)-1)*Math.PI/180;h+=`<path d="${arc(34,48,a0,a1)}" fill="${GOMOS[i]}"/>`}s.innerHTML=h+`<circle cx="50" cy="50" r="31" fill="#fff"/><circle cx="50" cy="50" r="14" fill="#141829"/>`}
-// Borda arco-íris que se desenha uma vez em volta do cartão.
-function edge(){const card=$("evoCard"),svg=$("edge"),w=card.offsetWidth,h=card.offsetHeight,r=28;
-  svg.setAttribute("viewBox",`0 0 ${w} ${h}`);svg.setAttribute("width",w);svg.setAttribute("height",h);
-  const per=2*(w+h-4*r)+2*Math.PI*r;
-  svg.innerHTML=`<defs><linearGradient id="eg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="${C.coral}"/><stop offset=".3" stop-color="${C.yellow}"/><stop offset=".6" stop-color="${C.turq}"/><stop offset="1" stop-color="${C.lilac}"/></linearGradient></defs><rect x="1.2" y="1.2" width="${w-2.4}" height="${h-2.4}" rx="${r}" fill="none" stroke="url(#eg)" stroke-width="2.4" stroke-dasharray="${per}" stroke-dashoffset="${reduce?0:per}" style="transition:stroke-dashoffset 1.3s cubic-bezier(.3,.8,.3,1) .2s"/>`;
-  requestAnimationFrame(()=>requestAnimationFrame(()=>{svg.querySelector("rect").style.strokeDashoffset=0}));}
-function card(){
+// Borda arco-íris que se desenha uma vez. pathLength=100 deixa o traço independente do tamanho,
+// e o retângulo se redesenha se o cartão mudar de tamanho (fonte carregando, giro da tela).
+function edge(card,animate){
+  const svg=document.createElementNS("http://www.w3.org/2000/svg","svg");svg.setAttribute("class","edge");card.prepend(svg);
+  const g="e"+(++seq);
+  const draw=()=>{const w=card.offsetWidth,h=card.offsetHeight;if(!w)return;svg.setAttribute("viewBox",`0 0 ${w} ${h}`);
+    const old=svg.querySelector("rect");const off=old?old.style.strokeDashoffset:"100";
+    svg.innerHTML=`<defs><linearGradient id="${g}" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="${C.coral}"/><stop offset=".3" stop-color="${C.yellow}"/><stop offset=".6" stop-color="${C.turq}"/><stop offset="1" stop-color="${C.lilac}"/></linearGradient></defs><rect x="1.2" y="1.2" width="${w-2.4}" height="${h-2.4}" rx="26" fill="none" stroke="url(#${g})" stroke-width="2.4" pathLength="100" stroke-dasharray="100" style="stroke-dashoffset:${off};transition:stroke-dashoffset 1.3s cubic-bezier(.3,.8,.3,1) .2s"/>`;};
+  draw();new ResizeObserver(draw).observe(card);
+  const r=svg.querySelector("rect");
+  if(!animate||reduce){r.style.transition="none";r.style.strokeDashoffset="0"}
+  else requestAnimationFrame(()=>requestAnimationFrame(()=>{svg.querySelector("rect").style.strokeDashoffset="0"}));
+}
+function makeCard(gomos,{animate=true,go=true,week=true}={}){
   const i=lvOf(gomos),l=LV[i],nx=LV[i+1];
-  $("evoEyebrow").textContent=`Sua evolução · nível ${i+1} de 8`;
-  $("evoName").textContent=nm(l);$("evoText").textContent=l.t;
-  $("badge").innerHTML=`<svg viewBox="0 0 100 100">${ICON[i]}</svg>`;
-  $("gomosText").textContent=`${gomos} de 48`;
-  const box=$("next");box.innerHTML="";
-  if(nx){const n=nx.g-l.g,k=gomos-l.g;for(let j=0;j<n;j++){const s=document.createElement("i");s.style.setProperty("--c",GOMOS[Math.floor((l.g+j)/48*16)]);box.appendChild(s);setTimeout(()=>s.classList.toggle("lit",j<k),reduce?0:700+j*90)}
-    $("nextText").textContent=`Falta${nx.g-gomos>1?"m":""} ${nx.g-gomos} gomo${nx.g-gomos>1?"s":""} para ${nm(nx)}`;}
-  else $("nextText").textContent="Íris completa";
-  iris($("ring"),gomos);edge();
+  const el=document.createElement("div");el.className="card";
+  const ring=`<svg class="ring" viewBox="0 0 100 100"></svg>`;
+  const falta=nx?nx.g-gomos:0;
+  el.innerHTML=`<div class="evo"><div class="ringwrap">${ring}<div class="lvbadge"><svg viewBox="0 0 100 100">${icon(i)}</svg></div></div>
+    <div style="min-width:0;flex:1"><div class="eyebrow">Sua evolução · nível ${i+1} de 8</div><h3 class="disp">${nm(l)}</h3><div class="muted" style="font-size:13px;line-height:1.4">${l.t}</div></div></div>
+    ${nx?`<div class="next"></div>`:""}
+    <div class="foot"><span class="muted">${nx?`Falta${falta>1?"m":""} ${falta} gomo${falta>1?"s":""} para ${nm(nx)}`:"A íris inteira acesa"}</span><span class="dim">${gomos} de 48</span></div>
+    ${week?`<div class="week">Esta semana <span><i></i><i></i><i></i><i></i></span> 4 de 4 · segunda tem mais</div>`:""}
+    ${go?`<div class="go">Ver a trilha ›</div>`:""}`;
+  iris(el.querySelector("svg.ring"),gomos,{animate});
+  if(nx){const box=el.querySelector(".next"),n=nx.g-l.g,k=gomos-l.g;
+    for(let j=0;j<n;j++){const s=document.createElement("i");s.style.setProperty("--c",GOMOS[Math.floor((l.g+j)/3)]);box.appendChild(s);
+      if(j<k){if(!animate||reduce)s.classList.add("lit");else setTimeout(()=>s.classList.add("lit"),700+j*90)}}}
+  requestAnimationFrame(()=>edge(el,animate));
+  return el;
 }
-function trail(){
-  const i=lvOf(gomos);$("sheetTitle").textContent=`Você é ${nm(LV[i])}`;
-  $("trail").innerHTML=LV.map((l,k)=>{const st=k<i?"done":k===i?"now":"lock";
-    const gm=k<=i?(k===i?"você está aqui":`${l.g} gomos`):`faltam ${l.g-gomos}`;
-    return `<div class="step ${st==="lock"?"lock":st==="now"?"now":""}">${k<7?`<div class="rail"><b style="--h:${k<i?"100%":"0"}"></b></div>`:""}<div class="ic"><svg viewBox="0 0 100 100">${ICON[k]}</svg></div><div style="min-width:0"><div class="nm">${nm(l)}</div><div class="tx">${l.t}</div></div><div class="gm">${gm}</div></div>`}).join("");
+function perfil(animate){const box=$("perfilCard");box.innerHTML="";box.appendChild(makeCard(5,{animate}))}
+function trilha(animate){
+  const g=5,i=lvOf(g);
+  $("trail").innerHTML=`<div class="grab"></div><div class="eyebrow">Sua evolução</div><div class="disp" style="font-size:26px;margin-top:4px">Você é ${nm(LV[i])}</div><div class="muted" style="font-size:13.5px;margin-top:4px;line-height:1.4">Cada gomo da íris é uma contribuição sua. A íris enche e você sobe de nível.</div><div style="margin-top:12px">`+
+  LV.map((l,k)=>{const st=k<i?"":k===i?"now":"lock";const gm=k<i?`${l.g} gomos`:k===i?"você está aqui":`faltam ${l.g-g}`;
+    return `<div class="step ${st}">${k<7?`<div class="rail"><b data-k="${k}"></b></div>`:""}<div class="ic"><svg viewBox="0 0 100 100">${icon(k)}</svg></div><div style="min-width:0"><div class="nm">${nm(l)}</div><div class="tx">${l.t}</div></div><div class="gm">${gm}</div></div>`}).join("")+
+  `</div><div class="how"><b>Como os gomos acendem:</b> uma avaliação, a 5ª avaliação de um lugar (a do selo), um lugar cadastrado, uma foto aprovada. No máximo 4 por semana. Relato nunca conta.</div>`;
+  $("trail").querySelectorAll(".rail b").forEach(b=>{const k=+b.dataset.k;if(k>=i)return;if(!animate||reduce)b.style.height="100%";else{b.style.height="0";setTimeout(()=>{b.style.height="100%"},300+k*180)}});
 }
-function gallery(){
-  $("gal").innerHTML=LV.map((l,k)=>`<div><svg viewBox="0 0 100 100">${ICON[k]}</svg>${k+1}. ${nm(l)}</div>`).join("");
-  $("tab").innerHTML=LV.map((l,k)=>`<tr><td><b>${nm(l)}</b><br><span class="dim">${l.t}</span></td><td>${l.g} gomos${k?` · semana ${Math.max(1,Math.ceil(l.g/4))}`:""}</td></tr>`).join("");
+function subiu(animate){
+  const card=$("lvcard"),l=LV[3],nx=LV[4];
+  $("lvName").textContent=nm(l);$("lvText").textContent=l.t;$("lvNext").textContent=`Próximo: ${nm(nx)}, com ${nx.g} gomos.`;$("lvIcon").innerHTML=icon(3);
+  if(!animate||reduce){card.classList.remove("hide");iris($("lvRing"),10,{animate:false});return}
+  card.classList.add("hide");iris($("lvRing"),0,{animate:false});
+  const fades=card.querySelectorAll(".fade");
+  setTimeout(()=>{fades[0].style.transitionDelay="0s";card.classList.remove("hide");
+    fades.forEach((f,j)=>{f.style.transitionDelay=j===0?"0s":(1.2+j*.15)+"s"});card.querySelector(".icon").style.transitionDelay=".9s";
+    iris($("lvRing"),10,{step:70,delay:200})},60);
 }
-function medals(){const c=[C.coral,C.yellow,C.turq,C.lilac];$("medals").innerHTML=[0,1,2,3,4,5].map(i=>`<div style="width:46px;height:46px;border-radius:50%;background:${i<4?"#FFF8EE":"#F1F5FA"};box-shadow:inset 0 0 0 3px ${i<4?c[i]:"#E6ECF3"}"></div>`).join("")}
+function grid8(){$("grid8").innerHTML="";LV.forEach(l=>$("grid8").appendChild(makeCard(l.g,{animate:false,go:false,week:false})))}
+function icons(){$("icons").innerHTML=LV.map((l,k)=>`<div><svg viewBox="0 0 100 100">${icon(k)}</svg><b>${k+1}. ${nm(l)}</b>${["broto","olhos","gota de tinta","esmalte","balão de fofoca","mapa com pinos","chama","coroa"][k]}</div>`).join("")}
+function tab(){$("tab").innerHTML=LV.map((l,k)=>`<tr><td><b>${nm(l)}</b><br><span class="dim">${l.t}</span></td><td>${l.g}</td><td>${k?`semana ${Math.ceil(l.g/4)}`:"ao entrar"}</td></tr>`).join("")}
+function medals(){const c=[C.coral,C.yellow,C.turq,C.lilac];$("medals").innerHTML=[0,1,2,3,4,5].map(i=>`<div style="width:40px;height:40px;border-radius:50%;background:${i<4?"#FFF8EE":"#F1F5FA"};box-shadow:inset 0 0 0 3px ${i<4?c[i]:"#E6ECF3"}"></div>`).join("")}
 
-function show(which){
-  ["bPerfil","bTrilha","bSubiu"].forEach(b=>$(b).setAttribute("aria-pressed",String(b===which)));
-  const open=which==="bTrilha";$("sheet").classList.toggle("open",open);$("veil").classList.toggle("open",open);$("sheet").setAttribute("aria-hidden",String(!open));
-  if(open){trail();requestAnimationFrame(()=>document.querySelectorAll(".rail b").forEach((b,k)=>{b.style.height="0";setTimeout(()=>{b.style.height=k<lvOf(gomos)?"100%":"0"},reduce?0:250+k*160)}))}
-  const up=which==="bSubiu";$("lvup").classList.toggle("open",up);
-  if(up){const l=LV[3],nx=LV[4];$("lvName").textContent=nm(l);$("lvText").textContent=l.t;$("lvNext").textContent=`Próximo: ${nm(nx)}, com ${nx.g} gomos.`;$("lvIcon").innerHTML=ICON[3];iris($("lvRing"),10,{step:70,delay:350})}
-  if(which==="bPerfil"){gomos=5;card()}
-}
-$("bPerfil").onclick=()=>show("bPerfil");$("bTrilha").onclick=()=>show("bTrilha");$("bSubiu").onclick=()=>show("bSubiu");
-$("evoCard").onclick=()=>show("bTrilha");$("evoCard").onkeydown=(e)=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();show("bTrilha")}};
-$("veil").onclick=()=>show("bPerfil");$("lvOk").onclick=()=>show("bPerfil");
-document.querySelectorAll("[data-f]").forEach(b=>b.onclick=()=>{forma=+b.dataset.f;document.querySelectorAll("[data-f]").forEach(x=>x.setAttribute("aria-pressed",String(x===b)));card();gallery();if($("sheet").classList.contains("open"))trail()});
-logo();medals();gallery();card();
+function all(animate){perfil(animate);trilha(animate);subiu(animate);grid8();icons();tab()}
+document.querySelectorAll("[data-replay]").forEach(b=>b.onclick=()=>({perfil,trilha,subiu})[b.dataset.replay](true));
+document.querySelectorAll("[data-f]").forEach(b=>b.onclick=()=>{forma=+b.dataset.f;document.querySelectorAll("[data-f]").forEach(x=>x.setAttribute("aria-pressed",String(x===b)));all(false)});
+medals();all(true);
 })();
 </script>
