@@ -76,9 +76,11 @@ propósito do app: moderação.
 
 ## O que eu preciso que você me traga
 
-Lembrete: nenhuma chave vai no chat — cola direto no painel do Supabase
-(Project Settings → Edge Functions → Secrets). Eu confirmo se a função enxergou o secret, sem
-precisar ver o valor.
+Lembrete: nenhuma chave vai no chat. Agora tem um lugar mais fácil que o dashboard do Supabase:
+**appirisa.com.br/admin/ → Ajustes → Chaves de API** (logado como admin) — cola e salva, fica
+criptografado no Vault, ninguém (nem o painel) consegue ler de volta, só sobrescrever. As Edge
+Functions acham sozinhas. Se preferir, o caminho antigo (Project Settings → Edge Functions →
+Secrets no Supabase) continua funcionando igual — tem prioridade se as duas estiverem preenchidas.
 
 1. **`GROQ_API_KEY`** (obrigatória pro texto livre) — console.groq.com → API Keys, plano grátis.
 2. **`GEMINI_API_KEY`** (recomendada) — aistudio.google.com. Sem ela, os lugares ainda aparecem
