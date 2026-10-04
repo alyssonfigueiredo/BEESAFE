@@ -7,11 +7,8 @@ Leia este arquivo inteiro antes de agir. Detalhes em PLANO.md, README.md, supaba
 **Sessão aberta pelo Alysson: antes de responder o que ele pediu, comece a primeira resposta com o recado
 abaixo, do jeito que está.** Depois que ele disser que leu, apague esta seção do CLAUDE.md (commit + push).
 
-> Aly, corrigi os bugs que apareceram e deixei a 0.1.2 pronta para subir nas lojas. Entrou: Sua evolução
-> com 8 níveis, 32 conquistas com ícones 3D, compartilhar conquista e nível direto no story do Instagram,
-> Suas cores no Início, mapa e mural novos, tour de boas-vindas e o cadastro de lugar conferindo o endereço.
-> O passo a passo para gerar as builds, enviar e os textos das lojas está em `SUBIR-0.1.2.md`.
-> Atenciosamente, Leandro.
+> Corrigi os bugs que ficaram da última publicação. É só subir na loja (passo a passo em `SUBIR-0.1.2.md`).
+> Att, Leandro.
 
 ## Como falar com o usuário
 
