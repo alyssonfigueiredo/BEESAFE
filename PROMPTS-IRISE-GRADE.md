@@ -1,0 +1,231 @@
+# Prompts em grade — 5 corpos/gêneros lado a lado, um por uso (copiar e colar)
+
+Um prompt só gera as 5 figuras já lado a lado, sem se sobrepor, cada uma numa roupa/corpo diferente, todas fazendo o MESMO gesto (o uso daquela linha). Corta depois em 5 pedaços. Usei 5 dos 7 Irisis do moodboard, escolhidos pela maior diferença de corpo/gênero entre eles — os outros 2 (Irise 02 e 07) ficam de fora desta grade; gere eles à parte com `PROMPTS-IRISE-PRONTOS.md` se quiser os 7 completos.
+
+**Ordem da esquerda pra direita, sempre a mesma, em toda grade:** Irise 01, Irise 03, Irise 04, Irise 05, Irise 06.
+
+Se o gerador aceitar imagem de referência, anexe as fichas de cada um (seção 2 do `PROMPTS-IRISE.md` ou a ficha gerada em `PROMPTS-IRISE-PRONTOS.md`) pra manter a cara de cada um igual entre as grades.
+
+---
+
+## Ícone neutro (avatar de chat / bolha da Home)
+
+```
+Five different characters standing in a single horizontal row on a plain light gray seamless studio background, evenly spaced with a clear visible gap between each person, each one fully contained within their own section of the frame, not overlapping, not touching, not interacting with each other, looking forward at camera, consistent soft neutral studio lighting across all five, semi-realistic stylized 3D character illustration, same rendering style across all five figures, soft neutral studio lighting, plain light gray seamless studio background, NO scene elements, NO glow effects, NO holographic UI, NO light trails, NO particles, game-character icon / sticker style, crisp clean silhouettes easy to cut out individually, no text, no logo, wide horizontal composition.
+
+From left to right:
+1) young man, light-brown skin, dark brown medium-length curly hair, slim-athletic build, black tank top, olive green cargo pants, layered chain necklaces, tattoo on left forearm, white sneakers, relaxed friendly expression looking straight at camera, half-body
+2) androgynous person, light skin, short blonde curly hair, headphones resting around neck, slim build, black tank top, olive cargo shorts, striped socks, white sneakers, tattoos, relaxed friendly expression looking straight at camera, half-body
+3) plus-size woman, dark skin, large voluminous curly afro-textured hair, purple cropped top, wide-leg dark trousers, cross-body bag strap, tattoo on arm, relaxed friendly expression looking straight at camera, half-body
+4) man, light-medium skin, short wavy brown hair, round glasses, light stubble, layered white t-shirt under open shirt, denim shorts, backpack, necklace, relaxed friendly expression looking straight at camera, half-body
+5) woman, medium skin, short tight curly hair, backwards cap, sporty cropped top, denim shorts, striped knee-high socks, sneakers, tattoos, relaxed friendly expression looking straight at camera, half-body
+```
+
+## Aceno (boas-vindas)
+
+```
+Five different characters standing in a single horizontal row on a plain light gray seamless studio background, evenly spaced with a clear visible gap between each person, each one fully contained within their own section of the frame, not overlapping, not touching, not interacting with each other, looking forward at camera, consistent soft neutral studio lighting across all five, semi-realistic stylized 3D character illustration, same rendering style across all five figures, soft neutral studio lighting, plain light gray seamless studio background, NO scene elements, NO glow effects, NO holographic UI, NO light trails, NO particles, game-character icon / sticker style, crisp clean silhouettes easy to cut out individually, no text, no logo, wide horizontal composition.
+
+From left to right:
+1) young man, light-brown skin, dark brown medium-length curly hair, slim-athletic build, black tank top, olive green cargo pants, layered chain necklaces, tattoo on left forearm, white sneakers, waving one hand at the camera with a warm welcoming smile, half-body
+2) androgynous person, light skin, short blonde curly hair, headphones resting around neck, slim build, black tank top, olive cargo shorts, striped socks, white sneakers, tattoos, waving one hand at the camera with a warm welcoming smile, half-body
+3) plus-size woman, dark skin, large voluminous curly afro-textured hair, purple cropped top, wide-leg dark trousers, cross-body bag strap, tattoo on arm, waving one hand at the camera with a warm welcoming smile, half-body
+4) man, light-medium skin, short wavy brown hair, round glasses, light stubble, layered white t-shirt under open shirt, denim shorts, backpack, necklace, waving one hand at the camera with a warm welcoming smile, half-body
+5) woman, medium skin, short tight curly hair, backwards cap, sporty cropped top, denim shorts, striped knee-high socks, sneakers, tattoos, waving one hand at the camera with a warm welcoming smile, half-body
+```
+
+## Apontando pro mapa (tour)
+
+```
+Five different characters standing in a single horizontal row on a plain light gray seamless studio background, evenly spaced with a clear visible gap between each person, each one fully contained within their own section of the frame, not overlapping, not touching, not interacting with each other, looking forward at camera, consistent soft neutral studio lighting across all five, semi-realistic stylized 3D character illustration, same rendering style across all five figures, soft neutral studio lighting, plain light gray seamless studio background, NO scene elements, NO glow effects, NO holographic UI, NO light trails, NO particles, game-character icon / sticker style, crisp clean silhouettes easy to cut out individually, no text, no logo, wide horizontal composition.
+
+From left to right:
+1) young man, light-brown skin, dark brown medium-length curly hair, slim-athletic build, black tank top, olive green cargo pants, layered chain necklaces, tattoo on left forearm, white sneakers, holding a smartphone in one hand and pointing at its screen with the other finger, curious engaged expression, half-body
+2) androgynous person, light skin, short blonde curly hair, headphones resting around neck, slim build, black tank top, olive cargo shorts, striped socks, white sneakers, tattoos, holding a smartphone in one hand and pointing at its screen with the other finger, curious engaged expression, half-body
+3) plus-size woman, dark skin, large voluminous curly afro-textured hair, purple cropped top, wide-leg dark trousers, cross-body bag strap, tattoo on arm, holding a smartphone in one hand and pointing at its screen with the other finger, curious engaged expression, half-body
+4) man, light-medium skin, short wavy brown hair, round glasses, light stubble, layered white t-shirt under open shirt, denim shorts, backpack, necklace, holding a smartphone in one hand and pointing at its screen with the other finger, curious engaged expression, half-body
+5) woman, medium skin, short tight curly hair, backwards cap, sporty cropped top, denim shorts, striped knee-high socks, sneakers, tattoos, holding a smartphone in one hand and pointing at its screen with the other finger, curious engaged expression, half-body
+```
+
+## Avaliação / polegar pra cima
+
+```
+Five different characters standing in a single horizontal row on a plain light gray seamless studio background, evenly spaced with a clear visible gap between each person, each one fully contained within their own section of the frame, not overlapping, not touching, not interacting with each other, looking forward at camera, consistent soft neutral studio lighting across all five, semi-realistic stylized 3D character illustration, same rendering style across all five figures, soft neutral studio lighting, plain light gray seamless studio background, NO scene elements, NO glow effects, NO holographic UI, NO light trails, NO particles, game-character icon / sticker style, crisp clean silhouettes easy to cut out individually, no text, no logo, wide horizontal composition.
+
+From left to right:
+1) young man, light-brown skin, dark brown medium-length curly hair, slim-athletic build, black tank top, olive green cargo pants, layered chain necklaces, tattoo on left forearm, white sneakers, holding a smartphone showing a star rating in one hand, giving a thumbs-up with the other hand, cheerful expression, half-body
+2) androgynous person, light skin, short blonde curly hair, headphones resting around neck, slim build, black tank top, olive cargo shorts, striped socks, white sneakers, tattoos, holding a smartphone showing a star rating in one hand, giving a thumbs-up with the other hand, cheerful expression, half-body
+3) plus-size woman, dark skin, large voluminous curly afro-textured hair, purple cropped top, wide-leg dark trousers, cross-body bag strap, tattoo on arm, holding a smartphone showing a star rating in one hand, giving a thumbs-up with the other hand, cheerful expression, half-body
+4) man, light-medium skin, short wavy brown hair, round glasses, light stubble, layered white t-shirt under open shirt, denim shorts, backpack, necklace, holding a smartphone showing a star rating in one hand, giving a thumbs-up with the other hand, cheerful expression, half-body
+5) woman, medium skin, short tight curly hair, backwards cap, sporty cropped top, denim shorts, striped knee-high socks, sneakers, tattoos, holding a smartphone showing a star rating in one hand, giving a thumbs-up with the other hand, cheerful expression, half-body
+```
+
+## Pensando / radar
+
+```
+Five different characters standing in a single horizontal row on a plain light gray seamless studio background, evenly spaced with a clear visible gap between each person, each one fully contained within their own section of the frame, not overlapping, not touching, not interacting with each other, looking forward at camera, consistent soft neutral studio lighting across all five, semi-realistic stylized 3D character illustration, same rendering style across all five figures, soft neutral studio lighting, plain light gray seamless studio background, NO scene elements, NO glow effects, NO holographic UI, NO light trails, NO particles, game-character icon / sticker style, crisp clean silhouettes easy to cut out individually, no text, no logo, wide horizontal composition.
+
+From left to right:
+1) young man, light-brown skin, dark brown medium-length curly hair, slim-athletic build, black tank top, olive green cargo pants, layered chain necklaces, tattoo on left forearm, white sneakers, looking down thoughtfully at a smartphone held in one hand, other hand resting near chin, calm focused expression, half-body
+2) androgynous person, light skin, short blonde curly hair, headphones resting around neck, slim build, black tank top, olive cargo shorts, striped socks, white sneakers, tattoos, looking down thoughtfully at a smartphone held in one hand, other hand resting near chin, calm focused expression, half-body
+3) plus-size woman, dark skin, large voluminous curly afro-textured hair, purple cropped top, wide-leg dark trousers, cross-body bag strap, tattoo on arm, looking down thoughtfully at a smartphone held in one hand, other hand resting near chin, calm focused expression, half-body
+4) man, light-medium skin, short wavy brown hair, round glasses, light stubble, layered white t-shirt under open shirt, denim shorts, backpack, necklace, looking down thoughtfully at a smartphone held in one hand, other hand resting near chin, calm focused expression, half-body
+5) woman, medium skin, short tight curly hair, backwards cap, sporty cropped top, denim shorts, striped knee-high socks, sneakers, tattoos, looking down thoughtfully at a smartphone held in one hand, other hand resting near chin, calm focused expression, half-body
+```
+
+## Conquista / segurando medalha
+
+```
+Five different characters standing in a single horizontal row on a plain light gray seamless studio background, evenly spaced with a clear visible gap between each person, each one fully contained within their own section of the frame, not overlapping, not touching, not interacting with each other, looking forward at camera, consistent soft neutral studio lighting across all five, semi-realistic stylized 3D character illustration, same rendering style across all five figures, soft neutral studio lighting, plain light gray seamless studio background, NO scene elements, NO glow effects, NO holographic UI, NO light trails, NO particles, game-character icon / sticker style, crisp clean silhouettes easy to cut out individually, no text, no logo, wide horizontal composition.
+
+From left to right:
+1) young man, light-brown skin, dark brown medium-length curly hair, slim-athletic build, black tank top, olive green cargo pants, layered chain necklaces, tattoo on left forearm, white sneakers, holding up a small round medal with both hands close to chest, proud delighted smile, half-body
+2) androgynous person, light skin, short blonde curly hair, headphones resting around neck, slim build, black tank top, olive cargo shorts, striped socks, white sneakers, tattoos, holding up a small round medal with both hands close to chest, proud delighted smile, half-body
+3) plus-size woman, dark skin, large voluminous curly afro-textured hair, purple cropped top, wide-leg dark trousers, cross-body bag strap, tattoo on arm, holding up a small round medal with both hands close to chest, proud delighted smile, half-body
+4) man, light-medium skin, short wavy brown hair, round glasses, light stubble, layered white t-shirt under open shirt, denim shorts, backpack, necklace, holding up a small round medal with both hands close to chest, proud delighted smile, half-body
+5) woman, medium skin, short tight curly hair, backwards cap, sporty cropped top, denim shorts, striped knee-high socks, sneakers, tattoos, holding up a small round medal with both hands close to chest, proud delighted smile, half-body
+```
+
+## Convite / fim do tour
+
+```
+Five different characters standing in a single horizontal row on a plain light gray seamless studio background, evenly spaced with a clear visible gap between each person, each one fully contained within their own section of the frame, not overlapping, not touching, not interacting with each other, looking forward at camera, consistent soft neutral studio lighting across all five, semi-realistic stylized 3D character illustration, same rendering style across all five figures, soft neutral studio lighting, plain light gray seamless studio background, NO scene elements, NO glow effects, NO holographic UI, NO light trails, NO particles, game-character icon / sticker style, crisp clean silhouettes easy to cut out individually, no text, no logo, wide horizontal composition.
+
+From left to right:
+1) young man, light-brown skin, dark brown medium-length curly hair, slim-athletic build, black tank top, olive green cargo pants, layered chain necklaces, tattoo on left forearm, white sneakers, reaching one open hand toward the camera as an invitation, confident warm smile, half-body
+2) androgynous person, light skin, short blonde curly hair, headphones resting around neck, slim build, black tank top, olive cargo shorts, striped socks, white sneakers, tattoos, reaching one open hand toward the camera as an invitation, confident warm smile, half-body
+3) plus-size woman, dark skin, large voluminous curly afro-textured hair, purple cropped top, wide-leg dark trousers, cross-body bag strap, tattoo on arm, reaching one open hand toward the camera as an invitation, confident warm smile, half-body
+4) man, light-medium skin, short wavy brown hair, round glasses, light stubble, layered white t-shirt under open shirt, denim shorts, backpack, necklace, reaching one open hand toward the camera as an invitation, confident warm smile, half-body
+5) woman, medium skin, short tight curly hair, backwards cap, sporty cropped top, denim shorts, striped knee-high socks, sneakers, tattoos, reaching one open hand toward the camera as an invitation, confident warm smile, half-body
+```
+
+## Braços abertos (descoberta)
+
+```
+Five different characters standing in a single horizontal row on a plain light gray seamless studio background, evenly spaced with a clear visible gap between each person, each one fully contained within their own section of the frame, not overlapping, not touching, not interacting with each other, looking forward at camera, consistent soft neutral studio lighting across all five, semi-realistic stylized 3D character illustration, same rendering style across all five figures, soft neutral studio lighting, plain light gray seamless studio background, NO scene elements, NO glow effects, NO holographic UI, NO light trails, NO particles, game-character icon / sticker style, crisp clean silhouettes easy to cut out individually, no text, no logo, wide horizontal composition.
+
+From left to right:
+1) young man, light-brown skin, dark brown medium-length curly hair, slim-athletic build, black tank top, olive green cargo pants, layered chain necklaces, tattoo on left forearm, white sneakers, both arms open in a welcoming inviting gesture, playful curious expression, half-body
+2) androgynous person, light skin, short blonde curly hair, headphones resting around neck, slim build, black tank top, olive cargo shorts, striped socks, white sneakers, tattoos, both arms open in a welcoming inviting gesture, playful curious expression, half-body
+3) plus-size woman, dark skin, large voluminous curly afro-textured hair, purple cropped top, wide-leg dark trousers, cross-body bag strap, tattoo on arm, both arms open in a welcoming inviting gesture, playful curious expression, half-body
+4) man, light-medium skin, short wavy brown hair, round glasses, light stubble, layered white t-shirt under open shirt, denim shorts, backpack, necklace, both arms open in a welcoming inviting gesture, playful curious expression, half-body
+5) woman, medium skin, short tight curly hair, backwards cap, sporty cropped top, denim shorts, striped knee-high socks, sneakers, tattoos, both arms open in a welcoming inviting gesture, playful curious expression, half-body
+```
+
+## Apresentando opções (recomendação)
+
+```
+Five different characters standing in a single horizontal row on a plain light gray seamless studio background, evenly spaced with a clear visible gap between each person, each one fully contained within their own section of the frame, not overlapping, not touching, not interacting with each other, looking forward at camera, consistent soft neutral studio lighting across all five, semi-realistic stylized 3D character illustration, same rendering style across all five figures, soft neutral studio lighting, plain light gray seamless studio background, NO scene elements, NO glow effects, NO holographic UI, NO light trails, NO particles, game-character icon / sticker style, crisp clean silhouettes easy to cut out individually, no text, no logo, wide horizontal composition.
+
+From left to right:
+1) young man, light-brown skin, dark brown medium-length curly hair, slim-athletic build, black tank top, olive green cargo pants, layered chain necklaces, tattoo on left forearm, white sneakers, one hand extended to the side as if presenting options, head slightly tilted, warm knowing smile, half-body
+2) androgynous person, light skin, short blonde curly hair, headphones resting around neck, slim build, black tank top, olive cargo shorts, striped socks, white sneakers, tattoos, one hand extended to the side as if presenting options, head slightly tilted, warm knowing smile, half-body
+3) plus-size woman, dark skin, large voluminous curly afro-textured hair, purple cropped top, wide-leg dark trousers, cross-body bag strap, tattoo on arm, one hand extended to the side as if presenting options, head slightly tilted, warm knowing smile, half-body
+4) man, light-medium skin, short wavy brown hair, round glasses, light stubble, layered white t-shirt under open shirt, denim shorts, backpack, necklace, one hand extended to the side as if presenting options, head slightly tilted, warm knowing smile, half-body
+5) woman, medium skin, short tight curly hair, backwards cap, sporty cropped top, denim shorts, striped knee-high socks, sneakers, tattoos, one hand extended to the side as if presenting options, head slightly tilted, warm knowing smile, half-body
+```
+
+## Dúvida / poucos dados
+
+```
+Five different characters standing in a single horizontal row on a plain light gray seamless studio background, evenly spaced with a clear visible gap between each person, each one fully contained within their own section of the frame, not overlapping, not touching, not interacting with each other, looking forward at camera, consistent soft neutral studio lighting across all five, semi-realistic stylized 3D character illustration, same rendering style across all five figures, soft neutral studio lighting, plain light gray seamless studio background, NO scene elements, NO glow effects, NO holographic UI, NO light trails, NO particles, game-character icon / sticker style, crisp clean silhouettes easy to cut out individually, no text, no logo, wide horizontal composition.
+
+From left to right:
+1) young man, light-brown skin, dark brown medium-length curly hair, slim-athletic build, black tank top, olive green cargo pants, layered chain necklaces, tattoo on left forearm, white sneakers, shrugging with both palms up, one eyebrow raised, playful questioning half-smile, half-body
+2) androgynous person, light skin, short blonde curly hair, headphones resting around neck, slim build, black tank top, olive cargo shorts, striped socks, white sneakers, tattoos, shrugging with both palms up, one eyebrow raised, playful questioning half-smile, half-body
+3) plus-size woman, dark skin, large voluminous curly afro-textured hair, purple cropped top, wide-leg dark trousers, cross-body bag strap, tattoo on arm, shrugging with both palms up, one eyebrow raised, playful questioning half-smile, half-body
+4) man, light-medium skin, short wavy brown hair, round glasses, light stubble, layered white t-shirt under open shirt, denim shorts, backpack, necklace, shrugging with both palms up, one eyebrow raised, playful questioning half-smile, half-body
+5) woman, medium skin, short tight curly hair, backwards cap, sporty cropped top, denim shorts, striped knee-high socks, sneakers, tattoos, shrugging with both palms up, one eyebrow raised, playful questioning half-smile, half-body
+```
+
+## Convite pra avaliar / escrevendo
+
+```
+Five different characters standing in a single horizontal row on a plain light gray seamless studio background, evenly spaced with a clear visible gap between each person, each one fully contained within their own section of the frame, not overlapping, not touching, not interacting with each other, looking forward at camera, consistent soft neutral studio lighting across all five, semi-realistic stylized 3D character illustration, same rendering style across all five figures, soft neutral studio lighting, plain light gray seamless studio background, NO scene elements, NO glow effects, NO holographic UI, NO light trails, NO particles, game-character icon / sticker style, crisp clean silhouettes easy to cut out individually, no text, no logo, wide horizontal composition.
+
+From left to right:
+1) young man, light-brown skin, dark brown medium-length curly hair, slim-athletic build, black tank top, olive green cargo pants, layered chain necklaces, tattoo on left forearm, white sneakers, holding a pen near a small notepad or phone as if about to write, encouraging expression, half-body
+2) androgynous person, light skin, short blonde curly hair, headphones resting around neck, slim build, black tank top, olive cargo shorts, striped socks, white sneakers, tattoos, holding a pen near a small notepad or phone as if about to write, encouraging expression, half-body
+3) plus-size woman, dark skin, large voluminous curly afro-textured hair, purple cropped top, wide-leg dark trousers, cross-body bag strap, tattoo on arm, holding a pen near a small notepad or phone as if about to write, encouraging expression, half-body
+4) man, light-medium skin, short wavy brown hair, round glasses, light stubble, layered white t-shirt under open shirt, denim shorts, backpack, necklace, holding a pen near a small notepad or phone as if about to write, encouraging expression, half-body
+5) woman, medium skin, short tight curly hair, backwards cap, sporty cropped top, denim shorts, striped knee-high socks, sneakers, tattoos, holding a pen near a small notepad or phone as if about to write, encouraging expression, half-body
+```
+
+## Comemoração / subiu de nível
+
+```
+Five different characters standing in a single horizontal row on a plain light gray seamless studio background, evenly spaced with a clear visible gap between each person, each one fully contained within their own section of the frame, not overlapping, not touching, not interacting with each other, looking forward at camera, consistent soft neutral studio lighting across all five, semi-realistic stylized 3D character illustration, same rendering style across all five figures, soft neutral studio lighting, plain light gray seamless studio background, NO scene elements, NO glow effects, NO holographic UI, NO light trails, NO particles, game-character icon / sticker style, crisp clean silhouettes easy to cut out individually, no text, no logo, wide horizontal composition.
+
+From left to right:
+1) young man, light-brown skin, dark brown medium-length curly hair, slim-athletic build, black tank top, olive green cargo pants, layered chain necklaces, tattoo on left forearm, white sneakers, one fist pumped up in the air, big open joyful laugh, dynamic energetic pose, half-body
+2) androgynous person, light skin, short blonde curly hair, headphones resting around neck, slim build, black tank top, olive cargo shorts, striped socks, white sneakers, tattoos, one fist pumped up in the air, big open joyful laugh, dynamic energetic pose, half-body
+3) plus-size woman, dark skin, large voluminous curly afro-textured hair, purple cropped top, wide-leg dark trousers, cross-body bag strap, tattoo on arm, one fist pumped up in the air, big open joyful laugh, dynamic energetic pose, half-body
+4) man, light-medium skin, short wavy brown hair, round glasses, light stubble, layered white t-shirt under open shirt, denim shorts, backpack, necklace, one fist pumped up in the air, big open joyful laugh, dynamic energetic pose, half-body
+5) woman, medium skin, short tight curly hair, backwards cap, sporty cropped top, denim shorts, striped knee-high socks, sneakers, tattoos, one fist pumped up in the air, big open joyful laugh, dynamic energetic pose, half-body
+```
+
+## Quase lá / cúmplice
+
+```
+Five different characters standing in a single horizontal row on a plain light gray seamless studio background, evenly spaced with a clear visible gap between each person, each one fully contained within their own section of the frame, not overlapping, not touching, not interacting with each other, looking forward at camera, consistent soft neutral studio lighting across all five, semi-realistic stylized 3D character illustration, same rendering style across all five figures, soft neutral studio lighting, plain light gray seamless studio background, NO scene elements, NO glow effects, NO holographic UI, NO light trails, NO particles, game-character icon / sticker style, crisp clean silhouettes easy to cut out individually, no text, no logo, wide horizontal composition.
+
+From left to right:
+1) young man, light-brown skin, dark brown medium-length curly hair, slim-athletic build, black tank top, olive green cargo pants, layered chain necklaces, tattoo on left forearm, white sneakers, winking at the camera with one finger raised near the face, sly knowing smirk, half-body
+2) androgynous person, light skin, short blonde curly hair, headphones resting around neck, slim build, black tank top, olive cargo shorts, striped socks, white sneakers, tattoos, winking at the camera with one finger raised near the face, sly knowing smirk, half-body
+3) plus-size woman, dark skin, large voluminous curly afro-textured hair, purple cropped top, wide-leg dark trousers, cross-body bag strap, tattoo on arm, winking at the camera with one finger raised near the face, sly knowing smirk, half-body
+4) man, light-medium skin, short wavy brown hair, round glasses, light stubble, layered white t-shirt under open shirt, denim shorts, backpack, necklace, winking at the camera with one finger raised near the face, sly knowing smirk, half-body
+5) woman, medium skin, short tight curly hair, backwards cap, sporty cropped top, denim shorts, striped knee-high socks, sneakers, tattoos, winking at the camera with one finger raised near the face, sly knowing smirk, half-body
+```
+
+## Loading / carregando
+
+```
+Five different characters standing in a single horizontal row on a plain light gray seamless studio background, evenly spaced with a clear visible gap between each person, each one fully contained within their own section of the frame, not overlapping, not touching, not interacting with each other, looking forward at camera, consistent soft neutral studio lighting across all five, semi-realistic stylized 3D character illustration, same rendering style across all five figures, soft neutral studio lighting, plain light gray seamless studio background, NO scene elements, NO glow effects, NO holographic UI, NO light trails, NO particles, game-character icon / sticker style, crisp clean silhouettes easy to cut out individually, no text, no logo, wide horizontal composition.
+
+From left to right:
+1) young man, light-brown skin, dark brown medium-length curly hair, slim-athletic build, black tank top, olive green cargo pants, layered chain necklaces, tattoo on left forearm, white sneakers, looking at a smartphone held in both hands with a slightly puzzled focused expression, half-body
+2) androgynous person, light skin, short blonde curly hair, headphones resting around neck, slim build, black tank top, olive cargo shorts, striped socks, white sneakers, tattoos, looking at a smartphone held in both hands with a slightly puzzled focused expression, half-body
+3) plus-size woman, dark skin, large voluminous curly afro-textured hair, purple cropped top, wide-leg dark trousers, cross-body bag strap, tattoo on arm, looking at a smartphone held in both hands with a slightly puzzled focused expression, half-body
+4) man, light-medium skin, short wavy brown hair, round glasses, light stubble, layered white t-shirt under open shirt, denim shorts, backpack, necklace, looking at a smartphone held in both hands with a slightly puzzled focused expression, half-body
+5) woman, medium skin, short tight curly hair, backwards cap, sporty cropped top, denim shorts, striped knee-high socks, sneakers, tattoos, looking at a smartphone held in both hands with a slightly puzzled focused expression, half-body
+```
+
+## Erro / fallback
+
+```
+Five different characters standing in a single horizontal row on a plain light gray seamless studio background, evenly spaced with a clear visible gap between each person, each one fully contained within their own section of the frame, not overlapping, not touching, not interacting with each other, looking forward at camera, consistent soft neutral studio lighting across all five, semi-realistic stylized 3D character illustration, same rendering style across all five figures, soft neutral studio lighting, plain light gray seamless studio background, NO scene elements, NO glow effects, NO holographic UI, NO light trails, NO particles, game-character icon / sticker style, crisp clean silhouettes easy to cut out individually, no text, no logo, wide horizontal composition.
+
+From left to right:
+1) young man, light-brown skin, dark brown medium-length curly hair, slim-athletic build, black tank top, olive green cargo pants, layered chain necklaces, tattoo on left forearm, white sneakers, one hand resting lightly on forehead, playful exaggerated "oops" expression, half-body
+2) androgynous person, light skin, short blonde curly hair, headphones resting around neck, slim build, black tank top, olive cargo shorts, striped socks, white sneakers, tattoos, one hand resting lightly on forehead, playful exaggerated "oops" expression, half-body
+3) plus-size woman, dark skin, large voluminous curly afro-textured hair, purple cropped top, wide-leg dark trousers, cross-body bag strap, tattoo on arm, one hand resting lightly on forehead, playful exaggerated "oops" expression, half-body
+4) man, light-medium skin, short wavy brown hair, round glasses, light stubble, layered white t-shirt under open shirt, denim shorts, backpack, necklace, one hand resting lightly on forehead, playful exaggerated "oops" expression, half-body
+5) woman, medium skin, short tight curly hair, backwards cap, sporty cropped top, denim shorts, striped knee-high socks, sneakers, tattoos, one hand resting lightly on forehead, playful exaggerated "oops" expression, half-body
+```
+
+## Retrato limpo (Meu Irise / Perfil)
+
+```
+Five different characters standing in a single horizontal row on a plain light gray seamless studio background, evenly spaced with a clear visible gap between each person, each one fully contained within their own section of the frame, not overlapping, not touching, not interacting with each other, looking forward at camera, consistent soft neutral studio lighting across all five, semi-realistic stylized 3D character illustration, same rendering style across all five figures, soft neutral studio lighting, plain light gray seamless studio background, NO scene elements, NO glow effects, NO holographic UI, NO light trails, NO particles, game-character icon / sticker style, crisp clean silhouettes easy to cut out individually, no text, no logo, wide horizontal composition.
+
+From left to right:
+1) young man, light-brown skin, dark brown medium-length curly hair, slim-athletic build, black tank top, olive green cargo pants, layered chain necklaces, tattoo on left forearm, white sneakers, relaxed three-quarter body portrait, arms loosely crossed or hands in pockets, natural confident smile
+2) androgynous person, light skin, short blonde curly hair, headphones resting around neck, slim build, black tank top, olive cargo shorts, striped socks, white sneakers, tattoos, relaxed three-quarter body portrait, arms loosely crossed or hands in pockets, natural confident smile
+3) plus-size woman, dark skin, large voluminous curly afro-textured hair, purple cropped top, wide-leg dark trousers, cross-body bag strap, tattoo on arm, relaxed three-quarter body portrait, arms loosely crossed or hands in pockets, natural confident smile
+4) man, light-medium skin, short wavy brown hair, round glasses, light stubble, layered white t-shirt under open shirt, denim shorts, backpack, necklace, relaxed three-quarter body portrait, arms loosely crossed or hands in pockets, natural confident smile
+5) woman, medium skin, short tight curly hair, backwards cap, sporty cropped top, denim shorts, striped knee-high socks, sneakers, tattoos, relaxed three-quarter body portrait, arms loosely crossed or hands in pockets, natural confident smile
+```
+
+## Gesto descontraído (sticker de uso geral)
+
+```
+Five different characters standing in a single horizontal row on a plain light gray seamless studio background, evenly spaced with a clear visible gap between each person, each one fully contained within their own section of the frame, not overlapping, not touching, not interacting with each other, looking forward at camera, consistent soft neutral studio lighting across all five, semi-realistic stylized 3D character illustration, same rendering style across all five figures, soft neutral studio lighting, plain light gray seamless studio background, NO scene elements, NO glow effects, NO holographic UI, NO light trails, NO particles, game-character icon / sticker style, crisp clean silhouettes easy to cut out individually, no text, no logo, wide horizontal composition.
+
+From left to right:
+1) young man, light-brown skin, dark brown medium-length curly hair, slim-athletic build, black tank top, olive green cargo pants, layered chain necklaces, tattoo on left forearm, white sneakers, making a peace sign near the face with one hand, relaxed playful smile, half-body
+2) androgynous person, light skin, short blonde curly hair, headphones resting around neck, slim build, black tank top, olive cargo shorts, striped socks, white sneakers, tattoos, making a peace sign near the face with one hand, relaxed playful smile, half-body
+3) plus-size woman, dark skin, large voluminous curly afro-textured hair, purple cropped top, wide-leg dark trousers, cross-body bag strap, tattoo on arm, making a peace sign near the face with one hand, relaxed playful smile, half-body
+4) man, light-medium skin, short wavy brown hair, round glasses, light stubble, layered white t-shirt under open shirt, denim shorts, backpack, necklace, making a peace sign near the face with one hand, relaxed playful smile, half-body
+5) woman, medium skin, short tight curly hair, backwards cap, sporty cropped top, denim shorts, striped knee-high socks, sneakers, tattoos, making a peace sign near the face with one hand, relaxed playful smile, half-body
+```
+
