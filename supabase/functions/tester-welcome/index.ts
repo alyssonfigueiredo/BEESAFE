@@ -9,12 +9,15 @@ import { adminClient, json } from "../_shared/supabase.ts";
 // Primeiro o de participação (vira testador), depois o da loja (só abre para quem já é testador).
 const PLAY_TEST_URL = "https://play.google.com/apps/testing/br.com.irisa.app";
 const PLAY_STORE_URL = "https://play.google.com/store/apps/details?id=br.com.irisa.app";
+// jsDelivr (não raw.githubusercontent.com): serve com CORS e cache-control normais, e o proxy de
+// imagem do Gmail carregava a logo do GitHub direto como quebrada. Preso num commit (@sha) pra não
+// sumir se o arquivo mudar de nome depois.
 const LOGO_URL =
-  "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/marca-pack/irisa-horizontal-ink.png";
+  "https://cdn.jsdelivr.net/gh/alyssonfigueiredo/BEESAFE@e494d72a1f9742fa671d766e5c9c84e369284987/docs/marca-pack/irisa-horizontal-white.png";
 
-// E-mail em HTML (tabela + CSS inline, do jeito que clientes de e-mail toleram) na mesma paleta
-// do app e do Instagram (papel, cápsulas coral/turquesa), com o texto puro como alternativa pra
-// quem não carrega HTML. `rows` é a lista de passos numerados; `cta` os botões em cápsula.
+// E-mail em HTML (tabela + CSS inline) desenhado já escuro: o Gmail Android reescreve fundo claro
+// pra escuro na marra (nem meta color-scheme nem !important travam isso), então em vez de brigar o
+// e-mail nasce na paleta .sl.night da marca — fica igual não importa o que o cliente decidir.
 function wrapHtml(opts: {
   titulo: string;
   corpo: string;
@@ -25,48 +28,38 @@ function wrapHtml(opts: {
   const passos = opts.passos
     .map(
       (p, i) =>
-        `<tr><td style="padding:4px 0;font-size:15px;line-height:1.5;color:#3D4560 !important;font-family:Arial,Helvetica,sans-serif;"><b style="color:#141829 !important;">${i + 1}.</b> ${p}</td></tr>`,
+        `<tr><td style="padding:4px 0;font-size:15px;line-height:1.5;color:#C8CCDC;font-family:Arial,Helvetica,sans-serif;"><b style="color:#FFFFFF;">${i + 1}.</b> ${p}</td></tr>`,
     )
     .join("");
-  // Botão "à prova de bala": a cor vive no bgcolor da célula, não no <a> — o Gmail às vezes
-  // apaga background de link em modo escuro, mas respeita bgcolor de tabela.
   const ctas = opts.ctas
     .map(
       (c) =>
-        `<tr><td style="padding:10px 0;text-align:center;"><table role="presentation" align="center" cellpadding="0" cellspacing="0"><tr><td bgcolor="${c.cor}" style="background:${c.cor};border-radius:999px;"><a href="${c.url}" style="display:block;padding:14px 30px;color:${c.tinta} !important;text-decoration:none;font-weight:700;font-size:15px;font-family:Arial,Helvetica,sans-serif;">${c.texto}</a></td></tr></table></td></tr>`,
+        `<tr><td style="padding:10px 0;text-align:center;"><table role="presentation" align="center" cellpadding="0" cellspacing="0"><tr><td bgcolor="${c.cor}" style="background:${c.cor};border-radius:999px;"><a href="${c.url}" style="display:block;padding:14px 30px;color:${c.tinta};text-decoration:none;font-weight:700;font-size:15px;font-family:Arial,Helvetica,sans-serif;">${c.texto}</a></td></tr></table></td></tr>`,
     )
     .join("");
-  // color-scheme/supported-color-schemes pedem pro cliente de e-mail não reescrever as cores
-  // sozinho (o Gmail no Android troca fundo branco por preto e lê mal cor de botão sem isso).
   return `<!doctype html>
-<html><head><meta charset="utf-8"><meta name="color-scheme" content="light only"><meta name="supported-color-schemes" content="light only">
-<style>:root{color-scheme:light only;supported-color-schemes:light only}
-@media (prefers-color-scheme: dark){ .irisa-page{background:#F5F4F1 !important} .irisa-card{background:#FFFFFF !important} .irisa-soft{background:#F5F4F1 !important} }
-[data-ogsc] .irisa-page,[data-ogsb] .irisa-page{background:#F5F4F1 !important}
-[data-ogsc] .irisa-card,[data-ogsb] .irisa-card{background:#FFFFFF !important}
-[data-ogsc] .irisa-soft,[data-ogsb] .irisa-soft{background:#F5F4F1 !important}</style>
-</head>
-<body style="margin:0;padding:0;background:#F5F4F1 !important;">
-<table role="presentation" width="100%" cellpadding="0" cellspacing="0" bgcolor="#F5F4F1" class="irisa-page" style="background:#F5F4F1 !important;padding:32px 16px;">
+<html><head><meta charset="utf-8"><meta name="color-scheme" content="dark"><meta name="supported-color-schemes" content="dark"></head>
+<body style="margin:0;padding:0;background:#141829;">
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" bgcolor="#141829" style="background:#141829;padding:32px 16px;">
 <tr><td align="center">
-<table role="presentation" width="100%" bgcolor="#FFFFFF" class="irisa-card" style="max-width:480px;background:#FFFFFF !important;border-radius:24px;overflow:hidden;">
-<tr><td bgcolor="#FFFFFF" class="irisa-card" style="background:#FFFFFF !important;padding:36px 32px 4px;text-align:center;">
-<img src="${LOGO_URL}" width="150" alt="Irisa" style="display:block;margin:0 auto;border:0;">
+<table role="presentation" width="100%" bgcolor="#1E2340" style="max-width:480px;background:#1E2340;border-radius:24px;overflow:hidden;">
+<tr><td style="padding:36px 32px 4px;text-align:center;">
+<img src="${LOGO_URL}" width="150" height="59" alt="Irisa" style="display:block;margin:0 auto;border:0;">
 </td></tr>
-<tr><td bgcolor="#FFFFFF" class="irisa-card" style="background:#FFFFFF !important;padding:20px 32px 0;text-align:center;">
-<p style="margin:0 0 14px;font-family:Arial,Helvetica,sans-serif;font-size:20px;font-weight:700;letter-spacing:.02em;color:#141829 !important;text-transform:uppercase;">${opts.titulo}</p>
-<p style="margin:0 0 22px;font-family:Arial,Helvetica,sans-serif;font-size:15px;line-height:1.6;color:#3D4560 !important;">${opts.corpo}</p>
+<tr><td style="padding:20px 32px 0;text-align:center;">
+<p style="margin:0 0 14px;font-family:Arial,Helvetica,sans-serif;font-size:20px;font-weight:700;letter-spacing:.02em;color:#FFFFFF;text-transform:uppercase;">${opts.titulo}</p>
+<p style="margin:0 0 22px;font-family:Arial,Helvetica,sans-serif;font-size:15px;line-height:1.6;color:#C8CCDC;">${opts.corpo}</p>
 </td></tr>
-<tr><td bgcolor="#FFFFFF" class="irisa-card" style="background:#FFFFFF !important;padding:0 32px;">
-<table role="presentation" width="100%" bgcolor="#F5F4F1" class="irisa-soft" style="background:#F5F4F1 !important;border-radius:16px;padding:18px 20px;"><tbody>${passos}</tbody></table>
+<tr><td style="padding:0 32px;">
+<table role="presentation" width="100%" bgcolor="#141829" style="background:#141829;border-radius:16px;padding:18px 20px;"><tbody>${passos}</tbody></table>
 </td></tr>
-<tr><td bgcolor="#FFFFFF" class="irisa-card" style="background:#FFFFFF !important;padding:16px 32px 0;"><table role="presentation" width="100%"><tbody>${ctas}</tbody></table></td></tr>
-<tr><td bgcolor="#FFFFFF" class="irisa-card" style="background:#FFFFFF !important;padding:18px 32px 0;">
-<p style="margin:0;font-family:Arial,Helvetica,sans-serif;font-size:13px;line-height:1.6;color:#7C8296 !important;">${opts.nota}</p>
+<tr><td style="padding:16px 32px 0;"><table role="presentation" width="100%"><tbody>${ctas}</tbody></table></td></tr>
+<tr><td style="padding:18px 32px 0;">
+<p style="margin:0;font-family:Arial,Helvetica,sans-serif;font-size:13px;line-height:1.6;color:#8E96AE;">${opts.nota}</p>
 </td></tr>
-<tr><td bgcolor="#FFFFFF" class="irisa-card" style="background:#FFFFFF !important;padding:28px 32px 34px;text-align:center;border-top:1px solid #ECEAE5;margin-top:10px;">
-<p style="margin:20px 0 4px;font-family:Arial,Helvetica,sans-serif;font-size:13px;color:#7C8296 !important;">O mapa dos lugares onde a gente é bem-vinde, feito por nós.</p>
-<p style="margin:0;font-family:Arial,Helvetica,sans-serif;font-size:13px;font-weight:700;color:#141829 !important;">@appirisa</p>
+<tr><td style="padding:28px 32px 34px;text-align:center;border-top:1px solid #2A3050;margin-top:10px;">
+<p style="margin:20px 0 4px;font-family:Arial,Helvetica,sans-serif;font-size:13px;color:#8E96AE;">O mapa dos lugares onde a gente é bem-vinde, feito por nós.</p>
+<p style="margin:0;font-family:Arial,Helvetica,sans-serif;font-size:13px;font-weight:700;color:#FFFFFF;">@appirisa</p>
 </td></tr>
 </table>
 </td></tr>
