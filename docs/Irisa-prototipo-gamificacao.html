@@ -1,6 +1,6 @@
 <title>Protótipo Acender o arco-íris</title>
 <!-- Protótipo navegável da gamificação (proposta final, 04/10/2026), para aprovar com o Aly.
-     Tour guiado de 12 passos + navegação livre. Nada grava: é tudo encenado no navegador.
+     Tour guiado de 13 passos + navegação livre. Nada grava: é tudo encenado no navegador.
      Medalhas e objetos vêm de pingentes.js; o arquivo único sai com
      node scripts/gamificacao-unica.mjs docs/prototipo-gamificacao.html docs/Irisa-prototipo-gamificacao.html -->
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -99,14 +99,9 @@ h1.t{font-family:var(--display);font-weight:700;text-transform:uppercase;font-si
 .num{font-family:var(--display);font-weight:700;line-height:1;font-variant-numeric:tabular-nums}
 
 /* semana */
-.wk{display:flex;justify-content:space-between;margin:14px 0 12px}
-.wk div{width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:600;color:var(--dim);background:var(--subtle);transition:background .3s,color .3s}
-.wk div.on{color:var(--ink)}
-.wk div.hj{box-shadow:inset 0 0 0 2.5px var(--ink);background:#fff;color:var(--ink)}
-#wkCard.lit{box-shadow:0 0 0 3px transparent,var(--shadow)}
 #wkCard .glowring{position:absolute;inset:-3px;border-radius:27px;padding:3px;background:var(--rb);-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;opacity:0;pointer-events:none}
-.dots{display:grid;grid-template-columns:repeat(20,1fr);gap:4px;margin-top:12px}
-.dots i{aspect-ratio:1;border-radius:50%;background:#2E3450;transition:background .4s}
+.dots{display:grid;grid-template-columns:repeat(20,1fr);gap:2px}
+.dots i{aspect-ratio:1;border-radius:50%;background:#E4E1DA;transition:background .4s}
 
 /* tab bar */
 .tb{position:absolute;left:14px;right:14px;bottom:24px;z-index:20;height:68px;border-radius:34px;background:rgba(255,255,255,.8);box-shadow:var(--shadow);display:flex;justify-content:space-around;align-items:center;padding:0 4px;backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px)}
@@ -116,15 +111,22 @@ h1.t{font-family:var(--display);font-weight:700;text-transform:uppercase;font-si
 .tb .pf{position:relative}
 .tb .badge{position:absolute;top:6px;right:12px;width:9px;height:9px;border-radius:50%;background:var(--coral);transform:scale(0)}
 
-/* lugar */
-.back{width:40px;height:40px;border-radius:50%;background:rgba(255,255,255,.8);display:flex;align-items:center;justify-content:center;box-shadow:var(--shadow)}
-.q{display:flex;flex-direction:column;gap:8px;padding:12px 0;border-top:1px solid rgba(20,24,41,.07)}
-.q:first-of-type{border-top:0}
-.q p{font-size:15px;font-weight:600}
-.q .opts{display:flex;gap:6px}
-.q .opts button{flex:1;height:38px;border-radius:12px;background:var(--subtle);font-size:13px;font-weight:600;color:var(--muted);transition:background .25s,color .25s,transform .2s}
-.q .opts button.sel{color:var(--ink)}
-
+/* ficha atual do app */
+.hback{position:relative;z-index:5;display:flex;align-items:center;gap:2px;margin:2px 0 0 10px;font-size:17px;color:var(--ink)}
+.rbtxt{font-family:var(--display);font-weight:700;font-size:21px;text-transform:uppercase;background:var(--rb);-webkit-background-clip:text;background-clip:text;color:transparent}
+.pillbtn{display:flex;align-items:center;gap:8px;background:var(--subtle);border-radius:18px;padding:13px 16px;font-size:14px;font-weight:500;box-shadow:var(--shadow)}
+.q{display:flex;flex-direction:column;gap:5px}
+.q p{font-size:14px;font-weight:500}
+.q small{font-size:12px;color:var(--dim)}
+.rbw{display:flex;gap:6px;margin-top:4px}
+.rbw i{width:50px;height:16px;border-radius:8px;background:#E6E3DD;overflow:hidden;position:relative;cursor:pointer}
+.rbw i b{position:absolute;left:0;top:0;bottom:0;width:0;border-radius:8px;transition:width .35s cubic-bezier(.3,1.3,.45,1)}
+.rbw.sm{gap:3px;margin-top:6px}.rbw.sm i{width:22px;height:7px;cursor:default}
+.ta{min-height:76px;border-radius:18px;background:#fff;padding:12px 16px;font-size:14px;color:var(--dim);box-shadow:0 1px 2px rgba(20,24,41,.05)}
+.srch{display:flex;align-items:center;gap:10px;height:52px;border-radius:26px;background:rgba(255,255,255,.7);padding:0 18px;font-size:15px;color:var(--dim);box-shadow:var(--shadow)}
+.fld{display:flex;flex-direction:column;gap:6px}.fld small{font-size:13px;color:var(--dim)}.fld span{height:48px;border-radius:16px;background:#fff;display:flex;align-items:center;padding:0 16px;font-size:15px;box-shadow:0 1px 2px rgba(20,24,41,.05)}
+.lr{display:flex;flex-direction:column;gap:3px;padding:16px 0;border-bottom:1px dashed rgba(20,24,41,.15)}.lr b{font-size:15px}.lr small{font-size:12.5px;line-height:1.4;color:var(--dim)}
+.cd.new:after{content:"Novo";position:absolute;top:-8px;right:16px;background:var(--night);color:#fff;font-size:11px;font-weight:700;padding:3px 9px;border-radius:10px}
 /* folhas e camadas */
 .veil{position:absolute;inset:0;z-index:30;background:rgba(20,24,41,.38);opacity:0;pointer-events:none;transition:opacity .35s}
 .veil.on{opacity:1;pointer-events:auto}
@@ -179,60 +181,104 @@ h1.t{font-family:var(--display);font-weight:700;text-transform:uppercase;font-si
   <div id="stageWrap"><div id="phone"><div id="screen">
     <div class="island"></div>
 
-    <!-- Início -->
+    <!-- Início: o painel atual do app fica igual; a gamificação entra em dois cartões logo abaixo -->
     <section class="scr" id="s-home">
       <div class="sb"><span>9:41</span><i data-sb></i></div>
       <div class="hd"><div class="logo"><svg class="ring" data-lit="48" width="30" height="30" viewBox="0 0 100 100"></svg><span>IRIS<b>A</b></span></div><div class="sos" data-sos></div></div>
       <div class="body">
-        <div class="cd" id="wkCard"><i class="glowring"></i>
-          <div style="display:flex;justify-content:space-between;align-items:baseline"><p class="lb">Sua semana</p><p style="font-size:13px;color:var(--muted)" id="wkCount">2 de 4 dias</p></div>
-          <div class="wk" id="wk"><div data-c="#FF6964" class="on" style="background:#FF6964">S</div><div>T</div><div data-c="#FFD066" class="on" style="background:#FFD066">Q</div><div>Q</div><div data-c="#49DCC0" class="hj" id="today">S</div><div data-c="#A889FF" id="tomorrow">S</div><div>D</div></div>
-          <p style="font-size:15px;line-height:1.35" id="wkMsg">Abra a Irisa em mais <b>2 dias</b> e a semana acende.</p>
-          <p style="font-size:13px;color:var(--dim);margin-top:4px">Quaisquer 4 dias. Não precisa ser seguido.</p>
+        <div class="cd dk" style="padding:20px 20px 18px;border-radius:30px">
+          <div style="display:flex;align-items:center;gap:10px"><span style="width:40px;height:40px;border-radius:12px;background:#2C3250;display:flex;align-items:center;justify-content:center"><svg class="ring" data-lit="48" width="24" height="24" viewBox="0 0 100 100"></svg></span><p class="lb" style="color:var(--soft);letter-spacing:.16em">Sua cidade</p></div>
+          <p style="font-family:var(--display);font-weight:700;font-size:38px;line-height:1.05;margin-top:10px">CURITIBA</p>
+          <p style="font-size:15px;color:#E6E7EF;margin-top:2px">Curitiba · PR ⌄</p>
+          <i style="display:block;width:96px;height:4px;border-radius:2px;background:var(--rb);margin:12px 0"></i>
+          <p style="font-size:14.5px;line-height:1.5;color:#E6E7EF">O mapa dos lugares onde a gente é <b style="color:var(--yellow)">bem-vinde</b>, feito por nós. Diga quanta cor tem os lugares por onde você passa. E registre, sem se identificar, o que não deveria ter acontecido.</p>
+          <div style="display:flex;gap:10px;margin-top:16px">
+            <button class="btn" id="goRate" style="background:var(--turq);flex:1;font-size:15px">Avaliar um lugar</button>
+            <button class="btn" id="goReport" style="background:var(--coral);flex:1;font-size:15px">Registrar relato</button>
+          </div>
         </div>
-        <div class="cd dk" id="cityCard" style="padding:18px">
-          <p class="lb">Curitiba</p>
-          <div style="display:flex;align-items:baseline;gap:10px;margin-top:6px"><span class="num" style="font-size:52px" id="cityN">12</span><span style="font-size:15px;color:var(--soft)">dos 100 lugares mais<br>conhecidos já têm selo</span></div>
-          <div class="dots" id="dots"></div>
-          <p style="font-size:13px;color:var(--soft);margin-top:10px" id="cityMsg">Esta semana foram 3.</p>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;align-items:start">
+          <button class="cd" id="wkCard" style="text-align:left;padding:14px;display:flex;flex-direction:column;gap:8px"><i class="glowring"></i>
+            <span style="display:flex;align-items:center;gap:10px"><svg id="wkRing" width="46" height="46" viewBox="0 0 100 100"></svg><span><span class="lb" style="display:block">Sua semana</span><span class="num" style="font-size:26px" id="wkCount">2 de 4</span></span></span>
+            <span style="font-size:13px;line-height:1.35;color:var(--muted)" id="wkMsg">Cada dia que você abre a Irisa acende um pedaço.</span>
+          </button>
+          <div class="cd" id="cityCard" style="padding:14px;display:flex;flex-direction:column;gap:8px">
+            <span><span class="lb" style="display:block">Curitiba</span><span class="num" style="font-size:26px"><span id="cityN">12</span> de 100</span></span>
+            <span class="dots" id="dots"></span>
+            <span style="font-size:13px;line-height:1.35;color:var(--muted)" id="cityMsg">dos mais conhecidos já têm selo</span>
+          </div>
         </div>
-        <button class="cd" id="almostCard" style="display:flex;align-items:center;gap:14px;padding:14px 16px;text-align:left" data-open="famosinha">
-          <span data-md="famosinha" data-s="lock" data-p=".73" data-size="64" data-nolock="1" id="almostMedal"></span>
-          <span style="flex:1"><span style="display:block;font-size:12px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--coralInk)">Quase lá</span><span style="display:block;font-size:16px;font-weight:700">Famosinhe</span><span style="display:block;font-size:13px;color:var(--muted)" id="almostTxt">Faltam 8 avaliações</span></span>
+        <button class="cd" id="almostCard" style="display:flex;align-items:center;gap:14px;padding:12px 16px;text-align:left" data-open="famosinha">
+          <span data-md="famosinha" data-s="lock" data-p=".73" data-size="58" data-nolock="1" id="almostMedal"></span>
+          <span style="flex:1"><span style="display:block;font-size:11px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--coralInk)">Quase lá</span><span style="display:block;font-size:15px;font-weight:700">Famosinhe</span><span style="display:block;font-size:13px;color:var(--muted)" id="almostTxt">Faltam 8 avaliações</span></span>
           <span class="chip">Ver</span>
         </button>
-        <div style="display:flex;gap:10px">
-          <button class="btn" id="goRate" style="background:var(--turq);flex:1">Avaliar um lugar</button>
-          <button class="btn" id="goReport" style="background:var(--coral);flex:1">Registrar relato</button>
-        </div>
+        <div class="srch"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#7C8296" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg>Buscar um lugar em Curitiba</div>
+        <p style="font-size:18px;font-weight:700;margin-top:4px">Lugares mais acolhedores</p>
+        <div class="cd" style="display:flex;gap:12px;align-items:center"><span style="width:62px;height:62px;border-radius:18px;background:rgba(255,105,100,.16);display:flex;align-items:center;justify-content:center"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#C72825" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 3h14l-7 9z"/><path d="M12 12v8M8 21h8"/></svg></span><span style="flex:1"><span style="display:block;font-size:17px;font-weight:700">Bar Aquarela</span><span class="rbw sm" data-v="4.7"></span><span style="display:block;font-size:12.5px;color:var(--dim);margin-top:4px">12 avaliações · São Francisco</span></span><span class="chip" style="background:rgba(73,220,192,.2);color:#0A8B7A">Acolhedor</span></div>
       </div>
     </section>
 
-    <!-- Ficha do lugar -->
+    <!-- Ficha do lugar: igual à do app; nada muda no formulário -->
     <section class="scr right" id="s-place">
       <div class="sb"><span>9:41</span><i data-sb></i></div>
-      <div class="body" style="padding-top:8px">
-        <div style="display:flex;align-items:center;gap:12px"><button class="back" id="placeBack" aria-label="Voltar"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#141829" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg></button><p style="font-size:15px;color:var(--muted)">Lugares</p></div>
-        <div class="cd" style="display:flex;gap:14px;align-items:center">
-          <div style="width:70px;height:70px;border-radius:20px;background:rgba(255,163,83,.22);display:flex;align-items:center;justify-content:center"><svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#B5651D" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 8h1a4 4 0 1 1 0 8h-1"/><path d="M3 8h14v9a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4Z"/><path d="M6 2v2M10 2v2M14 2v2"/></svg></div>
-          <div style="flex:1"><p style="font-size:20px;font-weight:700">Café do Largo</p><p style="font-size:14px;color:var(--muted)">Café · Centro · 4 avaliações</p><p style="font-size:13px;color:var(--coralInk);font-weight:600;margin-top:3px" id="placeSeal">Falta 1 avaliação para o selo</p></div>
+      <button class="hback" id="placeBack"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#141829" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>Voltar</button>
+      <div class="body" style="padding-top:6px;gap:16px">
+        <div class="cd" style="border-radius:28px;padding:18px;display:flex;flex-direction:column;gap:8px">
+          <div id="placePhoto" style="height:140px;border-radius:20px;background:#E9E6E0;display:flex;align-items:center;justify-content:center;transition:background .6s"><svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="#9A9EAD" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" id="placeIcon"><path d="M17 8h1a4 4 0 1 1 0 8h-1"/><path d="M3 8h14v9a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4Z"/><path d="M6 2v2M10 2v2M14 2v2"/></svg></div>
+          <p style="font-family:var(--display);font-weight:700;font-size:26px;letter-spacing:.02em">CAFÉ DO LARGO</p>
+          <p style="font-size:14px;color:var(--dim)">Café · <u style="color:#0A8B7A">Centro</u> · Curitiba</p>
+          <p style="font-size:14px;color:var(--muted)">Largo da Ordem, 41</p>
+          <p class="rbtxt" style="margin-top:10px">Quanta cor tem esse lugar?</p>
+          <p style="font-size:15px;color:var(--dim)" id="placeState">4 avaliações até agora. Falta 1 para o selo aparecer.</p>
         </div>
-        <div class="cd" id="qCard">
-          <p style="font-family:var(--display);font-weight:700;text-transform:uppercase;font-size:24px;margin-bottom:4px">Quanta cor tem esse lugar?</p>
-          <div class="q" data-ax="0" data-c="#FF6964"><p>Atendimento</p><div class="opts"><button>Não</button><button>Pouco</button><button>Bem</button><button>Muito</button></div></div>
-          <div class="q" data-ax="1" data-c="#FFA353"><p>Afeto em público</p><div class="opts"><button>Não</button><button>Pouco</button><button>Bem</button><button>Muito</button></div></div>
-          <div class="q" data-ax="2" data-c="#FFD066"><p>Banheiro</p><div class="opts"><button>Não</button><button>Pouco</button><button>Bem</button><button>Muito</button></div></div>
-          <div class="q" data-ax="3" data-c="#49DCC0"><p>Clientela</p><div class="opts"><button>Não</button><button>Pouco</button><button>Bem</button><button>Muito</button></div></div>
+        <div class="pillbtn"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0A8B7A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l19-9-9 19-2-8z"/></svg>Como chegar</div>
+        <div class="cd" id="qCard" style="border-radius:24px;display:flex;flex-direction:column;gap:16px">
+          <p style="font-size:16px;font-weight:700">Como foi lá?</p>
+          <div class="q" data-ax="0"><p>A equipe te tratou bem?</p><small>Sem constrangimento, sem olhar torto, sem insistir no “senhor”.</small><span class="rbw" data-v="0"></span></div>
+          <div class="q" data-ax="1"><p>Dava para ficar à vontade com quem você ama?</p><small>De mãos dadas, um beijo, sem plateia.</small><span class="rbw" data-v="0"></span></div>
+          <div class="q" data-ax="2"><p>E o banheiro?</p><small>Usou o que quis, sem ser questionade.</small><span class="rbw" data-v="0"></span></div>
+          <div class="q" data-ax="3"><p>E as outras pessoas no ambiente?</p><small>Quem estava em volta, não a equipe.</small><span class="rbw" data-v="0"></span></div>
+          <div class="ta">Quer contar como foi? (opcional, até 500 caracteres)</div>
+          <div class="pillbtn" style="justify-content:center;font-weight:700;box-shadow:none">Adicionar uma foto do lugar</div>
+          <button class="btn" id="send" style="background:var(--yellow);color:var(--night);font-weight:700;box-shadow:0 8px 20px rgba(255,208,102,.45)">Enviar avaliação</button>
         </div>
-        <button class="btn" id="send" style="background:var(--night);color:#fff;opacity:.35" disabled>Enviar avaliação</button>
       </div>
     </section>
 
-    <!-- Pulseira -->
-    <section class="scr right" id="s-pul">
+    <!-- Perfil: tudo o que já existe continua; entra só o cartão da pulseira -->
+    <section class="scr off" id="s-perfil">
       <div class="sb"><span>9:41</span><i data-sb></i></div>
       <div class="hd"><div class="logo"><svg class="ring" data-lit="48" width="30" height="30" viewBox="0 0 100 100"></svg><span>IRIS<b>A</b></span></div><div class="sos" data-sos></div></div>
-      <div class="body" style="gap:16px">
+      <div class="body" style="padding-inline:18px;gap:16px">
+        <div class="cd" style="border-radius:30px;padding:20px;display:flex;align-items:center;gap:16px">
+          <span style="position:relative;width:72px;height:72px;flex:none;border-radius:50%;padding:3px;background:var(--rb)"><span style="display:flex;width:100%;height:100%;border-radius:50%;background:#fff;align-items:center;justify-content:center;font-family:var(--display);font-weight:700;font-size:30px">B</span><span style="position:absolute;right:-2px;bottom:-2px;width:26px;height:26px;border-radius:50%;background:#fff;box-shadow:var(--shadow);display:flex;align-items:center;justify-content:center"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#141829" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7h4l2-3h6l2 3h4v13H3z"/><circle cx="12" cy="13" r="4"/></svg></span></span>
+          <span style="min-width:0"><span style="display:block;font-family:var(--display);font-weight:700;font-size:22px">BIA</span><span style="display:block;font-size:13px;color:var(--dim)">bia@exemplo.com</span><span class="chip" style="margin-top:6px;height:24px;font-size:11.5px;font-weight:500;color:var(--muted)">Curitiba · PR</span></span>
+        </div>
+        <button class="cd new" id="pulCard" style="border-radius:30px;padding:16px 18px;text-align:left;display:flex;flex-direction:column;gap:12px">
+          <span style="display:flex;justify-content:space-between;align-items:baseline;width:100%"><span style="font-size:17px;font-weight:500">Sua pulseira</span><span style="font-size:13px;font-weight:600;color:#0A8B7A" id="pulMini">5 de 12 · Ver todas</span></span>
+          <span id="pulRow" style="display:flex;gap:6px"></span>
+        </button>
+        <div class="cd" style="border-radius:30px;padding:24px 22px;display:flex;flex-direction:column;gap:14px">
+          <p style="font-size:17px;font-weight:500">Seu perfil</p>
+          <div class="fld"><small>Apelido no mural e nas avaliações</small><span>Bia</span></div>
+          <div class="fld"><small>Cidade padrão</small><span>Curitiba · PR</span></div>
+          <div class="btn" style="background:var(--turq);height:48px;font-size:15px;font-weight:700">Salvar</div>
+        </div>
+        <div class="cd" style="border-radius:30px;padding:6px 22px">
+          <div class="lr"><b>Privacidade</b><small>Relatos e mensagens nunca mostram seu nome ou e-mail. Só o apelido que você escolher aparece no mural e nas avaliações.</small></div>
+          <div class="lr" style="border:0"><b>Pessoas bloqueadas</b><small>Ninguém por aqui. Bloqueie pelo ícone em uma mensagem do mural ou avaliação.</small></div>
+        </div>
+        <div class="btn" style="background:#fff;box-shadow:var(--shadow)">Sair</div>
+        <p style="text-align:center;font-size:14px;color:var(--coralInk);font-weight:500">Excluir minha conta</p>
+      </div>
+    </section>
+
+    <!-- Pulseira: abre a partir do cartão do Perfil -->
+    <section class="scr right" id="s-pul">
+      <div class="sb"><span>9:41</span><i data-sb></i></div>
+      <button class="hback" id="pulBack"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#141829" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>Perfil</button>
+      <div class="body" style="gap:16px;padding-top:4px">
         <div><h1 class="t">Pulseira</h1><p class="sub" style="margin-top:2px" id="pulCount">5 de 12 desbloqueadas</p></div>
         <button class="cd" id="pulAlmost" style="display:flex;align-items:center;gap:14px;padding:14px 16px;text-align:left" data-open="famosinha">
           <span data-md="famosinha" data-s="lock" data-p=".77" data-size="70" data-nolock="1"></span>
@@ -325,7 +371,7 @@ h1.t{font-family:var(--display);font-weight:700;text-transform:uppercase;font-si
   </div></div></div>
 
   <aside id="tour" aria-live="polite">
-    <div class="top"><span class="mark">IRIS<b>A</b> · PROTÓTIPO</span><span class="count" id="tCount">1 de 12</span></div>
+    <div class="top"><span class="mark">IRIS<b>A</b> · PROTÓTIPO</span><span class="count" id="tCount">1 de 13</span></div>
     <div class="bar"><i id="tBar"></i></div>
     <p class="eb" id="tEb"></p>
     <h2 id="tH"></h2>
@@ -522,6 +568,21 @@ function animProg(host, from, to, d = 1100, delay = 0) {
 }
 const RB6 = ["#FF6964", "#FFA353", "#FFD066", "#49DCC0", "#59A7FF", "#A889FF"];
 $("#dots").innerHTML = Array.from({ length: 100 }, (_, i) => `<i style="${i < 12 ? "background:" + RB6[i % 6] : ""}"></i>`).join("");
+// semana: quatro gomos que só enchem, sem dia da semana nenhum à vista
+const WKC = ["#FF6964", "#FFD066", "#49DCC0", "#A889FF"];
+function drawWk(n) {
+  let h = "";
+  for (let i = 0; i < 4; i++) { const a0 = (-90 + 90 * i + 5) * Math.PI / 180, a1 = (-90 + 90 * (i + 1) - 5) * Math.PI / 180;
+    h += `<path data-k="${i}" d="M${Pt(48, a0)}A48 48 0 0 1 ${Pt(48, a1)}L${Pt(32, a1)}A32 32 0 0 0 ${Pt(32, a0)}Z" fill="${i < n ? WKC[i] : "#E4E1DA"}" style="transform-origin:50px 50px"/>`; }
+  $("#wkRing").innerHTML = h + `<circle cx="50" cy="50" r="13" fill="#0F1220"/><circle cx="46.1" cy="45.6" r="2.86" fill="#fff"/>`;
+}
+drawWk(2);
+function lightWk(k) { const g = $(`#wkRing path[data-k="${k}"]`); g.setAttribute("fill", WKC[k]);
+  A(g, [{ transform: "scale(.7)", fill: "#E4E1DA" }, { transform: "scale(1.18)", fill: WKC[k], offset: .6 }, { transform: "scale(1)", fill: WKC[k] }], { d: 700, e: "cubic-bezier(.3,1.5,.45,1)" }); }
+// marcador de nota do app: cinco faixas que enchem da esquerda
+const SCALE5 = ["#FF6964", "#FFA353", "#FFD066", "#49DCC0", "#A889FF"];
+function drawRbw(el, v) { el.innerHTML = SCALE5.map((c, i) => `<i data-n="${i + 1}"><b style="background:${c};width:${Math.max(0, Math.min(1, v - i)) * 100}%"></b></i>`).join(""); }
+$$(".rbw").forEach(e => drawRbw(e, +e.dataset.v));
 
 /* ---------- tab bar ---------- */
 const IC = { "Início": '<path d="M3 10l9-7 9 7v10a2 2 0 0 1-2 2h-4v-7H9v7H5a2 2 0 0 1-2-2Z"/>', "Mapa": '<path d="M9 4L3 6v14l6-2 6 2 6-2V4l-6 2Z"/><path d="M9 4v14M15 6v14"/>', "Lugares": '<path d="M3 9l1.5-5h15L21 9"/><path d="M4 9v11h16V9"/><path d="M3 9h18"/><path d="M10 20v-5h4v5"/>', "Apoio": '<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4"/><path d="M5.6 5.6l3.6 3.6M14.8 14.8l3.6 3.6M18.4 5.6l-3.6 3.6M9.2 14.8l-3.6 3.6"/>', "Perfil": '<circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/>' };
@@ -536,7 +597,13 @@ const PUL = () => [
   ["acendeu-a-luz", S.unlocked ? undefined : 0.8], ["figurinha", 0.47], ["famosinha", S.rated ? 0.77 : 0.73],
   ["nome-na-lista", 0.6], ["mala-pronta", 0.33], ["ombro-amigo", 0.2], ["eu-conheco", 0],
 ];
+function renderPulRow() {
+  const rows = PUL(), on = rows.filter(([, p]) => p === undefined), lk = rows.filter(([, p]) => p !== undefined);
+  $("#pulMini").textContent = `${on.length} de 12 · Ver todas`;
+  $("#pulRow").innerHTML = [...on.slice(0, 4), ...lk.slice(0, 2)].map(([id, p]) => `<span>${medal(id, { size: 50, state: p === undefined ? "on" : "lock", prog: p || 0, lockIcon: false })}</span>`).join("");
+}
 function renderPul(anim) {
+  renderPulRow();
   const n = PUL().filter(([, p]) => p === undefined).length;
   $("#pulCount").textContent = `${n} de 12 desbloqueadas`;
   $("#mg").innerHTML = PUL().map(([id, p], i) => { const o = P.get(id), lk = p !== undefined;
@@ -548,18 +615,20 @@ function renderPul(anim) {
 renderPul(false);
 
 /* ---------- navegação ---------- */
-const SCR = { home: "#s-home", place: "#s-place", pul: "#s-pul" };
+const SCR = { home: "#s-home", place: "#s-place", perfil: "#s-perfil", pul: "#s-pul" };
+const pushed = n => n === "place" || n === "pul";
 function go(name) {
   if (S.scr === name) return;
   const from = $(SCR[S.scr]), to = $(SCR[name]);
-  // a ficha entra pela direita; Início e Pulseira trocam com um esmaecer
-  from.className = "scr " + (name === "place" ? "left" : S.scr === "place" ? "right" : "off");
-  to.className = "scr";
+  // ficha e pulseira entram pela direita, por cima das abas; Início e Perfil trocam com um esmaecer
+  from.className = "scr " + (pushed(name) ? "left" : pushed(S.scr) ? "right" : "off");
+  to.className = "scr"; to.scrollTop = 0;
   S.scr = name;
-  setTab(name === "pul" ? 4 : 0);
+  setTab(name === "perfil" || name === "pul" ? 4 : 0);
   $("#tabs").style.transition = "transform .45s cubic-bezier(.2,.7,.2,1)";
-  $("#tabs").style.transform = name === "place" ? "translateY(140%)" : "";
+  $("#tabs").style.transform = pushed(name) ? "translateY(140%)" : "";
   if (name === "pul") renderPul(true);
+  if (name === "perfil") renderPulRow();
 }
 setTab(0);
 function toast(t, top = 118) { const el = $("#toast"); el.textContent = t; el.style.top = top + "px";
@@ -568,28 +637,24 @@ function toast(t, top = 118) { const el = $("#toast"); el.textContent = t; el.st
 /* ---------- ações do app ---------- */
 async function lightToday() {
   if (S.today) return; S.today = true;
-  const d = $("#today"); d.classList.remove("hj"); d.classList.add("on");
-  A(d, [{ transform: "scale(.6)", background: "#ECEAE5" }, { transform: "scale(1.25)", background: d.dataset.c, offset: .6 }, { transform: "scale(1)", background: d.dataset.c }], { d: 700, e: "cubic-bezier(.3,1.5,.45,1)" });
-  d.style.background = d.dataset.c;
-  $("#tomorrow").classList.add("hj");
+  lightWk(2);
   await wait(300);
-  $("#wkCount").textContent = "3 de 4 dias"; $("#wkMsg").innerHTML = "Abra a Irisa em mais <b>1 dia</b> e a semana acende.";
+  $("#wkCount").textContent = "3 de 4"; $("#wkMsg").textContent = "Mais um dia com a Irisa aberta e a semana acende.";
   A($("#wkCount"), [{ transform: "scale(1.3)", color: "#0A8B7A" }, { transform: "scale(1)" }], { d: 600 });
-  toast("Hoje contou para a sua semana");
+  toast("Hoje acendeu mais um pedaço da semana");
 }
-function answer(q, k) {
-  const c = q.dataset.c;
-  $$(".opts button", q).forEach((b, i) => { b.classList.toggle("sel", i === k); b.style.background = i === k ? c : ""; });
-  A($$(".opts button", q)[k], [{ transform: "scale(.88)" }, { transform: "scale(1.06)", offset: .6 }, { transform: "scale(1)" }], { d: 380 });
-  const done = $$(".q").every(x => $(".sel", x));
-  const s = $("#send"); s.disabled = !done; s.style.opacity = done ? 1 : .35;
-  if (done) A(s, [{ transform: "scale(.96)" }, { transform: "scale(1)" }], { d: 400, e: "cubic-bezier(.3,1.5,.45,1)" });
+function answer(q, v) {
+  const el = $(".rbw", q); el.dataset.v = v;
+  $$("i", el).forEach((seg, k) => { $("b", seg).style.width = (v > k ? 100 : 0) + "%"; });
+  A($$("i", el)[v - 1], [{ transform: "scaleY(1)" }, { transform: "scaleY(1.4)" }, { transform: "scaleY(1)" }], { d: 320 });
+  const done = $$("#qCard .q").filter(x => +$(".rbw", x).dataset.v > 0).length;
+  const ph = $("#placePhoto"); ph.style.filter = `grayscale(${1 - done / 4})`; ph.style.background = "rgba(255,163,83,.22)"; $("#placeIcon").setAttribute("stroke", "#B5651D");
 }
 async function autoAnswer() {
-  const picks = [3, 2, 3, 2];
-  for (const [i, q] of $$(".q").entries()) { if (!$(".sel", q)) { await wait(380); answer(q, picks[i]); } }
+  const picks = [5, 4, 5, 4];
+  for (const [i, q] of $$("#qCard .q").entries()) { if (!+$(".rbw", q).dataset.v) { await wait(420); answer(q, picks[i]); } }
 }
-$$(".q").forEach(q => $$(".opts button", q).forEach((b, k) => b.onclick = () => answer(q, k)));
+$$("#qCard .q").forEach(q => $(".rbw", q).addEventListener("click", e => { const seg = e.target.closest("i"); if (seg) answer(q, +seg.dataset.n); }));
 
 function flyTo(fromEl, toEl, html) {
   const scr = $("#screen").getBoundingClientRect(), z = scr.width / 390;
@@ -604,10 +669,12 @@ const SPARK = `<svg width="28" height="28" viewBox="0 0 24 24"><path d="M12 1l2.
 
 async function submitRating() {
   if (S.rated) { openSheet("#rw"); return; }
+  const falta = $$("#qCard .q").find(x => !+$(".rbw", x).dataset.v);
+  if (falta) { toast("Falta responder: " + $("p", falta).textContent, 140); return; }
   S.rated = true;
   const s = $("#send"); A(s, [{ transform: "scale(1)" }, { transform: "scale(.94)" }, { transform: "scale(1)" }], { d: 300 });
-  s.textContent = "Enviada"; s.disabled = true;
-  $("#placeSeal").textContent = "Selo aceso agora"; $("#placeSeal").style.color = "#0A8B7A";
+  s.textContent = "Avaliação enviada";
+  $("#placeState").textContent = "5 avaliações. O selo acabou de acender.";
   await wait(250);
   openSheet("#rw");
   await wait(520);
@@ -699,13 +766,12 @@ async function weekComplete() {
   S.week4 = true;
   toast("Um dia depois…", 118);
   await wait(900);
-  const d = $("#tomorrow"); d.classList.remove("hj"); d.classList.add("on"); d.style.background = d.dataset.c;
-  A(d, [{ transform: "scale(.6)" }, { transform: "scale(1.25)", offset: .6 }, { transform: "scale(1)" }], { d: 700, e: "cubic-bezier(.3,1.5,.45,1)" });
+  lightWk(3);
   await wait(350);
-  $("#wkCount").textContent = "4 de 4 dias"; $("#wkMsg").innerHTML = "<b>Semana acesa.</b> Sua caixinha chegou.";
+  $("#wkCount").textContent = "4 de 4"; $("#wkMsg").innerHTML = "<b>Semana acesa.</b> Sua caixinha chegou.";
   A($("#wkCard .glowring"), [{ opacity: 0 }, { opacity: 1 }], { d: 600 });
-  A($("#wkCard"), [{ transform: "scale(1)" }, { transform: "scale(1.03)" }, { transform: "scale(1)" }], { d: 600, e: "cubic-bezier(.3,1.5,.45,1)" });
-  $$("#wk div.on").forEach((x, i) => A(x, [{ transform: "translateY(0)" }, { transform: "translateY(-8px)" }, { transform: "translateY(0)" }], { d: 420, delay: 80 * i }));
+  A($("#wkCard"), [{ transform: "scale(1)" }, { transform: "scale(1.04)" }, { transform: "scale(1)" }], { d: 600, e: "cubic-bezier(.3,1.5,.45,1)" });
+  A($("#wkRing"), [{ transform: "rotate(0)" }, { transform: "rotate(360deg)" }], { d: 900, e: "cubic-bezier(.3,.8,.3,1)" });
   await wait(1100);
   openBox();
 }
@@ -741,27 +807,30 @@ $("#send").onclick = submitRating;
 $("#rwGo").onclick = () => { if (!S.unlocked) celebrate(); else closeSheets(); };
 $("#celShare").onclick = showStory;
 $("#celPul").onclick = () => { closeCel(); go("pul"); };
+$("#pulCard").onclick = () => go("pul");
+$("#pulBack").onclick = () => go("perfil");
 $("#storyX").onclick = closeStory;
 $("#boxGo").onclick = closeBox;
 $("#detGo").onclick = () => { if ($("#detGo").dataset.mode === "rate") { closeSheets(); go("place"); } else { closeSheets(); showStory(); } };
 document.addEventListener("click", e => { const b = e.target.closest("[data-open]"); if (b && $("#screen").contains(b)) openDetail(b.dataset.open); });
 $("#tabs").addEventListener("click", e => { const b = e.target.closest("button"); if (!b) return; const i = +b.dataset.tab;
-  if (i === 0) go("home"); else if (i === 4) { go("pul"); $("#pfBadge").style.transform = "scale(0)"; } else toast("Fora deste protótipo", 118); });
-$("#wkCard").addEventListener("click", () => { if (!S.today) lightToday(); else if (!S.week4) weekComplete(); });
+  if (i === 0) go("home"); else if (i === 4) { go("perfil"); $("#pfBadge").style.transform = "scale(0)"; } else toast("Fora deste protótipo", 118); });
+$("#wkCard").addEventListener("click", () => { if (!S.today) lightToday(); else weekComplete(); });
 
 /* ---------- tour ---------- */
 const STEPS = [
-  { eb: "Abrir o app", h: "O dia conta para a semana", t: "Só de abrir a Irisa, o dia acende na <b>semana</b>. Nada de sequência: valem quaisquer 4 dias.", scr: "home", spot: "#wkCard", run: lightToday },
-  { eb: "Semana acesa", h: "4 dias quaisquer", t: "Faltou um dia? Tudo bem. A semana recomeça na segunda <b>sem perder nada</b>. Quatro dias acendem a semana e abrem uma caixinha.", scr: "home", spot: "#wkCard" },
+  { eb: "Abrir o app", h: "Cada dia acende um pedaço", t: "Abriu a Irisa, um dos <b>quatro pedaços</b> da semana acende. Não aparece dia da semana nenhum, então nada fica marcado como perdido.", scr: "home", spot: "#wkCard", run: lightToday },
+  { eb: "Semana acesa", h: "Só conta o que acendeu", t: "Quatro dias com a Irisa aberta, em qualquer ordem, acendem a semana e abrem uma caixinha. Se não der, a semana seguinte começa de novo e <b>nada do que a pessoa ganhou some</b>.", scr: "home", spot: "#wkCard" },
   { eb: "O mapa responde", h: "12 dos 100 mais conhecidos", t: "A meta da cidade usa os <b>100 lugares mais conhecidos</b>, não os 10 mil do mapa. Assim o número anda toda semana.", scr: "home", spot: "#cityCard" },
-  { eb: "Quase lá", h: "Medalha bloqueada mostra quanto falta", t: "A medalha aparece em <b>silhueta</b> e o anel enche com o progresso. Dá curiosidade sem poluir a tela.", scr: "home", spot: "#almostCard", run: () => animProg($("#almostMedal"), 0, .73, 1300, 200) },
-  { eb: "Avaliar", h: "Quanta cor tem esse lugar?", t: "As quatro perguntas de sempre. A avaliação entra no ar <b>na hora</b>, sem moderação antes.", scr: "place", spot: "#qCard", run: autoAnswer },
+  { eb: "Quase lá", h: "Medalha bloqueada mostra quanto falta", t: "A medalha aparece em <b>silhueta</b> e o anel enche com o progresso. O resto do Início fica como está hoje.", scr: "home", spot: "#almostCard", run: () => animProg($("#almostMedal"), 0, .73, 1300, 200) },
+  { eb: "Avaliar", h: "A ficha de hoje, sem mudança", t: "As mesmas quatro perguntas e o mesmo marcador de cinco faixas. A foto do lugar ganha cor a cada resposta, como já faz. A avaliação entra no ar <b>na hora</b>.", scr: "place", spot: "#qCard", run: autoAnswer },
   { eb: "Na hora", h: "Gomo, faísca e cor no mapa", t: "Enviou, o <b>gomo acende</b> no anel, a faísca voa até o Perfil e a Famosinhe anda uma casa. Se uma denúncia derrubar a avaliação, o gomo apaga.", scr: "place", spot: "#rw", run: async () => { await autoAnswer(); await submitRating(); } },
   { eb: "Desbloqueou", h: "Acendeu a Luz", t: "Era a <b>5ª avaliação</b> do Café do Largo: o selo do lugar acendeu e a medalha também. A cidade ganha um ponto: 13 dos 100.", spot: null, run: async () => { if (!S.rated) { await autoAnswer(); await submitRating(); await wait(1600); } if (!$("#cel").classList.contains("on")) celebrate(); } },
   { eb: "Divulgação", h: "O print que a pessoa quer postar", t: "O cartão leva a medalha e a frase. <b>O nome do lugar nunca aparece</b>, nem aqui nem na pulseira.", spot: null, run: async () => { if (!$("#cel").classList.contains("on") && !S.unlocked) { await celebrate(); await wait(1500); } showStory(); } },
-  { eb: "Pulseira", h: "Todas as medalhas num lugar só", t: "Desbloqueadas em cor, as outras em silhueta com o anel de progresso. Sem argola, sem selo de raridade, sem texto em volta.", scr: "pul", spot: "#mg", run: () => { closeStory(); closeCel(); S.unlocked = true; } },
+  { eb: "Perfil", h: "O Perfil continua o mesmo", t: "Foto, apelido, cidade, privacidade, bloqueios, sair e excluir conta ficam onde estão. Entra <b>um cartão só</b>: a pulseira.", scr: "perfil", spot: "#pulCard", run: () => { closeStory(); closeCel(); S.unlocked = true; renderPulRow(); } },
+  { eb: "Pulseira", h: "Todas as medalhas num lugar só", t: "Desbloqueadas em cor, as outras em silhueta com o anel de progresso. Sem argola, sem selo de raridade, sem texto em volta.", scr: "pul", spot: "#mg" },
   { eb: "Detalhe", h: "Toque para ver quanto falta", t: "Uma medalha, um número e um botão que leva direto a avaliar. Toque em qualquer outra para ver a dela.", scr: "pul", spot: "#det", run: () => openDetail("famosinha") },
-  { eb: "Caixinha", h: "Semana acesa abre a caixinha", t: "No quarto dia da semana, a caixinha abre: um <b>banho surpresa</b> numa medalha que a pessoa já tem. A surpresa nunca é previsível.", scr: "home", spot: null, run: () => { closeSheets(); weekComplete(); } },
+  { eb: "Caixinha", h: "Semana acesa abre a caixinha", t: "Quando o quarto pedaço acende, a caixinha abre: um <b>banho surpresa</b> numa medalha que a pessoa já tem.", scr: "home", spot: null, run: () => { closeSheets(); weekComplete(); } },
   { eb: "Fora do jogo", h: "O que nunca vira ponto", t: "<b>Relato</b> não pontua. <b>Medalha</b> não mostra lugar. <b>Missão</b> não fala de horário. <b>Aviso</b> no celular é neutro. Medalha de quantidade pede semanas diferentes.", scr: "home", spot: null, run: () => { closeBox(); closeSheets(); } },
 ];
 let step = -1, touring = true;
@@ -769,6 +838,11 @@ function placeSpot(sel) {
   const sp = $("#spot");
   if (!sel || !touring) { sp.style.opacity = 0; sp.classList.remove("pulse"); return; }
   const t = $(sel); if (!t) return;
+  // rola a tela do celular até o alvo antes de acender o holofote
+  const host = t.closest(".scr");
+  if (host) { const hr = host.getBoundingClientRect(), tr = t.getBoundingClientRect(), zz = hr.width / 390;
+    const top = (tr.top - hr.top) / zz + host.scrollTop, h = tr.height / zz;
+    if (top - host.scrollTop < 110 || top + h - host.scrollTop > 844 - 110) host.scrollTop = Math.max(0, top - 140); }
   const scr = $("#screen").getBoundingClientRect(), z = scr.width / 390, r = t.getBoundingClientRect(), pad = 6;
   sp.style.left = (r.left - scr.left) / z - pad + "px"; sp.style.top = (r.top - scr.top) / z - pad + "px";
   sp.style.width = r.width / z + pad * 2 + "px"; sp.style.height = Math.min(r.height / z + pad * 2, 844) + "px";

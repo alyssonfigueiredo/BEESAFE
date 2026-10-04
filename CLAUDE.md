@@ -422,6 +422,11 @@ Nome: **Irisa** (INPI livre; @appirisa livre). Bundle id Android `br.com.irisa.a
   medalha quase lá, avaliar, recompensa na hora (gomo, faísca voando, Famosinhe 22→23), desbloqueio de Acendeu a Luz
   (5ª avaliação do lugar), cartão do story sem o lugar, pulseira, detalhe, caixinha com banho neon e as travas.
   Nada grava; é encenado com Web Animations.
+  **Ajuste do Aly (04/10/2026):** as telas atuais não mudam. A ficha do lugar no protótipo é a do app (as quatro
+  perguntas de `AXES` com o marcador `Rainbow` de cinco faixas, comentário, foto, botão amarelo); o Perfil mantém foto,
+  apelido, cidade, privacidade, bloqueados, sair e excluir, e ganha só o cartão "Sua pulseira" (a grade abre numa tela
+  por cima). O Início mantém o painel escuro e ganha dois cartões abaixo. **Semana sem dia da semana:** quatro gomos que
+  só enchem ("3 de 4"), para nada parecer dia perdido.
 
 ## Stack
 
