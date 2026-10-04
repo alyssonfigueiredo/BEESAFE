@@ -477,6 +477,11 @@ Nome: **Irisa** (INPI livre; @appirisa livre). Bundle id Android `br.com.irisa.a
   preenchimento (gomos, borda, barras, contagem; nada de pulo grande), borda de progresso no cartão Sua semana,
   Sua semana e Sua cidade abrem detalhe (só os dias que contaram; perto do selo e já com selo), Quase lá em destaque
   no Início e herói escuro nas Conquistas. **Nada disso está no app ainda: esperando aprovação.**
+  **Lugares perto de você (migration 41, 04/10/2026, achado pelo Leandro em Pinhais):** a aba Lugares mostrava os do
+  centro de Curitiba. Duas causas: o `CityProvider` só lia o GPS quando não havia cidade salva nem no perfil (quase
+  nunca), e a lista era o lote de 1.000 da cidade escolhida ordenado por distância. Agora `locate()` no provider lê a
+  posição sempre (sem pedir permissão na abertura; a aba Lugares pede), e com posição a lista vem de `places_near`
+  (índice espacial, até 30 km, 200 lugares, qualquer município). Sem posição ou sem a migration, volta ao lote da cidade.
 
 ## Stack
 

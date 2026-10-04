@@ -154,6 +154,8 @@ select count(*) as um_dia_1, bool_and(consulted) as consultou from public.user_d
 set role authenticated;
 select (public.my_gamification()) ? 'medalhas' as tem_medalhas;
 select jsonb_array_length(public.my_gamification()->'conquistadas') > 0 as abre_alas_desbloqueada;
+-- migration 41: lugares perto de um ponto, de qualquer cidade
+select count(*) >= 0 as perto_ok from public.places_near(-25.43, -49.27);
 -- migration 40: gomos da semana e unidade em toda medalha de contagem
 select (public.my_gamification()->>'gomos_semana_max')::int = 4 as teto_semana_4;
 select bool_and(m ? 'unidade') as figurinha_tem_unidade
