@@ -12,9 +12,10 @@ import {
   useWindowDimensions,
   View,
 } from "react-native";
-import Svg, { Defs, RadialGradient, Rect, Stop } from "react-native-svg";
+import Svg, { Defs, Path, RadialGradient, Rect, Stop } from "react-native-svg";
 
 import { FadeUp } from "@/components/gami/Anim";
+import { Confete } from "@/components/gami/Confete";
 import { NivelIcone } from "@/components/gami/NivelIcone";
 import { MedalView } from "@/components/gami/MedalView";
 import { Mark } from "@/components/Mark";
@@ -35,6 +36,8 @@ export type Compartilhavel =
 
 const W = 360;
 const H = 640;
+/** Centro vertical da medalha no cartão (o halo do fundo acompanha). */
+const HALO_Y = 232;
 
 // ID público do app Irisa na Meta: o Instagram exige no compartilhamento direto para o story.
 const META_APP_ID = "2296597601132815";
@@ -80,76 +83,156 @@ function Fundo() {
       {manchas.map(([, x, y], i) => (
         <Rect key={i} x={x - 230} y={y - 230} width={460} height={460} fill={`url(#stm${i})`} />
       ))}
+      {/* Halo claro atrás da medalha: dá o destaque sem moldura. */}
+      <Defs>
+        <RadialGradient id="sthalo" cx="50%" cy="50%" r="50%">
+          <Stop offset="0" stopColor="#FFFFFF" stopOpacity={0.95} />
+          <Stop offset="0.55" stopColor="#FFFFFF" stopOpacity={0.55} />
+          <Stop offset="1" stopColor="#FFFFFF" stopOpacity={0} />
+        </RadialGradient>
+      </Defs>
+      <Rect x={W / 2 - 170} y={HALO_Y - 170} width={340} height={340} fill="url(#sthalo)" />
     </Svg>
   );
 }
 
-/** O cartão em si, no tamanho lógico 360 × 640 (a captura sai em 1080 × 1920). */
+const ARCO = [
+  colors.coral,
+  colors.orange,
+  colors.yellow,
+  colors.turquoise,
+  "#59A7FF",
+  colors.lilac,
+];
+
+/** Brilhinhos de quatro pontas em volta da medalha (parados: a imagem é estática). */
+function Brilhos() {
+  const pts: [number, number, number, string][] = [
+    [72, 196, 9, colors.yellow],
+    [292, 176, 7, colors.coral],
+    [300, 318, 10, colors.turquoise],
+    [62, 330, 6, colors.lilac],
+  ];
+  return (
+    <Svg width={W} height={H} style={{ position: "absolute", top: 0, left: 0 }}>
+      {pts.map(([x, y, r, c], i) => (
+        <Path
+          key={i}
+          d={`M${x} ${y - r}Q${x} ${y} ${x + r} ${y}Q${x} ${y} ${x} ${y + r}Q${x} ${y} ${x - r} ${y}Q${x} ${y} ${x} ${y - r}Z`}
+          fill={c}
+        />
+      ))}
+    </Svg>
+  );
+}
+
+/**
+ * O cartão em si, no tamanho lógico 360 × 640 (a captura sai em 1080 × 1920). Blocos empilhados em
+ * coluna (nunca posicionados por cima um do outro), dentro da área que o Instagram não cobre:
+ * ~90 px no topo e ~110 px embaixo ficam para a interface do story.
+ */
 function Cartao({ c, forma }: { c: Compartilhavel; forma: number }) {
   const medalha = c.tipo === "medalha" ? getMedalha(c.id) : null;
   const nivel = c.tipo === "nivel" ? NIVEIS_EVO[c.k] : null;
   const rotulo = medalha ? "Desbloqueei na Irisa" : "Meu nível na Irisa";
   const nome = medalha ? nomeDa(medalha, forma) : nivel ? nomeNivel(nivel, forma) : "";
   const frase = medalha ? medalha.copy : (nivel?.t ?? "");
+  const extra = nivel && c.tipo === "nivel" ? `Nível ${c.k + 1} de 8` : null;
   return (
     <View style={{ width: W, height: H, overflow: "hidden" }}>
       <Fundo />
-      {/* Fora das faixas de cima e de baixo, que o Instagram cobre com a própria interface. */}
-      <View style={{ position: "absolute", top: 104, left: 28, right: 28, alignItems: "center" }}>
-        <Text
-          className="font-body-medium uppercase"
-          style={{ fontSize: 12, letterSpacing: 2.4, color: colors.muted }}
-        >
-          {rotulo}
-        </Text>
-        <View style={{ marginTop: 22 }}>
+      <Brilhos />
+      <View style={{ flex: 1, paddingTop: 92, paddingBottom: 104, paddingHorizontal: 30 }}>
+        <View style={{ alignItems: "center" }}>
+          <View
+            style={{
+              paddingHorizontal: 14,
+              paddingVertical: 7,
+              borderRadius: 999,
+              backgroundColor: "rgba(255,255,255,0.72)",
+            }}
+          >
+            <Text
+              className="font-body-bold uppercase"
+              style={{ fontSize: 11, letterSpacing: 2.2, color: colors.ink }}
+            >
+              {rotulo}
+            </Text>
+          </View>
+        </View>
+
+        <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
           {medalha ? (
             <MedalView
               id={medalha.id}
-              size={210}
+              size={200}
               on
               banho={c.tipo === "medalha" ? (c.banho ?? null) : null}
             />
           ) : nivel && c.tipo === "nivel" ? (
             <View
               className="items-center justify-center rounded-full bg-solid"
-              style={{ width: 196, height: 196, boxShadow: "0 18px 40px rgba(20,24,41,0.14)" }}
+              style={{ width: 188, height: 188, boxShadow: "0 18px 40px rgba(20,24,41,0.14)" }}
             >
-              <NivelIcone k={c.k} size={150} />
+              <NivelIcone k={c.k} size={142} />
             </View>
           ) : null}
-        </View>
-        <Text
-          className="mt-6 text-center font-display uppercase text-ink"
-          style={{ fontSize: 40, lineHeight: 44 }}
-        >
-          {nome}
-        </Text>
-        <Text
-          className="mt-3 text-center font-body"
-          style={{ fontSize: 16, lineHeight: 23, color: colors.muted, maxWidth: 280 }}
-        >
-          {medalha ? `“${frase}”` : frase}
-        </Text>
-      </View>
-      <View
-        style={{ position: "absolute", bottom: 112, left: 28, right: 28, alignItems: "center" }}
-      >
-        <View className="flex-row items-center gap-2.5">
-          <Mark size={30} />
+          {extra && (
+            <Text
+              className="mt-4 font-body-bold uppercase"
+              style={{ fontSize: 11, letterSpacing: 2, color: colors.turquoiseInk }}
+            >
+              {extra}
+            </Text>
+          )}
           <Text
-            className="font-wordmark uppercase text-ink"
-            style={{ fontSize: 22, letterSpacing: 3.3 }}
+            className="text-center font-display uppercase text-ink"
+            style={{ fontSize: 40, lineHeight: 43, marginTop: extra ? 6 : 22 }}
+            numberOfLines={2}
+            adjustsFontSizeToFit
           >
-            Iris<Text style={{ color: colors.amber }}>a</Text>
+            {nome}
+          </Text>
+          <View style={{ flexDirection: "row", gap: 3, marginTop: 14 }}>
+            {ARCO.map((cor) => (
+              <View
+                key={cor}
+                style={{ width: 14, height: 4, borderRadius: 2, backgroundColor: cor }}
+              />
+            ))}
+          </View>
+          <Text
+            className="text-center font-body"
+            style={{
+              fontSize: 15.5,
+              lineHeight: 22,
+              color: colors.muted,
+              marginTop: 14,
+              maxWidth: 270,
+            }}
+            numberOfLines={3}
+          >
+            {medalha ? `“${frase}”` : frase}
           </Text>
         </View>
-        <Text
-          className="mt-2 text-center font-body"
-          style={{ fontSize: 12.5, lineHeight: 17, color: colors.muted }}
-        >
-          O mapa dos lugares onde a gente é bem-vinde, feito por nós.
-        </Text>
+
+        <View style={{ alignItems: "center", gap: 6 }}>
+          <View className="flex-row items-center gap-2">
+            <Mark size={26} />
+            <Text
+              className="font-wordmark uppercase text-ink"
+              style={{ fontSize: 19, letterSpacing: 2.9 }}
+            >
+              Iris<Text style={{ color: colors.amber }}>a</Text>
+            </Text>
+          </View>
+          <Text
+            className="text-center font-body"
+            style={{ fontSize: 11.5, lineHeight: 16, color: colors.muted, maxWidth: 250 }}
+          >
+            O mapa dos lugares onde a gente é bem-vinde, feito por nós.
+          </Text>
+        </View>
       </View>
     </View>
   );
@@ -168,7 +251,9 @@ export function CompartilharSheet({
   const ref = useRef<View>(null);
   const [ocupado, setOcupado] = useState<"story" | "outros" | null>(null);
   useFolhaAberta(!!c);
-  const escala = Math.min((width - 64) / W, (height - 260) / H, 1);
+  const escala = Math.min((width - 72) / W, (height - 300) / H, 1);
+  // Uma explosão nova cada vez que a prévia abre com outro cartão.
+  const chave = c ? (c.tipo === "medalha" ? c.id : `nivel-${c.k}`) : "";
 
   async function capturar() {
     const { captureRef } =
@@ -228,22 +313,35 @@ export function CompartilharSheet({
           className="flex-1 items-center justify-center"
           style={{ backgroundColor: colors.night }}
         >
-          <FadeUp distance={12} duration={360}>
-            <View
-              style={{
-                width: W * escala,
-                height: H * escala,
-                borderRadius: 26,
-                overflow: "hidden",
-              }}
+          <FadeUp distance={6} duration={300}>
+            <Text
+              className="mb-4 text-center font-body-medium uppercase"
+              style={{ fontSize: 11.5, letterSpacing: 2, color: "#8A90AA" }}
             >
-              <View style={{ transform: [{ scale: escala }], transformOrigin: "top left" }}>
-                <View ref={ref} collapsable={false}>
-                  <Cartao c={c} forma={forma} />
+              Prévia do seu story
+            </Text>
+          </FadeUp>
+          <View style={{ width: W * escala, height: H * escala }}>
+            <FadeUp distance={12} duration={380}>
+              <View
+                style={{
+                  width: W * escala,
+                  height: H * escala,
+                  borderRadius: 28,
+                  overflow: "hidden",
+                  boxShadow: "0 30px 80px rgba(0,0,0,0.45)",
+                }}
+              >
+                <View style={{ transform: [{ scale: escala }], transformOrigin: "top left" }}>
+                  <View ref={ref} collapsable={false}>
+                    <Cartao c={c} forma={forma} />
+                  </View>
                 </View>
               </View>
-            </View>
-          </FadeUp>
+            </FadeUp>
+            {/* Fora da captura: o confete é da tela, não entra na imagem do story. */}
+            <Confete key={chave} x={(W * escala) / 2} y={HALO_Y * escala} />
+          </View>
           <View className="mt-6 w-full gap-2 px-8">
             <Pressable
               onPress={() => rodar("story")}

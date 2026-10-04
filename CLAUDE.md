@@ -571,6 +571,11 @@ Nome: **Irisa** (INPI livre; @appirisa livre). Bundle id Android `br.com.irisa.a
   Meta 2296597601132815; abre o story já com a imagem de fundo) e **"Outros apps"** (expo-sharing). Sem Instagram
   instalado, cai no menu. `plugins/withInstagramStories.js` declara `instagram-stories` no iOS e o pacote do Instagram
   nas `<queries>` do Android (o plugin da biblioteca exigia expo-build-properties). Nativo: só em build nova.
+  **Cartão rediagramado + confete (mesmo dia, retorno dele: a frase ficava por cima da logo):** o cartão agora é uma
+  coluna (selo "Desbloqueei na Irisa" em cápsula, medalha com halo claro e brilhinhos, nome, barrinha arco-íris, frase,
+  logo e frase da marca embaixo), dentro das faixas que o Instagram cobre (92 px em cima, 104 embaixo). A prévia ganhou
+  uma explosão de confete uma vez ao abrir (`src/components/gami/Confete.tsx`, Reanimated, fora da imagem capturada,
+  nada com "reduzir movimento") — exceção pedida por ele à regra de comemoração calma, só nesta tela.
 
 ## Stack
 
