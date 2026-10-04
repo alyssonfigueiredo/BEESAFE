@@ -56,23 +56,19 @@ texto livre fica sem resposta inteligente (mensagem avisando e os botões voltam
 - **Edge Function**: `supabase/functions/irise-orchestrator/index.ts`.
 - **Nenhum build novo precisa aqui**: é só UI + `supabase.functions.invoke`, sem peça nativa nova.
 
-## 3. TybyrIA — moderação de discurso de ódio (projeto Código Não Binário)
+## 3. TybyrIA — pausada por ora
 
 Você pediu um terceiro cérebro pra "inteligência da comunidade" usando um modelo do Código Não
 Binário. Pesquisei: a TybyrIA v2.2 (`Veronyka/tybyria-v2.2`, Hugging Face, pública, licença MIT)
 **não é** um analisador de sentimento de avaliação — é um classificador de discurso de ódio
-anti-LGBTQIA+ em português. Botei ela pra fazer o que ela realmente faz, e que serve direto ao
-propósito do app: moderação.
+anti-LGBTQIA+ em português. Tinha montado como moderação automática (score alto vira denúncia
+na fila de sempre, revisão continua humana), mas por decisão sua (04/10/2026) ficou **de fora por
+ora**: você quer seguir só com o que já está 100% confirmado como grátis, e o plano do Hugging
+Face, mesmo sendo grátis de verdade (US$0,10 de crédito/mês, sem cobrança sem cartão cadastrado),
+ainda não entrou nessa categoria pra você.
 
-- **O que faz**: a cada 10 min, a Edge Function `tybyria-check` pega avaliações e mensagens do
-  mural que ainda não foram checadas, manda o texto pra TybyrIA e grava o score.
-- **Nunca atrasa nem esconde sozinha**: a avaliação continua aparecendo na hora (sua decisão de
-  04/10 não muda). Score ≥ 0,40 (limiar que o próprio modelo recomenda) só gera uma denúncia
-  automática, que cai na **mesma fila de moderação que já existe** (`moderation_queue`) — revisão
-  continua sendo humana, igual a uma denúncia de pessoa.
-- **Migration**: `00000000000052_tybyria_moderacao.sql`. **Edge Function**:
-  `supabase/functions/tybyria-check/index.ts`.
-- **Nenhum build novo**: roda só no servidor.
+A migration 55 desfaz a 52 (tabela, funções e cron da TybyrIA) e a Edge Function foi removida.
+Nada foi perdido: é só retomar com uma migration nova quando fizer sentido.
 
 ## O que eu preciso que você me traga
 
@@ -85,23 +81,21 @@ Secrets no Supabase) continua funcionando igual — tem prioridade se as duas es
 1. **`GROQ_API_KEY`** (obrigatória pro texto livre) — console.groq.com → API Keys, plano grátis.
 2. **`GEMINI_API_KEY`** (recomendada) — aistudio.google.com. Sem ela, os lugares ainda aparecem
    (na ordem que o banco já devolve), só sem o "motivo" por lugar.
-3. **`HF_API_TOKEN`** (pra ligar a TybyrIA) — huggingface.co → Settings → Access Tokens, nível
-   "Read" já serve, é grátis. Sem ela, a moderação automática de ódio fica desligada (nada quebra,
-   só não roda).
-4. **Revisar o banco de frases das pílulas** antes de ligar o push (migration 49) — 11 frases,
+3. **Revisar o banco de frases das pílulas** antes de ligar o push (migration 49) — 11 frases,
    duas novas marcadas no comentário da migration.
-5. **Decidir o intervalo do push** das pílulas (padrão 4 dias) — mudo rápido se quiser outro número.
-6. Depois de aprovar: colar as migrations 49–52 (ou deixar subir sozinho, se a branch for mesclada
-   numa das branches principais) e publicar as três Edge Functions novas (`comfort-pill-push`,
-   `irise-orchestrator`, `tybyria-check`).
+4. **Decidir o intervalo do push** das pílulas (padrão 4 dias) — mudo rápido se quiser outro número.
+5. Depois de aprovar: colar as migrations (ou deixar subir sozinho, se a branch for mesclada numa
+   das branches principais) e publicar as Edge Functions novas (`comfort-pill-push`,
+   `irise-orchestrator`).
 
 ## Validado nesta sessão
 
-- As quatro migrations novas (49, 50, 51, 52) passaram no `scripts/db-smoke.sh` (Postgres 16 +
-  PostGIS + pg_cron local), junto com todas as migrations existentes.
-- Testado à mão: `next_comfort_pill` sorteia sem repetir e reinicia o ciclo quando esgota o banco.
+- As migrations novas passaram no `scripts/db-smoke.sh` (Postgres 16 + PostGIS + pg_cron local),
+  junto com todas as migrations existentes.
+- Testado à mão: `next_comfort_pill` sorteia sem repetir e reinicia o ciclo quando esgota o banco;
+  `admin_set_api_key`/`admin_api_keys_status`/`get_secret_for_function` também testados à mão.
 - `npm run lint`, `npm run typecheck` e `npx expo export --platform ios` passaram sem erro com o
   código novo (Irise + Pílulas) integrado à Home e ao Perfil.
-- **Não testado**: as chamadas reais ao Groq, Gemini e Hugging Face (preciso das chaves) e o app
-  em aparelho físico (sem Mac/iPhone nesta sessão) — vale `npx expo start --dev-client` antes de
-  liberar pros testadores.
+- **Não testado**: as chamadas reais ao Groq e Gemini (preciso das chaves) e o app em aparelho
+  físico (sem Mac/iPhone nesta sessão) — vale `npx expo start --dev-client` antes de liberar pros
+  testadores.

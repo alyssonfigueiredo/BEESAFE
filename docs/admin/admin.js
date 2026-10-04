@@ -1441,7 +1441,6 @@ async function viewConfig(ctx) {
 const API_KEYS = [
   { name: "GROQ_API_KEY", label: "Groq", hint: "Conversa e decisão da Irise. console.groq.com → API Keys (grátis)." },
   { name: "GEMINI_API_KEY", label: "Gemini", hint: "Ranqueia e explica os lugares achados. aistudio.google.com (grátis)." },
-  { name: "HF_API_TOKEN", label: "Hugging Face (TybyrIA)", hint: "Moderação de discurso de ódio. huggingface.co → Settings → Access Tokens, nível \"Read\" (grátis)." },
 ];
 
 async function viewChaves(ctx) {
