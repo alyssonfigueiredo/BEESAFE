@@ -529,6 +529,19 @@ Nome: **Irisa** (INPI livre; @appirisa livre). Bundle id Android `br.com.irisa.a
   (anel de 5 gomos do lugar) e a folha abre com "1º selo de <cidade>". Com selo, volta o "N de 100" e a frase ainda
   aponta o próximo. Só convida para lugar que a pessoa ainda não avaliou (`my_rated_places(ids)`, só ids;
   `convitesDaCidade` em `useGamification.ts`); a folha ganhou "Ainda sem nenhuma cor" (conta para Inaugurou).
+  **"Suas cores" substituiu "Sua cidade" (migration 47, 04/10/2026, pedido do Leandro):** o placar da cidade não é
+  conquista do usuário. O cartão mostra os lugares que a pessoa avaliou, a melhor frase de efeito (selo que saiu com a
+  avaliação dela > "N pessoas abriram a ficha depois da sua avaliação" > primeira cor > bairros) e o anel de bairros
+  rumo aos 6 da Nome na Lista; com zero avaliações, convida para um lugar conhecido. Folha `CoresSheet.tsx` com os
+  números, o mapinha dos lugares coloridos e convites. `place_views` guarda só contagem por lugar/dia (nunca quem abriu);
+  o app conta cada lugar uma vez por aparelho (`logVistaDeLugar`, AsyncStorage `irisa.vistos.v1`), e quem avaliou não
+  conta. `my_cores()` monta o resumo. O "N de 100" da cidade segue no `my_gamification` para o painel.
+  **Comemoração calma (mesmo dia):** RewardSheet, MedalCelebration, BoxModal e Sheet sem mola nem confete nem
+  loop: aparecem subindo 12 px, a borda arco-íris se desenha uma vez, os gomos enchem, o número conta.
+  `Shine` aceita `once` (uma passada fraca); "Quase lá" e Conquistas usam `shine="once"`.
+  **Cadastro de lugar confere o endereço (migration 46):** o Na Feira Bar entrou com o alfinete no GPS do Leandro
+  (Rebouças) e o endereço certo no texto (Princesa Izabel 465, Mercês). Agora o envio busca o endereço escrito que não
+  foi conferido e, se ficar a mais de 150 m do alfinete, pergunta "No endereço / No alfinete / Ajustar". A 46 moveu a ficha.
 
 ## Stack
 

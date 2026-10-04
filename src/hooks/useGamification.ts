@@ -1,3 +1,4 @@
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useEffect, useSyncExternalStore } from "react";
 import { AppState } from "react-native";
@@ -215,6 +216,66 @@ export function convitesDaCidade(lugares: LugarDaMeta[] | undefined, minimo: num
     .sort((a, b) => b.rating_count - a.rating_count);
   const virgens = livres.filter((p) => p.rating_count === 0);
   return { perto, virgens, proximo: perto[0] ?? null };
+}
+
+// ---------- suas cores (migration 47) ----------
+export type MinhaCor = {
+  id: string;
+  nome: string;
+  categoria: import("@/theme/domain").PlaceCategory;
+  bairro: string | null;
+  lat: number;
+  lng: number;
+  nota: number;
+  primeira: boolean;
+  selo: boolean;
+};
+export type MinhasCores = {
+  lugares: number;
+  primeiras: number;
+  selos: number;
+  bairros: number;
+  ajudou: number;
+  ultimo_selo: string | null;
+  ultima_primeira: string | null;
+  itens: MinhaCor[];
+};
+
+/** O que a pessoa fez: lugares avaliados, primeiras cores, selos, bairros, quantos ajudou. */
+export function useMinhasCores() {
+  const { session } = useAuth();
+  return useQuery({
+    queryKey: ["cores"],
+    enabled: !!session,
+    retry: false,
+    staleTime: 60_000,
+    queryFn: async () => {
+      const { data, error } = await supabase.rpc("my_cores");
+      if (error) return null; // sem a migration 47 o cartão some calado
+      return data as MinhasCores;
+    },
+  });
+}
+
+// Cada lugar conta uma vez por aparelho: o número do "ajudou" fica perto de "pessoas", não de
+// "aberturas". Guarda só ids de lugar no próprio aparelho, nada vai junto com a pessoa para o banco.
+const VISTOS_KEY = "irisa.vistos.v1";
+let vistos: Set<string> | null = null;
+export async function logVistaDeLugar(placeId: string) {
+  try {
+    if (!vistos) {
+      const salvo = await AsyncStorage.getItem(VISTOS_KEY);
+      vistos = new Set(salvo ? (JSON.parse(salvo) as string[]) : []);
+    }
+    if (vistos.has(placeId)) return;
+    vistos.add(placeId);
+    const lista = [...vistos].slice(-3000);
+    vistos = new Set(lista);
+    await AsyncStorage.setItem(VISTOS_KEY, JSON.stringify(lista));
+    await supabase.rpc("log_place_view", { p_place: placeId });
+  } catch {
+    // contagem é bônus: falhar não atrapalha a ficha
+  }
 }
 
 // ---------- ações ----------

@@ -103,7 +103,7 @@ function Hero({ q, g, onOpen }: { q: MedalhaProgresso; g: Gamificacao; onOpen: (
             prog={q.valor / q.alvo}
             delay={350}
             duration={1500}
-            shine
+            shine="once"
           />
           <View className="min-w-0 flex-1">
             <View className="flex-row items-center gap-1.5">

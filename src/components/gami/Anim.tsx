@@ -336,17 +336,27 @@ export function ProgressEdge({
 }
 
 // ---------- brilho que passa pela medalha ----------
-/** Faixa de luz que atravessa a medalha de tempos em tempos (3,6 s), discreta. */
-export function Shine({ size }: { size: number }) {
+/**
+ * Faixa de luz que atravessa a medalha de tempos em tempos (3,6 s), discreta.
+ * `once`: passa uma vez só, bem fraca (opacidade 0,25), depois de `delay`, e para.
+ */
+export function Shine({
+  size,
+  once = false,
+  delay = 1200,
+}: {
+  size: number;
+  once?: boolean;
+  delay?: number;
+}) {
   const reduce = useReducedMotion();
   const id = useSvgId("shine");
   const t = useSharedValue(0);
   useEffect(() => {
     if (reduce) return;
-    t.set(
-      withDelay(1200, withRepeat(withTiming(1, { duration: 3600, easing: Easing.linear }), -1)),
-    );
-  }, [reduce, t]);
+    const passada = withTiming(1, { duration: 3600, easing: Easing.linear });
+    t.set(withDelay(delay, once ? passada : withRepeat(passada, -1)));
+  }, [reduce, once, delay, t]);
   const inner = size * 0.88; // inset de 6 %
   const band = inner * 1.4;
   const st = useAnimatedStyle(() => {
@@ -373,7 +383,7 @@ export function Shine({ size }: { size: number }) {
           <Defs>
             <LinearGradient id={id} x1="0" y1="0.3" x2="1" y2="0.7">
               <Stop offset="0.38" stopColor="#FFFFFF" stopOpacity={0} />
-              <Stop offset="0.5" stopColor="#FFFFFF" stopOpacity={0.7} />
+              <Stop offset="0.5" stopColor="#FFFFFF" stopOpacity={once ? 0.25 : 0.7} />
               <Stop offset="0.62" stopColor="#FFFFFF" stopOpacity={0} />
             </LinearGradient>
           </Defs>

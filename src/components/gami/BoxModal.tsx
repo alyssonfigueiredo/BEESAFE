@@ -1,13 +1,10 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Modal, Pressable, Text, View } from "react-native";
 import Animated, {
   Easing,
   useAnimatedStyle,
   useReducedMotion,
   useSharedValue,
-  withDelay,
-  withRepeat,
-  withSequence,
   withTiming,
 } from "react-native-reanimated";
 import Svg, { Defs, LinearGradient, Path, Rect, Stop } from "react-native-svg";
@@ -22,8 +19,9 @@ import { useFolhaAberta } from "@/hooks/useDiscovery";
 const BANHO: Record<Banho, string> = { neon: "neon", holo: "holográfico", dourado: "dourado" };
 
 /**
- * Caixinha: dá uma balançadinha de vez em quando, a tampa sai e o anel da medalha se desenha até
- * fechar; aí aparece a cor com o banho surpresa (numa medalha que a pessoa já tem). Nada de pulo.
+ * Caixinha: fica quieta esperando o toque (nada de balançar em loop). Ao abrir, a tampa sobe um
+ * pouco e some junto com a caixa, o anel da medalha se desenha até fechar e aí aparece a cor com o
+ * banho surpresa (numa medalha que a pessoa já tem). Nada de pulo, cada coisa anima uma vez só.
  */
 export function BoxModal({ visible, onClose }: { visible: boolean; onClose: () => void }) {
   useFolhaAberta(visible);
@@ -46,46 +44,21 @@ function Caixa({ onClose }: { onClose: () => void }) {
   const reduce = useReducedMotion();
   const [premio, setPremio] = useState<{ medalha: string; banho: Banho } | null>(null);
   const [erro, setErro] = useState<string | null>(null);
-  const shake = useSharedValue(0);
   const lid = useSharedValue(0);
-
-  useEffect(() => {
-    if (!reduce)
-      shake.set(
-        withRepeat(
-          withSequence(
-            withTiming(-4, { duration: 110 }),
-            withTiming(4, { duration: 110 }),
-            withTiming(-2, { duration: 110 }),
-            withTiming(0, { duration: 110 }),
-            withDelay(1300, withTiming(0, { duration: 1 })),
-          ),
-          -1,
-        ),
-      );
-  }, [reduce, shake]);
 
   async function onAbrir() {
     try {
       const r = await abrir.mutateAsync();
-      shake.set(withTiming(0, { duration: 80 }));
-      lid.set(withTiming(1, { duration: reduce ? 1 : 520, easing: Easing.out(Easing.cubic) }));
-      setTimeout(() => setPremio(r), reduce ? 0 : 380);
+      lid.set(withTiming(1, { duration: reduce ? 1 : 420, easing: Easing.out(Easing.cubic) }));
+      setTimeout(() => setPremio(r), reduce ? 0 : 420);
     } catch (e) {
       setErro(e instanceof Error ? e.message : "Não deu certo agora.");
     }
   }
 
-  const boxStyle = useAnimatedStyle(() => ({
-    transform: [{ rotate: `${shake.get()}deg` }],
-    opacity: 1 - lid.get(),
-  }));
+  const boxStyle = useAnimatedStyle(() => ({ opacity: 1 - lid.get() }));
   const lidStyle = useAnimatedStyle(() => ({
-    transform: [
-      { translateY: -60 * lid.get() },
-      { translateX: 16 * lid.get() },
-      { rotate: `${14 * lid.get()}deg` },
-    ],
+    transform: [{ translateY: -12 * lid.get() }],
     opacity: 1 - lid.get(),
   }));
   const m = premio ? getMedalha(premio.medalha) : null;
@@ -112,7 +85,11 @@ function Caixa({ onClose }: { onClose: () => void }) {
             duration={1100}
           />
         ) : (
-          <>
+          <FadeUp
+            distance={12}
+            duration={400}
+            style={{ width: 200, height: 200, alignItems: "center", justifyContent: "center" }}
+          >
             <Animated.View style={[{ position: "absolute" }, boxStyle]}>
               <Svg width={200} height={200} viewBox="0 0 200 200">
                 <Defs>
@@ -139,10 +116,10 @@ function Caixa({ onClose }: { onClose: () => void }) {
                 />
               </Svg>
             </Animated.View>
-          </>
+          </FadeUp>
         )}
       </View>
-      <FadeUp key={premio ? "premio" : "caixa"} delay={premio && !reduce ? 1200 : 0}>
+      <FadeUp key={premio ? "premio" : "caixa"} delay={premio && !reduce ? 1100 : 0}>
         <Text className="text-center font-display text-[32px] uppercase text-paper">
           {premio && m ? `${nomeDa(m, g?.forma ?? 2)} ${BANHO[premio.banho]}` : "Sua caixinha"}
         </Text>

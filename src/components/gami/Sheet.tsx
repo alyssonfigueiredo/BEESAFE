@@ -9,13 +9,15 @@ import {
   type StyleProp,
   type ViewStyle,
 } from "react-native";
-import Animated, { Easing, SlideInDown, useReducedMotion } from "react-native-reanimated";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+
+import { FadeUp } from "@/components/gami/Anim";
 import { useFolhaAberta } from "@/hooks/useDiscovery";
 
 /**
  * Folha que sobe de baixo (o mesmo desenho da folha de recompensa: #FBFCFE, cantos de 34, alça).
- * Sobe deslizando, sem mola. O conteúdo só monta com a folha aberta, então as animações de
+ * Chega com calma: o fundo escurece e a folha sobe 12 px aparecendo (360 ms, ease-out), sem mola
+ * e sem atravessar a tela. O conteúdo só monta com a folha aberta, então as animações de
  * preenchimento lá dentro recomeçam a cada abertura.
  */
 export function Sheet({
@@ -30,7 +32,6 @@ export function Sheet({
   contentStyle?: StyleProp<ViewStyle>;
 }) {
   useFolhaAberta(visible);
-  const reduce = useReducedMotion();
   const { height } = useWindowDimensions();
   const insets = useSafeAreaInsets();
   return (
@@ -47,8 +48,9 @@ export function Sheet({
         accessibilityLabel="Fechar"
       />
       {visible && (
-        <Animated.View
-          entering={reduce ? undefined : SlideInDown.duration(480).easing(Easing.out(Easing.cubic))}
+        <FadeUp
+          duration={360}
+          distance={12}
           style={{
             position: "absolute",
             left: 0,
@@ -81,7 +83,7 @@ export function Sheet({
           >
             {children}
           </ScrollView>
-        </Animated.View>
+        </FadeUp>
       )}
     </Modal>
   );

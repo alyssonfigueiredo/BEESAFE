@@ -6,7 +6,7 @@ import Animated, { FadeInDown } from "react-native-reanimated";
 
 import { Counter, FadeUp, LiveDot, ProgressEdge, Segs } from "@/components/gami/Anim";
 import { BoxModal } from "@/components/gami/BoxModal";
-import { CitySheet } from "@/components/gami/CitySheet";
+import { BAIRROS_META, CoresSheet } from "@/components/gami/CoresSheet";
 import { AnimatedMedal } from "@/components/gami/MedalView";
 import { SliceRing, WeekRing } from "@/components/gami/Rings";
 import { WeekSheet } from "@/components/gami/WeekSheet";
@@ -18,14 +18,12 @@ import {
   useAppConfig,
   useCityTopPlaces,
   useGamification,
-  type Gamificacao,
+  useMinhasCores,
 } from "@/hooks/useGamification";
 import { getMedalha, nomeDa } from "@/lib/medals";
 import { useCity } from "@/providers/CityProvider";
 import { RATING_MIN } from "@/theme/domain";
 import { colors, shadow } from "@/theme/tokens";
-
-type CidadeMeta = NonNullable<Gamificacao["cidade"]>;
 
 // Cartões novos do Início, logo abaixo do painel da cidade. O painel e o resto da tela não mudam.
 
@@ -72,11 +70,10 @@ export function AvisoCard() {
 export function GamiHomeCards() {
   const { data: g } = useGamification();
   const [caixa, setCaixa] = useState(false);
-  const [folha, setFolha] = useState<"semana" | "cidade" | null>(null);
+  const [folha, setFolha] = useState<"semana" | "cores" | null>(null);
   if (!g) return null;
   const quase = quaseLa(g);
   const qm = quase ? getMedalha(quase.id) : null;
-  const cidade = g.cidade && g.cidade.total > 0 ? g.cidade : null;
   const dias = Math.min(4, g.semana.dias);
 
   return (
@@ -114,7 +111,7 @@ export function GamiHomeCards() {
             <Mais texto="Ver os dias" />
           </Pressable>
         </FadeUp>
-        {cidade && <CidadeCard c={cidade} onOpen={() => setFolha("cidade")} />}
+        <CoresCard onOpen={() => setFolha("cores")} />
       </View>
 
       {g.caixinhas > 0 && (
@@ -147,7 +144,7 @@ export function GamiHomeCards() {
               size={62}
               prog={quase.valor / quase.alvo}
               delay={400}
-              shine
+              shine="once"
             />
             <View className="min-w-0 flex-1">
               <View className="flex-row items-center gap-1.5">
@@ -182,80 +179,73 @@ export function GamiHomeCards() {
 
       <BoxModal visible={caixa} onClose={() => setCaixa(false)} />
       <WeekSheet visible={folha === "semana"} onClose={() => setFolha(null)} />
-      <CitySheet visible={folha === "cidade"} onClose={() => setFolha(null)} />
+      <CoresSheet visible={folha === "cores"} onClose={() => setFolha(null)} />
     </View>
   );
 }
 
 /**
- * Sua cidade. No começo nenhum lugar tem selo, e "0 de 100" só desanima: enquanto a cidade não tem
- * selo, o cartão aponta o lugar mais perto do primeiro (entre os que a pessoa ainda não avaliou).
- * Com selo na cidade, volta o "N de 100", e a frase ainda aponta o próximo.
+ * Suas cores: só o que a pessoa fez (retorno do Leandro, 04/10/2026: o placar da cidade não é
+ * conquista dela, e "1 de 100" parecia que o app tinha flopado). Número = lugares que ela avaliou;
+ * frase = o melhor efeito que ela tem agora; anel = bairros rumo aos 6 da Nome na Lista.
+ * Antes da primeira avaliação, convida para um lugar conhecido que ela ainda não avaliou.
  */
-function CidadeCard({ c, onOpen }: { c: CidadeMeta; onOpen: () => void }) {
+function CoresCard({ onOpen }: { onOpen: () => void }) {
+  const { data: c } = useMinhasCores();
   const { city } = useCity();
-  const { data: lugares } = useCityTopPlaces(city?.id);
-  const { proximo, virgens } = convitesDaCidade(lugares, RATING_MIN);
-  const nome = city?.name ?? "sua cidade";
-  const k = proximo ? Math.min(RATING_MIN - 1, proximo.rating_count) : 0;
-  const falta = RATING_MIN - k;
-  const semSelo = c.com_selo === 0;
+  const { data: lugares } = useCityTopPlaces(city?.id, !!c && c.lugares === 0);
+  if (!c) return null;
+  const conv = convitesDaCidade(lugares, RATING_MIN);
+  const alvo = conv.proximo ?? conv.virgens[0] ?? null;
+  const bairros = Math.min(BAIRROS_META, c.bairros);
+  const zero = c.lugares === 0;
 
-  let numero: string;
+  const numero = zero ? "Sua 1ª cor" : `${c.lugares} ${c.lugares === 1 ? "lugar" : "lugares"}`;
   let frase: string;
-  let mais: string;
-  if (semSelo && proximo) {
-    numero = `Falta${falta > 1 ? "m" : ""} ${falta}`;
-    frase = `para ${proximo.name} ganhar o 1º selo de ${nome}.`;
-    mais = "Ajudar no selo";
-  } else if (semSelo) {
-    numero = "1º selo";
-    frase = virgens.length
-      ? `${nome} ainda não tem lugar com selo. Sua avaliação começa a contagem.`
-      : `${nome} ainda não tem lugar com selo.`;
-    mais = "Por onde começar";
-  } else {
-    numero = `${c.com_selo} de ${c.total}`;
-    frase = proximo
-      ? `já têm selo. Falta${falta > 1 ? "m" : ""} ${falta} em ${proximo.name}.`
-      : c.semana > 0
-        ? `dos mais conhecidos já têm selo. ${c.semana} esta semana.`
-        : "dos lugares mais conhecidos já têm selo.";
-    mais = "Ver quais";
-  }
+  if (zero)
+    frase = alvo
+      ? `Comece por ${alvo.name}. Já passou por lá?`
+      : "Avalie um lugar por onde você passou.";
+  else if (c.ultimo_selo) frase = `${c.ultimo_selo} ganhou selo com a sua avaliação.`;
+  else if (c.ajudou > 0)
+    frase = `${c.ajudou} ${c.ajudou === 1 ? "pessoa abriu" : "pessoas abriram"} a ficha depois da sua avaliação.`;
+  else if (c.primeiras > 0)
+    frase =
+      c.primeiras === 1 && c.ultima_primeira
+        ? `Você deu a primeira cor de ${c.ultima_primeira}.`
+        : `${c.primeiras} foram a primeira cor de lá.`;
+  else frase = `Você já coloriu ${c.bairros} ${c.bairros === 1 ? "bairro" : "bairros"}.`;
+  const mais = zero ? (alvo ? "Avaliar" : "Ver lugares") : "Ver o seu mapa";
+
+  const abrir = () => {
+    if (zero && alvo) router.push(`/lugar/${alvo.id}?avaliar=1` as Href);
+    else if (zero) router.push("/lugares");
+    else onOpen();
+  };
 
   return (
     <FadeUp delay={80} style={{ flex: 1, minWidth: 0 }}>
       <Pressable
-        onPress={onOpen}
+        onPress={abrir}
         className="gap-2.5 rounded-3xl bg-surface p-3.5 active:opacity-90"
         style={[{ flexGrow: 1 }, shadow.card]}
         accessibilityRole="button"
-        accessibilityLabel={`Sua cidade: ${numero} ${frase} ${mais}.`}
+        accessibilityLabel={`Suas cores: ${numero}. ${frase} ${mais}.`}
       >
-        <ProgressEdge
-          frac={semSelo ? k / RATING_MIN : c.com_selo / c.total}
-          radius={24}
-          duration={900}
-        />
+        <ProgressEdge frac={bairros / BAIRROS_META} radius={24} duration={1100} />
         <View className="flex-row items-center gap-2.5">
-          {semSelo ? (
-            // Os cinco gomos do selo do lugar apontado: dá para ver quanto falta.
-            <SliceRing lit={k} n={RATING_MIN} inner={30} gap={6} animate delay={200} step={120} />
-          ) : (
-            <SliceRing
-              lit={c.com_selo}
-              n={c.total}
-              inner={34}
-              gap={0.8}
-              animate
-              delay={200}
-              step={45}
-            />
-          )}
+          <SliceRing
+            lit={bairros}
+            n={BAIRROS_META}
+            inner={30}
+            gap={6}
+            animate
+            delay={250}
+            step={140}
+          />
           <View className="min-w-0 flex-1">
             <Text className="font-body-medium text-[11px] uppercase tracking-wider text-dim">
-              Sua cidade
+              Suas cores
             </Text>
             <Text className="font-display text-[22px] text-ink" numberOfLines={1}>
               {numero}

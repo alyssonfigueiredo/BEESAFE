@@ -1,6 +1,7 @@
 import { useEffect, useMemo } from "react";
 import { View } from "react-native";
 import Animated, {
+  Easing,
   useAnimatedProps,
   useAnimatedStyle,
   useReducedMotion,
@@ -47,7 +48,8 @@ const L = 2 * Math.PI * 55;
 /**
  * Medalha com o anel enchendo. Bloqueada: a silhueta aparece com o trilho vazio e o anel desenha
  * até o progresso. `reveal`: o anel desenha até fechar e só então a cor da medalha aparece por
- * cima (celebração, caixinha). `shine`: uma faixa de luz passa por ela de tempos em tempos.
+ * cima (celebração, caixinha). `shine`: uma faixa de luz passa por ela de tempos em tempos;
+ * `shine="once"` passa uma vez só, fraquinha, depois que o anel fecha. Nada pula nem pulsa.
  */
 export function AnimatedMedal({
   id,
@@ -65,7 +67,7 @@ export function AnimatedMedal({
   animate?: boolean;
   delay?: number;
   duration?: number;
-  shine?: boolean;
+  shine?: boolean | "once";
   reveal?: boolean;
 }) {
   const reduce = useReducedMotion();
@@ -82,7 +84,13 @@ export function AnimatedMedal({
       return;
     }
     p.set(withDelay(delay, withTiming(alvo, { duration, easing: EASE })));
-    if (reveal) cor.set(withDelay(delay + duration, withTiming(1, { duration: 520 })));
+    if (reveal)
+      cor.set(
+        withDelay(
+          delay + duration,
+          withTiming(1, { duration: 520, easing: Easing.out(Easing.cubic) }),
+        ),
+      );
   }, [anim, alvo, delay, duration, reveal, p, cor]);
 
   const arcProps = useAnimatedProps(() => ({
@@ -96,7 +104,9 @@ export function AnimatedMedal({
     return (
       <View style={{ width: size, height: size }}>
         <MedalView id={id} size={size} on banho={banho} />
-        {shine && <Shine size={size} />}
+        {shine && (
+          <Shine size={size} once={shine === "once"} delay={shine === "once" ? delay : 1200} />
+        )}
       </View>
     );
   }
@@ -143,7 +153,13 @@ export function AnimatedMedal({
           <MedalView id={id} size={size} on banho={banho} />
         </Animated.View>
       )}
-      {shine && <Shine size={size} />}
+      {shine && (
+        <Shine
+          size={size}
+          once={shine === "once"}
+          delay={shine === "once" ? delay + duration + 520 : 1200}
+        />
+      )}
     </View>
   );
 }

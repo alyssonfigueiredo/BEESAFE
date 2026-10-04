@@ -1,14 +1,7 @@
 import { router } from "expo-router";
 import { useEffect, useMemo, useState } from "react";
-import { Modal, Pressable, Text, View, useWindowDimensions } from "react-native";
-import Animated, {
-  Easing,
-  useAnimatedStyle,
-  useReducedMotion,
-  useSharedValue,
-  withDelay,
-  withTiming,
-} from "react-native-reanimated";
+import { Modal, Pressable, Text, View } from "react-native";
+import { useReducedMotion } from "react-native-reanimated";
 
 import { FadeUp } from "@/components/gami/Anim";
 import { AnimatedMedal } from "@/components/gami/MedalView";
@@ -17,57 +10,12 @@ import { getMedalha, nomeDa } from "@/lib/medals";
 import { colors } from "@/theme/tokens";
 import { useFolhaAberta } from "@/hooks/useDiscovery";
 
-const CORES = [
-  colors.coral,
-  colors.orange,
-  colors.yellow,
-  colors.turquoise,
-  colors.lilac,
-  "#59A7FF",
-];
-
-// Confete discreto: poucos papeizinhos, pequenos, que só saem quando o anel da medalha fecha.
-const CONFETES = 14;
-const ANEL = 1300; // o anel desenha em 1,3 s (AnimatedMedal), depois a cor aparece
-
-function Confete({ i, w }: { i: number; w: number }) {
-  const t = useSharedValue(0);
-  const ang = (i / CONFETES) * Math.PI * 2 + (i % 3) * 0.3;
-  const dist = 90 + ((i * 37) % 90);
-  useEffect(() => {
-    t.set(
-      withDelay(
-        200 + ANEL,
-        withTiming(1, { duration: 1500 + (i % 5) * 120, easing: Easing.out(Easing.cubic) }),
-      ),
-    );
-  }, [t, i]);
-  const st = useAnimatedStyle(() => ({
-    opacity: t.get() === 0 ? 0 : 0.8 * (1 - t.get() * t.get()),
-    transform: [
-      { translateX: Math.cos(ang) * dist * t.get() },
-      { translateY: Math.sin(ang) * dist * t.get() + 120 * t.get() * t.get() },
-      { rotate: `${t.get() * (300 + i * 30)}deg` },
-    ],
-  }));
-  return (
-    <Animated.View
-      pointerEvents="none"
-      style={[
-        {
-          position: "absolute",
-          left: w / 2 - 3,
-          top: 250,
-          width: 6,
-          height: 10,
-          borderRadius: 2,
-          backgroundColor: CORES[i % CORES.length],
-        },
-        st,
-      ]}
-    />
-  );
-}
+// Calmo e uma vez só: o rótulo aparece, o anel arco-íris da medalha se desenha até fechar, a cor
+// da medalha surge por cima e só então o nome e a frase aparecem. Sem confete, sem brilho em
+// loop, sem medalha pulsando.
+const ATRASO = 300; // o anel começa depois que a tela escureceu
+const ANEL = 1200; // o anel desenha em 1,2 s (AnimatedMedal), depois a cor aparece
+const T_NOME = ATRASO + ANEL - 200;
 
 /**
  * Medalha nova, em tela cheia. Fica no layout raiz e aparece sozinha quando o banco desbloqueia
@@ -78,7 +26,6 @@ export function MedalCelebration() {
   const rewardOpen = useRewardOpen();
   const marcar = useMarkSeen();
   const reduce = useReducedMotion();
-  const { width } = useWindowDimensions();
   const [aberta, setAberta] = useState<string[] | null>(null);
 
   const novas = useMemo(
@@ -114,11 +61,7 @@ export function MedalCelebration() {
     >
       {m && (
         <View className="flex-1 items-center px-7 pt-24" style={{ backgroundColor: colors.night }}>
-          {!reduce &&
-            Array.from({ length: CONFETES }, (_, i) => (
-              <Confete key={`${m.id}-${i}`} i={i} w={width} />
-            ))}
-          <FadeUp duration={400}>
+          <FadeUp key={`d-${m.id}`} duration={400}>
             <Text
               className="font-body-medium text-[12px] uppercase tracking-wider"
               style={{ color: colors.turquoise }}
@@ -133,16 +76,16 @@ export function MedalCelebration() {
               size={228}
               banho={banho}
               reveal
-              delay={200}
+              delay={ATRASO}
               duration={ANEL}
             />
           </View>
-          <FadeUp key={`n-${m.id}`} delay={reduce ? 0 : 600} duration={500}>
+          <FadeUp key={`n-${m.id}`} delay={reduce ? 0 : T_NOME} duration={450}>
             <Text className="mt-6 text-center font-display text-[42px] uppercase leading-[46px] text-paper">
               {nomeDa(m, g?.forma ?? 2)}
             </Text>
           </FadeUp>
-          <FadeUp key={`c-${m.id}`} delay={reduce ? 0 : 800} duration={500}>
+          <FadeUp key={`c-${m.id}`} delay={reduce ? 0 : T_NOME + 180} duration={450}>
             <Text
               className="mt-3 text-center font-body text-[16px] leading-[23px]"
               style={{ color: "#C9CDE0" }}
@@ -151,9 +94,11 @@ export function MedalCelebration() {
             </Text>
           </FadeUp>
           {resto > 0 && (
-            <Text className="mt-3 text-center font-body text-[13px]" style={{ color: "#8A90AA" }}>
-              E mais {resto} nas suas conquistas.
-            </Text>
+            <FadeUp key={`r-${m.id}`} delay={reduce ? 0 : T_NOME + 360} duration={450}>
+              <Text className="mt-3 text-center font-body text-[13px]" style={{ color: "#8A90AA" }}>
+                E mais {resto} nas suas conquistas.
+              </Text>
+            </FadeUp>
           )}
           <View className="absolute bottom-12 left-6 right-6 gap-2">
             <Pressable

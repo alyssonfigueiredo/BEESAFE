@@ -15,7 +15,7 @@ import {
   marcarDescobertaConcluida,
   ORIGEM_DESCOBERTA,
 } from "@/hooks/useDiscovery";
-import { trackDay, useGamification } from "@/hooks/useGamification";
+import { logVistaDeLugar, trackDay, useGamification } from "@/hooks/useGamification";
 import { useScreenInsets } from "@/hooks/useScreenInsets";
 import { AreaLevel } from "@/components/AreaLevel";
 import { AxisBars } from "@/components/AxisBars";
@@ -72,7 +72,9 @@ export default function PlaceScreen() {
   const scrollRef = useRef<ScrollView>(null);
   const rolouAoForm = useRef(false);
   useEffect(() => {
-    if (id) trackDay("consult");
+    if (!id) return;
+    trackDay("consult");
+    logVistaDeLugar(id);
   }, [id]);
   const mineKey = mine ? `${mine.id}:${mine.updated_at}` : "none";
   // Reinicia o rascunho quando a avaliação própria muda (padrão "derive state from props").

@@ -238,6 +238,7 @@ export function useCreatePlace() {
       client.invalidateQueries({ queryKey: ["places-similar"] });
       client.invalidateQueries({ queryKey: ["welcoming"] });
       client.invalidateQueries({ queryKey: ["cidade-top"] });
+      client.invalidateQueries({ queryKey: ["cores"] });
     },
   });
 }
