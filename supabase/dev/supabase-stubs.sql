@@ -2,7 +2,7 @@
 create schema auth;
 create schema extensions;
 alter database irisa set search_path = public, extensions;  -- igual ao Supabase
-create table auth.users (id uuid primary key default gen_random_uuid(), email text);
+create table auth.users (id uuid primary key default gen_random_uuid(), email text, created_at timestamptz default now(), last_sign_in_at timestamptz);
 create function auth.uid() returns uuid language sql stable as $$ select nullif(current_setting('request.jwt.claim.sub', true), '')::uuid $$;
 create role anon nologin; create role authenticated nologin;
 create schema realtime;

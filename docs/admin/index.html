@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<meta name="referrer" content="no-referrer">
+<title>Irisa · Painel</title>
+<link rel="icon" href="../icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@700&family=Space+Grotesk:wght@400;500;600;700&family=Urbanist:wght@500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="admin.css">
+</head>
+<body>
+<div id="app" aria-live="polite">
+  <div class="boot"><span class="wordmark">IRIS<b>A</b></span><p>Carregando o painel…</p></div>
+</div>
+<div id="toasts" class="toasts" role="status" aria-live="polite"></div>
+<dialog id="dlg" class="dlg"></dialog>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.49.4/dist/umd/supabase.min.js"></script>
+<script src="pingentes.js"></script>
+<script type="module" src="admin.js"></script>
+</body>
+</html>

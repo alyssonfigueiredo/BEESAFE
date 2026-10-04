@@ -62,6 +62,8 @@ export declare const SATURATION: number;
 export declare function saturate(hex: string, k?: number): string;
 export declare const shadow: {
   card: ViewStyle;
+  field: ViewStyle;
+  fieldFocus: ViewStyle;
   lift: ViewStyle;
   turquoise: ViewStyle;
   coral: ViewStyle;

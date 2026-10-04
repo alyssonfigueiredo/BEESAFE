@@ -86,13 +86,33 @@
     return `<svg viewBox="0 0 100 100" width="${size}" height="${size}" aria-hidden="true"><defs><linearGradient id="${id}" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#FBE7A8"/><stop offset=".45" stop-color="#E2B04A"/><stop offset="1" stop-color="#A97A1E"/></linearGradient>${lock}</defs><g transform="translate(0 2)"${locked ? ` filter="url(#${id}l)"` : ""}><circle cx="50" cy="9" r="5.6" fill="none" stroke="${C.rim}" stroke-width="4.4"/><circle cx="50" cy="9" r="5.6" fill="none" stroke="${G}" stroke-width="2.6"/><path d="M50 14.6V${top + 2}" stroke="${G}" stroke-width="3" stroke-linecap="round"/>${body}</g></svg>`;
   }
 
+  // Medalha limpa (proposta final): disco com o objeto no centro e anel de progresso em volta, sem argola.
+  // state "on" = conquistado (cor, anel cheio); "lock" = silhueta cinza, anel mostra o progresso (0 a 1).
+  const TINT = { "Trajetória": "#FFE1DF", "Reconhecimento": "#ECE5FF", "Cidade": "#D9F7F0", "Mapa": "#FFF2CF", "Rolê": "#FFE8D3", "Constância": "#DEEDFF", "Apoio": "#FFE3EC", "Veterania": "#FBEFD0" };
+  function medal(art, { size = 120, state = "on", prog = 0, cat = "Trajetória", lockIcon = true } = {}) {
+    const id = "md" + (++seq), G = `url(#${id}g)`, on = state === "on";
+    const [, body] = ART[art](G);
+    const L = 2 * Math.PI * 55;
+    const arc = on ? `<circle cx="60" cy="60" r="55" fill="none" stroke="url(#${id}r)" stroke-width="4.5"/>`
+      : prog > 0 ? `<circle cx="60" cy="60" r="55" fill="none" stroke="url(#${id}r)" stroke-width="4.5" stroke-linecap="round" stroke-dasharray="${(L * Math.min(prog, 1)).toFixed(1)} 999" transform="rotate(-90 60 60)"/>` : "";
+    const sil = on ? "" : `<filter id="${id}s"><feColorMatrix type="matrix" values="0 0 0 0 .76  0 0 0 0 .74  0 0 0 0 .70  0 0 0 1 0"/></filter>`;
+    const lk = !on && lockIcon ? `<circle cx="96" cy="96" r="13" fill="#141829" stroke="#fff" stroke-width="3"/><rect x="90.5" y="95" width="11" height="8.5" rx="2" fill="#fff"/><path d="M92.8 95v-2.6a3.2 3.2 0 0 1 6.4 0V95" fill="none" stroke="#fff" stroke-width="1.8"/>` : "";
+    return `<svg viewBox="0 0 120 120" width="${size}" height="${size}" aria-hidden="true"><defs>` +
+      `<linearGradient id="${id}g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#FBE7A8"/><stop offset=".45" stop-color="#E2B04A"/><stop offset="1" stop-color="#A97A1E"/></linearGradient>` +
+      `<linearGradient id="${id}r" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#FF6964"/><stop offset=".25" stop-color="#FFA353"/><stop offset=".45" stop-color="#FFD066"/><stop offset=".65" stop-color="#49DCC0"/><stop offset=".82" stop-color="#59A7FF"/><stop offset="1" stop-color="#A889FF"/></linearGradient>` +
+      `<radialGradient id="${id}t" cx=".35" cy=".3" r=".8"><stop offset="0" stop-color="#fff"/><stop offset="1" stop-color="${on ? (TINT[cat] || "#F3F0EA") : "#ECE9E3"}"/></radialGradient>${sil}</defs>` +
+      `${on ? "" : `<circle cx="60" cy="60" r="55" fill="none" stroke="#E7E3DC" stroke-width="4.5"/>`}${arc}` +
+      `<circle cx="60" cy="60" r="47" fill="url(#${id}t)"/><circle cx="60" cy="60" r="46" fill="none" stroke="#fff" stroke-width="2" opacity=".9"/>` +
+      `<svg x="23" y="23" width="74" height="74" viewBox="8 14 84 84"><g${on ? "" : ` filter="url(#${id}s)"`}>${body}</g></svg>${lk}</svg>`;
+  }
+
   // flex: [a, o, e]. cat: categoria. rar: comum | incomum | rara | epica | lendaria.
   const LISTA = [
     // Trajetória: avaliações válidas (contam depois de 48 h sem a moderação esconder)
     { id: "deu-o-nome", t: "Deu o Nome", art: "cracha", cat: "Trajetória", rar: "comum", cond: "Primeira avaliação válida.", obj: "Crachá de festa “Olá” com o nome rabiscado.", copy: "Prazer. Agora o mapa sabe o que você acha." },
     { id: "deu-close", t: "Deu Close", art: "camera", cat: "Trajetória", rar: "comum", cond: "5 avaliações.", obj: "Câmera com flash e um brilhinho.", copy: "Cinco lugares, cinco closes. O mapa agradece." },
     { id: "figurinha", t: "Figurinha Conhecida", art: "figurinha", cat: "Trajetória", rar: "incomum", cond: "15 avaliações, em pelo menos 3 semanas diferentes.", obj: "Figurinha de álbum com o canto descolando.", copy: "Se o mapa fosse álbum, você já era figurinha conhecida." },
-    { id: "famosinha", t: "Famosinha", flex: ["Famosinha", "Famosinho", "Famosinhe"], art: "oculos", cat: "Trajetória", rar: "rara", cond: "30 avaliações.", obj: "Óculos escuros de coração.", copy: "Óculos escuros, por favor. O flash não para." },
+    { id: "famosinha", t: "Famosinha", flex: ["Famosinha", "Famosinho", "Famosinhe"], art: "oculos", cat: "Trajetória", rar: "rara", cond: "30 avaliações, em pelo menos 4 semanas diferentes.", obj: "Óculos escuros de coração.", copy: "Óculos escuros, por favor. O flash não para." },
     { id: "influ-do-vale", t: "Influ do Vale", art: "credencial", cat: "Trajetória", rar: "epica", cond: "60 avaliações e 25 “ajudou” recebidos.", obj: "Credencial VIP com cordão.", copy: "O que você irisa, a cidade lê." },
     // Reconhecimento: “ajudou” nas avaliações (novo, anônimo) + curtidas no mural (já existem)
     { id: "utilidade-publica", t: "Utilidade Pública", art: "orelhao", cat: "Reconhecimento", rar: "incomum", cond: "10 “ajudou” ou curtidas recebidos.", obj: "Orelhão em miniatura.", copy: "Declarado de utilidade pública. Sem burocracia." },
@@ -113,8 +133,8 @@
     { id: "nome-na-lista", t: "Nome na Lista", art: "pulseiraFesta", cat: "Rolê", rar: "incomum", cond: "Avaliou lugares em 5 bairros diferentes.", obj: "Pulseirinha de entrada de festa.", copy: "Seu nome tá na lista de cinco bairros." },
     { id: "da-casa", t: "Da Casa", art: "chave", cat: "Rolê", rar: "rara", cond: "Reavaliou o mesmo lugar depois de 6 meses. O nome do lugar aparece só no seu Perfil, nunca no cartão do story.", obj: "Chave de camarim com plaquinha “Nº 1”.", copy: "Da casa. Já pode pedir o de sempre." },
     // Constância
-    { id: "bateu-ponto", t: "Bateu Ponto", art: "cartaoPonto", cat: "Constância", rar: "comum", cond: "7 dias acesos seguidos.", obj: "Cartão de ponto perfurado.", copy: "Sete dias seguidos. Bateu ponto." },
-    { id: "ja-mora-aqui", t: "Já Mora Aqui", art: "capacho", cat: "Constância", rar: "rara", cond: "30 dias acesos seguidos.", obj: "Capacho “bem-vinde”.", copy: "Trinta dias. Já pode receber correspondência aqui." },
+    { id: "bateu-ponto", t: "Bateu Ponto", art: "cartaoPonto", cat: "Constância", rar: "comum", cond: "Primeira semana acesa: o app aberto em 4 dias quaisquer da semana.", obj: "Cartão de ponto perfurado.", copy: "Bateu ponto. E nem precisou ser todo dia." },
+    { id: "ja-mora-aqui", t: "Já Mora Aqui", art: "capacho", cat: "Constância", rar: "rara", cond: "4 semanas acesas, seguidas ou não.", obj: "Capacho “bem-vinde”.", copy: "Quatro semanas acesas. Já pode receber correspondência aqui." },
     { id: "serviu-tudo", t: "Serviu Tudo", art: "bandeja", cat: "Constância", rar: "rara", cond: "Completou os 3 desafios do dia em 7 dias diferentes.", obj: "Bandeja com taças.", copy: "Serviu tudo. Literalmente." },
     { id: "agenda-cheia", t: "Agenda Cheia", art: "agenda", cat: "Constância", rar: "epica", cond: "Abriu a Irisa nas 6 datas da comunidade do ano: 29/01, 17/05, 28/06, 29/08, 23/09, 11/10.", obj: "Calendário com seis dias marcados.", copy: "Presente em todas as datas que importam." },
     // Apoio
@@ -129,5 +149,5 @@
   ];
 
   const RAR = { comum: ["Comum", "#DEDAD2"], incomum: ["Incomum", "#49DCC0"], rara: ["Rara", "#59A7FF"], epica: ["Épica", "#A889FF"], lendaria: ["Lendária", "linear-gradient(90deg,#FFD066,#FFA353,#FF6964)"] };
-  window.PINGENTES = { lista: LISTA, svg, RAR, get: id => LISTA.find(p => p.id === id) };
+  window.PINGENTES = { lista: LISTA, svg, medal, RAR, get: id => LISTA.find(p => p.id === id) };
 })();

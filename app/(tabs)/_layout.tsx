@@ -1,6 +1,6 @@
 import { Tabs } from "expo-router";
 import { Home, LifeBuoy, Map, Store, User } from "lucide-react-native";
-import type { ReactNode } from "react";
+import { useState, type ReactNode } from "react";
 import {
   Pressable,
   StyleSheet,
@@ -36,6 +36,11 @@ function TabButton({
   testID?: string;
 }) {
   const on = !!accessibilityState?.selected;
+  // A lente é uma camada própria com raio = metade do lado menor, medido na tela. Antes o raio era
+  // fixo e o fundo ficava no mesmo View do conteúdo com overflow hidden: nas abas da ponta (Início e
+  // Perfil) o Android desenhava a lente quadrada.
+  const [size, setSize] = useState({ w: 0, h: 0 });
+  const radius = size.w && size.h ? Math.min(size.w, size.h) / 2 : glass.radius - 5;
   return (
     <Pressable
       onPress={onPress}
@@ -44,20 +49,33 @@ function TabButton({
       accessibilityState={accessibilityState}
       accessibilityLabel={accessibilityLabel}
       testID={testID}
-      style={[style, { flex: 1 }]}
+      style={[style, { flex: 1, backgroundColor: "transparent" }]}
     >
       <View
+        onLayout={(e) => setSize({ w: e.nativeEvent.layout.width, h: e.nativeEvent.layout.height })}
         style={{
           flex: 1,
           marginVertical: 5,
           marginHorizontal: 4,
-          borderRadius: glass.radius - 5,
-          backgroundColor: on ? colors.solid : "transparent",
           alignItems: "center",
           justifyContent: "center",
-          overflow: "hidden",
         }}
       >
+        {on && (
+          <View
+            pointerEvents="none"
+            style={{
+              position: "absolute",
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+              borderRadius: radius,
+              borderCurve: "continuous",
+              backgroundColor: colors.solid,
+            }}
+          />
+        )}
         {children}
       </View>
     </Pressable>

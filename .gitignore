@@ -54,3 +54,8 @@ scripts/.alertas-enviados.json
 import-rm.log
 supabase/.temp/
 google-services.json
+
+# Cópias que o build do site gera a partir de docs/ (o Pages monta tudo no CI; não versionar de novo)
+site/reels-*.html
+site/Irisa-reels-*.mp4
+site/admin/

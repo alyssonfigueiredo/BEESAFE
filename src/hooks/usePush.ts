@@ -20,8 +20,14 @@ function notifications(): Notifications | null {
 
 let handlerPronto = false;
 
-function abrirRota(N: Notifications, resposta: import("expo-notifications").NotificationResponse | null) {
-  const url = resposta?.notification.request.content.data?.url;
+function abrirRota(
+  N: Notifications,
+  resposta: import("expo-notifications").NotificationResponse | null,
+) {
+  const data = resposta?.notification.request.content.data;
+  const url = data?.url;
+  // Painel: conta quem abriu cada notificação (migration 39). Falha calada se não houver a função.
+  if (typeof data?.envio === "number") void supabase.rpc("push_aberto", { p_envio: data.envio });
   if (typeof url === "string" && url.startsWith("/")) {
     router.push(url as never);
   }

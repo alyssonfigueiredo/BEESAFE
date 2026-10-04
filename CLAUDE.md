@@ -376,6 +376,7 @@ Nome: **Irisa** (INPI livre; @appirisa livre). Bundle id Android `br.com.irisa.a
   apresentação para o Alysson em `docs/apresentacao-liquid.html`; plano de lançamento em
   `docs/plano-lancamento.html` (nenhum deles é publicado no site).
 
+- **0.1.1 liberada nas duas lojas (dito por ele em 03/10/2026).** Versão do app subiu para 0.1.2 (a da build com push).
 - **Notificações push (migration 38 + Edge Function `send-push`, 03/10/2026):** `expo-notifications` é
   nativo, então só funciona a partir da próxima build (0.1.2). `src/hooks/usePush.ts` só faz o `require`
   depois de `requireOptionalNativeModule("ExpoPushTokenManager")`: o mesmo JS chega por EAS Update em
@@ -400,6 +401,55 @@ Nome: **Irisa** (INPI livre; @appirisa livre). Bundle id Android `br.com.irisa.a
   depois de mexer na apresentação ou nas telas, `node scripts/gamificacao-unica.mjs` gera de novo. O `gamificacao.html`
   avulso só abre com `pingentes.js` e `gamificacao/` na mesma pasta.
   Regras: relato nunca pontua, nada público, nada de check-in, "Da Casa" nunca mostra o lugar no cartão do story.
+  **V3 (04/10/2026, `docs/gamificacao-v3.html` → `docs/Irisa-gamificacao-v3.html`):** resposta à V2 que o ChatGPT fez.
+  Fica a cadeia única, os quatro tempos e o lançamento com 12 pingentes; corrige: nome de lugar nunca no pingente,
+  missão nunca por horário/região de alerta, denominador da cidade = os 100 lugares mais conhecidos (`prominence`),
+  gomo provisório na hora e confirmado em 48 h, dia guardado na sequência. Os 12: Deu o Nome, Deu Close, Figurinha,
+  Famosinha, Inaugurou, Acendeu a Luz, Eu Conheço um Lugar, Nome na Lista, Mala Pronta, Bateu Ponto, Ombro Amigo,
+  Abre-Alas (este só vale para quem entrou no teste fechado do Android, então tem que sair antes da produção).
+  **Proposta final (04/10/2026, `docs/gamificacao-final.html` → `docs/Irisa-gamificacao-final.html`, artefato publicado):**
+  V3 + retorno do Aly. **Sem sequência diária** (ele acha irritante): "semana acesa" = app aberto em 4 dias quaisquer
+  da semana, recomeça na segunda sem perder nada; Bateu Ponto = primeira semana acesa, Já Mora Aqui = 4 semanas,
+  seguidas ou não. **Medalhas limpas** (ele achou os pingentes poluídos): `PINGENTES.medal()` em `docs/pingentes.js`
+  desenha disco + objeto + anel de progresso; bloqueada é silhueta com cadeado e o anel mostra quanto falta; sem
+  argola, sem selo de raridade na tela. Telas em `docs/gamificacao-final-telas.html` →
+  `node scripts/gamificacao-telas.mjs docs/gamificacao-final-telas.html` → `docs/gamificacao/final-*.png`.
+  **Sem moderação prévia nas avaliações (dito por ele em 04/10/2026):** avaliação aparece na hora, então a proposta
+  final não tem mais o elo de 48 h; o gomo acende na hora e apaga se uma denúncia derrubar a avaliação, e medalha
+  de quantidade pede semanas diferentes (Famosinha: 30 avaliações em 4 semanas) para ninguém farmar num dia.
+  **Protótipo navegável (04/10/2026):** `docs/prototipo-gamificacao.html` → `docs/Irisa-prototipo-gamificacao.html`
+  (arquivo único, artefato publicado). Tour de 12 passos com holofote + navegação livre: semana acesa, 12 dos 100,
+  medalha quase lá, avaliar, recompensa na hora (gomo, faísca voando, Famosinhe 22→23), desbloqueio de Acendeu a Luz
+  (5ª avaliação do lugar), cartão do story sem o lugar, pulseira, detalhe, caixinha com banho neon e as travas.
+  Nada grava; é encenado com Web Animations.
+  **Ajuste do Aly (04/10/2026):** as telas atuais não mudam. A ficha do lugar no protótipo é a do app (as quatro
+  perguntas de `AXES` com o marcador `Rainbow` de cinco faixas, comentário, foto, botão amarelo); o Perfil mantém foto,
+  apelido, cidade, privacidade, bloqueados, sair e excluir, e ganha só o cartão "Sua pulseira" (a grade abre numa tela
+  por cima). O Início mantém o painel escuro e ganha dois cartões abaixo. **Semana sem dia da semana:** quatro gomos que
+  só enchem ("3 de 4"), para nada parecer dia perdido. **Dias 5, 6 e 7:** uma faísca cada, sem prêmio de 7 de 7
+  (decisão de produto: ninguém pode sentir que precisa abrir todo dia).
+
+- **Gamificação no app + painel (migration 39, 04/10/2026):** só acréscimos. Banco: `user_days` (dia em que abriu,
+  só a data; `consulted`/`supported`), `user_medals`, `user_boxes`, `app_settings` (aviso no Início, data do Abre-Alas),
+  `push_aberturas`, `profiles.medal_form`. `my_gamification(p_city)` calcula tudo e grava medalha nova; `track_day`,
+  `open_box`, `set_medal_form`, `mark_medals_seen`, `app_config`. Regras do anel: 1 gomo por avaliação no ar + 1 se foi
+  a primeira do lugar + 1 se foi a 5ª + 1 por lugar cadastrado + 1 por foto aprovada (teto 48; nível = gomos/8).
+  Faísca: consulta do dia, apoio no mural do dia, dias 5–7 da semana; caixinha a cada 10 faíscas e a cada semana acesa.
+  Abre-Alas: conta criada até `app_settings.abre_alas_ate` (null = todo mundo, enquanto o Android está em teste:
+  **gravar a data no painel no dia em que for para produção**). App (só JS, sai por EAS Update): `src/lib/medals.ts`
+  (mesmo desenho do `docs/pingentes.js`, via `SvgXml`), `src/hooks/useGamification.ts`, `src/components/gami/*`,
+  `app/pulseira.tsx`; Início ganhou `AvisoCard` em cima e `GamiHomeCards` embaixo do painel; Perfil ganhou só
+  `PulseiraCard`; ficha do lugar marca consulta e mostra `RewardSheet` em avaliação nova (atualização segue com o
+  alerta de sempre); `MedalCelebration` no layout raiz. Sem a migration no banco, tudo isso some calado.
+  Push: `send-push` manda o id do envio e o app grava a abertura — **republicar a função** (`npx supabase functions
+  deploy send-push --project-ref ntjirpqulrnieeglpiei`) para o painel contar quem abriu.
+  **Painel web:** `docs/admin/` → https://appirisa.com.br/admin/ (funções `admin_*`, papel conferido em cada uma;
+  moderação vê moderação/lugares/fotos, admin vê tudo). Relatos nunca aparecem ligados a uma pessoa, nem no painel.
+  Foto da equipe: Storage `fotos-lugares/equipe/<lugar>/…` + `admin_place_photo` (origem `equipe`).
+  Login do painel com e-mail/senha ou Google; para o Google funcionar, `https://appirisa.com.br/admin/` tem que estar
+  em Supabase → Authentication → URL Configuration → Redirect URLs. O painel é JS puro (`docs/admin/admin.js`),
+  sem build; a chave `sb_publishable_` entra pelo `build-site.mjs` igual à da landing.
+  **Aba ativa quadrada nas pontas (corrigido):** a lente virou camada própria com raio medido (`onLayout`).
 
 ## Stack
 

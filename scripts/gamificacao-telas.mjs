@@ -1,5 +1,6 @@
 // Exporta as telas de exemplo da gamificação (docs/gamificacao-telas.html) em PNG para apresentação.
 // node scripts/gamificacao-telas.mjs  →  docs/gamificacao/tela-*.png (celular 1170×2532, story 1080×1920)
+// node scripts/gamificacao-telas.mjs docs/gamificacao-final-telas.html  →  docs/gamificacao/final-*.png
 import { chromium } from "playwright-core";
 import { mkdirSync, readFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
@@ -18,7 +19,7 @@ const page = await browser.newPage({ viewport: { width: 1400, height: 1000 }, de
 page.on("pageerror", (e) => console.log("erro na página:", e.message));
 await page.route(/fonts\.googleapis/, (r) => r.fulfill({ contentType: "text/css", body: css }));
 await page.route(/gstatic/, (r) => r.abort());
-await page.goto("file://" + path.join(raiz, "docs/gamificacao-telas.html"));
+await page.goto("file://" + path.join(raiz, process.argv[2] || "docs/gamificacao-telas.html"));
 await page.evaluate(() => document.fonts.ready);
 for (const id of await page.$$eval(".ph,.story", (els) => els.map((e) => e.id))) {
   await page.locator("#" + id).screenshot({ path: path.join(saida, id + ".png") });
