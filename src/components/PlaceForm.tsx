@@ -20,6 +20,37 @@ const CATEGORY_KEYS = Object.keys(PLACE_CATEGORIES) as PlaceCategory[];
 const distancia = (m: number) =>
   m >= 1000 ? `${(m / 1000).toFixed(1).replace(".", ",")} km` : `${Math.round(m)} m`;
 
+type Ponto = { lat: number; lng: number };
+/** De onde veio o alfinete: GPS, endereço achado ou toque no mapa. */
+type Origem = "gps" | "endereco" | "mapa";
+
+function metros(a: Ponto, b: Ponto) {
+  const r = Math.PI / 180;
+  const x = (b.lng - a.lng) * r * Math.cos(((a.lat + b.lat) / 2) * r);
+  const y = (b.lat - a.lat) * r;
+  return Math.sqrt(x * x + y * y) * 6371000;
+}
+
+/** Alert que espera a resposta. */
+function perguntar<T extends string>(
+  titulo: string,
+  texto: string,
+  botoes: { label: string; valor: T; cancelar?: boolean }[],
+): Promise<T> {
+  return new Promise((resolve) =>
+    Alert.alert(
+      titulo,
+      texto,
+      botoes.map((b) => ({
+        text: b.label,
+        style: b.cancelar ? "cancel" : "default",
+        onPress: () => resolve(b.valor),
+      })),
+      { cancelable: false },
+    ),
+  );
+}
+
 export function PlaceForm({ onDone }: { onDone: (placeId: string) => void }) {
   const { city, userLocation } = useCity();
   const router = useRouter();
@@ -27,7 +58,10 @@ export function PlaceForm({ onDone }: { onDone: (placeId: string) => void }) {
   const [name, setName] = useState("");
   const [category, setCategory] = useState<PlaceCategory>("bar");
   const [address, setAddress] = useState("");
-  const [point, setPoint] = useState<{ lat: number; lng: number } | null>(null);
+  const [point, setPoint] = useState<Ponto | null>(null);
+  const [origem, setOrigem] = useState<Origem | null>(null);
+  // O texto que virou o ponto atual. Endereço editado depois disso não foi conferido.
+  const [enderecoAchado, setEnderecoAchado] = useState<string | null>(null);
   // `foco` leva a câmera até o ponto; só o GPS e o endereço achado mexem nela (toque no mapa não).
   const [foco, setFoco] = useState<{ lat: number; lng: number } | null>(null);
   const [achando, setAchando] = useState(false);
@@ -47,6 +81,8 @@ export function PlaceForm({ onDone }: { onDone: (placeId: string) => void }) {
       setPoint(p);
       setFoco(p);
       setRotulo(null);
+      setOrigem("gps");
+      setEnderecoAchado(null);
     } catch {
       Alert.alert(
         "Não consegui sua localização",
@@ -72,6 +108,8 @@ export function PlaceForm({ onDone }: { onDone: (placeId: string) => void }) {
       setPoint({ lat: achado.lat, lng: achado.lng });
       setFoco({ lat: achado.lat, lng: achado.lng });
       setRotulo(achado.rotulo);
+      setOrigem("endereco");
+      setEnderecoAchado(address.trim());
       if (!achado.cidadeConfere)
         Alert.alert(
           "Esse endereço não é dessa cidade",
@@ -84,16 +122,83 @@ export function PlaceForm({ onDone }: { onDone: (placeId: string) => void }) {
     }
   }
 
+  /**
+   * Confere o endereço escrito antes de gravar. Aconteceu em 04/10/2026: o Na Feira Bar foi
+   * cadastrado com o endereço certo no texto e o alfinete no GPS de quem cadastrou (outro bairro),
+   * porque o endereço só virava ponto tocando em "Achar esse endereço no mapa". Agora, endereço
+   * escrito e ainda não conferido é buscado no envio; se não bater com o alfinete, a pessoa escolhe.
+   * Devolve o ponto que vale, ou null para parar e ajustar.
+   */
+  async function pontoFinal(): Promise<Ponto | null> {
+    const escrito = address.trim();
+    if (!city || escrito.length < 4 || escrito === enderecoAchado) return point;
+    setAchando(true);
+    let achado: Awaited<ReturnType<typeof geocodificar>> = null;
+    try {
+      achado = await geocodificar(escrito, city);
+    } catch {
+      achado = null;
+    } finally {
+      setAchando(false);
+    }
+    if (!achado) {
+      if (origem !== "gps") return point;
+      const r = await perguntar(
+        "Não achei esse endereço no mapa",
+        "O lugar vai ficar onde você está agora. Você está no lugar?",
+        [
+          { label: "Ajustar o ponto", valor: "ajustar", cancelar: true },
+          { label: "Estou no lugar", valor: "ok" },
+        ],
+      );
+      return r === "ok" ? point : null;
+    }
+    const doEndereco = { lat: achado.lat, lng: achado.lng };
+    const d = point ? metros(point, doEndereco) : Infinity;
+    if (point && d <= 150) return point;
+    let usar: "endereco" | "alfinete" | "ajustar" = "endereco";
+    if (point) {
+      usar = await perguntar(
+        "O endereço e o alfinete não batem",
+        `${achado.rotulo}\n\nEsse endereço fica a ${distancia(d)} do alfinete${
+          origem === "gps" ? ", que está onde você está agora" : ""
+        }. Onde o lugar fica?`,
+        [
+          { label: "Ajustar", valor: "ajustar", cancelar: true },
+          { label: "No alfinete", valor: "alfinete" },
+          { label: "No endereço", valor: "endereco" },
+        ],
+      );
+    }
+    if (usar === "alfinete") return point;
+    // "Ajustar" também leva o mapa até o endereço, para a pessoa ver e mexer.
+    setPoint(doEndereco);
+    setFoco(doEndereco);
+    setRotulo(achado.rotulo);
+    setOrigem("endereco");
+    setEnderecoAchado(escrito);
+    return usar === "endereco" ? doEndereco : null;
+  }
+
   async function submit() {
     if (name.trim().length < 2) return Alert.alert("Falta o nome", "Dê um nome ao lugar.");
-    if (!point) return Alert.alert("Falta o local", "Use sua localização ou toque no mapa.");
+    if (!point && address.trim().length < 4)
+      return Alert.alert(
+        "Falta o local",
+        "Escreva o endereço, use sua localização ou toque no mapa.",
+      );
+    const ponto = await pontoFinal();
+    if (!ponto) {
+      if (!point) Alert.alert("Falta o local", "Use sua localização ou toque no mapa.");
+      return;
+    }
     try {
       const id = await create.mutateAsync({
         name,
         category,
         address,
-        lat: point.lat,
-        lng: point.lng,
+        lat: ponto.lat,
+        lng: ponto.lng,
       });
       // Limpa antes de sair: a tela fica montada no fundo (aba escondida), então voltar
       // encontraria o formulário preenchido com o lugar que já foi criado.
@@ -103,6 +208,8 @@ export function PlaceForm({ onDone }: { onDone: (placeId: string) => void }) {
       setPoint(null);
       setFoco(null);
       setRotulo(null);
+      setOrigem(null);
+      setEnderecoAchado(null);
       onDone(id);
     } catch (e) {
       Alert.alert("Não deu certo", e instanceof Error ? e.message : "Tente de novo.");
@@ -170,6 +277,7 @@ export function PlaceForm({ onDone }: { onDone: (placeId: string) => void }) {
           onPick={(p) => {
             setPoint(p);
             setRotulo(null);
+            setOrigem("mapa");
           }}
           picked={point}
           focus={foco}
@@ -177,6 +285,11 @@ export function PlaceForm({ onDone }: { onDone: (placeId: string) => void }) {
         />
         {rotulo && (
           <Text className="font-body text-xs text-turquoiseInk">Achei aqui: {rotulo}</Text>
+        )}
+        {origem === "gps" && address.trim().length >= 4 && address.trim() !== enderecoAchado && (
+          <Text className="font-body text-xs text-coralInk">
+            O alfinete está onde você está agora. Ao enviar, o endereço escrito é conferido.
+          </Text>
         )}
       </FormSection>
 
@@ -209,8 +322,10 @@ export function PlaceForm({ onDone }: { onDone: (placeId: string) => void }) {
 
       <PrimaryButton
         tone="turquoise"
-        label={create.isPending ? "Salvando…" : "Adicionar lugar"}
-        disabled={create.isPending}
+        label={
+          create.isPending ? "Salvando…" : achando ? "Conferindo o endereço…" : "Adicionar lugar"
+        }
+        disabled={create.isPending || achando}
         onPress={submit}
       />
     </View>
