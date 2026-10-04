@@ -52,6 +52,7 @@ const config: ExpoConfig = {
     "expo-web-browser",
     ...(appleSignIn ? ["expo-apple-authentication"] : ["./plugins/withoutAppleSignIn"]),
     "@maplibre/maplibre-react-native",
+    "./plugins/withInstagramStories",
     [
       "expo-image-picker",
       {

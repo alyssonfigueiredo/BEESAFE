@@ -566,6 +566,11 @@ Nome: **Irisa** (INPI livre; @appirisa livre). Bundle id Android `br.com.irisa.a
   trilha. Peças nativas novas (`react-native-view-shot`, `expo-sharing` sem o plugin, que é de receber compartilhamento)
   e `NSPhotoLibraryAddUsageDescription` no app.config (sem ela "Salvar imagem" fecha o app): **precisa de build nova**.
   `podeCompartilhar()` esconde o botão em build antiga, então o JS segue seguro por EAS Update na build 10.
+  **Story direto (mesmo dia):** o menu do iPhone escondia o Instagram (ele testou e só aparecia WhatsApp). Agora a
+  prévia tem **"Story do Instagram"** (`react-native-share`, `Social.InstagramStories`, `appId` = ID público do app Irisa na
+  Meta 2296597601132815; abre o story já com a imagem de fundo) e **"Outros apps"** (expo-sharing). Sem Instagram
+  instalado, cai no menu. `plugins/withInstagramStories.js` declara `instagram-stories` no iOS e o pacote do Instagram
+  nas `<queries>` do Android (o plugin da biblioteca exigia expo-build-properties). Nativo: só em build nova.
 
 ## Stack
 

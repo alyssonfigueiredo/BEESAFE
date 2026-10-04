@@ -16,7 +16,8 @@ do Mac, na pasta BEESAFE.
 - Visual igual no app todo (seletores, campos, botões).
 - Cadastro de lugar confere o endereço escrito antes de gravar (o caso do Na Feira Bar).
 - Notificações (push).
-- Compartilhar conquista e nível no story do Instagram (cartão 1080 × 1920, sem nome e sem lugar).
+- Compartilhar conquista e nível direto no story do Instagram (cartão 1080 × 1920, sem nome e sem lugar),
+  ou por outros apps.
   **Peça nativa nova:** o botão só aparece em build nova. Quem recebe o código por atualização em cima da
   build 10 não vê o botão (de propósito, para não quebrar).
 

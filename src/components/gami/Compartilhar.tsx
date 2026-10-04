@@ -1,5 +1,5 @@
 import { requireOptionalNativeModule } from "expo";
-import { Share2 } from "lucide-react-native";
+import { Camera, Share2 } from "lucide-react-native";
 import { useRef, useState } from "react";
 import {
   Alert,
@@ -35,6 +35,18 @@ export type Compartilhavel =
 
 const W = 360;
 const H = 640;
+
+// ID público do app Irisa na Meta: o Instagram exige no compartilhamento direto para o story.
+const META_APP_ID = "2296597601132815";
+
+/** Compartilhamento direto no story (react-native-share, nativo): só em build que tem a peça. */
+function storyDisponivel() {
+  try {
+    return !!(TurboModuleRegistry.get("RNShare") ?? NativeModules.RNShare);
+  } catch {
+    return false;
+  }
+}
 
 export function podeCompartilhar() {
   if (Platform.OS === "web") return false;
@@ -154,29 +166,52 @@ export function CompartilharSheet({
   const forma = useForma();
   const { width, height } = useWindowDimensions();
   const ref = useRef<View>(null);
-  const [ocupado, setOcupado] = useState(false);
+  const [ocupado, setOcupado] = useState<"story" | "outros" | null>(null);
   useFolhaAberta(!!c);
   const escala = Math.min((width - 64) / W, (height - 260) / H, 1);
 
-  async function compartilhar() {
-    if (!ref.current || ocupado) return;
-    setOcupado(true);
-    try {
-      const { captureRef } =
-        // eslint-disable-next-line @typescript-eslint/no-require-imports
-        require("react-native-view-shot") as typeof import("react-native-view-shot");
+  async function capturar() {
+    const { captureRef } =
       // eslint-disable-next-line @typescript-eslint/no-require-imports
-      const Sharing = require("expo-sharing") as typeof import("expo-sharing");
-      const uri = await captureRef(ref, { format: "png", quality: 1, width: 1080, height: 1920 });
-      await Sharing.shareAsync(uri, {
-        mimeType: "image/png",
-        UTI: "public.png",
-        dialogTitle: "Compartilhar",
-      });
+      require("react-native-view-shot") as typeof import("react-native-view-shot");
+    return captureRef(ref, { format: "png", quality: 1, width: 1080, height: 1920 });
+  }
+
+  async function outrosApps(uri?: string) {
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
+    const Sharing = require("expo-sharing") as typeof import("expo-sharing");
+    await Sharing.shareAsync(uri ?? (await capturar()), {
+      mimeType: "image/png",
+      UTI: "public.png",
+      dialogTitle: "Compartilhar",
+    });
+  }
+
+  async function rodar(qual: "story" | "outros") {
+    if (!ref.current || ocupado) return;
+    setOcupado(qual);
+    try {
+      const uri = await capturar();
+      if (qual === "outros" || !storyDisponivel()) return await outrosApps(uri);
+      // eslint-disable-next-line @typescript-eslint/no-require-imports
+      const lib = require("react-native-share") as typeof import("react-native-share");
+      const RNShare = lib.default;
+      try {
+        await RNShare.shareSingle({
+          social: lib.Social.InstagramStories,
+          appId: META_APP_ID,
+          backgroundImage: uri,
+        });
+      } catch (e) {
+        // Instagram não instalado (ou a pessoa voltou sem postar): cai no menu do celular.
+        const msg = e instanceof Error ? e.message : String(e);
+        if (/cancel|dismiss/i.test(msg)) return;
+        await outrosApps(uri);
+      }
     } catch (e) {
       Alert.alert("Não deu para compartilhar", e instanceof Error ? e.message : "Tente de novo.");
     } finally {
-      setOcupado(false);
+      setOcupado(null);
     }
   }
 
@@ -211,21 +246,36 @@ export function CompartilharSheet({
           </FadeUp>
           <View className="mt-6 w-full gap-2 px-8">
             <Pressable
-              onPress={compartilhar}
-              disabled={ocupado}
+              onPress={() => rodar("story")}
+              disabled={!!ocupado}
               className="h-[52px] flex-row items-center justify-center gap-2 rounded-full bg-paper active:opacity-85"
               style={{ opacity: ocupado ? 0.6 : 1 }}
             >
-              <Share2 color={colors.night} size={18} strokeWidth={2.4} />
+              <Camera color={colors.night} size={18} strokeWidth={2.2} />
               <Text className="font-body-bold text-[16px] text-night">
-                {ocupado ? "Preparando…" : "Compartilhar"}
+                {ocupado === "story" ? "Abrindo o Instagram…" : "Story do Instagram"}
+              </Text>
+            </Pressable>
+            <Pressable
+              onPress={() => rodar("outros")}
+              disabled={!!ocupado}
+              className="h-[48px] flex-row items-center justify-center gap-2 rounded-full active:opacity-80"
+              style={{
+                borderWidth: 1.5,
+                borderColor: "rgba(255,255,255,0.35)",
+                opacity: ocupado ? 0.6 : 1,
+              }}
+            >
+              <Share2 color={colors.paper} size={16} strokeWidth={2.4} />
+              <Text className="font-body-bold text-[15px] text-paper">
+                {ocupado === "outros" ? "Preparando…" : "Outros apps"}
               </Text>
             </Pressable>
             <Pressable onPress={onClose} className="items-center py-3 active:opacity-70">
               <Text className="font-body-bold text-[15px] text-paper">Fechar</Text>
             </Pressable>
             <Text className="text-center font-body text-[12px]" style={{ color: "#8A90AA" }}>
-              Sem seu nome e sem nenhum lugar. No Instagram, escolha Story.
+              Sem seu nome e sem nenhum lugar. Em Outros apps: WhatsApp, salvar imagem e o resto.
             </Text>
           </View>
         </View>
