@@ -414,6 +414,9 @@ Nome: **Irisa** (INPI livre; @appirisa livre). Bundle id Android `br.com.irisa.a
   desenha disco + objeto + anel de progresso; bloqueada é silhueta com cadeado e o anel mostra quanto falta; sem
   argola, sem selo de raridade na tela. Telas em `docs/gamificacao-final-telas.html` →
   `node scripts/gamificacao-telas.mjs docs/gamificacao-final-telas.html` → `docs/gamificacao/final-*.png`.
+  **Sem moderação prévia nas avaliações (dito por ele em 04/10/2026):** avaliação aparece na hora, então a proposta
+  final não tem mais o elo de 48 h; o gomo acende na hora e apaga se uma denúncia derrubar a avaliação, e medalha
+  de quantidade pede semanas diferentes (Famosinha: 30 avaliações em 4 semanas) para ninguém farmar num dia.
 
 ## Stack
 
