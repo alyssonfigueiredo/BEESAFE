@@ -426,7 +426,8 @@ Nome: **Irisa** (INPI livre; @appirisa livre). Bundle id Android `br.com.irisa.a
   perguntas de `AXES` com o marcador `Rainbow` de cinco faixas, comentário, foto, botão amarelo); o Perfil mantém foto,
   apelido, cidade, privacidade, bloqueados, sair e excluir, e ganha só o cartão "Sua pulseira" (a grade abre numa tela
   por cima). O Início mantém o painel escuro e ganha dois cartões abaixo. **Semana sem dia da semana:** quatro gomos que
-  só enchem ("3 de 4"), para nada parecer dia perdido.
+  só enchem ("3 de 4"), para nada parecer dia perdido. **Dias 5, 6 e 7:** uma faísca cada, sem prêmio de 7 de 7
+  (decisão de produto: ninguém pode sentir que precisa abrir todo dia).
 
 ## Stack
 

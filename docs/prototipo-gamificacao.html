@@ -1,6 +1,6 @@
 <title>Protótipo Acender o arco-íris</title>
 <!-- Protótipo navegável da gamificação (proposta final, 04/10/2026), para aprovar com o Aly.
-     Tour guiado de 13 passos + navegação livre. Nada grava: é tudo encenado no navegador.
+     Tour guiado de 14 passos + navegação livre. Nada grava: é tudo encenado no navegador.
      Medalhas e objetos vêm de pingentes.js; o arquivo único sai com
      node scripts/gamificacao-unica.mjs docs/prototipo-gamificacao.html docs/Irisa-prototipo-gamificacao.html -->
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -98,6 +98,15 @@ h1.t{font-family:var(--display);font-weight:700;text-transform:uppercase;font-si
 .chip{display:inline-flex;align-items:center;height:30px;padding:0 13px;border-radius:15px;background:var(--subtle);font-size:13px;font-weight:600}
 .num{font-family:var(--display);font-weight:700;line-height:1;font-variant-numeric:tabular-nums}
 
+/* dois cartões da home: mesma altura, mesma grade interna */
+.duo{display:grid;grid-template-columns:1fr 1fr;gap:10px;align-items:stretch}
+.mini2{text-align:left;padding:14px;display:flex;flex-direction:column;gap:10px}
+.mini2 .row2{display:flex;align-items:center;gap:9px}
+.mini2 .row2 svg{flex:none}
+.mini2 .lb{display:block}
+.mini2 .big{display:block;font-size:23px;white-space:nowrap}
+.mini2 .cap{font-size:13px;line-height:1.35;color:var(--muted)}
+.xtra{position:absolute;top:-9px;right:12px;font-style:normal;font-family:var(--display);font-weight:700;font-size:14px;background:var(--yellow);color:var(--ink);border-radius:10px;padding:2px 8px;transform:scale(0)}
 /* semana */
 #wkCard .glowring{position:absolute;inset:-3px;border-radius:27px;padding:3px;background:var(--rb);-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;opacity:0;pointer-events:none}
 .dots{display:grid;grid-template-columns:repeat(20,1fr);gap:2px}
@@ -197,15 +206,14 @@ h1.t{font-family:var(--display);font-weight:700;text-transform:uppercase;font-si
             <button class="btn" id="goReport" style="background:var(--coral);flex:1;font-size:15px">Registrar relato</button>
           </div>
         </div>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;align-items:start">
-          <button class="cd" id="wkCard" style="text-align:left;padding:14px;display:flex;flex-direction:column;gap:8px"><i class="glowring"></i>
-            <span style="display:flex;align-items:center;gap:10px"><svg id="wkRing" width="46" height="46" viewBox="0 0 100 100"></svg><span><span class="lb" style="display:block">Sua semana</span><span class="num" style="font-size:26px" id="wkCount">2 de 4</span></span></span>
-            <span style="font-size:13px;line-height:1.35;color:var(--muted)" id="wkMsg">Cada dia que você abre a Irisa acende um pedaço.</span>
+        <div class="duo">
+          <button class="cd mini2" id="wkCard"><i class="glowring"></i><i class="xtra" id="wkX">+1</i>
+            <span class="row2"><svg id="wkRing" width="40" height="40" viewBox="0 0 100 100"></svg><span><span class="lb">Sua semana</span><span class="num big" id="wkCount">2 de 4</span></span></span>
+            <span class="cap" id="wkMsg">Cada dia que você abre a Irisa acende um pedaço.</span>
           </button>
-          <div class="cd" id="cityCard" style="padding:14px;display:flex;flex-direction:column;gap:8px">
-            <span><span class="lb" style="display:block">Curitiba</span><span class="num" style="font-size:26px"><span id="cityN">12</span> de 100</span></span>
-            <span class="dots" id="dots"></span>
-            <span style="font-size:13px;line-height:1.35;color:var(--muted)" id="cityMsg">dos mais conhecidos já têm selo</span>
+          <div class="cd mini2" id="cityCard">
+            <span class="row2"><svg id="cityRing" width="40" height="40" viewBox="0 0 100 100"></svg><span><span class="lb">Curitiba</span><span class="num big"><span id="cityN">12</span> de 100</span></span></span>
+            <span class="cap" id="cityMsg">dos lugares mais conhecidos já têm selo.</span>
           </div>
         </div>
         <button class="cd" id="almostCard" style="display:flex;align-items:center;gap:14px;padding:12px 16px;text-align:left" data-open="famosinha">
@@ -371,7 +379,7 @@ h1.t{font-family:var(--display);font-weight:700;text-transform:uppercase;font-si
   </div></div></div>
 
   <aside id="tour" aria-live="polite">
-    <div class="top"><span class="mark">IRIS<b>A</b> · PROTÓTIPO</span><span class="count" id="tCount">1 de 13</span></div>
+    <div class="top"><span class="mark">IRIS<b>A</b> · PROTÓTIPO</span><span class="count" id="tCount">1 de 14</span></div>
     <div class="bar"><i id="tBar"></i></div>
     <p class="eb" id="tEb"></p>
     <h2 id="tH"></h2>
@@ -413,7 +421,14 @@ function animProg(host, from, to, d = 1100, delay = 0) {
   A(c, [{ strokeDasharray: `${(L * from).toFixed(1)} 999` }, { strokeDasharray: `${(L * to).toFixed(1)} 999` }], { d, delay, e: "cubic-bezier(.3,.8,.3,1)" });
 }
 const RB6 = ["#FF6964", "#FFA353", "#FFD066", "#49DCC0", "#59A7FF", "#A889FF"];
-$("#dots").innerHTML = Array.from({ length: 100 }, (_, i) => `<i style="${i < 12 ? "background:" + RB6[i % 6] : ""}"></i>`).join("");
+// cidade: anel fino de 100 tracinhos, os acesos em cor
+function drawCity(n) {
+  let h = "";
+  for (let i = 0; i < 100; i++) { const a0 = (-90 + 3.6 * i + .5) * Math.PI / 180, a1 = (-90 + 3.6 * (i + 1) - .5) * Math.PI / 180;
+    h += `<path data-c="${i}" d="M${Pt(48, a0)}A48 48 0 0 1 ${Pt(48, a1)}L${Pt(34, a1)}A34 34 0 0 0 ${Pt(34, a0)}Z" fill="${i < n ? G[Math.round(i / Math.max(n - 1, 1) * 47)] : "#E4E1DA"}"/>`; }
+  $("#cityRing").innerHTML = h + `<circle cx="50" cy="50" r="13" fill="#0F1220"/><circle cx="46.1" cy="45.6" r="2.86" fill="#fff"/>`;
+}
+drawCity(12);
 // semana: quatro gomos que só enchem, sem dia da semana nenhum à vista
 const WKC = ["#FF6964", "#FFD066", "#49DCC0", "#A889FF"];
 function drawWk(n) {
@@ -571,7 +586,7 @@ async function celebrate() {
   ["#celC", "#celW"].forEach((s, i) => A($(s), [{ opacity: 0, transform: "translateY(10px)" }, { opacity: 1, transform: "none" }], { d: 500, delay: 650 + 150 * i }));
   $$("#cel .acts .btn").forEach((b, i) => A(b, [{ opacity: 0, transform: "translateY(20px)" }, { opacity: 1, transform: "none" }], { d: 500, delay: 900 + 120 * i }));
   // a cidade também ganha cor
-  const d = $$("#dots i")[12]; d.style.background = RB6[0];
+  drawCity(13);
   $("#cityN").textContent = "13"; $("#cityMsg").textContent = "Esta semana foram 4. Um foi você.";
 }
 function confetti() {
@@ -621,6 +636,19 @@ async function weekComplete() {
   await wait(1100);
   openBox();
 }
+// dias 5, 6 e 7: uma faísca cada, sem prêmio de 7 de 7 (ninguém precisa abrir todo dia)
+async function extraDay() {
+  if (!S.week4) return weekComplete();
+  S.extra = (S.extra || 0);
+  if (S.extra >= 3) { toast("Semana cheia. Segunda começa outra, sem perder nada", 118); return; }
+  S.extra++;
+  toast("Mais um dia aberto: +1 faísca", 118);
+  await wait(300);
+  flyTo($("#wkCard"), $("#tabs .pf"), SPARK);
+  const x = $("#wkX"); x.textContent = "+" + S.extra;
+  A(x, [{ transform: "scale(0)" }, { transform: "scale(1.4)" }, { transform: "scale(1)" }], { d: 500, e: "cubic-bezier(.3,1.5,.45,1)" });
+  $("#wkMsg").innerHTML = `<b>Semana acesa.</b> ${S.extra} dia${S.extra > 1 ? "s" : ""} a mais, ${S.extra} faísca${S.extra > 1 ? "s" : ""} extra.`;
+}
 async function openBox() {
   const b = $("#box"); b.classList.add("on");
   $("#boxPrize").innerHTML = medal("deu-close", { size: 170 }); $("#boxPrize").classList.remove("neon");
@@ -661,7 +689,7 @@ $("#detGo").onclick = () => { if ($("#detGo").dataset.mode === "rate") { closeSh
 document.addEventListener("click", e => { const b = e.target.closest("[data-open]"); if (b && $("#screen").contains(b)) openDetail(b.dataset.open); });
 $("#tabs").addEventListener("click", e => { const b = e.target.closest("button"); if (!b) return; const i = +b.dataset.tab;
   if (i === 0) go("home"); else if (i === 4) { go("perfil"); $("#pfBadge").style.transform = "scale(0)"; } else toast("Fora deste protótipo", 118); });
-$("#wkCard").addEventListener("click", () => { if (!S.today) lightToday(); else weekComplete(); });
+$("#wkCard").addEventListener("click", () => { if (!S.today) lightToday(); else if (!S.week4) weekComplete(); else extraDay(); });
 
 /* ---------- tour ---------- */
 const STEPS = [
@@ -677,6 +705,7 @@ const STEPS = [
   { eb: "Pulseira", h: "Todas as medalhas num lugar só", t: "Desbloqueadas em cor, as outras em silhueta com o anel de progresso. Sem argola, sem selo de raridade, sem texto em volta.", scr: "pul", spot: "#mg" },
   { eb: "Detalhe", h: "Toque para ver quanto falta", t: "Uma medalha, um número e um botão que leva direto a avaliar. Toque em qualquer outra para ver a dela.", scr: "pul", spot: "#det", run: () => openDetail("famosinha") },
   { eb: "Caixinha", h: "Semana acesa abre a caixinha", t: "Quando o quarto pedaço acende, a caixinha abre: um <b>banho surpresa</b> numa medalha que a pessoa já tem.", scr: "home", spot: null, run: () => { closeSheets(); weekComplete(); } },
+  { eb: "E se abrir os 7 dias?", h: "Ganha faísca, não obrigação", t: "Depois que a semana acende, cada dia a mais dá <b>uma faísca</b> (até três). Não existe prêmio de 7 de 7, de propósito: ninguém deve sentir que precisa abrir todo dia.", scr: "home", spot: "#wkCard", run: async () => { closeBox(); await wait(400); await extraDay(); await wait(1300); await extraDay(); } },
   { eb: "Fora do jogo", h: "O que nunca vira ponto", t: "<b>Relato</b> não pontua. <b>Medalha</b> não mostra lugar. <b>Missão</b> não fala de horário. <b>Aviso</b> no celular é neutro. Medalha de quantidade pede semanas diferentes.", scr: "home", spot: null, run: () => { closeBox(); closeSheets(); } },
 ];
 let step = -1, touring = true;
