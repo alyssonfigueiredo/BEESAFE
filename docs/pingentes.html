@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Pingentes da Irisa</title>
+<!-- Catálogo das 30 conquistas (briefing de pingentes). Os dados e os desenhos vêm de pingentes.js. Uso interno, não vai para o site. -->
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Urbanist:wght@500&family=Oswald:wght@400;700&family=Space+Grotesk:wght@400;500;600;700&display=swap">
+<style>
+:root{--paper:#F5F4F1;--card:#FFFFFF;--ink:#141829;--muted:#3D4560;--dim:#7C8296;--turqInk:#0A8B7A;
+  --rb:linear-gradient(90deg,#FF6964,#FFA353,#FFD066,#49DCC0,#59A7FF,#A889FF);--shadow:0 2px 4px rgba(20,24,41,.03),0 16px 40px rgba(20,24,41,.08)}
+*{box-sizing:border-box}p,h1,h2,h3{margin:0}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:"Space Grotesk",Arial,sans-serif}
+body:before{content:"";position:fixed;inset:0;z-index:-1;background:
+  radial-gradient(60% 40% at -6% -4%,rgba(73,220,192,.28),transparent 62%),radial-gradient(50% 36% at 106% 6%,rgba(255,105,100,.2),transparent 62%),
+  radial-gradient(55% 40% at 104% 104%,rgba(168,137,255,.26),transparent 62%),radial-gradient(45% 34% at -4% 102%,rgba(255,208,102,.24),transparent 62%)}
+.wrap{max-width:1440px;margin:0 auto;padding:56px 16px 80px}
+@media(min-width:720px){.wrap{padding:72px 40px 96px}}
+.eb{font-size:14px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--turqInk)}
+h1{font-family:Oswald,Impact,sans-serif;font-weight:700;text-transform:uppercase;font-size:clamp(40px,7vw,84px);line-height:1.05;margin:10px 0 18px}
+h1 span{background:var(--rb);-webkit-background-clip:text;background-clip:text;color:transparent}
+.lead{font-size:18px;line-height:1.5;color:var(--muted);max-width:820px}
+.rules{display:flex;flex-wrap:wrap;gap:10px;margin:22px 0 8px}
+.rules span{font-size:14px;font-weight:600;padding:8px 14px;border-radius:999px;background:rgba(255,255,255,.7)}
+h2{font-family:Oswald,Impact,sans-serif;text-transform:uppercase;font-size:30px;margin:48px 0 16px;display:flex;align-items:baseline;gap:12px}
+h2 small{font-family:"Space Grotesk";text-transform:none;font-size:15px;color:var(--dim);font-weight:500}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px}
+.pc{background:rgba(255,255,255,.78);border-radius:24px;padding:20px;box-shadow:var(--shadow);display:grid;grid-template-columns:96px 1fr;gap:4px 16px;align-items:start}
+.pc .art{grid-row:span 3;width:96px;height:96px;border-radius:22px;background:#F1EEE8;display:flex;align-items:center;justify-content:center}
+.pc h3{font-size:21px;font-weight:700;line-height:1.2}
+.pc .fx{font-size:13px;color:var(--dim)}
+.rar{justify-self:start;font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:4px 10px;border-radius:999px;color:var(--ink)}
+.pc dl{grid-column:1/-1;margin:12px 0 0;display:grid;grid-template-columns:88px 1fr;gap:6px 10px;font-size:14.5px;line-height:1.4}
+.pc dt{color:var(--dim);font-weight:600}
+.pc dd{margin:0;color:var(--muted)}
+.pc .copy{grid-column:1/-1;margin-top:12px;padding:12px 14px;border-radius:14px;background:#141829;color:#F1F0EC;font-size:15px;line-height:1.4}
+.pc .copy:before{content:"“";color:#FFD066;font-weight:700}
+.pc .copy:after{content:"”";color:#FFD066;font-weight:700}
+.note{margin-top:40px;font-size:15px;line-height:1.55;color:var(--muted);max-width:900px}
+</style></head><body>
+<div class="wrap">
+  <p class="eb">Irisa · gamificação</p>
+  <h1>Pingentes da <span>Irisa</span></h1>
+  <p class="lead">30 conquistas. Primeiro o título, que a pessoa tem vontade de printar; depois o objeto, uma joia pequena que traduz o título sem ser um ícone literal. A graça vem do status exagerado e da linguagem do rolê, nunca da identidade de alguém.</p>
+  <div class="rules"><span>Relato nunca dá pingente</span><span>Só a pessoa vê a pulseira</span><span>Nada de check-in</span><span>Títulos com flexão: a pessoa escolhe a, o ou e</span></div>
+  <div id="cat"></div>
+  <p class="note"><b>“Ajudou”</b> é um botão novo nas avaliações, anônimo como a curtida do mural: quem marca não aparece e quem recebe só vê o número. Ele e a curtida do mural alimentam a linha de Reconhecimento. <b>Avaliação válida</b> é a que passou 48 h sem a moderação esconder, e o mesmo lugar só conta de novo depois de 6 meses.</p>
+</div>
+<script src="pingentes.js"></script>
+<script>
+const P=window.PINGENTES,ORD=["Trajetória","Reconhecimento","Cidade","Mapa","Rolê","Constância","Apoio","Veterania"];
+const SUB={"Trajetória":"a linha principal, por avaliações","Reconhecimento":"quando o que você escreve ajuda alguém","Cidade":"selos acesos e cidades novas","Mapa":"o que deixa o mapa mais completo","Rolê":"variedade de lugares","Constância":"dias acesos e desafios","Apoio":"mural, convite e cuidado","Veterania":"as que quase ninguém tem"};
+document.getElementById("cat").innerHTML=ORD.map(c=>{const it=P.lista.filter(p=>p.cat===c);
+  return `<h2>${c} <small>${it.length} · ${SUB[c]}</small></h2><div class="grid">`+it.map(p=>{const [rn,rc]=P.RAR[p.rar];
+    return `<article class="pc"><div class="art">${P.svg(p.art,{size:84})}</div><h3>${p.t}</h3>${p.flex?`<p class="fx">${p.flex.join(" · ")}</p>`:""}<span class="rar" style="background:${rc}">${rn}</span>
+      <dl><dt>Desbloqueia</dt><dd>${p.cond}</dd><dt>Pingente</dt><dd>${p.obj}</dd></dl><p class="copy">${p.copy}</p></article>`}).join("")+`</div>`}).join("");
+</script>
+</body></html>

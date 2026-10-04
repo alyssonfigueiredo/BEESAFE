@@ -18,6 +18,8 @@ type CityState = {
   loading: boolean;
   userLocation: { lat: number; lng: number } | null;
   setCity: (city: City) => void;
+  /** Atualiza a posição de quem usa; com `ask`, pede a permissão se ainda não foi dada. */
+  locate: (ask?: boolean) => Promise<void>;
 };
 
 const CityContext = createContext<CityState>({
@@ -25,6 +27,7 @@ const CityContext = createContext<CityState>({
   loading: true,
   userLocation: null,
   setCity: () => {},
+  locate: async () => {},
 });
 
 const FALLBACK = { name: "Curitiba", state: "PR" };
@@ -59,6 +62,29 @@ export function CityProvider({ children }: PropsWithChildren) {
     },
     [uid],
   );
+
+  // A posição não depende da cidade escolhida: quem salvou Curitiba e está em Pinhais precisa ver
+  // os lugares de perto. Antes ela só era lida quando não havia cidade salva nem no perfil.
+  const locate = useCallback(async (ask = true) => {
+    try {
+      let { status } = await Location.getForegroundPermissionsAsync();
+      if (status !== "granted" && ask)
+        ({ status } = await Location.requestForegroundPermissionsAsync());
+      if (status !== "granted") return;
+      const last = await Location.getLastKnownPositionAsync();
+      if (last) setUserLocation({ lat: last.coords.latitude, lng: last.coords.longitude });
+      const pos = await Location.getCurrentPositionAsync({ accuracy: Location.Accuracy.Balanced });
+      setUserLocation({ lat: pos.coords.latitude, lng: pos.coords.longitude });
+    } catch {
+      // sem GPS, a lista cai na ordem por nome
+    }
+  }, []);
+
+  useEffect(() => {
+    if (!uid) return;
+    const t = setTimeout(() => void locate(false), 0);
+    return () => clearTimeout(t);
+  }, [uid, locate]);
 
   useEffect(() => {
     if (!uid) return;
@@ -125,7 +151,7 @@ export function CityProvider({ children }: PropsWithChildren) {
   }, [uid]);
 
   return (
-    <CityContext.Provider value={{ city, loading, userLocation, setCity }}>
+    <CityContext.Provider value={{ city, loading, userLocation, setCity, locate }}>
       {children}
     </CityContext.Provider>
   );

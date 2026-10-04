@@ -1,5 +1,5 @@
 import { Link } from "expo-router";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { FlatList, Pressable, ScrollView, Text, View } from "react-native";
 
 import { useScreenInsets } from "@/hooks/useScreenInsets";
@@ -7,7 +7,7 @@ import { Aurora } from "@/components/Aurora";
 import { Chip } from "@/components/Chip";
 import { PlaceCard } from "@/components/PlaceCard";
 import { SearchField } from "@/components/SearchField";
-import { usePlaceCount, usePlaces, useSearchPlaces } from "@/hooks/usePlaces";
+import { useNearPlaces, usePlaceCount, usePlaces, useSearchPlaces } from "@/hooks/usePlaces";
 import { distanceMeters } from "@/lib/geo";
 import { useCity } from "@/providers/CityProvider";
 import { PLACE_CATEGORIES, type PlaceCategory } from "@/theme/domain";
@@ -17,8 +17,20 @@ const simplifica = (s: string) => s.toLowerCase().normalize("NFD").replace(/[̀-
 
 export default function LugaresScreen() {
   const insets = useScreenInsets();
-  const { city, loading, userLocation } = useCity();
-  const { data: places = [], isLoading } = usePlaces(city?.id);
+  const { city, loading, userLocation, locate } = useCity();
+  const { data: cidade = [], isLoading: carregandoCidade } = usePlaces(city?.id);
+  // Com a localização, a lista é dos lugares mais perto de você, de qualquer cidade (quem está em
+  // Pinhais com Curitiba escolhida via os do centro de Curitiba). Sem ela, o lote da cidade.
+  useEffect(() => {
+    void locate(true);
+  }, [locate]);
+  const perto = useNearPlaces(userLocation, null);
+  const modoPerto = !!userLocation && !perto.isError;
+  const places = useMemo(
+    () => (modoPerto ? (perto.data ?? []) : cidade),
+    [modoPerto, perto.data, cidade],
+  );
+  const isLoading = modoPerto ? perto.isLoading : carregandoCidade;
   const [busca, setBusca] = useState("");
   // Com dois caracteres a busca vai ao banco: a cidade tem muito mais lugar do que o lote
   // carregado, então filtrar só o que está na memória esconde lugar que existe.
@@ -96,8 +108,9 @@ export default function LugaresScreen() {
                 Lugares
               </Text>
               <Text className="font-body text-sm text-dim">
-                {city.name} · {city.state}
-                {totalCidade != null ? ` · ${totalCidade} cadastrados` : ""}
+                {modoPerto
+                  ? `Perto de você · ${city.name} e arredores`
+                  : `${city.name} · ${city.state}${totalCidade != null ? ` · ${totalCidade} cadastrados` : ""}`}
               </Text>
             </View>
 

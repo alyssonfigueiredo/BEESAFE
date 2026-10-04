@@ -4,12 +4,16 @@ import type { ExpoConfig } from "expo/config";
 // no build local com Personal Team (npx expo run:ios) fica desligado.
 const appleSignIn = process.env.APP_ENV === "preview" || process.env.APP_ENV === "production";
 
+// Push no Android passa pelo Firebase (FCM). O google-services.json não vai para o repositório público:
+// ele entra pela variável de arquivo GOOGLE_SERVICES_JSON do EAS (no Mac: GOOGLE_SERVICES_JSON=./google-services.json).
+const googleServicesFile = process.env.GOOGLE_SERVICES_JSON;
+
 const config: ExpoConfig = {
   name: "Irisa",
   slug: "irisa",
   owner: "alyssondfa",
   scheme: "irisa",
-  version: "0.1.1",
+  version: "0.1.2",
   orientation: "portrait",
   icon: "./assets/icon.png",
   userInterfaceStyle: "light",
@@ -27,6 +31,7 @@ const config: ExpoConfig = {
   },
   android: {
     package: "br.com.irisa.app",
+    ...(googleServicesFile ? { googleServicesFile } : {}),
     adaptiveIcon: {
       backgroundColor: "#FAF9F6",
       foregroundImage: "./assets/android-icon-foreground.png",
@@ -54,6 +59,10 @@ const config: ExpoConfig = {
       },
     ],
     [
+      "expo-notifications",
+      { icon: "./assets/android-icon-monochrome.png", color: "#D98C8A" },
+    ],
+    [
       "expo-location",
       {
         locationWhenInUsePermission:
@@ -78,7 +87,12 @@ const config: ExpoConfig = {
   // Só código nativo (lib nova, ícone, permissão) continua exigindo build — e a cota do plano
   // Free do EAS é de build, não de update. `runtimeVersion` pela policy `appVersion`: um update
   // só alcança quem está na mesma versão do app, então build velha nunca recebe código novo.
-  updates: { url: "https://u.expo.dev/38a09fd2-63cc-4a90-912d-0f73022944ff" },
+  // O canal vem do eas.json nos builds do EAS; build feita direto no Xcode (Archive) fica no de
+  // produção, para também receber os updates.
+  updates: {
+    url: "https://u.expo.dev/38a09fd2-63cc-4a90-912d-0f73022944ff",
+    requestHeaders: { "expo-channel-name": "production" },
+  },
   runtimeVersion: { policy: "appVersion" },
   extra: {
     eas: { projectId: "38a09fd2-63cc-4a90-912d-0f73022944ff" },

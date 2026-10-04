@@ -376,6 +376,123 @@ Nome: **Irisa** (INPI livre; @appirisa livre). Bundle id Android `br.com.irisa.a
   apresentação para o Alysson em `docs/apresentacao-liquid.html`; plano de lançamento em
   `docs/plano-lancamento.html` (nenhum deles é publicado no site).
 
+- **0.1.1 liberada nas duas lojas (dito por ele em 03/10/2026).** Versão do app subiu para 0.1.2 (a da build com push).
+- **iOS 0.1.2 (build 10) gerada no EAS e enviada ao App Store Connect em 04/10/2026** (`--auto-submit`), com push,
+  gamificação e aba ativa corrigida; chave de push da Apple criada no mesmo build. Falta criar a versão 0.1.2 na
+  App Store Connect, escolher a build 10 e enviar para revisão. `npx expo run:ios --device` (Debug) no Mac dele
+  falha no link com `Sealable::Sealable()` do MapLibre (núcleo do RN pré-compilado em Release); a build EAS (Release)
+  passa. Para testar no iPhone: `npx expo run:ios --device --configuration Release`.
+- **Notificações push (migration 38 + Edge Function `send-push`, 03/10/2026):** `expo-notifications` é
+  nativo, então só funciona a partir da próxima build (0.1.2). `src/hooks/usePush.ts` só faz o `require`
+  depois de `requireOptionalNativeModule("ExpoPushTokenManager")`: o mesmo JS chega por EAS Update em
+  0.1.1 sem derrubar o app (lá ele simplesmente não pede permissão). Pede a permissão uma vez, depois do
+  login e do splash, grava o token por `register_push_token` em `push_tokens` (sem policy, some com a
+  conta) e abre `data.url` ao tocar. Envio pelo SQL Editor com `supabase/notificacoes.sql`:
+  `enviar_notificacao(titulo, corpo, quando, url, cidade)` grava em `push_envios`; na hora chama a função
+  na mesma transação, agendado o pg_cron `send-push` (5 em 5 min) pega. Senha só no Vault (`push_secret`,
+  gerada pela migration), conferida por `push_autorizado`. Token de aparelho que desinstalou
+  (`DeviceNotRegistered`) é apagado no envio. **Antes da build:** Android precisa do Firebase (projeto no
+  console do Firebase com o pacote `br.com.irisa.app` → `google-services.json` → `npx eas-cli env:create
+  --name GOOGLE_SERVICES_JSON --type file --value ./google-services.json` nos ambientes preview e
+  production → chave de conta de serviço FCM V1 em `npx eas-cli credentials` → Android → Push
+  Notifications). iOS: o `eas build` pergunta se gera a chave de push da Apple (responder sim).
+  O arquivo `google-services.json` está no .gitignore (repo público).
+- **Gamificação (proposta, 03/10/2026, nada no app ainda):** `docs/gamificacao.html` é a apresentação para o Aly
+  (anel de 48 gomos, dias acesos, faíscas, caixinha, desafios, pulseira). Pingentes seguem o briefing dele: título
+  primeiro, objeto depois, sem bandeira/arco-íris/emoji; os 30 estão em `docs/pingentes.js` (dados + SVG) e no
+  catálogo `docs/pingentes.html`. Títulos com flexão (Famosinha/o/e) a pessoa escolhe no Perfil. Telas de exemplo em
+  `docs/gamificacao-telas.html`, exportadas por `node scripts/gamificacao-telas.mjs` para `docs/gamificacao/tela-*.png`.
+  **Arquivo para mandar:** `docs/Irisa-gamificacao.html` (27 slides, pingentes.js e telas embutidos, abre sozinho);
+  depois de mexer na apresentação ou nas telas, `node scripts/gamificacao-unica.mjs` gera de novo. O `gamificacao.html`
+  avulso só abre com `pingentes.js` e `gamificacao/` na mesma pasta.
+  Regras: relato nunca pontua, nada público, nada de check-in, "Da Casa" nunca mostra o lugar no cartão do story.
+  **V3 (04/10/2026, `docs/gamificacao-v3.html` → `docs/Irisa-gamificacao-v3.html`):** resposta à V2 que o ChatGPT fez.
+  Fica a cadeia única, os quatro tempos e o lançamento com 12 pingentes; corrige: nome de lugar nunca no pingente,
+  missão nunca por horário/região de alerta, denominador da cidade = os 100 lugares mais conhecidos (`prominence`),
+  gomo provisório na hora e confirmado em 48 h, dia guardado na sequência. Os 12: Deu o Nome, Deu Close, Figurinha,
+  Famosinha, Inaugurou, Acendeu a Luz, Eu Conheço um Lugar, Nome na Lista, Mala Pronta, Bateu Ponto, Ombro Amigo,
+  Abre-Alas (este só vale para quem entrou no teste fechado do Android, então tem que sair antes da produção).
+  **Proposta final (04/10/2026, `docs/gamificacao-final.html` → `docs/Irisa-gamificacao-final.html`, artefato publicado):**
+  V3 + retorno do Aly. **Sem sequência diária** (ele acha irritante): "semana acesa" = app aberto em 4 dias quaisquer
+  da semana, recomeça na segunda sem perder nada; Bateu Ponto = primeira semana acesa, Já Mora Aqui = 4 semanas,
+  seguidas ou não. **Medalhas limpas** (ele achou os pingentes poluídos): `PINGENTES.medal()` em `docs/pingentes.js`
+  desenha disco + objeto + anel de progresso; bloqueada é silhueta com cadeado e o anel mostra quanto falta; sem
+  argola, sem selo de raridade na tela. Telas em `docs/gamificacao-final-telas.html` →
+  `node scripts/gamificacao-telas.mjs docs/gamificacao-final-telas.html` → `docs/gamificacao/final-*.png`.
+  **Sem moderação prévia nas avaliações (dito por ele em 04/10/2026):** avaliação aparece na hora, então a proposta
+  final não tem mais o elo de 48 h; o gomo acende na hora e apaga se uma denúncia derrubar a avaliação, e medalha
+  de quantidade pede semanas diferentes (Famosinha: 30 avaliações em 4 semanas) para ninguém farmar num dia.
+  **Protótipo navegável (04/10/2026):** `docs/prototipo-gamificacao.html` → `docs/Irisa-prototipo-gamificacao.html`
+  (arquivo único, artefato publicado). Tour de 12 passos com holofote + navegação livre: semana acesa, 12 dos 100,
+  medalha quase lá, avaliar, recompensa na hora (gomo, faísca voando, Famosinhe 22→23), desbloqueio de Acendeu a Luz
+  (5ª avaliação do lugar), cartão do story sem o lugar, pulseira, detalhe, caixinha com banho neon e as travas.
+  Nada grava; é encenado com Web Animations.
+  **Ajuste do Aly (04/10/2026):** as telas atuais não mudam. A ficha do lugar no protótipo é a do app (as quatro
+  perguntas de `AXES` com o marcador `Rainbow` de cinco faixas, comentário, foto, botão amarelo); o Perfil mantém foto,
+  apelido, cidade, privacidade, bloqueados, sair e excluir, e ganha só o cartão "Sua pulseira" (a grade abre numa tela
+  por cima). O Início mantém o painel escuro e ganha dois cartões abaixo. **Semana sem dia da semana:** quatro gomos que
+  só enchem ("3 de 4"), para nada parecer dia perdido. **Dias 5, 6 e 7:** uma faísca cada, sem prêmio de 7 de 7
+  (decisão de produto: ninguém pode sentir que precisa abrir todo dia).
+
+- **Gamificação no app + painel (migration 39, 04/10/2026):** só acréscimos. Banco: `user_days` (dia em que abriu,
+  só a data; `consulted`/`supported`), `user_medals`, `user_boxes`, `app_settings` (aviso no Início, data do Abre-Alas),
+  `push_aberturas`, `profiles.medal_form`. `my_gamification(p_city)` calcula tudo e grava medalha nova; `track_day`,
+  `open_box`, `set_medal_form`, `mark_medals_seen`, `app_config`. Regras do anel: 1 gomo por avaliação no ar + 1 se foi
+  a primeira do lugar + 1 se foi a 5ª + 1 por lugar cadastrado + 1 por foto aprovada (teto 48; nível = gomos/8).
+  Faísca: consulta do dia, apoio no mural do dia, dias 5–7 da semana; caixinha a cada 10 faíscas e a cada semana acesa.
+  Abre-Alas: conta criada até `app_settings.abre_alas_ate` (null = todo mundo, enquanto o Android está em teste:
+  **gravar a data no painel no dia em que for para produção**). App (só JS, sai por EAS Update): `src/lib/medals.ts`
+  (mesmo desenho do `docs/pingentes.js`, via `SvgXml`), `src/hooks/useGamification.ts`, `src/components/gami/*`,
+  `app/pulseira.tsx`; Início ganhou `AvisoCard` em cima e `GamiHomeCards` embaixo do painel; Perfil ganhou só
+  `PulseiraCard`; ficha do lugar marca consulta e mostra `RewardSheet` em avaliação nova (atualização segue com o
+  alerta de sempre); `MedalCelebration` no layout raiz. Sem a migration no banco, tudo isso some calado.
+  Push: `send-push` manda o id do envio e o app grava a abertura — **republicar a função** (`npx supabase functions
+  deploy send-push --project-ref ntjirpqulrnieeglpiei`) para o painel contar quem abriu.
+  **Painel web:** `docs/admin/` → https://appirisa.com.br/admin/ (funções `admin_*`, papel conferido em cada uma;
+  moderação vê moderação/lugares/fotos, admin vê tudo). Relatos nunca aparecem ligados a uma pessoa, nem no painel.
+  Foto da equipe: Storage `fotos-lugares/equipe/<lugar>/…` + `admin_place_photo` (origem `equipe`).
+  Login do painel com e-mail/senha ou Google; para o Google funcionar, `https://appirisa.com.br/admin/` tem que estar
+  em Supabase → Authentication → URL Configuration → Redirect URLs. O painel é JS puro (`docs/admin/admin.js`),
+  sem build; a chave `sb_publishable_` entra pelo `build-site.mjs` igual à da landing.
+  **Aba ativa quadrada nas pontas (corrigido):** a lente virou camada própria com raio medido (`onLayout`).
+  **Ajuste depois do 1º dia (migration 40, 04/10/2026, retorno dele):** o anel enchia rápido demais (com quase todo
+  lugar sem nota, cada avaliação valia 2 gomos e o Leandro fechou os 48 no primeiro dia). Agora **cada semana acende no
+  máximo 4 gomos** (avaliação, 5ª avaliação do lugar, lugar cadastrado, foto aprovada; a "primeira do lugar" não soma
+  mais, ela é a medalha Inaugurou): 48 gomos = 12 semanas no mínimo. `my_gamification` devolve `gomos_semana` e
+  `gomos_semana_max`. Figurinha/Famosinha mostravam 15/15 trancada (faltava a trava das semanas): com as avaliações
+  feitas, o progresso passa a contar semanas; toda medalha de contagem tem `unidade`. **"Pulseira" virou
+  "Conquistas"** (rota `/conquistas`, `ConquistasCard`), e o anel saiu dela: no Perfil são dois cartões, `AnelCard`
+  (gomos) e `ConquistasCard` (medalhas). Os dois cartões do Início colapsavam (`flex-1` em filho de altura automática):
+  agora `flexGrow`. **EAS Update só chega em quem tem a mesma versão do app** (`runtimeVersion` = `appVersion`): com o
+  app.config em 0.1.2, update não alcança a 0.1.1.
+  **Tour de boas-vindas (04/10/2026, pedido dele):** `src/components/Tour.tsx` + `src/hooks/useTour.ts`. Seis telas
+  deslizáveis (boas-vindas, quatro perguntas, relato anônimo, emergência, apoio, conquistas) com Pular/Próximo/Começar,
+  uma vez por aparelho (AsyncStorage `irisa.tour.v1`; trocar para v2 faz todo mundo ver de novo), depois do login e do
+  splash. O pedido de notificação e a celebração de medalha esperam o tour fechar. Perfil ganhou a linha "Como a Irisa
+  funciona → Rever o tour". Só JS: sai por EAS Update (para quem tem 0.1.2).
+  **Protótipo v2 para aprovar (04/10/2026, retorno do Leandro):** o tour de seis telas com ícones pulando não agradou.
+  `docs/prototipo-gamificacao-v2.html` → `docs/Irisa-prototipo-gamificacao-v2.html` (artefato
+  https://claude.ai/artifact/RtAaAJagiNUDsh3tKFGSrS): tour dentro do Início (anel da marca se desenha gomo a gomo,
+  holofote + borda arco-íris que se desenha em volta de cada alvo, balão com Pular/Próximo), animações só de
+  preenchimento (gomos, borda, barras, contagem; nada de pulo grande), borda de progresso no cartão Sua semana,
+  Sua semana e Sua cidade abrem detalhe (só os dias que contaram; perto do selo e já com selo), Quase lá em destaque
+  no Início e herói escuro nas Conquistas. **Nada disso está no app ainda: esperando aprovação.**
+  **Lugares perto de você (migration 41, 04/10/2026, achado pelo Leandro em Pinhais):** a aba Lugares mostrava os do
+  centro de Curitiba. Duas causas: o `CityProvider` só lia o GPS quando não havia cidade salva nem no perfil (quase
+  nunca), e a lista era o lote de 1.000 da cidade escolhida ordenado por distância. Agora `locate()` no provider lê a
+  posição sempre (sem pedir permissão na abertura; a aba Lugares pede), e com posição a lista vem de `places_near`
+  (índice espacial, até 30 km, 200 lugares, qualquer município). Sem posição ou sem a migration, volta ao lote da cidade.
+  **Protótipo v2 ampliado (04/10/2026, 15 passos):** entraram Mapa (painel sólido com Mapa/Lista e camadas Lugares/
+  Relatos, pinos agrupados com número, lugar sem nota como pontinho, relato como área, folha "Perto de você"), Apoio
+  (mural em papel colado com pergunta da semana, atalhos abraço/dica/pedir ajuda, reação por tipo, aba Serviços com os
+  4 números grandes), **pronome no Perfil valendo para o app todo** (a frase da marca "onde a gente é bem-vinde" não
+  muda) e a **descoberta na Home**. Reação por tipo e pergunta da semana pedem banco novo.
+  **Descoberta na Home (proposta, NÃO implementar sem ok dele):** `docs/descoberta-proposta.html` → artefato
+  https://claude.ai/artifact/BpjJ4FLBXBCP3GLBLsyuyh. Regra dele: o framework de avaliações não muda (perguntas, escalas,
+  pesos, `place_ratings`, cálculo). "Já fui" leva à ficha de sempre; origem só em `discovery_events` (sem coluna nova
+  em `place_ratings`, recomendação) e na rota `?origem=home_discovery&avaliar=1`. Pendente decidir a folha de
+  recompensa quando a avaliação vem da descoberta.
+
 ## Stack
 
 Expo SDK 57, Expo Router, NativeWind v4, TypeScript, TanStack Query, MapLibre React Native v11 com tiles Esri

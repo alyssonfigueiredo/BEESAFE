@@ -70,6 +70,36 @@ export function useNearbyPlaces(point: { lat: number; lng: number } | null, radi
   });
 }
 
+/**
+ * Os lugares mais perto de quem usa, de qualquer cidade (migration 41). É o que a aba Lugares mostra
+ * com a localização ligada: o lote de usePlaces é da cidade escolhida, e quem está numa cidade
+ * vizinha via os do centro dela.
+ */
+export function useNearPlaces(
+  point: { lat: number; lng: number } | null,
+  category: PlaceCategory | null,
+) {
+  // Arredonda a ~100 m para não refazer a busca a cada passo dado.
+  const lat = point ? Math.round(point.lat * 1000) / 1000 : null;
+  const lng = point ? Math.round(point.lng * 1000) / 1000 : null;
+  return useQuery({
+    queryKey: ["places-near", lat, lng, category],
+    enabled: lat != null && lng != null,
+    staleTime: 60_000,
+    retry: false,
+    queryFn: async () => {
+      const { data, error } = await supabase.rpc("places_near", {
+        p_lat: point!.lat,
+        p_lng: point!.lng,
+        p_category: category,
+        p_limit: 150,
+      });
+      if (error) throw error;
+      return data as PublicPlace[];
+    },
+  });
+}
+
 // Quantos lugares a cidade tem de verdade (o lote de usePlaces é só o que cabe na tela).
 export function usePlaceCount(cityId: number | undefined) {
   return useQuery({

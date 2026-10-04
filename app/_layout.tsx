@@ -19,28 +19,46 @@ import { SafeAreaProvider } from "react-native-safe-area-context";
 import { queryClient } from "@/lib/query";
 import { AuthProvider, useAuth } from "@/providers/AuthProvider";
 import { Splash } from "@/components/Splash";
+import { MedalCelebration } from "@/components/gami/MedalCelebration";
+import { Tour } from "@/components/Tour";
+import { useTrackOpen } from "@/hooks/useGamification";
+import { usePush } from "@/hooks/usePush";
+import { useTour } from "@/hooks/useTour";
 import { CityProvider } from "@/providers/CityProvider";
 import { colors } from "@/theme/tokens";
 
 SplashScreen.preventAutoHideAsync();
 
-function RootNavigator() {
+function RootNavigator({ pronto }: { pronto: boolean }) {
   const { session, loading } = useAuth();
+  // Tour de boas-vindas uma vez por aparelho, depois do login e da abertura animada.
+  const tour = useTour(!!session && pronto);
+  // Pedido de notificação só depois da abertura animada e do tour, para não aparecer por cima deles.
+  usePush(session?.user.id, pronto && tour === "fechado");
+  // Gamificação: marca o dia em que a pessoa abriu o app (só a data) e celebra medalha nova.
+  useTrackOpen();
   if (loading) return null;
   return (
-    <Stack screenOptions={{ headerShown: false, contentStyle: { backgroundColor: colors.paper } }}>
-      <Stack.Protected guard={!!session}>
-        <Stack.Screen name="(tabs)" />
-        <Stack.Screen name="lugar/[id]" />
-        <Stack.Screen name="moderacao" />
-      </Stack.Protected>
-      <Stack.Protected guard={!session}>
-        <Stack.Screen name="(auth)" />
-      </Stack.Protected>
-      {/* Fora dos guards (o retorno do login chega sem sessão), mas por último: a primeira tela da
+    <>
+      <Stack
+        screenOptions={{ headerShown: false, contentStyle: { backgroundColor: colors.paper } }}
+      >
+        <Stack.Protected guard={!!session}>
+          <Stack.Screen name="(tabs)" />
+          <Stack.Screen name="lugar/[id]" />
+          <Stack.Screen name="moderacao" />
+          <Stack.Screen name="conquistas" />
+        </Stack.Protected>
+        <Stack.Protected guard={!session}>
+          <Stack.Screen name="(auth)" />
+        </Stack.Protected>
+        {/* Fora dos guards (o retorno do login chega sem sessão), mas por último: a primeira tela da
           lista vira a rota inicial, e esta nunca pode ser a de abertura do app. */}
-      <Stack.Screen name="auth/callback" />
-    </Stack>
+        <Stack.Screen name="auth/callback" />
+      </Stack>
+      {session && pronto && tour === "fechado" && <MedalCelebration />}
+      <Tour visible={!!session && pronto && tour === "aberto"} />
+    </>
   );
 }
 
@@ -71,7 +89,7 @@ export default function RootLayout() {
           <AuthProvider>
             <CityProvider>
               <StatusBar style="dark" />
-              <RootNavigator />
+              <RootNavigator pronto={!abrindo} />
               {abrindo && <Splash onDone={fecharSplash} />}
             </CityProvider>
           </AuthProvider>

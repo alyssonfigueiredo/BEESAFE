@@ -142,3 +142,57 @@ select count(*) as open_reports_0 from public.content_reports where status = 'op
 select public.verify_place('aaaaaaaa-0000-0000-0000-000000000001', true);
 select verified from public.public_places;
 reset role;
+
+-- ---------- gamificação e painel (migration 39) ----------
+set role authenticated;
+set request.jwt.claim.sub = '66666666-6666-6666-6666-666666666666';
+select public.track_day('open');
+select public.track_day('consult');
+select public.track_day('open');
+reset role;
+select count(*) as um_dia_1, bool_and(consulted) as consultou from public.user_days where user_id = '66666666-6666-6666-6666-666666666666';
+set role authenticated;
+select (public.my_gamification()) ? 'medalhas' as tem_medalhas;
+select jsonb_array_length(public.my_gamification()->'conquistadas') > 0 as abre_alas_desbloqueada;
+-- migration 41: lugares perto de um ponto, de qualquer cidade
+select count(*) >= 0 as perto_ok from public.places_near(-25.43, -49.27);
+-- migration 40: gomos da semana e unidade em toda medalha de contagem
+select (public.my_gamification()->>'gomos_semana_max')::int = 4 as teto_semana_4;
+select bool_and(m ? 'unidade') as figurinha_tem_unidade
+  from jsonb_array_elements(public.my_gamification()->'medalhas') m where m->>'id' in ('figurinha', 'famosinha');
+select public.set_medal_form(0::smallint);
+select public.mark_medals_seen(array['abre-alas']);
+select public.app_config() ? 'aviso' as tem_aviso;
+-- caixinha sem faísca: recusa
+do $$ begin
+  perform public.open_box();
+  raise exception 'NAO DEVERIA';
+exception when raise_exception then raise notice 'caixinha fechada ok: %', sqlerrm; end $$;
+-- usuário comum não entra no painel
+set request.jwt.claim.sub = '55555555-5555-5555-5555-555555555555';
+do $$ begin
+  perform public.admin_overview();
+  raise exception 'NAO DEVERIA';
+exception when insufficient_privilege then raise notice 'painel protegido ok'; end $$;
+set request.jwt.claim.sub = '66666666-6666-6666-6666-666666666666';
+reset role;
+update public.profiles set role = 'admin' where id = '66666666-6666-6666-6666-666666666666';
+set role authenticated;
+select public.admin_overview() ? 'serie' as overview_ok;
+select count(*) > 0 as lista_pessoas from public.admin_users();
+select public.admin_user('66666666-6666-6666-6666-666666666666') ? 'gamificacao' as detalhe_ok;
+select count(*) >= 0 as avaliacoes_ok from public.admin_ratings();
+select count(*) >= 0 as mensagens_ok from public.admin_messages();
+select count(*) >= 0 as relatos_ok from public.admin_occurrences();
+select count(*) > 0 as lugares_ok from public.admin_places();
+select public.admin_place_save(null, 'Bar da Equipe', 'bar', 'Rua Teste, 1', -30.045, -51.225) is not null as lugar_criado;
+select public.admin_place_photo((select id from public.places where name = 'Bar da Equipe'), 'https://exemplo/equipe/x.jpg', 'Equipe Irisa');
+select photo_source from public.places where name = 'Bar da Equipe';
+select public.admin_setting_set('aviso', '{"ativo": true, "titulo": "Oi", "texto": "Teste", "url": null}');
+select public.app_config()->'aviso'->>'ativo' as aviso_ativo;
+select public.admin_push_create('Teste', 'Corpo', now() + interval '1 day') as envio \gset
+select public.admin_push_cancel(:envio);
+select status from public.admin_push_list() limit 1;
+select count(*) >= 0 as servicos_ok from public.admin_services();
+reset role;
+
