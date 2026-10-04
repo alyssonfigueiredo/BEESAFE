@@ -417,6 +417,11 @@ Nome: **Irisa** (INPI livre; @appirisa livre). Bundle id Android `br.com.irisa.a
   **Sem moderação prévia nas avaliações (dito por ele em 04/10/2026):** avaliação aparece na hora, então a proposta
   final não tem mais o elo de 48 h; o gomo acende na hora e apaga se uma denúncia derrubar a avaliação, e medalha
   de quantidade pede semanas diferentes (Famosinha: 30 avaliações em 4 semanas) para ninguém farmar num dia.
+  **Protótipo navegável (04/10/2026):** `docs/prototipo-gamificacao.html` → `docs/Irisa-prototipo-gamificacao.html`
+  (arquivo único, artefato publicado). Tour de 12 passos com holofote + navegação livre: semana acesa, 12 dos 100,
+  medalha quase lá, avaliar, recompensa na hora (gomo, faísca voando, Famosinhe 22→23), desbloqueio de Acendeu a Luz
+  (5ª avaliação do lugar), cartão do story sem o lugar, pulseira, detalhe, caixinha com banho neon e as travas.
+  Nada grava; é encenado com Web Animations.
 
 ## Stack
 

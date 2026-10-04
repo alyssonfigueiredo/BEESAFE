@@ -1,0 +1,817 @@
+<title>Protótipo Acender o arco-íris</title>
+<!-- Protótipo navegável da gamificação (proposta final, 04/10/2026), para aprovar com o Aly.
+     Tour guiado de 12 passos + navegação livre. Nada grava: é tudo encenado no navegador.
+     Medalhas e objetos vêm de pingentes.js; o arquivo único sai com
+     node scripts/gamificacao-unica.mjs docs/prototipo-gamificacao.html docs/Irisa-prototipo-gamificacao.html -->
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Urbanist:wght@500&family=Oswald:wght@400;700&family=Space+Grotesk:wght@400;500;600;700&display=swap">
+<style>
+/* Palco claro com a aurora da marca; celular no centro; tour num cartão ao lado (embaixo no celular).
+   Visual único e claro de propósito, igual ao app: cores todas explícitas. */
+:root{
+  --paper:#F5F4F1;--stage:#ECEAE5;--card:#FFFFFF;--subtle:#ECEAE5;--night:#141829;--night2:#20253A;
+  --ink:#141829;--muted:#3D4560;--dim:#7C8296;--soft:#C9CDE0;
+  --coral:#FF6964;--orange:#FFA353;--yellow:#FFD066;--turq:#49DCC0;--blue:#59A7FF;--lilac:#A889FF;
+  --coralInk:#C72825;--turqInk:#0A8B7A;--amber:#E0A32E;
+  --rb:linear-gradient(90deg,#FF6964,#FFA353,#FFD066,#49DCC0,#59A7FF,#A889FF);
+  --display:"Oswald","Arial Narrow",Impact,sans-serif;--body:"Space Grotesk","Helvetica Neue",Arial,sans-serif;--mark:"Urbanist","Helvetica Neue",Arial,sans-serif;
+  --shadow:0 1px 2px rgba(20,24,41,.04),0 10px 28px rgba(20,24,41,.08);
+  --spring:cubic-bezier(.3,1.5,.45,1);--ease:cubic-bezier(.2,.7,.2,1);
+  color-scheme:light;
+}
+*{box-sizing:border-box}p,h1,h2,h3{margin:0}
+html,body{height:100%}
+body{margin:0;overflow:hidden;font-family:var(--body);color:var(--ink);background:var(--stage);-webkit-font-smoothing:antialiased}
+body:before{content:"";position:fixed;inset:0;pointer-events:none;background:
+  radial-gradient(50% 45% at 0% 0%,rgba(73,220,192,.30),transparent 65%),radial-gradient(45% 40% at 100% 0%,rgba(255,105,100,.22),transparent 65%),
+  radial-gradient(50% 45% at 100% 100%,rgba(168,137,255,.28),transparent 65%),radial-gradient(45% 40% at 0% 100%,rgba(255,208,102,.26),transparent 65%)}
+button{font:inherit;color:inherit;border:0;background:none;cursor:pointer;padding:0}
+button:focus-visible{outline:3px solid var(--turq);outline-offset:3px}
+
+/* ---------- palco ---------- */
+#app{position:relative;height:100%;display:flex;align-items:center;justify-content:center;gap:56px;padding-inline:24px}
+#stageWrap{position:relative;flex:none}
+#phone{position:absolute;left:0;top:0;width:414px;height:868px;border-radius:62px;background:#0E1020;padding:12px;transform-origin:0 0;
+  box-shadow:0 40px 80px rgba(20,24,41,.28),0 0 0 2px #2A2E44 inset}
+#screen{position:relative;width:390px;height:844px;border-radius:50px;overflow:hidden;background:var(--paper);isolation:isolate}
+#screen:before{content:"";position:absolute;inset:0;z-index:0;background:
+  radial-gradient(70% 34% at -10% -2%,rgba(73,220,192,.34),transparent 64%),radial-gradient(60% 30% at 110% 4%,rgba(255,105,100,.26),transparent 64%),
+  radial-gradient(70% 34% at 108% 100%,rgba(168,137,255,.32),transparent 64%),radial-gradient(60% 30% at -8% 98%,rgba(255,208,102,.3),transparent 64%)}
+.island{position:absolute;left:50%;top:11px;width:124px;height:36px;margin-left:-62px;border-radius:20px;background:#000;z-index:60}
+
+/* ---------- tour ---------- */
+#tour{width:400px;flex:none;background:rgba(255,255,255,.82);border-radius:30px;padding:28px 28px 22px;box-shadow:var(--shadow);display:flex;flex-direction:column;gap:14px;
+  backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px)}
+#tour .top{display:flex;justify-content:space-between;align-items:center}
+#tour .mark{font-family:var(--mark);font-weight:500;letter-spacing:.2em;font-size:15px;color:var(--muted)}
+#tour .mark b{font-weight:500;color:var(--amber)}
+#tour .count{font-size:13px;font-weight:600;color:var(--dim);font-variant-numeric:tabular-nums}
+#tour .bar{height:6px;border-radius:3px;background:var(--subtle);overflow:hidden}
+#tour .bar i{display:block;height:100%;width:0;background:var(--rb);border-radius:3px;transition:width .5s var(--ease)}
+#tour .eb{font-size:12px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--turqInk);margin-top:6px}
+#tour h2{font-family:var(--display);font-weight:700;text-transform:uppercase;font-size:34px;line-height:1.05;text-wrap:balance}
+#tour .txt{font-size:16px;line-height:1.55;color:var(--muted);min-height:120px}
+#tour .txt b{color:var(--ink)}
+#tour .nav{display:flex;gap:10px;align-items:center;margin-top:4px}
+.tbtn{height:48px;border-radius:24px;padding:0 22px;font-weight:600;font-size:15px}
+.tbtn.pri{background:var(--night);color:#fff;flex:1}
+.tbtn.sec{background:var(--subtle)}
+.tbtn:disabled{opacity:.35;cursor:default}
+#tour .free{font-size:13px;color:var(--dim);text-decoration:underline;text-underline-offset:3px;align-self:flex-start}
+#tour .keys{font-size:12px;color:var(--dim)}
+#tour .txt,#tour h2,#tour .eb{transition:opacity .25s ease,transform .35s var(--ease)}
+#tour.swap .txt,#tour.swap h2,#tour.swap .eb{opacity:0;transform:translateY(8px)}
+#reopen{position:fixed;right:20px;bottom:calc(20px + env(safe-area-inset-bottom,0px));z-index:5;height:46px;padding:0 20px;border-radius:23px;background:var(--night);color:#fff;font-weight:600;box-shadow:var(--shadow)}
+
+@media (max-width:860px){
+  #app{flex-direction:column;justify-content:flex-start;gap:10px;padding-block:10px 0}
+  #app{overflow:hidden}
+  #tour{position:fixed;left:12px;right:12px;bottom:calc(10px + env(safe-area-inset-bottom,0px));width:auto;padding:14px 16px 12px;gap:7px;border-radius:24px;z-index:4}
+  #tour h2{font-size:24px}
+  #tour .txt{font-size:14px;min-height:0}
+  #tour .keys,#tour .mark{display:none}
+  .tbtn{height:42px}
+}
+
+/* ---------- dentro do celular ---------- */
+.layer{position:absolute;inset:0;z-index:1}
+.scr{position:absolute;inset:0;z-index:1;overflow-y:auto;scrollbar-width:none;transition:transform .5s var(--ease),opacity .4s ease}
+.scr.off{opacity:0;pointer-events:none}
+.scr.left{transform:translateX(-28%);opacity:0;pointer-events:none}
+.scr.right{transform:translateX(100%);pointer-events:none}
+.sb{position:relative;z-index:50;height:54px;display:flex;justify-content:space-between;align-items:flex-end;padding:0 32px 6px 38px;font-weight:600;font-size:16px}
+.sb i{display:flex;gap:6px;align-items:center}
+.sb.lt{color:#fff}
+.hd{position:relative;z-index:5;margin:4px 14px 0;height:58px;border-radius:29px;background:rgba(255,255,255,.66);box-shadow:var(--shadow);display:flex;align-items:center;justify-content:space-between;padding:0 7px 0 14px}
+.logo{display:flex;align-items:center;gap:10px;font-family:var(--mark);font-weight:500;letter-spacing:.2em;font-size:20px}
+.logo b{font-weight:500;color:var(--amber)}
+.sos{width:44px;height:44px;border-radius:50%;background:var(--coral);display:flex;align-items:center;justify-content:center}
+.body{position:relative;z-index:2;padding:14px 14px 120px;display:flex;flex-direction:column;gap:12px}
+.cd{background:rgba(255,255,255,.7);border-radius:24px;padding:16px;box-shadow:var(--shadow);position:relative}
+.cd.dk{background:var(--night2);color:#F1F0EC}
+.lb{font-size:12px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--dim)}
+.dk .lb{color:var(--turq)}
+h1.t{font-family:var(--display);font-weight:700;text-transform:uppercase;font-size:34px;line-height:1.05}
+.sub{font-size:15px;color:var(--muted)}
+.btn{height:52px;border-radius:26px;display:flex;align-items:center;justify-content:center;font-weight:600;font-size:16px;gap:8px;width:100%}
+.btn:active{transform:scale(.97)}
+.chip{display:inline-flex;align-items:center;height:30px;padding:0 13px;border-radius:15px;background:var(--subtle);font-size:13px;font-weight:600}
+.num{font-family:var(--display);font-weight:700;line-height:1;font-variant-numeric:tabular-nums}
+
+/* semana */
+.wk{display:flex;justify-content:space-between;margin:14px 0 12px}
+.wk div{width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:600;color:var(--dim);background:var(--subtle);transition:background .3s,color .3s}
+.wk div.on{color:var(--ink)}
+.wk div.hj{box-shadow:inset 0 0 0 2.5px var(--ink);background:#fff;color:var(--ink)}
+#wkCard.lit{box-shadow:0 0 0 3px transparent,var(--shadow)}
+#wkCard .glowring{position:absolute;inset:-3px;border-radius:27px;padding:3px;background:var(--rb);-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;opacity:0;pointer-events:none}
+.dots{display:grid;grid-template-columns:repeat(20,1fr);gap:4px;margin-top:12px}
+.dots i{aspect-ratio:1;border-radius:50%;background:#2E3450;transition:background .4s}
+
+/* tab bar */
+.tb{position:absolute;left:14px;right:14px;bottom:24px;z-index:20;height:68px;border-radius:34px;background:rgba(255,255,255,.8);box-shadow:var(--shadow);display:flex;justify-content:space-around;align-items:center;padding:0 4px;backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px)}
+.tb button{width:64px;height:60px;border-radius:30px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;font-size:11.5px;color:var(--muted);transition:background .3s,color .3s}
+.tb button.on{background:#fff;box-shadow:0 4px 14px rgba(20,24,41,.1);font-weight:600}
+.tb svg{width:24px;height:24px}
+.tb .pf{position:relative}
+.tb .badge{position:absolute;top:6px;right:12px;width:9px;height:9px;border-radius:50%;background:var(--coral);transform:scale(0)}
+
+/* lugar */
+.back{width:40px;height:40px;border-radius:50%;background:rgba(255,255,255,.8);display:flex;align-items:center;justify-content:center;box-shadow:var(--shadow)}
+.q{display:flex;flex-direction:column;gap:8px;padding:12px 0;border-top:1px solid rgba(20,24,41,.07)}
+.q:first-of-type{border-top:0}
+.q p{font-size:15px;font-weight:600}
+.q .opts{display:flex;gap:6px}
+.q .opts button{flex:1;height:38px;border-radius:12px;background:var(--subtle);font-size:13px;font-weight:600;color:var(--muted);transition:background .25s,color .25s,transform .2s}
+.q .opts button.sel{color:var(--ink)}
+
+/* folhas e camadas */
+.veil{position:absolute;inset:0;z-index:30;background:rgba(20,24,41,.38);opacity:0;pointer-events:none;transition:opacity .35s}
+.veil.on{opacity:1;pointer-events:auto}
+.sheet{position:absolute;left:0;right:0;bottom:0;z-index:31;background:#FBFAF8;border-radius:34px 34px 0 0;transform:translateY(105%);transition:transform .55s var(--ease);padding:12px 22px 34px;display:flex;flex-direction:column;align-items:center;text-align:center}
+.sheet.on{transform:none}
+.grab{width:44px;height:5px;border-radius:3px;background:#D9D5CD}
+.toast{position:absolute;left:50%;top:118px;z-index:40;transform:translate(-50%,-20px);opacity:0;background:var(--night);color:#fff;font-weight:600;font-size:14px;padding:10px 16px;border-radius:20px;white-space:nowrap;box-shadow:0 10px 24px rgba(20,24,41,.25);pointer-events:none}
+.mini{flex:1;background:var(--subtle);border-radius:18px;padding:12px 8px}
+.mini .num{font-size:24px}
+.mini p{font-size:12px;color:var(--muted);margin-top:2px}
+
+/* celebração */
+#cel{position:absolute;inset:0;z-index:45;background:var(--night);color:#F1F0EC;opacity:0;pointer-events:none;overflow:hidden}
+#cel.on{pointer-events:auto}
+#cel .halo{position:absolute;inset:0;background:radial-gradient(52% 32% at 50% 38%,rgba(255,208,102,.32),transparent 72%),radial-gradient(70% 44% at 50% 40%,rgba(168,137,255,.34),transparent 74%)}
+#cel .sweep{position:absolute;left:50%;top:38%;width:900px;height:900px;margin:-450px 0 0 -450px;border-radius:50%;background:conic-gradient(from 0deg,rgba(73,220,192,.0),rgba(73,220,192,.28) 40deg,rgba(73,220,192,0) 70deg);opacity:0}
+#cel .in{display:flex;flex-direction:column;align-items:center;text-align:center;padding:40px 28px 0;position:relative}
+#cel h1{font-family:var(--display);font-weight:700;text-transform:uppercase;font-size:46px;line-height:1.02;color:#fff;margin-top:24px}
+#cel h1 span{display:inline-block}
+#cel .acts{position:absolute;left:24px;right:24px;bottom:42px;display:flex;flex-direction:column;gap:8px}
+.conf{position:absolute;width:8px;height:14px;border-radius:2px;left:50%;top:36%}
+
+/* story */
+#story{position:absolute;inset:0;z-index:46;background:rgba(10,12,22,.92);opacity:0;pointer-events:none;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;padding:60px 0 30px}
+#story.on{pointer-events:auto}
+#story .card9{width:300px;height:533px;border-radius:22px;background:var(--paper);position:relative;overflow:hidden;display:flex;flex-direction:column;align-items:center;text-align:center;padding:34px 22px 0}
+#story .card9:before{content:"";position:absolute;inset:0;background:radial-gradient(80% 40% at -10% -4%,rgba(73,220,192,.4),transparent 64%),radial-gradient(70% 34% at 112% 6%,rgba(255,105,100,.3),transparent 64%),radial-gradient(80% 40% at 110% 104%,rgba(168,137,255,.4),transparent 64%),radial-gradient(70% 34% at -10% 100%,rgba(255,208,102,.36),transparent 64%)}
+#story .card9>*{position:relative}
+
+/* caixinha */
+#box{position:absolute;inset:0;z-index:44;background:rgba(20,24,41,.86);opacity:0;pointer-events:none;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;color:#fff;gap:18px;padding:0 30px}
+#box.on{pointer-events:auto}
+#box .rays{position:absolute;left:50%;top:44%;width:600px;height:600px;margin:-300px 0 0 -300px;border-radius:50%;background:repeating-conic-gradient(rgba(255,208,102,.16) 0 8deg,transparent 8deg 22deg);opacity:0}
+.neon{animation:neon 2.4s linear infinite}
+@keyframes neon{0%{filter:drop-shadow(0 0 10px #FF6964) hue-rotate(0deg)}50%{filter:drop-shadow(0 0 18px #A889FF) hue-rotate(180deg)}100%{filter:drop-shadow(0 0 10px #FF6964) hue-rotate(360deg)}}
+
+/* pulseira */
+.mg{display:grid;grid-template-columns:repeat(3,1fr);gap:18px 8px}
+.mg button{display:flex;flex-direction:column;align-items:center;gap:6px;text-align:center}
+.mg p{font-size:12.5px;font-weight:600;line-height:1.2}
+.mg .lk p{color:var(--dim);font-weight:500}
+
+/* holofote do tour */
+#spot{position:absolute;z-index:55;border-radius:26px;pointer-events:none;box-shadow:0 0 0 2000px rgba(20,24,41,.45),0 0 0 3px rgba(255,255,255,.9);opacity:0;transition:left .5s var(--ease),top .5s var(--ease),width .5s var(--ease),height .5s var(--ease),opacity .35s,border-radius .5s}
+#spot.pulse{animation:spot 1.6s ease-in-out infinite}
+@keyframes spot{50%{box-shadow:0 0 0 2000px rgba(20,24,41,.45),0 0 0 7px rgba(255,255,255,.55)}}
+
+@media (prefers-reduced-motion:reduce){*,*:before,*:after{animation-duration:.01ms!important;transition-duration:.01ms!important}}
+</style>
+
+<div id="app">
+  <div id="stageWrap"><div id="phone"><div id="screen">
+    <div class="island"></div>
+
+    <!-- Início -->
+    <section class="scr" id="s-home">
+      <div class="sb"><span>9:41</span><i data-sb></i></div>
+      <div class="hd"><div class="logo"><svg class="ring" data-lit="48" width="30" height="30" viewBox="0 0 100 100"></svg><span>IRIS<b>A</b></span></div><div class="sos" data-sos></div></div>
+      <div class="body">
+        <div class="cd" id="wkCard"><i class="glowring"></i>
+          <div style="display:flex;justify-content:space-between;align-items:baseline"><p class="lb">Sua semana</p><p style="font-size:13px;color:var(--muted)" id="wkCount">2 de 4 dias</p></div>
+          <div class="wk" id="wk"><div data-c="#FF6964" class="on" style="background:#FF6964">S</div><div>T</div><div data-c="#FFD066" class="on" style="background:#FFD066">Q</div><div>Q</div><div data-c="#49DCC0" class="hj" id="today">S</div><div data-c="#A889FF" id="tomorrow">S</div><div>D</div></div>
+          <p style="font-size:15px;line-height:1.35" id="wkMsg">Abra a Irisa em mais <b>2 dias</b> e a semana acende.</p>
+          <p style="font-size:13px;color:var(--dim);margin-top:4px">Quaisquer 4 dias. Não precisa ser seguido.</p>
+        </div>
+        <div class="cd dk" id="cityCard" style="padding:18px">
+          <p class="lb">Curitiba</p>
+          <div style="display:flex;align-items:baseline;gap:10px;margin-top:6px"><span class="num" style="font-size:52px" id="cityN">12</span><span style="font-size:15px;color:var(--soft)">dos 100 lugares mais<br>conhecidos já têm selo</span></div>
+          <div class="dots" id="dots"></div>
+          <p style="font-size:13px;color:var(--soft);margin-top:10px" id="cityMsg">Esta semana foram 3.</p>
+        </div>
+        <button class="cd" id="almostCard" style="display:flex;align-items:center;gap:14px;padding:14px 16px;text-align:left" data-open="famosinha">
+          <span data-md="famosinha" data-s="lock" data-p=".73" data-size="64" data-nolock="1" id="almostMedal"></span>
+          <span style="flex:1"><span style="display:block;font-size:12px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--coralInk)">Quase lá</span><span style="display:block;font-size:16px;font-weight:700">Famosinhe</span><span style="display:block;font-size:13px;color:var(--muted)" id="almostTxt">Faltam 8 avaliações</span></span>
+          <span class="chip">Ver</span>
+        </button>
+        <div style="display:flex;gap:10px">
+          <button class="btn" id="goRate" style="background:var(--turq);flex:1">Avaliar um lugar</button>
+          <button class="btn" id="goReport" style="background:var(--coral);flex:1">Registrar relato</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Ficha do lugar -->
+    <section class="scr right" id="s-place">
+      <div class="sb"><span>9:41</span><i data-sb></i></div>
+      <div class="body" style="padding-top:8px">
+        <div style="display:flex;align-items:center;gap:12px"><button class="back" id="placeBack" aria-label="Voltar"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#141829" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg></button><p style="font-size:15px;color:var(--muted)">Lugares</p></div>
+        <div class="cd" style="display:flex;gap:14px;align-items:center">
+          <div style="width:70px;height:70px;border-radius:20px;background:rgba(255,163,83,.22);display:flex;align-items:center;justify-content:center"><svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#B5651D" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 8h1a4 4 0 1 1 0 8h-1"/><path d="M3 8h14v9a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4Z"/><path d="M6 2v2M10 2v2M14 2v2"/></svg></div>
+          <div style="flex:1"><p style="font-size:20px;font-weight:700">Café do Largo</p><p style="font-size:14px;color:var(--muted)">Café · Centro · 4 avaliações</p><p style="font-size:13px;color:var(--coralInk);font-weight:600;margin-top:3px" id="placeSeal">Falta 1 avaliação para o selo</p></div>
+        </div>
+        <div class="cd" id="qCard">
+          <p style="font-family:var(--display);font-weight:700;text-transform:uppercase;font-size:24px;margin-bottom:4px">Quanta cor tem esse lugar?</p>
+          <div class="q" data-ax="0" data-c="#FF6964"><p>Atendimento</p><div class="opts"><button>Não</button><button>Pouco</button><button>Bem</button><button>Muito</button></div></div>
+          <div class="q" data-ax="1" data-c="#FFA353"><p>Afeto em público</p><div class="opts"><button>Não</button><button>Pouco</button><button>Bem</button><button>Muito</button></div></div>
+          <div class="q" data-ax="2" data-c="#FFD066"><p>Banheiro</p><div class="opts"><button>Não</button><button>Pouco</button><button>Bem</button><button>Muito</button></div></div>
+          <div class="q" data-ax="3" data-c="#49DCC0"><p>Clientela</p><div class="opts"><button>Não</button><button>Pouco</button><button>Bem</button><button>Muito</button></div></div>
+        </div>
+        <button class="btn" id="send" style="background:var(--night);color:#fff;opacity:.35" disabled>Enviar avaliação</button>
+      </div>
+    </section>
+
+    <!-- Pulseira -->
+    <section class="scr right" id="s-pul">
+      <div class="sb"><span>9:41</span><i data-sb></i></div>
+      <div class="hd"><div class="logo"><svg class="ring" data-lit="48" width="30" height="30" viewBox="0 0 100 100"></svg><span>IRIS<b>A</b></span></div><div class="sos" data-sos></div></div>
+      <div class="body" style="gap:16px">
+        <div><h1 class="t">Pulseira</h1><p class="sub" style="margin-top:2px" id="pulCount">5 de 12 desbloqueadas</p></div>
+        <button class="cd" id="pulAlmost" style="display:flex;align-items:center;gap:14px;padding:14px 16px;text-align:left" data-open="famosinha">
+          <span data-md="famosinha" data-s="lock" data-p=".77" data-size="70" data-nolock="1"></span>
+          <span style="flex:1"><span style="display:block;font-size:12px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--coralInk)">Quase lá</span><span style="display:block;font-size:16px;font-weight:700">Famosinhe</span><span style="display:block;font-size:13px;color:var(--muted)">23 de 30 avaliações</span></span>
+          <span class="num" style="font-size:22px">77%</span>
+        </button>
+        <div class="mg" id="mg"></div>
+      </div>
+    </section>
+
+    <!-- camadas comuns -->
+    <div class="tb" id="tabs"></div>
+    <div class="veil" id="veil"></div>
+
+    <!-- recompensa depois de avaliar -->
+    <div class="sheet" id="rw">
+      <div class="grab"></div>
+      <div style="position:relative;margin-top:18px;width:138px;height:138px"><svg class="ring" id="rwRing" data-lit="30" width="138" height="138" viewBox="0 0 100 100"></svg></div>
+      <p class="num" style="font-size:34px;margin-top:10px" id="rwTitle">+1 GOMO</p>
+      <p style="font-size:14px;color:var(--muted);margin-top:4px">Já está no mapa. <span id="rwOf">30</span> de 48.</p>
+      <div style="display:flex;gap:8px;margin-top:16px;width:100%">
+        <div class="mini" id="mFa"><p class="num" id="faN">7</p><p>faíscas de 10</p></div>
+        <div class="mini" id="mCor"><p class="num">+1</p><p>cor no mapa</p></div>
+        <div class="mini" id="mFam"><p class="num" id="famN">22</p><p>de 30 · Famosinhe</p></div>
+      </div>
+      <button class="btn" id="rwGo" style="background:var(--night);color:#fff;margin-top:16px">Continuar</button>
+    </div>
+
+    <!-- detalhe da medalha -->
+    <div class="sheet" id="det">
+      <div class="grab"></div>
+      <div id="detMedal" style="margin-top:22px"></div>
+      <h1 class="t" style="font-size:38px;margin-top:14px" id="detT">Famosinhe</h1>
+      <p style="font-size:15px;color:var(--muted);margin-top:6px;max-width:300px" id="detC">30 avaliações, em 4 semanas diferentes</p>
+      <div style="display:flex;align-items:baseline;gap:6px;margin-top:16px" id="detNum"><span class="num" style="font-size:44px" id="detA">23</span><span style="font-size:17px;color:var(--dim)" id="detB">de 30</span></div>
+      <p style="font-size:14px;color:var(--muted);margin-top:8px;max-width:300px;line-height:1.4" id="detX">Quase todos os lugares perto de você ainda estão sem nota.</p>
+      <button class="btn" id="detGo" style="background:var(--night);color:#fff;margin-top:20px">Avaliar um lugar perto</button>
+    </div>
+
+    <!-- desbloqueou -->
+    <div id="cel">
+      <div class="halo"></div><div class="sweep" id="celSweep"></div><div id="confHost"></div>
+      <div class="sb lt"><span>9:41</span><i data-sb></i></div>
+      <div class="in">
+        <p class="lb" style="color:var(--turq);font-size:13px" id="celEb">Desbloqueado</p>
+        <div id="celMedal" style="margin-top:22px;width:232px;height:232px;position:relative"></div>
+        <h1 id="celT"></h1>
+        <p style="font-size:17px;line-height:1.45;color:var(--soft);margin-top:12px" id="celC"></p>
+        <p style="font-size:13px;color:#8A90AA;margin-top:10px" id="celW"></p>
+      </div>
+      <div class="acts">
+        <button class="btn" id="celShare" style="background:#fff;color:var(--ink)">Compartilhar no story</button>
+        <button class="btn" id="celPul" style="color:#fff">Ver a pulseira</button>
+      </div>
+    </div>
+
+    <!-- story -->
+    <div id="story">
+      <div class="card9" id="card9">
+        <div class="logo" style="font-size:15px"><svg class="ring" data-lit="48" width="22" height="22" viewBox="0 0 100 100"></svg><span>IRIS<b>A</b></span></div>
+        <p class="lb" style="margin-top:30px;color:var(--turqInk);font-size:11px">Desbloqueei</p>
+        <div id="storyMedal" style="margin-top:10px"></div>
+        <p style="font-family:var(--display);font-weight:700;text-transform:uppercase;font-size:44px;line-height:.98;margin-top:14px">Acendeu<br><span style="background:var(--rb);-webkit-background-clip:text;background-clip:text;color:transparent">a Luz</span></p>
+        <p style="font-size:14px;line-height:1.45;color:var(--muted);margin-top:12px">O selo acendeu. Fui eu que apertei o interruptor.</p>
+        <p style="position:absolute;left:0;right:0;bottom:24px;font-weight:700;font-size:14px">@appirisa</p>
+      </div>
+      <p style="color:#C9CDE0;font-size:13px;max-width:300px;text-align:center">O cartão mostra a medalha e a frase. O nome do lugar nunca aparece.</p>
+      <button class="btn" id="storyX" style="background:#fff;color:var(--ink);width:300px">Fechar</button>
+    </div>
+
+    <!-- caixinha -->
+    <div id="box">
+      <div class="rays" id="rays"></div>
+      <p class="lb" style="color:var(--yellow);position:relative" id="boxEb">Semana acesa</p>
+      <div style="position:relative;width:200px;height:200px" id="boxStage">
+        <svg id="boxSvg" viewBox="0 0 200 200" width="200" height="200" style="position:absolute;inset:0">
+          <defs><linearGradient id="bxg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#FF6964"/><stop offset=".5" stop-color="#FFA353"/><stop offset="1" stop-color="#A889FF"/></linearGradient></defs>
+          <g id="boxBody"><rect x="40" y="88" width="120" height="92" rx="14" fill="url(#bxg)"/><rect x="92" y="88" width="16" height="92" fill="#FFD066"/></g>
+          <g id="boxLid"><rect x="30" y="64" width="140" height="32" rx="10" fill="#FF8A85"/><rect x="92" y="64" width="16" height="32" fill="#FFD066"/><path d="M100 64c-14-26-44-18-30-2M100 64c14-26 44-18 30-2" fill="none" stroke="#FFD066" stroke-width="8" stroke-linecap="round"/></g>
+        </svg>
+        <div id="boxPrize" style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;opacity:0"></div>
+      </div>
+      <h1 class="t" style="color:#fff;font-size:36px;position:relative" id="boxT">Abrindo a caixinha</h1>
+      <p style="color:var(--soft);font-size:15px;line-height:1.45;position:relative;max-width:290px" id="boxC">4 dias nesta semana. Nada de sequência.</p>
+      <button class="btn" id="boxGo" style="background:#fff;color:var(--ink);position:relative;opacity:0;width:260px">Usar o banho neon</button>
+    </div>
+
+    <div class="toast" id="toast"></div>
+    <div id="spot"></div>
+  </div></div></div>
+
+  <aside id="tour" aria-live="polite">
+    <div class="top"><span class="mark">IRIS<b>A</b> · PROTÓTIPO</span><span class="count" id="tCount">1 de 12</span></div>
+    <div class="bar"><i id="tBar"></i></div>
+    <p class="eb" id="tEb"></p>
+    <h2 id="tH"></h2>
+    <p class="txt" id="tTxt"></p>
+    <div class="nav"><button class="tbtn sec" id="tPrev">Voltar</button><button class="tbtn pri" id="tNext">Próximo</button></div>
+    <button class="free" id="tFree">Fechar o tour e explorar sozinho</button>
+    <p class="keys">Setas do teclado também passam. Toque em qualquer coisa no celular.</p>
+  </aside>
+</div>
+<button id="reopen" hidden>Retomar o tour</button>
+
+<script>
+// Pingentes da Irisa: catálogo das conquistas (título, condição, objeto, categoria, raridade, microcopy)
+// e o desenho de cada pingente em SVG. Fonte única para docs/gamificacao.html e docs/pingentes.html.
+// Regra do briefing: título primeiro, objeto depois. Nada de bandeira, arco-íris ou emoji em 3D.
+// Títulos com flexão trazem as três formas [a, o, e]: a pessoa escolhe no Perfil como quer ser chamada.
+(function () {
+  const C = { coral: "#FF6964", orange: "#FFA353", yellow: "#FFD066", turq: "#49DCC0", blue: "#59A7FF", lilac: "#A889FF", night: "#1E2340", white: "#FFFDF8", rim: "#8A6418" };
+  const R = `stroke="${C.rim}" stroke-width="2" stroke-linejoin="round"`;
+  const star = (cx, cy, ro, ri, n = 5) => {
+    let d = "";
+    for (let i = 0; i < n * 2; i++) {
+      const r = i % 2 ? ri : ro, a = (-90 + (180 / n) * i) * Math.PI / 180;
+      d += (i ? "L" : "M") + (cx + r * Math.cos(a)).toFixed(1) + " " + (cy + r * Math.sin(a)).toFixed(1);
+    }
+    return d + "Z";
+  };
+  const heart = (cx, cy, s) => `M${cx} ${cy + s * 0.9}C${cx - s * 1.3} ${cy + s * 0.1} ${cx - s * 1.1} ${cy - s * 0.95} ${cx} ${cy - s * 0.45}C${cx + s * 1.1} ${cy - s * 0.95} ${cx + s * 1.3} ${cy + s * 0.1} ${cx} ${cy + s * 0.9}Z`;
+  const T = (x, y, s, txt, fill = "#fff", extra = "") => `<text x="${x}" y="${y}" font-family="Oswald,Impact,sans-serif" font-weight="700" font-size="${s}" fill="${fill}" text-anchor="middle" ${extra}>${txt}</text>`;
+  const GOMOS = ["#ff6964", "#ff8e5a", "#ffa353", "#ffbf5f", "#ffd066", "#bed582", "#74d6a4", "#49dcc0", "#4fcbdc", "#52b4f5", "#59a7ff", "#7d96ff", "#a889ff", "#c681dd", "#ea709b", "#ff636e"];
+
+  // cada desenho recebe G (o dourado) e devolve [topo do objeto, svg]
+  const ART = {
+    cracha: G => [21, `<rect x="22" y="30" width="56" height="44" rx="7" fill="${C.white}" ${R}/><path d="M22 45v-8a7 7 0 0 1 7-7h42a7 7 0 0 1 7 7v8Z" fill="${C.coral}" ${R}/>${T(50, 42, 10, "OLÁ")}<path d="M31 61c4-7 8 5 12-2s6 5 10-1 6 4 13-2" fill="none" stroke="${C.night}" stroke-width="2.6" stroke-linecap="round"/><rect x="44" y="21" width="12" height="12" rx="3" fill="${G}" ${R}/>`],
+    camera: G => [29, `<path d="M36 37l4-8h20l4 8Z" fill="${C.night}" ${R}/><rect x="20" y="36" width="60" height="40" rx="8" fill="${C.night}" ${R}/><circle cx="50" cy="56" r="15" fill="${G}" ${R}/><circle cx="50" cy="56" r="9.5" fill="${C.turq}" stroke="${C.night}" stroke-width="2"/><circle cx="46.6" cy="52.6" r="2.8" fill="#fff"/><rect x="25" y="41" width="9" height="6" rx="2" fill="${C.yellow}"/><path d="${star(79, 30, 9, 2.6, 4)}" fill="${C.yellow}" ${R}/>`],
+    figurinha: G => [26, `<g transform="rotate(-6 50 60)"><path d="M27 28h46v60H41L27 74Z" fill="${C.white}" ${R}/><rect x="32" y="33" width="36" height="34" rx="3" fill="${C.lilac}"/><path d="${star(50, 50, 11, 4.6)}" fill="#fff"/>${T(61, 80, 9, "07", C.night)}<path d="M27 74h14v14Z" fill="#D9D3C7" ${R}/></g>`],
+    oculos: G => [44, `<path d="M18 52l-4-6M82 52l4-6" stroke="${G}" stroke-width="3.4" stroke-linecap="round"/><path d="M43 52q7-6 14 0" fill="none" stroke="${G}" stroke-width="3.4" stroke-linecap="round"/><path d="${heart(31, 58, 15)}" fill="${C.coral}" ${R}/><path d="${heart(69, 58, 15)}" fill="${C.coral}" ${R}/><path d="${heart(31, 58, 10)}" fill="${C.night}"/><path d="${heart(69, 58, 10)}" fill="${C.night}"/><path d="M24 54l5-4M62 54l5-4" stroke="#fff" stroke-width="2.4" stroke-linecap="round"/>`],
+    credencial: G => [28, `<rect x="30" y="28" width="40" height="58" rx="6" fill="${C.white}" ${R}/><rect x="43" y="32" width="14" height="4" rx="2" fill="#D9D3C7"/><rect x="31" y="42" width="38" height="15" fill="${C.coral}"/>${T(50, 54, 12, "VIP")}<g fill="${C.night}"><rect x="35" y="63" width="6" height="6"/><rect x="43" y="63" width="3" height="3"/><rect x="35" y="72" width="3" height="3"/><rect x="40" y="72" width="6" height="6"/><rect x="47" y="67" width="3" height="3"/></g><path d="${star(61, 72, 7, 3)}" fill="${G}" ${R}/>`],
+    orelhao: G => [26, `<path d="M50 26c16 0 24 14 24 30 0 10-3 18-6 24H32c-3-6-6-14-6-24 0-16 8-30 24-30Z" fill="${C.orange}" ${R}/><path d="M50 37c9 0 14 9 14 20 0 8-2 15-4 21H40c-2-6-4-13-4-21 0-11 5-20 14-20Z" fill="#FFE3BF"/><rect x="45" y="50" width="13" height="20" rx="3" fill="${C.night}"/><rect x="40" y="46" width="5" height="17" rx="2.5" fill="${C.night}"/><g fill="#fff"><circle cx="49" cy="56" r="1.2"/><circle cx="54" cy="56" r="1.2"/><circle cx="49" cy="61" r="1.2"/><circle cx="54" cy="61" r="1.2"/></g>`],
+    carimbo: G => [30, `<g transform="rotate(-12 50 60)"><circle cx="50" cy="60" r="30" fill="${G}" ${R}/><circle cx="50" cy="60" r="25" fill="${C.white}"/><circle cx="50" cy="60" r="20" fill="none" stroke="${C.coral}" stroke-width="1.6" stroke-dasharray="3 2.4"/>${T(50, 64, 11, "DEFERIDO", C.coral)}<path d="${star(50, 47, 4, 1.7)}" fill="${C.coral}"/><path d="${star(50, 74, 4, 1.7)}" fill="${C.coral}"/></g>`],
+    buque: G => {
+      const fl = (x, y, c, core) => [0, 72, 144, 216, 288].map(a => `<circle cx="${(x + 6 * Math.cos(a * Math.PI / 180)).toFixed(1)}" cy="${(y + 6 * Math.sin(a * Math.PI / 180)).toFixed(1)}" r="5.2" fill="${c}" ${R.replace('2"', '1.2"')}/>`).join("") + `<circle cx="${x}" cy="${y}" r="3.6" fill="${core}"/>`;
+      return [24, `<path d="M42 56l-6-10M50 56V40M58 56l6-10" stroke="${C.turqInk || "#0A8B7A"}" stroke-width="2.4"/><ellipse cx="36" cy="58" rx="7" ry="3.4" fill="${C.turq}" transform="rotate(-30 36 58)"/><ellipse cx="64" cy="58" rx="7" ry="3.4" fill="${C.turq}" transform="rotate(30 64 58)"/>${fl(36, 44, C.coral, C.yellow)}${fl(64, 44, C.lilac, C.yellow)}${fl(50, 33, C.yellow, C.orange)}<path d="M34 56L50 96L66 56Z" fill="${C.white}" ${R}/><path d="M44 72q6 4 12 0l-2 8q-4-2-8 0Z" fill="${C.coral}" ${R}/>`];
+    },
+    pinCoroa: G => [22, `<path d="M50 94C40 80 28 68 28 54a22 22 0 0 1 44 0c0 14-12 26-22 40Z" fill="${C.turq}" ${R}/><circle cx="50" cy="54" r="9" fill="#fff" ${R}/><path d="M37 34l3-11 6 6 4-8 4 8 6-6 3 11Z" fill="${G}" ${R}/><circle cx="50" cy="54" r="3.4" fill="${C.coral}"/>`],
+    busto: G => [28, `<circle cx="50" cy="40" r="11" fill="${G}" ${R}/><path d="M31 70c2-13 10-17 19-17s17 4 19 17Z" fill="${G}" ${R}/><rect x="28" y="68" width="44" height="7" rx="2" fill="#D7D0E6" ${R}/><rect x="33" y="74" width="34" height="16" fill="#C3BAD9" ${R}/><path d="M38 44q-5-8 0-15M62 44q5-8 0-15" fill="none" stroke="${C.turq}" stroke-width="2.6" stroke-linecap="round"/>`],
+    placaAzul: G => [34, `<ellipse cx="50" cy="60" rx="32" ry="26" fill="${G}" ${R}/><ellipse cx="50" cy="60" rx="26.5" ry="20.5" fill="${C.blue}" stroke="#fff" stroke-width="2"/>${T(50, 58, 8.6, "PATRIMÔNIO")}${T(50, 69, 8.6, "CULTURAL")}<path d="${star(50, 47, 3.6, 1.5)}" fill="#fff"/>`],
+    placaBronze: G => [34, `<rect x="20" y="34" width="60" height="46" rx="4" fill="${G}" ${R}/><rect x="26" y="40" width="48" height="34" fill="#B07D25" stroke="${C.rim}" stroke-width="1.4"/>${T(50, 57, 10.5, "TOMBADO", "#FBE7A8")}<path d="M34 64h32" stroke="#FBE7A8" stroke-width="1.4"/>${T(50, 70.5, 5.6, "PROTEGIDO PELA COMUNIDADE", "#FBE7A8", 'font-weight="400"')}<g fill="#FBE7A8" stroke="${C.rim}" stroke-width="1"><circle cx="23.5" cy="37.5" r="2.2"/><circle cx="76.5" cy="37.5" r="2.2"/><circle cx="23.5" cy="76.5" r="2.2"/><circle cx="76.5" cy="76.5" r="2.2"/></g>`],
+    tesoura: G => [32, `<path d="M14 54h32l-4 6 4 6H14Z" fill="${C.coral}" ${R}/><path d="M86 54H58l4 6-4 6h28Z" fill="${C.coral}" ${R}/><path d="M43 78L58 32M57 78L42 32" stroke="${C.rim}" stroke-width="7" stroke-linecap="round"/><path d="M43 78L58 32M57 78L42 32" stroke="${G}" stroke-width="4.6" stroke-linecap="round"/><circle cx="50" cy="56" r="2.6" fill="${C.night}"/><circle cx="40" cy="85" r="7" fill="none" stroke="${C.rim}" stroke-width="6.4"/><circle cx="60" cy="85" r="7" fill="none" stroke="${C.rim}" stroke-width="6.4"/><circle cx="40" cy="85" r="7" fill="none" stroke="${G}" stroke-width="4"/><circle cx="60" cy="85" r="7" fill="none" stroke="${G}" stroke-width="4"/>`],
+    lampada: G => [26, `<circle cx="50" cy="46" r="30" fill="${C.yellow}" opacity=".28"/><path d="M50 26a20 20 0 0 1 12 36c-2 2-3 5-3 8H41c0-3-1-6-3-8a20 20 0 0 1 12-36Z" fill="${C.yellow}" ${R}/><path d="M43 56l3.5-7 3.5 7 3.5-7 3.5 7" fill="none" stroke="${C.orange}" stroke-width="2" stroke-linejoin="round"/><path d="M42 36a10 10 0 0 1 6-4" stroke="#fff" stroke-width="2.6" stroke-linecap="round" fill="none"/><rect x="41" y="70" width="18" height="14" rx="2" fill="${G}" ${R}/><path d="M41 75h18M41 80h18" stroke="${C.rim}" stroke-width="1.4"/><path d="M45 84h10l-2 5h-6Z" fill="${C.night}"/>`],
+    bussola: G => [30, `<circle cx="50" cy="60" r="29" fill="${G}" ${R}/><circle cx="50" cy="60" r="22.5" fill="${C.white}"/><g stroke="${C.night}" stroke-width="2"><path d="M50 40v4M50 76v4M30 60h4M66 60h4"/></g>${T(50, 49.5, 7, "N", C.night)}<path d="M50 42l6.5 18H43.5Z" fill="${C.coral}" ${R.replace('2"', '1.2"')}/><path d="M50 78l6.5-18H43.5Z" fill="${C.night}"/><circle cx="50" cy="60" r="2.8" fill="${G}" ${R.replace('2"', '1"')}/>`],
+    porta: G => [28, `<path d="M62 30l12-6v62l-12-2Z" fill="${C.yellow}" opacity=".55"/><rect x="28" y="28" width="36" height="60" rx="3" fill="#FFE9A8" ${R}/><path d="M28 28l26 5v51l-26 4Z" fill="${C.turq}" ${R}/><circle cx="48" cy="60" r="2.8" fill="${G}" ${R.replace('2"', '1"')}/><rect x="33" y="38" width="15" height="16" rx="1.5" fill="none" stroke="#0A8B7A" stroke-width="1.6"/><rect x="33" y="64" width="15" height="16" rx="1.5" fill="none" stroke="#0A8B7A" stroke-width="1.6"/>`],
+    pulseiraFesta: G => [40, `<ellipse cx="50" cy="60" rx="27" ry="19" fill="none" stroke="${C.rim}" stroke-width="12"/><ellipse cx="50" cy="60" rx="27" ry="19" fill="none" stroke="${C.lilac}" stroke-width="8.4"/><ellipse cx="50" cy="60" rx="27" ry="19" fill="none" stroke="#fff" stroke-width="1" stroke-dasharray="1 5" opacity=".7"/><rect x="38" y="68" width="24" height="16" rx="2" fill="${C.white}" ${R}/><g stroke="${C.night}" stroke-width="1.6"><path d="M42 71v10M45 71v10M47 71v10M51 71v10M53 71v10M57 71v10M59 71v10"/></g>`],
+    chave: G => [24, `<path d="M57 38q14-4 20 6" fill="none" stroke="${C.night}" stroke-width="1.4"/><g transform="rotate(16 74 52)"><rect x="63" y="44" width="22" height="15" rx="3" fill="${C.coral}" ${R}/>${T(74, 55.5, 9, "Nº 1")}</g><circle cx="50" cy="36" r="10" fill="none" stroke="${C.rim}" stroke-width="8"/><circle cx="50" cy="36" r="10" fill="none" stroke="${G}" stroke-width="5"/><rect x="47" y="46" width="6" height="40" rx="2" fill="${G}" ${R}/><path d="M53 70h8v4h-8M53 78h6v4h-6" fill="${G}" ${R}/>`],
+    mapa: G => [30, `<path d="M22 34l18-4v52l-18 4Z" fill="${C.white}" ${R}/><path d="M40 30l20 6v52l-20-6Z" fill="#C4F3E9" ${R}/><path d="M60 36l18-4v52l-18 4Z" fill="${C.white}" ${R}/><path d="M28 76c8-10 14 4 22-10s12-4 15-14" fill="none" stroke="${C.coral}" stroke-width="2.4" stroke-dasharray="1 4.4" stroke-linecap="round"/><path d="M63 40l9 9M72 40l-9 9" stroke="${C.coral}" stroke-width="3.8" stroke-linecap="round"/>`],
+    mala: G => [28, `<path d="M40 42v-8a4 4 0 0 1 4-4h12a4 4 0 0 1 4 4v8" fill="none" stroke="${C.rim}" stroke-width="6"/><path d="M40 42v-8a4 4 0 0 1 4-4h12a4 4 0 0 1 4 4v8" fill="none" stroke="${G}" stroke-width="3.6"/><rect x="22" y="42" width="56" height="42" rx="7" fill="${C.orange}" ${R}/><path d="M34 42v42M66 42v42" stroke="#D9772E" stroke-width="3"/><circle cx="44" cy="58" r="6.5" fill="${C.turq}" ${R.replace('2"', '1.2"')}/><rect x="49" y="64" width="13" height="9" rx="2" fill="${C.lilac}" transform="rotate(-10 55 68)" ${R.replace('2"', '1.2"')}/><path d="${star(57, 52, 5, 2.2)}" fill="${C.yellow}" ${R.replace('2"', '1"')}/>`],
+    cartaoPonto: G => [26, `<rect x="30" y="26" width="40" height="62" rx="4" fill="${C.white}" ${R}/><path d="M30 38v-8a4 4 0 0 1 4-4h32a4 4 0 0 1 4 4v8Z" fill="${C.coral}"/>${T(50, 35.5, 7.2, "PONTO")}${[0, 1, 2, 3, 4, 5, 6].map(i => `<path d="M35 ${44 + i * 6.3}h20" stroke="#D9D3C7" stroke-width="1.6"/><circle cx="62" cy="${44 + i * 6.3}" r="2.3" fill="${C.night}"/>`).join("")}`],
+    capacho: G => [42, `<g stroke="#B5832F" stroke-width="1.8">${[46, 51, 56, 61, 66, 71, 76].map(y => `<path d="M14 ${y}h5M81 ${y}h5"/>`).join("")}</g><rect x="18" y="42" width="64" height="38" rx="5" fill="#E7B867" ${R}/><rect x="23" y="47" width="54" height="28" rx="3" fill="none" stroke="#B5832F" stroke-width="1.4" stroke-dasharray="2 2"/>${T(50, 65, 10.5, "BEM-VINDE", C.night)}`],
+    almofada: G => [32, `<path d="${heart(50, 60, 24)}" fill="${C.coral}" ${R}/><path d="${heart(50, 60, 18)}" fill="none" stroke="#fff" stroke-width="1.6" stroke-dasharray="3 3"/><path d="M35 50q3-6 9-6" stroke="#fff" stroke-width="3" stroke-linecap="round" fill="none" opacity=".8"/><circle cx="50" cy="83" r="3" fill="${G}" ${R.replace('2"', '1"')}/>`],
+    leque: G => {
+      let s = "";
+      const n = 8, cx = 50, cy = 82, r = 38;
+      for (let i = 0; i < n; i++) {
+        const a0 = (200 + (140 / n) * i) * Math.PI / 180, a1 = (200 + (140 / n) * (i + 1)) * Math.PI / 180;
+        s += `<path d="M${cx} ${cy}L${(cx + r * Math.cos(a0)).toFixed(1)} ${(cy + r * Math.sin(a0)).toFixed(1)}A${r} ${r} 0 0 1 ${(cx + r * Math.cos(a1)).toFixed(1)} ${(cy + r * Math.sin(a1)).toFixed(1)}Z" fill="${i % 2 ? C.white : C.lilac}" ${R.replace('2"', '1.4"')}/>`;
+      }
+      return [44, s + `<path d="M${cx - 31} ${cy - 22}A${r - 1} ${r - 1} 0 0 1 ${cx + 31} ${cy - 22}" fill="none" stroke="${G}" stroke-width="3" stroke-dasharray="2 3"/><rect x="45" y="78" width="10" height="14" rx="3" fill="${G}" ${R}/>`];
+    },
+    olho: G => {
+      let s = `<circle cx="50" cy="60" r="29.5" fill="${G}" ${R}/><circle cx="50" cy="60" r="26" fill="${C.white}"/>`;
+      for (let i = 0; i < 16; i++) {
+        const a0 = (-90 + 22.5 * i) * Math.PI / 180, a1 = a0 + 19 * Math.PI / 180, P = (r, a) => (50 + r * Math.cos(a)).toFixed(2) + " " + (60 + r * Math.sin(a)).toFixed(2);
+        s += `<path d="M${P(25, a0)}A25 25 0 0 1 ${P(25, a1)}L${P(17, a1)}A17 17 0 0 0 ${P(17, a0)}Z" fill="${GOMOS[i]}"/>`;
+      }
+      return [30, s + `<circle cx="50" cy="60" r="8.5" fill="#0F1220"/><circle cx="47.5" cy="57.2" r="2" fill="#fff"/>`];
+    },
+    latas: G => [20, `<path d="M28 50C28 22 72 22 72 50" fill="none" stroke="${C.night}" stroke-width="1.6"/><rect x="18" y="50" width="20" height="30" rx="2" fill="${C.turq}" ${R}/><ellipse cx="28" cy="50" rx="10" ry="3.4" fill="${G}" ${R}/><rect x="62" y="50" width="20" height="30" rx="2" fill="${C.coral}" ${R}/><ellipse cx="72" cy="50" rx="10" ry="3.4" fill="${G}" ${R}/><path d="M18 60h20M18 70h20M62 60h20M62 70h20" stroke="#fff" stroke-width="1.2" opacity=".6"/>`],
+    estandarte: G => [19, `<path d="M50 22v70" stroke="${C.rim}" stroke-width="5" stroke-linecap="round"/><path d="M50 22v70" stroke="${G}" stroke-width="3" stroke-linecap="round"/><path d="M30 30h40" stroke="${G}" stroke-width="3.4" stroke-linecap="round"/><circle cx="50" cy="21" r="3.6" fill="${G}" ${R.replace('2"', '1.2"')}/><path d="M32 32h36v38l-18 12-18-12Z" fill="${C.lilac}" ${R}/><path d="M33 70l17 11 17-11" fill="none" stroke="${G}" stroke-width="2" stroke-dasharray="1.6 2"/><path d="${star(50, 50, 9, 3.8)}" fill="${C.yellow}" ${R.replace('2"', '1.2"')}/>`],
+    bandeja: G => [36, `<path d="M28 46h22l-11 14Z" fill="${C.coral}" ${R}/><path d="M39 60v14M33 76h12" stroke="${G}" stroke-width="2.6" stroke-linecap="round"/><path d="M58 38h11l-1 20a4.5 4.5 0 0 1-9 0Z" fill="${C.yellow}" ${R}/><path d="M63.5 62.5v11M58 75.5h11" stroke="${G}" stroke-width="2.6" stroke-linecap="round"/><ellipse cx="50" cy="80" rx="34" ry="8" fill="${G}" ${R}/><ellipse cx="50" cy="78.6" rx="27" ry="4.6" fill="none" stroke="#FBE7A8" stroke-width="1.4"/><path d="${star(76, 40, 6, 1.8, 4)}" fill="${C.yellow}"/>`],
+    tiara: G => [38, `<path d="M22 76L30 52L40 66L50 40L60 66L70 52L78 76Q50 66 22 76Z" fill="${G}" ${R}/><path d="M22 76Q50 66 78 76L76 82Q50 72 24 82Z" fill="${G}" ${R}/><circle cx="50" cy="46" r="4.4" fill="${C.coral}" ${R.replace('2"', '1.2"')}/><circle cx="30" cy="56" r="3.2" fill="${C.turq}" ${R.replace('2"', '1"')}/><circle cx="70" cy="56" r="3.2" fill="${C.lilac}" ${R.replace('2"', '1"')}/><circle cx="40" cy="70" r="2.4" fill="#fff"/><circle cx="60" cy="70" r="2.4" fill="#fff"/><circle cx="50" cy="68" r="3" fill="${C.blue}"/>`],
+    agenda: G => {
+      const cores = [C.coral, C.orange, C.yellow, C.turq, C.blue, C.lilac], marc = [1, 6, 9, 14, 17, 22];
+      let g = "";
+      for (let i = 0; i < 24; i++) {
+        const x = 30 + (i % 6) * 8, y = 50 + Math.floor(i / 6) * 8, k = marc.indexOf(i);
+        g += k >= 0 ? `<circle cx="${x + 2}" cy="${y + 2}" r="3.4" fill="${cores[k]}"/>` : `<rect x="${x}" y="${y}" width="4" height="4" rx="1" fill="#D9D3C7"/>`;
+      }
+      return [26, `<rect x="24" y="32" width="52" height="52" rx="6" fill="${C.white}" ${R}/><path d="M24 45v-7a6 6 0 0 1 6-6h40a6 6 0 0 1 6 6v7Z" fill="${C.coral}" ${R}/><rect x="35" y="26" width="5" height="11" rx="2.5" fill="${G}" ${R.replace('2"', '1.2"')}/><rect x="60" y="26" width="5" height="11" rx="2.5" fill="${G}" ${R.replace('2"', '1.2"')}/>${g}`];
+    },
+  };
+
+  let seq = 0;
+  /** SVG do pingente: argola dourada + objeto. `locked` desenha a silhueta (ainda não conquistado). */
+  function svg(art, { size = 100, locked = false } = {}) {
+    const id = "pg" + (++seq), G = `url(#${id})`;
+    const [top, body] = ART[art](G);
+    const lock = locked ? `<filter id="${id}l"><feColorMatrix type="matrix" values="0 0 0 0 .72  0 0 0 0 .70  0 0 0 0 .66  0 0 0 1 0"/></filter>` : "";
+    return `<svg viewBox="0 0 100 100" width="${size}" height="${size}" aria-hidden="true"><defs><linearGradient id="${id}" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#FBE7A8"/><stop offset=".45" stop-color="#E2B04A"/><stop offset="1" stop-color="#A97A1E"/></linearGradient>${lock}</defs><g transform="translate(0 2)"${locked ? ` filter="url(#${id}l)"` : ""}><circle cx="50" cy="9" r="5.6" fill="none" stroke="${C.rim}" stroke-width="4.4"/><circle cx="50" cy="9" r="5.6" fill="none" stroke="${G}" stroke-width="2.6"/><path d="M50 14.6V${top + 2}" stroke="${G}" stroke-width="3" stroke-linecap="round"/>${body}</g></svg>`;
+  }
+
+  // Medalha limpa (proposta final): disco com o objeto no centro e anel de progresso em volta, sem argola.
+  // state "on" = conquistado (cor, anel cheio); "lock" = silhueta cinza, anel mostra o progresso (0 a 1).
+  const TINT = { "Trajetória": "#FFE1DF", "Reconhecimento": "#ECE5FF", "Cidade": "#D9F7F0", "Mapa": "#FFF2CF", "Rolê": "#FFE8D3", "Constância": "#DEEDFF", "Apoio": "#FFE3EC", "Veterania": "#FBEFD0" };
+  function medal(art, { size = 120, state = "on", prog = 0, cat = "Trajetória", lockIcon = true } = {}) {
+    const id = "md" + (++seq), G = `url(#${id}g)`, on = state === "on";
+    const [, body] = ART[art](G);
+    const L = 2 * Math.PI * 55;
+    const arc = on ? `<circle cx="60" cy="60" r="55" fill="none" stroke="url(#${id}r)" stroke-width="4.5"/>`
+      : prog > 0 ? `<circle cx="60" cy="60" r="55" fill="none" stroke="url(#${id}r)" stroke-width="4.5" stroke-linecap="round" stroke-dasharray="${(L * Math.min(prog, 1)).toFixed(1)} 999" transform="rotate(-90 60 60)"/>` : "";
+    const sil = on ? "" : `<filter id="${id}s"><feColorMatrix type="matrix" values="0 0 0 0 .76  0 0 0 0 .74  0 0 0 0 .70  0 0 0 1 0"/></filter>`;
+    const lk = !on && lockIcon ? `<circle cx="96" cy="96" r="13" fill="#141829" stroke="#fff" stroke-width="3"/><rect x="90.5" y="95" width="11" height="8.5" rx="2" fill="#fff"/><path d="M92.8 95v-2.6a3.2 3.2 0 0 1 6.4 0V95" fill="none" stroke="#fff" stroke-width="1.8"/>` : "";
+    return `<svg viewBox="0 0 120 120" width="${size}" height="${size}" aria-hidden="true"><defs>` +
+      `<linearGradient id="${id}g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#FBE7A8"/><stop offset=".45" stop-color="#E2B04A"/><stop offset="1" stop-color="#A97A1E"/></linearGradient>` +
+      `<linearGradient id="${id}r" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#FF6964"/><stop offset=".25" stop-color="#FFA353"/><stop offset=".45" stop-color="#FFD066"/><stop offset=".65" stop-color="#49DCC0"/><stop offset=".82" stop-color="#59A7FF"/><stop offset="1" stop-color="#A889FF"/></linearGradient>` +
+      `<radialGradient id="${id}t" cx=".35" cy=".3" r=".8"><stop offset="0" stop-color="#fff"/><stop offset="1" stop-color="${on ? (TINT[cat] || "#F3F0EA") : "#ECE9E3"}"/></radialGradient>${sil}</defs>` +
+      `${on ? "" : `<circle cx="60" cy="60" r="55" fill="none" stroke="#E7E3DC" stroke-width="4.5"/>`}${arc}` +
+      `<circle cx="60" cy="60" r="47" fill="url(#${id}t)"/><circle cx="60" cy="60" r="46" fill="none" stroke="#fff" stroke-width="2" opacity=".9"/>` +
+      `<svg x="23" y="23" width="74" height="74" viewBox="8 14 84 84"><g${on ? "" : ` filter="url(#${id}s)"`}>${body}</g></svg>${lk}</svg>`;
+  }
+
+  // flex: [a, o, e]. cat: categoria. rar: comum | incomum | rara | epica | lendaria.
+  const LISTA = [
+    // Trajetória: avaliações válidas (contam depois de 48 h sem a moderação esconder)
+    { id: "deu-o-nome", t: "Deu o Nome", art: "cracha", cat: "Trajetória", rar: "comum", cond: "Primeira avaliação válida.", obj: "Crachá de festa “Olá” com o nome rabiscado.", copy: "Prazer. Agora o mapa sabe o que você acha." },
+    { id: "deu-close", t: "Deu Close", art: "camera", cat: "Trajetória", rar: "comum", cond: "5 avaliações.", obj: "Câmera com flash e um brilhinho.", copy: "Cinco lugares, cinco closes. O mapa agradece." },
+    { id: "figurinha", t: "Figurinha Conhecida", art: "figurinha", cat: "Trajetória", rar: "incomum", cond: "15 avaliações, em pelo menos 3 semanas diferentes.", obj: "Figurinha de álbum com o canto descolando.", copy: "Se o mapa fosse álbum, você já era figurinha conhecida." },
+    { id: "famosinha", t: "Famosinha", flex: ["Famosinha", "Famosinho", "Famosinhe"], art: "oculos", cat: "Trajetória", rar: "rara", cond: "30 avaliações, em pelo menos 4 semanas diferentes.", obj: "Óculos escuros de coração.", copy: "Óculos escuros, por favor. O flash não para." },
+    { id: "influ-do-vale", t: "Influ do Vale", art: "credencial", cat: "Trajetória", rar: "epica", cond: "60 avaliações e 25 “ajudou” recebidos.", obj: "Credencial VIP com cordão.", copy: "O que você irisa, a cidade lê." },
+    // Reconhecimento: “ajudou” nas avaliações (novo, anônimo) + curtidas no mural (já existem)
+    { id: "utilidade-publica", t: "Utilidade Pública", art: "orelhao", cat: "Reconhecimento", rar: "incomum", cond: "10 “ajudou” ou curtidas recebidos.", obj: "Orelhão em miniatura.", copy: "Declarado de utilidade pública. Sem burocracia." },
+    { id: "interesse-municipal", t: "Interesse Municipal", art: "carimbo", cat: "Reconhecimento", rar: "rara", cond: "50 “ajudou” ou curtidas recebidos.", obj: "Selo carimbado “DEFERIDO”.", copy: "Pedido deferido: você é de interesse municipal." },
+    { id: "aclamada", t: "Aclamada", flex: ["Aclamada", "Aclamado", "Aclamade"], art: "buque", cat: "Reconhecimento", rar: "epica", cond: "150 “ajudou” ou curtidas recebidos.", obj: "Buquê jogado no palco.", copy: "Aplausos de pé. A comunidade confia no seu olhar." },
+    { id: "favorita", t: "Favorita do Público", flex: ["Favorita do Público", "Favorito do Público", "Favorite do Público"], art: "tiara", cat: "Reconhecimento", rar: "epica", cond: "A avaliação com mais “ajudou” do mês na sua cidade.", obj: "Tiara de concurso.", copy: "A avaliação mais útil do mês na cidade foi a sua." },
+    // Cidade
+    { id: "icone-local", t: "Ícone Local", art: "pinCoroa", cat: "Cidade", rar: "rara", cond: "Acendeu o selo (5ª avaliação) de 3 lugares na mesma cidade.", obj: "Alfinete de mapa com coroa.", copy: "Três selos acesos por você. Já é ícone local." },
+    { id: "lenda-local", t: "Lenda Local", art: "busto", cat: "Cidade", rar: "epica", cond: "Acendeu o selo de 10 lugares na mesma cidade.", obj: "Busto de praça no pedestal.", copy: "Já pode encomendar sua estátua na praça." },
+    { id: "mala-pronta", t: "Mala Pronta", art: "mala", cat: "Cidade", rar: "incomum", cond: "Avaliou lugares em 3 cidades. Cada cidade nova cola um adesivo na mala.", obj: "Mala de viagem com adesivos.", copy: "Mala pronta e o mapa na mão." },
+    // Mapa
+    { id: "inaugurou", t: "Inaugurou", art: "tesoura", cat: "Mapa", rar: "comum", cond: "Primeira avaliação de um lugar que não tinha nenhuma.", obj: "Tesourinha cortando a fita.", copy: "Corta a fita: esse lugar estreou no mapa com você." },
+    { id: "acendeu-a-luz", t: "Acendeu a Luz", art: "lampada", cat: "Mapa", rar: "incomum", cond: "Deu a 5ª avaliação, a que acende o selo do lugar.", obj: "Lâmpada de camarim.", copy: "O selo acendeu. Foi você que apertou o interruptor." },
+    { id: "eu-conheco", t: "Eu Conheço um Lugar", art: "mapa", cat: "Mapa", rar: "incomum", cond: "Cadastrou um lugar que faltava (ativo depois de 48 h).", obj: "Mapa dobrado com um X.", copy: "Ninguém conhecia. Agora tá no mapa." },
+    { id: "pode-entrar", t: "Pode Entrar", art: "porta", cat: "Mapa", rar: "rara", cond: "3 fotos aprovadas pela moderação.", obj: "Porta entreaberta com luz saindo.", copy: "Agora dá pra ver a porta antes de chegar." },
+    // Rolê
+    { id: "sabe-onde-ir", t: "Sabe Onde Ir", art: "bussola", cat: "Rolê", rar: "incomum", cond: "Avaliou 4 categorias diferentes (bar, café, restaurante, hotel, balada).", obj: "Bússola.", copy: "Bar, café, hotel, restaurante. Sabe onde ir." },
+    { id: "nome-na-lista", t: "Nome na Lista", art: "pulseiraFesta", cat: "Rolê", rar: "incomum", cond: "Avaliou lugares em 5 bairros diferentes.", obj: "Pulseirinha de entrada de festa.", copy: "Seu nome tá na lista de cinco bairros." },
+    { id: "da-casa", t: "Da Casa", art: "chave", cat: "Rolê", rar: "rara", cond: "Reavaliou o mesmo lugar depois de 6 meses. O nome do lugar aparece só no seu Perfil, nunca no cartão do story.", obj: "Chave de camarim com plaquinha “Nº 1”.", copy: "Da casa. Já pode pedir o de sempre." },
+    // Constância
+    { id: "bateu-ponto", t: "Bateu Ponto", art: "cartaoPonto", cat: "Constância", rar: "comum", cond: "Primeira semana acesa: o app aberto em 4 dias quaisquer da semana.", obj: "Cartão de ponto perfurado.", copy: "Bateu ponto. E nem precisou ser todo dia." },
+    { id: "ja-mora-aqui", t: "Já Mora Aqui", art: "capacho", cat: "Constância", rar: "rara", cond: "4 semanas acesas, seguidas ou não.", obj: "Capacho “bem-vinde”.", copy: "Quatro semanas acesas. Já pode receber correspondência aqui." },
+    { id: "serviu-tudo", t: "Serviu Tudo", art: "bandeja", cat: "Constância", rar: "rara", cond: "Completou os 3 desafios do dia em 7 dias diferentes.", obj: "Bandeja com taças.", copy: "Serviu tudo. Literalmente." },
+    { id: "agenda-cheia", t: "Agenda Cheia", art: "agenda", cat: "Constância", rar: "epica", cond: "Abriu a Irisa nas 6 datas da comunidade do ano: 29/01, 17/05, 28/06, 29/08, 23/09, 11/10.", obj: "Calendário com seis dias marcados.", copy: "Presente em todas as datas que importam." },
+    // Apoio
+    { id: "ombro-amigo", t: "Ombro Amigo", art: "almofada", cat: "Apoio", rar: "comum", cond: "10 mensagens de apoio no mural, sem denúncia aceita.", obj: "Almofadinha de coração.", copy: "Dez abraços deixados no mural." },
+    { id: "bateu-leque", t: "Bateu Leque", art: "leque", cat: "Apoio", rar: "rara", cond: "Mensagens de apoio em 10 semanas diferentes.", obj: "Leque aberto.", copy: "Abriu o leque pra comunidade." },
+    { id: "rede-de-apoio", t: "Rede de Apoio", art: "latas", cat: "Apoio", rar: "rara", cond: "3 pessoas entraram pelo seu convite.", obj: "Telefone de lata.", copy: "Três pessoas chegaram por você." },
+    { id: "olho-vivo", t: "Olho Vivo", art: "olho", cat: "Apoio", rar: "incomum", cond: "Consultou a ficha do bairro em 5 dias diferentes.", obj: "O olho da Irisa em miniatura.", copy: "Antes de sair, você olha. Isso é cuidado." },
+    // Veterania
+    { id: "abre-alas", t: "Abre-Alas", art: "estandarte", cat: "Veterania", rar: "lendaria", cond: "Entrou na fase de testes. Depois do lançamento, ninguém mais consegue.", obj: "Estandarte de escola de samba.", copy: "Você abriu alas. Essa ninguém mais pega." },
+    { id: "patrimonio-cultural", t: "Patrimônio Cultural", art: "placaAzul", cat: "Veterania", rar: "lendaria", cond: "Completou o anel: os 48 gomos acesos.", obj: "Placa azul oval de patrimônio.", copy: "Oficialmente patrimônio cultural da comunidade." },
+    { id: "patrimonio-tombado", t: "Patrimônio Tombado", art: "placaBronze", cat: "Veterania", rar: "lendaria", cond: "Um ano de Irisa, contribuindo em 10 meses diferentes.", obj: "Placa de bronze com parafusos.", copy: "Patrimônio tombado. Agora ninguém mexe." },
+  ];
+
+  const RAR = { comum: ["Comum", "#DEDAD2"], incomum: ["Incomum", "#49DCC0"], rara: ["Rara", "#59A7FF"], epica: ["Épica", "#A889FF"], lendaria: ["Lendária", "linear-gradient(90deg,#FFD066,#FFA353,#FF6964)"] };
+  window.PINGENTES = { lista: LISTA, svg, medal, RAR, get: id => LISTA.find(p => p.id === id) };
+})();
+</script>
+<script>
+const P = window.PINGENTES;
+const $ = (s, r = document) => r.querySelector(s), $$ = (s, r = document) => [...r.querySelectorAll(s)];
+const RM = matchMedia("(prefers-reduced-motion: reduce)").matches;
+const A = (el, kf, o) => el.animate(kf, { duration: RM ? 1 : (o?.d ?? 500), delay: RM ? 0 : (o?.delay ?? 0), easing: o?.e ?? "cubic-bezier(.2,.7,.2,1)", fill: "both" });
+const wait = ms => new Promise(r => setTimeout(r, RM ? 0 : ms));
+
+/* ---------- desenho ---------- */
+const G = ['#ff6964','#ff7062','#ff7760','#ff7f5d','#ff875c','#ff8e5a','#ff9558','#ff9c55','#ffa353','#ffa955','#ffae58','#ffb35a','#ffb95d','#ffbf5f','#ffc561','#ffc964','#ffd066','#efd46c','#d7d679','#bed582','#a3d38c','#8bd296','#74d6a4','#5fd9b2','#49dcc0','#4cd7ca','#4fd2d4','#4fcbdc','#50c4e4','#51bcec','#52b4f5','#52aefd','#59a7ff','#63a3ff','#6b9fff','#759aff','#7d96ff','#8791ff','#908dff','#9d8bff','#a889ff','#b684f0','#c681dd','#d37eca','#de78b3','#ea709b','#f56a85','#ff636e'];
+const Pt = (r, a) => (50 + r * Math.cos(a)).toFixed(2) + " " + (50 + r * Math.sin(a)).toFixed(2);
+function drawRing(s, lit) {
+  let h = "";
+  for (let i = 0; i < 48; i++) { const a0 = (-90 + 7.5 * i) * Math.PI / 180, a1 = a0 + 7 * Math.PI / 180;
+    h += `<path data-i="${i}" d="M${Pt(48, a0)}A48 48 0 0 1 ${Pt(48, a1)}L${Pt(35, a1)}A35 35 0 0 0 ${Pt(35, a0)}Z" fill="${i < lit ? G[i] : "#DEDAD2"}" style="transform-origin:50px 50px"/>`; }
+  s.innerHTML = h + `<circle cx="50" cy="50" r="13" fill="#0F1220"/><circle cx="46.1" cy="45.6" r="2.86" fill="#fff"/>`;
+}
+$$("svg.ring").forEach(s => drawRing(s, +s.dataset.lit));
+const SB = `<svg width="18" height="12" viewBox="0 0 18 12" fill="currentColor"><rect x="0" y="8" width="3" height="4" rx="1"/><rect x="5" y="5" width="3" height="7" rx="1"/><rect x="10" y="2.5" width="3" height="9.5" rx="1"/><rect x="15" y="0" width="3" height="12" rx="1"/></svg><svg width="16" height="12" viewBox="0 0 16 12" fill="currentColor"><path d="M8 2.5c2.3 0 4.4.9 6 2.4l1.2-1.3A10.4 10.4 0 0 0 8 .7 10.4 10.4 0 0 0 .8 3.6L2 4.9a8.6 8.6 0 0 1 6-2.4Zm0 3.6c1.3 0 2.5.5 3.4 1.3l1.2-1.3A6.6 6.6 0 0 0 8 4.3 6.6 6.6 0 0 0 3.4 6.1l1.2 1.3c.9-.8 2.1-1.3 3.4-1.3ZM8 9.6l2-2.1a3 3 0 0 0-4 0Z"/></svg><svg width="27" height="13" viewBox="0 0 27 13"><rect x=".5" y=".5" width="23" height="12" rx="3.5" fill="none" stroke="currentColor" opacity=".4"/><rect x="2" y="2" width="20" height="9" rx="2" fill="currentColor"/></svg>`;
+$$("[data-sb]").forEach(e => e.innerHTML = SB);
+$$("[data-sos]").forEach(e => e.innerHTML = `<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#141829" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 18v-6a5 5 0 0 1 10 0v6"/><path d="M5 21h14v-3H5Z"/><path d="M21 12h1M18.5 4.5l-.7.7M2 12h1M12 2v1M4.9 4.9l.7.7"/></svg>`);
+const medal = (id, o = {}) => { const p = P.get(id); return P.medal(p.art, { cat: p.cat, ...o }); };
+function hydrateMedals(root = document) { $$("[data-md]", root).forEach(e => e.innerHTML = medal(e.dataset.md, { size: +e.dataset.size || 100, state: e.dataset.s || "on", prog: +e.dataset.p || 0, lockIcon: !e.dataset.nolock })); }
+hydrateMedals();
+const L = 2 * Math.PI * 55;
+function animProg(host, from, to, d = 1100, delay = 0) {
+  const c = host.querySelector("circle[stroke-dasharray]"); if (!c) return;
+  A(c, [{ strokeDasharray: `${(L * from).toFixed(1)} 999` }, { strokeDasharray: `${(L * to).toFixed(1)} 999` }], { d, delay, e: "cubic-bezier(.3,.8,.3,1)" });
+}
+const RB6 = ["#FF6964", "#FFA353", "#FFD066", "#49DCC0", "#59A7FF", "#A889FF"];
+$("#dots").innerHTML = Array.from({ length: 100 }, (_, i) => `<i style="${i < 12 ? "background:" + RB6[i % 6] : ""}"></i>`).join("");
+
+/* ---------- tab bar ---------- */
+const IC = { "Início": '<path d="M3 10l9-7 9 7v10a2 2 0 0 1-2 2h-4v-7H9v7H5a2 2 0 0 1-2-2Z"/>', "Mapa": '<path d="M9 4L3 6v14l6-2 6 2 6-2V4l-6 2Z"/><path d="M9 4v14M15 6v14"/>', "Lugares": '<path d="M3 9l1.5-5h15L21 9"/><path d="M4 9v11h16V9"/><path d="M3 9h18"/><path d="M10 20v-5h4v5"/>', "Apoio": '<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4"/><path d="M5.6 5.6l3.6 3.6M14.8 14.8l3.6 3.6M18.4 5.6l-3.6 3.6M9.2 14.8l-3.6 3.6"/>', "Perfil": '<circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/>' };
+const TC = ["#C72825", "#B5651D", "#8F6300", "#0A8B7A", "#6037F0"];
+$("#tabs").innerHTML = Object.entries(IC).map(([n, d], i) => `<button data-tab="${i}" class="${i === 4 ? "pf" : ""}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${d}</svg>${n}${i === 4 ? '<i class="badge" id="pfBadge"></i>' : ""}</button>`).join("");
+function setTab(i) { $$("#tabs button").forEach((b, k) => { b.classList.toggle("on", k === i); b.style.color = k === i ? TC[k] : ""; }); }
+
+/* ---------- estado ---------- */
+const S = { today: false, rated: false, unlocked: false, week4: false, neon: false, scr: "home", celStep: 0 };
+const PUL = () => [
+  ["deu-o-nome"], ["deu-close"], ["inaugurou"], ["bateu-ponto"], ["abre-alas"],
+  ["acendeu-a-luz", S.unlocked ? undefined : 0.8], ["figurinha", 0.47], ["famosinha", S.rated ? 0.77 : 0.73],
+  ["nome-na-lista", 0.6], ["mala-pronta", 0.33], ["ombro-amigo", 0.2], ["eu-conheco", 0],
+];
+function renderPul(anim) {
+  const n = PUL().filter(([, p]) => p === undefined).length;
+  $("#pulCount").textContent = `${n} de 12 desbloqueadas`;
+  $("#mg").innerHTML = PUL().map(([id, p], i) => { const o = P.get(id), lk = p !== undefined;
+    return `<button class="${lk ? "lk" : ""}" data-open="${id}" data-i="${i}"><span data-host>${medal(id, { size: 94, state: lk ? "lock" : "on", prog: p || 0 })}</span><p>${o.flex ? o.flex[2] : o.t}</p></button>`; }).join("");
+  if (S.neon) $("#mg [data-open='deu-close'] [data-host]").classList.add("neon");
+  if (anim) $$("#mg button").forEach((b, i) => { A(b, [{ opacity: 0, transform: "translateY(18px) scale(.9)" }, { opacity: 1, transform: "none" }], { d: 520, delay: 60 * i, e: "cubic-bezier(.3,1.4,.45,1)" });
+    const id = b.dataset.open, p = PUL()[i][1]; if (p) animProg(b, 0, p, 900, 300 + 60 * i); });
+}
+renderPul(false);
+
+/* ---------- navegação ---------- */
+const SCR = { home: "#s-home", place: "#s-place", pul: "#s-pul" };
+function go(name) {
+  if (S.scr === name) return;
+  const from = $(SCR[S.scr]), to = $(SCR[name]);
+  // a ficha entra pela direita; Início e Pulseira trocam com um esmaecer
+  from.className = "scr " + (name === "place" ? "left" : S.scr === "place" ? "right" : "off");
+  to.className = "scr";
+  S.scr = name;
+  setTab(name === "pul" ? 4 : 0);
+  $("#tabs").style.transition = "transform .45s cubic-bezier(.2,.7,.2,1)";
+  $("#tabs").style.transform = name === "place" ? "translateY(140%)" : "";
+  if (name === "pul") renderPul(true);
+}
+setTab(0);
+function toast(t, top = 118) { const el = $("#toast"); el.textContent = t; el.style.top = top + "px";
+  A(el, [{ opacity: 0, transform: "translate(-50%,-16px) scale(.96)" }, { opacity: 1, transform: "translate(-50%,0)" , offset: .15 }, { opacity: 1, transform: "translate(-50%,0)", offset: .85 }, { opacity: 0, transform: "translate(-50%,-8px)" }], { d: 2600, e: "ease" }); }
+
+/* ---------- ações do app ---------- */
+async function lightToday() {
+  if (S.today) return; S.today = true;
+  const d = $("#today"); d.classList.remove("hj"); d.classList.add("on");
+  A(d, [{ transform: "scale(.6)", background: "#ECEAE5" }, { transform: "scale(1.25)", background: d.dataset.c, offset: .6 }, { transform: "scale(1)", background: d.dataset.c }], { d: 700, e: "cubic-bezier(.3,1.5,.45,1)" });
+  d.style.background = d.dataset.c;
+  $("#tomorrow").classList.add("hj");
+  await wait(300);
+  $("#wkCount").textContent = "3 de 4 dias"; $("#wkMsg").innerHTML = "Abra a Irisa em mais <b>1 dia</b> e a semana acende.";
+  A($("#wkCount"), [{ transform: "scale(1.3)", color: "#0A8B7A" }, { transform: "scale(1)" }], { d: 600 });
+  toast("Hoje contou para a sua semana");
+}
+function answer(q, k) {
+  const c = q.dataset.c;
+  $$(".opts button", q).forEach((b, i) => { b.classList.toggle("sel", i === k); b.style.background = i === k ? c : ""; });
+  A($$(".opts button", q)[k], [{ transform: "scale(.88)" }, { transform: "scale(1.06)", offset: .6 }, { transform: "scale(1)" }], { d: 380 });
+  const done = $$(".q").every(x => $(".sel", x));
+  const s = $("#send"); s.disabled = !done; s.style.opacity = done ? 1 : .35;
+  if (done) A(s, [{ transform: "scale(.96)" }, { transform: "scale(1)" }], { d: 400, e: "cubic-bezier(.3,1.5,.45,1)" });
+}
+async function autoAnswer() {
+  const picks = [3, 2, 3, 2];
+  for (const [i, q] of $$(".q").entries()) { if (!$(".sel", q)) { await wait(380); answer(q, picks[i]); } }
+}
+$$(".q").forEach(q => $$(".opts button", q).forEach((b, k) => b.onclick = () => answer(q, k)));
+
+function flyTo(fromEl, toEl, html) {
+  const scr = $("#screen").getBoundingClientRect(), z = scr.width / 390;
+  const a = fromEl.getBoundingClientRect(), b = toEl.getBoundingClientRect();
+  const f = document.createElement("div"); f.innerHTML = html; f.style.cssText = `position:absolute;z-index:58;left:${(a.left - scr.left) / z + a.width / z / 2 - 14}px;top:${(a.top - scr.top) / z + 6}px;pointer-events:none`;
+  $("#screen").appendChild(f);
+  const dx = (b.left - a.left) / z + (b.width - a.width) / z / 2, dy = (b.top - a.top) / z;
+  const an = A(f, [{ transform: "translate(0,0) scale(1)", opacity: 1 }, { transform: `translate(${dx * .5}px,${dy * .5 - 120}px) scale(1.3)`, opacity: 1, offset: .5 }, { transform: `translate(${dx}px,${dy}px) scale(.4)`, opacity: .2 }], { d: 1000, e: "cubic-bezier(.5,0,.3,1)" });
+  an.onfinish = () => f.remove();
+}
+const SPARK = `<svg width="28" height="28" viewBox="0 0 24 24"><path d="M12 1l2.6 8.4L23 12l-8.4 2.6L12 23l-2.6-8.4L1 12l8.4-2.6Z" fill="#FFD066" stroke="#B98500" stroke-width="1"/></svg>`;
+
+async function submitRating() {
+  if (S.rated) { openSheet("#rw"); return; }
+  S.rated = true;
+  const s = $("#send"); A(s, [{ transform: "scale(1)" }, { transform: "scale(.94)" }, { transform: "scale(1)" }], { d: 300 });
+  s.textContent = "Enviada"; s.disabled = true;
+  $("#placeSeal").textContent = "Selo aceso agora"; $("#placeSeal").style.color = "#0A8B7A";
+  await wait(250);
+  openSheet("#rw");
+  await wait(520);
+  // gomo novo acende
+  const g = $('#rwRing path[data-i="30"]');
+  A(g, [{ fill: "#DEDAD2", transform: "scale(1)" }, { fill: G[30], transform: "scale(1.22)", offset: .5 }, { fill: G[30], transform: "scale(1)" }], { d: 800, e: "cubic-bezier(.3,1.5,.45,1)" });
+  g.setAttribute("fill", G[30]);
+  A($("#rwRing"), [{ filter: "drop-shadow(0 0 0 rgba(89,167,255,0))" }, { filter: "drop-shadow(0 0 18px rgba(89,167,255,.7))", offset: .4 }, { filter: "drop-shadow(0 0 0 rgba(89,167,255,0))" }], { d: 1400 });
+  A($("#rwTitle"), [{ opacity: 0, transform: "translateY(10px) scale(.9)" }, { opacity: 1, transform: "none" }], { d: 500, delay: 200, e: "cubic-bezier(.3,1.5,.45,1)" });
+  $("#rwOf").textContent = "31";
+  await wait(500);
+  for (const [i, el] of ["#mFa", "#mCor", "#mFam"].entries()) A($(el), [{ opacity: 0, transform: "translateY(16px)" }, { opacity: 1, transform: "none" }], { d: 460, delay: 120 * i, e: "cubic-bezier(.3,1.4,.45,1)" });
+  await wait(450);
+  flyTo($("#mFa"), $("#tabs .pf"), SPARK);
+  $("#faN").textContent = "8";
+  A($("#faN"), [{ transform: "scale(1.5)", color: "#B98500" }, { transform: "scale(1)" }], { d: 600 });
+  await wait(260);
+  $("#famN").textContent = "23";
+  A($("#famN"), [{ transform: "scale(1.5)", color: "#C72825" }, { transform: "scale(1)" }], { d: 600 });
+  await wait(700);
+  A($("#pfBadge"), [{ transform: "scale(0)" }, { transform: "scale(1.4)" }, { transform: "scale(1)" }], { d: 500, e: "cubic-bezier(.3,1.5,.45,1)" });
+  $("#almostTxt").textContent = "Faltam 7 avaliações";
+}
+
+function openSheet(sel) { $("#veil").classList.add("on"); $(sel).classList.add("on"); }
+function closeSheets() { $("#veil").classList.remove("on"); $$(".sheet").forEach(s => s.classList.remove("on")); }
+$("#veil").onclick = closeSheets;
+
+async function celebrate() {
+  closeSheets();
+  S.unlocked = true;
+  const c = $("#cel"); c.classList.add("on");
+  A(c, [{ opacity: 0 }, { opacity: 1 }], { d: 400 });
+  $("#celT").innerHTML = "Acendeu<br>a Luz".replace(/([^<>\s]+)(?![^<]*>)/g, w => `<span>${w}</span>`);
+  $("#celC").textContent = "“O selo acendeu. Foi você que apertou o interruptor.”";
+  $("#celW").textContent = "5ª avaliação do Café do Largo · 6 de 12";
+  const m = $("#celMedal");
+  m.innerHTML = `<div id="cmL" style="position:absolute;inset:0">${medal("acendeu-a-luz", { size: 232, state: "lock", prog: .8 })}</div><div id="cmO" style="position:absolute;inset:0;opacity:0">${medal("acendeu-a-luz", { size: 232 })}</div>`;
+  A($("#celSweep"), [{ opacity: 0, transform: "rotate(0deg)" }, { opacity: 1, offset: .2 }, { opacity: 0, transform: "rotate(360deg)" }], { d: 1800, delay: 200, e: "cubic-bezier(.4,0,.2,1)" });
+  A(m, [{ transform: "scale(.5) rotate(-20deg)", opacity: 0 }, { transform: "scale(1) rotate(0)", opacity: 1 }], { d: 700, delay: 150, e: "cubic-bezier(.3,1.4,.45,1)" });
+  animProg($("#cmL"), .8, 1, 700, 700);
+  await wait(1350);
+  A($("#cmL"), [{ opacity: 1 }, { opacity: 0 }], { d: 300 });
+  A($("#cmO"), [{ opacity: 0, transform: "scale(.9)" }, { opacity: 1, transform: "scale(1.08)", offset: .5 }, { opacity: 1, transform: "scale(1)" }], { d: 600, e: "cubic-bezier(.3,1.5,.45,1)" });
+  A(m, [{ filter: "drop-shadow(0 0 0 rgba(255,208,102,0))" }, { filter: "drop-shadow(0 0 46px rgba(255,208,102,.6))" }], { d: 900 });
+  confetti();
+  $$("#celT span").forEach((s, i) => A(s, [{ opacity: 0, transform: "translateY(30px) rotate(6deg)" }, { opacity: 1, transform: "none" }], { d: 600, delay: 200 + 110 * i, e: "cubic-bezier(.3,1.4,.45,1)" }));
+  ["#celC", "#celW"].forEach((s, i) => A($(s), [{ opacity: 0, transform: "translateY(10px)" }, { opacity: 1, transform: "none" }], { d: 500, delay: 650 + 150 * i }));
+  $$("#cel .acts .btn").forEach((b, i) => A(b, [{ opacity: 0, transform: "translateY(20px)" }, { opacity: 1, transform: "none" }], { d: 500, delay: 900 + 120 * i }));
+  // a cidade também ganha cor
+  const d = $$("#dots i")[12]; d.style.background = RB6[0];
+  $("#cityN").textContent = "13"; $("#cityMsg").textContent = "Esta semana foram 4. Um foi você.";
+}
+function confetti() {
+  const host = $("#confHost"); host.innerHTML = "";
+  for (let i = 0; i < 70; i++) { const e = document.createElement("i"); e.className = "conf"; e.style.background = RB6[i % 6]; host.appendChild(e);
+    const a = Math.random() * Math.PI * 2, r = 140 + Math.random() * 220, x = Math.cos(a) * r, y = Math.sin(a) * r - 60;
+    A(e, [{ transform: "translate(-50%,-50%) scale(.2) rotate(0)", opacity: 1 }, { transform: `translate(${x}px,${y}px) rotate(${Math.random() * 540}deg)`, opacity: 1, offset: .55 }, { transform: `translate(${x * 1.1}px,${y + 260}px) rotate(${Math.random() * 900}deg)`, opacity: 0 }], { d: 1800 + Math.random() * 700, e: "cubic-bezier(.15,.7,.3,1)" }); }
+}
+function closeCel() { const c = $("#cel"); A(c, [{ opacity: 1 }, { opacity: 0 }], { d: 300 }).onfinish = () => c.classList.remove("on"); }
+async function showStory() {
+  $("#storyMedal").innerHTML = medal("acendeu-a-luz", { size: 170 });
+  const s = $("#story"); s.classList.add("on");
+  A(s, [{ opacity: 0 }, { opacity: 1 }], { d: 300 });
+  A($("#card9"), [{ transform: "translateY(60px) scale(.9) rotate(-3deg)", opacity: 0 }, { transform: "none", opacity: 1 }], { d: 650, delay: 100, e: "cubic-bezier(.3,1.4,.45,1)" });
+}
+function closeStory() { const s = $("#story"); A(s, [{ opacity: 1 }, { opacity: 0 }], { d: 250 }).onfinish = () => s.classList.remove("on"); }
+
+function openDetail(id) {
+  const o = P.get(id), row = PUL().find(r => r[0] === id), lk = row && row[1] !== undefined, p = row ? row[1] : 0;
+  const nums = { famosinha: [S.rated ? 23 : 22, 30], figurinha: [7, 15], "nome-na-lista": [3, 5], "mala-pronta": [1, 3], "ombro-amigo": [2, 10], "eu-conheco": [0, 1], "acendeu-a-luz": [4, 5] }[id];
+  $("#detMedal").innerHTML = medal(id, { size: 196, state: lk ? "lock" : "on", prog: p || 0 });
+  if (S.neon && id === "deu-close") $("#detMedal").classList.add("neon"); else $("#detMedal").classList.remove("neon");
+  $("#detT").textContent = o.flex ? o.flex[2] : o.t;
+  $("#detC").textContent = lk ? o.cond : "“" + o.copy + "”";
+  $("#detNum").hidden = !lk || !nums;
+  if (nums) { $("#detA").textContent = nums[0]; $("#detB").textContent = "de " + nums[1]; }
+  $("#detX").textContent = lk ? (id === "famosinha" ? "Quase todos os lugares perto de você ainda estão sem nota." : "") : o.obj;
+  $("#detGo").textContent = lk ? "Avaliar um lugar perto" : "Compartilhar no story";
+  $("#detGo").dataset.mode = lk ? "rate" : "share";
+  openSheet("#det");
+  if (lk && p) animProg($("#detMedal"), 0, p, 1200, 350);
+  A($("#detMedal"), [{ transform: "scale(.7)", opacity: 0 }, { transform: "scale(1)", opacity: 1 }], { d: 600, delay: 200, e: "cubic-bezier(.3,1.4,.45,1)" });
+}
+
+async function weekComplete() {
+  if (!S.today) await lightToday();
+  if (S.week4) { openBox(); return; }
+  S.week4 = true;
+  toast("Um dia depois…", 118);
+  await wait(900);
+  const d = $("#tomorrow"); d.classList.remove("hj"); d.classList.add("on"); d.style.background = d.dataset.c;
+  A(d, [{ transform: "scale(.6)" }, { transform: "scale(1.25)", offset: .6 }, { transform: "scale(1)" }], { d: 700, e: "cubic-bezier(.3,1.5,.45,1)" });
+  await wait(350);
+  $("#wkCount").textContent = "4 de 4 dias"; $("#wkMsg").innerHTML = "<b>Semana acesa.</b> Sua caixinha chegou.";
+  A($("#wkCard .glowring"), [{ opacity: 0 }, { opacity: 1 }], { d: 600 });
+  A($("#wkCard"), [{ transform: "scale(1)" }, { transform: "scale(1.03)" }, { transform: "scale(1)" }], { d: 600, e: "cubic-bezier(.3,1.5,.45,1)" });
+  $$("#wk div.on").forEach((x, i) => A(x, [{ transform: "translateY(0)" }, { transform: "translateY(-8px)" }, { transform: "translateY(0)" }], { d: 420, delay: 80 * i }));
+  await wait(1100);
+  openBox();
+}
+async function openBox() {
+  const b = $("#box"); b.classList.add("on");
+  $("#boxPrize").innerHTML = medal("deu-close", { size: 170 }); $("#boxPrize").classList.remove("neon");
+  $("#boxT").textContent = "Abrindo a caixinha"; $("#boxC").textContent = "4 dias nesta semana. Nada de sequência.";
+  A(b, [{ opacity: 0 }, { opacity: 1 }], { d: 300 });
+  [$("#boxBody"), $("#boxLid")].forEach(x => x.style.transformOrigin = "100px 140px");
+  A($("#boxSvg"), [{ opacity: 0, transform: "scale(.6)" }, { opacity: 1, transform: "scale(1)" }], { d: 500, e: "cubic-bezier(.3,1.5,.45,1)" });
+  A($("#boxPrize"), [{ opacity: 0 }, { opacity: 0 }], { d: 1 });
+  await wait(500);
+  A($("#boxSvg"), [0, -8, 8, -10, 10, -6, 6, 0].map(r => ({ transform: `rotate(${r}deg)` })), { d: 900, e: "ease-in-out" });
+  await wait(950);
+  A($("#boxLid"), [{ transform: "translate(0,0) rotate(0)" }, { transform: "translate(40px,-150px) rotate(40deg)", opacity: 0 }], { d: 700, e: "cubic-bezier(.3,.8,.3,1)" });
+  A($("#boxBody"), [{ opacity: 1, transform: "translateY(0)" }, { opacity: 0, transform: "translateY(40px)" }], { d: 600, delay: 150 });
+  A($("#rays"), [{ opacity: 0, transform: "rotate(0) scale(.6)" }, { opacity: 1, transform: "rotate(90deg) scale(1)" }], { d: 1600, e: "ease-out" });
+  A($("#boxPrize"), [{ opacity: 0, transform: "scale(.3) translateY(40px)" }, { opacity: 1, transform: "scale(1.1) translateY(-6px)", offset: .7 }, { opacity: 1, transform: "scale(1)" }], { d: 800, delay: 250, e: "cubic-bezier(.3,1.4,.45,1)" });
+  await wait(800);
+  $("#boxPrize").classList.add("neon");
+  $("#boxEb").textContent = "Banho surpresa";
+  $("#boxT").textContent = "Deu Close neon"; $("#boxC").textContent = "Um acabamento novo numa medalha que você já tem.";
+  A($("#boxT"), [{ opacity: 0, transform: "translateY(10px)" }, { opacity: 1, transform: "none" }], { d: 400 });
+  A($("#boxGo"), [{ opacity: 0, transform: "translateY(16px)" }, { opacity: 1, transform: "none" }], { d: 500, delay: 300 });
+}
+function closeBox() { S.neon = true; const b = $("#box"); A(b, [{ opacity: 1 }, { opacity: 0 }], { d: 300 }).onfinish = () => { b.classList.remove("on"); $("#boxEb").textContent = "Semana acesa"; }; }
+
+/* ---------- toques livres ---------- */
+$("#goRate").onclick = () => go("place");
+$("#goReport").onclick = () => toast("Relato fica fora de tudo: não pontua", 118);
+$("#placeBack").onclick = () => go("home");
+$("#send").onclick = submitRating;
+$("#rwGo").onclick = () => { if (!S.unlocked) celebrate(); else closeSheets(); };
+$("#celShare").onclick = showStory;
+$("#celPul").onclick = () => { closeCel(); go("pul"); };
+$("#storyX").onclick = closeStory;
+$("#boxGo").onclick = closeBox;
+$("#detGo").onclick = () => { if ($("#detGo").dataset.mode === "rate") { closeSheets(); go("place"); } else { closeSheets(); showStory(); } };
+document.addEventListener("click", e => { const b = e.target.closest("[data-open]"); if (b && $("#screen").contains(b)) openDetail(b.dataset.open); });
+$("#tabs").addEventListener("click", e => { const b = e.target.closest("button"); if (!b) return; const i = +b.dataset.tab;
+  if (i === 0) go("home"); else if (i === 4) { go("pul"); $("#pfBadge").style.transform = "scale(0)"; } else toast("Fora deste protótipo", 118); });
+$("#wkCard").addEventListener("click", () => { if (!S.today) lightToday(); else if (!S.week4) weekComplete(); });
+
+/* ---------- tour ---------- */
+const STEPS = [
+  { eb: "Abrir o app", h: "O dia conta para a semana", t: "Só de abrir a Irisa, o dia acende na <b>semana</b>. Nada de sequência: valem quaisquer 4 dias.", scr: "home", spot: "#wkCard", run: lightToday },
+  { eb: "Semana acesa", h: "4 dias quaisquer", t: "Faltou um dia? Tudo bem. A semana recomeça na segunda <b>sem perder nada</b>. Quatro dias acendem a semana e abrem uma caixinha.", scr: "home", spot: "#wkCard" },
+  { eb: "O mapa responde", h: "12 dos 100 mais conhecidos", t: "A meta da cidade usa os <b>100 lugares mais conhecidos</b>, não os 10 mil do mapa. Assim o número anda toda semana.", scr: "home", spot: "#cityCard" },
+  { eb: "Quase lá", h: "Medalha bloqueada mostra quanto falta", t: "A medalha aparece em <b>silhueta</b> e o anel enche com o progresso. Dá curiosidade sem poluir a tela.", scr: "home", spot: "#almostCard", run: () => animProg($("#almostMedal"), 0, .73, 1300, 200) },
+  { eb: "Avaliar", h: "Quanta cor tem esse lugar?", t: "As quatro perguntas de sempre. A avaliação entra no ar <b>na hora</b>, sem moderação antes.", scr: "place", spot: "#qCard", run: autoAnswer },
+  { eb: "Na hora", h: "Gomo, faísca e cor no mapa", t: "Enviou, o <b>gomo acende</b> no anel, a faísca voa até o Perfil e a Famosinhe anda uma casa. Se uma denúncia derrubar a avaliação, o gomo apaga.", scr: "place", spot: "#rw", run: async () => { await autoAnswer(); await submitRating(); } },
+  { eb: "Desbloqueou", h: "Acendeu a Luz", t: "Era a <b>5ª avaliação</b> do Café do Largo: o selo do lugar acendeu e a medalha também. A cidade ganha um ponto: 13 dos 100.", spot: null, run: async () => { if (!S.rated) { await autoAnswer(); await submitRating(); await wait(1600); } if (!$("#cel").classList.contains("on")) celebrate(); } },
+  { eb: "Divulgação", h: "O print que a pessoa quer postar", t: "O cartão leva a medalha e a frase. <b>O nome do lugar nunca aparece</b>, nem aqui nem na pulseira.", spot: null, run: async () => { if (!$("#cel").classList.contains("on") && !S.unlocked) { await celebrate(); await wait(1500); } showStory(); } },
+  { eb: "Pulseira", h: "Todas as medalhas num lugar só", t: "Desbloqueadas em cor, as outras em silhueta com o anel de progresso. Sem argola, sem selo de raridade, sem texto em volta.", scr: "pul", spot: "#mg", run: () => { closeStory(); closeCel(); S.unlocked = true; } },
+  { eb: "Detalhe", h: "Toque para ver quanto falta", t: "Uma medalha, um número e um botão que leva direto a avaliar. Toque em qualquer outra para ver a dela.", scr: "pul", spot: "#det", run: () => openDetail("famosinha") },
+  { eb: "Caixinha", h: "Semana acesa abre a caixinha", t: "No quarto dia da semana, a caixinha abre: um <b>banho surpresa</b> numa medalha que a pessoa já tem. A surpresa nunca é previsível.", scr: "home", spot: null, run: () => { closeSheets(); weekComplete(); } },
+  { eb: "Fora do jogo", h: "O que nunca vira ponto", t: "<b>Relato</b> não pontua. <b>Medalha</b> não mostra lugar. <b>Missão</b> não fala de horário. <b>Aviso</b> no celular é neutro. Medalha de quantidade pede semanas diferentes.", scr: "home", spot: null, run: () => { closeBox(); closeSheets(); } },
+];
+let step = -1, touring = true;
+function placeSpot(sel) {
+  const sp = $("#spot");
+  if (!sel || !touring) { sp.style.opacity = 0; sp.classList.remove("pulse"); return; }
+  const t = $(sel); if (!t) return;
+  const scr = $("#screen").getBoundingClientRect(), z = scr.width / 390, r = t.getBoundingClientRect(), pad = 6;
+  sp.style.left = (r.left - scr.left) / z - pad + "px"; sp.style.top = (r.top - scr.top) / z - pad + "px";
+  sp.style.width = r.width / z + pad * 2 + "px"; sp.style.height = Math.min(r.height / z + pad * 2, 844) + "px";
+  const br = getComputedStyle(t).borderTopLeftRadius; sp.style.borderRadius = (parseFloat(br) || 20) + pad + "px";
+  sp.style.opacity = 1; sp.classList.add("pulse");
+}
+async function show(n) {
+  n = Math.max(0, Math.min(STEPS.length - 1, n)); if (n === step) return;
+  step = n; const s = STEPS[n];
+  const T = $("#tour"); T.classList.add("swap"); placeSpot(null);
+  await wait(200);
+  $("#tEb").textContent = s.eb; $("#tH").textContent = s.h; $("#tTxt").innerHTML = s.t;
+  $("#tCount").textContent = `${n + 1} de ${STEPS.length}`; $("#tBar").style.width = ((n + 1) / STEPS.length * 100) + "%";
+  $("#tPrev").disabled = n === 0; $("#tNext").textContent = n === STEPS.length - 1 ? "Explorar sozinho" : "Próximo";
+  T.classList.remove("swap");
+  fit();
+  if (s.scr && S.scr !== s.scr) { if (s.scr !== "place") { closeSheets(); } go(s.scr); await wait(520); }
+  if (s.run) await s.run();
+  await wait(s.spot === "#rw" || s.spot === "#det" ? 700 : s.spot === "#celMedal" || s.spot === "#card9" ? 900 : s.spot === "#boxStage" ? 300 : 120);
+  if (step === n) placeSpot(s.spot);
+}
+function endTour() { touring = false; placeSpot(null); $("#tour").hidden = true; $("#reopen").hidden = false; fit(); }
+$("#tNext").onclick = () => step === STEPS.length - 1 ? endTour() : show(step + 1);
+$("#tPrev").onclick = () => show(step - 1);
+$("#tFree").onclick = endTour;
+$("#reopen").onclick = () => { touring = true; $("#tour").hidden = false; $("#reopen").hidden = true; fit(); step = -1; show(0); };
+addEventListener("keydown", e => { if (!touring) return; if (e.key === "ArrowRight") { e.preventDefault(); $("#tNext").click(); } if (e.key === "ArrowLeft") { e.preventDefault(); show(step - 1); } });
+// o holofote some enquanto a pessoa mexe no celular
+$("#screen").addEventListener("pointerdown", () => { $("#spot").style.opacity = 0; $("#spot").classList.remove("pulse"); });
+
+/* ---------- escala do celular ---------- */
+function fit() {
+  const narrow = innerWidth <= 860, tour = $("#tour");
+  const tourH = narrow && !tour.hidden ? tour.offsetHeight + 16 : 0;
+  const availH = innerHeight - (narrow ? tourH + 16 : 48), availW = narrow ? innerWidth - 32 : innerWidth - (tour.hidden ? 48 : 400 + 56 + 48);
+  const z = Math.max(.3, Math.min(availH / 868, availW / 414, 1.05));
+  $("#phone").style.transform = `scale(${z})`;
+  $("#stageWrap").style.width = 414 * z + "px"; $("#stageWrap").style.height = 868 * z + "px";
+  if (step >= 0 && touring) placeSpot(STEPS[step].spot);
+}
+addEventListener("resize", fit);
+// nada no palco rola: o foco de um botão não pode empurrar o celular para fora da tela
+addEventListener("scroll", () => { if (scrollY) scrollTo(0, 0); });
+fit();
+(document.fonts?.ready || Promise.resolve()).then(() => { fit(); show(0); });
+</script>
