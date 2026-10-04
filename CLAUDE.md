@@ -406,6 +406,13 @@ Nome: **Irisa** (INPI livre; @appirisa livre). Bundle id Android `br.com.irisa.a
   gomo provisório na hora e confirmado em 48 h, dia guardado na sequência. Os 12: Deu o Nome, Deu Close, Figurinha,
   Famosinha, Inaugurou, Acendeu a Luz, Eu Conheço um Lugar, Nome na Lista, Mala Pronta, Bateu Ponto, Ombro Amigo,
   Abre-Alas (este só vale para quem entrou no teste fechado do Android, então tem que sair antes da produção).
+  **Proposta final (04/10/2026, `docs/gamificacao-final.html` → `docs/Irisa-gamificacao-final.html`, artefato publicado):**
+  V3 + retorno do Aly. **Sem sequência diária** (ele acha irritante): "semana acesa" = app aberto em 4 dias quaisquer
+  da semana, recomeça na segunda sem perder nada; Bateu Ponto = primeira semana acesa, Já Mora Aqui = 4 semanas,
+  seguidas ou não. **Medalhas limpas** (ele achou os pingentes poluídos): `PINGENTES.medal()` em `docs/pingentes.js`
+  desenha disco + objeto + anel de progresso; bloqueada é silhueta com cadeado e o anel mostra quanto falta; sem
+  argola, sem selo de raridade na tela. Telas em `docs/gamificacao-final-telas.html` →
+  `node scripts/gamificacao-telas.mjs docs/gamificacao-final-telas.html` → `docs/gamificacao/final-*.png`.
 
 ## Stack
 
