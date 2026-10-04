@@ -1,9 +1,4 @@
-<!doctype html>
-<html lang="pt-BR">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Protótipo Irise — Home fiel</title>
+<title>Protótipo Irise</title>
 <!-- Protótipo do assistente Irise (chips → router → Groq/Gemini), sem personagem/mascote,
      construído traduzindo 1:1 o código real: app/(tabs)/index.tsx, app/(tabs)/_layout.tsx,
      src/components/{Mark,Logo,Chip,SearchField,StatCard,PlaceCard,AxisBars,Rainbow,Aurora,Glass}.tsx,
@@ -173,9 +168,8 @@ img,svg{display:block}
 #panel .leg i.l2{background:var(--yellow)}
 @media (max-width:900px){#app{flex-direction:column;overflow:auto;padding-block:16px}#panel{width:auto}}
 @media (prefers-reduced-motion:reduce){*,*:before,*:after{animation-duration:.01ms!important;transition-duration:.01ms!important}}
+:root{color-scheme:light}
 </style>
-</head>
-<body>
 <div id="app">
   <div id="phone"><div id="screen">
     <div class="island"></div>
@@ -466,5 +460,3 @@ $("#sendFree").onclick=sendFree;
 $("#freeText").addEventListener("keydown",e=>{ if(e.key==="Enter") sendFree(); });
 function sendFree(){ const i=$("#freeText"); const v=i.value.trim(); if(!v) return; i.value=""; handleFreeText(v); }
 </script>
-</body>
-</html>
