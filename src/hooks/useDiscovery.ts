@@ -5,7 +5,6 @@ import { useEffect, useSyncExternalStore } from "react";
 import { queryClient } from "@/lib/query";
 import { supabase } from "@/lib/supabase";
 import type { PublicPlace } from "@/lib/types";
-import { TOUR_CLOSED_AT_KEY } from "@/hooks/useTour";
 
 // Descoberta ("Passou por aqui?", migration 43, docs/descoberta-proposta.html). Um cartão que sobe
 // às vezes acima da barra de abas com um lugar perto e pouco avaliado. "Já fui" leva para a ficha de
@@ -54,9 +53,10 @@ export function hojeSP() {
   return new Date().toLocaleDateString("en-CA", { timeZone: "America/Sao_Paulo" });
 }
 
-// ---------- uma vez por dia, e nunca logo depois do tour ----------
+// ---------- uma vez por dia ----------
+// A folga de 30 min depois do tour saiu (04/10/2026): quem acabou de instalar fechava e abria o app
+// e o cartão não vinha. Basta não ser a mesma sessão do tour (DiscoveryNudge confere).
 const KEY_DIA = "irisa.descoberta.dia";
-const TOUR_FOLGA_MS = 30 * 60_000;
 
 /** Se o cartão pode aparecer hoje neste aparelho (o banco também confere: X hoje ou 2 vistos = nada). */
 export function useDescobertaHoje(enabled: boolean) {
@@ -66,13 +66,9 @@ export function useDescobertaHoje(enabled: boolean) {
     retry: false,
     staleTime: 10 * 60_000,
     queryFn: async () => {
-      const pares = await AsyncStorage.multiGet([KEY_DIA, TOUR_CLOSED_AT_KEY]).catch(
-        () => [] as [string, string | null][],
-      );
-      const mapa = Object.fromEntries(pares);
-      const fechadoEm = Number(mapa[TOUR_CLOSED_AT_KEY] ?? 0) || 0;
+      const visto = await AsyncStorage.getItem(KEY_DIA).catch(() => null);
       return {
-        pode: mapa[KEY_DIA] !== hojeSP() && Date.now() - fechadoEm > TOUR_FOLGA_MS,
+        pode: visto !== hojeSP(),
         dia: new Date().getDate(),
       };
     },

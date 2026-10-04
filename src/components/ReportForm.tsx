@@ -2,12 +2,14 @@ import DateTimePicker from "@react-native-community/datetimepicker";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import * as Location from "expo-location";
-import { Crosshair } from "lucide-react-native";
+import { Calendar, Crosshair } from "lucide-react-native";
 import { useState } from "react";
-import { Alert, Platform, Pressable, Text, TextInput, View } from "react-native";
+import { Alert, Platform, Pressable, Text, View } from "react-native";
 
+import { PrimaryButton, SecondaryButton } from "@/components/Button";
 import { Chip } from "@/components/Chip";
 import { CityMap } from "@/components/CityMap";
+import { FieldShell, FormSection, IconDot, TextArea } from "@/components/Field";
 import { PlacePicker, type PickedPlace } from "@/components/PlacePicker";
 import { useCreateOccurrence } from "@/hooks/useCreateOccurrence";
 import { useCity } from "@/providers/CityProvider";
@@ -21,7 +23,7 @@ import {
   type OccurrenceType,
   type Severity,
 } from "@/theme/domain";
-import { colors, shadow } from "@/theme/tokens";
+import { shadow } from "@/theme/tokens";
 
 const TYPE_KEYS = Object.keys(OCCURRENCE_TYPES) as OccurrenceType[];
 const SEV_KEYS = Object.keys(SEVERITIES) as Severity[];
@@ -112,9 +114,24 @@ export function ReportForm({
     userLocation ??
     (city ? { lat: city.lat, lng: city.lng } : { lat: -15.78, lng: -47.93 });
 
+  // Na Android o seletor abre como diálogo; no iOS fica compacto dentro da cápsula.
+  const picker = showPicker && (
+    <DateTimePicker
+      value={date}
+      mode="date"
+      maximumDate={new Date()}
+      display={Platform.OS === "ios" ? "compact" : "default"}
+      themeVariant="light"
+      onChange={(_, d) => {
+        if (Platform.OS === "android") setShowPicker(false);
+        if (d) setDate(d);
+      }}
+    />
+  );
+
   return (
     <View className="gap-5">
-      <Field label="Tipo">
+      <FormSection label="Tipo">
         <View className="flex-row flex-wrap gap-2">
           {TYPE_KEYS.map((k) => (
             <Chip
@@ -126,36 +143,33 @@ export function ReportForm({
             />
           ))}
         </View>
-      </Field>
+      </FormSection>
 
-      <Field label="Data">
-        {Platform.OS === "android" && (
-          <Pressable
-            onPress={() => setShowPicker(true)}
-            className="rounded-2xl bg-solid px-4 py-3"
+      <FormSection label="Data">
+        {Platform.OS === "android" ? (
+          <>
+            <Pressable onPress={() => setShowPicker(true)} accessibilityRole="button">
+              <FieldShell icon={Calendar}>
+                <Text className="flex-1 font-body text-[15px] text-ink">
+                  {format(date, "d 'de' MMMM 'de' yyyy", { locale: ptBR })}
+                </Text>
+              </FieldShell>
+            </Pressable>
+            {picker}
+          </>
+        ) : (
+          <View
+            className="h-[50px] flex-row items-center gap-3 rounded-full bg-solid pl-[7px] pr-2"
             style={shadow.field}
           >
-            <Text className="font-body text-base text-ink">
-              {format(date, "d 'de' MMMM 'de' yyyy", { locale: ptBR })}
-            </Text>
-          </Pressable>
+            <IconDot icon={Calendar} />
+            <Text className="flex-1 font-body text-[15px] text-dim">Data</Text>
+            {picker}
+          </View>
         )}
-        {showPicker && (
-          <DateTimePicker
-            value={date}
-            mode="date"
-            maximumDate={new Date()}
-            display={Platform.OS === "ios" ? "compact" : "default"}
-            themeVariant="light"
-            onChange={(_, d) => {
-              if (Platform.OS === "android") setShowPicker(false);
-              if (d) setDate(d);
-            }}
-          />
-        )}
-      </Field>
+      </FormSection>
 
-      <Field label="Gravidade">
+      <FormSection label="Gravidade">
         <View className="flex-row gap-2">
           {SEV_KEYS.map((k) => (
             <Chip
@@ -168,19 +182,13 @@ export function ReportForm({
             />
           ))}
         </View>
-      </Field>
+      </FormSection>
 
-      <Field
+      <FormSection
         label="Local"
-        hint="Use sua localização ou toque no mapa. O bairro é identificado automaticamente."
+        note="Use sua localização ou toque no mapa. O bairro é identificado automaticamente."
       >
-        <Pressable
-          onPress={useMyLocation}
-          className="flex-row items-center justify-center gap-2 rounded-full bg-turquoise/20 py-3 active:opacity-80"
-        >
-          <Crosshair color={colors.turquoiseInk} size={18} />
-          <Text className="font-body-bold text-sm text-turquoiseInk">Usar minha localização</Text>
-        </Pressable>
+        <SecondaryButton label="Usar minha localização" icon={Crosshair} onPress={useMyLocation} />
         <CityMap
           occurrences={[]}
           center={center}
@@ -196,11 +204,12 @@ export function ReportForm({
         <Text className="font-body text-xs text-dim">
           {point ? `${point.lat.toFixed(5)}, ${point.lng.toFixed(5)}` : "Nenhum ponto marcado"}
         </Text>
-      </Field>
+      </FormSection>
 
-      <Field
+      <FormSection
         label="Onde foi"
-        hint="opcional — ajuda a ler o mapa (“nessa praça”, “nesse ponto de ônibus”)"
+        hint="opcional"
+        note="Ajuda a ler o mapa (“nessa praça”, “nesse ponto de ônibus”)."
       >
         <View className="flex-row flex-wrap gap-2">
           {SETTING_KEYS.map((k) => (
@@ -213,9 +222,9 @@ export function ReportForm({
             />
           ))}
         </View>
-      </Field>
+      </FormSection>
 
-      <Field label="Quando foi" hint="opcional — muita violência tem hora">
+      <FormSection label="Quando foi" hint="opcional" note="Muita violência tem hora.">
         <View className="flex-row gap-2">
           {PERIOD_KEYS.map((k) => (
             <Chip
@@ -228,58 +237,29 @@ export function ReportForm({
             />
           ))}
         </View>
-      </Field>
+      </FormSection>
 
       {point && (
-        <Field label="Foi em um lugar cadastrado?" hint="opcional">
+        <FormSection label="Foi em um lugar cadastrado?" hint="opcional">
           <PlacePicker point={point} value={place} onChange={setPlace} />
-        </Field>
+        </FormSection>
       )}
 
-      <Field label="Descrição (opcional)" hint={`${description.length}/2000`}>
-        <TextInput
-          className="min-h-28 rounded-2xl bg-solid px-4 py-3 font-body text-base text-ink"
-          style={shadow.field}
+      <FormSection label="Descrição (opcional)" hint={`${description.length}/2000`}>
+        <TextArea
           placeholder="O que aconteceu? Não inclua seu nome nem dados que identifiquem você ou outras pessoas."
-          placeholderTextColor={colors.dim}
-          multiline
-          textAlignVertical="top"
           maxLength={2000}
           value={description}
           onChangeText={setDescription}
         />
-      </Field>
+      </FormSection>
 
-      <Pressable
+      <PrimaryButton
+        tone="coral"
+        label={create.isPending ? "Enviando…" : "Registrar relato"}
         disabled={create.isPending}
         onPress={submit}
-        className="items-center rounded-full bg-coral py-4 active:opacity-80 disabled:opacity-50"
-        style={shadow.coral}
-      >
-        <Text className="font-body-bold text-base text-night">
-          {create.isPending ? "Enviando…" : "Registrar relato"}
-        </Text>
-      </Pressable>
-    </View>
-  );
-}
-
-function Field({
-  label,
-  hint,
-  children,
-}: {
-  label: string;
-  hint?: string;
-  children: React.ReactNode;
-}) {
-  return (
-    <View className="gap-2">
-      <View className="flex-row items-baseline justify-between">
-        <Text className="font-body-bold text-xs text-muted">{label}</Text>
-        {hint && <Text className="font-body text-xs text-dim">{hint}</Text>}
-      </View>
-      {children}
+      />
     </View>
   );
 }

@@ -1,11 +1,13 @@
 import { useRouter } from "expo-router";
 import * as Location from "expo-location";
-import { Crosshair, Search } from "lucide-react-native";
+import { Crosshair, MapPin, Search, Store } from "lucide-react-native";
 import { useState } from "react";
-import { Alert, Pressable, Text, TextInput, View } from "react-native";
+import { Alert, Pressable, Text, View } from "react-native";
 
+import { PrimaryButton, SecondaryButton } from "@/components/Button";
 import { Chip } from "@/components/Chip";
 import { CityMap } from "@/components/CityMap";
+import { Field, FormSection } from "@/components/Field";
 import { useCreatePlace, useSimilarPlaces } from "@/hooks/usePlaces";
 import { geocodificar } from "@/lib/geocode";
 import { useCity } from "@/providers/CityProvider";
@@ -114,21 +116,17 @@ export function PlaceForm({ onDone }: { onDone: (placeId: string) => void }) {
 
   return (
     <View className="gap-5">
-      <View className="gap-2">
-        <Text className="font-body-bold text-xs text-muted">Nome</Text>
-        <TextInput
-          className="rounded-2xl bg-solid px-4 py-3 font-body text-base text-ink"
-          style={shadow.field}
+      <FormSection label="Nome">
+        <Field
+          icon={Store}
           placeholder="Ex.: Bar da Esquina"
-          placeholderTextColor={colors.dim}
           maxLength={80}
           value={name}
           onChangeText={setName}
         />
-      </View>
+      </FormSection>
 
-      <View className="gap-2">
-        <Text className="font-body-bold text-xs text-muted">Categoria</Text>
+      <FormSection label="Categoria">
         <View className="flex-row flex-wrap gap-2">
           {CATEGORY_KEYS.map((k) => (
             <Chip
@@ -139,45 +137,32 @@ export function PlaceForm({ onDone }: { onDone: (placeId: string) => void }) {
             />
           ))}
         </View>
-      </View>
+      </FormSection>
 
-      <View className="gap-2">
-        <Text className="font-body-bold text-xs text-muted">Endereço (opcional)</Text>
-        <TextInput
-          className="rounded-2xl bg-solid px-4 py-3 font-body text-base text-ink"
-          style={shadow.field}
+      <FormSection label="Endereço" hint="opcional">
+        <Field
+          icon={MapPin}
           placeholder="Rua e número"
-          placeholderTextColor={colors.dim}
           maxLength={200}
           value={address}
           onChangeText={setAddress}
           onSubmitEditing={acharEndereco}
           returnKeyType="search"
         />
-        <Pressable
+        <SecondaryButton
+          label={achando ? "Procurando…" : "Achar esse endereço no mapa"}
+          icon={Search}
+          color={colors.lilacInk}
           disabled={achando}
           onPress={acharEndereco}
-          className="flex-row items-center justify-center gap-2 rounded-full bg-lilac/20 py-3 active:opacity-80 disabled:opacity-50"
-        >
-          <Search color={colors.lilacInk} size={18} />
-          <Text className="font-body-bold text-sm text-lilacInk">
-            {achando ? "Procurando…" : "Achar esse endereço no mapa"}
-          </Text>
-        </Pressable>
-      </View>
+        />
+      </FormSection>
 
-      <View className="gap-2">
-        <Text className="font-body-bold text-xs text-muted">Local</Text>
-        <Text className="font-body text-xs text-dim">
-          O alfinete é o que vale: a cidade e o bairro do lugar saem dele, não do endereço escrito.
-        </Text>
-        <Pressable
-          onPress={useMyLocation}
-          className="flex-row items-center justify-center gap-2 rounded-full bg-turquoise/20 py-3 active:opacity-80"
-        >
-          <Crosshair color={colors.turquoiseInk} size={18} />
-          <Text className="font-body-bold text-sm text-turquoiseInk">Estou no lugar agora</Text>
-        </Pressable>
+      <FormSection
+        label="Local"
+        note="O alfinete é o que vale: a cidade e o bairro do lugar saem dele, não do endereço escrito."
+      >
+        <SecondaryButton label="Estou no lugar agora" icon={Crosshair} onPress={useMyLocation} />
         <CityMap
           occurrences={[]}
           center={center}
@@ -193,10 +178,10 @@ export function PlaceForm({ onDone }: { onDone: (placeId: string) => void }) {
         {rotulo && (
           <Text className="font-body text-xs text-turquoiseInk">Achei aqui: {rotulo}</Text>
         )}
-      </View>
+      </FormSection>
 
       {jaExistem.length > 0 && (
-        <View className="gap-3 rounded-3xl bg-surface p-4">
+        <View className="gap-3 rounded-3xl bg-surface p-4" style={shadow.card}>
           <Text className="font-body-bold text-sm text-ink">
             {jaExistem.length === 1 ? "Já existe um parecido" : "Já existem parecidos"}
           </Text>
@@ -209,7 +194,8 @@ export function PlaceForm({ onDone }: { onDone: (placeId: string) => void }) {
             <Pressable
               key={p.id}
               onPress={() => router.push({ pathname: "/lugar/[id]", params: { id: p.id } })}
-              className="rounded-xl bg-subtle px-3 py-2 active:opacity-70"
+              className="rounded-[18px] bg-solid px-4 py-3 active:opacity-70"
+              style={shadow.field}
             >
               <Text className="font-body-medium text-base text-ink">{p.name}</Text>
               <Text className="font-body text-xs text-dim">
@@ -221,16 +207,12 @@ export function PlaceForm({ onDone }: { onDone: (placeId: string) => void }) {
         </View>
       )}
 
-      <Pressable
+      <PrimaryButton
+        tone="turquoise"
+        label={create.isPending ? "Salvando…" : "Adicionar lugar"}
         disabled={create.isPending}
         onPress={submit}
-        className="items-center rounded-full bg-turquoise py-4 active:opacity-80 disabled:opacity-50"
-        style={shadow.turquoise}
-      >
-        <Text className="font-body-bold text-base text-night">
-          {create.isPending ? "Salvando…" : "Adicionar lugar"}
-        </Text>
-      </Pressable>
+      />
     </View>
   );
 }

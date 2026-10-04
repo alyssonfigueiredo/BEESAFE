@@ -1,12 +1,13 @@
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { useState } from "react";
-import { Pressable, ScrollView, Text, View } from "react-native";
+import { ScrollView, Text, View } from "react-native";
 
 import { Aurora } from "@/components/Aurora";
 import { useScreenInsets } from "@/hooks/useScreenInsets";
 import { PlaceForm } from "@/components/PlaceForm";
 import { ReportForm } from "@/components/ReportForm";
-import { colors, shadow } from "@/theme/tokens";
+import { Segmented } from "@/components/Segmented";
+import { shadow } from "@/theme/tokens";
 
 export default function RegistrarScreen() {
   const insets = useScreenInsets();
@@ -48,26 +49,14 @@ export default function RegistrarScreen() {
           </Text>
         </View>
 
-        <View className="flex-row rounded-full bg-subtle p-1" style={shadow.card}>
-          {(["relato", "lugar"] as const).map((m) => (
-            <Pressable
-              key={m}
-              onPress={() => setMode(m)}
-              className="flex-1 items-center rounded-full py-2"
-              style={{
-                backgroundColor:
-                  mode === m ? (m === "relato" ? colors.coral : colors.turquoise) : "transparent",
-              }}
-            >
-              <Text
-                className="font-body-bold text-sm"
-                style={{ color: mode === m ? colors.night : colors.muted }}
-              >
-                {m === "relato" ? "Relato" : "Lugar"}
-              </Text>
-            </Pressable>
-          ))}
-        </View>
+        <Segmented
+          options={[
+            { key: "relato", label: "Relato" },
+            { key: "lugar", label: "Lugar" },
+          ]}
+          value={mode}
+          onChange={setMode}
+        />
 
         {mode === "relato" ? (
           <ReportForm

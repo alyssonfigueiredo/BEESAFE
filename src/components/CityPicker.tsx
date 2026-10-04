@@ -1,12 +1,13 @@
-import { ChevronDown, X } from "lucide-react-native";
+import { ChevronDown, Search, X } from "lucide-react-native";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
-import { FlatList, Modal, Pressable, Text, TextInput, View } from "react-native";
+import { FlatList, Modal, Pressable, Text, View } from "react-native";
 
+import { Field } from "@/components/Field";
 import { supabase } from "@/lib/supabase";
 import type { City } from "@/lib/types";
 import { useCity } from "@/providers/CityProvider";
-import { colors, shadow } from "@/theme/tokens";
+import { colors } from "@/theme/tokens";
 import { useFolhaAberta } from "@/hooks/useDiscovery";
 
 export function CityPicker({ tone = "light" }: { tone?: "light" | "dark" } = {}) {
@@ -36,19 +37,23 @@ export function CityPicker({ tone = "light" }: { tone?: "light" | "dark" } = {})
         <ChevronDown color={cor} size={16} />
       </Pressable>
       <Modal visible={open} animationType="slide" onRequestClose={() => setOpen(false)}>
-        <View className="flex-1 gap-4 bg-paper px-4 pt-14">
+        <View className="flex-1 gap-4 px-4 pt-14" style={{ backgroundColor: "#FBFCFE" }}>
           <View className="flex-row items-center justify-between">
             <Text className="font-display text-2xl uppercase tracking-wide text-ink">Cidade</Text>
-            <Pressable onPress={() => setOpen(false)} hitSlop={12}>
-              <X color={colors.muted} size={24} />
+            <Pressable
+              onPress={() => setOpen(false)}
+              hitSlop={12}
+              className="h-9 w-9 items-center justify-center rounded-full"
+              style={{ backgroundColor: colors.subtle }}
+              accessibilityLabel="Fechar"
+            >
+              <X color={colors.muted} size={20} />
             </Pressable>
           </View>
-          <TextInput
+          <Field
+            icon={Search}
             autoFocus
-            className="rounded-2xl bg-solid px-4 py-3 font-body text-base text-ink"
-            style={shadow.field}
             placeholder="Digite o nome da cidade"
-            placeholderTextColor={colors.dim}
             value={q}
             onChangeText={setQ}
           />

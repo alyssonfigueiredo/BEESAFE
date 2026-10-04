@@ -1,20 +1,13 @@
 import { formatDistanceToNow, parseISO } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { Link, Stack, useLocalSearchParams } from "expo-router";
-import { AlertTriangle, BadgeCheck, Navigation } from "lucide-react-native";
+import { AlertTriangle, BadgeCheck, Camera, Navigation } from "lucide-react-native";
 import { useEffect, useRef, useState } from "react";
-import {
-  Alert,
-  Linking,
-  Platform,
-  Pressable,
-  ScrollView,
-  Text,
-  TextInput,
-  View,
-} from "react-native";
+import { Alert, Linking, Platform, ScrollView, Text, View } from "react-native";
 
 import { Aurora } from "@/components/Aurora";
+import { PrimaryButton, SecondaryButton } from "@/components/Button";
+import { TextArea } from "@/components/Field";
 import { RewardSheet } from "@/components/gami/RewardSheet";
 import {
   fraseDescoberta,
@@ -180,7 +173,6 @@ export default function PlaceScreen() {
           title: "",
           headerTransparent: true,
           headerStyle: { backgroundColor: "transparent" },
-          headerBlurEffect: "systemUltraThinMaterial",
           headerTintColor: colors.ink,
           headerShadowVisible: false,
         }}
@@ -303,14 +295,7 @@ export default function PlaceScreen() {
             )}
           </View>
 
-          <Pressable
-            onPress={comoChegar}
-            className="flex-row items-center gap-2 rounded-2xl bg-subtle px-4 py-3 active:opacity-80"
-            style={shadow.card}
-          >
-            <Navigation color={colors.turquoiseInk} size={18} />
-            <Text className="font-body-medium text-sm text-ink">Como chegar</Text>
-          </Pressable>
+          <SecondaryButton label="Como chegar" icon={Navigation} onPress={comoChegar} />
 
           {formVisivel ? (
             <View
@@ -336,48 +321,39 @@ export default function PlaceScreen() {
                   <Rainbow value={current[k]} size={16} onChange={(v) => responder(k, v)} />
                 </View>
               ))}
-              <TextInput
-                className="min-h-20 rounded-2xl bg-solid px-4 py-3 font-body text-base text-ink"
-                style={shadow.field}
+              <TextArea
+                minHeight={88}
                 placeholder="Quer contar como foi? (opcional, até 500 caracteres)"
-                placeholderTextColor={colors.dim}
-                multiline
-                textAlignVertical="top"
                 maxLength={500}
                 value={current.comment}
                 onChangeText={(v) => setDraft({ ...current, comment: v })}
               />
-              <Pressable
-                disabled={enviarFoto.isPending}
-                onPress={mandarFoto}
-                className="items-center rounded-full bg-subtle py-3 active:opacity-80 disabled:opacity-50"
-              >
-                <Text className="font-body-bold text-base text-ink">
-                  {enviarFoto.isPending
+              <SecondaryButton
+                label={
+                  enviarFoto.isPending
                     ? "Enviando foto…"
                     : place.photo_source === "usuario"
                       ? "Trocar a foto do lugar"
-                      : "Adicionar uma foto do lugar"}
-                </Text>
-              </Pressable>
-              <Pressable
+                      : "Adicionar uma foto do lugar"
+                }
+                icon={Camera}
+                color={colors.lilacInk}
+                disabled={enviarFoto.isPending}
+                onPress={mandarFoto}
+              />
+              <PrimaryButton
+                tone="yellow"
+                label={rate.isPending ? "Enviando…" : mine ? "Atualizar" : "Enviar avaliação"}
                 disabled={rate.isPending}
                 onPress={submit}
-                className="items-center rounded-full bg-yellow py-3 active:opacity-80 disabled:opacity-50"
-                style={shadow.yellow}
-              >
-                <Text className="font-body-bold text-base text-night">
-                  {rate.isPending ? "Enviando…" : mine ? "Atualizar" : "Enviar avaliação"}
-                </Text>
-              </Pressable>
+              />
             </View>
           ) : (
-            <Pressable
+            <SecondaryButton
+              label="Avaliar este lugar"
+              color={colors.ink}
               onPress={() => setAbrirForm(true)}
-              className="items-center rounded-full bg-subtle py-3 active:opacity-80"
-            >
-              <Text className="font-body-bold text-base text-ink">Avaliar este lugar</Text>
-            </Pressable>
+            />
           )}
 
           {ratings.length > 0 && (

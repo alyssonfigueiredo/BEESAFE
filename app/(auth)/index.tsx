@@ -15,6 +15,7 @@ import { Aurora } from "@/components/Aurora";
 import { AppleLogo, GoogleG } from "@/components/BrandIcons";
 import { Field } from "@/components/Field";
 import { Logo } from "@/components/Logo";
+import { Segmented } from "@/components/Segmented";
 import { authMessage } from "@/lib/authErrors";
 import { isAppleSignInAvailable, signInWithApple, signInWithGoogle } from "@/lib/socialAuth";
 import { supabase } from "@/lib/supabase";
@@ -128,6 +129,15 @@ export default function LoginScreen() {
                 <View className="flex-1 border-t border-dashed border-ink/15" />
               </View>
 
+              <Segmented
+                options={[
+                  { key: "login", label: "Entrar" },
+                  { key: "signup", label: "Criar conta" },
+                ]}
+                value={mode}
+                onChange={setMode}
+              />
+
               <Field
                 label="E-mail"
                 icon={Mail}
@@ -162,26 +172,20 @@ export default function LoginScreen() {
               <Pressable
                 disabled={busy}
                 onPress={submitEmail}
-                className="mt-1 h-12 flex-row items-center justify-center rounded-full bg-coral active:opacity-80 disabled:opacity-50"
+                className="mt-1 h-[52px] flex-row items-center justify-center rounded-full bg-coral active:opacity-80 disabled:opacity-50"
                 style={shadow.coral}
               >
-                <Text className="font-body-bold text-[15px] text-night">
+                <Text className="font-body-bold text-base text-night">
                   {mode === "login" ? "Entrar" : "Criar conta"}
                 </Text>
                 <View
-                  className="absolute right-[5px] h-[38px] w-[38px] items-center justify-center rounded-full"
+                  className="absolute right-[5px] h-[42px] w-[42px] items-center justify-center rounded-full"
                   style={{ backgroundColor: "rgba(20,24,41,0.10)" }}
                 >
                   <ArrowRight color={colors.night} size={18} strokeWidth={1.75} />
                 </View>
               </Pressable>
             </View>
-
-            <Pressable onPress={() => setMode(mode === "login" ? "signup" : "login")}>
-              <Text className="text-center font-body-medium text-sm text-turquoiseInk">
-                {mode === "login" ? "Não tem conta? Cadastre-se" : "Já tem conta? Entrar"}
-              </Text>
-            </Pressable>
           </ScrollView>
         </KeyboardAvoidingView>
       </SafeAreaView>

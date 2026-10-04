@@ -1,7 +1,9 @@
-import { MapPin, X } from "lucide-react-native";
+import { MapPin, Search, X } from "lucide-react-native";
 import { useState } from "react";
-import { Pressable, Text, TextInput, View } from "react-native";
+import { Pressable, Text, View } from "react-native";
 
+import { SecondaryButton } from "@/components/Button";
+import { Field } from "@/components/Field";
 import { useNearbyPlaces, useSearchPlaces } from "@/hooks/usePlaces";
 import { distanceMeters, formatDistance } from "@/lib/geo";
 import { useCity } from "@/providers/CityProvider";
@@ -44,7 +46,10 @@ export function PlacePicker({
   if (value) {
     return (
       <View className="gap-2">
-        <View className="flex-row items-center gap-2 rounded-xl border border-turquoise bg-surface px-4 py-3">
+        <View
+          className="flex-row items-center gap-2 rounded-[18px] bg-solid px-4 py-3"
+          style={shadow.fieldFocus}
+        >
           <MapPin color={colors.turquoiseInk} size={16} />
           <Text className="flex-1 font-body-medium text-base text-ink" numberOfLines={1}>
             {value.name}
@@ -64,34 +69,33 @@ export function PlacePicker({
   return (
     <View className="gap-2">
       {searching ? (
-        <View className="flex-row items-center gap-2">
-          <TextInput
-            className="flex-1 rounded-2xl bg-solid px-4 py-3 font-body text-base text-ink"
-            style={shadow.field}
-            placeholder="Nome do lugar"
-            placeholderTextColor={colors.dim}
-            autoFocus
-            value={search}
-            onChangeText={setSearch}
-          />
-          <Pressable
-            onPress={() => {
-              setSearching(false);
-              setSearch("");
-            }}
-            hitSlop={10}
-          >
-            <X color={colors.dim} size={20} />
-          </Pressable>
-        </View>
+        <Field
+          icon={Search}
+          placeholder="Nome do lugar"
+          autoFocus
+          value={search}
+          onChangeText={setSearch}
+          right={
+            <Pressable
+              onPress={() => {
+                setSearching(false);
+                setSearch("");
+              }}
+              hitSlop={10}
+              accessibilityLabel="Fechar busca"
+            >
+              <X color={colors.dim} size={18} />
+            </Pressable>
+          }
+        />
       ) : null}
 
       {list.map((p) => (
         <Pressable
           key={p.id}
           onPress={() => onChange({ id: p.id, name: p.name })}
-          className="flex-row items-center gap-2 rounded-2xl bg-subtle px-4 py-3 active:opacity-80"
-          style={shadow.card}
+          className="flex-row items-center gap-2 rounded-[18px] bg-solid px-4 py-3 active:opacity-80"
+          style={shadow.field}
         >
           <MapPin color={colors.dim} size={16} />
           <View className="min-w-0 flex-1">
@@ -116,11 +120,11 @@ export function PlacePicker({
       )}
 
       {!searching && (
-        <Pressable onPress={() => setSearching(true)} hitSlop={8}>
-          <Text className="font-body-medium text-sm text-turquoiseInk">
-            Procurar pelo nome do lugar
-          </Text>
-        </Pressable>
+        <SecondaryButton
+          label="Procurar pelo nome do lugar"
+          icon={Search}
+          onPress={() => setSearching(true)}
+        />
       )}
     </View>
   );

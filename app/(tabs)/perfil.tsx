@@ -7,6 +7,7 @@ import Svg, { Circle, Defs, LinearGradient, Stop } from "react-native-svg";
 import { Alert, Image, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 
 import { Aurora } from "@/components/Aurora";
+import { PrimaryButton } from "@/components/Button";
 import { Field, FieldShell } from "@/components/Field";
 import { AnelCard, ConquistasCard } from "@/components/gami/ConquistasCard";
 import { FormaCard } from "@/components/gami/FormaCard";
@@ -166,14 +167,7 @@ export default function PerfilScreen() {
               <CityPicker />
             </View>
           </FieldShell>
-          <Pressable
-            disabled={update.isPending}
-            onPress={save}
-            className="mt-1 h-12 items-center justify-center rounded-full bg-turquoise active:opacity-80 disabled:opacity-50"
-            style={shadow.turquoise}
-          >
-            <Text className="font-body-bold text-[15px] text-night">Salvar</Text>
-          </Pressable>
+          <PrimaryButton tone="turquoise" label="Salvar" disabled={update.isPending} onPress={save} />
         </View>
 
         <FormaCard />
@@ -223,7 +217,7 @@ export default function PerfilScreen() {
         {profile && profile.role !== "user" && (
           <Link href="/moderacao" asChild>
             <Pressable
-              className="h-12 items-center justify-center rounded-full bg-lilac active:opacity-80"
+              className="h-[52px] items-center justify-center rounded-full bg-lilac active:opacity-80"
               style={shadow.lilac}
             >
               <Text className="font-body-bold text-base text-night">Fila de moderação</Text>

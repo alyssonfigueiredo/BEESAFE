@@ -516,6 +516,14 @@ Nome: **Irisa** (INPI livre; @appirisa livre). Bundle id Android `br.com.irisa.a
   (`DiscoveryNudge.tsx`, `useDiscovery.ts`; folhas abertas avisam com `useFolhaAberta`), ficha com `?origem=home_discovery&avaliar=1`
   e RewardSheet com `frase`. `subtle` = #F1F5FA e `border` = #E6ECF3 em tokens.js. Nada disso rodou em aparelho antes do
   update: lint, typecheck, teste do banco e `expo export` passaram. Ao implementar, trocar `subtle` em `src/theme/tokens.js` (o papel #F5F4F1 fica).
+  **Tapa visual (04/10/2026, retorno do Leandro):** o visual v2 foi para o resto do app (formulários de relato e
+  lugar, Lugares, Perfil, login, moderação, bairro): seletor de dois lados = `src/components/Segmented.tsx` (pílula
+  branca deslizando no trilho claro, saiu de `mural/`), chips tonais, campos em cápsula branca, botão secundário
+  branco. Conquistas: o fundo escuro do destaque é medido (`onLayout`), porque o svg em 100% ficava do tamanho da
+  primeira medida; o cabeçalho das telas empilhadas não usa mais `headerBlurEffect` (fazia uma faixa).
+  **Quando a descoberta aparece:** sessão nova depois da do tour (fechar o app de vez e abrir), ~8 s parado no
+  Início ou em Lugares sem folha aberta, uma vez por dia; não aparece na sessão em que abriu o registro de relato.
+  A folga de 30 min depois do tour saiu.
 
 ## Stack
 

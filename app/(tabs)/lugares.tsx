@@ -7,6 +7,7 @@ import { Aurora } from "@/components/Aurora";
 import { Chip } from "@/components/Chip";
 import { PlaceCard } from "@/components/PlaceCard";
 import { SearchField } from "@/components/SearchField";
+import { Segmented } from "@/components/Segmented";
 import { useNearPlaces, usePlaceCount, usePlaces, useSearchPlaces } from "@/hooks/usePlaces";
 import { distanceMeters } from "@/lib/geo";
 import { useCity } from "@/providers/CityProvider";
@@ -117,18 +118,14 @@ export default function LugaresScreen() {
             <SearchField placeholder="Buscar por nome" value={busca} onChangeText={setBusca} />
 
             {avaliados > 0 && (
-              <ScrollView
-                horizontal
-                showsHorizontalScrollIndicator={false}
-                contentContainerClassName="gap-2"
-              >
-                <Chip label="Tudo" active={recorte === "tudo"} onPress={() => setRecorte("tudo")} />
-                <Chip
-                  label={`Já avaliados (${avaliados})`}
-                  active={recorte === "avaliados"}
-                  onPress={() => setRecorte("avaliados")}
-                />
-              </ScrollView>
+              <Segmented
+                options={[
+                  { key: "tudo", label: "Tudo" },
+                  { key: "avaliados", label: `Já avaliados (${avaliados})` },
+                ]}
+                value={recorte}
+                onChange={setRecorte}
+              />
             )}
 
             <ScrollView

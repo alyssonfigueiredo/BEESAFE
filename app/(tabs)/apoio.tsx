@@ -7,7 +7,7 @@ import { Chip } from "@/components/Chip";
 import { ComposerCard } from "@/components/mural/ComposerCard";
 import { ComposerSheet, type ComposeRequest } from "@/components/mural/ComposerSheet";
 import { NoteCard } from "@/components/mural/NoteCard";
-import { Segmented } from "@/components/mural/Segmented";
+import { Segmented } from "@/components/Segmented";
 import { ServicesPanel } from "@/components/mural/ServicesPanel";
 import { WeeklyQuestion } from "@/components/mural/WeeklyQuestion";
 import { useProfile } from "@/hooks/useProfile";

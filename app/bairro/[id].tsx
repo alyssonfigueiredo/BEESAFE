@@ -34,7 +34,6 @@ export default function BairroScreen() {
     headerBackTitle: "Voltar",
     headerTransparent: true,
     headerStyle: { backgroundColor: "transparent" },
-    headerBlurEffect: "systemUltraThinMaterial",
     headerTintColor: colors.ink,
     headerShadowVisible: false,
   } as const;

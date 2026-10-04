@@ -46,7 +46,7 @@ import { colors, glass, mark } from "@/theme/tokens";
 // "Passou por aqui?" — às vezes, nunca fixo. Regras (docs/descoberta-proposta.html):
 // - no máximo uma vez por dia (aparelho) e o banco devolve nada se a pessoa fechou no X hoje ou já
 //   viu 2 lugares hoje;
-// - nunca na mesma sessão do tour, nem nos 30 min depois dele;
+// - nunca na mesma sessão do tour;
 // - só no Início ou em Lugares, depois de ~8 s lá; nunca com folha/modal aberta, no Apoio, no
 //   registro de relato nem depois de um relato na sessão;
 // - X fecha (discovery_closed); "Não conheço" troca uma vez e, na segunda, despede-se;

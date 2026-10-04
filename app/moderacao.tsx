@@ -58,7 +58,6 @@ export default function ModeracaoScreen() {
           title: "Moderação",
           headerTransparent: true,
           headerStyle: { backgroundColor: "transparent" },
-          headerBlurEffect: "systemUltraThinMaterial",
           headerTintColor: colors.ink,
         }}
       />
@@ -106,13 +105,15 @@ export default function ModeracaoScreen() {
                   <View className="flex-row gap-2">
                     <Pressable
                       onPress={() => decidirFoto(foto.id, true)}
-                      className="flex-1 items-center rounded-full bg-turquoise py-2 active:opacity-80"
+                      className="h-[44px] flex-1 items-center justify-center rounded-full bg-turquoise active:opacity-80"
+                      style={shadow.turquoise}
                     >
                       <Text className="font-body-bold text-sm text-night">Liberar</Text>
                     </Pressable>
                     <Pressable
                       onPress={() => decidirFoto(foto.id, false)}
-                      className="flex-1 items-center rounded-full bg-coral py-2 active:opacity-80"
+                      className="h-[44px] flex-1 items-center justify-center rounded-full bg-coral active:opacity-80"
+                      style={shadow.coral}
                     >
                       <Text className="font-body-bold text-sm text-night">Recusar</Text>
                     </Pressable>
@@ -153,14 +154,15 @@ export default function ModeracaoScreen() {
               <View className="flex-row gap-2">
                 <Pressable
                   onPress={() => act(item.target_type, item.target_id, "remove")}
-                  className="flex-1 items-center rounded-full bg-coral py-2 active:opacity-80"
+                  className="h-[44px] flex-1 items-center justify-center rounded-full bg-coral active:opacity-80"
                   style={shadow.coral}
                 >
                   <Text className="font-body-bold text-sm text-night">Remover</Text>
                 </Pressable>
                 <Pressable
                   onPress={() => act(item.target_type, item.target_id, "restore")}
-                  className="flex-1 items-center rounded-xl border border-turquoise py-2 active:opacity-80"
+                  className="h-[44px] flex-1 items-center justify-center rounded-full bg-solid active:opacity-80"
+                  style={shadow.field}
                 >
                   <Text className="font-body-bold text-sm text-turquoiseInk">Manter</Text>
                 </Pressable>

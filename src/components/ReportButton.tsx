@@ -1,9 +1,12 @@
-import { Flag } from "lucide-react-native";
+import { Flag, PenLine } from "lucide-react-native";
 import { useState } from "react";
-import { Alert, Modal, Pressable, Text, TextInput, View } from "react-native";
+import { Alert, Modal, Pressable, Text, View } from "react-native";
 
+import { PrimaryButton } from "@/components/Button";
+import { Chip } from "@/components/Chip";
+import { Field } from "@/components/Field";
 import { useReportContent, type ReportTarget } from "@/hooks/useModeration";
-import { colors, shadow } from "@/theme/tokens";
+import { colors } from "@/theme/tokens";
 import { useFolhaAberta } from "@/hooks/useDiscovery";
 
 const REASONS = [
@@ -50,51 +53,48 @@ export function ReportButton({
         {!compact && <Text className="font-body text-xs text-dim">Denunciar</Text>}
       </Pressable>
       <Modal visible={open} transparent animationType="fade" onRequestClose={() => setOpen(false)}>
-        <Pressable className="flex-1 justify-end bg-black/60" onPress={() => setOpen(false)}>
+        <Pressable
+          className="flex-1 justify-end"
+          style={{ backgroundColor: "rgba(20,24,41,0.38)" }}
+          onPress={() => setOpen(false)}
+        >
           <Pressable
-            className="gap-3 rounded-t-3xl border-t border-border bg-surface px-6 pb-10 pt-6"
+            className="gap-3 rounded-t-[34px] px-6 pb-10 pt-3"
+            style={{ backgroundColor: "#FBFCFE" }}
             onPress={() => {}}
           >
+            {/* Alça da folha, a mesma das folhas novas. */}
+            <View
+              className="mb-2 h-[5px] w-11 self-center rounded-full"
+              style={{ backgroundColor: colors.border }}
+            />
             <Text className="font-display text-2xl uppercase tracking-wide text-ink">
               Denunciar
             </Text>
             <View className="flex-row flex-wrap gap-2">
               {REASONS.map((r) => (
-                <Pressable
+                <Chip
                   key={r}
+                  label={r}
+                  color={colors.coral}
+                  active={reason === r}
                   onPress={() => setReason(r)}
-                  className="rounded-full border px-3 py-1.5"
-                  style={{
-                    borderColor: colors.coral,
-                    backgroundColor: reason === r ? colors.coral : "transparent",
-                  }}
-                >
-                  <Text
-                    className="font-body-medium text-xs"
-                    style={{ color: reason === r ? colors.night : colors.coralInk }}
-                  >
-                    {r}
-                  </Text>
-                </Pressable>
+                />
               ))}
             </View>
-            <TextInput
-              className="rounded-2xl bg-solid px-4 py-3 font-body text-base text-ink"
-              style={shadow.field}
+            <Field
+              icon={PenLine}
               placeholder="Detalhe se quiser (até 500 caracteres)"
-              placeholderTextColor={colors.dim}
               maxLength={500}
               value={reason}
               onChangeText={setReason}
             />
-            <Pressable
+            <PrimaryButton
+              tone="coral"
+              label="Enviar denúncia"
               disabled={report.isPending}
               onPress={submit}
-              className="items-center rounded-full bg-coral py-3 active:opacity-80 disabled:opacity-50"
-              style={shadow.coral}
-            >
-              <Text className="font-body-bold text-base text-night">Enviar denúncia</Text>
-            </Pressable>
+            />
           </Pressable>
         </Pressable>
       </Modal>

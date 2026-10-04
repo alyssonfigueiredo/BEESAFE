@@ -33,7 +33,7 @@ import { colors, shadow } from "@/theme/tokens";
 const SOFT = "#C9CDE0";
 
 /** Fundo do destaque: noite com um halo azul no alto à esquerda e um brilho quente que acende. */
-function FundoHero() {
+function FundoHero({ w, h }: { w: number; h: number }) {
   const reduce = useReducedMotion();
   const bg = useSvgId("herobg");
   const gl = useSvgId("heroglow");
@@ -47,15 +47,17 @@ function FundoHero() {
   }));
   return (
     <>
-      <Svg style={StyleSheet.absoluteFill} width="100%" height="100%">
-        <Defs>
-          <RadialGradient id={bg} cx="15%" cy="0%" rx="90%" ry="70%" fx="15%" fy="0%">
-            <Stop offset="0" stopColor="#2F3760" />
-            <Stop offset="1" stopColor="#141829" />
-          </RadialGradient>
-        </Defs>
-        <Rect width="100%" height="100%" fill={`url(#${bg})`} />
-      </Svg>
+      {w > 0 && h > 0 && (
+        <Svg style={StyleSheet.absoluteFill} width={w} height={h}>
+          <Defs>
+            <RadialGradient id={bg} cx="15%" cy="0%" rx="90%" ry="70%" fx="15%" fy="0%">
+              <Stop offset="0" stopColor="#2F3760" />
+              <Stop offset="1" stopColor="#141829" />
+            </RadialGradient>
+          </Defs>
+          <Rect width={w} height={h} fill={`url(#${bg})`} />
+        </Svg>
+      )}
       <Animated.View
         pointerEvents="none"
         style={[{ position: "absolute", left: -30, top: -20, width: 240, height: 240 }, glow]}
@@ -79,10 +81,21 @@ function Hero({ q, g, onOpen }: { q: MedalhaProgresso; g: Gamificacao; onOpen: (
   const falta = faltam(q);
   const nSegs = Math.min(q.alvo, 30);
   const cta = ctaDa(q.id);
+  // O fundo é medido: svg com 100% dentro de um cartão que cresce depois (contador, textos)
+  // ficava do tamanho da primeira medida e deixava o cartão com uma faixa clara.
+  const [box, setBox] = useState({ w: 0, h: 0 });
   return (
     <View className="rounded-[30px]" style={shadow.lift}>
-      <Pressable onPress={onOpen} className="overflow-hidden rounded-[30px] px-5 pb-[18px] pt-5">
-        <FundoHero />
+      <Pressable
+        onPress={onOpen}
+        onLayout={(e) => {
+          const { width, height } = e.nativeEvent.layout;
+          if (width !== box.w || height !== box.h) setBox({ w: width, h: height });
+        }}
+        className="overflow-hidden rounded-[30px] px-5 pb-[18px] pt-5"
+        style={{ backgroundColor: "#141829" }}
+      >
+        <FundoHero w={box.w} h={box.h} />
         <View className="flex-row items-center gap-4">
           <AnimatedMedal
             id={q.id}
@@ -132,10 +145,14 @@ function Hero({ q, g, onOpen }: { q: MedalhaProgresso; g: Gamificacao; onOpen: (
           style={{ marginTop: 10 }}
         />
         <View className="mt-1.5 flex-row justify-between">
-          <Text className="font-body text-[12px]" style={{ color: SOFT }}>
+          <Text
+            className="min-w-0 flex-1 font-body text-[12px]"
+            style={{ color: SOFT }}
+            numberOfLines={1}
+          >
             {progressoTexto(q)}
           </Text>
-          <Text className="font-body text-[12px]" style={{ color: SOFT }}>
+          <Text className="ml-2 font-body text-[12px]" style={{ color: SOFT }}>
             {Math.round((q.valor / q.alvo) * 100)}%
           </Text>
         </View>
@@ -219,7 +236,6 @@ export default function ConquistasScreen() {
           title: "",
           headerTransparent: true,
           headerStyle: { backgroundColor: "transparent" },
-          headerBlurEffect: "systemUltraThinMaterial",
           headerTintColor: colors.ink,
           headerShadowVisible: false,
         }}
