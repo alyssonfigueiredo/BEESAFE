@@ -10,8 +10,8 @@
 /* Palco claro com a aurora da marca; celular no centro; roteiro de aprovação ao lado (embaixo no celular).
    Visual único e claro de propósito, igual ao app: cores todas explícitas. */
 :root{
-  --paper:#F5F4F1;--stage:#ECEAE5;--subtle:#EAF0F8;--night:#141829;--night2:#20253A;
-  --ink:#141829;--muted:#3D4560;--dim:#7C8296;--soft:#C9CDE0;--off:#DFE6F0;
+  --paper:#F5F4F1;--stage:#ECEAE5;--subtle:#F1F5FA;--night:#141829;--night2:#20253A;
+  --ink:#141829;--muted:#3D4560;--dim:#7C8296;--soft:#C9CDE0;--off:#E6ECF3;
   --coral:#FF6964;--orange:#FFA353;--yellow:#FFD066;--turq:#49DCC0;--blue:#59A7FF;--lilac:#A889FF;
   --coralInk:#C72825;--turqInk:#0A8B7A;--amber:#E0A32E;--lilacInk:#6037F0;
   --rb:linear-gradient(90deg,#FF6964,#FFA353,#FFD066,#49DCC0,#59A7FF,#A889FF);
@@ -150,7 +150,7 @@ h1.t{font-family:var(--display);font-weight:700;text-transform:uppercase;font-si
 .sheet{position:absolute;left:0;right:0;bottom:0;z-index:31;max-height:88%;overflow-y:auto;scrollbar-width:none;background:#FBFAF8;border-radius:34px 34px 0 0;transform:translateY(105%);transition:transform .55s var(--ease);padding:12px 22px 34px;display:flex;flex-direction:column;gap:14px}
 .sheet::-webkit-scrollbar{display:none}
 .sheet.on{transform:none}
-.grab{width:44px;height:5px;border-radius:3px;background:#C9D3E1;align-self:center;flex:none}
+.grab{width:44px;height:5px;border-radius:3px;background:#D3DBE6;align-self:center;flex:none}
 .shd{display:flex;align-items:center;gap:16px}
 .shd h3{font-family:var(--display);font-weight:700;text-transform:uppercase;font-size:28px;line-height:1.05}
 .shd p{font-size:14px;color:var(--muted);line-height:1.4;margin-top:4px}
@@ -238,12 +238,12 @@ h1.t{font-family:var(--display);font-weight:700;text-transform:uppercase;font-si
 .lay.on{border-color:transparent}
 .lay small{font-weight:600;color:var(--dim);font-variant-numeric:tabular-nums}
 .lay.fil{flex:none;width:44px;padding:0}
-.msheet{position:absolute;left:10px;right:10px;bottom:104px;z-index:6;border-radius:28px;-webkit-backdrop-filter:blur(24px) saturate(180%);background:radial-gradient(70% 110% at 0% 0%,rgba(73,220,192,.22),transparent 62%),radial-gradient(60% 100% at 100% 0%,rgba(255,105,100,.15),transparent 62%),radial-gradient(70% 110% at 100% 100%,rgba(168,137,255,.2),transparent 62%),radial-gradient(60% 100% at 0% 100%,rgba(255,208,102,.2),transparent 62%),rgba(250,249,246,.95);border:1px solid rgba(255,255,255,.85);box-shadow:0 10px 30px rgba(20,24,41,.18);padding:10px 0 14px;backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px)}
-.msheet .h{display:flex;align-items:center;justify-content:space-between;padding:0 16px}
+.msheet{position:absolute;left:10px;right:10px;bottom:104px;z-index:6;border-radius:28px;-webkit-backdrop-filter:blur(24px) saturate(180%);background:radial-gradient(70% 110% at 0% 0%,rgba(73,220,192,.11),transparent 62%),radial-gradient(60% 100% at 100% 0%,rgba(255,105,100,.08),transparent 62%),radial-gradient(70% 110% at 100% 100%,rgba(168,137,255,.1),transparent 62%),radial-gradient(60% 100% at 0% 100%,rgba(255,208,102,.1),transparent 62%),rgba(255,255,255,.96);border:1px solid rgba(255,255,255,.85);box-shadow:0 10px 30px rgba(20,24,41,.18);padding:12px 0 25px;backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px)}
+.msheet .h{display:flex;align-items:center;justify-content:space-between;padding:0 25px}
 .msheet h3{font-size:17px;font-weight:700}
-.msheet .sum{font-size:12.5px;color:var(--muted);padding:2px 16px 10px}
+.msheet .sum{font-size:12.5px;color:var(--muted);padding:2px 25px 12px}
 .msheet .sum b{color:var(--coralInk)}
-.car{display:flex;gap:10px;overflow-x:auto;padding:0 16px;scrollbar-width:none;scroll-snap-type:x mandatory}
+.car{display:flex;gap:10px;overflow-x:auto;padding:0 25px 2px;scroll-padding-inline:25px;scrollbar-width:none;scroll-snap-type:x mandatory}
 .car::-webkit-scrollbar{display:none}
 .pc{flex:none;width:236px;scroll-snap-align:start;display:flex;gap:10px;align-items:center;background:#fff;border:1px solid rgba(20,24,41,.07);border-radius:18px;padding:10px;box-shadow:0 1px 2px rgba(20,24,41,.06),0 4px 12px rgba(20,24,41,.06);text-align:left}
 .pc .tile{flex:none;width:48px;height:48px;border-radius:14px;display:flex;align-items:center;justify-content:center}
@@ -490,7 +490,7 @@ h1.t{font-family:var(--display);font-weight:700;text-transform:uppercase;font-si
       <div class="msheet" id="msheet">
         <div class="grab" style="margin:0 auto 8px"></div>
         <div class="h"><h3 id="msT">Perto de você</h3><button class="regbtn" id="mReg"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#141829" stroke-width="2.6" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>Registrar</button></div>
-        <p class="sum" id="msSum">3 lugares com selo a até 1 km · <b>1 área de atenção</b> a 400 m</p>
+        <p class="sum" id="msSum">3 com selo até 1 km · <b>1 área de atenção</b> a 400 m</p>
         <div class="car" id="car"></div>
       </div>
     </section>
@@ -648,7 +648,7 @@ const EASE = "cubic-bezier(.3,.8,.3,1)";
 
 /* ---------- desenho: tudo que tem progresso nasce vazio e enche ---------- */
 const G = ['#ff6964','#ff7062','#ff7760','#ff7f5d','#ff875c','#ff8e5a','#ff9558','#ff9c55','#ffa353','#ffa955','#ffae58','#ffb35a','#ffb95d','#ffbf5f','#ffc561','#ffc964','#ffd066','#efd46c','#d7d679','#bed582','#a3d38c','#8bd296','#74d6a4','#5fd9b2','#49dcc0','#4cd7ca','#4fd2d4','#4fcbdc','#50c4e4','#51bcec','#52b4f5','#52aefd','#59a7ff','#63a3ff','#6b9fff','#759aff','#7d96ff','#8791ff','#908dff','#9d8bff','#a889ff','#b684f0','#c681dd','#d37eca','#de78b3','#ea709b','#f56a85','#ff636e'];
-const OFF = "#DFE6F0";
+const OFF = "#E6ECF3";
 const Pt = (r, a) => (50 + r * Math.cos(a)).toFixed(2) + " " + (50 + r * Math.sin(a)).toFixed(2);
 const PUPIL = `<circle cx="50" cy="50" r="13" fill="#0F1220"/><circle cx="46.1" cy="45.6" r="2.86" fill="#fff"/>`;
 // anel de N fatias; `lit` acesas. Com `anim`, as acesas enchem uma a uma, como o radar da marca.
@@ -801,7 +801,7 @@ function pinsHTML() {
   let h = "";
   for (let i = 0; i < 170; i++) { const cx = 200 + rnd() * 390, cy = 300 + rnd() * 650; h += `<i class="dotp" style="left:${cx}px;top:${cy}px"></i>`; }
   h += AREAS.map(([x, y, r]) => `<div class="area" data-area style="left:${x - r}px;top:${y - r}px;width:${2 * r}px;height:${2 * r}px"><i></i></div>`).join("");
-  h += CLUSTERS.map(([x, y, n, f], i) => `<button class="clu" data-clu="${i}" style="left:${x}px;top:${y}px"><svg viewBox="0 0 46 46"><circle cx="23" cy="23" r="20" fill="none" stroke="#DFE6F0" stroke-width="4"/><circle cx="23" cy="23" r="20" fill="none" stroke="url(#rbg)" stroke-width="4" stroke-linecap="round" pathLength="100" stroke-dasharray="${Math.max(6, f * 100 * 3)} 100" transform="rotate(-90 23 23)"/></svg><span>${n}</span></button>`).join("");
+  h += CLUSTERS.map(([x, y, n, f], i) => `<button class="clu" data-clu="${i}" style="left:${x}px;top:${y}px"><svg viewBox="0 0 46 46"><circle cx="23" cy="23" r="20" fill="none" stroke="#E6ECF3" stroke-width="4"/><circle cx="23" cy="23" r="20" fill="none" stroke="url(#rbg)" stroke-width="4" stroke-linecap="round" pathLength="100" stroke-dasharray="${Math.max(6, f * 100 * 3)} 100" transform="rotate(-90 23 23)"/></svg><span>${n}</span></button>`).join("");
   h += RATED.map(([n, x, y, sc, c], i) => `<button class="pin" data-pin="${i}" style="left:${x}px;top:${y}px;--c:${c}"><b>${String(sc).replace(".", ",")}</b></button>`).join("");
   h += `<i class="me" style="left:470px;top:660px"></i>`;
   return h;
