@@ -6,7 +6,7 @@ import { Counter, FadeUp, Segs } from "@/components/gami/Anim";
 import { SliceRing } from "@/components/gami/Rings";
 import { Sheet } from "@/components/gami/Sheet";
 import { PlacePhoto } from "@/components/PlacePhoto";
-import { useCityTopPlaces, useGamification } from "@/hooks/useGamification";
+import { convitesDaCidade, useCityTopPlaces, useGamification } from "@/hooks/useGamification";
 import type { PublicPlace } from "@/lib/types";
 import { useCity } from "@/providers/CityProvider";
 import { BADGES, PLACE_CATEGORIES, RATING_MIN, SCALE } from "@/theme/domain";
@@ -47,7 +47,7 @@ function Perto({ p, i, onGo }: { p: PublicPlace; i: number; onGo: (h: Href) => v
             {p.name}
           </Text>
           <Text className="font-body text-[12px] text-dim" numberOfLines={1}>
-            {subtitulo(p)} · falta{falta > 1 ? "m" : ""} {falta}
+            {subtitulo(p)} · {k === 0 ? "seja a 1ª cor" : `falta${falta > 1 ? "m" : ""} ${falta}`}
           </Text>
           <View className="mt-1.5 flex-row" style={{ width: 92 }}>
             <Pips k={k} delay={700 + i * 160} />
@@ -126,14 +126,14 @@ function Conteudo({ onClose }: { onClose: () => void }) {
   const c = g?.cidade;
   if (!c) return null;
 
-  const perto = [
-    ...lugares
-      .filter((p) => p.rating_count >= 3 && p.rating_count < RATING_MIN)
-      .sort((a, b) => b.rating_count - a.rating_count),
-    ...lugares
-      .filter((p) => p.rating_count >= 1 && p.rating_count < 3)
-      .sort((a, b) => b.rating_count - a.rating_count),
-  ].slice(0, 5);
+  // Só convida para o que a pessoa ainda pode ajudar (o que ela já avaliou sai da lista).
+  const conv = convitesDaCidade(lugares, RATING_MIN);
+  const perto = conv.perto.slice(0, 5);
+  const virgens = conv.virgens.slice(0, perto.length >= 3 ? 2 : 4);
+  const prox = conv.proximo;
+  const kProx = prox ? Math.min(RATING_MIN - 1, prox.rating_count) : 0;
+  const faltaProx = RATING_MIN - kProx;
+  const nome = city?.name ?? "sua cidade";
   const feitos = lugares
     .filter((p) => p.rating_count >= RATING_MIN)
     .sort((a, b) => b.rating_count - a.rating_count)
@@ -146,43 +146,72 @@ function Conteudo({ onClose }: { onClose: () => void }) {
 
   return (
     <>
-      <View className="flex-row items-center gap-4">
-        <SliceRing
-          lit={c.com_selo}
-          n={c.total}
-          size={104}
-          inner={34}
-          gap={0.8}
-          animate
-          delay={450}
-          step={55}
-        />
-        <View className="min-w-0 flex-1">
-          <View className="flex-row items-baseline">
-            <Counter
-              value={c.com_selo}
-              duration={1100}
-              delay={450}
-              className="font-display text-[28px] text-ink"
-            />
-            <Text className="font-display text-[28px] uppercase text-ink"> de {c.total}</Text>
+      {c.com_selo === 0 ? (
+        // Nenhum selo ainda: em vez de "0 de 100", o primeiro selo da cidade e quem está perto dele.
+        <View className="flex-row items-center gap-4">
+          <SliceRing
+            lit={kProx}
+            n={RATING_MIN}
+            size={104}
+            inner={30}
+            gap={5}
+            animate
+            delay={450}
+            step={160}
+          />
+          <View className="min-w-0 flex-1">
+            <Text className="font-display text-[28px] uppercase leading-[30px] text-ink">
+              1º selo de {nome}
+            </Text>
+            <Text className="mt-1 font-body text-[14px] leading-[20px] text-muted">
+              {prox
+                ? `${prox.name} está a ${faltaProx} avaliaç${faltaProx > 1 ? "ões" : "ão"} do selo. Já passou por lá?`
+                : `Nenhum lugar tem selo ainda. São ${RATING_MIN} avaliações para o primeiro: a sua pode começar.`}
+            </Text>
           </View>
-          <Text className="mt-1 font-body text-[14px] leading-[20px] text-muted">
-            dos lugares mais conhecidos{city ? ` de ${city.name}` : ""} já têm selo ({RATING_MIN}{" "}
-            avaliações).
-          </Text>
-          {c.semana > 0 && (
-            <View
-              className="mt-2 self-start rounded-full px-3 py-1.5"
-              style={{ backgroundColor: colors.turquoise + "33" }}
-            >
-              <Text className="font-body-bold text-[12.5px]" style={{ color: colors.turquoiseInk }}>
-                +{c.semana} esta semana
-              </Text>
-            </View>
-          )}
         </View>
-      </View>
+      ) : (
+        <View className="flex-row items-center gap-4">
+          <SliceRing
+            lit={c.com_selo}
+            n={c.total}
+            size={104}
+            inner={34}
+            gap={0.8}
+            animate
+            delay={450}
+            step={55}
+          />
+          <View className="min-w-0 flex-1">
+            <View className="flex-row items-baseline">
+              <Counter
+                value={c.com_selo}
+                duration={1100}
+                delay={450}
+                className="font-display text-[28px] text-ink"
+              />
+              <Text className="font-display text-[28px] uppercase text-ink"> de {c.total}</Text>
+            </View>
+            <Text className="mt-1 font-body text-[14px] leading-[20px] text-muted">
+              dos lugares mais conhecidos{city ? ` de ${city.name}` : ""} já têm selo ({RATING_MIN}{" "}
+              avaliações).
+            </Text>
+            {c.semana > 0 && (
+              <View
+                className="mt-2 self-start rounded-full px-3 py-1.5"
+                style={{ backgroundColor: colors.turquoise + "33" }}
+              >
+                <Text
+                  className="font-body-bold text-[12.5px]"
+                  style={{ color: colors.turquoiseInk }}
+                >
+                  +{c.semana} esta semana
+                </Text>
+              </View>
+            )}
+          </View>
+        </View>
+      )}
 
       <Secao>Perto do selo</Secao>
       {isLoading ? (
@@ -195,8 +224,24 @@ function Conteudo({ onClose }: { onClose: () => void }) {
         </View>
       ) : (
         <Text className="font-body text-[13px] leading-[18px] text-dim">
-          Nenhum deles tem avaliação ainda. A primeira já põe um lugar no caminho do selo.
+          {lugares.some((p) => p.meu && p.rating_count < RATING_MIN)
+            ? "Os que estavam perto você já avaliou. Agora é com quem ainda não foi."
+            : "Nenhum deles tem avaliação ainda. A primeira já põe um lugar no caminho do selo."}
         </Text>
+      )}
+
+      {!isLoading && virgens.length > 0 && (
+        <>
+          <Secao>Ainda sem nenhuma cor</Secao>
+          <View className="gap-2">
+            {virgens.map((p, i) => (
+              <Perto key={p.id} p={p} i={perto.length + i} onGo={go} />
+            ))}
+          </View>
+          <Text className="font-body text-[12px] leading-[17px] text-dim">
+            A primeira avaliação de um lugar conta para a medalha Inaugurou.
+          </Text>
+        </>
       )}
 
       {feitos.length > 0 && (

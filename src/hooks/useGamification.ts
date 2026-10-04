@@ -180,6 +180,9 @@ export function useMyWeek(enabled = true) {
   });
 }
 
+/** Lugar da meta da cidade; `meu` = a pessoa já avaliou (não dá para convidar de novo). */
+export type LugarDaMeta = PublicPlace & { meu: boolean };
+
 /** Os 100 lugares mais conhecidos da cidade (o denominador do "N de 100"). */
 export function useCityTopPlaces(cityId: number | null | undefined, enabled = true) {
   const { session } = useAuth();
@@ -191,9 +194,27 @@ export function useCityTopPlaces(cityId: number | null | undefined, enabled = tr
     queryFn: async () => {
       const { data, error } = await supabase.rpc("city_top_places", { p_city: cityId! });
       if (error) throw error;
-      return (data ?? []) as PublicPlace[];
+      const lugares = (data ?? []) as PublicPlace[];
+      // Sem a migration 45, ninguém aparece como avaliado: só perde o filtro.
+      const meus = await supabase.rpc("my_rated_places", { p_ids: lugares.map((p) => p.id) });
+      const ids = new Set((meus.error ? [] : ((meus.data ?? []) as string[])).map(String));
+      return lugares.map((p) => ({ ...p, meu: ids.has(p.id) })) as LugarDaMeta[];
     },
   });
+}
+
+/**
+ * Convites da meta da cidade, só entre os lugares que a pessoa ainda não avaliou:
+ * `perto` = já têm de 1 a 4 avaliações (o mais perto do selo primeiro); `virgens` = ninguém avaliou
+ * (na ordem dos mais conhecidos). `proximo` é o que o cartão do Início aponta.
+ */
+export function convitesDaCidade(lugares: LugarDaMeta[] | undefined, minimo: number) {
+  const livres = (lugares ?? []).filter((p) => !p.meu);
+  const perto = livres
+    .filter((p) => p.rating_count >= 1 && p.rating_count < minimo)
+    .sort((a, b) => b.rating_count - a.rating_count);
+  const virgens = livres.filter((p) => p.rating_count === 0);
+  return { perto, virgens, proximo: perto[0] ?? null };
 }
 
 // ---------- ações ----------

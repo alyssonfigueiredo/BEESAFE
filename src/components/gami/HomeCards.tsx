@@ -11,14 +11,21 @@ import { AnimatedMedal } from "@/components/gami/MedalView";
 import { SliceRing, WeekRing } from "@/components/gami/Rings";
 import { WeekSheet } from "@/components/gami/WeekSheet";
 import {
+  convitesDaCidade,
   faltam,
   quaseLa,
   unidadeTexto,
   useAppConfig,
+  useCityTopPlaces,
   useGamification,
+  type Gamificacao,
 } from "@/hooks/useGamification";
 import { getMedalha, nomeDa } from "@/lib/medals";
+import { useCity } from "@/providers/CityProvider";
+import { RATING_MIN } from "@/theme/domain";
 import { colors, shadow } from "@/theme/tokens";
+
+type CidadeMeta = NonNullable<Gamificacao["cidade"]>;
 
 // Cartões novos do Início, logo abaixo do painel da cidade. O painel e o resto da tela não mudam.
 
@@ -107,53 +114,7 @@ export function GamiHomeCards() {
             <Mais texto="Ver os dias" />
           </Pressable>
         </FadeUp>
-        {cidade && (
-          <FadeUp delay={80} style={{ flex: 1, minWidth: 0 }}>
-            <Pressable
-              onPress={() => setFolha("cidade")}
-              className="gap-2.5 rounded-3xl bg-surface p-3.5 active:opacity-90"
-              style={[{ flexGrow: 1 }, shadow.card]}
-              accessibilityRole="button"
-              accessibilityLabel={`Sua cidade: ${cidade.com_selo} de ${cidade.total} com selo. Ver quais.`}
-            >
-              <ProgressEdge frac={cidade.com_selo / cidade.total} radius={24} duration={900} />
-              <View className="flex-row items-center gap-2.5">
-                <SliceRing
-                  lit={cidade.com_selo}
-                  n={cidade.total}
-                  inner={34}
-                  gap={0.8}
-                  animate
-                  delay={200}
-                  step={45}
-                />
-                <View className="min-w-0 flex-1">
-                  <Text className="font-body-medium text-[11px] uppercase tracking-wider text-dim">
-                    Sua cidade
-                  </Text>
-                  <View className="flex-row items-center">
-                    <Counter
-                      value={cidade.com_selo}
-                      duration={900}
-                      delay={200}
-                      className="font-display text-[22px] text-ink"
-                    />
-                    <Text className="font-display text-[22px] text-ink" numberOfLines={1}>
-                      {" "}
-                      de {cidade.total}
-                    </Text>
-                  </View>
-                </View>
-              </View>
-              <Text className="font-body text-[12.5px] leading-[17px] text-muted">
-                {cidade.semana > 0
-                  ? `dos mais conhecidos já têm selo. ${cidade.semana} esta semana.`
-                  : "dos lugares mais conhecidos já têm selo."}
-              </Text>
-              <Mais texto="Ver quais" />
-            </Pressable>
-          </FadeUp>
-        )}
+        {cidade && <CidadeCard c={cidade} onOpen={() => setFolha("cidade")} />}
       </View>
 
       {g.caixinhas > 0 && (
@@ -223,6 +184,90 @@ export function GamiHomeCards() {
       <WeekSheet visible={folha === "semana"} onClose={() => setFolha(null)} />
       <CitySheet visible={folha === "cidade"} onClose={() => setFolha(null)} />
     </View>
+  );
+}
+
+/**
+ * Sua cidade. No começo nenhum lugar tem selo, e "0 de 100" só desanima: enquanto a cidade não tem
+ * selo, o cartão aponta o lugar mais perto do primeiro (entre os que a pessoa ainda não avaliou).
+ * Com selo na cidade, volta o "N de 100", e a frase ainda aponta o próximo.
+ */
+function CidadeCard({ c, onOpen }: { c: CidadeMeta; onOpen: () => void }) {
+  const { city } = useCity();
+  const { data: lugares } = useCityTopPlaces(city?.id);
+  const { proximo, virgens } = convitesDaCidade(lugares, RATING_MIN);
+  const nome = city?.name ?? "sua cidade";
+  const k = proximo ? Math.min(RATING_MIN - 1, proximo.rating_count) : 0;
+  const falta = RATING_MIN - k;
+  const semSelo = c.com_selo === 0;
+
+  let numero: string;
+  let frase: string;
+  let mais: string;
+  if (semSelo && proximo) {
+    numero = `Falta${falta > 1 ? "m" : ""} ${falta}`;
+    frase = `para ${proximo.name} ganhar o 1º selo de ${nome}.`;
+    mais = "Ajudar no selo";
+  } else if (semSelo) {
+    numero = "1º selo";
+    frase = virgens.length
+      ? `${nome} ainda não tem lugar com selo. Sua avaliação começa a contagem.`
+      : `${nome} ainda não tem lugar com selo.`;
+    mais = "Por onde começar";
+  } else {
+    numero = `${c.com_selo} de ${c.total}`;
+    frase = proximo
+      ? `já têm selo. Falta${falta > 1 ? "m" : ""} ${falta} em ${proximo.name}.`
+      : c.semana > 0
+        ? `dos mais conhecidos já têm selo. ${c.semana} esta semana.`
+        : "dos lugares mais conhecidos já têm selo.";
+    mais = "Ver quais";
+  }
+
+  return (
+    <FadeUp delay={80} style={{ flex: 1, minWidth: 0 }}>
+      <Pressable
+        onPress={onOpen}
+        className="gap-2.5 rounded-3xl bg-surface p-3.5 active:opacity-90"
+        style={[{ flexGrow: 1 }, shadow.card]}
+        accessibilityRole="button"
+        accessibilityLabel={`Sua cidade: ${numero} ${frase} ${mais}.`}
+      >
+        <ProgressEdge
+          frac={semSelo ? k / RATING_MIN : c.com_selo / c.total}
+          radius={24}
+          duration={900}
+        />
+        <View className="flex-row items-center gap-2.5">
+          {semSelo ? (
+            // Os cinco gomos do selo do lugar apontado: dá para ver quanto falta.
+            <SliceRing lit={k} n={RATING_MIN} inner={30} gap={6} animate delay={200} step={120} />
+          ) : (
+            <SliceRing
+              lit={c.com_selo}
+              n={c.total}
+              inner={34}
+              gap={0.8}
+              animate
+              delay={200}
+              step={45}
+            />
+          )}
+          <View className="min-w-0 flex-1">
+            <Text className="font-body-medium text-[11px] uppercase tracking-wider text-dim">
+              Sua cidade
+            </Text>
+            <Text className="font-display text-[22px] text-ink" numberOfLines={1}>
+              {numero}
+            </Text>
+          </View>
+        </View>
+        <Text className="font-body text-[12.5px] leading-[17px] text-muted" numberOfLines={3}>
+          {frase}
+        </Text>
+        <Mais texto={mais} />
+      </Pressable>
+    </FadeUp>
   );
 }
 

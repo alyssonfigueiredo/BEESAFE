@@ -524,6 +524,11 @@ Nome: **Irisa** (INPI livre; @appirisa livre). Bundle id Android `br.com.irisa.a
   **Quando a descoberta aparece:** sessão nova depois da do tour (fechar o app de vez e abrir), ~8 s parado no
   Início ou em Lugares sem folha aberta, uma vez por dia; não aparece na sessão em que abriu o registro de relato.
   A folga de 30 min depois do tour saiu.
+  **Sua cidade vira convite (migration 45, 04/10/2026, retorno do Leandro):** "0 de 100" no começo só desanimava.
+  Enquanto a cidade não tem selo, o cartão do Início mostra "Falta N para <lugar> ganhar o 1º selo de <cidade>"
+  (anel de 5 gomos do lugar) e a folha abre com "1º selo de <cidade>". Com selo, volta o "N de 100" e a frase ainda
+  aponta o próximo. Só convida para lugar que a pessoa ainda não avaliou (`my_rated_places(ids)`, só ids;
+  `convitesDaCidade` em `useGamification.ts`); a folha ganhou "Ainda sem nenhuma cor" (conta para Inaugurou).
 
 ## Stack
 

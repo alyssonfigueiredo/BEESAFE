@@ -157,6 +157,8 @@ select count(*) as um_dia_1, bool_and(consulted) as consultou from public.user_d
 set role authenticated;
 select (public.my_gamification()) ? 'medalhas' as tem_medalhas;
 select jsonb_array_length(public.my_gamification()->'conquistadas') > 0 as abre_alas_desbloqueada;
+-- migration 45: meus avaliados entre ids
+select count(*) >= 0 as meus_ok from public.my_rated_places(array(select id from public.places limit 5));
 -- migration 43: reações, pergunta da semana e descoberta
 select (public.app_config() ? 'pergunta_semana') as tem_pergunta;
 select count(*) >= 0 as slate_ok from public.discovery_slate(-25.43, -49.27, null);
