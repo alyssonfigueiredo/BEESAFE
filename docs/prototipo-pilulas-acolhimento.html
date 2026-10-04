@@ -1,0 +1,264 @@
+<title>Protótipo · Pílulas de acolhimento</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Urbanist:wght@500&family=Oswald:wght@400;700&family=Space+Grotesk:wght@400;500;600;700&display=swap">
+<style>
+:root{
+  --paper:#F5F4F1;--surface:rgba(255,255,255,.4);--solid:#FFFFFF;
+  --subtle:#F1F5FA;--border:#E6ECF3;--night:#141829;--ink:#141829;--muted:#3D4560;--dim:#7C8296;
+  --coral:#FF6964;--orange:#FFA353;--yellow:#FFD066;--turquoise:#49DCC0;--lilac:#A889FF;--blue:#6AA8EE;
+  --coralInk:#C72825;--orangeInk:#96601C;--yellowInk:#8A6512;--turquoiseInk:#0A8B7A;--lilacInk:#6D4FD8;
+  --amber:#E0A32E;
+  --display:"Oswald","Arial Narrow",Impact,sans-serif;--body:"Space Grotesk","Helvetica Neue",Arial,sans-serif;--mark:"Urbanist","Helvetica Neue",Arial,sans-serif;
+  --shadowCard:0 2px 4px rgba(20,24,41,.03),0 12px 32px rgba(20,24,41,.06);--ease:cubic-bezier(.2,.7,.2,1);
+  color-scheme:light;
+}
+*{box-sizing:border-box}p,h1,h2,h3{margin:0}
+html,body{height:100%}
+body{margin:0;overflow:hidden;font-family:var(--body);color:var(--ink);background:#ECEAE5;-webkit-font-smoothing:antialiased}
+button{font:inherit;color:inherit;border:0;background:none;cursor:pointer;padding:0}
+img,svg{display:block}
+
+#app{position:relative;height:100%;display:flex;align-items:center;justify-content:center;gap:48px;padding-inline:24px}
+#phone{position:relative;width:390px;height:844px;border-radius:62px;background:#0E1020;padding:12px;box-shadow:0 40px 90px rgba(20,24,41,.32),0 0 0 2px #2A2E44 inset}
+#screen{position:relative;width:100%;height:100%;border-radius:50px;overflow:hidden;background:var(--paper);isolation:isolate}
+.island{position:absolute;left:50%;top:11px;width:120px;height:34px;margin-left:-60px;border-radius:20px;background:#000;z-index:60}
+#aurora{position:absolute;inset:0;z-index:0}
+.sb{position:relative;z-index:50;height:40px;display:flex;justify-content:space-between;align-items:flex-end;padding:0 30px 4px 36px;font-weight:600;font-size:14px;color:#111}
+.hd{position:relative;z-index:30;margin:2px 16px 0;height:52px;border-radius:26px;background:rgba(255,255,255,.66);backdrop-filter:blur(14px);box-shadow:0 1px 2px rgba(20,24,41,.03),0 12px 32px rgba(20,24,41,.06);display:flex;align-items:center;justify-content:space-between;padding:0 10px 0 16px}
+.logo-row{display:flex;align-items:center;gap:10px}
+.wordmark{font-family:var(--mark);font-weight:500;text-transform:uppercase;font-size:20px;letter-spacing:.14em;color:var(--ink)}
+.wordmark b{font-weight:500;color:var(--yellow)}
+.sos{width:40px;height:40px;border-radius:50%;background:var(--coral);display:flex;align-items:center;justify-content:center;flex:none}
+#scroll{position:relative;z-index:1;height:calc(100% - 54px);overflow-y:auto;scrollbar-width:none;padding:12px 16px 110px;display:flex;flex-direction:column;gap:16px}
+#scroll::-webkit-scrollbar{display:none}
+.hero{border-radius:28px;padding:20px;background:var(--night);box-shadow:0 2px 4px rgba(20,24,41,.08),0 14px 36px rgba(20,24,41,.16);display:flex;flex-direction:column;gap:12px}
+.hero .tag-row{display:flex;align-items:center;gap:12px}
+.hero .tag-tile{width:36px;height:36px;border-radius:12px;background:rgba(255,255,255,.1);display:flex;align-items:center;justify-content:center}
+.hero .eb{font-family:var(--body);font-weight:500;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:rgba(245,244,241,.6)}
+.hero h1{font-family:var(--display);font-weight:700;text-transform:uppercase;font-size:30px;letter-spacing:.01em;color:var(--paper)}
+.hero p{font-family:var(--body);font-size:14px;line-height:1.5;color:rgba(245,244,241,.75)}
+.hero p b{font-family:var(--body);font-weight:700;color:var(--yellow)}
+.card{background:var(--surface);border-radius:20px;padding:16px;box-shadow:var(--shadowCard)}
+.section-title{font-family:var(--body);font-weight:700;font-size:16px;color:var(--ink)}
+.sub{font-family:var(--body);font-size:12px;color:var(--dim)}
+
+/* ---------- notificação de bloqueio ---------- */
+#lock{position:absolute;inset:0;z-index:70;background:linear-gradient(180deg,#2b2f55,#141829 60%);display:flex;flex-direction:column;align-items:center;opacity:0;pointer-events:none;transition:opacity .35s}
+#lock.on{opacity:1;pointer-events:auto}
+#lock .clock{margin-top:120px;font-family:var(--display);font-weight:700;font-size:64px;color:#fff}
+#lock .date{font-family:var(--body);font-size:14px;color:rgba(255,255,255,.65);margin-top:4px}
+.notif{margin-top:52px;width:342px;background:rgba(255,255,255,.86);backdrop-filter:blur(16px);border-radius:22px;padding:14px 16px;box-shadow:0 14px 36px rgba(0,0,0,.28);display:flex;flex-direction:column;gap:6px;cursor:pointer;transform:translateY(0);transition:transform .2s}
+.notif:active{transform:scale(.97)}
+.notif .top{display:flex;align-items:center;gap:8px}
+.notif .appicon{width:22px;height:22px;border-radius:7px;background:var(--night);display:flex;align-items:center;justify-content:center;flex:none}
+.notif .appname{font-family:var(--body);font-weight:700;font-size:12px;letter-spacing:.04em;text-transform:uppercase;color:#4A4F66}
+.notif .time{font-family:var(--body);font-size:11px;color:#8A8FA3;margin-left:auto}
+.notif .title{font-family:var(--body);font-weight:700;font-size:14.5px;color:#141829}
+.notif .body{font-family:var(--body);font-size:13.5px;color:#4A4F66;line-height:1.35}
+.tapme{margin-top:14px;font-family:var(--body);font-size:12px;color:rgba(255,255,255,.55)}
+
+/* ---------- folha da pílula ---------- */
+.veil{position:absolute;inset:0;z-index:40;background:rgba(20,24,41,.4);opacity:0;pointer-events:none;transition:opacity .3s}
+.veil.on{opacity:1;pointer-events:auto}
+#pill{position:absolute;left:0;right:0;bottom:0;z-index:41;background:#FBFCFE;border-radius:34px 34px 0 0;transform:translateY(100%);transition:transform .4s cubic-bezier(.2,.8,.2,1);display:flex;flex-direction:column;align-items:center;padding:10px 26px 28px;gap:0}
+#pill.on{transform:none}
+.grab{width:44px;height:5px;border-radius:3px;background:#D9D5CD;margin:0 auto 18px}
+.pillcard{width:100%;border-radius:28px;padding:34px 26px 28px;display:flex;flex-direction:column;align-items:center;text-align:center;gap:14px;position:relative;overflow:hidden}
+.pillcard .blob{position:absolute;inset:0;z-index:0}
+.pillcard .inner{position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;gap:14px}
+.pill-eb{font-family:var(--body);font-weight:600;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--turquoiseInk)}
+.pill-phrase{font-family:var(--display);font-weight:700;text-transform:uppercase;font-size:34px;line-height:1.12;letter-spacing:.01em}
+.pill-phrase .rb{background:linear-gradient(90deg,var(--coral),var(--orange),var(--yellow),var(--turquoise),var(--blue),var(--lilac));-webkit-background-clip:text;background-clip:text;color:transparent}
+.pill-body{font-family:var(--body);font-size:14.5px;line-height:1.5;color:var(--muted);max-width:280px}
+.rb-line{display:flex;width:64px;height:5px;border-radius:3px;overflow:hidden;margin-top:2px}
+.rb-line i{flex:1}
+.pill-actions{display:flex;gap:10px;width:100%;margin-top:18px}
+.btn{height:48px;border-radius:999px;display:flex;align-items:center;justify-content:center;gap:8px;font-family:var(--body);font-weight:700;font-size:14px;flex:1}
+.btn.coral{background:var(--coral);color:var(--night)}
+.btn.ghost{background:var(--subtle);color:var(--ink)}
+.btn:active{opacity:.8}
+.pill-next{margin-top:10px;font-family:var(--body);font-size:12.5px;color:var(--dim);text-decoration:underline;text-underline-offset:3px}
+
+/* ---------- folha de compartilhar (share sheet iOS) ---------- */
+#share{position:absolute;left:0;right:0;bottom:0;z-index:55;background:rgba(250,250,252,.96);backdrop-filter:blur(20px);border-radius:28px 28px 0 0;transform:translateY(100%);transition:transform .32s cubic-bezier(.2,.8,.2,1);padding:16px 20px 30px;display:flex;flex-direction:column;align-items:center;gap:16px}
+#share.on{transform:none}
+.sharecard-wrap{width:140px;height:249px;border-radius:14px;overflow:hidden;box-shadow:0 8px 20px rgba(20,24,41,.18);flex:none}
+.sharecard-wrap .sc-inner{width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:14px;position:relative}
+.sc-phrase{font-family:var(--display);font-weight:700;text-transform:uppercase;font-size:14px;line-height:1.15;position:relative;z-index:1}
+.sc-mark{position:absolute;bottom:8px;left:0;right:0;display:flex;align-items:center;justify-content:center;gap:4px;font-family:var(--mark);font-weight:500;font-size:7px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink);z-index:1}
+.apps-row{display:flex;gap:18px;width:100%;overflow-x:auto;padding:4px 2px;scrollbar-width:none}
+.apps-row::-webkit-scrollbar{display:none}
+.appopt{display:flex;flex-direction:column;align-items:center;gap:6px;flex:none;width:62px}
+.appopt .ic{width:52px;height:52px;border-radius:16px;display:flex;align-items:center;justify-content:center}
+.appopt span{font-family:var(--body);font-size:10.5px;color:var(--muted);text-align:center}
+.sharecancel{width:100%;height:48px;border-radius:14px;background:var(--subtle);font-family:var(--body);font-weight:600;font-size:15px;color:var(--ink);margin-top:4px}
+
+/* ---------- toast "copiado" ---------- */
+#toast{position:absolute;left:50%;bottom:120px;transform:translate(-50%,10px);z-index:80;background:rgba(20,24,41,.92);color:#fff;font-family:var(--body);font-size:13px;font-weight:600;padding:12px 20px;border-radius:999px;opacity:0;transition:all .25s;pointer-events:none}
+#toast.on{opacity:1;transform:translate(-50%,0)}
+
+/* ---------- painel lateral ---------- */
+#panel{width:400px;flex:none;background:rgba(255,255,255,.9);border-radius:28px;padding:26px;box-shadow:0 2px 6px rgba(20,24,41,.05),0 18px 40px rgba(20,24,41,.12);backdrop-filter:blur(20px)}
+#panel .mark{font-family:var(--mark);font-weight:500;letter-spacing:.2em;font-size:13px;color:var(--muted)}
+#panel .mark b{color:var(--amber);font-weight:500}
+#panel h2{font-family:var(--display);font-weight:700;text-transform:uppercase;font-size:22px;margin-top:10px}
+#panel p{font-family:var(--body);font-size:13.5px;line-height:1.55;color:var(--muted);margin-top:10px}
+#panel .step{display:flex;gap:12px;align-items:flex-start;margin-top:14px}
+#panel .step i{width:24px;height:24px;border-radius:50%;background:var(--subtle);display:flex;align-items:center;justify-content:center;font-family:var(--body);font-weight:700;font-size:12px;flex:none;color:var(--muted)}
+#panel .step b{display:block;font-family:var(--body);font-weight:700;font-size:13.5px;color:var(--ink)}
+#panel .step span{font-family:var(--body);font-size:12.5px;color:var(--muted);line-height:1.4}
+#restart{margin-top:20px;height:44px;width:100%;border-radius:999px;background:var(--ink);color:#fff;font-family:var(--body);font-weight:700;font-size:13px}
+@media (max-width:900px){#app{flex-direction:column;overflow:auto;padding-block:16px}#panel{width:auto}}
+@media (prefers-reduced-motion:reduce){*,*:before,*:after{animation-duration:.01ms!important;transition-duration:.01ms!important}}
+</style>
+<div id="app">
+  <div id="phone"><div id="screen">
+    <div class="island"></div>
+    <svg id="aurora" width="100%" height="100%" viewBox="0 0 100 100" preserveAspectRatio="none"></svg>
+
+    <div class="sb"><span>9:41</span><span>●●●</span></div>
+    <div class="hd">
+      <div class="logo-row"><svg id="mark" width="28" height="28" viewBox="0 0 100 100"></svg>
+        <span class="wordmark">Iris<b>a</b></span></div>
+      <div class="sos"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#141829" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 18v-6a5 5 0 0 1 10 0v6"/><path d="M5 21h14v-3H5Z"/></svg></div>
+    </div>
+
+    <div id="scroll"></div>
+
+    <div class="veil" id="veil"></div>
+    <div id="pill">
+      <div class="grab"></div>
+      <div class="pillcard" id="pillcard">
+        <svg class="blob" viewBox="0 0 400 300" preserveAspectRatio="none"></svg>
+        <div class="inner">
+          <span class="pill-eb">Pílula de acolhimento</span>
+          <p class="pill-phrase" id="pillPhrase"></p>
+          <p class="pill-body" id="pillBody"></p>
+          <span class="rb-line"><i style="background:#FF6964"></i><i style="background:#FFA353"></i><i style="background:#FFD066"></i><i style="background:#49DCC0"></i><i style="background:#6AA8EE"></i><i style="background:#A889FF"></i></span>
+        </div>
+      </div>
+      <div class="pill-actions">
+        <button class="btn ghost" id="closePill">Guardar e fechar</button>
+        <button class="btn coral" id="openShare"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#141829" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12M7 8l5-5 5 5"/><path d="M5 13v6a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-6"/></svg>Compartilhar</button>
+      </div>
+      <button class="pill-next" id="nextPill">Quero outra pílula</button>
+    </div>
+
+    <div id="share">
+      <div class="grab"></div>
+      <div style="display:flex;gap:16px;align-items:center;width:100%">
+        <div class="sharecard-wrap"><div class="sc-inner" id="scInner">
+          <p class="sc-phrase" id="scPhrase"></p>
+          <div class="sc-mark"><svg width="9" height="9" viewBox="0 0 100 100" id="scMark"></svg>IRIS<b style="color:var(--amber)">A</b></div>
+        </div></div>
+        <div style="flex:1;display:flex;flex-direction:column;gap:4px">
+          <span style="font-family:var(--body);font-weight:700;font-size:14px;color:var(--ink)">Imagem pronta pra postar</span>
+          <span style="font-family:var(--body);font-size:12.5px;color:var(--dim);line-height:1.4">Formato de story — sem nenhum dado seu, só a frase e a marca.</span>
+        </div>
+      </div>
+      <div class="apps-row">
+        <div class="appopt" id="toInstagram"><span class="ic" style="background:radial-gradient(circle at 30% 110%,#fdf497,#fd5949 30%,#d6249f 60%,#285AEB 90%)"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="#fff" stroke="none"/></svg></span><span>Stories</span></div>
+        <div class="appopt"><span class="ic" style="background:#25D366"><svg width="24" height="24" viewBox="0 0 24 24" fill="#fff"><path d="M12 2a10 10 0 0 0-8.6 15L2 22l5.1-1.3A10 10 0 1 0 12 2Z" fill="#fff" opacity="0"/><path d="M17.5 14.4c-.3-.2-1.7-.9-2-1-.3-.1-.5-.2-.7.1-.2.3-.8 1-.9 1.2-.2.2-.3.2-.6.1-.3-.2-1.3-.5-2.4-1.5-.9-.8-1.5-1.8-1.7-2.1-.2-.3 0-.5.1-.6.1-.1.3-.3.4-.5.1-.2.2-.3.3-.5.1-.2 0-.4 0-.5C10 9 9.4 7.6 9.1 7c-.2-.5-.4-.4-.6-.4h-.5c-.2 0-.5.1-.7.4-.2.3-1 .9-1 2.3s1 2.7 1.1 2.9c.1.2 2 3 4.8 4.2.7.3 1.2.5 1.6.6.7.2 1.3.2 1.8.1.5-.1 1.7-.7 1.9-1.3.2-.7.2-1.2.2-1.3-.1-.2-.3-.2-.6-.4Z" fill="#25D366"/></svg></span><span>WhatsApp</span></div>
+        <div class="appopt"><span class="ic" style="background:#141829"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></span><span>Mensagem</span></div>
+        <div class="appopt" id="toCopy"><span class="ic" style="background:var(--subtle)"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#3D4560" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></span><span>Copiar texto</span></div>
+      </div>
+      <button class="sharecancel" id="cancelShare">Cancelar</button>
+    </div>
+
+    <div id="toast">Pílula salva nas suas conquistas</div>
+
+    <div id="lock">
+      <div class="clock">09:41</div>
+      <div class="date">Segunda-feira, 6 de outubro</div>
+      <div class="notif" id="notif">
+        <div class="top"><span class="appicon"><svg width="13" height="13" viewBox="0 0 100 100" id="markNotif"></svg></span><span class="appname">Irisa</span><span class="time">agora</span></div>
+        <p class="title">Uma pílula de acolhimento chegou pra você 🌈</p>
+        <p class="body" id="notifBody">Bem-vinde aqui.</p>
+      </div>
+      <div class="tapme">toque na notificação</div>
+    </div>
+  </div></div>
+
+  <aside id="panel">
+    <span class="mark">IRIS<b>A</b> · PÍLULAS DE ACOLHIMENTO</span>
+    <h2>Gatilho de conforto, dentro do app</h2>
+    <p>Não é conteúdo nosso pro Instagram — é uma mensagem de apoio que a <b>própria Irisa manda por notificação push</b> pra quem usa o app, igual já existe hoje pra push (migration 38). A pessoa abre, lê, e se quiser, <b>compartilha</b> a frase como imagem, sem nenhum dado dela.</p>
+    <div class="step"><i>1</i><div><b>Notificação chega</b><span>Mesmo pipeline de push que já existe (send-push). Frase e timing decididos por nós, sem IA.</span></div></div>
+    <div class="step"><i>2</i><div><b>Toca e abre a folha</b><span>Card com a frase em arco-íris, igual à identidade do app — nunca "lugar seguro" ou "região tranquila".</span></div></div>
+    <div class="step"><i>3</i><div><b>Compartilhar</b><span>Gera uma imagem de story só com a frase e a marca — zero dado da pessoa, zero local, zero relato.</span></div></div>
+    <div class="step"><i>4</i><div><b>Guardar</b><span>Fechar sem compartilhar também é uma opção válida — a pílula não cobra nada de volta.</span></div></div>
+    <button id="restart">Ver de novo</button>
+  </aside>
+</div>
+
+<script>
+const $=(s,r=document)=>r.querySelector(s), $$=(s,r=document)=>[...r.querySelectorAll(s)];
+$("#screen").addEventListener("scroll", function(){ this.scrollTop = 0; this.scrollLeft = 0; });
+
+/* Mark.tsx — mesmo algoritmo do protótipo da Home */
+const RING=["#FF6964","#FFA353","#FFD066","#49DCC0","#6AA8EE","#AE96F2"];
+function lerp(a,b,t){let o="#";for(let i=1;i<7;i+=2){const x=parseInt(a.slice(i,i+2),16),y=parseInt(b.slice(i,i+2),16);o+=Math.round(x+(y-x)*t).toString(16).padStart(2,"0");}return o;}
+function ringColor(t){const p=t*RING.length,i=Math.floor(p)%RING.length;return lerp(RING[i],RING[(i+1)%RING.length],p-Math.floor(p));}
+function pt(r,a){return{x:50+r*Math.cos(a),y:50+r*Math.sin(a)};}
+function slicePath(ro,ri,a0,a1){const o0=pt(ro,a0),o1=pt(ro,a1),i1=pt(ri,a1),i0=pt(ri,a0);return `M ${o0.x} ${o0.y} A ${ro} ${ro} 0 0 1 ${o1.x} ${o1.y} L ${i1.x} ${i1.y} A ${ri} ${ri} 0 0 0 ${i0.x} ${i0.y} Z`;}
+function drawMark(el){ if(!el) return; const N=48; let h="";
+  for(let i=0;i<N;i++){ const a0=(i/N)*2*Math.PI-Math.PI/2, a1=((i+1)/N)*2*Math.PI-Math.PI/2+0.05; h+=`<path d="${slicePath(48,35,a0,a1)}" fill="${ringColor(i/N)}"/>`; }
+  h+=`<path d="${slicePath(33,0,(-150*Math.PI)/180,(-55*Math.PI)/180)}" fill="rgba(73,220,192,.35)"/>`;
+  h+=`<circle cx="50" cy="50" r="13" fill="#0F1220"/><circle cx="46.1" cy="45.6" r="2.86" fill="#fff"/>`;
+  el.innerHTML=h;
+}
+drawMark($("#mark")); drawMark($("#markNotif")); drawMark($("#scMark"));
+
+/* Aurora.tsx */
+const AURORA=[{x:-0.08,y:-0.04,r:0.7,color:"#49DCC0",alpha:.42},{x:1.08,y:0.06,r:0.55,color:"#FF6964",alpha:.34},{x:1.06,y:1.04,r:0.6,color:"#A889FF",alpha:.4},{x:-0.06,y:1.02,r:0.5,color:"#FFD066",alpha:.38}];
+(function(){ const defs=AURORA.map((a,i)=>`<radialGradient id="au${i}" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="${a.color}" stop-opacity="${a.alpha}"/><stop offset="1" stop-color="${a.color}" stop-opacity="0"/></radialGradient>`).join("");
+  const ell=AURORA.map((a,i)=>`<ellipse cx="${a.x*100}" cy="${a.y*100}" rx="${a.r*60}" ry="${a.r*42}" fill="url(#au${i})"/>`).join("");
+  $("#aurora").innerHTML=`<defs>${defs}</defs>${ell}`;
+})();
+function blob(el){ el.innerHTML=`<defs><radialGradient id="pb0" cx="10%" cy="0%" r="60%"><stop offset="0" stop-color="#49DCC0" stop-opacity=".30"/><stop offset="1" stop-color="#49DCC0" stop-opacity="0"/></radialGradient><radialGradient id="pb1" cx="95%" cy="100%" r="60%"><stop offset="0" stop-color="#FF6964" stop-opacity=".22"/><stop offset="1" stop-color="#FF6964" stop-opacity="0"/></radialGradient></defs><rect width="400" height="300" fill="#FBFCFE"/><rect width="400" height="300" fill="url(#pb0)"/><rect width="400" height="300" fill="url(#pb1)"/>`; }
+blob($(".blob"));
+
+/* Home simplificada por trás */
+$("#scroll").innerHTML = `
+  <div class="hero">
+    <div class="tag-row"><span class="tag-tile"><svg width="20" height="20" viewBox="0 0 100 100" id="markMini"></svg></span><span class="eb">Sua cidade</span></div>
+    <h1>CURITIBA</h1>
+    <p>O mapa dos lugares onde a gente é <b>bem-vinde</b>, feito por nós.</p>
+  </div>
+  <div class="card"><span class="section-title">Lugares mais acolhedores</span><p class="sub" style="margin-top:6px">Carregando a cidade…</p></div>
+`;
+drawMark($("#markMini"));
+
+/* Pílulas — pool de frases já aprovadas no guia da marca */
+const PILLS=[
+  {phrase:['Bem-vinde','<span class="rb">aqui.</span>'],body:'Você não precisa explicar nada pra merecer um lugar que te acolha.'},
+  {phrase:['Não é fase.','<span class="rb">É endereço.</span>'],body:'Quem você é não é passageiro — é onde você mora.'},
+  {phrase:['A rua também','<span class="rb">é nossa.</span>'],body:'Ocupar espaço em público também é um jeito de existir.'},
+  {phrase:['Ninguém solta','<span class="rb">a mão de ninguém.</span>'],body:'Em grupo ou sozinhe, a gente se cuida — e se cuida junto.'},
+  {phrase:['Estamos aqui.','<span class="rb">E no mapa.</span>'],body:'Visíveis, acolhides, juntes.'},
+];
+let idx=0;
+function renderPill(){
+  const p=PILLS[idx];
+  $("#pillPhrase").innerHTML=p.phrase.join('<br>');
+  $("#pillBody").textContent=p.body;
+  $("#notifBody").textContent=p.phrase[0].replace(/<[^>]+>/g,'')+' '+p.phrase[1].replace(/<[^>]+>/g,'');
+  $("#scPhrase").innerHTML=p.phrase.join('<br>').replace('rb','sc-rb');
+}
+renderPill();
+
+const lock=$("#lock"), veil=$("#veil"), pill=$("#pill"), shareSheet=$("#share"), toast=$("#toast");
+function showLock(){ lock.classList.add("on"); }
+function openPill(){ lock.classList.remove("on"); veil.classList.add("on"); pill.classList.add("on"); }
+function closePill(){ veil.classList.remove("on"); pill.classList.remove("on"); shareSheet.classList.remove("on"); }
+$("#notif").onclick=openPill;
+$("#closePill").onclick=()=>{ closePill(); toast.classList.add("on"); setTimeout(()=>toast.classList.remove("on"),1800); };
+$("#nextPill").onclick=()=>{ idx=(idx+1)%PILLS.length; renderPill(); };
+$("#openShare").onclick=()=>{ shareSheet.classList.add("on"); };
+$("#cancelShare").onclick=()=>{ shareSheet.classList.remove("on"); };
+$("#toCopy").onclick=()=>{ shareSheet.classList.remove("on"); toast.textContent="Frase copiada"; toast.classList.add("on"); setTimeout(()=>toast.classList.remove("on"),1800); };
+$("#toInstagram").onclick=()=>{ shareSheet.classList.remove("on"); pill.classList.remove("on"); veil.classList.remove("on"); toast.textContent="Abrindo o story do Instagram…"; toast.classList.add("on"); setTimeout(()=>toast.classList.remove("on"),1800); };
+$("#restart").onclick=()=>{ closePill(); showLock(); };
+showLock();
+</script>
+<style>.sc-rb,.rb{background:linear-gradient(90deg,#FF6964,#FFA353,#FFD066,#49DCC0,#6AA8EE,#A889FF);-webkit-background-clip:text;background-clip:text;color:transparent}</style>
