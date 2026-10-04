@@ -377,6 +377,11 @@ Nome: **Irisa** (INPI livre; @appirisa livre). Bundle id Android `br.com.irisa.a
   `docs/plano-lancamento.html` (nenhum deles é publicado no site).
 
 - **0.1.1 liberada nas duas lojas (dito por ele em 03/10/2026).** Versão do app subiu para 0.1.2 (a da build com push).
+- **iOS 0.1.2 (build 10) gerada no EAS e enviada ao App Store Connect em 04/10/2026** (`--auto-submit`), com push,
+  gamificação e aba ativa corrigida; chave de push da Apple criada no mesmo build. Falta criar a versão 0.1.2 na
+  App Store Connect, escolher a build 10 e enviar para revisão. `npx expo run:ios --device` (Debug) no Mac dele
+  falha no link com `Sealable::Sealable()` do MapLibre (núcleo do RN pré-compilado em Release); a build EAS (Release)
+  passa. Para testar no iPhone: `npx expo run:ios --device --configuration Release`.
 - **Notificações push (migration 38 + Edge Function `send-push`, 03/10/2026):** `expo-notifications` é
   nativo, então só funciona a partir da próxima build (0.1.2). `src/hooks/usePush.ts` só faz o `require`
   depois de `requireOptionalNativeModule("ExpoPushTokenManager")`: o mesmo JS chega por EAS Update em
