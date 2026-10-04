@@ -1,72 +1,136 @@
-import { Link } from "expo-router";
-import { X } from "lucide-react-native";
-import { useMemo, useState } from "react";
-import { FlatList, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
+import { router } from "expo-router";
+import { useMemo, useState, type ReactNode } from "react";
+import { Pressable, StyleSheet, Text, View } from "react-native";
+import Animated, { FadeIn } from "react-native-reanimated";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
-import { Chip } from "@/components/Chip";
-import { CityMap } from "@/components/CityMap";
-import { DangerRanking } from "@/components/DangerRanking";
-import { Glass } from "@/components/Glass";
-import { OccurrenceCard } from "@/components/OccurrenceCard";
-import { PlaceCard } from "@/components/PlaceCard";
+import { Aurora } from "@/components/Aurora";
+import { LegendSheet } from "@/components/map/LegendSheet";
+import { MapList, type ListItem } from "@/components/map/MapList";
+import { MapPanel, type MapMode } from "@/components/map/MapPanel";
+import { MapaMap, type MapFocus } from "@/components/map/MapaMap";
+import { buildAreas, hasSeal, plural, type RelatoArea } from "@/components/map/mapData";
+import { NearPlaceCard, OpenCard, RelatoMiniCard } from "@/components/map/NearCards";
+import { NearSheet, type SheetCard } from "@/components/map/NearSheet";
 import { useAreaRisk, useOccurrences } from "@/hooks/useOccurrences";
-import { usePlaces } from "@/hooks/usePlaces";
+import { useNearPlaces, usePlaces } from "@/hooks/usePlaces";
 import { tabBarBottom, useScreenInsets } from "@/hooks/useScreenInsets";
-import { distanceMeters } from "@/lib/geo";
-import type { PublicOccurrence, PublicPlace } from "@/lib/types";
+import { distanceMeters, formatDistance } from "@/lib/geo";
+import type { PublicPlace } from "@/lib/types";
 import { useCity } from "@/providers/CityProvider";
-import { OCCURRENCE_TYPES, SEVERITIES, type OccurrenceType } from "@/theme/domain";
-import { colors, glass, shadow } from "@/theme/tokens";
+import { BADGES, OCCURRENCE_TYPES, PLACE_CATEGORIES, type OccurrenceType } from "@/theme/domain";
+import { glass } from "@/theme/tokens";
 
 const TYPE_KEYS = Object.keys(OCCURRENCE_TYPES) as OccurrenceType[];
+const CAROUSEL = 12;
+const LIST = 60;
+const NEAR_AREA_M = 2000;
+
+type Selection =
+  | { kind: "place"; place: PublicPlace }
+  | { kind: "cluster"; count: number; places: PublicPlace[]; seq: number }
+  | { kind: "area"; area: RelatoArea };
+
+const openPlace = (p: PublicPlace) =>
+  router.push({ pathname: "/lugar/[id]", params: { id: p.id } });
 
 /**
- * Mapa em tela cheia: o mapa ocupa tudo, os chips de filtro flutuam em vidro logo abaixo do
- * cabeçalho e uma folha de vidro no pé guarda o ranking e a legenda. A folha abre e fecha pelo
- * puxador; fechada, mostra só o título e o botão Registrar.
+ * Mapa em tela cheia. Em cima, um painel sólido (Mapa | Lista e as camadas); no pé, a folha
+ * "Perto de você" com os lugares mais perto. O lugar recebe cor, a rua recebe aviso: relato é
+ * sempre área, nunca pino, e nada aqui diz que uma região é segura — sem relato quer dizer só
+ * que ninguém registrou.
  */
 export default function MapaScreen() {
   const insets = useScreenInsets();
   const safe = useSafeAreaInsets();
-  const { city, loading, userLocation } = useCity();
-  const { data: occurrences = [], isLoading } = useOccurrences(city?.id);
+  const { city, loading, userLocation, locate } = useCity();
+  const { data: occurrences = [] } = useOccurrences(city?.id);
   const { data: ranking = [] } = useAreaRisk(city?.id, 6);
-  const { data: places = [] } = usePlaces(city?.id);
-  const [layers, setLayers] = useState({ relatos: true, lugares: true });
-  // Tocar num pino não abre a ficha direto: mostra um balão com o nome, e o balão é que abre.
-  const [placeSel, setPlaceSel] = useState<PublicPlace | null>(null);
-  // Mapa ou lista: a mesma cidade, os mesmos lugares, do jeito que a pessoa preferir olhar.
-  const [modo, setModo] = useState<"mapa" | "lista">("mapa");
-  const [filter, setFilter] = useState<OccurrenceType | "all">("all");
-  const [selected, setSelected] = useState<PublicOccurrence | null>(null);
-  const [aberta, setAberta] = useState(false);
+  const { data: cityPlaces = [], isLoading: loadingCity } = usePlaces(city?.id);
+  // Com localização, os lugares mais perto de quem usa, de qualquer cidade (migration 41).
+  const near = useNearPlaces(userLocation, null);
 
-  const filtered = useMemo(
-    () => (filter === "all" ? occurrences : occurrences.filter((o) => o.type === filter)),
-    [occurrences, filter],
+  const [mode, setMode] = useState<MapMode>("mapa");
+  const [layers, setLayers] = useState({ lugares: true, relatos: true });
+  const [types, setTypes] = useState<Set<OccurrenceType>>(() => new Set(TYPE_KEYS));
+  const [legend, setLegend] = useState(false);
+  const [sel, setSel] = useState<Selection | null>(null);
+  const [focus, setFocus] = useState<MapFocus | null>(null);
+  const [panelH, setPanelH] = useState(104);
+  const [sheetH, setSheetH] = useState(190);
+
+  const nearPlaces = useMemo(
+    () => (near.isError ? [] : (near.data ?? [])),
+    [near.isError, near.data],
   );
-  const lista = useMemo(
-    () =>
-      places
-        .map((p) => ({
-          place: p,
-          distance: userLocation
-            ? distanceMeters(userLocation, { lat: p.latitude, lng: p.longitude })
-            : null,
-        }))
-        .sort((a, b) =>
-          a.distance != null && b.distance != null
-            ? a.distance - b.distance
-            : a.place.name.localeCompare(b.place.name, "pt-BR"),
-        ),
-    [places, userLocation],
+  const nearMode = !!userLocation && nearPlaces.length > 0;
+
+  // O mapa mostra o lote da cidade somado aos de perto (quem está na cidade vizinha também vê).
+  const mapPlaces = useMemo(() => {
+    const seen = new Set<string>();
+    const out: PublicPlace[] = [];
+    for (const p of [...cityPlaces, ...nearPlaces]) {
+      if (seen.has(p.id)) continue;
+      seen.add(p.id);
+      out.push(p);
+    }
+    return out;
+  }, [cityPlaces, nearPlaces]);
+
+  const visibleOcc = useMemo(
+    () => occurrences.filter((o) => types.has(o.type)),
+    [occurrences, types],
   );
+  const areas = useMemo(() => buildAreas(visibleOcc), [visibleOcc]);
   const counts = useMemo(() => {
-    const c: Record<string, number> = {};
+    const c: Partial<Record<OccurrenceType, number>> = {};
     for (const o of occurrences) c[o.type] = (c[o.type] ?? 0) + 1;
     return c;
   }, [occurrences]);
+
+  const dist = useMemo(
+    () => (p: { latitude: number; longitude: number }) =>
+      userLocation ? distanceMeters(userLocation, { lat: p.latitude, lng: p.longitude }) : null,
+    [userLocation],
+  );
+
+  // Perto de você: por distância com localização; sem ela, os mais bem avaliados da cidade.
+  const nearList = useMemo<ListItem[]>(() => {
+    if (nearMode) {
+      return nearPlaces
+        .map((p) => ({ place: p, distance: dist(p) }))
+        .sort((a, b) => (a.distance ?? 0) - (b.distance ?? 0));
+    }
+    return [...cityPlaces]
+      .sort(
+        (a, b) =>
+          (b.score == null ? -1 : Number(b.score)) - (a.score == null ? -1 : Number(a.score)) ||
+          b.rating_count - a.rating_count,
+      )
+      .map((p) => ({ place: p, distance: dist(p) }));
+  }, [nearMode, nearPlaces, cityPlaces, dist]);
+
+  const sealCount = useMemo(
+    () =>
+      userLocation
+        ? mapPlaces.filter((p) => hasSeal(p) && (dist(p) ?? Infinity) <= 1000).length
+        : cityPlaces.filter(hasSeal).length,
+    [userLocation, mapPlaces, cityPlaces, dist],
+  );
+
+  const nearestArea = useMemo(() => {
+    if (!userLocation) return null;
+    let best: { area: RelatoArea; distance: number } | null = null;
+    for (const a of areas) {
+      const d = distanceMeters(userLocation, a);
+      if (!best || d < best.distance) best = { area: a, distance: d };
+    }
+    return best && best.distance <= NEAR_AREA_M ? best : null;
+  }, [areas, userLocation]);
+  const areasWithin1km = useMemo(
+    () => (userLocation ? areas.filter((a) => distanceMeters(userLocation, a) <= 1000).length : 0),
+    [areas, userLocation],
+  );
 
   if (loading || !city) {
     return (
@@ -80,227 +144,256 @@ export default function MapaScreen() {
     );
   }
 
-  const bottom = glass.tabBarHeight + tabBarBottom(safe.bottom) + 8;
+  const panelTop = insets.paddingTop - 8;
+  const sheetBottom = glass.tabBarHeight + tabBarBottom(safe.bottom) + 8;
+
+  function selectFromCard(p: PublicPlace) {
+    setSel({ kind: "place", place: p });
+    setFocus((f) => ({ lat: p.latitude, lng: p.longitude, zoom: 16, seq: (f?.seq ?? 0) + 1 }));
+  }
+
+  function openArea(a: RelatoArea) {
+    if (a.neighborhoodId != null) {
+      router.push({ pathname: "/bairro/[id]", params: { id: String(a.neighborhoodId) } });
+      return;
+    }
+    setMode("mapa");
+    setSel({ kind: "area", area: a });
+    setFocus((f) => ({ lat: a.lat, lng: a.lng, zoom: 15.5, seq: (f?.seq ?? 0) + 1 }));
+  }
+
+  // ---------- conteúdo da folha ----------
+  let title: string;
+  let summary: ReactNode;
+  let cards: SheetCard[];
+  let listKey: string;
+  let empty: string | undefined;
+
+  if (sel?.kind === "place") {
+    const p = sel.place;
+    const d = dist(p);
+    title = p.name;
+    listKey = `place-${p.id}`;
+    const badge = p.badge && p.badge !== "poucas" ? BADGES[p.badge] : null;
+    summary = (
+      <Text className="font-body text-[12.5px] text-muted" numberOfLines={2}>
+        {[PLACE_CATEGORIES[p.category], d != null ? formatDistance(d) : p.neighborhood]
+          .filter(Boolean)
+          .join(" · ")}
+        {badge ? (
+          <>
+            {" · "}
+            <Text className="font-body-bold" style={{ color: badge.ink }}>
+              {badge.label}
+            </Text>
+          </>
+        ) : p.score == null ? (
+          " · ainda sem nota"
+        ) : null}
+      </Text>
+    );
+    cards = [
+      {
+        key: p.id,
+        node: <NearPlaceCard place={p} distance={d} onPress={() => openPlace(p)} />,
+      },
+      { key: "ficha", node: <OpenCard onPress={() => openPlace(p)} /> },
+    ];
+  } else if (sel?.kind === "cluster") {
+    title = `${plural(sel.count, "lugar", "lugares")} nesta região`;
+    listKey = `cluster-${sel.seq}`;
+    summary = (
+      <Text className="font-body text-[12.5px] text-muted">
+        Aproxime o mapa para ver um por um.
+      </Text>
+    );
+    cards = sel.places
+      .map((p) => ({ place: p, distance: dist(p) }))
+      .sort((a, b) => (a.distance ?? 0) - (b.distance ?? 0))
+      .map(({ place, distance }) => ({
+        key: place.id,
+        node: (
+          <NearPlaceCard place={place} distance={distance} onPress={() => selectFromCard(place)} />
+        ),
+      }));
+  } else if (sel?.kind === "area") {
+    const a = sel.area;
+    title = "Área com relato";
+    listKey = `area-${a.id}`;
+    const quando =
+      a.recent30 > 0
+        ? `${plural(a.recent30, "relato", "relatos")} nos últimos 30 dias`
+        : plural(a.occurrences.length, "relato registrado", "relatos registrados");
+    summary = (
+      <Text className="font-body text-[12.5px] text-muted" numberOfLines={2}>
+        <Text className="font-body-bold text-coralInk">{quando}</Text>
+        {a.neighborhood ? ` · ${a.neighborhood}` : ""}
+        {" · o aviso é da rua, não de um lugar"}
+      </Text>
+    );
+    cards = a.occurrences.slice(0, 10).map((o) => ({
+      key: o.id,
+      node: <RelatoMiniCard occurrence={o} />,
+    }));
+  } else {
+    title = userLocation ? "Perto de você" : `Em ${city.name}`;
+    listKey = `near-${nearMode ? "gps" : "city"}`;
+    empty = loadingCity ? "Carregando lugares…" : "Nenhum lugar por aqui ainda.";
+    const areaPart =
+      layers.relatos &&
+      (userLocation
+        ? nearestArea && (
+            <>
+              {" · "}
+              <Text className="font-body-bold text-coralInk">
+                {plural(Math.max(1, areasWithin1km), "área de atenção", "áreas de atenção")}
+              </Text>
+              {` a ${formatDistance(nearestArea.distance)}`}
+            </>
+          )
+        : areas.length > 0 && (
+            <>
+              {" · "}
+              <Text className="font-body-bold text-coralInk">
+                {plural(areas.length, "área com relato", "áreas com relato")}
+              </Text>
+            </>
+          ));
+    summary = (
+      <View style={{ gap: 2 }}>
+        <Text className="font-body text-[12.5px] text-muted">
+          {userLocation
+            ? sealCount === 0
+              ? "Nenhum lugar com selo até 1 km ainda"
+              : `${sealCount} com selo até 1 km`
+            : `${plural(sealCount, "lugar com selo", "lugares com selo")} na cidade`}
+          {areaPart}
+        </Text>
+        {!userLocation && (
+          <Pressable onPress={() => void locate(true)} hitSlop={6}>
+            <Text className="font-body-medium text-[12.5px] text-turquoiseInk underline">
+              Ligar a localização para ver o que está perto
+            </Text>
+          </Pressable>
+        )}
+      </View>
+    );
+    cards = layers.lugares
+      ? nearList.slice(0, CAROUSEL).map(({ place, distance }) => ({
+          key: place.id,
+          node: (
+            <NearPlaceCard
+              place={place}
+              distance={distance}
+              onPress={() => selectFromCard(place)}
+            />
+          ),
+        }))
+      : [];
+    if (!layers.lugares) empty = "Lugares escondidos no mapa.";
+  }
 
   return (
     <View className="flex-1 bg-paper">
-      <CityMap
+      <MapaMap
         key={city.id}
-        occurrences={layers.relatos ? filtered : []}
-        places={layers.lugares ? places : []}
-        onSelectPlace={(p) => {
-          setSelected(null);
-          setPlaceSel(p);
-        }}
         center={{ lat: city.lat, lng: city.lng }}
-        onSelect={(o) => {
-          setPlaceSel(null);
-          setSelected(o);
-        }}
-        onPressEmpty={() => {
-          setPlaceSel(null);
-          setSelected(null);
-        }}
-        style={[StyleSheet.absoluteFill, { borderRadius: 0 }]}
+        userLocation={userLocation}
+        places={mapPlaces}
+        areas={areas}
+        showPlaces={layers.lugares}
+        showRelatos={layers.relatos}
+        selectedId={sel?.kind === "place" ? sel.place.id : null}
+        focus={focus}
+        padTop={panelTop + panelH}
+        padBottom={sheetBottom + sheetH}
+        onSelectPlace={(p) => setSel({ kind: "place", place: p })}
+        onSelectCluster={(places, count) =>
+          setSel((s) => ({
+            kind: "cluster",
+            places,
+            count,
+            seq: (s?.kind === "cluster" ? s.seq : 0) + 1,
+          }))
+        }
+        onSelectArea={(a) => setSel({ kind: "area", area: a })}
+        onPressEmpty={() => setSel(null)}
       />
 
-      {modo === "lista" && (
-        <View style={StyleSheet.absoluteFill} className="bg-paper">
-          <FlatList
-            data={lista}
-            keyExtractor={(i) => i.place.id}
-            contentContainerClassName="gap-3 px-4"
-            contentContainerStyle={{
-              paddingTop: insets.paddingTop + 96,
-              paddingBottom: insets.paddingBottom,
-            }}
-            renderItem={({ item, index }) => (
-              <PlaceCard place={item.place} distance={item.distance} index={index} />
-            )}
-            ListEmptyComponent={
-              <Text className="font-body text-sm text-dim">Nenhum lugar cadastrado ainda.</Text>
-            }
+      {mode === "lista" && (
+        <Animated.View entering={FadeIn.duration(250)} style={StyleSheet.absoluteFill}>
+          <Aurora />
+          <MapList
+            items={nearList.slice(0, LIST)}
+            nearestArea={nearestArea}
+            ranking={ranking}
+            showPlaces={layers.lugares}
+            showRelatos={layers.relatos}
+            nearMode={nearMode}
+            loading={nearMode ? near.isLoading : loadingCity}
+            paddingTop={panelTop + panelH + 12}
+            paddingBottom={insets.paddingBottom}
+            onOpenPlace={openPlace}
+            onOpenArea={openArea}
+          />
+        </Animated.View>
+      )}
+
+      <View pointerEvents="box-none" className="absolute left-0 right-0" style={{ top: panelTop }}>
+        <MapPanel
+          mode={mode}
+          onMode={setMode}
+          showPlaces={layers.lugares}
+          showRelatos={layers.relatos}
+          placeCount={mapPlaces.length}
+          relatoCount={visibleOcc.length}
+          onTogglePlaces={() => {
+            if (sel?.kind === "place" || sel?.kind === "cluster") setSel(null);
+            setLayers((l) => ({ ...l, lugares: !l.lugares }));
+          }}
+          onToggleRelatos={() => {
+            if (sel?.kind === "area") setSel(null);
+            setLayers((l) => ({ ...l, relatos: !l.relatos }));
+          }}
+          onFilters={() => setLegend(true)}
+          filtering={types.size < TYPE_KEYS.length}
+          onLayout={(e) => setPanelH(e.nativeEvent.layout.height)}
+        />
+      </View>
+
+      {mode === "mapa" && (
+        <View
+          pointerEvents="box-none"
+          className="absolute"
+          style={{ left: 10, right: 10, bottom: sheetBottom }}
+        >
+          <NearSheet
+            title={title}
+            summary={summary}
+            cards={cards}
+            listKey={listKey}
+            empty={empty}
+            onRegistrar={() => router.push("/registrar")}
+            onLayout={(e) => setSheetH(e.nativeEvent.layout.height)}
           />
         </View>
       )}
 
-      {/* Chips flutuando por cima do mapa, abaixo do cabeçalho de vidro. */}
-      <View
-        pointerEvents="box-none"
-        className="absolute left-0 right-0 gap-2"
-        style={{ top: insets.paddingTop - 8 }}
-      >
-        <View className="flex-row gap-2 px-4">
-          <Chip label="Mapa" glass active={modo === "mapa"} onPress={() => setModo("mapa")} />
-          <Chip label="Lista" glass active={modo === "lista"} onPress={() => setModo("lista")} />
-        </View>
-        {modo === "mapa" && (
-          <>
-            <ScrollView
-              horizontal
-              showsHorizontalScrollIndicator={false}
-              contentContainerClassName="gap-2 px-4"
-            >
-              <Chip
-                label={`Todos (${occurrences.length})`}
-                glass
-                active={filter === "all"}
-                onPress={() => setFilter("all")}
-              />
-              {TYPE_KEYS.map((k) => (
-                <Chip
-                  key={k}
-                  label={`${OCCURRENCE_TYPES[k].label} (${counts[k] ?? 0})`}
-                  color={OCCURRENCE_TYPES[k].color}
-                  glass
-                  active={filter === k}
-                  onPress={() => setFilter(k)}
-                />
-              ))}
-            </ScrollView>
-            <View className="flex-row gap-2 px-4">
-              <Chip
-                label={`Relatos (${occurrences.length})`}
-                color={colors.coral}
-                glass
-                active={layers.relatos}
-                onPress={() => setLayers((l) => ({ ...l, relatos: !l.relatos }))}
-              />
-              <Chip
-                label={`Lugares (${places.length})`}
-                color={colors.turquoise}
-                glass
-                active={layers.lugares}
-                onPress={() => setLayers((l) => ({ ...l, lugares: !l.lugares }))}
-              />
-            </View>
-          </>
-        )}
-        {isLoading && <Text className="px-4 font-body text-xs text-dim">Carregando relatos…</Text>}
-      </View>
-
-      {/* Lugar tocado: balão com o cartão; o toque no cartão abre a ficha. */}
-      {modo === "mapa" && placeSel && (
-        <View
-          pointerEvents="box-none"
-          className="absolute left-4 right-4"
-          style={{ top: insets.paddingTop + 130 }}
-        >
-          <Glass tint="strong" style={[{ borderRadius: 26, padding: 4 }, shadow.lift]}>
-            <PlaceCard place={placeSel} />
-            <Pressable
-              onPress={() => setPlaceSel(null)}
-              hitSlop={10}
-              className="absolute right-3 top-3 h-7 w-7 items-center justify-center rounded-full"
-              style={{ backgroundColor: "rgba(20,24,41,0.08)" }}
-            >
-              <X color={colors.muted} size={14} />
-            </Pressable>
-          </Glass>
-        </View>
-      )}
-
-      {/* Relato tocado: balão de vidro no meio da tela. */}
-      {modo === "mapa" && selected && (
-        <View
-          pointerEvents="box-none"
-          className="absolute left-4 right-4"
-          style={{ top: insets.paddingTop + 130 }}
-        >
-          <Glass tint="strong" style={[{ borderRadius: 24, padding: 4 }, shadow.lift]}>
-            <OccurrenceCard occurrence={selected} />
-            <Pressable
-              onPress={() => setSelected(null)}
-              hitSlop={10}
-              className="absolute right-3 top-3 h-7 w-7 items-center justify-center rounded-full"
-              style={{ backgroundColor: "rgba(20,24,41,0.08)" }}
-            >
-              <X color={colors.muted} size={14} />
-            </Pressable>
-          </Glass>
-        </View>
-      )}
-
-      {/* Folha de vidro no pé: título, Registrar e, aberta, ranking e legenda. */}
-      {modo === "mapa" && (
-        <View className="absolute left-4 right-4" style={{ bottom, maxHeight: "48%" }}>
-          <Glass
-            style={[{ borderRadius: 28, paddingHorizontal: 16, paddingBottom: 14 }, shadow.lift]}
-          >
-            <Pressable onPress={() => setAberta((a) => !a)} className="items-center py-2">
-              <View
-                className="h-1.5 w-10 rounded-full"
-                style={{ backgroundColor: "rgba(20,24,41,0.22)" }}
-              />
-            </Pressable>
-            <View className="flex-row items-center justify-between gap-2">
-              <Pressable onPress={() => setAberta((a) => !a)} className="flex-1">
-                <Text className="font-display text-2xl uppercase tracking-wide text-ink">Mapa</Text>
-                <Text className="font-body text-xs text-dim">
-                  {city.name} · {city.state} · {occurrences.length} relatos
-                </Text>
-              </Pressable>
-              <Link href="/registrar" asChild>
-                <Pressable
-                  className="rounded-full bg-coral px-4 py-2.5 active:opacity-80"
-                  style={shadow.coral}
-                >
-                  <Text className="font-body-bold text-sm text-night">Registrar</Text>
-                </Pressable>
-              </Link>
-            </View>
-            {aberta && (
-              <ScrollView
-                className="mt-3"
-                contentContainerClassName="gap-3"
-                showsVerticalScrollIndicator={false}
-              >
-                <DangerRanking items={ranking} />
-                <View className="gap-2 rounded-3xl bg-surface p-4">
-                  <Text className="font-body-bold text-base text-ink">Legenda</Text>
-                  <View className="flex-row flex-wrap gap-x-4 gap-y-1">
-                    {Object.values(SEVERITIES).map((s) => (
-                      <LegendItem
-                        key={s.label}
-                        color={s.color}
-                        label={`Gravidade ${s.label.toLowerCase()}`}
-                      />
-                    ))}
-                  </View>
-                  <View className="flex-row flex-wrap gap-x-4 gap-y-1">
-                    <LegendItem color={colors.turquoise} label="Lugar 4,5+" />
-                    <LegendItem color={colors.yellow} label="Lugar 3,5+" />
-                    <LegendItem color={colors.coral} label="Lugar abaixo de 2,5" />
-                    <LegendItem color={colors.dim} label="Sem avaliação" />
-                  </View>
-                  <View className="flex-row flex-wrap gap-x-4 gap-y-1">
-                    <LegendItem color={colors.yellow} label="1–2 relatos" faded />
-                    <LegendItem color={colors.orange} label="3–4 relatos" faded />
-                    <LegendItem color={colors.coral} label="5+ relatos" faded />
-                  </View>
-                </View>
-              </ScrollView>
-            )}
-          </Glass>
-        </View>
-      )}
-    </View>
-  );
-}
-
-function LegendItem({ color, label, faded }: { color: string; label: string; faded?: boolean }) {
-  return (
-    <View className="flex-row items-center gap-2">
-      <View
-        style={{
-          width: 12,
-          height: 12,
-          borderRadius: 6,
-          backgroundColor: color,
-          opacity: faded ? 0.4 : 1,
+      <LegendSheet
+        visible={legend}
+        onClose={() => setLegend(false)}
+        types={types}
+        counts={counts}
+        onToggleType={(t) => {
+          if (sel?.kind === "area") setSel(null);
+          setTypes((prev) => {
+            const next = new Set(prev);
+            if (next.has(t)) next.delete(t);
+            else next.add(t);
+            return next;
+          });
         }}
       />
-      <Text className="font-body text-xs text-muted">{label}</Text>
     </View>
   );
 }
