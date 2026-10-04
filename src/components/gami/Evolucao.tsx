@@ -59,7 +59,7 @@ export function EvolucaoCard() {
               className="absolute items-center justify-center rounded-full bg-solid"
               style={[{ right: -6, bottom: -4, width: 40, height: 40 }, shadow.card]}
             >
-              <NivelIcone k={i} size={31} />
+              <NivelIcone k={i} size={31} entrada={700} />
             </View>
           </View>
           <View className="min-w-0 flex-1">
@@ -326,7 +326,7 @@ export function SubiuDeNivel() {
                     className="items-center justify-center rounded-full bg-solid"
                     style={{ width: 70, height: 70 }}
                   >
-                    <NivelIcone k={mostrar} size={58} />
+                    <NivelIcone k={mostrar} size={58} flutua />
                   </View>
                 </FadeUp>
               </View>

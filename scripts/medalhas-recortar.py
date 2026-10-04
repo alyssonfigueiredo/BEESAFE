@@ -4,6 +4,8 @@
 Uso:  python3 scripts/medalhas-recortar.py
 Lê assets/medalhas/folhas/folha-N.(webp|png|jpg) e grava assets/medalhas/<id>.png (transparente, 384 px).
 A ordem dos ids em FOLHAS é a ordem dos objetos na folha, da esquerda para a direita.
+Níveis de "Sua evolução": assets/medalhas/folhas/niveis-1 e niveis-2 (4 objetos cada, do nível 1 ao 8)
+viram assets/niveis/nivel-0..7.png. No fim regera src/lib/medalImagens.ts com o que existir.
 
 Fundo: tudo que é claro e quase sem cor e encosta na borda da folha sai (inclui a sombra suave
 embaixo do objeto). A borda do recorte é suavizada para não ficar serrilhada.
@@ -16,6 +18,7 @@ from scipy import ndimage
 
 RAIZ = Path(__file__).resolve().parent.parent
 PASTA = RAIZ / "assets" / "medalhas"
+PASTA_NIVEIS = RAIZ / "assets" / "niveis"
 LADO = 384
 
 FOLHAS = {
@@ -26,6 +29,12 @@ FOLHAS = {
     5: ["ja-mora-aqui", "serviu-tudo", "agenda-cheia", "ombro-amigo", "bateu-leque"],
     6: ["rede-de-apoio", "olho-vivo", "abre-alas", "patrimonio-cultural", "patrimonio-tombado"],
     7: ["dona-do-pedaco", "resenha-boa", "cartografa", "abraco-coletivo", "tem-opiniao"],
+}
+
+# Níveis (0 = Curiose … 7 = Patrimônio LGBTQIA+), 4 por folha.
+NIVEIS = {
+    "niveis-1": ["nivel-0", "nivel-1", "nivel-2", "nivel-3"],
+    "niveis-2": ["nivel-4", "nivel-5", "nivel-6", "nivel-7"],
 }
 
 
@@ -79,7 +88,7 @@ def grupos(obj: np.ndarray, n: int) -> list[tuple[int, int, int, int]]:
     return [tuple(a) for a in ancoras]
 
 
-def recortar(arquivo: Path, ids: list[str]):
+def recortar(arquivo: Path, ids: list[str], destino: Path = PASTA):
     im = Image.open(arquivo).convert("RGB")
     rgb = np.asarray(im)
     bg = fundo(rgb)
@@ -103,17 +112,48 @@ def recortar(arquivo: Path, ids: list[str]):
         tela = Image.new("RGBA", (lado, lado), (255, 255, 255, 0))
         tela.paste(peca, ((lado - w) // 2, (lado - h) // 2), peca)
         tela = tela.resize((LADO, LADO), Image.LANCZOS)
-        tela.save(PASTA / f"{mid}.png", optimize=True)
+        tela.save(destino / f"{mid}.png", optimize=True)
         print(f"{mid}: {w}x{h}")
 
 
+def gerar_ts():
+    """src/lib/medalImagens.ts com os requires de tudo que foi recortado."""
+    linhas = [
+        'import type { ImageSourcePropType } from "react-native";',
+        "",
+        "// Gerado por scripts/medalhas-recortar.py (ícones 3D das conquistas e dos níveis). Não editar à mão.",
+        "export const MEDALHA_IMG: Record<string, ImageSourcePropType> = {",
+    ]
+    for f in sorted(PASTA.glob("*.png")):
+        linhas.append(f'  "{f.stem}": require("../../assets/medalhas/{f.name}"),')
+    linhas += ["};", "", "/** Nível de Sua evolução (0 a 7) → imagem 3D, quando existir. */",
+               "export const NIVEL_IMG: Record<number, ImageSourcePropType> = {"]
+    for f in sorted(PASTA_NIVEIS.glob("nivel-*.png")):
+        linhas.append(f'  {f.stem.split("-")[1]}: require("../../assets/niveis/{f.name}"),')
+    linhas.append("};")
+    (RAIZ / "src" / "lib" / "medalImagens.ts").write_text("\n".join(linhas) + "\n")
+
+
+def achar(nome) -> Path | None:
+    cand = sorted((PASTA / "folhas").glob(f"{nome}.*"))
+    return cand[0] if cand else None
+
+
 def main():
+    PASTA_NIVEIS.mkdir(exist_ok=True)
     for n, ids in FOLHAS.items():
-        cand = [p for p in (PASTA / "folhas").glob(f"folha-{n}.*")]
-        if not cand:
+        arq = achar(f"folha-{n}")
+        if not arq:
             print(f"folha {n}: arquivo não encontrado, pulei")
             continue
-        recortar(cand[0], ids)
+        recortar(arq, ids)
+    for nome, ids in NIVEIS.items():
+        arq = achar(nome)
+        if not arq:
+            print(f"{nome}: arquivo não encontrado, pulei")
+            continue
+        recortar(arq, ids, PASTA_NIVEIS)
+    gerar_ts()
 
 
 if __name__ == "__main__":

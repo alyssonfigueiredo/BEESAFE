@@ -1,9 +1,6 @@
 import type { ImageSourcePropType } from "react-native";
 
-// Ícones 3D das conquistas (04/10/2026, enviados pelo Leandro em 7 folhas de 5; recortados por
-// scripts/medalhas-recortar.py, fundo e sombra fora). Medalha sem imagem aqui continua com o
-// desenho em SVG de medals.ts. Para trocar ou incluir: salvar a folha em assets/medalhas/folhas/,
-// pôr os ids em FOLHAS no script, rodar e acrescentar a linha abaixo.
+// Gerado por scripts/medalhas-recortar.py (ícones 3D das conquistas e dos níveis). Não editar à mão.
 export const MEDALHA_IMG: Record<string, ImageSourcePropType> = {
   "abraco-coletivo": require("../../assets/medalhas/abraco-coletivo.png"),
   "abre-alas": require("../../assets/medalhas/abre-alas.png"),
@@ -41,3 +38,6 @@ export const MEDALHA_IMG: Record<string, ImageSourcePropType> = {
   "tem-opiniao": require("../../assets/medalhas/tem-opiniao.png"),
   "utilidade-publica": require("../../assets/medalhas/utilidade-publica.png"),
 };
+
+/** Nível de Sua evolução (0 a 7) → imagem 3D, quando existir. */
+export const NIVEL_IMG: Record<number, ImageSourcePropType> = {};

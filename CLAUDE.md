@@ -587,6 +587,11 @@ Nome: **Irisa** (INPI livre; @appirisa livre). Bundle id Android `br.com.irisa.a
   ("Conquista na Irisa" / "Nível N de 8"), linha leve "Desbloqueei"/"Agora sou", nome em Oswald com arco-íris (SVG),
   objeto 3D num cartão de vidro com brilhinhos que piscam, frase, e assinatura `#radarmin` + IRISa centralizada a 40
   (120 em 1080) do fundo. Na prévia o objeto entra crescendo e flutua; o confete segue fora da captura.
+  **Níveis de Sua evolução (mesmo dia):** o cartão de story e as animações valem para nível também (o ícone entra no
+  cartão do Perfil e flutua na subida de nível), mas os 8 ícones ainda são o desenho SVG de `niveis.ts`: falta a arte 3D.
+  Quando chegar, salvar as duas folhas de 4 em `assets/medalhas/folhas/niveis-1` e `niveis-2` (nível 1 a 8, da
+  esquerda para a direita) e rodar `python3 scripts/medalhas-recortar.py`: grava `assets/niveis/nivel-0..7.png`,
+  preenche `NIVEL_IMG` e o `NivelIcone` passa a usar a imagem sozinho.
 
 ## Stack
 

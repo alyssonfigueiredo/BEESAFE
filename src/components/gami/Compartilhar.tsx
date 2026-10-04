@@ -37,7 +37,7 @@ import { FadeUp } from "@/components/gami/Anim";
 import { Confete } from "@/components/gami/Confete";
 import { NivelIcone } from "@/components/gami/NivelIcone";
 import { MedalView } from "@/components/gami/MedalView";
-import { MEDALHA_IMG } from "@/lib/medalImagens";
+import { MEDALHA_IMG, NIVEL_IMG } from "@/lib/medalImagens";
 import { useFolhaAberta } from "@/hooks/useDiscovery";
 import { useForma } from "@/hooks/useGamification";
 import { getMedalha, nomeDa, type Banho } from "@/lib/medals";
@@ -318,7 +318,7 @@ function Destaque({ c }: { c: Compartilhavel }) {
     ) : (
       <MedalView id={c.id} size={190} on banho={c.banho ?? null} />
     );
-  } else corpo = <NivelIcone k={c.k} size={170} />;
+  } else corpo = <NivelIcone k={c.k} size={NIVEL_IMG[c.k] ? 196 : 170} />;
   return <Animated.View style={st}>{corpo}</Animated.View>;
 }
 
