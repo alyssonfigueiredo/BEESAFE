@@ -121,7 +121,7 @@
     { id: "favorita", t: "Favorita do Público", flex: ["Favorita do Público", "Favorito do Público", "Favorite do Público"], art: "tiara", cat: "Reconhecimento", rar: "epica", cond: "A avaliação com mais “ajudou” do mês na sua cidade.", obj: "Tiara de concurso.", copy: "A avaliação mais útil do mês na cidade foi a sua." },
     // Cidade
     { id: "icone-local", t: "Ícone Local", art: "pinCoroa", cat: "Cidade", rar: "rara", cond: "Acendeu o selo (5ª avaliação) de 3 lugares na mesma cidade.", obj: "Alfinete de mapa com coroa.", copy: "Três selos acesos por você. Já é ícone local." },
-    { id: "lenda-local", t: "Lenda Local", art: "busto", cat: "Cidade", rar: "epica", cond: "Acendeu o selo de 10 lugares na mesma cidade.", obj: "Busto de praça no pedestal.", copy: "Já pode encomendar sua estátua na praça." },
+    { id: "lenda-local", t: "Estátua na Praça", art: "busto", cat: "Cidade", rar: "epica", cond: "Acendeu o selo de 10 lugares na mesma cidade.", obj: "Busto de praça no pedestal.", copy: "Já pode encomendar sua estátua na praça." },
     { id: "mala-pronta", t: "Mala Pronta", art: "mala", cat: "Cidade", rar: "incomum", cond: "Avaliou lugares em 3 cidades. Cada cidade nova cola um adesivo na mala.", obj: "Mala de viagem com adesivos.", copy: "Mala pronta e o mapa na mão." },
     // Mapa
     { id: "inaugurou", t: "Inaugurou", art: "tesoura", cat: "Mapa", rar: "comum", cond: "Primeira avaliação de 3 lugares que não tinham nenhuma, em pelo menos 2 semanas diferentes.", obj: "Tesourinha cortando a fita.", copy: "Corta a fita: esse lugar estreou no mapa com você." },

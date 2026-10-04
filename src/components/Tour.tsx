@@ -119,7 +119,7 @@ const PASSOS: Passo[] = [
   {
     id: "tab-perfil",
     t: "Perfil",
-    x: () => "Seu anel e suas conquistas ficam aqui. Só você vê, e relato nunca conta ponto.",
+    x: () => "Sua evolução e suas conquistas ficam aqui. Só você vê, e relato nunca conta ponto.",
   },
 ];
 

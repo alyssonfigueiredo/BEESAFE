@@ -447,7 +447,7 @@ export const MEDALHAS: Medalha[] = [
   },
   {
     id: "lenda-local",
-    t: "Lenda Local",
+    t: "Estátua na Praça",
     art: "busto",
     cat: "Cidade",
     rar: "epica",
@@ -747,4 +747,3 @@ export const LANCAMENTO = [
   "patrimonio-tombado",
   "abre-alas",
 ];
-export const NIVEIS = ["Cinza", "Coral", "Laranja", "Amarelo", "Turquesa", "Azul", "Arco-íris"];

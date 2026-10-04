@@ -19,6 +19,7 @@ import { SafeAreaProvider } from "react-native-safe-area-context";
 import { queryClient } from "@/lib/query";
 import { AuthProvider, useAuth } from "@/providers/AuthProvider";
 import { Splash } from "@/components/Splash";
+import { SubiuDeNivel } from "@/components/gami/Evolucao";
 import { MedalCelebration } from "@/components/gami/MedalCelebration";
 import { Tour } from "@/components/Tour";
 import { useTrackOpen } from "@/hooks/useGamification";
@@ -57,6 +58,7 @@ function RootNavigator({ pronto }: { pronto: boolean }) {
         <Stack.Screen name="auth/callback" />
       </Stack>
       {session && pronto && tour === "fechado" && <MedalCelebration />}
+      {session && pronto && tour === "fechado" && <SubiuDeNivel />}
       {/* Tour por cima das telas reais (holofote): monta do zero a cada abertura. */}
       {!!session && pronto && tour === "aberto" && <Tour />}
     </>

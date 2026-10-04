@@ -1,7 +1,17 @@
 import { format, parseISO } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { Link } from "expo-router";
-import { Ban, Camera, Compass, LogOut, Trash2, MapPin, ShieldCheck, User, type LucideIcon } from "lucide-react-native";
+import {
+  Ban,
+  Camera,
+  Compass,
+  LogOut,
+  Trash2,
+  MapPin,
+  ShieldCheck,
+  User,
+  type LucideIcon,
+} from "lucide-react-native";
 import { useState, type ReactNode } from "react";
 import Svg, { Circle, Defs, LinearGradient, Stop } from "react-native-svg";
 import { Alert, Image, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
@@ -9,7 +19,8 @@ import { Alert, Image, Pressable, ScrollView, StyleSheet, Text, View } from "rea
 import { Aurora } from "@/components/Aurora";
 import { PrimaryButton } from "@/components/Button";
 import { Field, FieldShell } from "@/components/Field";
-import { AnelCard, ConquistasCard } from "@/components/gami/ConquistasCard";
+import { ConquistasCard } from "@/components/gami/ConquistasCard";
+import { EvolucaoCard } from "@/components/gami/Evolucao";
 import { FormaCard } from "@/components/gami/FormaCard";
 import { useScreenInsets } from "@/hooks/useScreenInsets";
 import { abrirTour } from "@/hooks/useTour";
@@ -73,15 +84,19 @@ export default function PerfilScreen() {
 
   function changePhoto() {
     if (!profile?.avatar_path) return photo.mutate(undefined, { onError: fail });
-    Alert.alert("Foto de perfil", "Só você vê essa foto. Ela não aparece no mural nem nas avaliações.", [
-      { text: "Trocar foto", onPress: () => photo.mutate(undefined, { onError: fail }) },
-      {
-        text: "Remover foto",
-        style: "destructive",
-        onPress: () => removePhoto.mutate(profile.avatar_path!, { onError: fail }),
-      },
-      { text: "Cancelar", style: "cancel" },
-    ]);
+    Alert.alert(
+      "Foto de perfil",
+      "Só você vê essa foto. Ela não aparece no mural nem nas avaliações.",
+      [
+        { text: "Trocar foto", onPress: () => photo.mutate(undefined, { onError: fail }) },
+        {
+          text: "Remover foto",
+          style: "destructive",
+          onPress: () => removePhoto.mutate(profile.avatar_path!, { onError: fail }),
+        },
+        { text: "Cancelar", style: "cancel" },
+      ],
+    );
   }
 
   const shown = value.trim() || "Anônimo";
@@ -98,7 +113,10 @@ export default function PerfilScreen() {
         contentContainerStyle={insets}
         keyboardShouldPersistTaps="handled"
       >
-        <View className="flex-row items-center gap-5 rounded-[30px] bg-surface px-6 py-6" style={shadow.card}>
+        <View
+          className="flex-row items-center gap-5 rounded-[30px] bg-surface px-6 py-6"
+          style={shadow.card}
+        >
           <Pressable
             onPress={changePhoto}
             disabled={photo.isPending}
@@ -115,7 +133,10 @@ export default function PerfilScreen() {
               <Circle cx={36} cy={36} r={34} fill="#FFFFFF" stroke="url(#avatar)" strokeWidth={3} />
             </Svg>
             {avatarUrl ? (
-              <Image source={{ uri: avatarUrl }} style={{ width: 62, height: 62, borderRadius: 31 }} />
+              <Image
+                source={{ uri: avatarUrl }}
+                style={{ width: 62, height: 62, borderRadius: 31 }}
+              />
             ) : (
               <Text className="font-display text-3xl uppercase text-ink">{shown.charAt(0)}</Text>
             )}
@@ -149,7 +170,7 @@ export default function PerfilScreen() {
           </View>
         </View>
 
-        <AnelCard />
+        <EvolucaoCard />
         <ConquistasCard />
 
         <View className="gap-4 rounded-[30px] bg-surface px-6 py-7" style={shadow.card}>
@@ -167,7 +188,12 @@ export default function PerfilScreen() {
               <CityPicker />
             </View>
           </FieldShell>
-          <PrimaryButton tone="turquoise" label="Salvar" disabled={update.isPending} onPress={save} />
+          <PrimaryButton
+            tone="turquoise"
+            label="Salvar"
+            disabled={update.isPending}
+            onPress={save}
+          />
         </View>
 
         <FormaCard />
@@ -201,7 +227,9 @@ export default function PerfilScreen() {
                     }
                     hitSlop={8}
                   >
-                    <Text className="font-body-bold text-[13px] text-turquoiseInk">Desbloquear</Text>
+                    <Text className="font-body-bold text-[13px] text-turquoiseInk">
+                      Desbloquear
+                    </Text>
                   </Pressable>
                 </View>
               ))
@@ -246,7 +274,15 @@ export default function PerfilScreen() {
   );
 }
 
-function Pill({ label, bg = colors.subtle, fg = colors.muted }: { label: string; bg?: string; fg?: string }) {
+function Pill({
+  label,
+  bg = colors.subtle,
+  fg = colors.muted,
+}: {
+  label: string;
+  bg?: string;
+  fg?: string;
+}) {
   return (
     <View className="rounded-full px-3 py-1" style={{ backgroundColor: bg }}>
       <Text className="font-body-medium text-[11.5px]" style={{ color: fg }} numberOfLines={1}>
@@ -274,7 +310,10 @@ function ListRow({
     <View
       className={`flex-row items-center gap-3.5 py-5 ${last ? "" : "border-b border-dashed border-ink/15"}`}
     >
-      <View className="h-10 w-10 items-center justify-center rounded-full bg-solid" style={shadow.field}>
+      <View
+        className="h-10 w-10 items-center justify-center rounded-full bg-solid"
+        style={shadow.field}
+      >
         <Icon_ icon={icon} color={color} />
       </View>
       <View className="min-w-0 flex-1 gap-0.5">

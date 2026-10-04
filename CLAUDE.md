@@ -551,11 +551,15 @@ Nome: **Irisa** (INPI livre; @appirisa livre). Bundle id Android `br.com.irisa.a
   pessoas que abriram a ficha depois da sua avaliação (`place_views`). Olho Vivo usa `user_days.bairro` (só o dia, via
   `trackDay("bairro")` na ficha do bairro). De fora, sem dado: Favorita do Público, Serviu Tudo, Rede de Apoio.
   `LANCAMENTO` (nome mantido) virou a lista das 32 na ordem da grade. As 5 novas ainda não estão no `docs/pingentes.js`.
-  **Sua evolução (protótipo, 04/10/2026, NÃO implementar sem ok dele):** `docs/prototipo-evolucao.html` → artefato
-  https://claude.ai/artifact/JnQKhqE35vAvRNgeG9eWXp. "Seu anel · Coral" vira "Sua evolução": a íris de 48 gomos fica, o
-  nível vira título com ícone em 8 degraus (Curiose/Entendide/Irisade com flexão pelo pronome, Close Certo, Do Babado,
-  Mapa Vivo, Lenda Local, Patrimônio LGBTQIA+) aos 0/2/5/10/16/24/34/48 gomos. Trilha na folha e subida de nível calma.
-  Conflito apontado: medalha Lenda Local → "Estátua na Praça"; nível 8 sai junto com a medalha Patrimônio Cultural.
+  **Sua evolução (APLICADO, 04/10/2026, aprovado pelo Leandro; protótipo `docs/prototipo-evolucao.html`, artefato
+  https://claude.ai/artifact/JnQKhqE35vAvRNgeG9eWXp):** "Seu anel · Coral" virou "Sua evolução". A íris de 48 gomos fica; o
+  nível é título com ícone em 8 degraus, calculado no app pelos gomos (`src/lib/niveis.ts`: Curiose/Entendide/Irisade com
+  flexão, Close Certo, Do Babado, Mapa Vivo, Lenda Local, Patrimônio LGBTQIA+, aos 0/2/5/10/16/24/34/48 gomos).
+  `src/components/gami/Evolucao.tsx`: `EvolucaoCard` (Perfil), `TrilhaSheet` e `SubiuDeNivel` (layout raiz; espera
+  avaliação e medalhas novas; AsyncStorage `irisa.nivel.visto.v1`, e na primeira vez só guarda, sem festa). O
+  `AnelCard` e o `NIVEIS` de cores saíram. A medalha Lenda Local virou **Estátua na Praça** (id `lenda-local` igual).
+  **Roteiro de lançamento da 0.1.2: `SUBIR-0.1.2.md` na raiz** (teste pelo TestFlight + EAS Update, build nova dos dois
+  lados, textos das lojas).
 
 ## Stack
 

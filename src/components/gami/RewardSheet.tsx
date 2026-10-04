@@ -6,7 +6,8 @@ import { Counter, FadeUp, ProgressEdge } from "@/components/gami/Anim";
 import { AnimatedMedal } from "@/components/gami/MedalView";
 import { SliceRing } from "@/components/gami/Rings";
 import { quaseLa, setRewardOpen, useGamification } from "@/hooks/useGamification";
-import { getMedalha, NIVEIS, nomeDa } from "@/lib/medals";
+import { getMedalha, nomeDa } from "@/lib/medals";
+import { nivelDe, nomeNivel, NIVEIS_EVO } from "@/lib/niveis";
 import { colors, shadow } from "@/theme/tokens";
 
 /**
@@ -111,10 +112,10 @@ export function RewardSheet({
                     {frase}
                   </Text>
                   <Text className="mt-1 text-center font-body text-[13px] text-muted">
-                    {ganhou ? `+${ganhou} gomo${ganhou > 1 ? "s" : ""} no seu anel · ` : ""}
+                    {ganhou ? `+${ganhou} gomo${ganhou > 1 ? "s" : ""} na sua íris · ` : ""}
                     <Counter value={g.gomos} from={antes ?? 0} delay={d(T_ANEL)} duration={1100} />
                     {" de 48"}
-                    {g.nivel > 0 ? ` · ${NIVEIS[g.nivel]}` : ""}
+                    {` · ${nomeNivel(NIVEIS_EVO[nivelDe(g.gomos)], g.forma ?? 2)}`}
                   </Text>
                 </FadeUp>
               ) : (
@@ -126,7 +127,7 @@ export function RewardSheet({
                     {"Já está no mapa. "}
                     <Counter value={g.gomos} from={antes ?? 0} delay={d(T_ANEL)} duration={1100} />
                     {" de 48"}
-                    {g.nivel > 0 ? ` · ${NIVEIS[g.nivel]}` : ""}.
+                    {` · ${nomeNivel(NIVEIS_EVO[nivelDe(g.gomos)], g.forma ?? 2)}`}.
                   </Text>
                 </FadeUp>
               )}
