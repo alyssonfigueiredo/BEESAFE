@@ -499,8 +499,12 @@ Nome: **Irisa** (INPI livre; @appirisa livre). Bundle id Android `br.com.irisa.a
   (ligado sozinho em pedido de ajuda); aviso para não pôr telefone/endereço/nome completo; texto que parece relato
   oferece virar relato anônimo (o mural nunca pode ser atalho para relato com apelido).
   **Bege saiu (pedido dele, 04/10/2026):** o tom areia de fundos tonais (folha do mapa, chips, seletores, trilhos
-  vazios) vira azul-claro frio no estilo iOS: `subtle` #EAF0F8, vazio #DFE6F0, alça #C9D3E1, folha do mapa em vidro
-  rgba(238,244,252,.8) com blur. Ao implementar, trocar `subtle` em `src/theme/tokens.js` (o papel #F5F4F1 fica).
+  vazios) vira azul-claro frio no estilo iOS: `subtle` #EAF0F8, vazio #DFE6F0, alça #C9D3E1, folha do mapa com a
+  textura de aurora do fundo do app (o azul ficou feio ali).
+  **Medalhas mais difíceis (migration 42, 04/10/2026, decisão dele):** Deu Close = 10 avaliações em 2 semanas;
+  Inaugurou = 3 lugares sem nota em 2 semanas; Eu Conheço um Lugar = lugar cadastrado que outra pessoa avaliou;
+  Nome na Lista = 6 bairros. Abre-Alas e as outras iguais. Quem já ganhou fica com a medalha. Textos em
+  `src/lib/medals.ts` e `docs/pingentes.js` (chegam no app pelo próximo update). Ao implementar, trocar `subtle` em `src/theme/tokens.js` (o papel #F5F4F1 fica).
 
 ## Stack
 

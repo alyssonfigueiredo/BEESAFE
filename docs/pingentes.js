@@ -110,7 +110,7 @@
   const LISTA = [
     // Trajetória: avaliações válidas (contam depois de 48 h sem a moderação esconder)
     { id: "deu-o-nome", t: "Deu o Nome", art: "cracha", cat: "Trajetória", rar: "comum", cond: "Primeira avaliação válida.", obj: "Crachá de festa “Olá” com o nome rabiscado.", copy: "Prazer. Agora o mapa sabe o que você acha." },
-    { id: "deu-close", t: "Deu Close", art: "camera", cat: "Trajetória", rar: "comum", cond: "5 avaliações.", obj: "Câmera com flash e um brilhinho.", copy: "Cinco lugares, cinco closes. O mapa agradece." },
+    { id: "deu-close", t: "Deu Close", art: "camera", cat: "Trajetória", rar: "comum", cond: "10 avaliações, em pelo menos 2 semanas diferentes.", obj: "Câmera com flash e um brilhinho.", copy: "Dez lugares, dez closes. O mapa agradece." },
     { id: "figurinha", t: "Figurinha Conhecida", art: "figurinha", cat: "Trajetória", rar: "incomum", cond: "15 avaliações, em pelo menos 3 semanas diferentes.", obj: "Figurinha de álbum com o canto descolando.", copy: "Se o mapa fosse álbum, você já era figurinha conhecida." },
     { id: "famosinha", t: "Famosinha", flex: ["Famosinha", "Famosinho", "Famosinhe"], art: "oculos", cat: "Trajetória", rar: "rara", cond: "30 avaliações, em pelo menos 4 semanas diferentes.", obj: "Óculos escuros de coração.", copy: "Óculos escuros, por favor. O flash não para." },
     { id: "influ-do-vale", t: "Influ do Vale", art: "credencial", cat: "Trajetória", rar: "epica", cond: "60 avaliações e 25 “ajudou” recebidos.", obj: "Credencial VIP com cordão.", copy: "O que você irisa, a cidade lê." },
@@ -124,13 +124,13 @@
     { id: "lenda-local", t: "Lenda Local", art: "busto", cat: "Cidade", rar: "epica", cond: "Acendeu o selo de 10 lugares na mesma cidade.", obj: "Busto de praça no pedestal.", copy: "Já pode encomendar sua estátua na praça." },
     { id: "mala-pronta", t: "Mala Pronta", art: "mala", cat: "Cidade", rar: "incomum", cond: "Avaliou lugares em 3 cidades. Cada cidade nova cola um adesivo na mala.", obj: "Mala de viagem com adesivos.", copy: "Mala pronta e o mapa na mão." },
     // Mapa
-    { id: "inaugurou", t: "Inaugurou", art: "tesoura", cat: "Mapa", rar: "comum", cond: "Primeira avaliação de um lugar que não tinha nenhuma.", obj: "Tesourinha cortando a fita.", copy: "Corta a fita: esse lugar estreou no mapa com você." },
+    { id: "inaugurou", t: "Inaugurou", art: "tesoura", cat: "Mapa", rar: "comum", cond: "Primeira avaliação de 3 lugares que não tinham nenhuma, em pelo menos 2 semanas diferentes.", obj: "Tesourinha cortando a fita.", copy: "Corta a fita: esse lugar estreou no mapa com você." },
     { id: "acendeu-a-luz", t: "Acendeu a Luz", art: "lampada", cat: "Mapa", rar: "incomum", cond: "Deu a 5ª avaliação, a que acende o selo do lugar.", obj: "Lâmpada de camarim.", copy: "O selo acendeu. Foi você que apertou o interruptor." },
-    { id: "eu-conheco", t: "Eu Conheço um Lugar", art: "mapa", cat: "Mapa", rar: "incomum", cond: "Cadastrou um lugar que faltava (ativo depois de 48 h).", obj: "Mapa dobrado com um X.", copy: "Ninguém conhecia. Agora tá no mapa." },
+    { id: "eu-conheco", t: "Eu Conheço um Lugar", art: "mapa", cat: "Mapa", rar: "incomum", cond: "Cadastrou um lugar que faltava e outra pessoa avaliou.", obj: "Mapa dobrado com um X.", copy: "Ninguém conhecia. Agora tá no mapa." },
     { id: "pode-entrar", t: "Pode Entrar", art: "porta", cat: "Mapa", rar: "rara", cond: "3 fotos aprovadas pela moderação.", obj: "Porta entreaberta com luz saindo.", copy: "Agora dá pra ver a porta antes de chegar." },
     // Rolê
     { id: "sabe-onde-ir", t: "Sabe Onde Ir", art: "bussola", cat: "Rolê", rar: "incomum", cond: "Avaliou 4 categorias diferentes (bar, café, restaurante, hotel, balada).", obj: "Bússola.", copy: "Bar, café, hotel, restaurante. Sabe onde ir." },
-    { id: "nome-na-lista", t: "Nome na Lista", art: "pulseiraFesta", cat: "Rolê", rar: "incomum", cond: "Avaliou lugares em 5 bairros diferentes.", obj: "Pulseirinha de entrada de festa.", copy: "Seu nome tá na lista de cinco bairros." },
+    { id: "nome-na-lista", t: "Nome na Lista", art: "pulseiraFesta", cat: "Rolê", rar: "incomum", cond: "Avaliou lugares em 6 bairros diferentes.", obj: "Pulseirinha de entrada de festa.", copy: "Seu nome tá na lista de seis bairros." },
     { id: "da-casa", t: "Da Casa", art: "chave", cat: "Rolê", rar: "rara", cond: "Reavaliou o mesmo lugar depois de 6 meses. O nome do lugar aparece só no seu Perfil, nunca no cartão do story.", obj: "Chave de camarim com plaquinha “Nº 1”.", copy: "Da casa. Já pode pedir o de sempre." },
     // Constância
     { id: "bateu-ponto", t: "Bateu Ponto", art: "cartaoPonto", cat: "Constância", rar: "comum", cond: "Primeira semana acesa: o app aberto em 4 dias quaisquer da semana.", obj: "Cartão de ponto perfurado.", copy: "Bateu ponto. E nem precisou ser todo dia." },
