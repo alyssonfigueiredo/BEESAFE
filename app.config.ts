@@ -4,6 +4,10 @@ import type { ExpoConfig } from "expo/config";
 // no build local com Personal Team (npx expo run:ios) fica desligado.
 const appleSignIn = process.env.APP_ENV === "preview" || process.env.APP_ENV === "production";
 
+// Push no Android passa pelo Firebase (FCM). O google-services.json não vai para o repositório público:
+// ele entra pela variável de arquivo GOOGLE_SERVICES_JSON do EAS (no Mac: GOOGLE_SERVICES_JSON=./google-services.json).
+const googleServicesFile = process.env.GOOGLE_SERVICES_JSON;
+
 const config: ExpoConfig = {
   name: "Irisa",
   slug: "irisa",
@@ -27,6 +31,7 @@ const config: ExpoConfig = {
   },
   android: {
     package: "br.com.irisa.app",
+    ...(googleServicesFile ? { googleServicesFile } : {}),
     adaptiveIcon: {
       backgroundColor: "#FAF9F6",
       foregroundImage: "./assets/android-icon-foreground.png",
@@ -52,6 +57,10 @@ const config: ExpoConfig = {
         cameraPermission: false,
         microphonePermission: false,
       },
+    ],
+    [
+      "expo-notifications",
+      { icon: "./assets/android-icon-monochrome.png", color: "#D98C8A" },
     ],
     [
       "expo-location",
