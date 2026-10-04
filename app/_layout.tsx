@@ -19,13 +19,16 @@ import { SafeAreaProvider } from "react-native-safe-area-context";
 import { queryClient } from "@/lib/query";
 import { AuthProvider, useAuth } from "@/providers/AuthProvider";
 import { Splash } from "@/components/Splash";
+import { usePush } from "@/hooks/usePush";
 import { CityProvider } from "@/providers/CityProvider";
 import { colors } from "@/theme/tokens";
 
 SplashScreen.preventAutoHideAsync();
 
-function RootNavigator() {
+function RootNavigator({ pronto }: { pronto: boolean }) {
   const { session, loading } = useAuth();
+  // Pedido de notificação só depois da abertura animada, para não aparecer por cima dela.
+  usePush(session?.user.id, pronto);
   if (loading) return null;
   return (
     <Stack screenOptions={{ headerShown: false, contentStyle: { backgroundColor: colors.paper } }}>
@@ -71,7 +74,7 @@ export default function RootLayout() {
           <AuthProvider>
             <CityProvider>
               <StatusBar style="dark" />
-              <RootNavigator />
+              <RootNavigator pronto={!abrindo} />
               {abrindo && <Splash onDone={fecharSplash} />}
             </CityProvider>
           </AuthProvider>

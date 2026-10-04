@@ -53,3 +53,4 @@ build/
 scripts/.alertas-enviados.json
 import-rm.log
 supabase/.temp/
+google-services.json

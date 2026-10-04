@@ -376,6 +376,21 @@ Nome: **Irisa** (INPI livre; @appirisa livre). Bundle id Android `br.com.irisa.a
   apresentação para o Alysson em `docs/apresentacao-liquid.html`; plano de lançamento em
   `docs/plano-lancamento.html` (nenhum deles é publicado no site).
 
+- **Notificações push (migration 38 + Edge Function `send-push`, 03/10/2026):** `expo-notifications` é
+  nativo, então só funciona a partir da próxima build (0.1.2). `src/hooks/usePush.ts` só faz o `require`
+  depois de `requireOptionalNativeModule("ExpoPushTokenManager")`: o mesmo JS chega por EAS Update em
+  0.1.1 sem derrubar o app (lá ele simplesmente não pede permissão). Pede a permissão uma vez, depois do
+  login e do splash, grava o token por `register_push_token` em `push_tokens` (sem policy, some com a
+  conta) e abre `data.url` ao tocar. Envio pelo SQL Editor com `supabase/notificacoes.sql`:
+  `enviar_notificacao(titulo, corpo, quando, url, cidade)` grava em `push_envios`; na hora chama a função
+  na mesma transação, agendado o pg_cron `send-push` (5 em 5 min) pega. Senha só no Vault (`push_secret`,
+  gerada pela migration), conferida por `push_autorizado`. Token de aparelho que desinstalou
+  (`DeviceNotRegistered`) é apagado no envio. **Antes da build:** Android precisa do Firebase (projeto no
+  console do Firebase com o pacote `br.com.irisa.app` → `google-services.json` → `npx eas-cli env:create
+  --name GOOGLE_SERVICES_JSON --type file --value ./google-services.json` nos ambientes preview e
+  production → chave de conta de serviço FCM V1 em `npx eas-cli credentials` → Android → Push
+  Notifications). iOS: o `eas build` pergunta se gera a chave de push da Apple (responder sim).
+  O arquivo `google-services.json` está no .gitignore (repo público).
 - **Gamificação (proposta, 03/10/2026, nada no app ainda):** `docs/gamificacao.html` é a apresentação para o Aly
   (anel de 48 gomos, dias acesos, faíscas, caixinha, desafios, pulseira). Pingentes seguem o briefing dele: título
   primeiro, objeto depois, sem bandeira/arco-íris/emoji; os 30 estão em `docs/pingentes.js` (dados + SVG) e no
