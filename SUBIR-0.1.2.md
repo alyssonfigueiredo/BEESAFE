@@ -1,13 +1,13 @@
 # Irisa 0.1.2: testar e subir nas lojas
 
 Escrito em 04/10/2026. Tudo que entrou hoje já está no repositório e o banco já foi atualizado sozinho
-(migrations até a 48). Falta só gerar as builds e enviar. Cada passo é um comando para colar no Terminal
+(migrations até a 48; nada de banco novo depois disso). Falta só gerar as builds e enviar. Cada passo é um comando para colar no Terminal
 do Mac, na pasta BEESAFE.
 
 ## O que vai nesta versão
 
-- Gamificação completa: Sua evolução (8 níveis com ícone sobre a íris de 48 gomos), 32 conquistas,
-  semana acesa, caixinha, comemorações calmas.
+- Gamificação completa: Sua evolução (8 níveis com ícone 3D sobre a íris de 48 gomos), 32 conquistas com
+  ícones 3D, semana acesa, caixinha, comemorações calmas.
 - Início novo: Sua semana, Suas cores (o que você coloriu e quantas pessoas abriram a ficha depois
   da sua avaliação), Quase lá e a sugestão "Passou por aqui?" uma vez por dia.
 - Mapa novo (painel Mapa/Lista, lugares agrupados, relato como área) e lugares perto de você de verdade.
@@ -16,8 +16,8 @@ do Mac, na pasta BEESAFE.
 - Visual igual no app todo (seletores, campos, botões).
 - Cadastro de lugar confere o endereço escrito antes de gravar (o caso do Na Feira Bar).
 - Notificações (push).
-- Compartilhar conquista e nível direto no story do Instagram (cartão 1080 × 1920, sem nome e sem lugar),
-  ou por outros apps.
+- Compartilhar conquista e nível direto no story do Instagram (cartão 1080 × 1920 na identidade do
+  Instagram da Irisa, frase em primeira pessoa para quem vê, sem nome e sem lugar), ou por outros apps.
   **Peça nativa nova:** o botão só aparece em build nova. Quem recebe o código por atualização em cima da
   build 10 não vê o botão (de propósito, para não quebrar).
 
