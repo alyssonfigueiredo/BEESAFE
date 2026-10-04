@@ -13,7 +13,7 @@ const config: ExpoConfig = {
   slug: "irisa",
   owner: "alyssondfa",
   scheme: "irisa",
-  version: "0.1.1",
+  version: "0.1.2",
   orientation: "portrait",
   icon: "./assets/icon.png",
   userInterfaceStyle: "light",

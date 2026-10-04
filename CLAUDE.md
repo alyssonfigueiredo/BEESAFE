@@ -376,6 +376,7 @@ Nome: **Irisa** (INPI livre; @appirisa livre). Bundle id Android `br.com.irisa.a
   apresentação para o Alysson em `docs/apresentacao-liquid.html`; plano de lançamento em
   `docs/plano-lancamento.html` (nenhum deles é publicado no site).
 
+- **0.1.1 liberada nas duas lojas (dito por ele em 03/10/2026).** Versão do app subiu para 0.1.2 (a da build com push).
 - **Notificações push (migration 38 + Edge Function `send-push`, 03/10/2026):** `expo-notifications` é
   nativo, então só funciona a partir da próxima build (0.1.2). `src/hooks/usePush.ts` só faz o `require`
   depois de `requireOptionalNativeModule("ExpoPushTokenManager")`: o mesmo JS chega por EAS Update em
