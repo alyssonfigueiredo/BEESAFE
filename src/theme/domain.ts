@@ -111,6 +111,18 @@ export const AXES = {
 export type Axis = keyof typeof AXES;
 export const AXIS_KEYS = Object.keys(AXES) as Axis[];
 
+/** Forma escolhida no Perfil: 0 = a, 1 = o, 2 = e (o padrão). */
+export type Forma = 0 | 1 | 2;
+/** "recebid" + forma → "recebida" / "recebido" / "recebide". A frase da marca ("bem-vinde") não passa por aqui. */
+export function flexiona(base: string, forma: number | null | undefined): string {
+  return base + (["a", "o", "e"][forma ?? 2] ?? "e");
+}
+/** Dica da pergunta com a forma da pessoa. `AXES[k].hint` segue neutro para quem já usa. */
+export function axisHint(axis: Axis, forma: number | null | undefined): string {
+  if (axis === "restroom") return `Usou o que quis, sem ser ${flexiona("questionad", forma)}.`;
+  return AXES[axis].hint;
+}
+
 // Selos: o número diz quanto, o selo diz o que fazer com isso.
 export const BADGES = {
   acolhedor: {

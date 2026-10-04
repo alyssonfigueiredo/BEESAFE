@@ -68,8 +68,9 @@ const colors = {
   paper: "#F5F4F1", // fundo das telas (por baixo da aurora)
   surface: "rgba(255,255,255,0.4)", // cartões: translúcidos, a aurora passa de leve por baixo
   solid: "#FFFFFF", // onde precisa ser opaco (lente da aba, balão do mapa)
-  subtle: "#ECEAE5", // campos, chips e botões fantasma (tonais, sem borda)
-  border: "#E6E3DD", // linhas divisórias; cartão não tem borda
+  // Tonais frios (04/10/2026): o bege antigo (#ECEAE5 / #E6E3DD) saiu a pedido dele; o papel segue.
+  subtle: "#F1F5FA", // campos, chips e botões fantasma (tonais, sem borda)
+  border: "#E6ECF3", // linhas divisórias e trilhos vazios (barras, anel); cartão não tem borda
   night: "#141829", // cor escura: texto sobre cor, traços do mapa, fundo do mapa
   ink: "#141829", // texto principal, mais escuro que antes (definição)
   muted: "#3D4560", // texto secundário

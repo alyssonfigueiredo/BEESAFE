@@ -14,10 +14,13 @@ import { PlaceCard } from "@/components/PlaceCard";
 import { RainbowLine } from "@/components/Rainbow";
 import { SearchField } from "@/components/SearchField";
 import { StatCard } from "@/components/StatCard";
+import { TourTarget } from "@/components/Tour";
 import { useCityStats } from "@/hooks/useCityStats";
+import { useGamification } from "@/hooks/useGamification";
 import { useAreaRisk, useOccurrences } from "@/hooks/useOccurrences";
 import { usePlaces, useSearchPlaces, useWelcoming } from "@/hooks/usePlaces";
 import { useScreenInsets } from "@/hooks/useScreenInsets";
+import { useTourScroll } from "@/hooks/useTour";
 import { distanceMeters } from "@/lib/geo";
 import { useCity } from "@/providers/CityProvider";
 import { OCCURRENCE_TYPES, PLACE_CATEGORIES, RATING_MIN, type PlaceCategory } from "@/theme/domain";
@@ -40,6 +43,9 @@ export default function HomeScreen() {
   const [filtro, setFiltro] = useState<Filtro>("all");
   // Com 2+ letras a busca vai ao banco: o lote carregado não cobre a cidade toda.
   const { data: achados } = useSearchPlaces(city?.id, busca);
+  // Tour: rola o Início até os alvos; os cartões da gamificação só viram alvo quando aparecem.
+  const { anexar: prenderRolagem, onScroll: aoRolar } = useTourScroll();
+  const { data: gami } = useGamification();
 
   // O ranking só aceita lugar com RATING_MIN avaliações, e nos primeiros meses isso é ninguém.
   // Até lá mostra quem já recebeu alguma nota: a seção precisa provar que o app está vivo.
@@ -82,6 +88,9 @@ export default function HomeScreen() {
     <View className="flex-1">
       <Aurora />
       <ScrollView
+        ref={prenderRolagem}
+        onScroll={aoRolar}
+        scrollEventThrottle={64}
         className="flex-1"
         contentContainerClassName="gap-4 px-4"
         contentContainerStyle={insets}
@@ -119,27 +128,37 @@ export default function HomeScreen() {
             deveria ter acontecido.
           </Text>
           <View className="flex-row gap-2 pt-1">
-            <Link href="/lugares" asChild>
-              <Pressable
-                className="flex-1 items-center rounded-full bg-turquoise py-3 active:opacity-80"
-                style={shadow.turquoise}
-              >
-                <Text className="font-body-bold text-sm text-night">Avaliar um lugar</Text>
-              </Pressable>
-            </Link>
-            <Link href="/registrar" asChild>
-              <Pressable
-                className="flex-1 items-center rounded-full bg-coral py-3 active:opacity-80"
-                style={shadow.coral}
-              >
-                <Text className="font-body-bold text-sm text-night">Registrar relato</Text>
-              </Pressable>
-            </Link>
+            <TourTarget id="avaliar" style={{ flex: 1 }}>
+              <Link href="/lugares" asChild>
+                <Pressable
+                  className="items-center rounded-full bg-turquoise py-3 active:opacity-80"
+                  style={shadow.turquoise}
+                >
+                  <Text className="font-body-bold text-sm text-night">Avaliar um lugar</Text>
+                </Pressable>
+              </Link>
+            </TourTarget>
+            <TourTarget id="relato" style={{ flex: 1 }}>
+              <Link href="/registrar" asChild>
+                <Pressable
+                  className="items-center rounded-full bg-coral py-3 active:opacity-80"
+                  style={shadow.coral}
+                >
+                  <Text className="font-body-bold text-sm text-night">Registrar relato</Text>
+                </Pressable>
+              </Link>
+            </TourTarget>
           </View>
         </View>
 
         {/* Gamificação: semana, cidade, caixinha e a medalha mais perto. Some se o banco não tiver. */}
-        <GamiHomeCards />
+        {gami ? (
+          <TourTarget id="gami">
+            <GamiHomeCards />
+          </TourTarget>
+        ) : (
+          <GamiHomeCards />
+        )}
 
         <View className="gap-2">
           <SearchField

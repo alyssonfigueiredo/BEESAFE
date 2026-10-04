@@ -57,7 +57,8 @@ function RootNavigator({ pronto }: { pronto: boolean }) {
         <Stack.Screen name="auth/callback" />
       </Stack>
       {session && pronto && tour === "fechado" && <MedalCelebration />}
-      <Tour visible={!!session && pronto && tour === "aberto"} />
+      {/* Tour por cima das telas reais (holofote): monta do zero a cada abertura. */}
+      {!!session && pronto && tour === "aberto" && <Tour />}
     </>
   );
 }

@@ -2,7 +2,7 @@ import { formatDistanceToNow, parseISO } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { Link, Stack, useLocalSearchParams } from "expo-router";
 import { AlertTriangle, BadgeCheck, Navigation } from "lucide-react-native";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   Alert,
   Linking,
@@ -16,6 +16,12 @@ import {
 
 import { Aurora } from "@/components/Aurora";
 import { RewardSheet } from "@/components/gami/RewardSheet";
+import {
+  fraseDescoberta,
+  logDescoberta,
+  marcarDescobertaConcluida,
+  ORIGEM_DESCOBERTA,
+} from "@/hooks/useDiscovery";
 import { trackDay, useGamification } from "@/hooks/useGamification";
 import { useScreenInsets } from "@/hooks/useScreenInsets";
 import { AreaLevel } from "@/components/AreaLevel";
@@ -30,7 +36,14 @@ import { Rainbow } from "@/components/Rainbow";
 import { ReportButton } from "@/components/ReportButton";
 import { useEnviarFotoDoLugar } from "@/hooks/usePlacePhoto";
 import { usePlace, usePlaceRatings, useRatePlace } from "@/hooks/usePlaces";
-import { AXES, AXIS_KEYS, BADGES, PLACE_CATEGORIES, placeScoreColor } from "@/theme/domain";
+import {
+  AXES,
+  AXIS_KEYS,
+  BADGES,
+  PLACE_CATEGORIES,
+  axisHint,
+  placeScoreColor,
+} from "@/theme/domain";
 import type { Axis } from "@/theme/domain";
 import { colors, shadow } from "@/theme/tokens";
 
@@ -38,7 +51,14 @@ type Draft = Record<Axis, number> & { key: string; comment: string };
 
 export default function PlaceScreen() {
   const insets = useScreenInsets({ tabs: false });
-  const { id } = useLocalSearchParams<{ id: string }>();
+  // `origem` e `avaliar` vêm da descoberta ("Passou por aqui?"): abrem o formulário de sempre e só
+  // alimentam discovery_events. A avaliação em si é igual a qualquer outra.
+  const { id, origem, avaliar } = useLocalSearchParams<{
+    id: string;
+    origem?: string;
+    avaliar?: string;
+  }>();
+  const daDescoberta = origem === ORIGEM_DESCOBERTA;
   const { data: place, isLoading } = usePlace(id);
   const { data: ratings = [] } = usePlaceRatings(id);
   const rate = useRatePlace(id);
@@ -48,7 +68,16 @@ export default function PlaceScreen() {
   const [abrirForm, setAbrirForm] = useState(false);
   // Gamificação: abrir a ficha conta como consulta do dia; avaliação nova abre a folha de recompensa.
   const { data: gami, refetch: refetchGami } = useGamification();
-  const [recompensa, setRecompensa] = useState<{ antes: number | null } | null>(null);
+  const [recompensa, setRecompensa] = useState<{
+    antes: number | null;
+    frase?: string;
+  } | null>(null);
+  const forma = gami?.forma ?? 2;
+  // Descoberta: "começou a avaliar" é a primeira resposta, uma vez só.
+  const comecou = useRef(false);
+  // Com ?avaliar=1 o formulário já vem aberto; a tela rola até ele uma vez.
+  const scrollRef = useRef<ScrollView>(null);
+  const rolouAoForm = useRef(false);
   useEffect(() => {
     if (id) trackDay("consult");
   }, [id]);
@@ -69,6 +98,14 @@ export default function PlaceScreen() {
   // Lugar sem nota: cada pergunta respondida devolve um quarto da cor à foto.
   const respondidas = AXIS_KEYS.length - missing.length;
 
+  function responder(k: Axis, v: number) {
+    if (daDescoberta && id && !comecou.current) {
+      comecou.current = true;
+      logDescoberta("discovery_review_started", id);
+    }
+    setDraft({ ...current, [k]: v });
+  }
+
   async function submit() {
     if (missing.length) return Alert.alert(`Falta responder: ${AXES[missing[0]].label}.`);
     try {
@@ -83,7 +120,14 @@ export default function PlaceScreen() {
         Alert.alert("Avaliação atualizada", "Obrigado por ajudar a comunidade.");
       } else {
         // A folha mostra o agradecimento de sempre se a gamificação ainda não estiver no banco.
-        setRecompensa({ antes: gami?.gomos ?? null });
+        // Vindo da descoberta, o título é a frase da descoberta e o gomo vira linha pequena.
+        if (daDescoberta && id) {
+          logDescoberta("discovery_review_completed", id);
+          marcarDescobertaConcluida(id);
+          setRecompensa({ antes: gami?.gomos ?? null, frase: fraseDescoberta(id) });
+        } else {
+          setRecompensa({ antes: gami?.gomos ?? null });
+        }
         refetchGami();
       }
     } catch (e) {
@@ -113,7 +157,7 @@ export default function PlaceScreen() {
   const score = place.score == null ? null : Number(place.score);
   // Sem nota nenhuma, o formulário já vem aberto: é a única coisa útil a fazer. Com nota, vira
   // um botão, para quem só quer consultar não rolar quatro perguntas.
-  const formVisivel = score == null || !!mine || abrirForm;
+  const formVisivel = score == null || !!mine || abrirForm || avaliar === "1";
 
   function comoChegar() {
     const { latitude: lat, longitude: lng, name } = place!;
@@ -144,6 +188,7 @@ export default function PlaceScreen() {
       <View className="flex-1">
         <Aurora />
         <ScrollView
+          ref={scrollRef}
           className="flex-1"
           contentContainerClassName="gap-4 px-4"
           contentContainerStyle={insets}
@@ -268,19 +313,27 @@ export default function PlaceScreen() {
           </Pressable>
 
           {formVisivel ? (
-            <View className="gap-4 rounded-3xl bg-surface p-4" style={shadow.card}>
+            <View
+              className="gap-4 rounded-3xl bg-surface p-4"
+              style={shadow.card}
+              onLayout={(e) => {
+                if (avaliar !== "1" || rolouAoForm.current) return;
+                rolouAoForm.current = true;
+                const y = e.nativeEvent.layout.y - insets.paddingTop;
+                setTimeout(
+                  () => scrollRef.current?.scrollTo({ y: Math.max(0, y), animated: true }),
+                  450,
+                );
+              }}
+            >
               <Text className="font-body-bold text-base text-ink">
                 {mine ? "Sua avaliação" : "Como foi lá?"}
               </Text>
               {AXIS_KEYS.map((k) => (
                 <View key={k} className="gap-2">
                   <Text className="font-body-medium text-sm text-ink">{AXES[k].question}</Text>
-                  <Text className="font-body text-xs text-dim">{AXES[k].hint}</Text>
-                  <Rainbow
-                    value={current[k]}
-                    size={16}
-                    onChange={(v) => setDraft({ ...current, [k]: v })}
-                  />
+                  <Text className="font-body text-xs text-dim">{axisHint(k, forma)}</Text>
+                  <Rainbow value={current[k]} size={16} onChange={(v) => responder(k, v)} />
                 </View>
               ))}
               <TextInput
@@ -373,6 +426,7 @@ export default function PlaceScreen() {
       <RewardSheet
         visible={!!recompensa}
         antes={recompensa?.antes ?? null}
+        frase={recompensa?.frase}
         onClose={() => setRecompensa(null)}
       />
     </>

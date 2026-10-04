@@ -9,7 +9,9 @@ import Animated, {
   withTiming,
 } from "react-native-reanimated";
 
+import { useFolhaAberta } from "@/hooks/useDiscovery";
 import { useSupportServices } from "@/hooks/useSupport";
+import { useTourTarget } from "@/hooks/useTour";
 import { useCity } from "@/providers/CityProvider";
 import { EMERGENCY_CONTACTS } from "@/theme/domain";
 import { Glass } from "@/components/Glass";
@@ -33,6 +35,9 @@ export function EmergencyButton() {
   const { city } = useCity();
   const { data: services = [] } = useSupportServices(city?.id);
   const local = services.filter((s) => s.city_id != null || s.state != null);
+  // Alvo do tour ("Emergência") e folha aberta (a descoberta não aparece por cima dela).
+  const tourRef = useTourTarget("sos");
+  useFolhaAberta(open);
 
   useEffect(() => {
     pulse.value = withRepeat(
@@ -65,7 +70,11 @@ export function EmergencyButton() {
             ring,
           ]}
         />
-        <View className="h-10 w-10 items-center justify-center rounded-full bg-coral">
+        <View
+          ref={tourRef}
+          collapsable={false}
+          className="h-10 w-10 items-center justify-center rounded-full bg-coral"
+        >
           <Siren color={colors.night} size={20} />
         </View>
       </Pressable>
