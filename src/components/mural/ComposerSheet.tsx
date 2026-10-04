@@ -140,7 +140,7 @@ function SheetBody({
       <Animated.View
         entering={reduce ? undefined : SlideInDown.duration(420).easing(Easing.out(Easing.cubic))}
         className="rounded-t-[34px]"
-        style={{ backgroundColor: "#FBFAF8", maxHeight: "90%" }}
+        style={{ backgroundColor: "#FBFCFE", maxHeight: "90%" }}
       >
         <ScrollView
           keyboardShouldPersistTaps="handled"

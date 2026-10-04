@@ -3,9 +3,6 @@ import { useEffect, useMemo, useState } from "react";
 import { Modal, Pressable, Text, View, useWindowDimensions } from "react-native";
 import Animated, {
   Easing,
-  FadeIn,
-  FadeInDown,
-  ZoomIn,
   useAnimatedStyle,
   useReducedMotion,
   useSharedValue,
@@ -13,10 +10,12 @@ import Animated, {
   withTiming,
 } from "react-native-reanimated";
 
-import { MedalView } from "@/components/gami/MedalView";
+import { FadeUp } from "@/components/gami/Anim";
+import { AnimatedMedal } from "@/components/gami/MedalView";
 import { useGamification, useMarkSeen, useRewardOpen } from "@/hooks/useGamification";
 import { getMedalha, nomeDa } from "@/lib/medals";
 import { colors } from "@/theme/tokens";
+import { useFolhaAberta } from "@/hooks/useDiscovery";
 
 const CORES = [
   colors.coral,
@@ -27,24 +26,28 @@ const CORES = [
   "#59A7FF",
 ];
 
+// Confete discreto: poucos papeizinhos, pequenos, que só saem quando o anel da medalha fecha.
+const CONFETES = 14;
+const ANEL = 1300; // o anel desenha em 1,3 s (AnimatedMedal), depois a cor aparece
+
 function Confete({ i, w }: { i: number; w: number }) {
   const t = useSharedValue(0);
-  const ang = (i / 26) * Math.PI * 2 + (i % 3) * 0.3;
-  const dist = 120 + ((i * 37) % 160);
+  const ang = (i / CONFETES) * Math.PI * 2 + (i % 3) * 0.3;
+  const dist = 90 + ((i * 37) % 90);
   useEffect(() => {
     t.set(
       withDelay(
-        250,
-        withTiming(1, { duration: 1700 + (i % 5) * 120, easing: Easing.out(Easing.cubic) }),
+        200 + ANEL,
+        withTiming(1, { duration: 1500 + (i % 5) * 120, easing: Easing.out(Easing.cubic) }),
       ),
     );
   }, [t, i]);
   const st = useAnimatedStyle(() => ({
-    opacity: 1 - t.value * t.value,
+    opacity: t.get() === 0 ? 0 : 0.8 * (1 - t.get() * t.get()),
     transform: [
-      { translateX: Math.cos(ang) * dist * t.value },
-      { translateY: Math.sin(ang) * dist * t.value + 200 * t.value * t.value },
-      { rotate: `${t.value * (360 + i * 40)}deg` },
+      { translateX: Math.cos(ang) * dist * t.get() },
+      { translateY: Math.sin(ang) * dist * t.get() + 120 * t.get() * t.get() },
+      { rotate: `${t.get() * (300 + i * 30)}deg` },
     ],
   }));
   return (
@@ -53,10 +56,10 @@ function Confete({ i, w }: { i: number; w: number }) {
       style={[
         {
           position: "absolute",
-          left: w / 2 - 4,
+          left: w / 2 - 3,
           top: 250,
-          width: 8,
-          height: 14,
+          width: 6,
+          height: 10,
           borderRadius: 2,
           backgroundColor: CORES[i % CORES.length],
         },
@@ -97,6 +100,7 @@ export function MedalCelebration() {
 
   const id = aberta?.[0];
   const m = id ? getMedalha(id) : null;
+  useFolhaAberta(!!m);
   const banho = g?.conquistadas.find((c) => c.id === id)?.banho ?? null;
   const resto = (aberta?.length ?? 1) - 1;
 
@@ -110,33 +114,42 @@ export function MedalCelebration() {
     >
       {m && (
         <View className="flex-1 items-center px-7 pt-24" style={{ backgroundColor: colors.night }}>
-          {!reduce && Array.from({ length: 26 }, (_, i) => <Confete key={i} i={i} w={width} />)}
-          <Animated.Text
-            entering={FadeIn.duration(400)}
-            className="font-body-medium text-[12px] uppercase tracking-wider"
-            style={{ color: colors.turquoise }}
-          >
-            Desbloqueada
-          </Animated.Text>
-          <Animated.View
-            entering={reduce ? undefined : ZoomIn.springify().damping(11).delay(120)}
-            style={{ marginTop: 22 }}
-          >
-            <MedalView id={m.id} size={228} banho={banho} />
-          </Animated.View>
-          <Animated.Text
-            entering={reduce ? undefined : FadeInDown.duration(500).delay(450)}
-            className="mt-6 text-center font-display text-[42px] uppercase leading-[46px] text-paper"
-          >
-            {nomeDa(m, g?.forma ?? 2)}
-          </Animated.Text>
-          <Animated.Text
-            entering={reduce ? undefined : FadeInDown.duration(500).delay(600)}
-            className="mt-3 text-center font-body text-[16px] leading-[23px]"
-            style={{ color: "#C9CDE0" }}
-          >
-            “{m.copy}”
-          </Animated.Text>
+          {!reduce &&
+            Array.from({ length: CONFETES }, (_, i) => (
+              <Confete key={`${m.id}-${i}`} i={i} w={width} />
+            ))}
+          <FadeUp duration={400}>
+            <Text
+              className="font-body-medium text-[12px] uppercase tracking-wider"
+              style={{ color: colors.turquoise }}
+            >
+              Desbloqueada
+            </Text>
+          </FadeUp>
+          <View style={{ marginTop: 22 }}>
+            <AnimatedMedal
+              key={m.id}
+              id={m.id}
+              size={228}
+              banho={banho}
+              reveal
+              delay={200}
+              duration={ANEL}
+            />
+          </View>
+          <FadeUp key={`n-${m.id}`} delay={reduce ? 0 : 600} duration={500}>
+            <Text className="mt-6 text-center font-display text-[42px] uppercase leading-[46px] text-paper">
+              {nomeDa(m, g?.forma ?? 2)}
+            </Text>
+          </FadeUp>
+          <FadeUp key={`c-${m.id}`} delay={reduce ? 0 : 800} duration={500}>
+            <Text
+              className="mt-3 text-center font-body text-[16px] leading-[23px]"
+              style={{ color: "#C9CDE0" }}
+            >
+              “{m.copy}”
+            </Text>
+          </FadeUp>
           {resto > 0 && (
             <Text className="mt-3 text-center font-body text-[13px]" style={{ color: "#8A90AA" }}>
               E mais {resto} nas suas conquistas.

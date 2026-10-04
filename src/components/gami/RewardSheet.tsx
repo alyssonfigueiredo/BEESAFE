@@ -3,7 +3,7 @@ import { Modal, Pressable, Text, View } from "react-native";
 import Animated, {
   FadeInDown,
   SlideInDown,
-  ZoomIn,
+  FadeIn,
   useReducedMotion,
 } from "react-native-reanimated";
 
@@ -65,10 +65,10 @@ export function RewardSheet({
         {g ? (
           <>
             <Animated.View
-              entering={reduce ? undefined : ZoomIn.springify().delay(200)}
+              entering={reduce ? undefined : FadeIn.duration(300)}
               style={{ marginTop: 18 }}
             >
-              <SliceRing lit={g.gomos} size={frase ? 104 : 132} />
+              <SliceRing lit={g.gomos} size={frase ? 104 : 132} animate={!reduce} delay={250} />
             </Animated.View>
             {frase ? (
               <>

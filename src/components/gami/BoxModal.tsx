@@ -2,25 +2,31 @@ import { useEffect, useState } from "react";
 import { Modal, Pressable, Text, View } from "react-native";
 import Animated, {
   Easing,
-  ZoomIn,
   useAnimatedStyle,
   useReducedMotion,
   useSharedValue,
+  withDelay,
   withRepeat,
   withSequence,
   withTiming,
 } from "react-native-reanimated";
 import Svg, { Defs, LinearGradient, Path, Rect, Stop } from "react-native-svg";
 
-import { MedalView } from "@/components/gami/MedalView";
+import { FadeUp } from "@/components/gami/Anim";
+import { AnimatedMedal } from "@/components/gami/MedalView";
 import { useGamification, useOpenBox } from "@/hooks/useGamification";
 import { getMedalha, nomeDa, type Banho } from "@/lib/medals";
 import { colors } from "@/theme/tokens";
+import { useFolhaAberta } from "@/hooks/useDiscovery";
 
 const BANHO: Record<Banho, string> = { neon: "neon", holo: "holográfico", dourado: "dourado" };
 
-/** Caixinha: balança, a tampa sai e aparece um banho surpresa numa medalha que a pessoa já tem. */
+/**
+ * Caixinha: dá uma balançadinha de vez em quando, a tampa sai e o anel da medalha se desenha até
+ * fechar; aí aparece a cor com o banho surpresa (numa medalha que a pessoa já tem). Nada de pulo.
+ */
 export function BoxModal({ visible, onClose }: { visible: boolean; onClose: () => void }) {
+  useFolhaAberta(visible);
   return (
     <Modal
       visible={visible}
@@ -48,9 +54,11 @@ function Caixa({ onClose }: { onClose: () => void }) {
       shake.set(
         withRepeat(
           withSequence(
-            withTiming(-7, { duration: 90 }),
-            withTiming(7, { duration: 90 }),
-            withTiming(0, { duration: 90 }),
+            withTiming(-4, { duration: 110 }),
+            withTiming(4, { duration: 110 }),
+            withTiming(-2, { duration: 110 }),
+            withTiming(0, { duration: 110 }),
+            withDelay(1300, withTiming(0, { duration: 1 })),
           ),
           -1,
         ),
@@ -69,16 +77,16 @@ function Caixa({ onClose }: { onClose: () => void }) {
   }
 
   const boxStyle = useAnimatedStyle(() => ({
-    transform: [{ rotate: `${shake.value}deg` }],
-    opacity: 1 - lid.value,
+    transform: [{ rotate: `${shake.get()}deg` }],
+    opacity: 1 - lid.get(),
   }));
   const lidStyle = useAnimatedStyle(() => ({
     transform: [
-      { translateY: -140 * lid.value },
-      { translateX: 40 * lid.value },
-      { rotate: `${40 * lid.value}deg` },
+      { translateY: -60 * lid.get() },
+      { translateX: 16 * lid.get() },
+      { rotate: `${14 * lid.get()}deg` },
     ],
-    opacity: 1 - lid.value,
+    opacity: 1 - lid.get(),
   }));
   const m = premio ? getMedalha(premio.medalha) : null;
 
@@ -95,9 +103,14 @@ function Caixa({ onClose }: { onClose: () => void }) {
       </Text>
       <View style={{ width: 200, height: 200 }} className="items-center justify-center">
         {premio && m ? (
-          <Animated.View entering={reduce ? undefined : ZoomIn.springify().damping(12)}>
-            <MedalView id={premio.medalha} size={190} banho={premio.banho} />
-          </Animated.View>
+          <AnimatedMedal
+            id={premio.medalha}
+            size={190}
+            banho={premio.banho}
+            reveal
+            delay={100}
+            duration={1100}
+          />
         ) : (
           <>
             <Animated.View style={[{ position: "absolute" }, boxStyle]}>
@@ -129,18 +142,20 @@ function Caixa({ onClose }: { onClose: () => void }) {
           </>
         )}
       </View>
-      <Text className="text-center font-display text-[32px] uppercase text-paper">
-        {premio && m ? `${nomeDa(m, g?.forma ?? 2)} ${BANHO[premio.banho]}` : "Sua caixinha"}
-      </Text>
-      <Text
-        className="text-center font-body text-[15px] leading-[21px]"
-        style={{ color: "#C9CDE0" }}
-      >
-        {erro ??
-          (premio
-            ? "Um acabamento novo numa medalha que você já tem."
-            : "Toque para abrir. O que sai nunca é previsível.")}
-      </Text>
+      <FadeUp key={premio ? "premio" : "caixa"} delay={premio && !reduce ? 1200 : 0}>
+        <Text className="text-center font-display text-[32px] uppercase text-paper">
+          {premio && m ? `${nomeDa(m, g?.forma ?? 2)} ${BANHO[premio.banho]}` : "Sua caixinha"}
+        </Text>
+        <Text
+          className="mt-5 text-center font-body text-[15px] leading-[21px]"
+          style={{ color: "#C9CDE0" }}
+        >
+          {erro ??
+            (premio
+              ? "Um acabamento novo numa medalha que você já tem."
+              : "Toque para abrir. O que sai nunca é previsível.")}
+        </Text>
+      </FadeUp>
       {premio || erro ? (
         <Pressable
           onPress={onClose}

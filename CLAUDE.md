@@ -504,7 +504,18 @@ Nome: **Irisa** (INPI livre; @appirisa livre). Bundle id Android `br.com.irisa.a
   **Medalhas mais difíceis (migration 42, 04/10/2026, decisão dele):** Deu Close = 10 avaliações em 2 semanas;
   Inaugurou = 3 lugares sem nota em 2 semanas; Eu Conheço um Lugar = lugar cadastrado que outra pessoa avaliou;
   Nome na Lista = 6 bairros. Abre-Alas e as outras iguais. Quem já ganhou fica com a medalha. Textos em
-  `src/lib/medals.ts` e `docs/pingentes.js` (chegam no app pelo próximo update). Ao implementar, trocar `subtle` em `src/theme/tokens.js` (o papel #F5F4F1 fica).
+  `src/lib/medals.ts` e `docs/pingentes.js` (chegam no app pelo próximo update).
+  **Protótipo v2 APLICADO no app (04/10/2026, aprovado por ele; só JS, sai por EAS Update para quem tem 0.1.2):**
+  migrations 43 (reações `support_reactions` + `react_support`, a curtida antiga vira "abraco" por trigger;
+  `support_messages.prompt` e `app_settings.pergunta_semana`; `discovery_events`, `discovery_slate`, `discovery_log`,
+  `admin_discovery`; `my_week`, `city_top_places`) e 44 (painel salva a pergunta). App: Mapa novo
+  (`src/components/map/*`; lugares com nota fora dos grupos, de propósito), Apoio novo (`src/components/mural/*`,
+  mural nacional, Anônimo = apelido "Anônimo", "Virar relato" abre `/registrar?texto=`), Início/Perfil/Conquistas
+  (`src/components/gami/Anim.tsx`, `WeekSheet`, `CitySheet`, `FormaCard`, `MedalDetail`; `useForma`, `flexWord`),
+  tour v2 (`Tour.tsx` com alvos `TourTarget`/`useTourTarget`, chave `irisa.tour.v2`), descoberta
+  (`DiscoveryNudge.tsx`, `useDiscovery.ts`; folhas abertas avisam com `useFolhaAberta`), ficha com `?origem=home_discovery&avaliar=1`
+  e RewardSheet com `frase`. `subtle` = #F1F5FA e `border` = #E6ECF3 em tokens.js. Nada disso rodou em aparelho antes do
+  update: lint, typecheck, teste do banco e `expo export` passaram. Ao implementar, trocar `subtle` em `src/theme/tokens.js` (o papel #F5F4F1 fica).
 
 ## Stack
 

@@ -246,7 +246,7 @@ const TINT: Record<string, string> = {
 };
 
 let seq = 0;
-const RING: Record<"padrao" | Banho, string[]> = {
+export const RING: Record<"padrao" | Banho, string[]> = {
   padrao: ["#FF6964", "#FFA353", "#FFD066", "#49DCC0", "#59A7FF", "#A889FF"],
   neon: ["#FF2E88", "#FF6964", "#FFD066", "#2EF2C8", "#59A7FF", "#B46BFF"],
   holo: ["#FFD6E8", "#D6F0FF", "#E7D6FF", "#D6FFEA", "#FFF2C7", "#FFD6E8"],

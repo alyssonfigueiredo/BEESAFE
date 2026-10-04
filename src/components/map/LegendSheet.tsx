@@ -37,7 +37,7 @@ export function LegendSheet({ visible, onClose, types, onToggleType, counts }: P
           right: 0,
           bottom: 0,
           maxHeight: "88%",
-          backgroundColor: "#FBFAF8",
+          backgroundColor: "#FBFCFE",
           borderTopLeftRadius: 34,
           borderTopRightRadius: 34,
         }}

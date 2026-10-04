@@ -7,11 +7,13 @@ import { supabase } from "@/lib/supabase";
 import type { City } from "@/lib/types";
 import { useCity } from "@/providers/CityProvider";
 import { colors, shadow } from "@/theme/tokens";
+import { useFolhaAberta } from "@/hooks/useDiscovery";
 
 export function CityPicker({ tone = "light" }: { tone?: "light" | "dark" } = {}) {
   const cor = tone === "dark" ? colors.paper : colors.turquoiseInk;
   const { city, setCity } = useCity();
   const [open, setOpen] = useState(false);
+  useFolhaAberta(open);
   const [q, setQ] = useState("");
   const term = q.trim();
   const { data: results = [] } = useQuery({

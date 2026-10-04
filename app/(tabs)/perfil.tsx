@@ -9,6 +9,7 @@ import { Alert, Image, Pressable, ScrollView, StyleSheet, Text, View } from "rea
 import { Aurora } from "@/components/Aurora";
 import { Field, FieldShell } from "@/components/Field";
 import { AnelCard, ConquistasCard } from "@/components/gami/ConquistasCard";
+import { FormaCard } from "@/components/gami/FormaCard";
 import { useScreenInsets } from "@/hooks/useScreenInsets";
 import { abrirTour } from "@/hooks/useTour";
 import { CityPicker } from "@/components/CityPicker";
@@ -174,6 +175,8 @@ export default function PerfilScreen() {
             <Text className="font-body-bold text-[15px] text-night">Salvar</Text>
           </Pressable>
         </View>
+
+        <FormaCard />
 
         <View className="rounded-[30px] bg-surface px-6 py-3" style={shadow.card}>
           <ListRow icon={ShieldCheck} color={colors.yellowInk} title="Privacidade">

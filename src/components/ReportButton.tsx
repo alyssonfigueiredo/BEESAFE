@@ -4,6 +4,7 @@ import { Alert, Modal, Pressable, Text, TextInput, View } from "react-native";
 
 import { useReportContent, type ReportTarget } from "@/hooks/useModeration";
 import { colors, shadow } from "@/theme/tokens";
+import { useFolhaAberta } from "@/hooks/useDiscovery";
 
 const REASONS = [
   "Conteúdo falso",
@@ -23,6 +24,7 @@ export function ReportButton({
   compact?: boolean;
 }) {
   const [open, setOpen] = useState(false);
+  useFolhaAberta(open);
   const [reason, setReason] = useState("");
   const report = useReportContent();
 
