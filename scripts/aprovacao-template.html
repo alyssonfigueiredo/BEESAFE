@@ -503,8 +503,13 @@ async function acao(id, qual, btn){
   if(!dbNs) return;
   if(qual==='jaja' && !confirm(AVISO_JAJA)) return;
   if(btn) btn.disabled = true;
-  await gravarAprovacao(id, ACOES[qual]);
-  if(btn) btn.disabled = false;
+  try {
+    await gravarAprovacao(id, ACOES[qual]);
+  } catch(e) {
+    alert('Não consegui gravar. Tenta de novo (conexão pode ter falhado).');
+  } finally {
+    if(btn) btn.disabled = false;
+  }
 }
 async function setPublicado(id, val){
   if(!dbNs) return;
@@ -624,8 +629,8 @@ function renderApprove(){
     }
     vapprove.innerHTML = partes.join('');
   }
-  const ba=document.getElementById('bapprove'); if(ba) ba.onclick=async()=>{ba.disabled=true;await setAprovado(cur.id,true);};
-  const bu=document.getElementById('bundo'); if(bu) bu.onclick=async()=>{bu.disabled=true;await setAprovado(cur.id,false);};
+  const ba=document.getElementById('bapprove'); if(ba) ba.onclick=async()=>{ba.disabled=true;try{await setAprovado(cur.id,true);}catch(e){alert('Não consegui gravar. Tenta de novo (conexão pode ter falhado).');}finally{ba.disabled=false;}};
+  const bu=document.getElementById('bundo'); if(bu) bu.onclick=async()=>{bu.disabled=true;try{await setAprovado(cur.id,false);}catch(e){alert('Não consegui gravar. Tenta de novo (conexão pode ter falhado).');}finally{bu.disabled=false;}};
   vapprove.querySelectorAll('button[data-a]').forEach(b=>{ b.onclick=()=>acao(id, b.dataset.a, b); });
 }
 function renderPublicado(){
@@ -637,8 +642,8 @@ function renderPublicado(){
     : (ja
         ? `<span class="pill-pub">✓ Marcado como publicado</span><button class="btn btn-desfazer" id="bpubundo" type="button">Desfazer</button>`
         : `<button class="btn btn-pub" id="bpub" type="button">Marcar como já publicado</button>`);
-  const bp=document.getElementById('bpub'); if(bp) bp.onclick=async()=>{bp.disabled=true;await setPublicado(cur.id,true);};
-  const bpu=document.getElementById('bpubundo'); if(bpu) bpu.onclick=async()=>{bpu.disabled=true;await setPublicado(cur.id,false);};
+  const bp=document.getElementById('bpub'); if(bp) bp.onclick=async()=>{bp.disabled=true;try{await setPublicado(cur.id,true);}catch(e){alert('Não consegui gravar. Tenta de novo (conexão pode ter falhado).');}finally{bp.disabled=false;}};
+  const bpu=document.getElementById('bpubundo'); if(bpu) bpu.onclick=async()=>{bpu.disabled=true;try{await setPublicado(cur.id,false);}catch(e){alert('Não consegui gravar. Tenta de novo (conexão pode ter falhado).');}finally{bpu.disabled=false;}};
 }
 function fechar(){ov.classList.remove('on');document.body.style.overflow='';vvid.pause();}
 $('vx').onclick=fechar;
@@ -721,7 +726,12 @@ function renderSApprove(){
   sapprove.style.display = arq ? 'none' : '';
   sapprove.textContent = aprovado?'Desfazer':'Aprovar';
   sapprove.className = 'sbtn'+(aprovado?' ok':'');
-  sapprove.onclick = async(e)=>{ e.stopPropagation(); clearTimeout(timer); sapprove.disabled=true; await setAprovado(sc.id,!aprovado); sapprove.disabled=false; timer=setTimeout(proxS,DUR); };
+  sapprove.onclick = async(e)=>{
+    e.stopPropagation(); clearTimeout(timer); sapprove.disabled=true;
+    try { await setAprovado(sc.id,!aprovado); }
+    catch(err) { alert('Não consegui gravar. Tenta de novo (conexão pode ter falhado).'); }
+    finally { sapprove.disabled=false; timer=setTimeout(proxS,DUR); }
+  };
   sjaja.style.display = (arq || ja) ? 'none' : '';
   sjaja.textContent = jaja ? 'Cancelar o já' : 'Publicar agora';
   sjaja.className = 'sbtn'+(jaja?' jaja':'');
@@ -735,7 +745,12 @@ function renderSApprove(){
     spub.style.display='';
     spub.textContent = publicadoState[sc.id] ? 'Desfazer publicado' : 'Marcar publicado';
     spub.className = 'sbtn'+(publicadoState[sc.id]?' ok':'');
-    spub.onclick = async(e)=>{ e.stopPropagation(); clearTimeout(timer); spub.disabled=true; await setPublicado(sc.id,!publicadoState[sc.id]); spub.disabled=false; timer=setTimeout(proxS,DUR); };
+    spub.onclick = async(e)=>{
+      e.stopPropagation(); clearTimeout(timer); spub.disabled=true;
+      try { await setPublicado(sc.id,!publicadoState[sc.id]); }
+      catch(err) { alert('Não consegui gravar. Tenta de novo (conexão pode ter falhado).'); }
+      finally { spub.disabled=false; timer=setTimeout(proxS,DUR); }
+    };
   }
 }
 function proxS(){ if(sd<STORIES.length-1){sd++;sc=STORIES[sd];renderS();} else fecharS(); }
@@ -989,14 +1004,16 @@ function buildListCard(item){
   bapprove.addEventListener('click', async()=>{
     if(!dbNs){ bapprove.textContent='Indisponível aqui'; return; }
     bapprove.disabled=true;
-    await setAprovado(item.id, !aprovadoState[item.id]);
-    bapprove.disabled=false;
+    try { await setAprovado(item.id, !aprovadoState[item.id]); }
+    catch(e) { alert('Não consegui gravar. Tenta de novo (conexão pode ter falhado).'); }
+    finally { bapprove.disabled=false; }
   });
   bpub.addEventListener('click', async()=>{
     if(!dbNs){ bpub.textContent='Indisponível aqui'; return; }
     bpub.disabled=true;
-    await setPublicado(item.id, !publicadoState[item.id]);
-    bpub.disabled=false;
+    try { await setPublicado(item.id, !publicadoState[item.id]); }
+    catch(e) { alert('Não consegui gravar. Tenta de novo (conexão pode ter falhado).'); }
+    finally { bpub.disabled=false; }
   });
   renderApproveL();
   listCardUpdaters[item.id]=renderApproveL;
@@ -1007,8 +1024,10 @@ function buildListCard(item){
     if(!dbNs){ pedTxt.placeholder='Indisponível nesta visualização — me diga direto no chat.'; return; }
     if(!pedTxt.value.trim()){ pedTxt.focus(); return; }
     pedBtn.disabled=true;
-    const ok = await enviarPedido(item.id, pedTxt.value);
-    pedBtn.disabled=false;
+    let ok = false;
+    try { ok = await enviarPedido(item.id, pedTxt.value); }
+    catch(e) { alert('Não consegui gravar. Tenta de novo (conexão pode ter falhado).'); }
+    finally { pedBtn.disabled=false; }
     if(ok){ pedTxt.value=''; pedOk.hidden=false; setTimeout(()=>{pedOk.hidden=true;},5000); }
   });
 
