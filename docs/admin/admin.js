@@ -1491,11 +1491,18 @@ async function viewChaves(ctx) {
     if (!ctx.alive()) return;
     const cfg = Object.fromEntries((status || []).map((s) => [s.name, s.configurado]));
     const iriseAtiva = !!(settings || {}).irise_ativa;
+    const vozExtra = typeof (settings || {}).irise_voz_extra === "string" ? (settings || {}).irise_voz_extra : "";
     box.innerHTML = `
       <form class="card form" id="iriseForm" style="margin-bottom:14px">
         <h2>Botão da Irise no app</h2>
         <p class="small muted">Enquanto desligado, o botão não aparece pra ninguém — o código já está publicado, só escondido. Ligue depois de colar as chaves e testar com calma.</p>
         <label class="check"><input type="checkbox" id="iriseAtiva" ${iriseAtiva ? "checked" : ""}> Mostrar o botão da Irise no app</label>
+      </form>
+      <form class="card form" id="vozForm" style="margin-bottom:14px">
+        <h2>Voz da Irise</h2>
+        <p class="small muted">Texto extra de tom/personalidade, colado depois das regras fixas (nunca inventar lugar, nunca dizer "seguro" etc. continuam protegidas no código). Salva na hora, sem precisar publicar nada no Supabase.</p>
+        <textarea class="input" id="vozExtra" rows="4" placeholder="Ex.: usa mais gíria tal, evita tal expressão…">${esc(vozExtra)}</textarea>
+        <div class="foot"><button class="btn" type="submit">Salvar voz</button></div>
       </form>` + API_KEYS.map((k) => `
       <form class="card form" data-key="${k.name}" style="margin-bottom:14px">
         <h2>${esc(k.label)} <span class="small ${cfg[k.name] ? "ok" : "dim"}">${cfg[k.name] ? "· configurada" : "· não configurada"}</span></h2>
@@ -1517,6 +1524,13 @@ async function viewChaves(ctx) {
       } finally {
         input.disabled = false;
       }
+    });
+    $("#vozForm", box).addEventListener("submit", (ev) => {
+      ev.preventDefault();
+      busy($("button", ev.currentTarget), async () => {
+        await rpc("admin_setting_set", { p_key: "irise_voz_extra", p_value: $("#vozExtra", box).value.trim() });
+        toast("Salvo");
+      });
     });
     $$("form[data-key]", box).forEach((form) => {
       const name = form.dataset.key;

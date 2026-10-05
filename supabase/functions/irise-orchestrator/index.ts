@@ -197,8 +197,13 @@ Deno.serve(async (req) => {
   const db = adminClient();
 
   try {
+    // Texto extra de voz/personalidade, editável no admin sem precisar de deploy (migration 58).
+    const { data: vozRow } = await db.from("app_settings").select("value").eq("key", "irise_voz_extra").maybeSingle();
+    const vozExtra = typeof vozRow?.value === "string" ? vozRow.value.trim() : "";
+    const systemPrompt = vozExtra ? `${SYSTEM_PROMPT}\n\n${vozExtra}` : SYSTEM_PROMPT;
+
     const messages: GroqMessage[] = [
-      { role: "system", content: SYSTEM_PROMPT },
+      { role: "system", content: systemPrompt },
       { role: "user", content: `Cidade da pessoa: ${cidade}. Mensagem: "${texto}"` },
     ];
     const primeira = await chamarGroq(db, messages, true);

@@ -194,10 +194,6 @@ function IriseSheet({
     }
   }
 
-  function addAgain() {
-    push({ kind: "chips", id: uid(), options: [{ label: "Quer procurar outra coisa?", onPick: flowIntro }] });
-  }
-
   // ---------- chips: zero IA, direto no banco ----------
   async function buscarPorChip(categories: PlaceCategory[] | null, semNota: boolean, mensagem: string) {
     await withTyping(async () => {
@@ -212,7 +208,6 @@ function IriseSheet({
         semNota,
       );
     });
-    addAgain();
   }
 
   async function buscarPerto() {
@@ -228,7 +223,6 @@ function IriseSheet({
         false,
       );
     });
-    addAgain();
   }
 
   function mostrarOuVazio(places: OrchestratedPlace[], semNota: boolean) {
@@ -338,7 +332,6 @@ function IriseSheet({
         return;
       }
     });
-    addAgain();
   }
 
   function onOpen() {
