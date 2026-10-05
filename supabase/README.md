@@ -88,6 +88,14 @@ Para promover alguém a moderador: `update public.profiles set role = 'moderator
 
 ## Edge Functions (`functions/`)
 
+**Publicação sozinha (`.github/workflows/functions.yml`):** push em `supabase/functions/**` nas duas
+branches principais publica todas as funções sozinho (`npx supabase functions deploy`), igual às
+migrations. Precisa do secret `SUPABASE_ACCESS_TOKEN` no GitHub (Settings → Secrets and variables →
+Actions): gerar em supabase.com/dashboard → ícone da conta → **Access Tokens** → New token (qualquer
+nome, ex. "GitHub Actions"), colar o valor direto no secret — sem ele, o workflow só avisa e não
+publica nada. Sem esse secret ainda dá pra publicar à mão com `npx supabase functions deploy
+--project-ref ntjirpqulrnieeglpiei` (ou só uma função, com o nome dela antes do `--project-ref`).
+
 Duas funções em Deno, para o que a Apple exige na regra 5.1.1 (revogar o "Entrar com a Apple" ao excluir a conta):
 
 - `apple-token`: o app chama logo depois do login com a Apple, com o `authorizationCode` (vale 5 minutos).
