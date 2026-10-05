@@ -1,6 +1,9 @@
 // Roda import-places-overture.mjs para todos os municípios da região metropolitana de uma capital,
 // um de cada vez (a capital em si já foi importada antes, então não entra na lista).
-// Lista de municípios tirada da API de regiões metropolitanas do IBGE em 01/10/2026.
+// Lista de municípios tirada da API de regiões metropolitanas do IBGE em 01/10/2026 e, desde
+// 05/10/2026, também de leis estaduais/Wikipédia para as RMs de belo-horizonte, fortaleza,
+// brasilia (RIDE-DF), goiania, vitoria, manaus, belem, florianopolis, sao-luis, aracaju, maceio,
+// cuiaba e teresina (RIDE PI+MA) — cada código IBGE confirmado na API oficial, município por nome.
 //
 // Roda na SUA máquina:
 //   set -a && source .env.scripts && set +a
@@ -94,6 +97,95 @@ const REGIOES = {
     [4320008, "Sapucaia do Sul"], [4318408, "São Jerônimo"], [4318705, "São Leopoldo"],
     [4319505, "São Sebastião do Caí"], [4321204, "Taquara"], [4322004, "Triunfo"],
     [4323002, "Viamão"],
+  ],
+  "belo-horizonte": [
+    [3106705, "Betim"], [3118601, "Contagem"], [3129806, "Ibirité"], [3156700, "Sabará"],
+    [3157807, "Santa Luzia"], [3144805, "Nova Lima"], [3154606, "Ribeirão das Neves"],
+    [3171204, "Vespasiano"], [3162955, "São José da Lapa"], [3124104, "Esmeraldas"],
+    [3140704, "Mateus Leme"], [3130101, "Igarapé"], [3136652, "Juatuba"], [3140159, "Mário Campos"],
+    [3165537, "Sarzedo"], [3109006, "Brumadinho"], [3110004, "Caeté"], [3154804, "Rio Acima"],
+    [3153905, "Raposos"], [3136603, "Nova União"], [3134608, "Jaboticatubas"],
+    [3168309, "Taquaraçu de Minas"], [3112505, "Capim Branco"], [3141108, "Matozinhos"],
+    [3149309, "Pedro Leopoldo"], [3117876, "Confins"], [3137601, "Lagoa Santa"], [3105004, "Baldim"],
+    [3163102, "São José da Varginha"], [3132206, "Itaguara"], [3133709, "Itatiaiuçu"],
+    [3126000, "Florestal"], [3155306, "Rio Manso"], [3162922, "São Joaquim de Bicas"],
+  ],
+  fortaleza: [
+    [2301000, "Aquiraz"], [2303501, "Cascavel"], [2303709, "Caucaia"], [2303956, "Chorozinho"],
+    [2304285, "Eusébio"], [2304954, "Guaiúba"], [2305233, "Horizonte"], [2306256, "Itaitinga"],
+    [2307650, "Maracanaú"], [2307700, "Maranguape"], [2309607, "Pacajus"], [2309706, "Pacatuba"],
+    [2310852, "Pindoretama"], [2312403, "São Gonçalo do Amarante"], [2312601, "São Luís do Curu"],
+    [2310258, "Paraipaba"], [2310209, "Paracuru"], [2313500, "Trairi"],
+  ],
+  brasilia: [
+    // RIDE-DF, lado Goiás
+    [5200100, "Abadiânia"], [5200175, "Água Fria de Goiás"], [5200258, "Águas Lindas de Goiás"],
+    [5200308, "Alexânia"], [5204003, "Cabeceiras"], [5205497, "Cidade Ocidental"],
+    [5205513, "Cocalzinho de Goiás"], [5205802, "Corumbá de Goiás"], [5206206, "Cristalina"],
+    [5208004, "Formosa"], [5212501, "Luziânia"], [5213053, "Mimoso de Goiás"],
+    [5215231, "Novo Gama"], [5215603, "Padre Bernardo"], [5217302, "Pirenópolis"],
+    [5217609, "Planaltina"], [5219753, "Santo Antônio do Descoberto"],
+    [5221858, "Valparaíso de Goiás"], [5222203, "Vila Boa"],
+    // RIDE-DF, lado Minas Gerais
+    [3170404, "Unaí"], [3109303, "Buritis"], [3109451, "Cabeceira Grande"],
+  ],
+  goiania: [
+    [5200050, "Abadia de Goiás"], [5201405, "Aparecida de Goiânia"], [5201801, "Aragoiânia"],
+    [5203302, "Bela Vista de Goiás"], [5203559, "Bonfinópolis"], [5203609, "Brazabrantes"],
+    [5204557, "Caldazinha"], [5205208, "Caturaí"], [5208400, "Goianápolis"],
+    [5208806, "Goianira"], [5209200, "Guapó"], [5209705, "Hidrolândia"], [5210000, "Inhumas"],
+    [5214507, "Nerópolis"], [5215009, "Nova Veneza"], [5219100, "Santa Bárbara de Goiás"],
+    [5219738, "Santo Antônio de Goiás"], [5220454, "Senador Canedo"],
+    [5221197, "Terezópolis de Goiás"], [5221403, "Trindade"],
+  ],
+  vitoria: [
+    [3201308, "Cariacica"], [3205002, "Serra"], [3205101, "Viana"], [3205200, "Vila Velha"],
+    [3202405, "Guarapari"], [3202207, "Fundão"],
+  ],
+  manaus: [
+    [1300300, "Autazes"], [1301100, "Careiro"], [1301159, "Careiro da Várzea"],
+    [1301852, "Iranduba"], [1301902, "Itacoatiara"], [1302009, "Itapiranga"],
+    [1302504, "Manacapuru"], [1302553, "Manaquiri"], [1303205, "Novo Airão"],
+    [1303536, "Presidente Figueiredo"], [1303569, "Rio Preto da Eva"], [1304005, "Silves"],
+  ],
+  belem: [
+    [1500800, "Ananindeua"], [1501303, "Barcarena"], [1501501, "Benevides"],
+    [1502400, "Castanhal"], [1504422, "Marituba"], [1506351, "Santa Bárbara do Pará"],
+    [1506500, "Santa Izabel do Pará"],
+  ],
+  florianopolis: [
+    [4200606, "Águas Mornas"], [4201208, "Antônio Carlos"], [4202305, "Biguaçu"],
+    [4211900, "Palhoça"], [4215703, "Santo Amaro da Imperatriz"], [4216602, "São José"],
+    [4217253, "São Pedro de Alcântara"],
+  ],
+  "sao-luis": [
+    [2111201, "São José de Ribamar"], [2107506, "Paço do Lumiar"], [2109452, "Raposa"],
+    [2100204, "Alcântara"], [2101251, "Bacabeira"], [2109601, "Rosário"],
+    [2110203, "Santa Rita"], [2105104, "Icatu"], [2107100, "Morros"],
+    [2109205, "Presidente Juscelino"], [2102374, "Cachoeira Grande"], [2101103, "Axixá"],
+  ],
+  aracaju: [
+    [2800605, "Barra dos Coqueiros"], [2804805, "Nossa Senhora do Socorro"],
+    [2806701, "São Cristóvão"],
+  ],
+  maceio: [
+    [2700409, "Atalaia"], [2700508, "Barra de Santo Antônio"], [2700607, "Barra de São Miguel"],
+    [2702207, "Coqueiro Seco"], [2704708, "Marechal Deodoro"], [2705200, "Messias"],
+    [2705507, "Murici"], [2706448, "Paripueira"], [2706901, "Pilar"], [2707701, "Rio Largo"],
+    [2707909, "Santa Luzia do Norte"], [2708907, "Satuba"],
+  ],
+  cuiaba: [
+    [5108402, "Várzea Grande"], [5106109, "Nossa Senhora do Livramento"],
+    [5107800, "Santo Antônio de Leverger"], [5100102, "Acorizal"],
+    [5103007, "Chapada dos Guimarães"], [5102678, "Campo Verde"],
+  ],
+  teresina: [
+    // RIDE interestadual (PI+MA), LC 112/2001 + Decreto 4.367/2002 — não é RM comum, mas é oficial.
+    [2200400, "Altos"], [2201606, "Beneditinos"], [2202737, "Coivaras"],
+    [2203255, "Curralinhos"], [2203305, "Demerval Lobão"], [2205508, "José de Freitas"],
+    [2205557, "Lagoa Alegre"], [2205581, "Lagoa do Piauí"], [2206308, "Miguel Leão"],
+    [2206407, "Monsenhor Gil"], [2206720, "Nazária"], [2211100, "União"],
+    [2112209, "Timon"], // único município do Maranhão na RIDE
   ],
 };
 
