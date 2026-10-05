@@ -136,12 +136,19 @@ async function rpc(name, args) {
   return data;
 }
 
-// O PostgREST corta toda resposta em 1.000 linhas por padrão, mesmo com limit maior na função —
-// só o .range() muda isso. Usar só nas exportações, que podem passar de 1.000 de propósito.
+// O projeto tem um teto de linhas por resposta no PostgREST (1.000): mesmo pedindo um .range()
+// maior, cada resposta para nesse teto. Busca em páginas de 1.000 até a página vir mais curta
+// (ou bater o "max"). Usar só nas exportações, que podem passar de 1.000 de propósito.
 async function rpcTudo(name, args, max) {
-  const { data, error } = await sb.rpc(name, args).range(0, max - 1);
-  if (error) throw new Error(ptErr(error));
-  return data;
+  const PAGINA = 1000;
+  let tudo = [];
+  for (let offset = 0; offset < max; offset += PAGINA) {
+    const { data, error } = await sb.rpc(name, args).range(offset, offset + PAGINA - 1);
+    if (error) throw new Error(ptErr(error));
+    tudo = tudo.concat(data || []);
+    if (!data || data.length < PAGINA) break;
+  }
+  return tudo;
 }
 
 // ---------------------------------------------------------------- peças de interface
