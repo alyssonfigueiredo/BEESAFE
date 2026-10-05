@@ -462,6 +462,11 @@ Nome: **Irisa** (INPI livre; @appirisa livre). Bundle id Android `br.com.irisa.a
   Login do painel com e-mail/senha ou Google; para o Google funcionar, `https://appirisa.com.br/admin/` tem que estar
   em Supabase → Authentication → URL Configuration → Redirect URLs. O painel é JS puro (`docs/admin/admin.js`),
   sem build; a chave `sb_publishable_` entra pelo `build-site.mjs` igual à da landing.
+  **Apple no painel (05/10/2026):** o botão "Entrar com Apple" dava "Unsupported provider: missing OAuth secret": login
+  da Apple pelo navegador precisa de Services ID + Secret Key no provider Apple da Supabase (o login nativo do app não
+  precisa). Ficou escondido (`APPLE_WEB = false` em `docs/admin/admin.js`) e entrou **"Sem senha? Receber link por
+  e-mail"** (`signInWithOtp`, `shouldCreateUser: false`): conta criada com Apple ou Google entra pelo link, aberto no
+  mesmo navegador (PKCE).
   **Aba ativa quadrada nas pontas (corrigido):** a lente virou camada própria com raio medido (`onLayout`).
   **Ajuste depois do 1º dia (migration 40, 04/10/2026, retorno dele):** o anel enchia rápido demais (com quase todo
   lugar sem nota, cada avaliação valia 2 gomos e o Leandro fechou os 48 no primeiro dia). Agora **cada semana acende no
