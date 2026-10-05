@@ -1114,34 +1114,33 @@ async function viewFotos(ctx) {
 }
 
 // ================================================================ 10. Lugares
-const lugaresState = { cidade: null, busca: "", status: null, offset: 0 };
+const lugaresState = { cidade: null, busca: "", status: null, descricao: null, offset: 0 };
 async function viewLugares(ctx) {
   ctx.el.innerHTML = headHTML("Lugares", "Lugares do mapa. Corrija nome, categoria e ponto, esconda o que não é lugar e suba foto da equipe.", `<button class="btn ghost" id="lExport">Exportar CSV</button><button class="btn ghost" id="lImport">Importar descrições</button><input type="file" id="lImportFile" accept=".csv" hidden><button class="btn" id="lNovo">Novo lugar</button>`) + `
     <div class="toolbar">
-      <div id="lCidade" style="flex:0 1 260px;min-width:200px"></div>
+      <div id="lCidade" style="flex:0 1 240px;min-width:180px"></div>
       <input class="input" type="search" id="lBusca" placeholder="Buscar pelo nome" aria-label="Buscar pelo nome" value="${esc(lugaresState.busca)}">
-      <label class="sr-only" for="lStatus">Status</label>
-      <select class="input" id="lStatus"><option value="">Todos</option><option value="active">No ar</option><option value="hidden">Escondidos</option><option value="removed">Removidos</option></select>
+      <label style="flex:0 0 auto"><span class="sr-only">Status</span><select class="input" id="lStatus"><option value="">Qualquer status</option><option value="active">No ar</option><option value="hidden">Escondidos</option><option value="removed">Removidos</option></select></label>
+      <label style="flex:0 0 auto"><span class="sr-only">Descrição</span><select class="input" id="lDescricao"><option value="">Com ou sem descrição</option><option value="sem">Sem descrição</option><option value="com">Com descrição</option></select></label>
     </div><div id="lbox"></div>`;
   $("#lStatus", ctx.el).value = lugaresState.status || "";
+  $("#lDescricao", ctx.el).value = lugaresState.descricao || "";
   const box = $("#lbox", ctx.el);
   let rows = [], total = 0;
   const reload = () => load(box, async () => {
-    rows = (await rpc("admin_places", { p_cidade: lugaresState.cidade?.id ?? null, p_busca: lugaresState.busca || null, p_status: lugaresState.status, p_limite: PAGE, p_offset: lugaresState.offset })) || [];
+    rows = (await rpc("admin_places", { p_cidade: lugaresState.cidade?.id ?? null, p_busca: lugaresState.busca || null, p_status: lugaresState.status, p_limite: PAGE, p_offset: lugaresState.offset, p_descricao: lugaresState.descricao })) || [];
     if (!ctx.alive()) return;
     total = rows[0]?.total || 0;
     box.innerHTML = rows.length ? `<div class="table-wrap"><table>
-      <thead><tr><th>Foto</th><th>Lugar</th><th>Cidade</th><th class="r">Avaliações</th><th>Nota</th><th>Status</th><th>Verificado</th><th class="r">Relevância</th><th>Entrou</th><th></th></tr></thead>
+      <thead><tr><th>Foto</th><th>Lugar</th><th>Cidade</th><th>Nota</th><th>Descrição</th><th>Status</th><th></th></tr></thead>
       <tbody>${rows.map((p, i) => `<tr class="click" tabindex="0" data-i="${i}">
         <td>${p.foto_url ? `<img class="thumb-sm" src="${esc(p.foto_url)}" alt="" loading="lazy" referrerpolicy="no-referrer">` : `<span class="thumb-sm" aria-hidden="true"></span>`}</td>
-        <td><div class="who">${esc(p.nome)}</div><div class="sub">${esc([CATEGORIA[p.categoria] || p.categoria, p.bairro].filter(Boolean).join(" · "))}</div></td>
+        <td><div class="who">${esc(p.nome)}${p.verificado ? ` <span class="small" style="color:var(--turq-ink)" title="Verificado pela equipe">✓</span>` : ""}</div>
+            <div class="sub">${esc([CATEGORIA[p.categoria] || p.categoria, p.bairro].filter(Boolean).join(" · "))} · entrou ${esc(rel(p.criado_em))}</div></td>
         <td class="nowrap">${esc(p.cidade || "—")}</td>
-        <td class="r num">${num(p.avaliacoes)}</td>
-        <td class="nowrap">${p.nota != null && Number(p.avaliacoes) ? `<strong>${esc(Number(p.nota).toFixed(1))}</strong>` : `<span class="dim">—</span>`}${p.selo ? `<div class="sub">${esc(SELO[p.selo] || p.selo)}</div>` : ""}</td>
+        <td class="nowrap">${p.nota != null && Number(p.avaliacoes) ? `<strong>${esc(Number(p.nota).toFixed(1))}</strong><span class="small dim"> (${num(p.avaliacoes)})</span>` : `<span class="dim">sem nota</span>`}${p.selo ? `<div class="sub">${esc(SELO[p.selo] || p.selo)}</div>` : ""}</td>
+        <td>${p.descricao ? chip("on", "tem") : chip("off", "falta")}</td>
         <td>${statusChip(p.status, false)}</td>
-        <td>${p.verificado ? chip("on", "sim") : `<span class="dim">não</span>`}</td>
-        <td class="r num">${p.relevancia == null ? "—" : num(p.relevancia)}</td>
-        <td class="nowrap">${esc(fmtD(p.criado_em))}</td>
         <td><button class="btn sm ghost" data-edit="${i}">Editar</button></td></tr>`).join("")}</tbody></table></div>${pagerHTML(total, lugaresState.offset)}`
       : `<div class="card empty">Nenhum lugar com esses filtros.</div>`;
     $$("tr[data-i]", box).forEach((tr) => {
@@ -1154,9 +1153,10 @@ async function viewLugares(ctx) {
   cityCombo($("#lCidade", ctx.el), { value: lugaresState.cidade, placeholder: "Filtrar por cidade", onChange: (v) => { lugaresState.cidade = v; lugaresState.offset = 0; reload(); } });
   $("#lBusca", ctx.el).addEventListener("input", debounce((ev) => { lugaresState.busca = ev.target.value.trim(); lugaresState.offset = 0; reload(); }));
   $("#lStatus", ctx.el).addEventListener("change", (ev) => { lugaresState.status = ev.target.value || null; lugaresState.offset = 0; reload(); });
+  $("#lDescricao", ctx.el).addEventListener("change", (ev) => { lugaresState.descricao = ev.target.value || null; lugaresState.offset = 0; reload(); });
   $("#lNovo", ctx.el).addEventListener("click", () => placeEditor(null, reload));
   $("#lExport", ctx.el).addEventListener("click", (ev) => busy(ev.currentTarget, async () => {
-    const todos = (await rpcTudo("admin_places_export", { p_cidade: lugaresState.cidade?.id ?? null, p_busca: lugaresState.busca || null, p_status: lugaresState.status }, 20000)) || [];
+    const todos = (await rpcTudo("admin_places_export", { p_cidade: lugaresState.cidade?.id ?? null, p_busca: lugaresState.busca || null, p_status: lugaresState.status, p_descricao: lugaresState.descricao }, 20000)) || [];
     if (!todos.length) { toast("Nenhum lugar com esses filtros."); return; }
     baixarCSV(`lugares-irisa-${new Date().toISOString().slice(0, 10)}.csv`, [
       { titulo: "Nome", valor: (p) => p.nome },
@@ -1171,6 +1171,7 @@ async function viewLugares(ctx) {
       { titulo: "Avaliações", valor: (p) => p.avaliacoes },
       { titulo: "Nota", valor: (p) => p.nota },
       { titulo: "Selo", valor: (p) => SELO[p.selo] || p.selo },
+      { titulo: "Descrição", valor: (p) => p.descricao },
       { titulo: "Entrou em", valor: (p) => fmtD(p.criado_em) },
     ], todos);
     toast(`${todos.length} lugares exportados.`);
@@ -1209,6 +1210,7 @@ function placeEditor(p, reload) {
         <label class="f">Status <select class="input" name="status"><option value="active">No ar</option><option value="hidden">Escondido</option><option value="removed">Removido</option></select></label>
       </div>
       <label class="f">Endereço <span class="hint">texto que aparece na ficha</span><input class="input" name="endereco" maxlength="200" value="${esc(p.endereco || "")}"></label>
+      <label class="f">Descrição <span class="hint">resumo curto na ficha do lugar, até 600 letras</span><textarea class="input" name="descricao" rows="3" maxlength="600">${esc(p.descricao || "")}</textarea></label>
       <div class="row">
         <label class="f">Latitude <input class="input" name="lat" inputmode="decimal" required value="${esc(p.lat ?? "")}" placeholder="-25.4284"></label>
         <label class="f">Longitude <input class="input" name="lng" inputmode="decimal" required value="${esc(p.lng ?? "")}" placeholder="-49.2733"></label>
@@ -1286,6 +1288,7 @@ function placeEditor(p, reload) {
       const id = await rpc("admin_place_save", {
         p_id: p.id, p_nome: nome, p_categoria: f.categoria.value, p_endereco: f.endereco.value.trim() || null,
         p_lat: lat, p_lng: lng, p_status: f.status.value, p_verificado: f.verificado.checked,
+        p_descricao: f.descricao.value.trim() || null,
       });
       mudou = true;
       toast("Salvo");
