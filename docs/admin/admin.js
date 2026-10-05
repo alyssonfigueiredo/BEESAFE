@@ -167,6 +167,26 @@ async function busy(btn, fn) {
   }
 }
 
+// CSV com BOM (Excel abre acentuado certo) e aspas escapadas; baixa na hora, sem passar por servidor.
+function campoCSV(v) {
+  if (v == null) return "";
+  const s = String(v);
+  return /[",\n;]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s;
+}
+function baixarCSV(nomeArquivo, colunas, linhas) {
+  const corpo = [colunas.map((c) => campoCSV(c.titulo)).join(";")]
+    .concat(linhas.map((l) => colunas.map((c) => campoCSV(c.valor(l))).join(";")))
+    .join("\r\n");
+  const blob = new Blob(["﻿" + corpo], { type: "text/csv;charset=utf-8;" });
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = nomeArquivo;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+}
+
 // Diálogos: cada um é um <dialog> novo, então dá para abrir uma confirmação por cima de um formulário.
 function openDialog(html, { wide = false, onClose } = {}) {
   const d = document.createElement("dialog");
@@ -305,6 +325,7 @@ const ROUTES = {
   lugares: { title: "Lugares", group: "Conteúdo", render: viewLugares },
   servicos: { title: "Serviços de apoio", admin: true, group: "Conteúdo", render: viewServicos },
   config: { title: "Configurações", admin: true, group: "Ajustes", render: viewConfig },
+  chaves: { title: "Chaves de API", admin: true, group: "Ajustes", render: viewChaves },
 };
 const canSee = (key) => !!ROUTES[key] && (!ROUTES[key].admin || me.role === "admin");
 const homeRoute = () => (me.role === "admin" ? "visao" : "denuncias");
@@ -1057,7 +1078,7 @@ async function viewFotos(ctx) {
 // ================================================================ 10. Lugares
 const lugaresState = { cidade: null, busca: "", status: null, offset: 0 };
 async function viewLugares(ctx) {
-  ctx.el.innerHTML = headHTML("Lugares", "Lugares do mapa. Corrija nome, categoria e ponto, esconda o que não é lugar e suba foto da equipe.", `<button class="btn" id="lNovo">Novo lugar</button>`) + `
+  ctx.el.innerHTML = headHTML("Lugares", "Lugares do mapa. Corrija nome, categoria e ponto, esconda o que não é lugar e suba foto da equipe.", `<button class="btn ghost" id="lExport">Exportar CSV</button><button class="btn" id="lNovo">Novo lugar</button>`) + `
     <div class="toolbar">
       <div id="lCidade" style="flex:0 1 260px;min-width:200px"></div>
       <input class="input" type="search" id="lBusca" placeholder="Buscar pelo nome" aria-label="Buscar pelo nome" value="${esc(lugaresState.busca)}">
@@ -1096,6 +1117,26 @@ async function viewLugares(ctx) {
   $("#lBusca", ctx.el).addEventListener("input", debounce((ev) => { lugaresState.busca = ev.target.value.trim(); lugaresState.offset = 0; reload(); }));
   $("#lStatus", ctx.el).addEventListener("change", (ev) => { lugaresState.status = ev.target.value || null; lugaresState.offset = 0; reload(); });
   $("#lNovo", ctx.el).addEventListener("click", () => placeEditor(null, reload));
+  $("#lExport", ctx.el).addEventListener("click", (ev) => busy(ev.currentTarget, async () => {
+    const todos = (await rpc("admin_places_export", { p_cidade: lugaresState.cidade?.id ?? null, p_busca: lugaresState.busca || null, p_status: lugaresState.status })) || [];
+    if (!todos.length) { toast("Nenhum lugar com esses filtros."); return; }
+    baixarCSV(`lugares-irisa-${new Date().toISOString().slice(0, 10)}.csv`, [
+      { titulo: "Nome", valor: (p) => p.nome },
+      { titulo: "Categoria", valor: (p) => CATEGORIA[p.categoria] || p.categoria },
+      { titulo: "Endereço", valor: (p) => p.endereco },
+      { titulo: "Cidade", valor: (p) => p.cidade },
+      { titulo: "Bairro", valor: (p) => p.bairro },
+      { titulo: "Latitude", valor: (p) => p.lat },
+      { titulo: "Longitude", valor: (p) => p.lng },
+      { titulo: "Status", valor: (p) => p.status },
+      { titulo: "Verificado", valor: (p) => (p.verificado ? "sim" : "não") },
+      { titulo: "Avaliações", valor: (p) => p.avaliacoes },
+      { titulo: "Nota", valor: (p) => p.nota },
+      { titulo: "Selo", valor: (p) => SELO[p.selo] || p.selo },
+      { titulo: "Entrou em", valor: (p) => fmtD(p.criado_em) },
+    ], todos);
+    toast(`${todos.length} lugares exportados.`);
+  }));
   await reload();
 }
 
@@ -1432,6 +1473,79 @@ async function viewConfig(ctx) {
       $("#aaData", box).value = "";
       aaEstado();
       saveAbre(ev.currentTarget, null);
+    });
+  }, ctx);
+}
+
+// ================================================================ 13. Chaves de API
+const API_KEYS = [
+  { name: "GROQ_API_KEY", label: "Groq", hint: "Conversa e decisão da Irise. console.groq.com → API Keys (grátis)." },
+  { name: "GEMINI_API_KEY", label: "Gemini", hint: "Ranqueia e explica os lugares achados. aistudio.google.com (grátis)." },
+];
+
+async function viewChaves(ctx) {
+  ctx.el.innerHTML = headHTML("Chaves de API", "Cole aqui em vez de mexer no painel do Supabase. A chave fica criptografada — nem o painel consegue mostrar de volta, só sobrescrever.") + `<div id="kbox"></div>`;
+  const box = $("#kbox", ctx.el);
+  await load(box, async () => {
+    const [status, settings] = await Promise.all([rpc("admin_api_keys_status"), rpc("admin_settings")]);
+    if (!ctx.alive()) return;
+    const cfg = Object.fromEntries((status || []).map((s) => [s.name, s.configurado]));
+    const iriseAtiva = !!(settings || {}).irise_ativa;
+    const vozExtra = typeof (settings || {}).irise_voz_extra === "string" ? (settings || {}).irise_voz_extra : "";
+    box.innerHTML = `
+      <form class="card form" id="iriseForm" style="margin-bottom:14px">
+        <h2>Botão da Irise no app</h2>
+        <p class="small muted">Enquanto desligado, o botão não aparece pra ninguém — o código já está publicado, só escondido. Ligue depois de colar as chaves e testar com calma.</p>
+        <label class="check"><input type="checkbox" id="iriseAtiva" ${iriseAtiva ? "checked" : ""}> Mostrar o botão da Irise no app</label>
+      </form>
+      <form class="card form" id="vozForm" style="margin-bottom:14px">
+        <h2>Voz da Irise</h2>
+        <p class="small muted">Texto extra de tom/personalidade, colado depois das regras fixas (nunca inventar lugar, nunca dizer "seguro" etc. continuam protegidas no código). Salva na hora, sem precisar publicar nada no Supabase.</p>
+        <textarea class="input" id="vozExtra" rows="4" placeholder="Ex.: usa mais gíria tal, evita tal expressão…">${esc(vozExtra)}</textarea>
+        <div class="foot"><button class="btn" type="submit">Salvar voz</button></div>
+      </form>` + API_KEYS.map((k) => `
+      <form class="card form" data-key="${k.name}" style="margin-bottom:14px">
+        <h2>${esc(k.label)} <span class="small ${cfg[k.name] ? "ok" : "dim"}">${cfg[k.name] ? "· configurada" : "· não configurada"}</span></h2>
+        <p class="small muted">${esc(k.hint)}</p>
+        <div class="row">
+          <input class="input" type="password" autocomplete="off" placeholder="Colar a chave aqui" style="flex:1">
+          <button class="btn" type="submit">Salvar</button>
+        </div>
+      </form>`).join("");
+    $("#iriseAtiva", box).addEventListener("change", async (ev) => {
+      const input = ev.currentTarget;
+      input.disabled = true;
+      try {
+        await rpc("admin_setting_set", { p_key: "irise_ativa", p_value: input.checked });
+        toast("Salvo");
+      } catch (e) {
+        input.checked = !input.checked;
+        toast(ptErr(e), true);
+      } finally {
+        input.disabled = false;
+      }
+    });
+    $("#vozForm", box).addEventListener("submit", (ev) => {
+      ev.preventDefault();
+      busy($("button", ev.currentTarget), async () => {
+        await rpc("admin_setting_set", { p_key: "irise_voz_extra", p_value: $("#vozExtra", box).value.trim() });
+        toast("Salvo");
+      });
+    });
+    $$("form[data-key]", box).forEach((form) => {
+      const name = form.dataset.key;
+      form.addEventListener("submit", (ev) => {
+        ev.preventDefault();
+        const input = $("input", form);
+        const btn = $("button", form);
+        busy(btn, async () => {
+          await rpc("admin_set_api_key", { p_name: name, p_value: input.value });
+          input.value = "";
+          $("h2 .small", form).textContent = "· configurada";
+          $("h2 .small", form).className = "small ok";
+          toast("Salvo");
+        });
+      });
     });
   }, ctx);
 }

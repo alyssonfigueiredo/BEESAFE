@@ -8,6 +8,7 @@ import { Chip } from "@/components/Chip";
 import { CityPicker } from "@/components/CityPicker";
 import { DangerRanking } from "@/components/DangerRanking";
 import { AvisoCard, GamiHomeCards } from "@/components/gami/HomeCards";
+import { IriseFab } from "@/components/irise/Irise";
 import { Mark } from "@/components/Mark";
 import { OccurrenceCard } from "@/components/OccurrenceCard";
 import { PlaceCard } from "@/components/PlaceCard";
@@ -16,7 +17,7 @@ import { SearchField } from "@/components/SearchField";
 import { StatCard } from "@/components/StatCard";
 import { TourTarget } from "@/components/Tour";
 import { useCityStats } from "@/hooks/useCityStats";
-import { useGamification } from "@/hooks/useGamification";
+import { useAppConfig, useGamification } from "@/hooks/useGamification";
 import { useAreaRisk, useOccurrences } from "@/hooks/useOccurrences";
 import { usePlaces, useSearchPlaces, useWelcoming } from "@/hooks/usePlaces";
 import { useScreenInsets } from "@/hooks/useScreenInsets";
@@ -46,6 +47,7 @@ export default function HomeScreen() {
   // Tour: rola o Início até os alvos; os cartões da gamificação só viram alvo quando aparecem.
   const { anexar: prenderRolagem, onScroll: aoRolar } = useTourScroll();
   const { data: gami } = useGamification();
+  const { data: cfg } = useAppConfig();
 
   // O ranking só aceita lugar com RATING_MIN avaliações, e nos primeiros meses isso é ninguém.
   // Até lá mostra quem já recebeu alguma nota: a seção precisa provar que o app está vivo.
@@ -282,6 +284,9 @@ export default function HomeScreen() {
 
         <DangerRanking items={ranking} title="Bairros com mais relatos" />
       </ScrollView>
+      {cfg?.irise_ativa && (
+        <IriseFab cityId={city?.id} cityName={city?.name} userLocation={userLocation} />
+      )}
     </View>
   );
 }

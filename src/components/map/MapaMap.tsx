@@ -47,8 +47,9 @@ const ME = "#3B82F6";
 const DOT = "#8E93A5";
 
 /**
- * Mapa da aba Mapa. O lugar recebe cor, a rua recebe aviso: lugar com nota é pino branco com o
- * número; sem nota, ponto cinza discreto; muitos juntos viram um círculo com a contagem. Relato
+ * Mapa da aba Mapa. O lugar recebe cor, a rua recebe aviso: lugar com nota é um ponto todo na
+ * cor da nota (sem número — isso fica pra ficha e pro cartão); sem nota, ponto cinza discreto;
+ * muitos juntos viram um círculo com "+contagem". Relato
  * é sempre mancha coral de ~100 m com contorno tracejado, nunca pino — a violência é da rua,
  * não do bar que está perto.
  */
@@ -250,7 +251,8 @@ export function MapaMap({
         />
       </GeoJSONSource>
 
-      {/* Lugares sem nota: agrupados. O grupo é um círculo branco com a contagem e um anel fino. */}
+      {/* Lugares sem nota: agrupados. O grupo é cinza (igual ao ponto solto) — nunca branco/roxo,
+          porque cinza aqui significa "sem avaliação", não uma categoria com cor própria. */}
       <GeoJSONSource
         id="mapa-places"
         ref={clusterRef}
@@ -278,12 +280,12 @@ export function MapaMap({
           type="circle"
           filter={["has", "point_count"]}
           paint={{
-            "circle-color": "#FFFFFF",
-            "circle-opacity": on,
+            "circle-color": DOT,
+            "circle-opacity": 0.5 * on,
             "circle-opacity-transition": fade(250),
             "circle-radius": ["step", ["get", "point_count"], 18, 10, 21, 50, 24, 200, 27],
-            "circle-stroke-color": colors.lilac,
-            "circle-stroke-width": 2.5 * on,
+            "circle-stroke-color": DOT,
+            "circle-stroke-width": 2 * on,
             "circle-stroke-width-transition": fade(400),
             "circle-stroke-opacity": 0.9,
           }}
@@ -293,9 +295,11 @@ export function MapaMap({
           type="symbol"
           filter={["has", "point_count"]}
           layout={{
-            "text-field": ["get", "point_count_abbreviated"],
+            // "+23", nunca só "23": uma nota nunca começa com "+", então não há como confundir
+            // contagem de grupo com nota de lugar (migration de UI, 04/10/2026).
+            "text-field": ["concat", "+", ["get", "point_count_abbreviated"]],
             "text-font": FONT_BOLD,
-            "text-size": 13,
+            "text-size": 12,
             "text-allow-overlap": true,
             "text-ignore-placement": true,
           }}
@@ -330,7 +334,9 @@ export function MapaMap({
         />
       </GeoJSONSource>
 
-      {/* Lugares com nota: sempre à vista, pino branco com o número e anel na cor da nota. */}
+      {/* Lugares com nota: sempre à vista, ponto todo na cor da nota — sem número, pra nunca
+          parecer a contagem do agrupamento (pedido do Leandro, 04/10/2026; a nota em si segue
+          na ficha do lugar e no cartão da lista). Selecionado vira tinta escura. */}
       <GeoJSONSource id="mapa-rated" data={rated} onPress={handlePlace}>
         <Layer
           id="mapa-pin-shadow"
@@ -348,32 +354,16 @@ export function MapaMap({
           id="mapa-pin"
           type="circle"
           paint={{
-            "circle-color": ["case", isSel, colors.night, "#FFFFFF"],
+            "circle-color": ["case", isSel, colors.night, ["get", "color"]],
             "circle-color-transition": { duration: reduce ? 0 : 250, delay: 0 },
             "circle-opacity": on,
             "circle-opacity-transition": fade(600),
             "circle-radius": ["case", isSel, 19, 16],
             "circle-radius-transition": { duration: reduce ? 0 : 250, delay: 0 },
-            "circle-stroke-color": ["get", "color"],
+            "circle-stroke-color": "#FFFFFF",
             "circle-stroke-width": 3,
             "circle-stroke-opacity": on,
             "circle-stroke-opacity-transition": fade(600),
-          }}
-        />
-        <Layer
-          id="mapa-pin-label"
-          type="symbol"
-          layout={{
-            "text-field": ["get", "label"],
-            "text-font": FONT_BOLD,
-            "text-size": 12.5,
-            "text-allow-overlap": true,
-            "text-ignore-placement": true,
-          }}
-          paint={{
-            "text-color": ["case", isSel, "#FFFFFF", colors.ink],
-            "text-opacity": on,
-            "text-opacity-transition": fade(650),
           }}
         />
       </GeoJSONSource>

@@ -5,6 +5,7 @@ import {
   Ban,
   Camera,
   Compass,
+  Heart,
   LogOut,
   Trash2,
   MapPin,
@@ -234,6 +235,15 @@ export default function PerfilScreen() {
                 </View>
               ))
             )}
+          </ListRow>
+          <ListRow icon={Heart} color={colors.coralInk} title="Pílula de acolhimento">
+            <Link href="/pilulas" asChild>
+              <Pressable hitSlop={8}>
+                <Text className="font-body-bold text-[13px] text-turquoiseInk">
+                  Receber uma frase
+                </Text>
+              </Pressable>
+            </Link>
           </ListRow>
           <ListRow icon={Compass} color={colors.turquoiseInk} title="Como a Irisa funciona" last>
             <Pressable onPress={abrirTour} hitSlop={8}>

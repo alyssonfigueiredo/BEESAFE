@@ -18,6 +18,7 @@ export function PlaceCard({
   verified,
   distance,
   index,
+  onPress,
 }: {
   place: WelcomingPlace;
   verified?: boolean;
@@ -25,6 +26,8 @@ export function PlaceCard({
   distance?: number | null;
   /** Posição na lista: os cartões entram um atrás do outro. */
   index?: number;
+  /** Roda antes de navegar — ex.: fechar um modal que está por cima da tela do lugar. */
+  onPress?: () => void;
 }) {
   const onde = [place.neighborhood, distance != null ? formatDistance(distance) : null]
     .filter(Boolean)
@@ -39,7 +42,7 @@ export function PlaceCard({
 
   return (
     <Animated.View entering={FadeInDown.duration(450).delay(Math.min(index ?? 0, 9) * 55)}>
-      <Link href={{ pathname: "/lugar/[id]", params: { id: place.id } }} asChild>
+      <Link href={{ pathname: "/lugar/[id]", params: { id: place.id } }} onPress={onPress} asChild>
         <Pressable
           className="flex-row gap-3 rounded-3xl bg-surface p-3 active:opacity-80"
           style={shadow.card}

@@ -32,3 +32,15 @@ export function json(status: number, body: unknown): Response {
 export function hasAppleIdentity(user: User): boolean {
   return (user.identities ?? []).some((i) => i.provider === "apple");
 }
+
+/**
+ * Chave de API de terceiro (Groq, Gemini, Hugging Face…): primeiro tenta o secret da própria
+ * função (Supabase → Edge Functions → Secrets), senão cai na que o painel admin gravou no Vault
+ * (migration 54, admin_set_api_key) — assim dá pra configurar sem mexer no dashboard.
+ */
+export async function getApiKey(db: ReturnType<typeof adminClient>, name: string): Promise<string | null> {
+  const direto = Deno.env.get(name);
+  if (direto) return direto;
+  const { data } = await db.rpc("get_secret_for_function", { p_name: name });
+  return (data as string | null) ?? null;
+}
