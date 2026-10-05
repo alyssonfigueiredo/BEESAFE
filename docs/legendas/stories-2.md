@@ -39,8 +39,13 @@ quiser puxar mais resposta pode comentar no post do dia com a mesma pergunta. **
 cortada**: cedeu o horário de domingo (eleição) pra story-05 e foi remarcada pra terça 06/10.
 
 ## 4 · `stories-2/04.png` (três coisas que o app não pede) — seg 05/10, 12h
-Título: "Três coisas que o app não pede" (foto, nome, CPF/telefone). Fecha com "Sem nome. Sem
-perfil. Sem rastro." Antes fechava com adesivo de link (dashed box "adesivo de link aqui");
-trocado pelo fecho de bio já usado no restante da campanha — "toque no link" / "O link está
-na bio" / @appirisa — que é texto fixo na própria arte, não depende de colar nada depois de
-publicar.
+Título: "Três coisas que o app não pede" (localização exata, autor do relato, CPF/telefone).
+Fecha com "Sem nome. Sem perfil. Sem rastro." Antes fechava com adesivo de link (dashed box
+"adesivo de link aqui"); trocado pelo fecho de bio já usado no restante da campanha — "toque
+no link" / "O link está na bio" / @appirisa — que é texto fixo na própria arte, não depende
+de colar nada depois de publicar.
+**Corrigido em 05/10/2026:** a lâmina original dizia "Sua foto — não tem perfil, não tem onde
+colocar" e "Seu nome — relato e avaliação saem sem autor". As duas ficaram falsas com a
+gamificação (foto de perfil existe) e o mural (apelido aparece por padrão; anônimo é opção).
+Troquei "foto" por "localização exata" (o app nunca mostra o ponto, só a área) e "seu nome"
+por "quem fez o relato" (isso continua 100% anônimo, sempre).
