@@ -187,6 +187,29 @@ function baixarCSV(nomeArquivo, colunas, linhas) {
   setTimeout(() => URL.revokeObjectURL(a.href), 1000);
 }
 
+// Lê CSV ; com campos entre aspas (o par da campoCSV acima). Primeira linha = cabeçalho.
+function lerCSV(texto) {
+  const linhas = texto.replace(/^﻿/, "").split(/\r\n|\n/).filter((l) => l.length);
+  const parseLinha = (linha) => {
+    const campos = [];
+    let atual = "", aspas = false;
+    for (let i = 0; i < linha.length; i++) {
+      const c = linha[i];
+      if (aspas) {
+        if (c === '"' && linha[i + 1] === '"') { atual += '"'; i++; }
+        else if (c === '"') aspas = false;
+        else atual += c;
+      } else if (c === '"') aspas = true;
+      else if (c === ";") { campos.push(atual); atual = ""; }
+      else atual += c;
+    }
+    campos.push(atual);
+    return campos;
+  };
+  const [cabecalho, ...resto] = linhas.map(parseLinha);
+  return resto.map((campos) => Object.fromEntries(cabecalho.map((h, i) => [h.trim(), campos[i] ?? ""])));
+}
+
 // Diálogos: cada um é um <dialog> novo, então dá para abrir uma confirmação por cima de um formulário.
 function openDialog(html, { wide = false, onClose } = {}) {
   const d = document.createElement("dialog");
@@ -1078,7 +1101,7 @@ async function viewFotos(ctx) {
 // ================================================================ 10. Lugares
 const lugaresState = { cidade: null, busca: "", status: null, offset: 0 };
 async function viewLugares(ctx) {
-  ctx.el.innerHTML = headHTML("Lugares", "Lugares do mapa. Corrija nome, categoria e ponto, esconda o que não é lugar e suba foto da equipe.", `<button class="btn ghost" id="lExport">Exportar CSV</button><button class="btn" id="lNovo">Novo lugar</button>`) + `
+  ctx.el.innerHTML = headHTML("Lugares", "Lugares do mapa. Corrija nome, categoria e ponto, esconda o que não é lugar e suba foto da equipe.", `<button class="btn ghost" id="lExport">Exportar CSV</button><button class="btn ghost" id="lImport">Importar descrições</button><input type="file" id="lImportFile" accept=".csv" hidden><button class="btn" id="lNovo">Novo lugar</button>`) + `
     <div class="toolbar">
       <div id="lCidade" style="flex:0 1 260px;min-width:200px"></div>
       <input class="input" type="search" id="lBusca" placeholder="Buscar pelo nome" aria-label="Buscar pelo nome" value="${esc(lugaresState.busca)}">
@@ -1137,6 +1160,23 @@ async function viewLugares(ctx) {
     ], todos);
     toast(`${todos.length} lugares exportados.`);
   }));
+  $("#lImport", ctx.el).addEventListener("click", () => $("#lImportFile", ctx.el).click());
+  $("#lImportFile", ctx.el).addEventListener("change", (ev) => {
+    const file = ev.currentTarget.files[0];
+    ev.currentTarget.value = "";
+    if (!file) return;
+    busy($("#lImport", ctx.el), async () => {
+      const texto = await file.text();
+      const linhas = lerCSV(texto);
+      const itens = linhas
+        .map((l) => ({ lat: parseFloat(l.lat ?? l.Latitude), lng: parseFloat(l.lng ?? l.Longitude), descricao: l.descricao ?? l.Descrição ?? l.Descricao }))
+        .filter((l) => isFinite(l.lat) && isFinite(l.lng) && l.descricao);
+      if (!itens.length) throw new Error('CSV sem colunas "lat", "lng" e "descricao" reconhecíveis.');
+      const n = await rpc("admin_import_place_descriptions", { p_items: itens });
+      toast(`${n} de ${itens.length} linhas encontraram o lugar e entraram (lugar sem description vazia e a até ~10 m do ponto do CSV).`);
+      reload();
+    });
+  });
   await reload();
 }
 
