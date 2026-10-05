@@ -326,8 +326,11 @@ function IriseSheet({
         });
         if (message) addBubble(message);
         if (places) mostrarOuVazio(places, false);
-      } catch {
-        addBubble("Não consegui pensar nisso agora — escolhe um dos botões abaixo. ✨");
+      } catch (err) {
+        // Mensagem técnica à vista de propósito (nada sensível passa por aqui — nunca a chave em
+        // si): sem acesso ao log do Supabase, é o único jeito de saber o que quebrou.
+        const detalhe = err instanceof Error ? err.message : String(err);
+        addBubble(`Não consegui pensar nisso agora — escolhe um dos botões abaixo. ✨\n\n(${detalhe})`);
         flowIntro();
         return;
       }
