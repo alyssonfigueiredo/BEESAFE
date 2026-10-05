@@ -16,8 +16,10 @@
 // ordem que o banco já devolve, só sem o "porquê" por lugar).
 import { adminClient, getApiKey, json, userFromRequest } from "../_shared/supabase.ts";
 
-const GROQ_MODEL = Deno.env.get("GROQ_MODEL") ?? "llama-3.3-70b-versatile";
-const GEMINI_MODEL = Deno.env.get("GEMINI_MODEL") ?? "gemini-1.5-flash";
+// llama-3.3-70b-versatile (Groq) e gemini-1.5-flash foram aposentados pelos provedores em 2026
+// — troca pra cá quando acontecer de novo, sem mexer no resto da função.
+const GROQ_MODEL = Deno.env.get("GROQ_MODEL") ?? "openai/gpt-oss-120b";
+const GEMINI_MODEL = Deno.env.get("GEMINI_MODEL") ?? "gemini-2.5-flash";
 
 const CATEGORIAS = ["bar", "restaurante", "balada", "cafe", "hotel"] as const;
 type Categoria = (typeof CATEGORIAS)[number];
