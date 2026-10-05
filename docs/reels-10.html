@@ -76,7 +76,11 @@ body{display:flex;align-items:center;justify-content:center;height:100vh;font-fa
 #blackout .glow{position:absolute;inset:0;background:radial-gradient(38% 30% at 50% 46%,rgba(255,255,255,.14),transparent 70%)}
 #cometwrap{position:relative;width:520px;height:520px}
 #cometwrap svg{position:absolute;inset:0;overflow:visible}
-#comethead{offset-path:path("M260,30 A230,230 0 1,1 259,30Z");offset-rotate:0deg;position:absolute;width:18px;height:18px;border-radius:50%;background:#fff;box-shadow:0 0 24px 10px #fff,0 0 50px 20px rgba(255,214,102,.8)}
+#comethead{offset-path:path("M260,30 A230,230 0 1,1 259,30Z");offset-rotate:0deg;position:absolute;width:34px;height:34px;margin:-17px 0 0 -17px}
+.cometflare{position:absolute;inset:0}
+.gomo{position:absolute;width:13px;height:13px;border-radius:50%;margin:-6.5px 0 0 -6.5px;opacity:0;box-shadow:0 0 14px 5px currentColor}
+.star{position:absolute;border-radius:50%;background:#fff;opacity:0;z-index:7}
+@keyframes tw{0%,100%{opacity:.25}50%{opacity:.9}}
 </style>
 </head>
 <body><div id="stage">
@@ -133,7 +137,7 @@ body{display:flex;align-items:center;justify-content:center;height:100vh;font-fa
         <circle cx="260" cy="260" r="230" fill="none" stroke="url(#cometgrad)" stroke-width="5" stroke-linecap="round"
           stroke-dasharray="1445.7" stroke-dashoffset="1445.7" id="cometpath" transform="rotate(-90 260 260)" opacity=".9"/>
       </svg>
-      <div id="comethead"></div>
+      <div id="comethead"><svg viewBox="0 0 20 20" style="width:100%;height:100%;filter:drop-shadow(0 0 10px #fff) drop-shadow(0 0 22px #FFD066)"><path d="M10 0Q10 10 20 10Q10 10 10 20Q10 10 0 10Q10 10 10 0Z" fill="#FFFDF8"/></svg></div>
       <svg id="markbig" style="position:absolute;inset:0;margin:auto;width:220px;height:220px;opacity:0" viewBox="0 0 100 100"><use href="#radarmark"></use></svg>
     </div>
     <div style="display:flex;align-items:center;gap:16px;margin-top:20px;font-family:var(--wordmark);font-weight:500;text-transform:uppercase;letter-spacing:.2em;font-size:64px;color:#FFFDF8;opacity:0" id="wmk"><span>IRIS<b style="color:var(--amber)">a</b></span></div>
@@ -213,13 +217,48 @@ A($("#brand"),[{opacity:1},{opacity:0}],14600,600,"linear");
 
 // 7) cometa traçando o anel de faíscas, depois vira a marca
 scene("#s5",15700,TOTAL+1000);
-const RAIO=230, CIRC=2*Math.PI*RAIO;
-A($("#cometpath"),[{strokeDashoffset:CIRC},{strokeDashoffset:0}],16500,2600,"linear");
-A($("#comethead"),[{offsetDistance:"0%",opacity:1},{offsetDistance:"100%",opacity:1}],16500,2600,"linear");
-A($("#comethead"),[{opacity:0},{opacity:1}],16500,200,"linear");
-A($("#comethead"),[{opacity:1},{opacity:0}],18900,300,"linear");
-A($("#cometpath"),[{opacity:.9},{opacity:0}],18900,500,"linear");
-A($("#markbig"),[{opacity:0,transform:"scale(.3) rotate(-24deg)",filter:"blur(8px)"},{opacity:1,transform:"scale(1.1) rotate(3deg)",filter:"blur(0)",offset:.72},{opacity:1,transform:"scale(1) rotate(0)"}],19000,750,ELASTIC);
+
+// estrelinhas espalhadas no fundo escuro, piscando — aparecem já com o fade pro preto
+let ss=7;const sr=()=>(ss=ss*48271%2147483647)/2147483647;
+for(let i=0;i<26;i++){
+  const st=document.createElement("div");st.className="star";
+  const size=2+sr()*3.2;
+  Object.assign(st.style,{left:(sr()*1080)+"px",top:(sr()*1920)+"px",width:size+"px",height:size+"px"});
+  $("#col").insertBefore(st,$("#brand"));
+  A(st,[{opacity:0},{opacity:.25+sr()*.5}],14700+sr()*600,900,"linear");
+  st.style.animation=`tw ${2200+sr()*2200}ms ease-in-out ${(2+sr()*2)}s infinite`;
+}
+
+// gomos do anel acendem um a um conforme o cometa passa, como o anel de verdade
+const RAIO=230, CIRC=2*Math.PI*RAIO, CX=260, CY=260, N_GOMOS=14;
+const GOMO_C=["#FF6964","#FF8E5A","#FFA353","#FFBF5F","#FFD066","#BED582","#74D6A4","#49DCC0","#4FCBDC","#52B4F5","#59A7FF","#8791FF","#A889FF","#EA709B"];
+const COMET_START=16500, COMET_DUR=2600;
+for(let i=0;i<N_GOMOS;i++){
+  const ang=(i/N_GOMOS)*360, rad=ang*Math.PI/180;
+  const x=CX+RAIO*Math.sin(rad), y=CY-RAIO*Math.cos(rad);
+  const g=document.createElement("div");g.className="gomo";
+  g.style.left=x+"px";g.style.top=y+"px";g.style.background=GOMO_C[i];g.style.color=GOMO_C[i];
+  $("#cometwrap").insertBefore(g,$("#comethead"));
+  const t=COMET_START+(i/N_GOMOS)*COMET_DUR;
+  A(g,[{opacity:0,transform:"scale(.3)"},{opacity:1,transform:"scale(1.3)",offset:.6},{opacity:.85,transform:"scale(1)"}],t,450,BACK);
+}
+
+A($("#cometpath"),[{strokeDashoffset:CIRC},{strokeDashoffset:0}],COMET_START,COMET_DUR,"linear");
+A($("#comethead"),[{offsetDistance:"0%",opacity:1},{offsetDistance:"100%",opacity:1}],COMET_START,COMET_DUR,"linear");
+A($("#comethead"),[{opacity:0,transform:"scale(.4)"},{opacity:1,transform:"scale(1)"}],COMET_START,220,"linear");
+A($("#comethead"),[{transform:"scale(1) rotate(0)"},{transform:"scale(1.25) rotate(360deg)"}],COMET_START,COMET_DUR,"linear",{iterations:1});
+
+// explosão de faíscas quando o anel fecha
+const burst=(box,start)=>{let s=29;const r=()=>(s=s*16807%2147483647)/2147483647;const cs=["#FFFDF8","#FFD066","#FF6964","#49DCC0","#A889FF","#59A7FF"];
+ for(let k=0;k<64;k++){const c=document.createElement("i");c.className="conf";const sz=3+r()*5;c.style.width=sz+"px";c.style.height=sz+"px";c.style.borderRadius="50%";c.style.background=cs[k%6];c.style.left="260px";c.style.top="260px";box.appendChild(c);
+  const ang2=r()*Math.PI*2,dist=120+r()*420;const dx=Math.cos(ang2)*dist,dy=Math.sin(ang2)*dist;
+  A(c,[{opacity:1,transform:"translate(0,0) scale(1)"},{opacity:0,transform:`translate(${dx}px,${dy}px) scale(.2)`}],start+r()*150,900+r()*500,"cubic-bezier(.1,.7,.3,1)")}};
+burst($("#cometwrap"),COMET_START+COMET_DUR-150);
+
+A($("#comethead"),[{opacity:1},{opacity:0}],COMET_START+COMET_DUR,300,"linear");
+A($("#cometpath"),[{opacity:.9},{opacity:0}],COMET_START+COMET_DUR,500,"linear");
+$$(".gomo").forEach(g=>A(g,[{opacity:.85},{opacity:0}],COMET_START+COMET_DUR+150,500,"linear"));
+A($("#markbig"),[{opacity:0,transform:"scale(.3) rotate(-24deg)",filter:"blur(8px)"},{opacity:1,transform:"scale(1.1) rotate(3deg)",filter:"blur(0)",offset:.72},{opacity:1,transform:"scale(1) rotate(0)"}],COMET_START+COMET_DUR+100,750,ELASTIC);
 A($("#wmk"),SIMPLE_IN,20000,650);
 A($("#tag"),SIMPLE_IN,20700,650);
 A($("#handle"),SIMPLE_IN,21400,650);
