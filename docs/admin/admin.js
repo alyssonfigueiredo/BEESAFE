@@ -136,6 +136,14 @@ async function rpc(name, args) {
   return data;
 }
 
+// O PostgREST corta toda resposta em 1.000 linhas por padrão, mesmo com limit maior na função —
+// só o .range() muda isso. Usar só nas exportações, que podem passar de 1.000 de propósito.
+async function rpcTudo(name, args, max) {
+  const { data, error } = await sb.rpc(name, args).range(0, max - 1);
+  if (error) throw new Error(ptErr(error));
+  return data;
+}
+
 // ---------------------------------------------------------------- peças de interface
 function toast(msg, err = false) {
   const box = $("#toasts");
@@ -1141,7 +1149,7 @@ async function viewLugares(ctx) {
   $("#lStatus", ctx.el).addEventListener("change", (ev) => { lugaresState.status = ev.target.value || null; lugaresState.offset = 0; reload(); });
   $("#lNovo", ctx.el).addEventListener("click", () => placeEditor(null, reload));
   $("#lExport", ctx.el).addEventListener("click", (ev) => busy(ev.currentTarget, async () => {
-    const todos = (await rpc("admin_places_export", { p_cidade: lugaresState.cidade?.id ?? null, p_busca: lugaresState.busca || null, p_status: lugaresState.status })) || [];
+    const todos = (await rpcTudo("admin_places_export", { p_cidade: lugaresState.cidade?.id ?? null, p_busca: lugaresState.busca || null, p_status: lugaresState.status }, 20000)) || [];
     if (!todos.length) { toast("Nenhum lugar com esses filtros."); return; }
     baixarCSV(`lugares-irisa-${new Date().toISOString().slice(0, 10)}.csv`, [
       { titulo: "Nome", valor: (p) => p.nome },
