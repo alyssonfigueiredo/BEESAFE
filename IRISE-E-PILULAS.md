@@ -84,9 +84,8 @@ Secrets no Supabase) continua funcionando igual — tem prioridade se as duas es
 3. **Revisar o banco de frases das pílulas** antes de ligar o push (migration 49) — 11 frases,
    duas novas marcadas no comentário da migration.
 4. **Decidir o intervalo do push** das pílulas (padrão 4 dias) — mudo rápido se quiser outro número.
-5. Depois de aprovar: colar as migrations (ou deixar subir sozinho, se a branch for mesclada numa
-   das branches principais) e publicar as Edge Functions novas (`comfort-pill-push`,
-   `irise-orchestrator`).
+5. ~~Publicar as Edge Functions novas~~ — feito pelo Alysson em 04/10/2026 (`npx supabase functions
+   deploy irise-orchestrator` e `comfort-pill-push`, ambas no ar).
 
 ## Validado nesta sessão
 
