@@ -1116,15 +1116,27 @@ async function viewFotos(ctx) {
 // ================================================================ 10. Lugares
 const lugaresState = { cidade: null, busca: "", status: null, descricao: null, offset: 0 };
 async function viewLugares(ctx) {
-  ctx.el.innerHTML = headHTML("Lugares", "Lugares do mapa. Corrija nome, categoria e ponto, esconda o que não é lugar e suba foto da equipe.", `<button class="btn ghost" id="lExport">Exportar CSV</button><button class="btn ghost" id="lImport">Importar descrições</button><input type="file" id="lImportFile" accept=".csv" hidden><button class="btn" id="lNovo">Novo lugar</button>`) + `
-    <div class="toolbar">
-      <div id="lCidade" style="flex:0 1 240px;min-width:180px"></div>
-      <input class="input" type="search" id="lBusca" placeholder="Buscar pelo nome" aria-label="Buscar pelo nome" value="${esc(lugaresState.busca)}">
-      <label style="flex:0 0 auto"><span class="sr-only">Status</span><select class="input" id="lStatus"><option value="">Qualquer status</option><option value="active">No ar</option><option value="hidden">Escondidos</option><option value="removed">Removidos</option></select></label>
-      <label style="flex:0 0 auto"><span class="sr-only">Descrição</span><select class="input" id="lDescricao"><option value="">Com ou sem descrição</option><option value="sem">Sem descrição</option><option value="com">Com descrição</option></select></label>
+  // Rascunho dos filtros: só vira busca de verdade (e só aí a URL de exportação muda) quando
+  // aperta "Aplicar filtros" — digitar ou trocar um select não dispara nada sozinho.
+  const rascunho = { ...lugaresState };
+  ctx.el.innerHTML = headHTML("Lugares", "Lugares do mapa. Corrija nome, categoria e ponto, esconda o que não é lugar e suba foto da equipe.", `<button class="btn ghost" id="lImport">Importar descrições</button><input type="file" id="lImportFile" accept=".csv" hidden><button class="btn" id="lNovo">Novo lugar</button>`) + `
+    <div class="card filtros">
+      <div class="filtros-grid">
+        <label>Cidade<div id="lCidade"></div></label>
+        <label>Nome<input class="input" type="search" id="lBusca" placeholder="Buscar pelo nome" value="${esc(rascunho.busca)}"></label>
+        <label>Status<select class="input" id="lStatus"><option value="">Qualquer status</option><option value="active">No ar</option><option value="hidden">Escondidos</option><option value="removed">Removidos</option></select></label>
+        <label>Descrição<select class="input" id="lDescricao"><option value="">Com ou sem</option><option value="sem">Sem descrição</option><option value="com">Com descrição</option></select></label>
+      </div>
+      <div class="filtros-actions">
+        <button class="btn" id="lAplicar">Aplicar filtros</button>
+        <button class="btn ghost" id="lLimpar">Limpar</button>
+        <span class="spacer"></span>
+        <span class="small dim">Exporta com os filtros já aplicados</span>
+        <button class="btn ghost" id="lExport">Exportar CSV</button>
+      </div>
     </div><div id="lbox"></div>`;
-  $("#lStatus", ctx.el).value = lugaresState.status || "";
-  $("#lDescricao", ctx.el).value = lugaresState.descricao || "";
+  $("#lStatus", ctx.el).value = rascunho.status || "";
+  $("#lDescricao", ctx.el).value = rascunho.descricao || "";
   const box = $("#lbox", ctx.el);
   let rows = [], total = 0;
   const reload = () => load(box, async () => {
@@ -1150,10 +1162,20 @@ async function viewLugares(ctx) {
     });
     bindPager(box, lugaresState, reload);
   }, ctx);
-  cityCombo($("#lCidade", ctx.el), { value: lugaresState.cidade, placeholder: "Filtrar por cidade", onChange: (v) => { lugaresState.cidade = v; lugaresState.offset = 0; reload(); } });
-  $("#lBusca", ctx.el).addEventListener("input", debounce((ev) => { lugaresState.busca = ev.target.value.trim(); lugaresState.offset = 0; reload(); }));
-  $("#lStatus", ctx.el).addEventListener("change", (ev) => { lugaresState.status = ev.target.value || null; lugaresState.offset = 0; reload(); });
-  $("#lDescricao", ctx.el).addEventListener("change", (ev) => { lugaresState.descricao = ev.target.value || null; lugaresState.offset = 0; reload(); });
+  cityCombo($("#lCidade", ctx.el), { value: rascunho.cidade, placeholder: "Todas", onChange: (v) => { rascunho.cidade = v; } });
+  $("#lBusca", ctx.el).addEventListener("input", (ev) => { rascunho.busca = ev.target.value.trim(); });
+  $("#lBusca", ctx.el).addEventListener("keydown", (ev) => { if (ev.key === "Enter") aplicar(); });
+  $("#lStatus", ctx.el).addEventListener("change", (ev) => { rascunho.status = ev.target.value || null; });
+  $("#lDescricao", ctx.el).addEventListener("change", (ev) => { rascunho.descricao = ev.target.value || null; });
+  function aplicar() {
+    Object.assign(lugaresState, rascunho, { offset: 0 });
+    reload();
+  }
+  $("#lAplicar", ctx.el).addEventListener("click", aplicar);
+  $("#lLimpar", ctx.el).addEventListener("click", () => {
+    Object.assign(lugaresState, { cidade: null, busca: "", status: null, descricao: null, offset: 0 });
+    viewLugares(ctx); // redesenha a tela com os campos zerados
+  });
   $("#lNovo", ctx.el).addEventListener("click", () => placeEditor(null, reload));
   $("#lExport", ctx.el).addEventListener("click", (ev) => busy(ev.currentTarget, async () => {
     const todos = (await rpcTudo("admin_places_export", { p_cidade: lugaresState.cidade?.id ?? null, p_busca: lugaresState.busca || null, p_status: lugaresState.status, p_descricao: lugaresState.descricao }, 20000)) || [];

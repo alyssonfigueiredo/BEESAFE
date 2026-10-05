@@ -180,6 +180,13 @@ textarea.input { resize: vertical; min-height: 80px; line-height: 1.45; }
 .toolbar .input { width: auto; flex: 1 1 220px; max-width: 360px; }
 .toolbar select.input { flex: 0 0 auto; }
 
+/* card de filtros com campos rotulados + ações (Aplicar/Exportar) na mesma linha */
+.filtros { margin-bottom: 14px; }
+.filtros-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 12px; }
+.filtros-grid label { display: grid; gap: 5px; font-size: 12.5px; font-weight: 600; color: var(--muted); }
+.filtros-actions { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; margin-top: 14px; padding-top: 14px; border-top: 1px solid var(--line-2); }
+.filtros-actions .spacer { flex: 1 1 auto; }
+
 /* chips */
 .chip { display: inline-flex; align-items: center; gap: 5px; padding: 2px 9px; border-radius: 99px; font-size: 12px; font-weight: 600; white-space: nowrap; background: var(--paper); color: var(--muted); }
 .chip.on, .chip.active, .chip.enviada, .chip.aprovada { background: #DDF6F0; color: #0A6B5E; }
