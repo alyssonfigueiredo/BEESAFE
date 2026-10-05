@@ -1,7 +1,7 @@
 [
  {
   "id": "story-hoje",
-  "aprovado": true,
+  "aprovado": false,
   "quando": "2026-09-26T18:00:00-03:00",
   "tipo": "STORY",
   "midias": [
@@ -59,7 +59,7 @@
  },
  {
   "id": "story-cidades",
-  "aprovado": false,
+  "aprovado": true,
   "quando": "2026-09-28T12:00:00-03:00",
   "tipo": "STORY",
   "midias": [
@@ -160,7 +160,7 @@
  },
  {
   "id": "story-01",
-  "aprovado": false,
+  "aprovado": true,
   "quando": "2026-10-02T12:00:00-03:00",
   "tipo": "STORY",
   "midias": [
@@ -202,7 +202,7 @@
  },
  {
   "id": "story-02",
-  "aprovado": false,
+  "aprovado": true,
   "quando": "2026-10-06T12:00:00-03:00",
   "tipo": "STORY",
   "midias": [
