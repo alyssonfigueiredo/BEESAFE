@@ -31,12 +31,23 @@ const supabase = createClient(url, key, { auth: { persistSession: false } });
 
 console.log("Buscando municípios sem nenhum lugar no banco...");
 
-// Todos os municípios
-const { data: cidades, error: eCidades } = await supabase
-  .from("cities")
-  .select("id, ibge_code, name, state")
-  .order("ibge_code");
-if (eCidades) throw eCidades;
+// Todos os municípios (paginado: o Supabase limita a 1000 linhas por select)
+const cidades = [];
+{
+  let from = 0;
+  const pagina = 1000;
+  for (;;) {
+    const { data, error } = await supabase
+      .from("cities")
+      .select("id, ibge_code, name, state")
+      .order("ibge_code")
+      .range(from, from + pagina - 1);
+    if (error) throw error;
+    cidades.push(...data);
+    if (data.length < pagina) break;
+    from += pagina;
+  }
+}
 
 // Municípios que já têm pelo menos 1 lugar (pega todos os city_id distintos, paginando)
 const comLugar = new Set();
