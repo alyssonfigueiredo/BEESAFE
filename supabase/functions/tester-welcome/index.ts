@@ -107,7 +107,7 @@ function androidEmail() {
       titulo: "Você está no teste da Irisa",
       corpo: "Oi! Seu e-mail já está na lista de teste. Bem-vinde.",
       passos: [
-        "Abra este link, no celular Android logado na mesma conta Google deste e-mail, e toque em <b>“Tornar-se testador”</b>.",
+        “Abra este link, no celular Android logado na mesma conta Google deste e-mail, e toque em <b>&ldquo;Tornar-se testador&rdquo;</b>.”,
         "Depois abra a Irisa na Play Store e instale.",
       ],
       ctas: [
@@ -141,7 +141,7 @@ function iosEmail(testflightUrl?: string) {
         corpo: “Oi! A Irisa já pode ser testada no iPhone. Bem-vinde.”,
         passos: [
           “Instale o app <b>TestFlight</b> da App Store.”,
-          “Abra o link abaixo no iPhone e toque em “Aceitar” e depois em “Instalar”.”,
+          “Abra o link abaixo no iPhone e toque em &ldquo;Aceitar&rdquo; e depois em &ldquo;Instalar&rdquo;.”,
         ],
         ctas: [{ texto: “Abrir no TestFlight”, url: testflightUrl, cor: “#FF6964”, tinta: “#FFFFFF” }],
         nota: “Conte o que achou respondendo este e-mail.”,
@@ -165,7 +165,7 @@ function iosEmail(testflightUrl?: string) {
       titulo: “A Irisa está na App Store!”,
       corpo: “Oi! A Irisa já está disponível na App Store. Você pediu para ser avisade — chegou a hora. Bem-vinde.”,
       passos: [
-        “Abra o link abaixo no iPhone e toque em <b>”Obter”</b> para instalar.”,
+        “Abra o link abaixo no iPhone e toque em <b>&ldquo;Obter&rdquo;</b> para instalar.”,
       ],
       ctas: [{ texto: “Baixar na App Store”, url: APP_STORE_URL, cor: “#FF6964”, tinta: “#FFFFFF” }],
       nota: “Conte o que achou respondendo este e-mail.”,
