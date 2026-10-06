@@ -49,6 +49,7 @@ function RootNavigator({ pronto }: { pronto: boolean }) {
           <Stack.Screen name="lugar/[id]" />
           <Stack.Screen name="moderacao" />
           <Stack.Screen name="conquistas" />
+          <Stack.Screen name="quero-ir" />
           <Stack.Screen name="pilulas" />
           {/* Prévia do personagem do irise (06/10/2026) — não linkada em lugar nenhum da navegação
             de propósito: só abre por link direto, pra ele aprovar antes de integrar de verdade. */}

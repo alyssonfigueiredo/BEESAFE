@@ -636,13 +636,17 @@ Nome: **Irisa** (INPI livre; @appirisa livre). Bundle id Android `br.com.irisa.a
   (máscara com `overflow: hidden`, ganhou folga de 8 px) e os títulos em Oswald caixa alta tinham entrelinha ≤ 1,1 do
   corpo (no iOS o À/É sobe acima da linha): todos subiram para ~1,17. Título novo em Oswald: entrelinha de pelo menos
   1,15 × o tamanho.
-  **Quero ir (proposta, NÃO implementar sem ok dele, 06/10/2026):** favoritar lugar numa lista "Quero ir", coração
-  irisado (traço arco-íris, enche ao salvar com uma explosãozinha de cor) no canto de cima da foto de cada cartão de
-  lugar (pedido dele: no meio do cartão ficava estranho), no canto de cima da ficha e no mapa
-  (camada "Quero ir" com pinos de coração). Acesso sem ocupar a barra: chip "Quero ir · N" no começo dos filtros de
-  Lugares e cartão no Perfil. Abas Quero ir / Já fui; avaliou um lugar da lista, ele passa sozinho para Já fui (a
-  recompensa avisa). Só a pessoa vê. Protótipo: `docs/Irisa-prototipo-quero-ir.html` (o mesmo `prototipo-app.html`
-  com `FAV` ligado, gerado pelo `scripts/prototipo-app.py`).
+  **Quero ir (APLICADO, migration 65, 06/10/2026, aprovado pelo Leandro; protótipo `docs/Irisa-prototipo-quero-ir.html`):**
+  favoritar lugar. Tabela `place_favorites` (RLS: cada um só as suas; teto de 1.000), trigger em `place_ratings` marca
+  `visitado_em` quando a pessoa avalia um lugar salvo (vai para "Já fui"). Não dá gomo, faísca nem medalha.
+  App (só JS, sai por EAS Update): `src/hooks/useFavoritos.ts`, `src/components/FavHeart.tsx` (coração com traço
+  arco-íris que enche ao salvar, pulinho + seis pontinhos de cor; `mini` no canto de cima da foto do `PlaceCard`,
+  `solid` no canto de cima da ficha via `headerRight`), `src/components/QueroIr.tsx` (chip no começo dos filtros de
+  Lugares e cartão no Perfil — fora da barra de baixo, pedido dele), tela `app/quero-ir.tsx` (Quero ir / Já fui,
+  Como chegar, "Já fui · avaliar" abre a ficha com `avaliar=1`, Ver no mapa), camada no Mapa (botão de coração no
+  `MapPanel`; `/mapa?camada=quero&t=…` liga, e com ela ligada o mapa e a folha mostram só os salvos; pinos são os de
+  sempre, sem desenho de coração) e linha "Saiu do Quero ir e foi para Já fui" na `RewardSheet`. Sem a migration no
+  banco, o coração, o chip e o cartão somem calados.
 
 ## Stack
 

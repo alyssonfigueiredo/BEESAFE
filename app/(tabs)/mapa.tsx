@@ -1,4 +1,4 @@
-import { router } from "expo-router";
+import { router, useLocalSearchParams } from "expo-router";
 import { useMemo, useState, type ReactNode } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import Animated, { FadeIn } from "react-native-reanimated";
@@ -12,6 +12,7 @@ import { MapaMap, type MapFocus } from "@/components/map/MapaMap";
 import { buildAreas, hasSeal, plural, type RelatoArea } from "@/components/map/mapData";
 import { NearPlaceCard, OpenCard, RelatoMiniCard } from "@/components/map/NearCards";
 import { NearSheet, type SheetCard } from "@/components/map/NearSheet";
+import { useFavoritos, useLugaresFavoritos } from "@/hooks/useFavoritos";
 import { useAreaRisk, useOccurrences } from "@/hooks/useOccurrences";
 import { useNearPlaces, usePlaces } from "@/hooks/usePlaces";
 import { tabBarBottom, useScreenInsets } from "@/hooks/useScreenInsets";
@@ -52,6 +53,18 @@ export default function MapaScreen() {
 
   const [mode, setMode] = useState<MapMode>("mapa");
   const [layers, setLayers] = useState({ lugares: true, relatos: true });
+  // Quero ir: a lista abre o mapa com ?camada=quero&t=… (t muda a cada toque, para "Ver no mapa"
+  // ligar a camada de novo mesmo depois de a pessoa ter desligado aqui).
+  const { camada, t } = useLocalSearchParams<{ camada?: string; t?: string }>();
+  const [queroSel, setQueroSel] = useState<{ t?: string; on: boolean } | null>(null);
+  const queroOn = queroSel && queroSel.t === t ? queroSel.on : camada === "quero";
+  const { data: favs } = useFavoritos();
+  const { data: favItens = [] } = useLugaresFavoritos();
+  const favPlaces = useMemo(
+    () => favItens.filter((i) => !i.visitado_em).map((i) => i.place),
+    [favItens],
+  );
+  const queroCount = favs == null ? null : favs.filter((f) => !f.visitado_em).length;
   const [types, setTypes] = useState<Set<OccurrenceType>>(() => new Set(TYPE_KEYS));
   const [legend, setLegend] = useState(false);
   const [sel, setSel] = useState<Selection | null>(null);
@@ -67,6 +80,7 @@ export default function MapaScreen() {
 
   // O mapa mostra o lote da cidade somado aos de perto (quem está na cidade vizinha também vê).
   const mapPlaces = useMemo(() => {
+    if (queroOn) return favPlaces;
     const seen = new Set<string>();
     const out: PublicPlace[] = [];
     for (const p of [...cityPlaces, ...nearPlaces]) {
@@ -75,7 +89,7 @@ export default function MapaScreen() {
       out.push(p);
     }
     return out;
-  }, [cityPlaces, nearPlaces]);
+  }, [cityPlaces, nearPlaces, queroOn, favPlaces]);
 
   const visibleOcc = useMemo(
     () => occurrences.filter((o) => types.has(o.type)),
@@ -96,6 +110,11 @@ export default function MapaScreen() {
 
   // Perto de você: por distância com localização; sem ela, os mais bem avaliados da cidade.
   const nearList = useMemo<ListItem[]>(() => {
+    if (queroOn) {
+      return favPlaces
+        .map((p) => ({ place: p, distance: dist(p) }))
+        .sort((a, b) => (a.distance ?? 0) - (b.distance ?? 0));
+    }
     if (nearMode) {
       return nearPlaces
         .map((p) => ({ place: p, distance: dist(p) }))
@@ -108,7 +127,7 @@ export default function MapaScreen() {
           b.rating_count - a.rating_count,
       )
       .map((p) => ({ place: p, distance: dist(p) }));
-  }, [nearMode, nearPlaces, cityPlaces, dist]);
+  }, [nearMode, nearPlaces, cityPlaces, dist, queroOn, favPlaces]);
 
   const sealCount = useMemo(
     () =>
@@ -291,6 +310,8 @@ export default function MapaScreen() {
         }))
       : [];
     if (!layers.lugares) empty = "Lugares escondidos no mapa.";
+    else if (queroOn && favPlaces.length === 0)
+      empty = "Nada no Quero ir ainda. Toque no coração de um lugar para salvar.";
   }
 
   return (
@@ -356,6 +377,13 @@ export default function MapaScreen() {
             setLayers((l) => ({ ...l, relatos: !l.relatos }));
           }}
           onFilters={() => setLegend(true)}
+          showQuero={!!queroOn}
+          queroCount={queroCount}
+          onToggleQuero={() => {
+            if (sel?.kind === "place" || sel?.kind === "cluster") setSel(null);
+            setQueroSel({ t, on: !queroOn });
+            if (!queroOn) setLayers((l) => ({ ...l, lugares: true }));
+          }}
           filtering={types.size < TYPE_KEYS.length}
           onLayout={(e) => setPanelH(e.nativeEvent.layout.height)}
         />
