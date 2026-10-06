@@ -6,6 +6,7 @@ import Animated, { FadeInDown } from "react-native-reanimated";
 import { AreaLevel } from "@/components/AreaLevel";
 import { AxisStrip } from "@/components/AxisBars";
 import { Badge } from "@/components/Badge";
+import { FavHeart } from "@/components/FavHeart";
 import { PlacePhoto } from "@/components/PlacePhoto";
 import { Rainbow } from "@/components/Rainbow";
 import { formatDistance } from "@/lib/geo";
@@ -47,17 +48,23 @@ export function PlaceCard({
           className="flex-row gap-3 rounded-3xl bg-surface p-3 active:opacity-80"
           style={shadow.card}
         >
-          <PlacePhoto
-            category={place.category}
-            photoName={place.photo_name}
-            photoUrl={place.photo_url}
-            photoCredit={place.photo_credit}
-            photoCreditUri={place.photo_credit_uri}
-            photoAuthor={place.photo_author}
-            photoAuthorUri={place.photo_author_uri}
-            size={64}
-            muted={score == null}
-          />
+          <View>
+            <PlacePhoto
+              category={place.category}
+              photoName={place.photo_name}
+              photoUrl={place.photo_url}
+              photoCredit={place.photo_credit}
+              photoCreditUri={place.photo_credit_uri}
+              photoAuthor={place.photo_author}
+              photoAuthorUri={place.photo_author_uri}
+              size={64}
+              muted={score == null}
+            />
+            {/* Quero ir: coração no canto de cima da foto (pedido do Leandro: no meio do cartão ficava estranho). */}
+            <View style={{ position: "absolute", top: -6, right: -6 }}>
+              <FavHeart placeId={place.id} variant="mini" />
+            </View>
+          </View>
           <View className="min-w-0 flex-1 gap-2">
             <View className="flex-row items-center justify-between gap-2">
               <View className="min-w-0 flex-1 flex-row items-center gap-1">

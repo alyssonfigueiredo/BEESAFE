@@ -213,6 +213,13 @@ select public.admin_push_create('Teste', 'Corpo', now() + interval '1 day') as e
 select public.admin_push_cancel(:envio);
 select status from public.admin_push_list() limit 1;
 select count(*) >= 0 as servicos_ok from public.admin_services();
+-- migration 65: Quero ir
+set request.jwt.claim.sub = '66666666-6666-6666-6666-666666666666';
+insert into public.place_favorites (place_id) select id from public.places where status = 'active' limit 2;
+select count(*) = 2 as favoritos_ok from public.place_favorites;
+set request.jwt.claim.sub = '55555555-5555-5555-5555-555555555555';
+select count(*) = 0 as favoritos_so_meus from public.place_favorites;
+set request.jwt.claim.sub = '66666666-6666-6666-6666-666666666666';
 -- migration 64: liberar/revogar medalha, mudar nível e notificação para pessoas escolhidas
 select public.admin_medal_grant('66666666-6666-6666-6666-666666666666', 'aclamada');
 select exists (select 1 from jsonb_array_elements(public.admin_user('66666666-6666-6666-6666-666666666666')->'conquistadas') c

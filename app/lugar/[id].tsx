@@ -9,6 +9,8 @@ import { Aurora } from "@/components/Aurora";
 import { PrimaryButton, SecondaryButton } from "@/components/Button";
 import { TextArea } from "@/components/Field";
 import { RewardSheet } from "@/components/gami/RewardSheet";
+import { FavHeart } from "@/components/FavHeart";
+import { useNaLista } from "@/hooks/useFavoritos";
 import {
   fraseDescoberta,
   logDescoberta,
@@ -64,7 +66,10 @@ export default function PlaceScreen() {
   const [recompensa, setRecompensa] = useState<{
     antes: number | null;
     frase?: string;
+    daLista?: boolean;
   } | null>(null);
+  // Estava no Quero ir antes de avaliar? A recompensa avisa que ele foi para Já fui.
+  const naLista = useNaLista(id);
   const forma = gami?.forma ?? 2;
   // Descoberta: "começou a avaliar" é a primeira resposta, uma vez só.
   const comecou = useRef(false);
@@ -119,9 +124,13 @@ export default function PlaceScreen() {
         if (daDescoberta && id) {
           logDescoberta("discovery_review_completed", id);
           marcarDescobertaConcluida(id);
-          setRecompensa({ antes: gami?.gomos ?? null, frase: fraseDescoberta(id) });
+          setRecompensa({
+            antes: gami?.gomos ?? null,
+            frase: fraseDescoberta(id),
+            daLista: !!naLista,
+          });
         } else {
-          setRecompensa({ antes: gami?.gomos ?? null });
+          setRecompensa({ antes: gami?.gomos ?? null, daLista: !!naLista });
         }
         refetchGami();
       }
@@ -177,6 +186,7 @@ export default function PlaceScreen() {
           headerStyle: { backgroundColor: "transparent" },
           headerTintColor: colors.ink,
           headerShadowVisible: false,
+          headerRight: () => <FavHeart placeId={place.id} variant="solid" />,
         }}
       />
       <View className="flex-1">
@@ -408,6 +418,7 @@ export default function PlaceScreen() {
         visible={!!recompensa}
         antes={recompensa?.antes ?? null}
         frase={recompensa?.frase}
+        daLista={recompensa?.daLista}
         onClose={() => setRecompensa(null)}
       />
     </>

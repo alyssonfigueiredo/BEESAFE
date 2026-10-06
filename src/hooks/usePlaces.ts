@@ -264,6 +264,8 @@ export function useRatePlace(placeId: string) {
       client.invalidateQueries({ queryKey: ["places"] });
       client.invalidateQueries({ queryKey: ["places-busca"] });
       client.invalidateQueries({ queryKey: ["welcoming"] });
+      // Lugar do Quero ir avaliado vai para Já fui (trigger da migration 65).
+      client.invalidateQueries({ queryKey: ["favoritos"] });
     },
   });
 }
