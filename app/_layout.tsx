@@ -50,6 +50,11 @@ function RootNavigator({ pronto }: { pronto: boolean }) {
           <Stack.Screen name="moderacao" />
           <Stack.Screen name="conquistas" />
           <Stack.Screen name="pilulas" />
+          {/* Prévia do personagem do irise (06/10/2026) — não linkada em lugar nenhum da navegação
+            de propósito: só abre por link direto, pra ele aprovar antes de integrar de verdade. */}
+          <Stack.Screen name="irise-preview/pronomes" />
+          <Stack.Screen name="irise-preview/escolha" />
+          <Stack.Screen name="irise-preview/apresentacao" />
         </Stack.Protected>
         <Stack.Protected guard={!session}>
           <Stack.Screen name="(auth)" />
