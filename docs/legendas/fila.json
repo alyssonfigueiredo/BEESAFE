@@ -1,7 +1,7 @@
 [
  {
   "id": "story-hoje",
-  "aprovado": true,
+  "aprovado": false,
   "quando": "2026-09-26T18:00:00-03:00",
   "tipo": "STORY",
   "midias": [
@@ -59,7 +59,7 @@
  },
  {
   "id": "story-cidades",
-  "aprovado": false,
+  "aprovado": true,
   "quando": "2026-09-28T12:00:00-03:00",
   "tipo": "STORY",
   "midias": [
@@ -67,7 +67,18 @@
   ],
   "legenda": "",
   "primeiro_comentario": "",
-  "publicado": false
+  "publicado": true,
+  "publicado_em": "2026-10-05T15:41:06.363Z",
+  "media_id": "17997170462825139",
+  "confirmacao": {
+   "id": "17997170462825139",
+   "media_type": "IMAGE",
+   "permalink": "https://www.instagram.com/stories/appirisa/4001322787223216448",
+   "timestamp": "2026-10-05T15:41:15+0000",
+   "na_lista_de_stories_ativos": true
+  },
+  "confirmado": true,
+  "confirmado_em": "2026-10-05T15:41:18.968Z"
  },
  {
   "id": "story-eixos",
@@ -160,7 +171,7 @@
  },
  {
   "id": "story-01",
-  "aprovado": false,
+  "aprovado": true,
   "quando": "2026-10-02T12:00:00-03:00",
   "tipo": "STORY",
   "midias": [
@@ -168,7 +179,18 @@
   ],
   "legenda": "",
   "primeiro_comentario": "",
-  "publicado": false
+  "publicado": true,
+  "publicado_em": "2026-10-05T15:41:06.363Z",
+  "media_id": "17911074270548721",
+  "confirmacao": {
+   "id": "17911074270548721",
+   "media_type": "IMAGE",
+   "permalink": "https://www.instagram.com/stories/appirisa/4001322885009195932",
+   "timestamp": "2026-10-05T15:41:23+0000",
+   "na_lista_de_stories_ativos": true
+  },
+  "confirmado": true,
+  "confirmado_em": "2026-10-05T15:41:26.167Z"
  },
  {
   "id": "carrossel-4",
@@ -202,7 +224,7 @@
  },
  {
   "id": "story-02",
-  "aprovado": false,
+  "aprovado": true,
   "quando": "2026-10-06T12:00:00-03:00",
   "tipo": "STORY",
   "midias": [
@@ -423,7 +445,8 @@
   ],
   "legenda": "Tem um momento exato em que o corpo relaxa.\n\nNão é a bebida. É perceber que ali, naquela mesa, ninguém tá contando quantas vezes vocês se tocaram.\n\nIsso tem nome: acolhimento. E devia acontecer em qualquer lugar, não só naquele.\n\nOnde foi a última vez que seu ombro relaxou assim? Comenta. 🌈\n\nO link está na bio. iPhone na App Store; Android ainda em teste.\n\n#Irisa #LGBTQIA #Orgulho #AppLGBT #Acolhimento",
   "primeiro_comentario": "appirisa.com.br",
-  "publicado": false
+  "publicado": false,
+  "arquivado": true
  },
  {
   "id": "carrossel-9",
@@ -440,7 +463,8 @@
   ],
   "legenda": "3 coisas que ninguém te conta sobre viajar em casal.\n\n1. A reserva. \"Cama de casal ou duas de solteiro?\" vem no check-in, na frente de todo mundo. Um hotel que insiste já respondeu por si.\n2. O café da manhã. Ninguém fala nada, mas todo mundo olha. Clientela é um dos quatro eixos da Irisa por isso.\n3. A rua do hotel. O hotel pode ser ótimo e a quadra, não. O lugar recebe cor, a rua recebe aviso: você olha os dois antes de reservar.\n\nQuem esteve lá responde: atendimento, afeto, banheiro, clientela.\n\nQual hotel te tratou como casal? Conta aqui e salva para quem vai viajar. 🌈\n\nO link está na bio. iPhone na App Store; Android ainda em teste.\n\n#Irisa #LGBTQIA #Orgulho #CasalLGBT #ViagemLGBT",
   "primeiro_comentario": "appirisa.com.br",
-  "publicado": false
+  "publicado": false,
+  "arquivado": true
  },
  {
   "id": "reels-nota",
@@ -452,7 +476,8 @@
   ],
   "legenda": "Uma nota de cinco estrelas não muda a vida de ninguém.\n\nMas um \"atendimento\", um \"afeto\" bem marcado, numa sexta-feira — isso já é o \"pode ir\" que alguém precisava antes de sair de casa.\n\nSua nota de hoje é a coragem de alguém amanhã.\n\nJá avaliou o lugar que te acolheu? Comenta. 🌈\n\nO link está na bio. iPhone na App Store; Android ainda em teste.\n\n#Irisa #LGBTQIA #Orgulho #AppLGBT #Avaliacao",
   "primeiro_comentario": "appirisa.com.br",
-  "publicado": false
+  "publicado": false,
+  "arquivado": true
  },
  {
   "id": "carrossel-10",
@@ -483,7 +508,8 @@
   ],
   "legenda": "Duas pessoas que nunca se falaram se olham do outro lado do salão.\n\nNão precisa de mais nada — os dois já sabem, sem perguntar, que ali os dois são bem-vindes.\n\nIsso não devia ser sorte. Devia ser informação.\n\nJá teve esse olhar com um estranho, num lugar bom? Comenta. 🌈\n\nO link está na bio. iPhone na App Store; Android ainda em teste.\n\n#Irisa #LGBTQIA #Orgulho #AppLGBT #Acolhimento",
   "primeiro_comentario": "appirisa.com.br",
-  "publicado": false
+  "publicado": false,
+  "arquivado": true
  },
  {
   "id": "carrossel-11",
@@ -537,6 +563,84 @@
    "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/Irisa-reels-5.mp4"
   ],
   "legenda": "Quantos relatos tem o seu bairro? Você não sabe. Ninguém sabe. Isso é o problema.\n\nE zero não quer dizer bairro tranquilo. Quer dizer que ninguém registrou. Por isso a Irisa nunca dá selo de \"região tranquila\".\n\nA ficha do bairro junta os dois lados:\nquantos relatos em 180 dias, quantos graves, de que tipo e a que hora;\ne os lugares do bairro, avaliados primeiro. Os sem nota esperam você irisar.\n\nCada relato é anônimo. Cada bairro ganha uma ficha.\n\nComece pelo seu bairro: um lugar irisado ou um relato, um minuto, e a ficha deixa de ser zero.\n\nQual é o seu bairro? Comenta que a gente conta quantos lugares já estão no mapa por lá. 🌈\n\nO link está na bio. iPhone na App Store; Android ainda em teste.\n\n#Irisa #LGBTQIA #Orgulho #AppLGBT #LGBTfobia",
+  "primeiro_comentario": "appirisa.com.br",
+  "publicado": false
+ },
+ {
+  "id": "carrossel-12",
+  "aprovado": false,
+  "quando": "2026-10-12T19:00:00-03:00",
+  "tipo": "POST",
+  "midias": [
+   "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/carrossel-12/01.png",
+   "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/carrossel-12/02.png",
+   "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/carrossel-12/03.png",
+   "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/carrossel-12/04.png",
+   "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/carrossel-12/05.png"
+  ],
+  "legenda": "A Irisa ganhou um joguinho. Sem perder a seriedade.\n\nQuem usa continua fazendo a mesma coisa: avaliando lugar, registrando relato. Só que agora isso acende um gomo no seu anel — 48 ao todo, sem sequência diária: a semana conta inteira, não cada dia sozinho.\n\nTem nome novo pra cada fase (Curiose, Entendide, Irisade…) e 32 medalhas escondidas, uma pra cada jeito de usar o app.\n\nO link está na bio.\n\n#Irisa #LGBTQIA #Orgulho #AppLGBT #Conquistas",
+  "primeiro_comentario": "appirisa.com.br",
+  "publicado": false
+ },
+ {
+  "id": "carrossel-15",
+  "aprovado": false,
+  "quando": "2026-10-14T19:00:00-03:00",
+  "tipo": "POST",
+  "midias": [
+   "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/carrossel-15/01.png",
+   "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/carrossel-15/02.png",
+   "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/carrossel-15/03.png",
+   "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/carrossel-15/04.png",
+   "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/carrossel-15/05.png",
+   "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/carrossel-15/06.png",
+   "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/carrossel-15/07.png"
+  ],
+  "legenda": "De Curiose a Patrimônio LGBTQIA+.\n\nOito jeitos de chamar quem usa a Irisa, calculados pelo seu anel de 48 gomos. Sem corrida, sem ranking público — só a sua evolução, no seu Perfil.\n\nEm qual desses oito você já tá?\n\n#Irisa #LGBTQIA #Orgulho #AppLGBT #Evolucao",
+  "primeiro_comentario": "appirisa.com.br",
+  "publicado": false
+ },
+ {
+  "id": "carrossel-13",
+  "aprovado": false,
+  "quando": "2026-10-13T19:00:00-03:00",
+  "tipo": "POST",
+  "midias": [
+   "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/carrossel-13/01.png",
+   "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/carrossel-13/02.png",
+   "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/carrossel-13/03.png",
+   "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/carrossel-13/04.png",
+   "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/carrossel-13/05.png",
+   "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/carrossel-13/06.png",
+   "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/carrossel-13/07.png"
+  ],
+  "legenda": "32 medalhas. Nenhuma por sorte.\n\nCada uma vem de um jeito diferente de ajudar o mapa: primeira avaliação, acender o selo de um lugar, consultar a ficha do bairro antes de sair, abrir o app sem precisar ser todo dia, conhecer vários bairros.\n\nQual dessas seis você quer destravar primeiro? Comenta aqui.\n\n#Irisa #LGBTQIA #Orgulho #AppLGBT #Medalhas",
+  "primeiro_comentario": "appirisa.com.br",
+  "publicado": false
+ },
+ {
+  "id": "carrossel-14",
+  "aprovado": false,
+  "quando": "2026-10-16T19:00:00-03:00",
+  "tipo": "POST",
+  "midias": [
+   "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/carrossel-14/01.png",
+   "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/carrossel-14/02.png",
+   "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/carrossel-14/03.png",
+   "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/carrossel-14/04.png",
+   "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/carrossel-14/05.png"
+  ],
+  "legenda": "Ganhou uma medalha? Mostra.\n\nToda conquista nova tem um botão: compartilhar no seu story. O cartão já vem pronto — sem apelido, sem o lugar, sem relato, nunca. Um toque e cai direto no Instagram.\n\nDesbloqueou algo essa semana? Posta o seu e marca a gente.\n\n#Irisa #LGBTQIA #Orgulho #AppLGBT #Compartilhe",
+  "primeiro_comentario": "appirisa.com.br",
+  "publicado": false
+ },
+ {
+  "id": "reels-10",
+  "aprovado": false,
+  "quando": "2026-10-10T19:00:00-03:00",
+  "tipo": "REELS",
+  "video": "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/Irisa-reels-10.mp4",
+  "legenda": "A Irisa mal chegou e já vem novidade. 🌈\n\nConquistas, medalhas, uma evolução que cresce com você — já disponível na atualização pra quem usa iPhone. Android segue em teste fechado.\n\nO link está na bio.\n\n#Irisa #LGBTQIA #Orgulho #AppLGBT #Conquistas",
   "primeiro_comentario": "appirisa.com.br",
   "publicado": false
  }

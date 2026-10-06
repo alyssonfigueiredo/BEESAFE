@@ -15,7 +15,14 @@ let viewSeq = 0;
 
 // ---------------------------------------------------------------- textos fixos
 const ROLE = { user: "Pessoa", moderator: "Moderação", admin: "Administração" };
-const NIVEIS = ["Cinza", "Coral", "Laranja", "Amarelo", "Turquesa", "Azul", "Arco-íris"];
+// Níveis de Sua evolução (src/lib/niveis.ts): começam em 0/2/5/10/16/24/34/48 gomos.
+const NIVEIS_EVO = [
+  { g: 0, f: ["Curiosa", "Curioso", "Curiose"] }, { g: 2, f: ["Entendida", "Entendido", "Entendide"] },
+  { g: 5, f: ["Irisada", "Irisado", "Irisade"] }, { g: 10, f: ["Close Certo"] }, { g: 16, f: ["Do Babado"] },
+  { g: 24, f: ["Mapa Vivo"] }, { g: 34, f: ["Lenda Local"] }, { g: 48, f: ["Patrimônio LGBTQIA+"] },
+];
+const nivelDe = (gomos) => NIVEIS_EVO.reduce((a, n, i) => (gomos >= n.g ? i : a), 0);
+const nomeNivel = (i, forma = 2) => { const f = NIVEIS_EVO[i].f; return f.length === 3 ? f[forma] : f[0]; };
 const MEDALHAS = {
   "deu-o-nome": "Deu o Nome",
   "deu-close": "Deu Close",
@@ -29,6 +36,12 @@ const MEDALHAS = {
   "bateu-ponto": "Bateu Ponto",
   "ombro-amigo": "Ombro Amigo",
   "abre-alas": "Abre-Alas",
+  "lenda-local": "Estátua na Praça",
+  "dona-do-pedaco": "Dona do Pedaço",
+  "resenha-boa": "Resenha Boa",
+  cartografa: "Cartógrafa",
+  "abraco-coletivo": "Abraço Coletivo",
+  "tem-opiniao": "Tem Opinião",
 };
 const FAMOSINHA = ["Famosinha", "Famosinho", "Famosinhe"];
 const BANHO = { neon: "Neon", holo: "Holográfico", dourado: "Dourado" };
@@ -684,6 +697,7 @@ function renderPessoa(box, u, reload) {
   const semana = g.semana || {};
   const faiscas = g.faiscas || {};
 
+  const revogadas = new Set(u.revogadas || []);
   const medalhas = (g.medalhas || []).map((m) => {
     const c = conquistadas[m.id];
     const ok = !!c || !!m.ok;
@@ -691,8 +705,13 @@ function renderPessoa(box, u, reload) {
     return `<div class="medal">${medalArt(m.id, { ok, prog })}
       <div class="t">${esc(medalName(m.id, forma))}</div>
       <div class="s">${c ? `desde ${esc(fmtD(c.em))}` : ok ? "liberada, ainda não gravada" : `${num(m.valor)}/${num(m.alvo)}`}</div>
-      ${c?.banho ? chip(c.banho, `Banho ${BANHO[c.banho] || c.banho}`) : ""}</div>`;
+      ${revogadas.has(m.id) ? chip("warn", "revogada") : ""}
+      ${c?.banho ? chip(c.banho, `Banho ${BANHO[c.banho] || c.banho}`) : ""}
+      ${c ? `<button class="btn sm ghost" data-med="revoke" data-id="${esc(m.id)}">Revogar</button>`
+          : `<button class="btn sm ghost" data-med="grant" data-id="${esc(m.id)}">Liberar</button>`}</div>`;
   }).join("");
+  const nivelAtual = nivelDe(gomos);
+  const ajuste = Number(u.ajuste_gomos || 0);
 
   const aparelhos = (u.aparelhos || []).map((a) => `${esc(a.plataforma === "ios" ? "iPhone" : a.plataforma === "android" ? "Android" : a.plataforma || "?")} <span class="dim">(${esc(rel(a.atualizado))})</span>`).join(", ") || `<span class="dim">nenhum</span>`;
 
@@ -731,7 +750,7 @@ function renderPessoa(box, u, reload) {
       <div class="card"><h2>Gamificação</h2>
         <div class="kv">
           <div><span class="k">Anel</span><span class="v">${num(gomos)}/48 gomos</span></div>
-          <div><span class="k">Nível</span><span class="v">${esc(NIVEIS[g.nivel] ?? "—")}</span></div>
+          <div><span class="k">Nível</span><span class="v">${nivelAtual + 1} de 8 · ${esc(nomeNivel(nivelAtual, forma))}${ajuste ? ` <span class="small dim">(ajuste manual de ${ajuste > 0 ? "+" : ""}${ajuste} gomos; pelo uso seriam ${num(u.gomos_calculados ?? gomos - ajuste)})</span>` : ""}</span></div>
           <div><span class="k">Semana</span><span class="v">${num(semana.dias ?? 0)}/4 dias ${semana.acesa ? chip("on", "acesa") : ""}</span></div>
           <div><span class="k">Semanas acesas</span><span class="v">${num(g.semanas_acesas ?? 0)}</span></div>
           <div><span class="k">Faíscas</span><span class="v">${num(faiscas.total ?? 0)} <span class="small dim">(${num(faiscas.rumo ?? 0)}/10 para a próxima)</span></span></div>
@@ -739,6 +758,10 @@ function renderPessoa(box, u, reload) {
           <div><span class="k">Avaliações que contam</span><span class="v">${num(g.avaliacoes ?? 0)}</span></div>
         </div>
         <div class="ring" aria-hidden="true">${ring}</div>
+        <div class="row" style="margin-top:12px;align-items:flex-end"><label class="f">Mudar nível
+          <select class="input" id="uNivel"><option value="">Automático (pelo uso)</option>${NIVEIS_EVO.map((n, i) => `<option value="${i + 1}">${i + 1} · ${esc(nomeNivel(i, forma))} (${n.g} gomos)</option>`).join("")}</select></label>
+          <button class="btn" id="uNivelSave">Salvar nível</button></div>
+        <p class="small dim" style="margin-top:6px">Leva a pessoa ao começo do nível escolhido. O que ela fizer depois continua somando.</p>
       </div>
     </div>
     <div class="card"><h2>Medalhas</h2><p class="small muted" style="margin:4px 0 12px">${plural(Object.keys(conquistadas).length, "conquistada", "conquistadas")}. Nas outras, o anel mostra quanto falta.</p>
@@ -756,10 +779,35 @@ function renderPessoa(box, u, reload) {
             <button class="btn" id="uRoleSave">Salvar papel</button></div>
           <div class="note danger" style="margin:6px 0 0"><span>Esconde todas as avaliações e mensagens no ar dessa pessoa. Dá para voltar uma a uma depois.</span></div>
           <div><button class="btn danger" id="uHideAll">Esconder tudo o que essa pessoa publicou</button></div>
+          <div><button class="btn ghost" id="uPush">Mandar notificação só para essa pessoa</button></div>
         </div>
       </div>
     </div>`;
 
+  $("#uNivel", box).value = ajuste ? String(nivelAtual + 1) : "";
+  $("#uNivelSave", box).addEventListener("click", (ev) => busy(ev.currentTarget, async () => {
+    const v = $("#uNivel", box).value;
+    await rpc("admin_set_level", { p_user: u.id, p_nivel: v ? Number(v) : null });
+    toast(v ? `Nível ${v} salvo` : "Nível volta a seguir o uso");
+    reload();
+  }));
+  $$("[data-med]", box).forEach((b) => b.addEventListener("click", async () => {
+    const revogar = b.dataset.med === "revoke";
+    const nomeM = medalName(b.dataset.id, forma);
+    if (revogar) {
+      const ok = await confirmBox({ title: `Revogar ${nomeM}?`, text: "A medalha sai das Conquistas da pessoa e não volta sozinha, mesmo que ela cumpra a regra de novo. Dá para liberar de novo aqui.", ok: "Revogar", danger: true });
+      if (!ok) return;
+    }
+    await busy(b, async () => {
+      await rpc(revogar ? "admin_medal_revoke" : "admin_medal_grant", { p_user: u.id, p_medal: b.dataset.id });
+      toast(revogar ? `${nomeM} revogada` : `${nomeM} liberada`);
+      reload();
+    });
+  }));
+  $("#uPush", box).addEventListener("click", () => {
+    pushPara = { id: u.id, apelido: u.apelido, email: u.email, tem_push: (u.aparelhos || []).length > 0 };
+    location.hash = "#push";
+  });
   $("#uRole", box).value = u.papel || "user";
   $("#uRoleSave", box).addEventListener("click", (ev) => busy(ev.currentTarget, async () => {
     const papel = $("#uRole", box).value;
@@ -792,6 +840,9 @@ function renderPessoa(box, u, reload) {
 }
 
 // ================================================================ 4. Notificações
+// Ficha da pessoa → "Mandar notificação": a tela de notificações abre com ela já escolhida.
+let pushPara = null;
+
 async function viewPush(ctx) {
   ctx.el.innerHTML = headHTML("Notificações", "Mande um aviso para o celular de quem usa a Irisa. Só chega em quem tem a versão com notificação e deixou receber.") + `
     <div class="grid2">
@@ -804,7 +855,13 @@ async function viewPush(ctx) {
         <span class="counter" id="cCorpo"></span>
         <div class="note danger" id="nAviso" hidden></div>
         <label class="f">Tela que abre ao tocar <select class="input" id="nUrl">${telaOptions("")}</select></label>
-        <div class="f"><span style="font-weight:500;font-size:13px;color:var(--muted)">Cidade <span class="hint">(vazio = todo mundo)</span></span><div id="nCidade"></div></div>
+        <div class="f"><span style="font-weight:500;font-size:13px;color:var(--muted)">Para quem</span>
+          <div class="seg" role="group" aria-label="Para quem enviar"><button type="button" data-para="todos" aria-pressed="true">Todo mundo</button><button type="button" data-para="cidade" aria-pressed="false">Uma cidade</button><button type="button" data-para="pessoas" aria-pressed="false">Pessoas escolhidas</button></div></div>
+        <div class="f" id="nCidadeBox" hidden><span style="font-weight:500;font-size:13px;color:var(--muted)">Cidade <span class="hint">(cidade salva no perfil)</span></span><div id="nCidade"></div></div>
+        <div class="f" id="nPessoasBox" hidden><span style="font-weight:500;font-size:13px;color:var(--muted)">Pessoas <span class="hint">(apelido ou e-mail)</span></span>
+          <input class="input" id="nBusca" placeholder="Buscar pessoa" autocomplete="off">
+          <div class="list" id="nAchados" style="margin-top:6px"></div>
+          <div id="nEscolhidas" style="display:flex;flex-wrap:wrap;gap:6px;margin-top:6px"></div></div>
         <div class="f"><span style="font-weight:500;font-size:13px;color:var(--muted)">Quando</span>
           <div class="seg" role="group" aria-label="Quando enviar"><button type="button" data-q="agora" aria-pressed="true">Agora</button><button type="button" data-q="agendar" aria-pressed="false">Agendar</button></div>
           <input class="input" type="datetime-local" id="nQuando" hidden aria-label="Data e hora (horário de Brasília)">
@@ -823,7 +880,9 @@ async function viewPush(ctx) {
 
   const f = $("#pushForm", ctx.el);
   const t = $("#nTitulo", f), c = $("#nCorpo", f), quando = $("#nQuando", f);
-  let modo = "agora", cidade = null, alcance = null;
+  let modo = "agora", cidade = null, alcance = null, para = "todos";
+  const escolhidas = new Map(); // id -> { apelido, email, tem_push }
+  if (pushPara) { escolhidas.set(pushPara.id, pushPara); para = "pessoas"; pushPara = null; }
   counter(t, $("#cTitulo", f), 65);
   counter(c, $("#cCorpo", f), 240);
 
@@ -842,18 +901,57 @@ async function viewPush(ctx) {
   c.addEventListener("input", preview);
   preview();
 
+  const cidadeAtiva = () => (para === "cidade" ? cidade : null);
+  const pessoasAtivas = () => (para === "pessoas" ? [...escolhidas.keys()] : null);
+  const publicoTxt = () => para === "pessoas"
+    ? plural(escolhidas.size, "pessoa escolhida", "pessoas escolhidas")
+    : cidadeAtiva() ? `quem tem ${cidadeAtiva().name} como cidade` : "o Brasil todo";
   const updAlcance = async () => {
     const el = $("#nAlcance", f);
+    if (para === "pessoas" && !escolhidas.size) { alcance = 0; el.textContent = "Escolha pelo menos uma pessoa."; return; }
+    if (para === "cidade" && !cidade) { alcance = 0; el.textContent = "Escolha a cidade."; return; }
     el.innerHTML = `${spinner} Calculando alcance…`;
     try {
-      alcance = Number(await rpc("admin_push_alcance", { p_cidade: cidade ? cidade.id : null }));
-      el.textContent = `Vai chegar em até ${plural(alcance, "aparelho", "aparelhos")}${cidade ? ` de quem tem ${cidade.name} como cidade` : " (todo mundo)"}.`;
+      alcance = Number(await rpc("admin_push_alcance", { p_cidade: cidadeAtiva()?.id ?? null, p_usuarios: pessoasAtivas() }));
+      el.textContent = `Vai chegar em até ${plural(alcance, "aparelho", "aparelhos")} (${publicoTxt()}).`;
     } catch (e) {
       el.innerHTML = `<span style="color:var(--coral-ink)">${esc(ptErr(e))}</span>`;
     }
   };
-  cityCombo($("#nCidade", f), { onChange: (v) => { cidade = v; updAlcance(); }, placeholder: "Buscar cidade (opcional)" });
-  updAlcance();
+  cityCombo($("#nCidade", f), { onChange: (v) => { cidade = v; updAlcance(); }, placeholder: "Buscar cidade" });
+
+  // Pessoas escolhidas: busca pelo mesmo admin_users da tela Pessoas.
+  const desenhaEscolhidas = () => {
+    const box = $("#nEscolhidas", f);
+    box.innerHTML = [...escolhidas.entries()].map(([id, p]) => `<span class="chip" style="display:inline-flex;gap:6px;align-items:center">${esc(p.apelido || p.email || "Sem apelido")}${p.tem_push ? "" : ` <span class="dim">(sem notificação ligada)</span>`}<button type="button" class="btn sm ghost" data-tira="${esc(id)}" aria-label="Tirar">×</button></span>`).join("");
+    $$("[data-tira]", box).forEach((b) => b.addEventListener("click", () => { escolhidas.delete(b.dataset.tira); desenhaEscolhidas(); updAlcance(); }));
+  };
+  const busca = $("#nBusca", f), achados = $("#nAchados", f);
+  busca.addEventListener("input", debounce(async () => {
+    const q = busca.value.trim();
+    if (q.length < 2) { achados.innerHTML = ""; return; }
+    try {
+      const rows = (await rpc("admin_users", { p_busca: q, p_limite: 8 })) || [];
+      achados.innerHTML = rows.length ? rows.map((r) => `<div class="it"><div class="txt"><strong>${esc(r.apelido || "Sem apelido")}</strong> <span class="small dim">${esc(r.email || "")}${r.tem_push ? "" : " · sem notificação ligada"}</span></div>
+        <button type="button" class="btn sm" data-add="${esc(r.id)}">${escolhidas.has(r.id) ? "Já está" : "Adicionar"}</button></div>`).join("") : `<p class="small dim">Ninguém com esse nome ou e-mail.</p>`;
+      $$("[data-add]", achados).forEach((b) => b.addEventListener("click", () => {
+        const r = rows.find((x) => x.id === b.dataset.add);
+        escolhidas.set(r.id, { apelido: r.apelido, email: r.email, tem_push: r.tem_push });
+        b.textContent = "Já está";
+        desenhaEscolhidas(); updAlcance();
+      }));
+    } catch (e) { achados.innerHTML = `<p class="small" style="color:var(--coral-ink)">${esc(ptErr(e))}</p>`; }
+  }));
+  const setPara = (v) => {
+    para = v;
+    $$("[data-para]", f).forEach((x) => x.setAttribute("aria-pressed", String(x.dataset.para === v)));
+    $("#nCidadeBox", f).hidden = v !== "cidade";
+    $("#nPessoasBox", f).hidden = v !== "pessoas";
+    updAlcance();
+  };
+  $$("[data-para]", f).forEach((b) => b.addEventListener("click", () => setPara(b.dataset.para)));
+  desenhaEscolhidas();
+  setPara(para);
 
   $$("[data-q]", f).forEach((b) => b.addEventListener("click", () => {
     modo = b.dataset.q;
@@ -881,14 +979,17 @@ async function viewPush(ctx) {
       if (new Date(iso).getTime() < Date.now() + 60000) { toast("Escolha um horário no futuro.", true); quando.focus(); return; }
       quandoTxt = "em " + fmtDT(iso);
     }
+    if (para === "pessoas" && !escolhidas.size) { toast("Escolha pelo menos uma pessoa.", true); busca.focus(); return; }
+    if (para === "cidade" && !cidade) { toast("Escolha a cidade.", true); return; }
     const ok = await confirmBox({
       title: modo === "agendar" ? "Agendar notificação?" : "Enviar agora?",
-      text: `“${titulo}” vai para ${alcance != null ? `até ${plural(alcance, "aparelho", "aparelhos")}` : "os aparelhos"} ${cidade ? `de ${cidade.name}` : "do Brasil todo"}, ${quandoTxt}. Depois de enviada não dá para apagar do celular de ninguém.`,
+      text: `“${titulo}” vai para ${alcance != null ? `até ${plural(alcance, "aparelho", "aparelhos")}` : "os aparelhos"} (${publicoTxt()}), ${quandoTxt}. Depois de enviada não dá para apagar do celular de ninguém.`,
       ok: modo === "agendar" ? "Agendar" : "Enviar",
     });
     if (!ok) return;
     await busy($("#nEnviar", f), async () => {
-      await rpc("admin_push_create", { p_titulo: titulo, p_corpo: corpo, p_quando: iso, p_url: $("#nUrl", f).value || null, p_cidade: cidade ? cidade.id : null });
+      await rpc("admin_push_create", { p_titulo: titulo, p_corpo: corpo, p_quando: iso, p_url: $("#nUrl", f).value || null,
+        p_cidade: cidadeAtiva()?.id ?? null, p_usuarios: pessoasAtivas() });
       toast(modo === "agendar" ? "Notificação agendada" : "Notificação na fila de envio");
       t.value = ""; c.value = ""; t.dispatchEvent(new Event("input")); c.dispatchEvent(new Event("input"));
       loadList();

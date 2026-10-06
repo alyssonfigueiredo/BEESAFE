@@ -88,7 +88,7 @@ export function MedalCelebration() {
             />
           </View>
           <FadeUp key={`n-${m.id}`} delay={reduce ? 0 : T_NOME} duration={450}>
-            <Text className="mt-6 text-center font-display text-[42px] uppercase leading-[46px] text-paper">
+            <Text className="mt-6 text-center font-display text-[42px] uppercase leading-[49px] text-paper">
               {nomeDa(m, g?.forma ?? 2)}
             </Text>
           </FadeUp>

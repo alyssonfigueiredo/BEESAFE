@@ -181,7 +181,7 @@ function Conteudo() {
       <View className="flex-row items-center gap-4">
         <WeekRing dias={Math.min(4, dias)} size={96} animate delay={450} step={300} />
         <View className="min-w-0 flex-1">
-          <Text className="font-display text-[28px] uppercase leading-[30px] text-ink">
+          <Text className="font-display text-[28px] uppercase leading-[33px] text-ink">
             Sua semana
           </Text>
           <Text className="mt-1 font-body text-[14px] leading-[20px] text-muted">

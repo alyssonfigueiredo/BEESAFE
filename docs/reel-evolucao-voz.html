@@ -1,0 +1,253 @@
+<!doctype html>
+<html lang="pt-BR"><head><meta charset="utf-8">
+<title>Irisa · Reel evolução (com narração)</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Urbanist:wght@500;600&family=Oswald:wght@400;500;700&family=Space+Grotesk:wght@400;500;700&display=swap">
+<style>
+:root{
+  --paper:#FAF9F6;--ink:#1E2340;--night2:#161B2E;--muted:#4F576F;
+  --coral:#F4736F;--orange:#F5A45D;--yellow:#F0CA75;--turq:#5CC9B4;--lilac:#AE96F2;--blue:#6AA8EE;
+  --coralInk:#B23C3A;--turqInk:#1B7A6E;--amber:#E0A32E;
+  --wordmark:"Urbanist","Helvetica Neue",Arial,sans-serif;--display:"Oswald",Impact,"Arial Narrow",sans-serif;--body:"Space Grotesk","Helvetica Neue",Arial,sans-serif;
+  --rainbow:linear-gradient(90deg,var(--coral),var(--orange),var(--yellow),var(--turq),var(--blue),var(--lilac));
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{width:1080px;height:1920px;position:relative;overflow:hidden;background:var(--paper);font-family:var(--body);color:var(--ink)}
+.bg{position:absolute;inset:0;z-index:0;pointer-events:none}
+.bg i{position:absolute;width:700px;height:700px;border-radius:50%;filter:blur(90px);opacity:.55}
+.bg i:nth-child(1){left:-220px;top:-160px;background:var(--turq)}
+.bg i:nth-child(2){right:-220px;top:-140px;background:var(--coral)}
+.bg i:nth-child(3){right:-240px;bottom:-200px;background:var(--lilac)}
+.bg i:nth-child(4){left:-240px;bottom:-220px;background:var(--yellow)}
+
+.mark{width:30px;height:30px;border-radius:50%;background:conic-gradient(from -90deg,var(--coral),var(--orange),var(--yellow),var(--turq),var(--blue),var(--lilac),var(--coral));position:relative;flex:none}
+.mark::after{content:"";position:absolute;inset:4px;border-radius:50%;background:var(--paper)}
+.mark::before{content:"";position:absolute;left:50%;top:50%;width:9px;height:9px;margin:-4.5px;border-radius:50%;background:var(--night2);z-index:1}
+.logo{position:absolute;left:50%;bottom:140px;transform:translateX(-50%);display:flex;align-items:center;gap:12px;font-family:var(--wordmark);font-weight:500;text-transform:uppercase;letter-spacing:.22em;font-size:26px;color:var(--night2);opacity:.9;z-index:2}
+.logo b{font-weight:500;color:var(--amber)}
+
+.scene{position:absolute;inset:0;z-index:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:0 110px}
+.eyebrow{font-family:var(--display);text-transform:uppercase;letter-spacing:.2em;font-size:30px;font-weight:500;color:var(--turqInk);margin-bottom:26px}
+.eyebrow.coral{color:var(--coralInk)}
+h1{font-family:var(--display);text-transform:uppercase;font-weight:500;letter-spacing:.01em;font-size:76px;line-height:1.04;margin:0}
+h1 .rb{background:var(--rainbow);-webkit-background-clip:text;background-clip:text;color:transparent}
+.tag{margin-top:30px;font-family:var(--display);text-transform:uppercase;letter-spacing:.08em;font-size:34px;font-weight:500;color:var(--ink)}
+.badge{display:inline-block;margin-bottom:22px;font-family:var(--display);text-transform:uppercase;letter-spacing:.14em;font-size:26px;font-weight:500;color:#fff;background:linear-gradient(90deg,var(--lilac),var(--blue));padding:10px 26px;border-radius:999px}
+
+/* anel */
+.ring-wrap{display:flex;flex-direction:column;align-items:center}
+.ring{position:relative;width:540px;height:540px;margin-top:10px}
+.ring svg{width:100%;height:100%;transform:rotate(-90deg)}
+.ring .bgc{stroke:#E6E2D9}
+.ring .fgc{stroke:url(#ringGrad);stroke-linecap:round}
+.ring .num{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;gap:14px}
+.ring .num b{font-family:var(--display);font-weight:500;font-size:140px;line-height:1;color:var(--ink)}
+.ring .num span{font-family:var(--display);font-weight:500;font-size:30px;color:var(--muted);align-self:center}
+.sub{margin-top:42px;max-width:760px;font-size:32px;line-height:1.4;color:var(--muted);font-weight:500;opacity:0;transition:opacity .5s ease}
+.sub.in{opacity:1}
+
+/* medalha única */
+.medal-card{width:360px;height:360px;background:#fff;border-radius:46px;box-shadow:0 30px 60px -30px rgba(30,35,64,.35);display:flex;align-items:center;justify-content:center;margin:40px 0 28px}
+.medal-card img{width:70%;height:70%;object-fit:contain}
+.medal-label{font-family:var(--display);text-transform:uppercase;letter-spacing:.06em;font-size:36px;font-weight:500;color:var(--ink)}
+
+/* fileira */
+.row{display:flex;gap:26px;margin-top:54px}
+.row .c{width:150px;height:150px;background:#fff;border-radius:30px;box-shadow:0 20px 40px -22px rgba(30,35,64,.3);display:flex;align-items:center;justify-content:center}
+.row .c img{width:72%;height:72%;object-fit:contain}
+
+/* grade recap */
+.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:22px;margin-top:50px}
+.grid .c{width:140px;height:140px;background:#fff;border-radius:26px;box-shadow:0 18px 36px -20px rgba(30,35,64,.3);display:flex;align-items:center;justify-content:center}
+.grid .c img{width:70%;height:70%;object-fit:contain}
+
+/* nível */
+.lvl{display:flex;flex-direction:column;align-items:center;margin-top:36px}
+.lvl-card{width:320px;height:320px;background:#fff;border-radius:999px;box-shadow:0 30px 60px -28px rgba(30,35,64,.35);display:flex;align-items:center;justify-content:center}
+.lvl-card img{width:66%;height:66%;object-fit:contain}
+
+/* mapa colorido */
+.mapdots{position:relative;width:640px;height:420px;margin-top:40px}
+.mapdots i{position:absolute;width:30px;height:30px;border-radius:50%;box-shadow:0 10px 18px -8px rgba(30,35,64,.35)}
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute">
+  <defs>
+    <linearGradient id="ringGrad" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#F4736F"/>
+      <stop offset="25%" stop-color="#F5A45D"/>
+      <stop offset="50%" stop-color="#F0CA75"/>
+      <stop offset="75%" stop-color="#5CC9B4"/>
+      <stop offset="100%" stop-color="#AE96F2"/>
+    </linearGradient>
+  </defs>
+</svg>
+
+<div class="bg"><i></i><i></i><i></i><i></i></div>
+
+<!-- 1 -->
+<section class="scene" data-from="0" data-to="4420">
+  <div class="eyebrow">Tem novidade chegando</div>
+  <h1>A IRISA MAL CHEGOU<br><span class="rb">E JÁ EVOLUIU.</span></h1>
+</section>
+
+<!-- 2 -->
+<section class="scene" data-from="4420" data-to="9060">
+  <div class="eyebrow">Toda vez que você avalia</div>
+  <h1>ALGUMA COISA<br><span class="rb">ACENDE.</span></h1>
+</section>
+
+<!-- 3 -->
+<section class="scene" data-from="9060" data-to="14620">
+  <div class="eyebrow">Dar close já é ótimo</div>
+  <h1>DAR CLOSE<br><span class="rb">E EVOLUIR?</span></h1>
+  <div class="tag">Melhor ainda.</div>
+</section>
+
+<!-- 4: anel -->
+<section class="scene" data-from="14620" data-to="22140">
+  <div class="ring-wrap">
+    <div class="eyebrow coral">Sua evolução</div>
+    <div class="ring">
+      <svg viewBox="0 0 200 200">
+        <circle class="bgc" cx="100" cy="100" r="88" fill="none" stroke-width="18"/>
+        <circle class="fgc" id="ringArc" cx="100" cy="100" r="88" fill="none" stroke-width="18" stroke-dasharray="553" stroke-dashoffset="553"/>
+      </svg>
+      <div class="num"><b id="ringNum">0</b><span>de 48</span></div>
+    </div>
+    <div class="sub" id="ringSub">48 peças pra descobrir e colecionar no seu tempo — sem bater ponto todo dia.</div>
+  </div>
+</section>
+
+<!-- 5: medalha -->
+<section class="scene" data-from="22140" data-to="25900">
+  <div class="eyebrow">E claro que tem</div>
+  <h1>MEDALHA,<br><span class="rb">NÉ?</span></h1>
+  <div class="medal-card"><img src="../assets/medalhas/acendeu-a-luz.png" alt=""></div>
+  <div class="medal-label">32 no total</div>
+</section>
+
+<!-- 6: fileira -->
+<section class="scene" data-from="25900" data-to="29100">
+  <div class="eyebrow">Conquistadas</div>
+  <h1>DE JEITOS<br><span class="rb">DIFERENTES.</span></h1>
+  <div class="row">
+    <div class="c"><img src="../assets/medalhas/deu-o-nome.png" alt=""></div>
+    <div class="c"><img src="../assets/medalhas/nome-na-lista.png" alt=""></div>
+    <div class="c"><img src="../assets/medalhas/abre-alas.png" alt=""></div>
+    <div class="c"><img src="../assets/medalhas/olho-vivo.png" alt=""></div>
+    <div class="c"><img src="../assets/medalhas/favorita.png" alt=""></div>
+  </div>
+</section>
+
+<!-- 7: mapa colorido -->
+<section class="scene" data-from="29100" data-to="33280">
+  <div class="eyebrow">Enquanto você avalia e explora</div>
+  <h1>O MAPA FICA<br><span class="rb">CADA VEZ MAIS COR.</span></h1>
+  <div class="mapdots" id="mapdots"></div>
+</section>
+
+<!-- 8: nível -->
+<section class="scene" data-from="33280" data-to="36640">
+  <div class="eyebrow">Quanto mais você</div>
+  <h1>MAIS A IRISA<br><span class="rb">DESBLOQUEIA.</span></h1>
+  <div class="lvl">
+    <div class="lvl-card"><img src="../assets/niveis/nivel-4.png" alt=""></div>
+  </div>
+</section>
+
+<!-- 9: grade recap -->
+<section class="scene" data-from="36640" data-to="40580">
+  <div class="eyebrow">Mais cor, mais conquista</div>
+  <h1>MAIS CLOSE<br><span class="rb">PRA COLEÇÃO.</span></h1>
+  <div class="grid">
+    <div class="c"><img src="../assets/medalhas/deu-close.png" alt=""></div>
+    <div class="c"><img src="../assets/medalhas/figurinha.png" alt=""></div>
+    <div class="c"><img src="../assets/medalhas/famosinha.png" alt=""></div>
+    <div class="c"><img src="../assets/medalhas/inaugurou.png" alt=""></div>
+    <div class="c"><img src="../assets/medalhas/acendeu-a-luz.png" alt=""></div>
+    <div class="c"><img src="../assets/medalhas/bateu-ponto.png" alt=""></div>
+    <div class="c"><img src="../assets/medalhas/mala-pronta.png" alt=""></div>
+    <div class="c"><img src="../assets/medalhas/ombro-amigo.png" alt=""></div>
+  </div>
+</section>
+
+<!-- 10 -->
+<section class="scene" data-from="40580" data-to="43780">
+  <div class="eyebrow">E calma, querida</div>
+  <h1>ISSO É SÓ<br><span class="rb">O COMEÇO.</span></h1>
+</section>
+
+<!-- 11 -->
+<section class="scene" data-from="43780" data-to="45680">
+  <h1>VEM MUITA<br><span class="rb">COISA POR AÍ!</span></h1>
+</section>
+
+<!-- 12: fecho -->
+<section class="scene" data-from="45680" data-to="47060">
+  <h1>BORA,<br><span class="rb">IRISAR!</span></h1>
+</section>
+
+<div class="logo"><div class="mark"></div><span>IRIS<b>A</b></span></div>
+
+<script>
+const scenes = [...document.querySelectorAll(".scene")].map(el => ({
+  el, from: Number(el.dataset.from), to: Number(el.dataset.to)
+}));
+window.__TOTAL = Math.max(...scenes.map(s => s.to)) + 300;
+
+const FADE = 600;
+function smooth(x){ x = Math.max(0, Math.min(1, x)); return x*x*(3-2*x); }
+function opacityFor(t, from, to){
+  const fadeStart = from <= 0 ? from : from - FADE/2;
+  if (t <= fadeStart || t >= to + FADE/2) return 0;
+  if (from > 0 && t < from + FADE/2) return smooth((t-fadeStart)/FADE);
+  if (t > to - FADE/2) return smooth(1-((t-(to-FADE/2))/FADE));
+  return 1;
+}
+
+// pontos coloridos do "mapa"
+const dotColors = ["#F4736F","#F5A45D","#F0CA75","#5CC9B4","#6AA8EE","#AE96F2","#F4736F","#5CC9B4","#F0CA75"];
+const dotPos = [[40,60],[180,20],[320,90],[480,30],[580,140],[60,220],[220,260],[400,210],[540,320],[140,340],[320,360],[460,370]];
+const mapEl = document.getElementById("mapdots");
+dotPos.forEach((p,i) => {
+  const d = document.createElement("i");
+  d.style.left = p[0]+"px"; d.style.top = p[1]+"px";
+  d.style.background = dotColors[i % dotColors.length];
+  mapEl.appendChild(d);
+});
+
+const ringScene = scenes.find(s => s.el.querySelector("#ringNum"));
+const ringNumEl = document.getElementById("ringNum");
+const ringArc = document.getElementById("ringArc");
+const ringSub = document.getElementById("ringSub");
+const ringSubEl = ringSub;
+const CIRC = 2 * Math.PI * 88;
+const mapDots = [...mapEl.children];
+
+window.__setT = function(t){
+  scenes.forEach(s => { s.el.style.opacity = opacityFor(t, s.from, s.to); });
+
+  // anel: conta e preenche nos primeiros 70% da cena
+  const rp = Math.max(0, Math.min(1, (t - ringScene.from) / (ringScene.to - ringScene.from)));
+  const countP = Math.min(1, rp / 0.7);
+  const val = Math.round(smooth(countP) * 31);
+  ringNumEl.textContent = val;
+  ringArc.setAttribute("stroke-dasharray", String(CIRC));
+  ringArc.setAttribute("stroke-dashoffset", String(CIRC * (1 - smooth(countP) * (31/48))));
+  ringSubEl.classList.toggle("in", rp > 0.68);
+
+  // mapa: pontos aparecem em sequência
+  const mp = Math.max(0, Math.min(1, (t - 29100) / (33280 - 29100)));
+  mapDots.forEach((d, i) => {
+    const th = i / mapDots.length;
+    const show = mp > th * 0.8;
+    d.style.transform = show ? "scale(1)" : "scale(0)";
+    d.style.transition = "transform .35s cubic-bezier(.3,1.4,.4,1)";
+  });
+};
+window.__setT(0);
+</script>
+</body></html>

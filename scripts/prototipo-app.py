@@ -67,6 +67,10 @@ def main():
     destino = RAIZ / "docs/Irisa-prototipo-app.html"
     destino.write_text(final)
     print(f"{len(meds)} medalhas, {len(dados['niveis'])} níveis, {destino.stat().st_size // 1024} KB → {destino}")
+    # Proposta "Quero ir" (06/10/2026): o mesmo protótipo com o coração ligado, abrindo em Lugares.
+    fav = RAIZ / "docs/Irisa-prototipo-quero-ir.html"
+    fav.write_text(final.replace("/*__FAV__*/false", "true").replace("<title>Irisa · protótipo</title>", "<title>Irisa · Quero ir</title>"))
+    print(f"proposta Quero ir → {fav}")
 
 
 if __name__ == "__main__":

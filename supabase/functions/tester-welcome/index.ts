@@ -23,6 +23,7 @@ function json(status: number, body: unknown): Response {
 // Primeiro o de participação (vira testador), depois o da loja (só abre para quem já é testador).
 const PLAY_TEST_URL = "https://play.google.com/apps/testing/br.com.irisa.app";
 const PLAY_STORE_URL = "https://play.google.com/store/apps/details?id=br.com.irisa.app";
+const APP_STORE_URL = "https://apps.apple.com/br/app/irisa/id6816761128";
 // Embutida em base64 (não é URL externa): nem raw.githubusercontent.com nem jsDelivr carregavam no
 // proxy de imagem de alguns Gmail — assim o logo viaja dentro do próprio e-mail, sem depender de
 // buscar nada de fora. Gerada de docs/marca-pack/irisa-horizontal-ink.png (567×224).
@@ -106,7 +107,7 @@ function androidEmail() {
       titulo: "Você está no teste da Irisa",
       corpo: "Oi! Seu e-mail já está na lista de teste. Bem-vinde.",
       passos: [
-        "Abra este link, no celular Android logado na mesma conta Google deste e-mail, e toque em <b>“Tornar-se testador”</b>.",
+        "Abra este link, no celular Android logado na mesma conta Google deste e-mail, e toque em <b>&ldquo;Tornar-se testador&rdquo;</b>.",
         "Depois abra a Irisa na Play Store e instale.",
       ],
       ctas: [
@@ -118,16 +119,42 @@ function androidEmail() {
   };
 }
 
-function iosEmail(url: string) {
+function iosEmail(testflightUrl?: string) {
+  if (testflightUrl) {
+    return {
+      subject: "Você está no teste da Irisa no iPhone",
+      text: [
+        "Oi! A Irisa já pode ser testada no iPhone. Bem-vinde.",
+        "",
+        "1. Instale o app TestFlight da App Store.",
+        "2. Abra este link no iPhone:",
+        testflightUrl,
+        "3. Toque em \"Aceitar\" e depois em \"Instalar\".",
+        "",
+        "Conte o que achou respondendo este e-mail.",
+        "",
+        "Irisa · o mapa dos lugares onde a gente é bem-vinde, feito por nós",
+        "@appirisa",
+      ].join("\n"),
+      html: wrapHtml({
+        titulo: "Você está no teste da Irisa no iPhone",
+        corpo: "Oi! A Irisa já pode ser testada no iPhone. Bem-vinde.",
+        passos: [
+          "Instale o app <b>TestFlight</b> da App Store.",
+          "Abra o link abaixo no iPhone e toque em &ldquo;Aceitar&rdquo; e depois em &ldquo;Instalar&rdquo;.",
+        ],
+        ctas: [{ texto: "Abrir no TestFlight", url: testflightUrl, cor: "#FF6964", tinta: "#FFFFFF" }],
+        nota: "Conte o que achou respondendo este e-mail.",
+      }),
+    };
+  }
   return {
-    subject: "Você está no teste da Irisa no iPhone",
+    subject: "A Irisa está na App Store!",
     text: [
-      "Oi! A Irisa já pode ser testada no iPhone. Bem-vinde.",
+      "Oi! A Irisa já está disponível na App Store. Você pediu para ser avisade — chegou a hora. Bem-vinde.",
       "",
-      "1. Instale o app TestFlight da App Store.",
-      "2. Abra este link no iPhone:",
-      url,
-      "3. Toque em \"Aceitar\" e depois em \"Instalar\".",
+      "1. Abra o link abaixo no iPhone e toque em \"Obter\".",
+      APP_STORE_URL,
       "",
       "Conte o que achou respondendo este e-mail.",
       "",
@@ -135,13 +162,12 @@ function iosEmail(url: string) {
       "@appirisa",
     ].join("\n"),
     html: wrapHtml({
-      titulo: "Você está no teste da Irisa no iPhone",
-      corpo: "Oi! A Irisa já pode ser testada no iPhone. Bem-vinde.",
+      titulo: "A Irisa está na App Store!",
+      corpo: "Oi! A Irisa já está disponível na App Store. Você pediu para ser avisade — chegou a hora. Bem-vinde.",
       passos: [
-        "Instale o app <b>TestFlight</b> da App Store.",
-        "Abra o link abaixo no iPhone e toque em “Aceitar” e depois em “Instalar”.",
+        "Abra o link abaixo no iPhone e toque em <b>&ldquo;Obter&rdquo;</b> para instalar.",
       ],
-      ctas: [{ texto: "Abrir no TestFlight", url, cor: "#FF6964", tinta: "#FFFFFF" }],
+      ctas: [{ texto: "Baixar na App Store", url: APP_STORE_URL, cor: "#FF6964", tinta: "#FFFFFF" }],
       nota: "Conte o que achou respondendo este e-mail.",
     }),
   };
@@ -164,8 +190,8 @@ Deno.serve(async (req) => {
     .is("welcomed_at", null)
     .order("added_at")
     .limit(40);
-  // Sem link público do TestFlight, quem é de iPhone espera (não marca como avisado).
-  if (!testflight) q = q.eq("platform", "android");
+  // iOS: envia sempre (App Store pública); TESTFLIGHT_URL é só para quem quer o e-mail de TestFlight.
+  // Android: sempre envia.
   const { data: pending, error } = await q;
   if (error) return json(500, { error: error.message });
   if (!pending?.length) return json(200, { sent: 0 });
@@ -179,7 +205,7 @@ Deno.serve(async (req) => {
   const sent: number[] = [];
   const failed: string[] = [];
   for (const row of pending) {
-    const mail = row.platform === "ios" ? iosEmail(testflight!) : androidEmail();
+    const mail = row.platform === "ios" ? iosEmail(testflight) : androidEmail();
     try {
       await smtp.sendMail({
         from: `Irisa <${user}>`,

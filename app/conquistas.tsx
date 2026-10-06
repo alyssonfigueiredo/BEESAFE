@@ -115,7 +115,7 @@ function Hero({ q, g, onOpen }: { q: MedalhaProgresso; g: Gamificacao; onOpen: (
                 Quase lá
               </Text>
             </View>
-            <Text className="mt-1.5 font-display text-[26px] uppercase leading-[28px] text-paper">
+            <Text className="mt-1.5 font-display text-[26px] uppercase leading-[31px] text-paper">
               {nomeDa(m, g.forma)}
             </Text>
             <Text className="mt-1 font-body text-[13px] leading-[18px]" style={{ color: SOFT }}>

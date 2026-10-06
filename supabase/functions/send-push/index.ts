@@ -1,7 +1,8 @@
 // Notificações push pela API do Expo (migration 38).
 // Chamada pelo pg_cron de 5 em 5 minutos quando há envio vencido e na hora por enviar_notificacao().
 // Pega os envios vencidos de public.push_envios, manda para os tokens de public.push_tokens
-// (todo mundo ou só quem tem a cidade no perfil), grava quantos foram aceitos e apaga os tokens
+// (todo mundo, só quem tem a cidade no perfil ou só as pessoas escolhidas no painel — migration 64),
+// grava quantos foram aceitos e apaga os tokens
 // de aparelho que desinstalou o app ou tirou a permissão (DeviceNotRegistered).
 // Secrets: SB_SECRET_KEY (já existe). Opcional: EXPO_ACCESS_TOKEN, se a segurança de push do Expo for ligada.
 // A senha do cron fica só no Vault (push_secret) e é conferida pela RPC push_autorizado.
@@ -53,14 +54,14 @@ Deno.serve(async (req) => {
   });
   if (!ok) return json(401, { error: "não autorizado" });
 
-  const { data: envios, error } = await db.rpc("push_pegar_envios");
+  const { data: envios, error } = await db.rpc("push_pegar_envios_v2");
   if (error) return json(500, { error: error.message });
 
   const resumo: unknown[] = [];
   for (const envio of (envios ?? []) as Envio[]) {
     try {
-      const { data: linhas, error: e } = await db.rpc("push_tokens_do_envio", {
-        p_city: envio.city_id,
+      const { data: linhas, error: e } = await db.rpc("push_tokens_do_envio_v2", {
+        p_envio: envio.id,
       });
       if (e) throw new Error(e.message);
       const tokens = ((linhas ?? []) as { token: string }[]).map((l) => l.token);
