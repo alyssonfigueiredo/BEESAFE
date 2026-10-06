@@ -637,7 +637,8 @@ Nome: **Irisa** (INPI livre; @appirisa livre). Bundle id Android `br.com.irisa.a
   corpo (no iOS o À/É sobe acima da linha): todos subiram para ~1,17. Título novo em Oswald: entrelinha de pelo menos
   1,15 × o tamanho.
   **Quero ir (proposta, NÃO implementar sem ok dele, 06/10/2026):** favoritar lugar numa lista "Quero ir", coração
-  irisado (traço arco-íris, enche ao salvar com uma explosãozinha de cor) em todo cartão de lugar, na ficha e no mapa
+  irisado (traço arco-íris, enche ao salvar com uma explosãozinha de cor) no canto de cima da foto de cada cartão de
+  lugar (pedido dele: no meio do cartão ficava estranho), no canto de cima da ficha e no mapa
   (camada "Quero ir" com pinos de coração). Acesso sem ocupar a barra: chip "Quero ir · N" no começo dos filtros de
   Lugares e cartão no Perfil. Abas Quero ir / Já fui; avaliou um lugar da lista, ele passa sozinho para Já fui (a
   recompensa avisa). Só a pessoa vê. Protótipo: `docs/Irisa-prototipo-quero-ir.html` (o mesmo `prototipo-app.html`
