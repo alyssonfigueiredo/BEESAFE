@@ -1,6 +1,6 @@
 import { router, Stack, useLocalSearchParams } from "expo-router";
-import { useRef, useState } from "react";
-import { Dimensions, Image, Pressable, ScrollView, Text, View } from "react-native";
+import { useEffect, useRef, useState } from "react";
+import { Dimensions, Pressable, ScrollView, Text, View } from "react-native";
 import Animated, {
   interpolate,
   type SharedValue,
@@ -11,7 +11,9 @@ import Animated, {
 
 import { Aurora } from "@/components/Aurora";
 import { Glass } from "@/components/Glass";
+import { Busto } from "@/components/irise-personagem/Busto";
 import { useScreenInsets } from "@/hooks/useScreenInsets";
+import { useSetIrisePersonagem } from "@/hooks/useProfile";
 import { corpoSrc, IRISES, STATS, type Forma } from "@/lib/irisePersonagens";
 import { colors } from "@/theme/tokens";
 
@@ -24,11 +26,23 @@ const ITEM_W = TELA_W; // uma página por personagem, com os vizinhos espiando p
  */
 export default function IrisePreviewEscolha() {
   const insets = useScreenInsets({ tabs: false });
-  const { nome, forma: formaParam } = useLocalSearchParams<{ nome: string; forma: string }>();
+  const { nome, forma: formaParam, modo, atual: atualParam } = useLocalSearchParams<{
+    nome: string;
+    forma: string;
+    /** "perfil": veio de Trocar irise no Perfil — escolher só salva e volta, sem apresentação. */
+    modo: string;
+    atual: string;
+  }>();
   const forma = (Number(formaParam ?? 2) || 2) as Forma;
+  const doPerfil = modo === "perfil";
+  const setPersonagem = useSetIrisePersonagem();
   const scrollRef = useRef<Animated.ScrollView>(null);
   const scrollX = useSharedValue(0);
-  const [indice, setIndice] = useState(0);
+  const [indice, setIndice] = useState(() => {
+    const n = Number(atualParam);
+    const i = IRISES.findIndex((p) => p.n === n);
+    return i >= 0 ? i : 0;
+  });
 
   const onScroll = useAnimatedScrollHandler((e) => {
     scrollX.set(e.contentOffset.x);
@@ -38,6 +52,12 @@ export default function IrisePreviewEscolha() {
     const alvo = Math.max(0, Math.min(IRISES.length - 1, i));
     scrollRef.current?.scrollTo({ x: alvo * ITEM_W, animated: true });
   }
+
+  // Abriu já num personagem (ex.: trocar no Perfil, no que a pessoa já tem): pula pra ele sem animar.
+  useEffect(() => {
+    if (indice > 0) scrollRef.current?.scrollTo({ x: indice * ITEM_W, animated: false });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const atual = IRISES[indice];
 
@@ -86,19 +106,14 @@ export default function IrisePreviewEscolha() {
           {IRISES.map((p, i) => (
             <Pressable key={p.n} onPress={() => irPara(i)}>
               <View
-                className="h-[42px] w-[42px] items-center justify-center overflow-hidden rounded-full"
                 style={{
+                  borderRadius: 24,
                   borderWidth: i === indice ? 2.5 : 0,
                   borderColor: colors.turquoiseInk,
-                  backgroundColor: colors.subtle,
                   transform: [{ scale: i === indice ? 1.12 : 1 }],
                 }}
               >
-                <Image
-                  source={corpoSrc(1, p.n)}
-                  style={{ width: 60, height: 60, marginTop: 18 }}
-                  resizeMode="cover"
-                />
+                <Busto personagem={p.n} size={42} />
               </View>
             </Pressable>
           ))}
@@ -148,17 +163,22 @@ export default function IrisePreviewEscolha() {
             </View>
 
             <Pressable
-              onPress={() =>
+              disabled={setPersonagem.isPending}
+              onPress={() => {
+                if (doPerfil) {
+                  setPersonagem.mutate(atual.n, { onSuccess: () => router.back() });
+                  return;
+                }
                 router.push({
                   pathname: "/irise-preview/apresentacao",
                   params: { nome, forma: String(forma), irise: String(atual.n) },
-                })
-              }
+                });
+              }}
               className="mt-5 h-[52px] items-center justify-center rounded-full active:opacity-85"
               style={{ backgroundColor: colors.turquoise }}
             >
               <Text className="font-display text-[17px] text-ink">
-                ESCOLHER {atual.nome.toUpperCase()}
+                {doPerfil ? "USAR" : "ESCOLHER"} {atual.nome.toUpperCase()}
               </Text>
             </Pressable>
           </ScrollView>

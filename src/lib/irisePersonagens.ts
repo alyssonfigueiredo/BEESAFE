@@ -38,10 +38,11 @@ export function flexionar(texto: string, forma: Forma): string {
   return texto.replace(/\{([^{}|]+)\|([^{}|]+)\|([^{}|]+)\}/g, (_, a, o, e) => [a, o, e][forma]);
 }
 
+// Sem XP/nível (decisão do Alysson, 06/10/2026) e só no chat (não acompanha o app inteiro).
 export const FALAS_APRESENTACAO = [
   { texto: "Oi, {nome}! Eu sou {irise}, seu irise. Prazer!", pose: 2 },
-  { texto: "Vou junto com você pelo app inteiro: nos lugares, no mapa e quando precisar de apoio.", pose: 13 },
-  { texto: "Cada lugar que você avalia acende um gomo da nossa íris e a gente sobe de nível. Bora?", pose: 6 },
+  { texto: "Fico te esperando ali no chat, sempre que quiser uma sugestão ou só conversar.", pose: 13 },
+  { texto: "Quer trocar de irise ou de pronome depois? É só ir no seu perfil. Bora?", pose: 6 },
 ] as const;
 
 // Corpo inteiro (fundo transparente): usado na Escolha (pose 1) e na Apresentação (poses 2, 6, 13).
@@ -87,4 +88,32 @@ const CORPO: Record<number, Record<number, number>> = {
 
 export function corpoSrc(pose: number, personagem: number): number {
   return CORPO[pose]?.[personagem] ?? CORPO[1][personagem];
+}
+
+// Busto (300×460, mesma proporção pros 7): feito sob medida pro avatar circular — nunca usar o
+// corpo inteiro (acima) num círculo, a imagem não é recortada pra isso e corta torto.
+export const BUSTO_ASPECTO = 460 / 300;
+const BUSTO: Record<number, Record<number, number>> = {
+  1: {
+    1: require("../../assets/irise-personagens/b1-1.webp"),
+    2: require("../../assets/irise-personagens/b1-2.webp"),
+    3: require("../../assets/irise-personagens/b1-3.webp"),
+    4: require("../../assets/irise-personagens/b1-4.webp"),
+    5: require("../../assets/irise-personagens/b1-5.webp"),
+    6: require("../../assets/irise-personagens/b1-6.webp"),
+    7: require("../../assets/irise-personagens/b1-7.webp"),
+  },
+  13: {
+    1: require("../../assets/irise-personagens/b13-1.webp"),
+    2: require("../../assets/irise-personagens/b13-2.webp"),
+    3: require("../../assets/irise-personagens/b13-3.webp"),
+    4: require("../../assets/irise-personagens/b13-4.webp"),
+    5: require("../../assets/irise-personagens/b13-5.webp"),
+    6: require("../../assets/irise-personagens/b13-6.webp"),
+    7: require("../../assets/irise-personagens/b13-7.webp"),
+  },
+};
+
+export function bustoSrc(pose: number, personagem: number): number {
+  return BUSTO[pose]?.[personagem] ?? BUSTO[1][personagem];
 }
