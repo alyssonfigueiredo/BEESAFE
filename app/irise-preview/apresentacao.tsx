@@ -1,12 +1,15 @@
 import { router, Stack, useLocalSearchParams } from "expo-router";
+import { X } from "lucide-react-native";
 import { useState } from "react";
-import { Image, View } from "react-native";
+import { Image, Pressable, View } from "react-native";
 import Animated, { FadeIn, ZoomIn } from "react-native-reanimated";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import { Aurora } from "@/components/Aurora";
 import { CaixaDeFala } from "@/components/irise-personagem/CaixaDeFala";
 import { useScreenInsets } from "@/hooks/useScreenInsets";
 import { corpoSrc, FALAS_APRESENTACAO, flexionar, IRISES, type Forma } from "@/lib/irisePersonagens";
+import { colors } from "@/theme/tokens";
 
 /**
  * Prévia do personagem do irise — apresentação. Três falas, depois "BORA!" volta pro app de
@@ -14,6 +17,7 @@ import { corpoSrc, FALAS_APRESENTACAO, flexionar, IRISES, type Forma } from "@/l
  */
 export default function IrisePreviewApresentacao() {
   const insets = useScreenInsets({ tabs: false });
+  const safe = useSafeAreaInsets();
   const { nome, forma: formaParam, irise: iriseParam } = useLocalSearchParams<{
     nome: string;
     forma: string;
@@ -34,6 +38,14 @@ export default function IrisePreviewApresentacao() {
       <Stack.Screen options={{ headerShown: false }} />
       <View className="flex-1 items-center justify-center">
         <Aurora />
+        <Pressable
+          onPress={() => (router.canGoBack() ? router.back() : router.replace("/(tabs)"))}
+          hitSlop={10}
+          style={{ position: "absolute", top: safe.top + 10, left: 18, zIndex: 10 }}
+          className="h-8 w-8 items-center justify-center rounded-full bg-subtle"
+        >
+          <X size={15} color={colors.ink} />
+        </Pressable>
         <Animated.View
           key={personagem.n}
           entering={ZoomIn.duration(500)}
