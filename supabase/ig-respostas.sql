@@ -7,7 +7,7 @@ select id, gatilho, resposta, ativo from public.ig_reply_rules order by id;
 
 -- Criar uma regra nova (ligada)
 insert into public.ig_reply_rules (gatilho, resposta, ativo) values
-  ('eu', 'Que bom te ver por aqui! 🌈 O link pra conhecer a Irisa está na bio.', true);
+  ('🌈', 'Que bom te ver por aqui! 🌈✨ O link pra conhecer a Irisa está na bio.', true);
 
 -- Desligar uma regra sem apagar (troca o id)
 update public.ig_reply_rules set ativo = false where id = 1;
