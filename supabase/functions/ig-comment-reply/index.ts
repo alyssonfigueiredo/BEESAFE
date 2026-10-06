@@ -9,7 +9,9 @@
 //          conferida, mas a função funciona do mesmo jeito), SB_SECRET_KEY.
 import { createClient } from "npm:@supabase/supabase-js@2";
 
-const API = "https://graph.facebook.com/v21.0";
+// Token "IGAA..." (Instagram API with Instagram Login) só vale em graph.instagram.com —
+// graph.facebook.com (API antiga via Facebook Login/Páginas) recusa esse formato de token.
+const API = "https://graph.instagram.com/v21.0";
 const TOKEN = Deno.env.get("META_ACCESS_TOKEN");
 const IG_USER_ID = Deno.env.get("META_IG_USER_ID");
 const VERIFY_TOKEN = Deno.env.get("IG_WEBHOOK_VERIFY_TOKEN");
