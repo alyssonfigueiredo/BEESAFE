@@ -15,7 +15,9 @@ import Animated, { FadeInDown } from "react-native-reanimated";
 import Svg, { Defs, LinearGradient, Rect, Stop } from "react-native-svg";
 
 import { PlaceCard } from "@/components/PlaceCard";
+import { Busto } from "@/components/irise-personagem/Busto";
 import { useIriseNear, useIriseOrchestrate, useIriseSuggest, type OrchestratedPlace } from "@/hooks/useIrise";
+import { useProfile } from "@/hooks/useProfile";
 import type { PlaceCategory } from "@/theme/domain";
 import { colors, shadow } from "@/theme/tokens";
 
@@ -53,6 +55,8 @@ export function IriseFab({
   userLocation: { lat: number; lng: number } | null;
 }) {
   const [aberta, setAberta] = useState(false);
+  const { data: profile } = useProfile();
+  const personagem = profile?.irise_personagem ?? null;
   return (
     <>
       <Pressable
@@ -61,18 +65,24 @@ export function IriseFab({
         style={{ position: "absolute", right: 18, bottom: 100, width: 54, height: 54, borderRadius: 27 }}
       >
         <AnelArcoIris />
-        <View
-          style={{
-            position: "absolute",
-            inset: 3,
-            borderRadius: 24,
-            backgroundColor: colors.night,
-            alignItems: "center",
-            justifyContent: "center",
-          }}
-        >
-          <Sparkles color="#fff" size={20} strokeWidth={2.2} />
-        </View>
+        {personagem ? (
+          <View style={{ position: "absolute", inset: 3 }}>
+            <Busto personagem={personagem} size={48} />
+          </View>
+        ) : (
+          <View
+            style={{
+              position: "absolute",
+              inset: 3,
+              borderRadius: 24,
+              backgroundColor: colors.night,
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            <Sparkles color="#fff" size={20} strokeWidth={2.2} />
+          </View>
+        )}
       </Pressable>
       <IriseSheet
         visible={aberta}
@@ -80,6 +90,7 @@ export function IriseFab({
         cityId={cityId}
         cityName={cityName}
         userLocation={userLocation}
+        personagem={personagem}
       />
     </>
   );
@@ -157,12 +168,14 @@ function IriseSheet({
   cityId,
   cityName,
   userLocation,
+  personagem,
 }: {
   visible: boolean;
   onClose: () => void;
   cityId: number | undefined;
   cityName: string | undefined;
   userLocation: { lat: number; lng: number } | null;
+  personagem: number | null;
 }) {
   const { height } = useWindowDimensions();
   const [log, setLog] = useState<LogItem[]>([]);
@@ -355,7 +368,7 @@ function IriseSheet({
           <View style={{ width: 44, height: 5, borderRadius: 3, backgroundColor: "#D9D5CD", alignSelf: "center", marginTop: 10 }} />
           <View className="flex-row items-center justify-between border-b border-border px-[18px] pb-3 pt-2">
             <View className="flex-row items-center gap-2">
-              <AnelArcoIris size={22} />
+              {personagem ? <Busto personagem={personagem} size={26} /> : <AnelArcoIris size={22} />}
               <Text className="font-body-bold text-[15px] text-ink">Irise</Text>
             </View>
             <Pressable onPress={onClose} hitSlop={10} className="h-[30px] w-[30px] items-center justify-center rounded-full bg-subtle">
