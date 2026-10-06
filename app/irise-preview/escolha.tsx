@@ -1,4 +1,5 @@
 import { router, Stack, useLocalSearchParams } from "expo-router";
+import { X } from "lucide-react-native";
 import { useEffect, useRef, useState } from "react";
 import { Dimensions, Pressable, ScrollView, Text, View } from "react-native";
 import Animated, {
@@ -71,6 +72,15 @@ export default function IrisePreviewEscolha() {
           headerStyle: { backgroundColor: "transparent" },
           headerTintColor: colors.ink,
           headerShadowVisible: false,
+          headerLeft: () => (
+            <Pressable
+              onPress={() => (router.canGoBack() ? router.back() : router.replace("/(tabs)"))}
+              hitSlop={10}
+              className="h-8 w-8 items-center justify-center rounded-full bg-subtle"
+            >
+              <X size={15} color={colors.ink} />
+            </Pressable>
+          ),
         }}
       />
       <View className="flex-1">

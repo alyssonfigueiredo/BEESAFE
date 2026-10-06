@@ -1,4 +1,5 @@
 import { router, Stack } from "expo-router";
+import { X } from "lucide-react-native";
 import { useState } from "react";
 import { Pressable, ScrollView, Text, TextInput, View } from "react-native";
 
@@ -45,6 +46,17 @@ export default function IrisePreviewPronomes() {
           headerStyle: { backgroundColor: "transparent" },
           headerTintColor: colors.ink,
           headerShadowVisible: false,
+          // Essa tela pode abrir sem nada antes dela no stack (link direto) — sem isso, sem jeito
+          // de sair (06/10/2026, achado pelo Alysson).
+          headerLeft: () => (
+            <Pressable
+              onPress={() => (router.canGoBack() ? router.back() : router.replace("/(tabs)"))}
+              hitSlop={10}
+              className="h-8 w-8 items-center justify-center rounded-full bg-subtle"
+            >
+              <X size={15} color={colors.ink} />
+            </Pressable>
+          ),
         }}
       />
       <View className="flex-1">
