@@ -213,5 +213,28 @@ select public.admin_push_create('Teste', 'Corpo', now() + interval '1 day') as e
 select public.admin_push_cancel(:envio);
 select status from public.admin_push_list() limit 1;
 select count(*) >= 0 as servicos_ok from public.admin_services();
+-- migration 64: liberar/revogar medalha, mudar nível e notificação para pessoas escolhidas
+select public.admin_medal_grant('66666666-6666-6666-6666-666666666666', 'aclamada');
+select exists (select 1 from jsonb_array_elements(public.admin_user('66666666-6666-6666-6666-666666666666')->'conquistadas') c
+               where c->>'id' = 'aclamada') as liberada_ok;
+select public.admin_medal_revoke('66666666-6666-6666-6666-666666666666', 'abre-alas');
+select (select (m->>'ok')::boolean from jsonb_array_elements(public.gami_stats('66666666-6666-6666-6666-666666666666')->'medalhas') m
+        where m->>'id' = 'abre-alas') = false as revogada_nao_volta;
+select (public.admin_set_level('66666666-6666-6666-6666-666666666666', 4)->>'gomos')::int = 10 as nivel_4_dez_gomos;
+select (public.admin_set_level('66666666-6666-6666-6666-666666666666', null)->>'gomos_ajuste')::int = 0 as nivel_automatico;
+do $$ begin
+  perform public.admin_medal_grant('66666666-6666-6666-6666-666666666666', 'nao-existe');
+  raise exception 'NAO DEVERIA';
+exception when raise_exception then
+  if sqlerrm = 'NAO DEVERIA' then raise; end if;
+  raise notice 'medalha desconhecida recusada ok';
+end $$;
+select (select m->>'unidade' from jsonb_array_elements(public.gami_stats('66666666-6666-6666-6666-666666666666')->'medalhas') m
+        where m->>'id' = 'utilidade-publica') = 'dicas' as utilidade_por_dicas;
+select public.admin_push_alcance(null, array['66666666-6666-6666-6666-666666666666'::uuid]) >= 0 as alcance_pessoas_ok;
+select public.admin_push_create('Só pra você', 'Corpo', now() + interval '1 day', null, null,
+                                array['66666666-6666-6666-6666-666666666666'::uuid]) as envio2 \gset
+select cidade from public.admin_push_list() where id = :envio2;
+select public.admin_push_cancel(:envio2);
 reset role;
 

@@ -221,7 +221,9 @@ function Revela({
   return (
     <View style={{ alignSelf: "stretch" }} onLayout={(e) => setW(e.nativeEvent.layout.width)}>
       {w > 0 ? (
-        <Animated.View style={[{ overflow: "hidden" }, st]}>
+        // A máscara corta tudo que passa da caixa: no iOS o acento das maiúsculas em Oswald (À, É)
+        // sobe acima da linha. A folga de 8 em cima e embaixo (devolvida na margem) evita o corte.
+        <Animated.View style={[{ overflow: "hidden", paddingVertical: 8, marginVertical: -8 }, st]}>
           <View style={{ width: w }}>{children}</View>
         </Animated.View>
       ) : (
@@ -252,7 +254,7 @@ function BoasVindas({
       <AnelEnchendo size={150} reduce={reduce} />
       <View style={{ marginTop: 22, alignSelf: "stretch" }}>
         <Revela delay={900} duration={800} reduce={reduce}>
-          <Text className="text-center font-display text-[38px] uppercase leading-[40px] text-ink">
+          <Text className="text-center font-display text-[36px] uppercase leading-[42px] text-ink">
             {flexiona("Bem-vind", forma)} à Irisa
           </Text>
         </Revela>
@@ -514,7 +516,7 @@ export function Tour() {
               onLayout={(e) => setBolhaH(e.nativeEvent.layout.height)}
             >
               <View style={[styles.seta, { left: setaX }, abaixo ? { top: -7 } : { bottom: -7 }]} />
-              <Text className="font-display text-[22px] uppercase leading-[24px] text-ink">
+              <Text className="font-display text-[22px] uppercase leading-[27px] text-ink">
                 {p.t}
               </Text>
               <Text className="mt-1.5 font-body text-[14px] leading-[20px] text-muted">

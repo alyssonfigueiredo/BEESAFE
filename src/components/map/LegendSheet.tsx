@@ -62,7 +62,7 @@ export function LegendSheet({ visible, onClose, types, onToggleType, counts }: P
           />
           <View className="flex-row items-start justify-between" style={{ gap: 12 }}>
             <View className="flex-1">
-              <Text className="font-display text-[28px] uppercase leading-tight text-ink">
+              <Text className="font-display text-[28px] uppercase leading-[33px] text-ink">
                 O que é cada coisa
               </Text>
               <Text className="mt-1 font-body text-sm text-muted">

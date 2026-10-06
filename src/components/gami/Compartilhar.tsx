@@ -442,7 +442,10 @@ function Cartao({ c, forma }: { c: Compartilhavel; forma: number }) {
           </Text>
           <View style={{ flexDirection: "row", alignItems: "center", gap: 6 }}>
             <RadarMin size={16} />
-            <Text className="font-wordmark uppercase text-ink" style={{ fontSize: 12.5, letterSpacing: 2.5 }}>
+            <Text
+              className="font-wordmark uppercase text-ink"
+              style={{ fontSize: 12.5, letterSpacing: 2.5 }}
+            >
               Iris<Text style={{ color: colors.amber }}>a</Text>
             </Text>
           </View>
