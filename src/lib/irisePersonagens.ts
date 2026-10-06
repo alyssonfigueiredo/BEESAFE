@@ -27,6 +27,8 @@ export const IRISES: Irise[] = [
   { n: 5, nome: "Dandara", pronomes: "ela/dela", classe: "Matriarca", bio: "Mãe do grupo. Cuida, cobra água e pergunta se você chegou bem.", stats: [5, 4, 4, 3] },
   { n: 6, nome: "Rafa", pronomes: "ele/dele", classe: "Cartógrafo", bio: "Nerd do mapa. Sabe a nota de cada bairro e explica sem pressa.", stats: [4, 3, 4, 3] },
   { n: 7, nome: "Nina", pronomes: "ela/elu", classe: "Exploradora", bio: "Vive achando lugar novo. Te chama pra ser a primeira cor do mapa.", stats: [3, 4, 4, 5] },
+  { n: 8, nome: "Bruno", pronomes: "ele/dele", classe: "Treinador", bio: "Te empurra pra fora de casa com carinho. Comemora junto cada avaliação nova.", stats: [4, 4, 3, 4] },
+  { n: 9, nome: "Igor", pronomes: "ele/dele", classe: "Viajante", bio: "Sempre de mochila nas costas, já mapeou meio bairro sem ninguém pedir.", stats: [3, 3, 4, 5] },
 ];
 
 export const PRONOMES = ["ela/dela", "ele/dele", "elu/delu", "qualquer pronome", "outro"] as const;
@@ -56,6 +58,8 @@ const CORPO: Record<number, Record<number, number>> = {
     5: require("../../assets/irise-personagens/p1-5.webp"),
     6: require("../../assets/irise-personagens/p1-6.webp"),
     7: require("../../assets/irise-personagens/p1-7.webp"),
+    8: require("../../assets/irise-personagens/p1-8.webp"),
+    9: require("../../assets/irise-personagens/p1-9.webp"),
   },
   2: {
     1: require("../../assets/irise-personagens/p2-1.webp"),
@@ -102,6 +106,8 @@ const BUSTO: Record<number, Record<number, number>> = {
     5: require("../../assets/irise-personagens/b1-5.webp"),
     6: require("../../assets/irise-personagens/b1-6.webp"),
     7: require("../../assets/irise-personagens/b1-7.webp"),
+    8: require("../../assets/irise-personagens/b1-8.webp"),
+    9: require("../../assets/irise-personagens/b1-9.webp"),
   },
   13: {
     1: require("../../assets/irise-personagens/b13-1.webp"),
