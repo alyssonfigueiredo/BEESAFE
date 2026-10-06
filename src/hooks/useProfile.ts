@@ -13,6 +13,7 @@ export type Profile = {
   nickname: string | null;
   default_city_id: number | null;
   avatar_path: string | null;
+  irise_personagem: number | null;
 };
 
 export function useProfile() {
@@ -48,6 +49,18 @@ export function useUpdateProfile() {
         throw new Error("O apelido não foi salvo. Tente de novo em instantes.");
     },
     onSuccess: () => client.invalidateQueries(),
+  });
+}
+
+/** Personagem do irise (1 a 7) escolhido no Perfil, só pro avatar do chat. null = sem personagem. */
+export function useSetIrisePersonagem() {
+  const client = useQueryClient();
+  return useMutation({
+    mutationFn: async (personagem: number | null) => {
+      const { error } = await supabase.rpc("set_my_irise_personagem", { p_personagem: personagem });
+      if (error) throw error;
+    },
+    onSuccess: () => client.invalidateQueries({ queryKey: ["profile"] }),
   });
 }
 

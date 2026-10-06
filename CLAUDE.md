@@ -619,6 +619,34 @@ Nome: **Irisa** (INPI livre; @appirisa livre). Bundle id Android `br.com.irisa.a
   Apoio (mural e serviços), Perfil, Sua evolução, Conquistas, subiu de nível, Sua semana, Suas cores e "Passou por
   aqui?". Painel ao lado com atalhos e o pronome (a/o/e); no celular, botão "Telas". Lugares e pessoas são fictícios.
   Mudou texto de medalha/nível ou ícone: rodar o script de novo.
+  **Conquistas sem visualização, ajustes no painel e público do push (migration 64, 06/10/2026, pedido do Leandro):**
+  Utilidade Pública, Interesse Municipal, Aclamada e Influ do Vale contavam "pessoas que abriram a ficha depois da sua
+  avaliação" — sem volume, e a conta incluía a própria pessoa (a visita gravada antes de avaliar). Agora: Utilidade
+  Pública = 5 dicas de segurança no mural; Interesse Municipal = 20 avaliações na mesma cidade; Influ do Vale = 60
+  avaliações em 6 semanas; Aclamada = 100 avaliações em 10 semanas. Quem já tinha fica. O "ajudou" de Suas cores conta
+  só a partir do dia seguinte à avaliação. O cálculo antigo virou `gami_stats_calc`; `gami_stats` aplica as regras novas,
+  o ajuste de gomos (`gami_ajustes`) e as revogadas (`user_medals_revogadas`, não voltam sozinhas). Painel → Pessoa:
+  **Liberar/Revogar** em cada medalha e **Mudar nível** (leva ao começo do nível; "Automático" tira o ajuste),
+  RPCs `admin_medal_grant`, `admin_medal_revoke`, `admin_set_level`. **Notificação para pessoas escolhidas:** Para quem =
+  Todo mundo / Uma cidade / Pessoas escolhidas (busca por apelido ou e-mail), e na ficha da pessoa "Mandar notificação só
+  para essa pessoa". `push_envios.usuarios uuid[]`; a Edge Function `send-push` usa `push_pegar_envios_v2` e
+  `push_tokens_do_envio_v2(p_envio)`. A função velha (`push_pegar_envios`) nunca pega envio com pessoas escolhidas, para
+  ele não sair para todo mundo se a função nova ainda não estiver publicada. O push semanal mandava o nível para
+  `/evolucao` (não existe): agora `/perfil`. **Texto cortando no iOS:** o efeito de revelar do tour cortava o acento
+  (máscara com `overflow: hidden`, ganhou folga de 8 px) e os títulos em Oswald caixa alta tinham entrelinha ≤ 1,1 do
+  corpo (no iOS o À/É sobe acima da linha): todos subiram para ~1,17. Título novo em Oswald: entrelinha de pelo menos
+  1,15 × o tamanho.
+  **Quero ir (APLICADO, migration 65, 06/10/2026, aprovado pelo Leandro; protótipo `docs/Irisa-prototipo-quero-ir.html`):**
+  favoritar lugar. Tabela `place_favorites` (RLS: cada um só as suas; teto de 1.000), trigger em `place_ratings` marca
+  `visitado_em` quando a pessoa avalia um lugar salvo (vai para "Já fui"). Não dá gomo, faísca nem medalha.
+  App (só JS, sai por EAS Update): `src/hooks/useFavoritos.ts`, `src/components/FavHeart.tsx` (coração com traço
+  arco-íris que enche ao salvar, pulinho + seis pontinhos de cor; `mini` no canto de cima da foto do `PlaceCard`,
+  `solid` no canto de cima da ficha via `headerRight`), `src/components/QueroIr.tsx` (chip no começo dos filtros de
+  Lugares e cartão no Perfil — fora da barra de baixo, pedido dele), tela `app/quero-ir.tsx` (Quero ir / Já fui,
+  Como chegar, "Já fui · avaliar" abre a ficha com `avaliar=1`, Ver no mapa), camada no Mapa (botão de coração no
+  `MapPanel`; `/mapa?camada=quero&t=…` liga, e com ela ligada o mapa e a folha mostram só os salvos; pinos são os de
+  sempre, sem desenho de coração) e linha "Saiu do Quero ir e foi para Já fui" na `RewardSheet`. Sem a migration no
+  banco, o coração, o chip e o cartão somem calados.
 
 ## Stack
 

@@ -1,0 +1,22 @@
+{
+  "stats": [
+    { "key": "acolhimento", "label": "Acolhimento", "color": "#FF6964" },
+    { "key": "humor", "label": "Humor", "color": "#FFD066" },
+    { "key": "papoReto", "label": "Papo reto", "color": "#49DCC0" },
+    { "key": "role", "label": "Rolê", "color": "#A889FF" }
+  ],
+  "irises": [
+    { "n": 1, "nome": "Theo", "pronomes": "ele/dele", "classe": "Guardião", "bio": "Papo reto e ombro firme. Avisa antes de você chegar num lugar furado.", "stats": [4, 3, 5, 3] },
+    { "n": 2, "nome": "Luna", "pronomes": "ela/dela", "classe": "Conselheira", "bio": "Escuta sem julgar e sempre sabe de um café tranquilo por perto.", "stats": [5, 3, 3, 3] },
+    { "n": 3, "nome": "Caio", "pronomes": "ele/dele", "classe": "Animador", "bio": "Energia lá em cima. Comemora cada avaliação como se fosse gol.", "stats": [3, 5, 3, 4] },
+    { "n": 4, "nome": "Kai", "pronomes": "elu/delu", "classe": "DJ do Rolê", "bio": "Conhece toda balada acolhedora da cidade e a playlist de cada uma.", "stats": [3, 4, 3, 5] },
+    { "n": 5, "nome": "Dandara", "pronomes": "ela/dela", "classe": "Matriarca", "bio": "Mãe do grupo. Cuida, cobra água e pergunta se você chegou bem.", "stats": [5, 4, 4, 3] },
+    { "n": 6, "nome": "Rafa", "pronomes": "ele/dele", "classe": "Cartógrafo", "bio": "Nerd do mapa. Sabe a nota de cada bairro e explica sem pressa.", "stats": [4, 3, 4, 3] },
+    { "n": 7, "nome": "Nina", "pronomes": "ela/elu", "classe": "Exploradora", "bio": "Vive achando lugar novo. Te chama pra ser a primeira cor do mapa.", "stats": [3, 4, 4, 5] }
+  ],
+  "pronomes": ["ela/dela", "ele/dele", "elu/delu", "qualquer pronome", "outro"],
+  "formaPadraoPorPronome": [0, 1, 2, 2, 2],
+  "formas": ["a", "o", "e"],
+  "xpPorNivel": 12,
+  "xpPorAvaliacao": 3
+}

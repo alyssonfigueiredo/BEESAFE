@@ -66,7 +66,7 @@ export function EvolucaoCard() {
             <Text className="font-body-medium text-[11px] uppercase tracking-wider text-dim">
               Sua evolução · nível {i + 1} de 8
             </Text>
-            <Text className="mt-0.5 font-display text-[26px] uppercase leading-[28px] text-ink">
+            <Text className="mt-0.5 font-display text-[26px] uppercase leading-[31px] text-ink">
               {nomeNivel(n, forma)}
             </Text>
             <Text className="mt-0.5 font-body text-[13px] leading-[18px] text-muted">{n.t}</Text>
@@ -188,7 +188,7 @@ export function TrilhaSheet({ visible, onClose }: { visible: boolean; onClose: (
         <Text className="font-body-medium text-[11px] uppercase tracking-wider text-dim">
           Sua evolução
         </Text>
-        <Text className="mt-1 font-display text-[26px] uppercase leading-[28px] text-ink">
+        <Text className="mt-1 font-display text-[26px] uppercase leading-[31px] text-ink">
           Você é {nomeNivel(NIVEIS_EVO[i], forma)}
         </Text>
         <Text className="mt-1 font-body text-[13.5px] leading-[19px] text-muted">
@@ -331,7 +331,7 @@ export function SubiuDeNivel() {
                 </FadeUp>
               </View>
               <FadeUp delay={ATRASO + ANEL} style={{ alignItems: "center" }}>
-                <Text className="mt-3 text-center font-display text-[32px] uppercase leading-[34px] text-ink">
+                <Text className="mt-3 text-center font-display text-[32px] uppercase leading-[38px] text-ink">
                   {nomeNivel(n, forma)}
                 </Text>
                 <Text className="mt-1 text-center font-body text-[14px] leading-[20px] text-muted">

@@ -5,6 +5,7 @@ import { FlatList, Pressable, ScrollView, Text, View } from "react-native";
 import { useScreenInsets } from "@/hooks/useScreenInsets";
 import { Aurora } from "@/components/Aurora";
 import { Chip } from "@/components/Chip";
+import { QueroIrChip } from "@/components/QueroIr";
 import { PlaceCard } from "@/components/PlaceCard";
 import { SearchField } from "@/components/SearchField";
 import { Segmented } from "@/components/Segmented";
@@ -133,6 +134,7 @@ export default function LugaresScreen() {
               showsHorizontalScrollIndicator={false}
               contentContainerClassName="gap-2"
             >
+              <QueroIrChip />
               <Chip
                 label={userLocation ? "Perto de você" : "Todos"}
                 active={categoria === "all"}

@@ -186,7 +186,7 @@ function Conteudo({ onClose }: { onClose: () => void }) {
           step={160}
         />
         <View className="min-w-0 flex-1">
-          <Text className="font-display text-[28px] uppercase leading-[30px] text-ink">
+          <Text className="font-display text-[28px] uppercase leading-[33px] text-ink">
             {c.lugares > 0 ? `${c.lugares} ${plural(c.lugares, "lugar", "lugares")}` : "Sua 1ª cor"}
           </Text>
           <Text className="mt-1 font-body text-[14px] leading-[20px] text-muted">

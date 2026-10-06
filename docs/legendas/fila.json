@@ -67,7 +67,18 @@
   ],
   "legenda": "",
   "primeiro_comentario": "",
-  "publicado": false
+  "publicado": true,
+  "publicado_em": "2026-10-05T15:41:06.363Z",
+  "media_id": "17997170462825139",
+  "confirmacao": {
+   "id": "17997170462825139",
+   "media_type": "IMAGE",
+   "permalink": "https://www.instagram.com/stories/appirisa/4001322787223216448",
+   "timestamp": "2026-10-05T15:41:15+0000",
+   "na_lista_de_stories_ativos": true
+  },
+  "confirmado": true,
+  "confirmado_em": "2026-10-05T15:41:18.968Z"
  },
  {
   "id": "story-eixos",
@@ -168,7 +179,18 @@
   ],
   "legenda": "",
   "primeiro_comentario": "",
-  "publicado": false
+  "publicado": true,
+  "publicado_em": "2026-10-05T15:41:06.363Z",
+  "media_id": "17911074270548721",
+  "confirmacao": {
+   "id": "17911074270548721",
+   "media_type": "IMAGE",
+   "permalink": "https://www.instagram.com/stories/appirisa/4001322885009195932",
+   "timestamp": "2026-10-05T15:41:23+0000",
+   "na_lista_de_stories_ativos": true
+  },
+  "confirmado": true,
+  "confirmado_em": "2026-10-05T15:41:26.167Z"
  },
  {
   "id": "carrossel-4",

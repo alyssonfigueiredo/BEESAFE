@@ -3,6 +3,7 @@ import { useState, type ReactNode } from "react";
 import { Pressable, Text, View, type LayoutChangeEvent } from "react-native";
 import Animated, { Easing, useAnimatedStyle, withTiming } from "react-native-reanimated";
 
+import { HeartIcon } from "@/components/FavHeart";
 import { colors, shadow } from "@/theme/tokens";
 
 import { formatCount } from "./mapData";
@@ -21,6 +22,10 @@ type Props = {
   onTogglePlaces: () => void;
   onToggleRelatos: () => void;
   onFilters: () => void;
+  /** Camada Quero ir (migration 65): só os lugares salvos. Sem `queroCount`, o botão não aparece. */
+  showQuero?: boolean;
+  queroCount?: number | null;
+  onToggleQuero?: () => void;
   /** Filtro de tipo de relato ligado: o botão de filtros ganha um ponto. */
   filtering?: boolean;
   onLayout?: (e: LayoutChangeEvent) => void;
@@ -42,6 +47,9 @@ export function MapPanel({
   onFilters,
   filtering,
   onLayout,
+  showQuero,
+  queroCount,
+  onToggleQuero,
 }: Props) {
   return (
     <View
@@ -75,6 +83,32 @@ export function MapPanel({
           ink={colors.coralInk}
           onPress={onToggleRelatos}
         />
+        {queroCount != null && onToggleQuero && (
+          <Pressable
+            onPress={onToggleQuero}
+            accessibilityRole="switch"
+            accessibilityState={{ checked: !!showQuero }}
+            accessibilityLabel={`Quero ir, ${queroCount} ${queroCount === 1 ? "lugar" : "lugares"}: ${showQuero ? "ligado" : "desligado"}`}
+            className="flex-row items-center justify-center active:opacity-80"
+            style={{
+              height: 38,
+              paddingHorizontal: 10,
+              gap: 5,
+              borderRadius: 14,
+              borderWidth: 1.5,
+              borderColor: showQuero ? "rgba(255,255,255,0)" : colors.subtle,
+              backgroundColor: showQuero ? colors.night : "#FFFFFF",
+            }}
+          >
+            <HeartIcon on size={17} />
+            <Text
+              className="font-body-bold text-[13px]"
+              style={{ color: showQuero ? colors.paper : colors.muted }}
+            >
+              {queroCount}
+            </Text>
+          </Pressable>
+        )}
         <Pressable
           onPress={onFilters}
           accessibilityRole="button"

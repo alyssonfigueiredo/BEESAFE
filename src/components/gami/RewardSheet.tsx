@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { Modal, Pressable, Text, View } from "react-native";
 import { useReducedMotion } from "react-native-reanimated";
 
+import { HeartIcon } from "@/components/FavHeart";
 import { Counter, FadeUp, ProgressEdge } from "@/components/gami/Anim";
 import { AnimatedMedal } from "@/components/gami/MedalView";
 import { SliceRing } from "@/components/gami/Rings";
@@ -24,11 +25,14 @@ export function RewardSheet({
   visible,
   antes,
   frase,
+  daLista,
   onClose,
 }: {
   visible: boolean;
   antes: number | null;
   frase?: string;
+  /** O lugar estava no Quero ir: ele acabou de ir para Já fui. */
+  daLista?: boolean;
   onClose: () => void;
 }) {
   const { data: g, isFetching } = useGamification();
@@ -137,6 +141,17 @@ export function RewardSheet({
                 <Text className="mt-1 text-center font-body text-[13px] text-dim">
                   Os gomos desta semana já acenderam. Segunda tem mais.
                 </Text>
+              </FadeUp>
+            )}
+            {daLista && (
+              <FadeUp delay={d(T_TEXTO + 160)} style={{ alignSelf: "stretch" }}>
+                <View className="mt-3 flex-row items-center gap-2.5 rounded-2xl bg-subtle px-3.5 py-2.5">
+                  <HeartIcon on size={22} />
+                  <Text className="flex-1 font-body text-[13.5px] leading-[19px] text-ink">
+                    Saiu do <Text className="font-body-bold">Quero ir</Text> e foi para{" "}
+                    <Text className="font-body-bold">Já fui</Text>.
+                  </Text>
+                </View>
               </FadeUp>
             )}
             <View className="mt-4 w-full flex-row gap-2">

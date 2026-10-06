@@ -57,7 +57,7 @@ function Conteudo({ id, g, onClose }: { id: string; g: Gamificacao; onClose: () 
         />
       </View>
       <FadeUp delay={250}>
-        <Text className="mt-4 text-center font-display text-[36px] uppercase leading-[40px] text-ink">
+        <Text className="mt-4 text-center font-display text-[36px] uppercase leading-[42px] text-ink">
           {nomeDa(m, g.forma)}
         </Text>
         <Text className="mt-1 max-w-[300px] self-center text-center font-body text-[15px] leading-[21px] text-muted">
