@@ -276,6 +276,9 @@ textarea.ta{width:100%;min-height:96px;border:0;outline:0;border-radius:20px;bac
 .nudge.on{transform:none;opacity:1}
 /* proposta: Quero ir */
 .fav{position:relative;width:36px;height:36px;border-radius:18px;display:flex;align-items:center;justify-content:center;flex:none}
+.fav.mini{position:absolute;top:-6px;right:-6px;width:28px;height:28px;border-radius:14px;background:#fff;box-shadow:0 2px 8px rgba(20,24,41,.18);z-index:2}
+.fav.mini svg.hz{width:16px!important;height:16px!important}
+.tw{position:relative;flex:none}
 .fav.solid{width:40px;height:40px;border-radius:20px;background:rgba(255,255,255,.9);box-shadow:var(--shadow);backdrop-filter:blur(12px)}
 .fav svg.hz{width:22px;height:22px}
 .fav.pop svg.hz{animation:favpop .5s var(--ease)}
@@ -471,12 +474,14 @@ function favSvg(on, s = 22) {
     <path d="M12 20.4s-7.6-4.6-9.5-9.1C1 7.9 3.4 4.8 6.8 4.8c2.1 0 3.7 1.2 5.2 3.1 1.5-1.9 3.1-3.1 5.2-3.1 3.4 0 5.8 3.1 4.3 6.5-1.9 4.5-9.5 9.1-9.5 9.1z" fill="${on ? `url(#${k})` : "none"}" stroke="url(#${k})" stroke-width="2.3" stroke-linejoin="round"/>
     ${on ? '<path d="M7.2 8.6c.6-.9 1.6-1.3 2.5-1" stroke="#fff" stroke-width="1.6" stroke-linecap="round" fill="none" opacity=".8"/>' : ""}</svg>`;
 }
-const favBtn = (id, solid = false) => FAV ? `<button class="fav ${solid ? "solid" : ""}" data-act="fav" data-id="${id}" aria-label="Quero ir">${favSvg(ST.fav.has(id))}</button>` : "";
+const favBtn = (id, tipo = "") => FAV ? `<button class="fav ${tipo === true ? "solid" : tipo}" data-act="fav" data-id="${id}" aria-label="Quero ir">${favSvg(ST.fav.has(id))}</button>` : "";
+// Coração no canto de cima da foto do lugar (cartões e lista Quero ir).
+const tileFav = (l, s = 64) => FAV ? `<div class="tw">${tile(l, s)}${favBtn(l.id, "mini")}</div>` : tile(l, s);
 function placeCard(l, i = 0) {
-  return `<div class="plc fu" style="--d:${i * 60}ms" data-go="lugar:${l.id}">${tile(l)}<div style="flex:1;min-width:0">
+  return `<div class="plc fu" style="--d:${i * 60}ms" data-go="lugar:${l.id}">${tileFav(l)}<div style="flex:1;min-width:0">
     <div class="nm">${l.nome}</div><div class="mt">${CAT[l.cat][0]} · ${l.bairro} · ${l.dist}</div>
     <div style="margin-top:6px;display:flex;gap:6px;align-items:center">${l.nota ? badge(l.badge) : l.n ? badge("poucas") : `<span class="pill" style="background:#F1F5FA;color:#3D4560">Sem nota ainda</span>`}</div>
-    ${l.alerta ? `<div class="ctx">${ic("alert", 14)} Relato de LGBTIfobia por perto</div>` : ""}</div>${favBtn(l.id)}${score(l.nota, 50)}</div>`;
+    ${l.alerta ? `<div class="ctx">${ic("alert", 14)} Relato de LGBTIfobia por perto</div>` : ""}</div>${score(l.nota, 50)}</div>`;
 }
 
 /* ---------- navegação ---------- */
@@ -858,10 +863,10 @@ SCR.queroir = {
   solid: true, html: aba => {
     aba = aba || "quero";
     const quero = LUGARES.filter(l => ST.fav.has(l.id)), fui = LUGARES.filter(l => ST.jaFui.has(l.id));
-    const item = (l, i) => `<div class="qi fu" style="--d:${120 + i * 60}ms" data-go="lugar:${l.id}">${tile(l, 56)}
+    const item = (l, i) => `<div class="qi fu" style="--d:${120 + i * 60}ms" data-go="lugar:${l.id}">${tileFav(l, 56)}
       <div style="flex:1;min-width:0"><b style="font-size:15px;display:block">${l.nome}</b><span class="dim" style="font-size:12.5px">${CAT[l.cat][0]} · ${l.bairro} · ${l.dist}</span>
       <div style="display:flex;gap:6px;margin-top:8px"><button class="pill" style="background:var(--subtle);color:var(--ink);height:28px" data-act="chegar">${ic("nav", 13)} Como chegar</button>
-      <button class="pill" style="background:#49DCC033;color:#0A8B7A;height:28px" data-go="lugar:${l.id}">${ic("check", 13)} Já fui</button></div></div>${favBtn(l.id)}</div>`;
+      <button class="pill" style="background:#49DCC033;color:#0A8B7A;height:28px" data-go="lugar:${l.id}">${ic("check", 13)} Já fui</button></div></div></div>`;
     const feito = (l, i) => `<div class="qi fu" style="--d:${120 + i * 60}ms" data-go="lugar:${l.id}">${tile(l, 56)}
       <div style="flex:1;min-width:0"><b style="font-size:15px;display:block">${l.nome}</b><span class="dim" style="font-size:12.5px">${CAT[l.cat][0]} · ${l.bairro}</span>
       <div style="margin-top:6px"><span class="pill" style="background:#49DCC033;color:#0A8B7A">${ic("check", 13)} Avaliado ${ST.jaFui.get(l.id)}</span></div></div>${score(l.nota, 46)}</div>`;
