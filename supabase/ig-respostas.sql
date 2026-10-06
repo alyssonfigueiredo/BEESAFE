@@ -1,13 +1,14 @@
--- Resposta automática a comentário no Instagram (migration 64). Colar no SQL Editor, um bloco por vez.
+-- Resposta automática a comentário no Instagram (migration 67). Colar no SQL Editor, um bloco por vez.
 -- "Gatilho" é comparado sem acento e minúsculo; a primeira regra ativa que aparecer no comentário
 -- responde. Deixar sem gatilho nenhum ativo == a automação não responde nada.
+-- Já ligadas hoje: comentário com 🌈 ou com ✨ (ids 1 e 2).
 
 -- Ver as regras de hoje
 select id, gatilho, resposta, ativo from public.ig_reply_rules order by id;
 
 -- Criar uma regra nova (ligada)
 insert into public.ig_reply_rules (gatilho, resposta, ativo) values
-  ('🌈', 'Que bom te ver por aqui! 🌈✨ O link pra conhecer a Irisa está na bio.', true);
+  ('alguma palavra', 'Texto da resposta automática 🌈', true);
 
 -- Desligar uma regra sem apagar (troca o id)
 update public.ig_reply_rules set ativo = false where id = 1;
