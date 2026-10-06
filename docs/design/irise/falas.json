@@ -1,0 +1,44 @@
+{
+  "_sintaxe": "{nome} = nome da pessoa; {irise} = nome do irise; {a|o|e} = flexão pela forma escolhida; pose = número da pose do asset",
+  "apresentacao": [
+    { "texto": "Oi, {nome}! Eu sou {irise}, seu irise. Prazer!", "pose": 2 },
+    { "texto": "Vou junto com você pelo app inteiro: nos lugares, no mapa e quando precisar de apoio.", "pose": 13 },
+    { "texto": "Cada lugar que você avalia acende um gomo da nossa íris e a gente sobe de nível. Bora?", "pose": 6 }
+  ],
+  "inicioBalao": {
+    "semAvaliacao": "Hoje a missão é simples: avaliar 1 lugar. Bora?",
+    "comAvaliacao": "Mandou bem! Já são {qtd} lugar(es) com a sua cor hoje."
+  },
+  "abas": {
+    "lugares": { "texto": "Toca num lugar que eu te conto o que a galera achou antes de você ir.", "pose": 3 },
+    "mapa": { "texto": "A área em vermelho teve relato recente. Sem relato não quer dizer seguro: quer dizer que ninguém registrou.", "pose": 5 },
+    "apoio": { "texto": "Aqui é o cantinho de apoio. Se rolar algo, eu te ajudo a registrar e achar ajuda. Você não tá sozinh{a|o|e}.", "pose": 7 },
+    "perfil": { "texto": "Seu perfil e o meu. Se quiser trocar de irise, sem ressentimento. Quase nenhum.", "pose": 17 }
+  },
+  "lugares": {
+    "_obs": "Exemplos. No app, gerar a partir da nota e dos selos reais.",
+    "acolhedor": { "texto": "{lugar}: {nota} e selo Acolhedor. Dá pra ir de mãos dadas tranquil{a|o|e}.", "pose": 3 },
+    "bemAvaliado": { "texto": "{lugar}: {nota}. Atendimento ótimo, só o banheiro que divide opiniões.", "pose": 3 },
+    "dividido": { "texto": "{lugar} tá com opiniões divididas e teve relato de LGBTIfobia por perto. Se for, me avisa quando chegar.", "pose": 14 },
+    "semSelo": { "texto": "{lugar} ainda não tem selo: faltam {n} avaliações. A sua pode acender ele.", "pose": 11 },
+    "jaAvaliado": { "texto": "Você já avaliou {lugar}. Mais uma cor no mapa por sua causa.", "pose": 16 },
+    "acoes": ["Avaliar agora", "Depois"]
+  },
+  "recompensa": {
+    "avaliou": { "texto": "Mais uma cor no mapa! {lugar} avaliado. +3 gomos pra gente.", "pose": 6, "toast": "+3 gomos" },
+    "subiuNivel": { "texto": "SUBIMOS PRO NÍVEL {nivel}! {lugar} avaliado e a íris tá mais colorida.", "pose": 12 }
+  },
+  "trocouIrise": { "texto": "Agora sou eu, {irise}! Bora continuar de onde parou.", "pose": 2 },
+  "chat": {
+    "abertura": "E aí, {nome}! Pergunta o que quiser sobre lugares e segurança, ou só chega pra conversar.",
+    "respostasRapidas": ["Onde tem um café acolhedor?", "Como funciona a nota?", "Tô me sentindo insegur{a|o|e}", "Me conta uma curiosidade"],
+    "poses": { "padrao": 13, "pensando": 5, "sensivel": 14, "leve": 15 }
+  },
+  "chatFallback": {
+    "sensivel": "Sinto muito que você esteja passando por isso. Se for urgente, liga 190; pra denunciar, Disque 100. Quer que eu te mostre um lugar acolhedor perto pra você ficar?",
+    "lugares": "O Café Aquarela tá com 4,7 e selo Acolhedor, a 300 m. Pra noite, a Balada Prisma tem 4,5.",
+    "nota": "São quatro perguntas de 1 a 5: atendimento, afeto, banheiro e clientela. Com 5 avaliações o lugar ganha selo.",
+    "leve": "Curiosidade: a íris da Irisa tem 48 gomos. Cada lugar que você avalia acende um.",
+    "padrao": "Anotado, {nome}. Posso te ajudar a achar lugar, entender uma nota ou só conversar."
+  }
+}
