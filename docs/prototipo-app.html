@@ -274,6 +274,18 @@ textarea.ta{width:100%;min-height:96px;border:0;outline:0;border-radius:20px;bac
 .toast.on{opacity:1;transform:translate(-50%,0)}
 .nudge{position:absolute;left:14px;right:14px;bottom:100px;z-index:45;background:#fff;border-radius:24px;padding:14px;box-shadow:0 14px 34px rgba(20,24,41,.2);display:flex;gap:12px;align-items:center;transform:translateY(30px);opacity:0;transition:all .45s var(--ease)}
 .nudge.on{transform:none;opacity:1}
+/* proposta: Quero ir */
+.fav{position:relative;width:36px;height:36px;border-radius:18px;display:flex;align-items:center;justify-content:center;flex:none}
+.fav.solid{width:40px;height:40px;border-radius:20px;background:rgba(255,255,255,.9);box-shadow:var(--shadow);backdrop-filter:blur(12px)}
+.fav svg.hz{width:22px;height:22px}
+.fav.pop svg.hz{animation:favpop .5s var(--ease)}
+@keyframes favpop{0%{transform:scale(1)}35%{transform:scale(1.32)}70%{transform:scale(.92)}100%{transform:scale(1)}}
+.fav .bu{position:absolute;left:50%;top:50%;width:6px;height:6px;margin:-3px;border-radius:3px;pointer-events:none;animation:bu .6s var(--ease) forwards}
+@keyframes bu{from{transform:translate(0,0) scale(1);opacity:1}to{transform:translate(var(--x),var(--y)) scale(.3);opacity:0}}
+.quero{flex:none;height:36px;padding:0 14px 0 10px;border-radius:18px;display:flex;align-items:center;gap:6px;font-size:13.5px;font-weight:700;background:#fff;position:relative;box-shadow:var(--shadow)}
+.quero:before{content:"";position:absolute;inset:0;border-radius:18px;padding:2px;background:var(--rb);-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude}
+.quero svg{width:18px;height:18px}
+.qi{display:flex;gap:12px;align-items:center;padding:12px;border-radius:24px;background:#fff;box-shadow:var(--shadow);margin-bottom:10px}
 </style>
 </head>
 <body>
@@ -291,6 +303,8 @@ textarea.ta{width:100%;min-height:96px;border:0;outline:0;border-radius:20px;bac
     <div class="mk">IRIS<b>a</b></div>
     <h1>O app inteiro, para navegar</h1>
     <p class="lead">Toque nas telas como no celular. Os atalhos abaixo levam direto a cada parte. Nada grava: é tudo encenado.</p>
+    <div id="favGroup" hidden><h3 style="color:#C72825">Proposta · Quero ir</h3>
+    <div class="grid"><button data-j="fav:lugares">Salvar um lugar</button><button data-j="fav:ficha">Coração na ficha</button><button data-j="fav:lista">Lista Quero ir</button><button data-j="fav:mapa">No mapa</button><button data-j="fav:perfil">No Perfil</button><button data-j="fav:avaliar">Avaliar da lista</button></div></div>
     <h3>Entrada</h3>
     <div class="grid"><button data-j="splash">Abertura</button><button data-j="login">Entrar</button><button data-j="tour">Tour</button></div>
     <h3>Lugares</h3>
@@ -423,6 +437,7 @@ const ST = {
   ganhas: new Set(["deu-o-nome", "inaugurou", "acendeu-a-luz", "bateu-ponto", "abre-alas", "eu-conheco", "sabe-onde-ir", "ombro-amigo", "utilidade-publica"]),
   prog: { "deu-close": [9, 10], "figurinha": [9, 15], "famosinha": [9, 30], "influ-do-vale": [9, 60], "resenha-boa": [4, 10], "icone-local": [1, 3], "lenda-local": [1, 10], "da-casa": [0, 1], "nome-na-lista": [4, 6], "dona-do-pedaco": [3, 5], "mala-pronta": [1, 3], "olho-vivo": [2, 5], "cartografa": [1, 5], "pode-entrar": [1, 3], "interesse-municipal": [14, 50], "aclamada": [14, 150], "bateu-leque": [3, 10], "abraco-coletivo": [11, 20], "tem-opiniao": [2, 4], "ja-mora-aqui": [2, 4], "agenda-cheia": [2, 6], "patrimonio-cultural": [7, 48], "patrimonio-tombado": [1, 10] },
   nudgeVisto: false, reacoes: {}, anon: false,
+  fav: new Set(["prisma", "sem", "sol"]), jaFui: new Map([["aquarela", "há 2 dias"]]), mapaFav: false,
 };
 const nomeM = m => m.flex ? m.flex[ST.forma] : m.t;
 const flex = b => b + ["a", "o", "e"][ST.forma];
@@ -447,11 +462,21 @@ function tile(l, s = 64) {
   return `<div class="tile" style="width:${s}px;height:${s}px;background:${cinza ? "#ECEEF2" : cor + "33"};color:${cinza ? "#9AA1B1" : cor}">${ic(icon, s * .44)}</div>`;
 }
 function badge(b) { if (!b) return ""; const [t, bg, ink] = BADGE[b]; return `<span class="pill" style="background:${b === "poucas" ? bg : bg + "38"};color:${ink}">${t}</span>`; }
+const FAV = /*__FAV__*/false;
+const plural = (n, um, varios) => `${n} ${n === 1 ? um : varios}`;
+let hz = 0;
+function favSvg(on, s = 22) {
+  const k = "hz" + (++hz);
+  return `<svg class="hz" viewBox="0 0 24 24" style="width:${s}px;height:${s}px"><defs><linearGradient id="${k}" x1="0" y1="0" x2="1" y2="1">${RB.map((c, i) => `<stop offset="${i / 5}" stop-color="${c}"/>`).join("")}</linearGradient></defs>
+    <path d="M12 20.4s-7.6-4.6-9.5-9.1C1 7.9 3.4 4.8 6.8 4.8c2.1 0 3.7 1.2 5.2 3.1 1.5-1.9 3.1-3.1 5.2-3.1 3.4 0 5.8 3.1 4.3 6.5-1.9 4.5-9.5 9.1-9.5 9.1z" fill="${on ? `url(#${k})` : "none"}" stroke="url(#${k})" stroke-width="2.3" stroke-linejoin="round"/>
+    ${on ? '<path d="M7.2 8.6c.6-.9 1.6-1.3 2.5-1" stroke="#fff" stroke-width="1.6" stroke-linecap="round" fill="none" opacity=".8"/>' : ""}</svg>`;
+}
+const favBtn = (id, solid = false) => FAV ? `<button class="fav ${solid ? "solid" : ""}" data-act="fav" data-id="${id}" aria-label="Quero ir">${favSvg(ST.fav.has(id))}</button>` : "";
 function placeCard(l, i = 0) {
   return `<div class="plc fu" style="--d:${i * 60}ms" data-go="lugar:${l.id}">${tile(l)}<div style="flex:1;min-width:0">
     <div class="nm">${l.nome}</div><div class="mt">${CAT[l.cat][0]} · ${l.bairro} · ${l.dist}</div>
     <div style="margin-top:6px;display:flex;gap:6px;align-items:center">${l.nota ? badge(l.badge) : l.n ? badge("poucas") : `<span class="pill" style="background:#F1F5FA;color:#3D4560">Sem nota ainda</span>`}</div>
-    ${l.alerta ? `<div class="ctx">${ic("alert", 14)} Relato de LGBTIfobia por perto</div>` : ""}</div>${score(l.nota, 50)}</div>`;
+    ${l.alerta ? `<div class="ctx">${ic("alert", 14)} Relato de LGBTIfobia por perto</div>` : ""}</div>${favBtn(l.id)}${score(l.nota, 50)}</div>`;
 }
 
 /* ---------- navegação ---------- */
@@ -627,7 +652,7 @@ SCR.lugares = {
   tab: true, html: () => `<div class="pad">
     <div class="topbar"><div><p class="h-big">Lugares</p><p class="dim" style="font-size:13px;margin-top:2px"><span data-count="10712">0</span> em Curitiba · perto de você</p></div><button class="sos" data-act="sos">SOS</button></div>
     <label class="field fu">${ic("search", 19)}<input placeholder="Buscar pelo nome" data-act-input="busca"></label>
-    <div class="chips fu" style="--d:60ms;margin:12px 0 14px" id="catChips">${["Todos", "Bar", "Café", "Restaurante", "Balada", "Hotel"].map((c, i) => `<button class="chip ${i ? "" : "on"}" data-act="cat">${c}</button>`).join("")}</div>
+    <div class="chips fu" style="--d:60ms;margin:12px 0 14px" id="catChips">${FAV ? `<button class="quero" data-go="queroir" data-tour="quero">${favSvg(true, 18)}Quero ir <span class="dim" id="qN">${ST.fav.size}</span></button>` : ""}${["Todos", "Bar", "Café", "Restaurante", "Balada", "Hotel"].map((c, i) => `<button class="chip ${i ? "" : "on"}" data-act="cat">${c}</button>`).join("")}</div>
     <div id="lista">${LUGARES.map(placeCard).join("")}</div>
     <button class="btn white fu" style="--d:400ms;margin-top:6px" data-act="novoLugar">${ic("plus", 18)}Cadastrar um lugar que falta</button>
   </div>`,
@@ -638,7 +663,7 @@ SCR.lugar = {
   solid: true, html: id => {
     const l = LUG[id || "sem"], [cat, icon, cor] = CAT[l.cat];
     const resp = ST.resp = [0, 0, 0, 0];
-    return `<button class="back" data-back>${ic("back", 20)}</button>
+    return `<button class="back" data-back>${ic("back", 20)}</button>${FAV ? `<div style="position:absolute;right:14px;top:54px;z-index:20">${favBtn(l.id, true)}</div>` : ""}
     <div class="hero"><div class="ph" id="ph" style="background:radial-gradient(80% 70% at 30% 30%,${cor}88,${cor}22 70%),linear-gradient(160deg,${cor}55,#F5F4F1);filter:grayscale(${l.nota ? 0 : 1})">
       <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:${cor};opacity:.5">${ic(icon, 120)}</div></div>
       <div style="position:absolute;left:0;right:0;bottom:0;height:120px;background:linear-gradient(transparent,var(--paper))"></div></div>
@@ -670,6 +695,7 @@ SCR.lugar = {
   },
 };
 
+const POS = { aquarela: [120, 300], lilas: [250, 260], prisma: [300, 430], mirante: [175, 470], sem: [95, 560], sol: [265, 610] };
 SCR.mapa = {
   tab: true, light: false, html: () => {
     const pins = [[120, 300, 4.7, C.turq, "aquarela"], [250, 260, 4.3, C.yellow, "lilas"], [300, 430, 4.5, C.turq, "prisma"], [175, 470, 3.1, C.lilac, "mirante"]];
@@ -679,11 +705,12 @@ SCR.mapa = {
       <div class="area" style="left:285px;top:300px;width:110px;height:110px;background:radial-gradient(circle,rgba(255,208,102,.45),rgba(255,208,102,.14) 60%,transparent 70%);animation-delay:.2s"></div>
       ${dots.map(([x, y]) => `<i class="dot" style="left:${x}px;top:${y}px"></i>`).join("")}
       <div class="clu" style="left:70px;top:300px">12</div><div class="clu" style="left:330px;top:640px">8</div>
-      ${pins.map(([x, y, n, c, id], i) => `<div class="pinp" style="left:${x}px;top:${y}px;--d:${200 + i * 120}ms" data-act="pin" data-id="${id}"><div class="bub" style="background:${c}">${n.toFixed(1).replace(".", ",")}</div><div class="tip" style="background:${c}"></div></div>`).join("")}
+      ${ST.mapaFav ? Object.entries(POS).filter(([id]) => ST.fav.has(id)).map(([id, [x, y]], i) => `<div class="pinp" style="left:${x}px;top:${y}px;--d:${150 + i * 120}ms" data-act="pin" data-id="${id}"><div class="bub" style="background:#fff;min-width:40px;height:40px;border-radius:20px;padding:0">${favSvg(true, 24)}</div><div class="tip" style="background:#fff"></div></div>`).join("")
+        : pins.map(([x, y, n, c, id], i) => `<div class="pinp" style="left:${x}px;top:${y}px;--d:${200 + i * 120}ms" data-act="pin" data-id="${id}"><div class="bub" style="background:${c}">${n.toFixed(1).replace(".", ",")}</div><div class="tip" style="background:${c}"></div></div>`).join("")}
       <div style="position:absolute;left:14px;right:14px;top:56px;display:flex;gap:8px;align-items:center">
         <div class="seg" style="flex:1;background:rgba(255,255,255,.85);box-shadow:var(--shadow)"><i style="width:calc(50% - 4px)"></i><button class="on" data-act="seg">Lugares</button><button data-act="seg">Relatos</button></div>
         <button class="sos" data-act="sos">SOS</button></div>
-      <div class="chips" style="position:absolute;left:14px;right:14px;top:106px">${["Com nota", "Bar", "Café", "Hotel", "Balada"].map((c, i) => `<button class="chip" style="background:rgba(255,255,255,.88);box-shadow:var(--shadow)${i ? "" : ";background:var(--night);color:#fff"}">${c}</button>`).join("")}</div>
+      <div class="chips" style="position:absolute;left:14px;right:14px;top:106px">${FAV ? `<button class="quero" data-act="mapaFav" style="${ST.mapaFav ? "background:var(--night);color:#fff" : ""}">${favSvg(true, 18)}Quero ir</button>` : ""}${["Com nota", "Bar", "Café", "Hotel", "Balada"].map((c, i) => `<button class="chip" style="background:rgba(255,255,255,.88);box-shadow:var(--shadow)${i || ST.mapaFav ? "" : ";background:var(--night);color:#fff"}">${c}</button>`).join("")}</div>
       <div style="position:absolute;left:0;right:0;bottom:0;height:250px;border-radius:30px 30px 0 0;background:rgba(245,244,241,.94);backdrop-filter:blur(20px);box-shadow:0 -8px 30px rgba(20,24,41,.12);padding:10px 16px">
         <div class="grab" style="width:40px;height:5px;border-radius:3px;background:var(--line);margin:0 auto 10px"></div>
         <div style="display:flex;justify-content:space-between;align-items:center"><b style="font-size:16px">Perto de você</b><button class="pill" style="background:var(--coral);color:var(--night);height:30px;padding:0 12px" data-go="registrar">${ic("alert", 14)} Registrar relato</button></div>
@@ -791,6 +818,9 @@ SCR.perfil = {
     <button class="card solid fu" style="--d:120ms;width:100%;margin-top:10px;text-align:left;display:flex;align-items:center;gap:12px" data-go="conquistas">
       <div style="display:flex">${[...ST.ganhas].slice(0, 3).map((id, i) => `<div style="margin-left:${i ? -16 : 0}px">${medal(id, { size: 54, d: 200 + i * 100 })}</div>`).join("")}</div>
       <div style="flex:1"><span class="eb">Conquistas</span><p style="font-weight:700;font-size:17px;margin-top:2px">${ST.ganhas.size} de 32</p><p class="dim" style="font-size:12.5px">Quase lá: ${nomeM(MED[ST.ganhas.has("deu-close") ? "figurinha" : "deu-close"])}</p></div>${ic("chev", 20)}</button>
+    ${FAV ? `<button class="card solid fu" style="--d:160ms;width:100%;margin-top:10px;text-align:left;display:flex;align-items:center;gap:12px" data-go="queroir" data-tour="perfilquero">
+      <span style="width:54px;height:54px;border-radius:27px;background:#FFF4F6;display:flex;align-items:center;justify-content:center">${favSvg(true, 30)}</span>
+      <div style="flex:1"><span class="eb">Quero ir</span><p style="font-weight:700;font-size:17px;margin-top:2px">${plural(ST.fav.size, "lugar", "lugares")} para conhecer</p><p class="dim" style="font-size:12.5px">${ST.jaFui.size} já ${ST.jaFui.size === 1 ? "visitado" : "visitados"} · só você vê</p></div>${ic("chev", 20)}</button>` : ""}
     <div class="lbl" style="margin-top:22px">Como o app fala com você</div>
     <div class="seg" id="pfForma"><i></i>${["a", "o", "e"].map((t, i) => `<button class="${i === ST.forma ? "on" : ""}" data-act="forma" data-f="${i}">${["Curiosa", "Curioso", "Curiose"][i]}</button>`).join("")}</div>
     <div class="card fu" style="margin-top:16px;padding:0 4px">
@@ -820,6 +850,32 @@ SCR.conquistas = {
       const on = ST.ganhas.has(id), p = ST.prog[id];
       return `<button data-act="medDet" data-id="${id}" class="fu" style="--d:${Math.min(i * 30, 600)}ms">${medal(id, { size: 92, on, prog: p ? p[0] / p[1] : 0, lock: !on && (!p || p[0] === 0), d: 200 + Math.min(i * 30, 600) })}<span class="nm" style="color:${on ? "var(--ink)" : "var(--dim)"}">${nomeM(MED[id])}</span></button>`;
     }).join("")}</div></div>`;
+  },
+};
+
+/* ---------- proposta: Quero ir ---------- */
+SCR.queroir = {
+  solid: true, html: aba => {
+    aba = aba || "quero";
+    const quero = LUGARES.filter(l => ST.fav.has(l.id)), fui = LUGARES.filter(l => ST.jaFui.has(l.id));
+    const item = (l, i) => `<div class="qi fu" style="--d:${120 + i * 60}ms" data-go="lugar:${l.id}">${tile(l, 56)}
+      <div style="flex:1;min-width:0"><b style="font-size:15px;display:block">${l.nome}</b><span class="dim" style="font-size:12.5px">${CAT[l.cat][0]} · ${l.bairro} · ${l.dist}</span>
+      <div style="display:flex;gap:6px;margin-top:8px"><button class="pill" style="background:var(--subtle);color:var(--ink);height:28px" data-act="chegar">${ic("nav", 13)} Como chegar</button>
+      <button class="pill" style="background:#49DCC033;color:#0A8B7A;height:28px" data-go="lugar:${l.id}">${ic("check", 13)} Já fui</button></div></div>${favBtn(l.id)}</div>`;
+    const feito = (l, i) => `<div class="qi fu" style="--d:${120 + i * 60}ms" data-go="lugar:${l.id}">${tile(l, 56)}
+      <div style="flex:1;min-width:0"><b style="font-size:15px;display:block">${l.nome}</b><span class="dim" style="font-size:12.5px">${CAT[l.cat][0]} · ${l.bairro}</span>
+      <div style="margin-top:6px"><span class="pill" style="background:#49DCC033;color:#0A8B7A">${ic("check", 13)} Avaliado ${ST.jaFui.get(l.id)}</span></div></div>${score(l.nota, 46)}</div>`;
+    const vazio = `<div style="text-align:center;padding:40px 20px" class="fu"><div style="display:flex;justify-content:center">${favSvg(false, 64)}</div>
+      <p class="h-mid" style="margin-top:12px">Nada salvo ainda</p><p class="mut" style="font-size:14px;line-height:1.5;margin-top:6px">Toque no coração de qualquer lugar para guardar aqui os que você quer conhecer.</p>
+      <button class="btn night" style="margin-top:16px" data-go="lugares">Ver lugares</button></div>`;
+    return `<button class="back" data-back>${ic("back", 20)}</button><div class="pad np" style="padding-top:108px">
+      <div style="display:flex;align-items:center;gap:10px" class="fu">${favSvg(true, 34)}<div><p class="h-big">Quero ir</p></div></div>
+      <p class="dim fu" style="font-size:13px;margin-top:4px">Só você vê essa lista.</p>
+      <div class="seg fu" style="--d:60ms;margin-top:14px" id="qSeg"><i style="width:calc(50% - 4px);transform:translateX(${aba === "fui" ? 100 : 0}%)"></i><button class="${aba === "quero" ? "on" : ""}" data-act="qAba" data-v="quero">Quero ir · ${quero.length}</button><button class="${aba === "fui" ? "on" : ""}" data-act="qAba" data-v="fui">Já fui · ${fui.length}</button></div>
+      <div style="margin-top:14px">${aba === "quero" ? (quero.length ? `<button class="btn white fu" style="height:42px;font-size:14px;margin-bottom:12px" data-act="qMapa">${ic("map", 17)}Ver no mapa</button>` + quero.map(item).join("") : vazio)
+        : (fui.length ? fui.map(feito).join("") : `<p class="dim" style="text-align:center;padding:30px">Quando você avaliar um lugar da lista, ele aparece aqui.</p>`)}</div>
+      ${aba === "quero" && quero.length ? `<p class="dim" style="font-size:12px;line-height:1.5;margin:10px 4px">Avaliou um lugar da lista? Ele passa sozinho para Já fui.</p>` : ""}
+    </div>`;
   },
 };
 
@@ -878,12 +934,15 @@ function folhaPostar(pergunta) {
 /* ---------- comemorações ---------- */
 function recompensa(lugarId) {
   ST.gomos += 1; ST.gomosSemana = Math.min(4, ST.gomosSemana + 1);
+  const saiuDaLista = FAV && ST.fav.delete(lugarId);
+  if (FAV) { ST.jaFui.set(lugarId, "agora"); $$(`.fav[data-id="${lugarId}"]`).forEach(b => b.innerHTML = favSvg(false)); }
   const ia = !ST.ganhas.has("deu-close");
   const sh = folha(`<div style="text-align:center;padding-top:6px;position:relative">
     <p class="eb" style="color:#0A8B7A">Avaliação no ar</p><p class="h-big" style="margin-top:6px;font-size:30px"><span style="font-weight:400">Mais</span> <span class="rbt">cor</span> <span style="font-weight:400">no</span> mapa</p>
     <p class="mut" style="font-size:14px;margin-top:6px">${LUG[lugarId].nome} ganhou a sua cor.</p>
     <div style="display:flex;justify-content:center;margin-top:18px;position:relative">${iris(ST.gomos, 150, { anim: true, delay: 200, step: 26 })}<div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center"><b style="font-family:var(--display);font-size:34px" data-count="${ST.gomos}">0</b><span class="dim" style="font-size:11px">de 48 gomos</span></div></div>
     <p style="font-size:13.5px;font-weight:600;margin-top:12px">+1 gomo · esta semana ${ST.gomosSemana} de 4</p>
+    ${saiuDaLista ? `<div class="card" style="margin-top:12px;display:flex;gap:10px;align-items:center;text-align:left">${favSvg(true, 26)}<p style="font-size:13.5px;line-height:1.4">Saiu do <b>Quero ir</b> e foi para <b>Já fui</b>.</p></div>` : ""}
     ${ia ? `<div class="card solid" style="margin-top:16px;display:flex;gap:12px;align-items:center;text-align:left">${medal("deu-close", { size: 62, on: false, prog: 1, lock: false, d: 600 })}<div><b>${nomeM(MED["deu-close"])}</b><p class="dim" style="font-size:12.5px">10 de 10 · desbloqueada</p></div></div>
     <button class="btn night" style="margin-top:14px" data-act="celebrar">Ver conquista nova</button>` : `<button class="btn night" style="margin-top:16px" data-act="fecharFolha">Fechar</button>`}
   </div>`);
@@ -1013,6 +1072,17 @@ function nudge() {
 
 /* ---------- ações ---------- */
 const ACT = {
+  fav: b => {
+    const id = b.dataset.id, on = !ST.fav.has(id);
+    on ? ST.fav.add(id) : ST.fav.delete(id);
+    $$(`.fav[data-id="${id}"]`).forEach(x => { x.innerHTML = favSvg(on); x.classList.remove("pop"); void x.offsetWidth; x.classList.add("pop"); });
+    if (on && !reduce) RB.forEach((c, i) => { const d = document.createElement("i"); d.className = "bu"; const a = i / 6 * Math.PI * 2 - Math.PI / 2; d.style.cssText = `background:${c};--x:${Math.cos(a) * 22}px;--y:${Math.sin(a) * 22}px`; b.appendChild(d); setTimeout(() => d.remove(), 650); });
+    const n = $("#qN"); if (n) n.textContent = ST.fav.size;
+    toast(on ? "Salvo em Quero ir" : "Saiu do Quero ir");
+  },
+  qAba: b => { const t = pilha[pilha.length - 1]; t.el.innerHTML = SCR.queroir.html(b.dataset.v); t.arg = b.dataset.v; ligar(t.el); armar(t.el); },
+  qMapa: () => { ST.mapaFav = true; irAba("mapa"); },
+  mapaFav: () => { ST.mapaFav = !ST.mapaFav; irAba("mapa", true); },
   pularSplash: () => irAba("login"),
   entrar: () => { irAba("inicio"); setTimeout(tour, 700); },
   sos: () => folhaSOS(),
@@ -1078,10 +1148,17 @@ const JUMP = {
   story: () => { irAba("perfil", true); story("medalha", "deu-o-nome"); },
   semana: () => { irAba("inicio", true); setTimeout(folhaSemana, 200); }, cores: () => { irAba("inicio", true); setTimeout(folhaCores, 200); },
 };
+const JFAV = {
+  lugares: () => irAba("lugares"), ficha: () => { irAba("lugares", true); ir("lugar", "lilas"); },
+  lista: () => { irAba("lugares", true); ir("queroir"); }, mapa: () => { ST.mapaFav = true; irAba("mapa"); },
+  perfil: () => irAba("perfil"), avaliar: () => { irAba("lugares", true); ir("queroir"); setTimeout(() => ir("lugar", "sem"), 450); },
+};
 $$("#side [data-j]").forEach(b => b.onclick = () => {
   $("#side").classList.remove("open");
   const [k, a] = b.dataset.j.split(":");
-  if (k === "lugar") { irAba("lugares", true); ir("lugar", a); } else JUMP[k]();
+  if (k !== "mapa" && !(k === "fav" && a === "mapa")) ST.mapaFav = false;
+  if (k === "fav") JFAV[a]();
+  else if (k === "lugar") { irAba("lugares", true); ir("lugar", a); } else JUMP[k]();
 });
 $("#menuBtn").onclick = () => $("#side").classList.toggle("open");
 
@@ -1094,7 +1171,13 @@ function escalar() {
   if (narrow && innerWidth / innerHeight < .62) { ph.style.transform = `scale(${innerWidth / 390})`; ph.style.padding = 0; ph.style.borderRadius = 0; ph.style.background = "transparent"; $("#screen").style.borderRadius = 0; wrap.style.width = innerWidth + "px"; wrap.style.height = 844 * innerWidth / 390 + "px"; }
 }
 addEventListener("resize", escalar); escalar();
-irAba("splash", true);
+if (FAV) {
+  $("#favGroup").hidden = false;
+  $("#side h1").textContent = "Quero ir: a lista de lugares para conhecer";
+  $("#side p.lead").innerHTML = "Proposta para aprovar. Coração irisado em todo lugar (lista, ficha, mapa); a lista mora em <b>Lugares</b> e no <b>Perfil</b>, sem ocupar a barra de baixo. Só a pessoa vê. Os outros atalhos levam ao resto do app.";
+  irAba("lugares", true);
+  setTimeout(() => toast("Toque no coração para salvar um lugar"), 600);
+} else irAba("splash", true);
 </script>
 </body>
 </html>

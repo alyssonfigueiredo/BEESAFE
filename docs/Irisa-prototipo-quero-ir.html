@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Irisa · protótipo</title>
+<title>Irisa · Quero ir</title>
 <!-- Protótipo navegável do app inteiro (04/10/2026): entrada, Início, Lugares, ficha do lugar com as
      quatro perguntas, Mapa, relato, emergência, Apoio, Perfil, Sua evolução, Conquistas e o cartão do
      story, no visual de hoje e com os ícones 3D. Nada grava: é encenado no navegador.
@@ -462,7 +462,7 @@ function tile(l, s = 64) {
   return `<div class="tile" style="width:${s}px;height:${s}px;background:${cinza ? "#ECEEF2" : cor + "33"};color:${cinza ? "#9AA1B1" : cor}">${ic(icon, s * .44)}</div>`;
 }
 function badge(b) { if (!b) return ""; const [t, bg, ink] = BADGE[b]; return `<span class="pill" style="background:${b === "poucas" ? bg : bg + "38"};color:${ink}">${t}</span>`; }
-const FAV = /*__FAV__*/false;
+const FAV = true;
 const plural = (n, um, varios) => `${n} ${n === 1 ? um : varios}`;
 let hz = 0;
 function favSvg(on, s = 22) {
