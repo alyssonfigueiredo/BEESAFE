@@ -8,7 +8,9 @@
 //   disown
 //
 // Flags: --simular (só lista quantos faltam, não importa nada), --limite 200 (repassado pro import),
-// --desde 3500000 (pula direto para um código IBGE, para retomar depois de uma parada no meio).
+// --desde 3500000 (pula direto para um código IBGE, para retomar depois de uma parada no meio),
+// --ate 3599999 (não passa desse código IBGE — serve pra dividir em faixas e rodar em paralelo,
+// um processo por faixa, sem os processos pisarem no mesmo município).
 // Continua para o próximo mesmo se um município der erro (malha do IBGE fora do ar, etc.) e mostra
 // o resumo no fim. Zero custo: Overture é gratuito, não chama a API do Google.
 
@@ -18,9 +20,12 @@ const args = process.argv.slice(2);
 const simular = args.includes("--simular");
 const desdeFlagIdx = args.indexOf("--desde");
 const desde = desdeFlagIdx >= 0 ? Number(args[desdeFlagIdx + 1]) : 0;
-// repassa pro import-places-overture.mjs tudo que não for --simular nem --desde (e seu valor)
+const ateFlagIdx = args.indexOf("--ate");
+const ate = ateFlagIdx >= 0 ? Number(args[ateFlagIdx + 1]) : Infinity;
+// repassa pro import-places-overture.mjs tudo que não for --simular, --desde nem --ate (e seus valores)
 const passthrough = args.filter((a, i) =>
-  a !== "--simular" && a !== "--desde" && i !== desdeFlagIdx + 1
+  a !== "--simular" && a !== "--desde" && a !== "--ate" &&
+  i !== desdeFlagIdx + 1 && i !== ateFlagIdx + 1
 );
 
 const { createClient } = await import("@supabase/supabase-js");
@@ -65,7 +70,7 @@ for (;;) {
   from += pagina;
 }
 
-const faltam = cidades.filter((c) => !comLugar.has(c.id) && c.ibge_code >= desde);
+const faltam = cidades.filter((c) => !comLugar.has(c.id) && c.ibge_code >= desde && c.ibge_code <= ate);
 console.log(`${cidades.length} municípios no total, ${comLugar.size} já têm lugar, ${faltam.length} faltam.\n`);
 
 if (simular) {
