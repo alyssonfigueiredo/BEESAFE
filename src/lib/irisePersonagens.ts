@@ -20,15 +20,17 @@ export type Irise = {
 };
 
 export const IRISES: Irise[] = [
-  { n: 1, nome: "Theo", pronomes: "ele/dele", classe: "Guardião", bio: "Papo reto e ombro firme. Avisa antes de você chegar num lugar furado.", stats: [4, 3, 5, 3] },
-  { n: 2, nome: "Luna", pronomes: "ela/dela", classe: "Conselheira", bio: "Escuta sem julgar e sempre sabe de um café tranquilo por perto.", stats: [5, 3, 3, 3] },
-  { n: 3, nome: "Caio", pronomes: "ele/dele", classe: "Animador", bio: "Energia lá em cima. Comemora cada avaliação como se fosse gol.", stats: [3, 5, 3, 4] },
-  { n: 4, nome: "Kai", pronomes: "elu/delu", classe: "DJ do Rolê", bio: "Conhece toda balada acolhedora da cidade e a playlist de cada uma.", stats: [3, 4, 3, 5] },
-  { n: 5, nome: "Dandara", pronomes: "ela/dela", classe: "Matriarca", bio: "Mãe do grupo. Cuida, cobra água e pergunta se você chegou bem.", stats: [5, 4, 4, 3] },
-  { n: 6, nome: "Rafa", pronomes: "ele/dele", classe: "Cartógrafo", bio: "Nerd do mapa. Sabe a nota de cada bairro e explica sem pressa.", stats: [4, 3, 4, 3] },
-  { n: 7, nome: "Nina", pronomes: "ela/elu", classe: "Exploradora", bio: "Vive achando lugar novo. Te chama pra ser a primeira cor do mapa.", stats: [3, 4, 4, 5] },
   { n: 8, nome: "Bruno", pronomes: "ele/dele", classe: "Treinador", bio: "Te empurra pra fora de casa com carinho. Comemora junto cada avaliação nova.", stats: [4, 4, 3, 4] },
   { n: 9, nome: "Igor", pronomes: "ele/dele", classe: "Viajante", bio: "Sempre de mochila nas costas, já mapeou meio bairro sem ninguém pedir.", stats: [3, 3, 4, 5] },
+  { n: 10, nome: "Kai", pronomes: "elu/delu", classe: "DJ do Rolê", bio: "Conhece toda balada acolhedora da cidade e a playlist de cada uma.", stats: [3, 4, 3, 5] },
+  { n: 11, nome: "Léo", pronomes: "ele/dele", classe: "Guardião", bio: "Papo reto e ombro firme. Avisa antes de você chegar num lugar furado.", stats: [4, 3, 5, 3] },
+  { n: 12, nome: "Theo", pronomes: "ele/dele", classe: "Conselheiro", bio: "Escuta sem julgar e sempre sabe de um café tranquilo por perto.", stats: [5, 3, 3, 3] },
+  { n: 13, nome: "Bento", pronomes: "ele/dele", classe: "Anfitrião", bio: "Faz questão de te apresentar todo mundo. Sabe o nome de metade da cidade.", stats: [5, 4, 3, 4] },
+  { n: 14, nome: "Dante", pronomes: "ele/dele", classe: "Protetor", bio: "Grandão, de voz mansa. Te acompanha até a porta sem fazer drama.", stats: [4, 3, 4, 3] },
+  { n: 15, nome: "Rafa", pronomes: "ele/dele", classe: "Cartógrafo", bio: "Nerd do mapa. Sabe a nota de cada bairro e explica sem pressa.", stats: [4, 3, 4, 3] },
+  { n: 16, nome: "Yara", pronomes: "ela/dela", classe: "Exploradora", bio: "Vive achando lugar novo. Te chama pra ser a primeira cor do mapa.", stats: [3, 4, 4, 5] },
+  { n: 17, nome: "Dandara", pronomes: "ela/dela", classe: "Matriarca", bio: "Mãe do grupo. Cuida, cobra água e pergunta se você chegou bem.", stats: [5, 4, 4, 3] },
+  { n: 18, nome: "Luna", pronomes: "ela/dela", classe: "Confidente", bio: "Escuta antes de opinar. Sempre acha uma frase que acalma.", stats: [5, 3, 4, 3] },
 ];
 
 export const PRONOMES = ["ela/dela", "ele/dele", "elu/delu", "qualquer pronome", "outro"] as const;
@@ -51,42 +53,17 @@ export const FALAS_APRESENTACAO = [
 // O Metro só resolve require() com caminho estático — por isso o mapa explícito, não um template.
 const CORPO: Record<number, Record<number, number>> = {
   1: {
-    1: require("../../assets/irise-personagens/p1-1.webp"),
-    2: require("../../assets/irise-personagens/p1-2.webp"),
-    3: require("../../assets/irise-personagens/p1-3.webp"),
-    4: require("../../assets/irise-personagens/p1-4.webp"),
-    5: require("../../assets/irise-personagens/p1-5.webp"),
-    6: require("../../assets/irise-personagens/p1-6.webp"),
-    7: require("../../assets/irise-personagens/p1-7.webp"),
     8: require("../../assets/irise-personagens/p1-8.webp"),
     9: require("../../assets/irise-personagens/p1-9.webp"),
-  },
-  2: {
-    1: require("../../assets/irise-personagens/p2-1.webp"),
-    2: require("../../assets/irise-personagens/p2-2.webp"),
-    3: require("../../assets/irise-personagens/p2-3.webp"),
-    4: require("../../assets/irise-personagens/p2-4.webp"),
-    5: require("../../assets/irise-personagens/p2-5.webp"),
-    6: require("../../assets/irise-personagens/p2-6.webp"),
-    7: require("../../assets/irise-personagens/p2-7.webp"),
-  },
-  6: {
-    1: require("../../assets/irise-personagens/p6-1.webp"),
-    2: require("../../assets/irise-personagens/p6-2.webp"),
-    3: require("../../assets/irise-personagens/p6-3.webp"),
-    4: require("../../assets/irise-personagens/p6-4.webp"),
-    5: require("../../assets/irise-personagens/p6-5.webp"),
-    6: require("../../assets/irise-personagens/p6-6.webp"),
-    7: require("../../assets/irise-personagens/p6-7.webp"),
-  },
-  13: {
-    1: require("../../assets/irise-personagens/p13-1.webp"),
-    2: require("../../assets/irise-personagens/p13-2.webp"),
-    3: require("../../assets/irise-personagens/p13-3.webp"),
-    4: require("../../assets/irise-personagens/p13-4.webp"),
-    5: require("../../assets/irise-personagens/p13-5.webp"),
-    6: require("../../assets/irise-personagens/p13-6.webp"),
-    7: require("../../assets/irise-personagens/p13-7.webp"),
+    10: require("../../assets/irise-personagens/p1-10.webp"),
+    11: require("../../assets/irise-personagens/p1-11.webp"),
+    12: require("../../assets/irise-personagens/p1-12.webp"),
+    13: require("../../assets/irise-personagens/p1-13.webp"),
+    14: require("../../assets/irise-personagens/p1-14.webp"),
+    15: require("../../assets/irise-personagens/p1-15.webp"),
+    16: require("../../assets/irise-personagens/p1-16.webp"),
+    17: require("../../assets/irise-personagens/p1-17.webp"),
+    18: require("../../assets/irise-personagens/p1-18.webp"),
   },
 };
 
@@ -99,24 +76,17 @@ export function corpoSrc(pose: number, personagem: number): number {
 export const BUSTO_ASPECTO = 460 / 300;
 const BUSTO: Record<number, Record<number, number>> = {
   1: {
-    1: require("../../assets/irise-personagens/b1-1.webp"),
-    2: require("../../assets/irise-personagens/b1-2.webp"),
-    3: require("../../assets/irise-personagens/b1-3.webp"),
-    4: require("../../assets/irise-personagens/b1-4.webp"),
-    5: require("../../assets/irise-personagens/b1-5.webp"),
-    6: require("../../assets/irise-personagens/b1-6.webp"),
-    7: require("../../assets/irise-personagens/b1-7.webp"),
     8: require("../../assets/irise-personagens/b1-8.webp"),
     9: require("../../assets/irise-personagens/b1-9.webp"),
-  },
-  13: {
-    1: require("../../assets/irise-personagens/b13-1.webp"),
-    2: require("../../assets/irise-personagens/b13-2.webp"),
-    3: require("../../assets/irise-personagens/b13-3.webp"),
-    4: require("../../assets/irise-personagens/b13-4.webp"),
-    5: require("../../assets/irise-personagens/b13-5.webp"),
-    6: require("../../assets/irise-personagens/b13-6.webp"),
-    7: require("../../assets/irise-personagens/b13-7.webp"),
+    10: require("../../assets/irise-personagens/b1-10.webp"),
+    11: require("../../assets/irise-personagens/b1-11.webp"),
+    12: require("../../assets/irise-personagens/b1-12.webp"),
+    13: require("../../assets/irise-personagens/b1-13.webp"),
+    14: require("../../assets/irise-personagens/b1-14.webp"),
+    15: require("../../assets/irise-personagens/b1-15.webp"),
+    16: require("../../assets/irise-personagens/b1-16.webp"),
+    17: require("../../assets/irise-personagens/b1-17.webp"),
+    18: require("../../assets/irise-personagens/b1-18.webp"),
   },
 };
 

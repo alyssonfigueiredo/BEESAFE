@@ -24,6 +24,7 @@ import { ConquistasCard } from "@/components/gami/ConquistasCard";
 import { QueroIrCard } from "@/components/QueroIr";
 import { EvolucaoCard } from "@/components/gami/Evolucao";
 import { FormaCard } from "@/components/gami/FormaCard";
+import { DicasToggle } from "@/components/irise-personagem/DicasToggle";
 import { IriseCard } from "@/components/irise-personagem/IriseCard";
 import { useScreenInsets } from "@/hooks/useScreenInsets";
 import { abrirTour } from "@/hooks/useTour";
@@ -202,6 +203,7 @@ export default function PerfilScreen() {
 
         <FormaCard />
         <IriseCard />
+        <DicasToggle />
 
         <View className="rounded-[30px] bg-surface px-6 py-3" style={shadow.card}>
           <ListRow icon={ShieldCheck} color={colors.yellowInk} title="Privacidade">

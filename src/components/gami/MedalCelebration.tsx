@@ -10,8 +10,11 @@ import {
   type Compartilhavel,
 } from "@/components/gami/Compartilhar";
 import { AnimatedMedal } from "@/components/gami/MedalView";
+import { Busto } from "@/components/irise-personagem/Busto";
 import { useGamification, useMarkSeen, useRewardOpen } from "@/hooks/useGamification";
+import { useProfile } from "@/hooks/useProfile";
 import { getMedalha, nomeDa } from "@/lib/medals";
+import { IRISES } from "@/lib/irisePersonagens";
 import { colors } from "@/theme/tokens";
 import { useFolhaAberta } from "@/hooks/useDiscovery";
 
@@ -33,6 +36,10 @@ export function MedalCelebration() {
   const reduce = useReducedMotion();
   const [aberta, setAberta] = useState<string[] | null>(null);
   const [story, setStory] = useState<Compartilhavel | null>(null);
+  const { data: profile } = useProfile();
+  const personagem = profile?.irise_personagem
+    ? IRISES.find((p) => p.n === profile.irise_personagem)
+    : null;
 
   const novas = useMemo(
     () => (g?.conquistadas ?? []).filter((c) => !c.visto && getMedalha(c.id)).map((c) => c.id),
@@ -105,6 +112,22 @@ export function MedalCelebration() {
               <Text className="mt-3 text-center font-body text-[13px]" style={{ color: "#8A90AA" }}>
                 E mais {resto} nas suas conquistas.
               </Text>
+            </FadeUp>
+          )}
+          {/* Prévia (09/10/2026): o irise comemora do lado, nunca no lugar da medalha. */}
+          {!!personagem && (
+            <FadeUp key={`irise-${m.id}`} delay={reduce ? 0 : T_NOME + 480} duration={450}>
+              <View className="mt-5 flex-row items-center gap-3 px-2">
+                <Busto personagem={personagem.n} size={44} />
+                <View
+                  className="min-w-0 flex-1 rounded-2xl rounded-bl-[6px] px-3.5 py-2.5"
+                  style={{ backgroundColor: "rgba(255,255,255,0.08)" }}
+                >
+                  <Text className="font-body text-[12.5px] leading-[17px]" style={{ color: "#C9CDE0" }}>
+                    Mandou bem! Bora pra próxima?
+                  </Text>
+                </View>
+              </View>
             </FadeUp>
           )}
           <View className="absolute bottom-12 left-6 right-6 gap-2">

@@ -9,6 +9,7 @@ import { CityPicker } from "@/components/CityPicker";
 import { DangerRanking } from "@/components/DangerRanking";
 import { AvisoCard, GamiHomeCards } from "@/components/gami/HomeCards";
 import { IriseFab } from "@/components/irise/Irise";
+import { IriseNudge } from "@/components/irise-personagem/IriseNudge";
 import { Mark } from "@/components/Mark";
 import { OccurrenceCard } from "@/components/OccurrenceCard";
 import { PlaceCard } from "@/components/PlaceCard";
@@ -98,6 +99,7 @@ export default function HomeScreen() {
         contentContainerStyle={insets}
         keyboardShouldPersistTaps="handled"
       >
+        <IriseNudge />
         <AvisoCard />
 
         {/* Cartão principal escuro: a marca em azulejo, a cidade, o fio arco-íris e as duas ações
