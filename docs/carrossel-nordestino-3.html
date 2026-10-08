@@ -55,6 +55,10 @@ body{font-family:var(--body);color:var(--ink);display:flex;flex-direction:column
 .mark{width:36px;height:36px;flex:none;display:block}
 .tag{display:inline-block;padding:14px 30px;border-radius:999px;font-family:var(--body);font-weight:600;font-size:30px;letter-spacing:.02em}
 
+.medal-glow{position:relative;width:680px;height:460px;display:flex;align-items:center;justify-content:center;margin:10px 0}
+.medal-glow::before{content:"";position:absolute;width:520px;height:520px;border-radius:50%;background:conic-gradient(var(--coral),var(--orange),var(--yellow),var(--turq),var(--blue),var(--lilac),var(--coral));filter:blur(60px);opacity:.4}
+.medal-glow::after{content:"";position:absolute;width:420px;height:420px;border-radius:50%;border:3px dashed color-mix(in srgb,var(--ink) 18%,transparent)}
+.medal-glow img{position:relative;width:86%;filter:drop-shadow(0 26px 34px rgba(20,24,41,.32))}
 .imgcard{width:640px;height:640px;border-radius:var(--r-xl);background:#fff;box-shadow:var(--shadow-card),var(--glass-inset);display:flex;align-items:center;justify-content:center;overflow:hidden}
 .imgcard img{width:86%;height:86%;object-fit:contain}
 .imgcard.sm{width:420px;height:420px}
