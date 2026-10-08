@@ -1,33 +1,25 @@
 import { router, Stack, useLocalSearchParams } from "expo-router";
-import { X } from "lucide-react-native";
-import { useEffect, useRef, useState } from "react";
-import { Dimensions, Pressable, Text, View } from "react-native";
-import Animated, {
-  FadeIn,
-  interpolate,
-  type SharedValue,
-  useAnimatedScrollHandler,
-  useAnimatedStyle,
-  useSharedValue,
-} from "react-native-reanimated";
+import { ChevronLeft, ChevronRight, X } from "lucide-react-native";
+import { useState } from "react";
+import { Pressable, Text, View } from "react-native";
+import Animated, { FadeIn } from "react-native-reanimated";
 
 import { Aurora } from "@/components/Aurora";
 import { Glass } from "@/components/Glass";
 import { Busto } from "@/components/irise-personagem/Busto";
+import { HeroAvatar } from "@/components/irise-personagem/HeroAvatar";
 import { useScreenInsets } from "@/hooks/useScreenInsets";
 import { useSetIrisePersonagem } from "@/hooks/useProfile";
 import { IRISES, STATS, type Forma } from "@/lib/irisePersonagens";
 import { colors } from "@/theme/tokens";
 
-const { width: TELA_W } = Dimensions.get("window");
-const ITEM_W = TELA_W; // uma página por personagem, com os vizinhos espiando pela escala/opacidade
-const HERO = 192; // diâmetro do busto em destaque
+const HERO = 150; // diâmetro do avatar em destaque — igual ao protótipo aprovado
 
 /**
- * Prévia do personagem do irise — tela 2 de 2 (escolha). Carrossel de bustos (não corpo inteiro:
- * o busto é o que aparece em todo lugar, então é o que precisa representar bem o personagem aqui).
- * A folha de baixo não rola — cabe tudo (nome, pronome, classe, bio e atributos). Protótipo: nada
- * grava além do personagem escolhido.
+ * Prévia do personagem do irise — tela 2 de 2 (escolha). Avatar grande (disco branco + anel
+ * arco-íris) no centro, setas pros lados pra trocar, fileira de miniaturas embaixo. A folha de
+ * baixo não rola — cabe tudo (nome, pronome, classe, bio e atributos). Protótipo: nada grava além
+ * do personagem escolhido.
  */
 export default function IrisePreviewEscolha() {
   const insets = useScreenInsets({ tabs: false });
@@ -41,28 +33,15 @@ export default function IrisePreviewEscolha() {
   const forma = (Number(formaParam ?? 2) || 2) as Forma;
   const doPerfil = modo === "perfil";
   const setPersonagem = useSetIrisePersonagem();
-  const scrollRef = useRef<Animated.ScrollView>(null);
-  const scrollX = useSharedValue(0);
   const [indice, setIndice] = useState(() => {
     const n = Number(atualParam);
     const i = IRISES.findIndex((p) => p.n === n);
     return i >= 0 ? i : 0;
   });
 
-  const onScroll = useAnimatedScrollHandler((e) => {
-    scrollX.set(e.contentOffset.x);
-  });
-
-  function irPara(i: number) {
-    const alvo = Math.max(0, Math.min(IRISES.length - 1, i));
-    scrollRef.current?.scrollTo({ x: alvo * ITEM_W, animated: true });
+  function mover(d: number) {
+    setIndice((i) => (i + d + IRISES.length) % IRISES.length);
   }
-
-  // Abriu já num personagem (ex.: trocar no Perfil, no que a pessoa já tem): pula pra ele sem animar.
-  useEffect(() => {
-    if (indice > 0) scrollRef.current?.scrollTo({ x: indice * ITEM_W, animated: false });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
   const atual = IRISES[indice];
 
@@ -101,35 +80,41 @@ export default function IrisePreviewEscolha() {
           </View>
         </View>
 
-        <Animated.ScrollView
-          ref={scrollRef}
-          horizontal
-          pagingEnabled
-          showsHorizontalScrollIndicator={false}
-          onScroll={onScroll}
-          onMomentumScrollEnd={(e) =>
-            setIndice(Math.round(e.nativeEvent.contentOffset.x / ITEM_W))
-          }
-          scrollEventThrottle={16}
-          style={{ height: HERO + 24, marginTop: 10 }}
-        >
-          {IRISES.map((p, i) => (
-            <Personagem key={p.n} i={i} scrollX={scrollX} personagem={p.n} />
-          ))}
-        </Animated.ScrollView>
+        <View style={{ height: HERO + 24, marginTop: 10 }} className="flex-row items-center justify-center">
+          <Pressable
+            onPress={() => mover(-1)}
+            hitSlop={8}
+            className="absolute left-5 z-10 h-[38px] w-[38px] items-center justify-center rounded-full bg-solid active:opacity-80"
+            style={{ boxShadow: "0 4px 14px rgba(20,24,41,0.14)" }}
+          >
+            <ChevronLeft size={18} color={colors.ink} />
+          </Pressable>
+          <Animated.View key={atual.n} entering={FadeIn.duration(200)}>
+            <HeroAvatar personagem={atual.n} size={HERO} />
+          </Animated.View>
+          <Pressable
+            onPress={() => mover(1)}
+            hitSlop={8}
+            className="absolute right-5 z-10 h-[38px] w-[38px] items-center justify-center rounded-full bg-solid active:opacity-80"
+            style={{ boxShadow: "0 4px 14px rgba(20,24,41,0.14)" }}
+          >
+            <ChevronRight size={18} color={colors.ink} />
+          </Pressable>
+        </View>
 
-        <View className="flex-row justify-center gap-2.5 py-3">
+        <View className="flex-row justify-center gap-2 py-3">
           {IRISES.map((p, i) => (
-            <Pressable key={p.n} onPress={() => irPara(i)} hitSlop={4}>
+            <Pressable key={p.n} onPress={() => setIndice(i)} hitSlop={4}>
               <View
                 style={{
-                  borderRadius: 24,
-                  borderWidth: i === indice ? 2.5 : 0,
+                  borderRadius: 18,
+                  borderWidth: i === indice ? 2 : 0,
                   borderColor: colors.turquoiseInk,
-                  transform: [{ scale: i === indice ? 1.1 : 1 }],
+                  opacity: i === indice ? 1 : 0.6,
+                  transform: [{ scale: i === indice ? 1.08 : 1 }],
                 }}
               >
-                <Busto personagem={p.n} size={44} />
+                <Busto personagem={p.n} size={32} />
               </View>
             </Pressable>
           ))}
@@ -203,30 +188,5 @@ export default function IrisePreviewEscolha() {
         </Glass>
       </View>
     </>
-  );
-}
-
-function Personagem({
-  i,
-  scrollX,
-  personagem,
-}: {
-  i: number;
-  scrollX: SharedValue<number>;
-  personagem: number;
-}) {
-  const estilo = useAnimatedStyle(() => {
-    const pos = i * ITEM_W;
-    const d = scrollX.get() - pos;
-    const escala = interpolate(d, [-ITEM_W, 0, ITEM_W], [0.72, 1, 0.72], "clamp");
-    const opacidade = interpolate(d, [-ITEM_W, 0, ITEM_W], [0.4, 1, 0.4], "clamp");
-    return { transform: [{ scale: escala }], opacity: opacidade };
-  });
-  return (
-    <View style={{ width: ITEM_W, alignItems: "center", justifyContent: "center" }}>
-      <Animated.View style={estilo}>
-        <Busto personagem={personagem} size={HERO} />
-      </Animated.View>
-    </View>
   );
 }
