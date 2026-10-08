@@ -1,8 +1,9 @@
 import { router, Stack, useLocalSearchParams } from "expo-router";
 import { X } from "lucide-react-native";
 import { useEffect, useRef, useState } from "react";
-import { Dimensions, Pressable, ScrollView, Text, View } from "react-native";
+import { Dimensions, Pressable, Text, View } from "react-native";
 import Animated, {
+  FadeIn,
   interpolate,
   type SharedValue,
   useAnimatedScrollHandler,
@@ -15,15 +16,18 @@ import { Glass } from "@/components/Glass";
 import { Busto } from "@/components/irise-personagem/Busto";
 import { useScreenInsets } from "@/hooks/useScreenInsets";
 import { useSetIrisePersonagem } from "@/hooks/useProfile";
-import { corpoSrc, IRISES, STATS, type Forma } from "@/lib/irisePersonagens";
+import { IRISES, STATS, type Forma } from "@/lib/irisePersonagens";
 import { colors } from "@/theme/tokens";
 
 const { width: TELA_W } = Dimensions.get("window");
 const ITEM_W = TELA_W; // uma página por personagem, com os vizinhos espiando pela escala/opacidade
+const HERO = 192; // diâmetro do busto em destaque
 
 /**
- * Prévia do personagem do irise — tela 2 de 2 (escolha). Carrossel de 7 personagens; a folha de
- * baixo mostra nome, classe e atributos do personagem central. Protótipo: nada grava ainda.
+ * Prévia do personagem do irise — tela 2 de 2 (escolha). Carrossel de bustos (não corpo inteiro:
+ * o busto é o que aparece em todo lugar, então é o que precisa representar bem o personagem aqui).
+ * A folha de baixo não rola — cabe tudo (nome, pronome, classe, bio e atributos). Protótipo: nada
+ * grava além do personagem escolhido.
  */
 export default function IrisePreviewEscolha() {
   const insets = useScreenInsets({ tabs: false });
@@ -91,7 +95,9 @@ export default function IrisePreviewEscolha() {
           </Text>
           <View className="flex-row items-end justify-between">
             <Text className="font-display text-[26px] text-ink">ESCOLHA SEU IRISE</Text>
-            <Text className="font-body-bold text-sm text-dim">{indice + 1}/7</Text>
+            <Text className="font-body-bold text-sm text-dim">
+              {indice + 1}/{IRISES.length}
+            </Text>
           </View>
         </View>
 
@@ -105,25 +111,25 @@ export default function IrisePreviewEscolha() {
             setIndice(Math.round(e.nativeEvent.contentOffset.x / ITEM_W))
           }
           scrollEventThrottle={16}
-          style={{ height: 320, marginTop: 8 }}
+          style={{ height: HERO + 24, marginTop: 10 }}
         >
           {IRISES.map((p, i) => (
-            <Personagem key={p.n} i={i} scrollX={scrollX} src={corpoSrc(1, p.n)} />
+            <Personagem key={p.n} i={i} scrollX={scrollX} personagem={p.n} />
           ))}
         </Animated.ScrollView>
 
-        <View className="flex-row justify-center gap-3 py-3">
+        <View className="flex-row justify-center gap-2.5 py-3">
           {IRISES.map((p, i) => (
-            <Pressable key={p.n} onPress={() => irPara(i)}>
+            <Pressable key={p.n} onPress={() => irPara(i)} hitSlop={4}>
               <View
                 style={{
                   borderRadius: 24,
                   borderWidth: i === indice ? 2.5 : 0,
                   borderColor: colors.turquoiseInk,
-                  transform: [{ scale: i === indice ? 1.12 : 1 }],
+                  transform: [{ scale: i === indice ? 1.1 : 1 }],
                 }}
               >
-                <Busto personagem={p.n} size={42} />
+                <Busto personagem={p.n} size={44} />
               </View>
             </Pressable>
           ))}
@@ -134,12 +140,14 @@ export default function IrisePreviewEscolha() {
           style={{
             borderTopLeftRadius: 38,
             borderTopRightRadius: 38,
-            padding: 20,
-            paddingBottom: insets.paddingBottom,
+            paddingHorizontal: 22,
+            paddingTop: 18,
+            paddingBottom: Math.max(16, insets.paddingBottom),
             flex: 1,
+            justifyContent: "space-between",
           }}
         >
-          <ScrollView showsVerticalScrollIndicator={false}>
+          <Animated.View key={atual.n} entering={FadeIn.duration(220)}>
             <View className="flex-row items-center gap-2">
               <Text className="font-display text-[26px] text-ink">{atual.nome.toUpperCase()}</Text>
             </View>
@@ -171,27 +179,27 @@ export default function IrisePreviewEscolha() {
                 </View>
               ))}
             </View>
+          </Animated.View>
 
-            <Pressable
-              disabled={setPersonagem.isPending}
-              onPress={() => {
-                if (doPerfil) {
-                  setPersonagem.mutate(atual.n, { onSuccess: () => router.back() });
-                  return;
-                }
-                router.push({
-                  pathname: "/irise-preview/apresentacao",
-                  params: { nome, forma: String(forma), irise: String(atual.n) },
-                });
-              }}
-              className="mt-5 h-[52px] items-center justify-center rounded-full active:opacity-85"
-              style={{ backgroundColor: colors.turquoise }}
-            >
-              <Text className="font-display text-[17px] text-ink">
-                {doPerfil ? "USAR" : "ESCOLHER"} {atual.nome.toUpperCase()}
-              </Text>
-            </Pressable>
-          </ScrollView>
+          <Pressable
+            disabled={setPersonagem.isPending}
+            onPress={() => {
+              if (doPerfil) {
+                setPersonagem.mutate(atual.n, { onSuccess: () => router.back() });
+                return;
+              }
+              router.push({
+                pathname: "/irise-preview/apresentacao",
+                params: { nome, forma: String(forma), irise: String(atual.n) },
+              });
+            }}
+            className="mt-5 h-[52px] items-center justify-center rounded-full active:opacity-85 active:scale-[0.98]"
+            style={{ backgroundColor: colors.turquoise }}
+          >
+            <Text className="font-display text-[17px] text-ink">
+              {doPerfil ? "USAR" : "ESCOLHER"} {atual.nome.toUpperCase()}
+            </Text>
+          </Pressable>
         </Glass>
       </View>
     </>
@@ -201,26 +209,24 @@ export default function IrisePreviewEscolha() {
 function Personagem({
   i,
   scrollX,
-  src,
+  personagem,
 }: {
   i: number;
   scrollX: SharedValue<number>;
-  src: number;
+  personagem: number;
 }) {
   const estilo = useAnimatedStyle(() => {
     const pos = i * ITEM_W;
     const d = scrollX.get() - pos;
-    const escala = interpolate(d, [-ITEM_W, 0, ITEM_W], [0.58, 1, 0.58], "clamp");
-    const opacidade = interpolate(d, [-ITEM_W, 0, ITEM_W], [0.5, 1, 0.5], "clamp");
+    const escala = interpolate(d, [-ITEM_W, 0, ITEM_W], [0.72, 1, 0.72], "clamp");
+    const opacidade = interpolate(d, [-ITEM_W, 0, ITEM_W], [0.4, 1, 0.4], "clamp");
     return { transform: [{ scale: escala }], opacity: opacidade };
   });
   return (
-    <View style={{ width: ITEM_W, alignItems: "center", justifyContent: "flex-end" }}>
-      <Animated.Image
-        source={src}
-        style={[{ width: ITEM_W * 0.62, height: 320 }, estilo]}
-        resizeMode="contain"
-      />
+    <View style={{ width: ITEM_W, alignItems: "center", justifyContent: "center" }}>
+      <Animated.View style={estilo}>
+        <Busto personagem={personagem} size={HERO} />
+      </Animated.View>
     </View>
   );
 }

@@ -24,7 +24,7 @@ export function IriseNudge() {
         className="flex-row items-center gap-3 rounded-3xl bg-surface p-3.5"
         style={shadow.card}
       >
-        <Busto personagem={personagem} size={44} />
+        <Busto personagem={personagem} pose={4} size={56} />
         <Text className="min-w-0 flex-1 font-body text-[13px] leading-[18px] text-ink">
           Já avaliou algum lugar essa semana? Eu ajudo a achar um pertinho.
         </Text>

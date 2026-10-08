@@ -523,8 +523,8 @@ export function Tour() {
             >
               <View style={[styles.seta, { left: setaX }, abaixo ? { top: -7 } : { bottom: -7 }]} />
               {!!personagem && (
-                <View style={{ position: "absolute", top: -22, left: 16 }}>
-                  <Busto personagem={personagem.n} size={40} />
+                <View style={{ position: "absolute", top: -32, left: 16 }}>
+                  <Busto personagem={personagem.n} pose={6} size={56} />
                 </View>
               )}
               <Text className="font-display text-[22px] uppercase leading-[27px] text-ink">

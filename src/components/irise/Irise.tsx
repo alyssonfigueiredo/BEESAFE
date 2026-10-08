@@ -367,9 +367,9 @@ function IriseSheet({
         <View className="bg-solid" style={{ borderTopLeftRadius: 34, borderTopRightRadius: 34, overflow: "hidden" }}>
           <View style={{ width: 44, height: 5, borderRadius: 3, backgroundColor: "#D9D5CD", alignSelf: "center", marginTop: 10 }} />
           <View className="flex-row items-center justify-between border-b border-border px-[18px] pb-3 pt-2">
-            <View className="flex-row items-center gap-2">
-              {personagem ? <Busto personagem={personagem} size={26} /> : <AnelArcoIris size={22} />}
-              <Text className="font-body-bold text-[15px] text-ink">Irise</Text>
+            <View className="flex-row items-center gap-2.5">
+              {personagem ? <Busto personagem={personagem} size={36} /> : <AnelArcoIris size={22} />}
+              <Text className="font-body-bold text-[16px] text-ink">Irise</Text>
             </View>
             <Pressable onPress={onClose} hitSlop={10} className="h-[30px] w-[30px] items-center justify-center rounded-full bg-subtle">
               <X size={14} color={colors.ink} />

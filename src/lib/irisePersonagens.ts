@@ -20,8 +20,6 @@ export type Irise = {
 };
 
 export const IRISES: Irise[] = [
-  { n: 8, nome: "Bruno", pronomes: "ele/dele", classe: "Treinador", bio: "Te empurra pra fora de casa com carinho. Comemora junto cada avaliação nova.", stats: [4, 4, 3, 4] },
-  { n: 9, nome: "Igor", pronomes: "ele/dele", classe: "Viajante", bio: "Sempre de mochila nas costas, já mapeou meio bairro sem ninguém pedir.", stats: [3, 3, 4, 5] },
   { n: 10, nome: "Kai", pronomes: "elu/delu", classe: "DJ do Rolê", bio: "Conhece toda balada acolhedora da cidade e a playlist de cada uma.", stats: [3, 4, 3, 5] },
   { n: 11, nome: "Léo", pronomes: "ele/dele", classe: "Guardião", bio: "Papo reto e ombro firme. Avisa antes de você chegar num lugar furado.", stats: [4, 3, 5, 3] },
   { n: 12, nome: "Theo", pronomes: "ele/dele", classe: "Conselheiro", bio: "Escuta sem julgar e sempre sabe de um café tranquilo por perto.", stats: [5, 3, 3, 3] },
@@ -44,17 +42,16 @@ export function flexionar(texto: string, forma: Forma): string {
 
 // Sem XP/nível (decisão do Alysson, 06/10/2026) e só no chat (não acompanha o app inteiro).
 export const FALAS_APRESENTACAO = [
-  { texto: "Oi, {nome}! Eu sou {irise}, seu irise. Prazer!", pose: 2 },
-  { texto: "Fico te esperando ali no chat, sempre que quiser uma sugestão ou só conversar.", pose: 13 },
-  { texto: "Quer trocar de irise ou de pronome depois? É só ir no seu perfil. Bora?", pose: 6 },
+  { texto: "Oi, {nome}! Eu sou {irise}, seu irise. Prazer!", pose: 1 },
+  { texto: "Fico te esperando ali no chat, sempre que quiser uma sugestão ou só conversar.", pose: 1 },
+  { texto: "Quer trocar de irise ou de pronome depois? É só ir no seu perfil. Bora?", pose: 1 },
 ] as const;
 
-// Corpo inteiro (fundo transparente): usado na Escolha (pose 1) e na Apresentação (poses 2, 6, 13).
+// Corpo inteiro (fundo transparente): só a pose 1 por personagem (fotos reais, 09/10/2026 — sem
+// variação de pose de corpo inteiro, só de busto, ver BUSTO abaixo).
 // O Metro só resolve require() com caminho estático — por isso o mapa explícito, não um template.
 const CORPO: Record<number, Record<number, number>> = {
   1: {
-    8: require("../../assets/irise-personagens/p1-8.webp"),
-    9: require("../../assets/irise-personagens/p1-9.webp"),
     10: require("../../assets/irise-personagens/p1-10.webp"),
     11: require("../../assets/irise-personagens/p1-11.webp"),
     12: require("../../assets/irise-personagens/p1-12.webp"),
@@ -71,13 +68,14 @@ export function corpoSrc(pose: number, personagem: number): number {
   return CORPO[pose]?.[personagem] ?? CORPO[1][personagem];
 }
 
-// Busto (300×460, mesma proporção pros 7): feito sob medida pro avatar circular — nunca usar o
-// corpo inteiro (acima) num círculo, a imagem não é recortada pra isso e corta torto.
+// Busto (300×460): feito sob medida pro avatar circular — nunca usar o corpo inteiro (acima) num
+// círculo, a imagem não é recortada pra isso e corta torto.
+// Poses de busto (fotos reais, 09/10/2026): 1 mão no peito (padrão), 2 comemorando, 3 preocupado,
+// 4 acolhendo, 5 piscadinha, 6 apoio — cada uma usada num lugar diferente do app (ver onde cada
+// bustoSrc(pose, …) é chamado).
 export const BUSTO_ASPECTO = 460 / 300;
 const BUSTO: Record<number, Record<number, number>> = {
   1: {
-    8: require("../../assets/irise-personagens/b1-8.webp"),
-    9: require("../../assets/irise-personagens/b1-9.webp"),
     10: require("../../assets/irise-personagens/b1-10.webp"),
     11: require("../../assets/irise-personagens/b1-11.webp"),
     12: require("../../assets/irise-personagens/b1-12.webp"),
@@ -87,6 +85,61 @@ const BUSTO: Record<number, Record<number, number>> = {
     16: require("../../assets/irise-personagens/b1-16.webp"),
     17: require("../../assets/irise-personagens/b1-17.webp"),
     18: require("../../assets/irise-personagens/b1-18.webp"),
+  },
+  2: {
+    10: require("../../assets/irise-personagens/b2-10.webp"),
+    11: require("../../assets/irise-personagens/b2-11.webp"),
+    12: require("../../assets/irise-personagens/b2-12.webp"),
+    13: require("../../assets/irise-personagens/b2-13.webp"),
+    14: require("../../assets/irise-personagens/b2-14.webp"),
+    15: require("../../assets/irise-personagens/b2-15.webp"),
+    16: require("../../assets/irise-personagens/b2-16.webp"),
+    17: require("../../assets/irise-personagens/b2-17.webp"),
+    18: require("../../assets/irise-personagens/b2-18.webp"),
+  },
+  3: {
+    10: require("../../assets/irise-personagens/b3-10.webp"),
+    11: require("../../assets/irise-personagens/b3-11.webp"),
+    12: require("../../assets/irise-personagens/b3-12.webp"),
+    13: require("../../assets/irise-personagens/b3-13.webp"),
+    14: require("../../assets/irise-personagens/b3-14.webp"),
+    15: require("../../assets/irise-personagens/b3-15.webp"),
+    16: require("../../assets/irise-personagens/b3-16.webp"),
+    17: require("../../assets/irise-personagens/b3-17.webp"),
+    18: require("../../assets/irise-personagens/b3-18.webp"),
+  },
+  4: {
+    10: require("../../assets/irise-personagens/b4-10.webp"),
+    11: require("../../assets/irise-personagens/b4-11.webp"),
+    12: require("../../assets/irise-personagens/b4-12.webp"),
+    13: require("../../assets/irise-personagens/b4-13.webp"),
+    14: require("../../assets/irise-personagens/b4-14.webp"),
+    15: require("../../assets/irise-personagens/b4-15.webp"),
+    16: require("../../assets/irise-personagens/b4-16.webp"),
+    17: require("../../assets/irise-personagens/b4-17.webp"),
+    18: require("../../assets/irise-personagens/b4-18.webp"),
+  },
+  5: {
+    10: require("../../assets/irise-personagens/b5-10.webp"),
+    11: require("../../assets/irise-personagens/b5-11.webp"),
+    12: require("../../assets/irise-personagens/b5-12.webp"),
+    13: require("../../assets/irise-personagens/b5-13.webp"),
+    14: require("../../assets/irise-personagens/b5-14.webp"),
+    15: require("../../assets/irise-personagens/b5-15.webp"),
+    16: require("../../assets/irise-personagens/b5-16.webp"),
+    17: require("../../assets/irise-personagens/b5-17.webp"),
+    18: require("../../assets/irise-personagens/b5-18.webp"),
+  },
+  6: {
+    10: require("../../assets/irise-personagens/b6-10.webp"),
+    11: require("../../assets/irise-personagens/b6-11.webp"),
+    12: require("../../assets/irise-personagens/b6-12.webp"),
+    13: require("../../assets/irise-personagens/b6-13.webp"),
+    14: require("../../assets/irise-personagens/b6-14.webp"),
+    15: require("../../assets/irise-personagens/b6-15.webp"),
+    16: require("../../assets/irise-personagens/b6-16.webp"),
+    17: require("../../assets/irise-personagens/b6-17.webp"),
+    18: require("../../assets/irise-personagens/b6-18.webp"),
   },
 };
 

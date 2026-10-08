@@ -118,12 +118,12 @@ export function MedalCelebration() {
           {!!personagem && (
             <FadeUp key={`irise-${m.id}`} delay={reduce ? 0 : T_NOME + 480} duration={450}>
               <View className="mt-5 flex-row items-center gap-3 px-2">
-                <Busto personagem={personagem.n} size={44} />
+                <Busto personagem={personagem.n} pose={2} size={72} />
                 <View
-                  className="min-w-0 flex-1 rounded-2xl rounded-bl-[6px] px-3.5 py-2.5"
-                  style={{ backgroundColor: "rgba(255,255,255,0.08)" }}
+                  className="min-w-0 flex-1 rounded-2xl rounded-bl-[6px] px-4 py-3"
+                  style={{ backgroundColor: "rgba(255,255,255,0.12)" }}
                 >
-                  <Text className="font-body text-[12.5px] leading-[17px]" style={{ color: "#C9CDE0" }}>
+                  <Text className="font-body text-[13.5px] leading-[19px]" style={{ color: "#E4E6F2" }}>
                     Mandou bem! Bora pra próxima?
                   </Text>
                 </View>

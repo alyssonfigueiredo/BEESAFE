@@ -174,6 +174,9 @@ export default function PerfilScreen() {
           </View>
         </View>
 
+        <IriseCard />
+        <DicasToggle />
+
         <EvolucaoCard />
         <ConquistasCard />
         <QueroIrCard />
@@ -202,8 +205,6 @@ export default function PerfilScreen() {
         </View>
 
         <FormaCard />
-        <IriseCard />
-        <DicasToggle />
 
         <View className="rounded-[30px] bg-surface px-6 py-3" style={shadow.card}>
           <ListRow icon={ShieldCheck} color={colors.yellowInk} title="Privacidade">

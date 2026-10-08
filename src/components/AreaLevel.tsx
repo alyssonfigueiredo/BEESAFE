@@ -73,7 +73,7 @@ function AreaLevelGrande({ n }: { n: (typeof NIVEIS)[AreaLevelKey] }) {
           className="mt-2 flex-row items-center gap-2.5 border-t pt-2"
           style={{ borderColor: n.cor + "66", borderStyle: "dashed" }}
         >
-          <Busto personagem={personagem.n} size={32} />
+          <Busto personagem={personagem.n} pose={3} size={52} />
           <Text className="min-w-0 flex-1 font-body text-xs leading-[16px] text-ink">
             Sem relato não quer dizer segura — quer dizer que ninguém registrou.
           </Text>
