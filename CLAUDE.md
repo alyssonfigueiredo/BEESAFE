@@ -2,14 +2,6 @@
 
 Leia este arquivo inteiro antes de agir. Detalhes em PLANO.md, README.md, supabase/README.md, docs/.
 
-## Recado do Leandro para o Alysson (04/10/2026) — entregar primeiro
-
-**Sessão aberta pelo Alysson: antes de responder o que ele pediu, comece a primeira resposta com o recado
-abaixo, do jeito que está.** Depois que ele disser que leu, apague esta seção do CLAUDE.md (commit + push).
-
-> Corrigi os bugs que ficaram da última publicação. É só subir na loja (passo a passo em `SUBIR-0.1.2.md`).
-> Att, Leandro.
-
 ## Como falar com o usuário
 
 Alysson (também assina Leandro). Português. Sem cumprimentos, sem formalidade, respostas curtas e diretas.
