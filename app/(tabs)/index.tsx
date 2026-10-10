@@ -1,4 +1,4 @@
-import { Link } from "expo-router";
+import { Link, router } from "expo-router";
 import { Clock, FileText, MapPin, MessageCircle } from "lucide-react-native";
 import { useMemo, useState } from "react";
 import { Pressable, ScrollView, Text, View } from "react-native";
@@ -8,8 +8,11 @@ import { Chip } from "@/components/Chip";
 import { CityPicker } from "@/components/CityPicker";
 import { DangerRanking } from "@/components/DangerRanking";
 import { AvisoCard, GamiHomeCards } from "@/components/gami/HomeCards";
-import { IriseFab } from "@/components/irise/Irise";
+import { IriseSheet } from "@/components/irise/Irise";
+import { CardCidadeIrise } from "@/components/irise-personagem/CardCidadeIrise";
+import { FaixaSempreOnline } from "@/components/irise-personagem/FaixaSempreOnline";
 import { IriseNudge } from "@/components/irise-personagem/IriseNudge";
+import { IrisePilula } from "@/components/irise-personagem/IrisePilula";
 import { Mark } from "@/components/Mark";
 import { OccurrenceCard } from "@/components/OccurrenceCard";
 import { PlaceCard } from "@/components/PlaceCard";
@@ -21,9 +24,12 @@ import { useCityStats } from "@/hooks/useCityStats";
 import { useAppConfig, useGamification } from "@/hooks/useGamification";
 import { useAreaRisk, useOccurrences } from "@/hooks/useOccurrences";
 import { usePlaces, useSearchPlaces, useWelcoming } from "@/hooks/usePlaces";
+import { useProfile } from "@/hooks/useProfile";
 import { useScreenInsets } from "@/hooks/useScreenInsets";
-import { useTourScroll } from "@/hooks/useTour";
+import { rolarInicio, useTourScroll } from "@/hooks/useTour";
 import { distanceMeters } from "@/lib/geo";
+import { FALAS, type Fala } from "@/lib/iriseFalas";
+import { IRISES } from "@/lib/irisePersonagens";
 import { useCity } from "@/providers/CityProvider";
 import { OCCURRENCE_TYPES, PLACE_CATEGORIES, RATING_MIN, type PlaceCategory } from "@/theme/domain";
 import { colors, shadow } from "@/theme/tokens";
@@ -49,6 +55,35 @@ export default function HomeScreen() {
   const { anexar: prenderRolagem, onScroll: aoRolar } = useTourScroll();
   const { data: gami } = useGamification();
   const { data: cfg } = useAppConfig();
+  const { data: profile } = useProfile();
+
+  // Irise na Início (protótipo aprovado 10/10/2026): só entra com personagem escolhido e a
+  // funcionalidade ligada (admin); sem isso, o card escuro de sempre continua do jeito que é.
+  const personagem = cfg?.irise_ativa ? (profile?.irise_personagem ?? null) : null;
+  const irise = personagem ? IRISES.find((p) => p.n === personagem) : null;
+  const [cidadeAberta, setCidadeAberta] = useState(false);
+  const [chatAberta, setChatAberta] = useState(false);
+  const [chatAbertura, setChatAbertura] = useState<Fala | null>(null);
+  const [scrollY, setScrollY] = useState(0);
+  const [cardBaixoY, setCardBaixoY] = useState<number | null>(null);
+
+  function abrirChat(fala: Fala | null) {
+    setChatAbertura(fala);
+    setChatAberta(true);
+  }
+
+  // O CTA do balão vai direto pro destino, sem abrir o chat. "Ver os dias" (fala de conquista)
+  // não tem tela própria — aqui ainda não existe fora do cartão "Sua semana" — então só rola até
+  // ele, que é o mais perto que dá de "o destino" sem mexer no card (regra do pacote).
+  function ctaDaFala(fala: Fala) {
+    if (fala.id === "missao") router.push("/lugares");
+    else if (fala.id === "falta") router.push("/conquistas");
+    else if (fala.id === "sugestao") router.push("/lugares");
+    else if (fala.id === "alerta") router.push("/mapa");
+    else rolarInicio(0);
+  }
+
+  const sugestaoAbertura = useMemo(() => FALAS.find((f) => f.id === "sugestao") ?? null, []);
 
   // O ranking só aceita lugar com RATING_MIN avaliações, e nos primeiros meses isso é ninguém.
   // Até lá mostra quem já recebeu alguma nota: a seção precisa provar que o app está vivo.
@@ -87,73 +122,99 @@ export default function HomeScreen() {
     places.some((p) => p.category === c),
   );
 
+  const pilulaVisivel = !!irise && cardBaixoY != null && scrollY > cardBaixoY;
+
   return (
     <View className="flex-1">
       <Aurora />
       <ScrollView
         ref={prenderRolagem}
-        onScroll={aoRolar}
+        onScroll={(e) => {
+          aoRolar(e);
+          setScrollY(e.nativeEvent.contentOffset.y);
+        }}
         scrollEventThrottle={64}
         className="flex-1"
         contentContainerClassName="gap-4 px-4"
         contentContainerStyle={insets}
         keyboardShouldPersistTaps="handled"
       >
-        <IriseNudge />
+        {/* O balão do CardCidadeIrise já lembra/sugere — mostrar os dois juntos duplicaria o aviso. */}
+        {!irise && <IriseNudge />}
         <AvisoCard />
 
-        {/* Cartão principal escuro: a marca em azulejo, a cidade, o fio arco-íris e as duas ações
-            do mesmo tamanho (avaliar é o uso de toda semana, registrar é o que ninguém quer
-            precisar — nenhum dos dois pode parecer secundário). */}
-        <View
-          className="gap-3 rounded-[28px] p-5"
-          style={[{ backgroundColor: colors.night }, shadow.lift]}
-        >
-          <View className="flex-row items-center gap-3">
-            <View
-              className="h-9 w-9 items-center justify-center rounded-xl"
-              style={{ backgroundColor: "rgba(255,255,255,0.10)" }}
-            >
-              <Mark size={24} />
+        {irise ? (
+          <View
+            style={{ marginHorizontal: -16 }}
+            onLayout={(e) => setCardBaixoY(e.nativeEvent.layout.y + e.nativeEvent.layout.height)}
+          >
+            <CardCidadeIrise
+              personagem={irise.n}
+              nomeIrise={irise.nome}
+              cidade={loading ? "Localizando…" : (city?.name ?? "Sem cidade")}
+              uf={city?.state ?? ""}
+              bemVinde="bem-vinde"
+              onTrocarCidade={() => setCidadeAberta(true)}
+              onAvaliar={() => router.push("/lugares")}
+              onRelato={() => router.push("/registrar")}
+              onCta={ctaDaFala}
+              onAbrirChat={abrirChat}
+            />
+          </View>
+        ) : (
+          /* Cartão principal escuro: a marca em azulejo, a cidade, o fio arco-íris e as duas ações
+             do mesmo tamanho (avaliar é o uso de toda semana, registrar é o que ninguém quer
+             precisar — nenhum dos dois pode parecer secundário). */
+          <View
+            className="gap-3 rounded-[28px] p-5"
+            style={[{ backgroundColor: colors.night }, shadow.lift]}
+          >
+            <View className="flex-row items-center gap-3">
+              <View
+                className="h-9 w-9 items-center justify-center rounded-xl"
+                style={{ backgroundColor: "rgba(255,255,255,0.10)" }}
+              >
+                <Mark size={24} />
+              </View>
+              <Text className="font-body-medium text-[11px] uppercase tracking-wider text-paper/60">
+                Sua cidade
+              </Text>
             </View>
-            <Text className="font-body-medium text-[11px] uppercase tracking-wider text-paper/60">
-              Sua cidade
+            <Text className="font-display text-3xl uppercase tracking-wide text-paper">
+              {loading ? "Localizando…" : (city?.name ?? "Sem cidade")}
             </Text>
+            <CityPicker tone="dark" />
+            <RainbowLine />
+            <Text className="font-body text-sm text-paper/75">
+              O mapa dos lugares onde a gente é{" "}
+              <Text className="font-body-bold text-yellow">bem-vinde</Text>, feito por nós. Diga
+              quanta cor tem os lugares por onde você passa. E registre, sem se identificar, o que não
+              deveria ter acontecido.
+            </Text>
+            <View className="flex-row gap-2 pt-1">
+              <TourTarget id="avaliar" style={{ flex: 1 }}>
+                <Link href="/lugares" asChild>
+                  <Pressable
+                    className="items-center rounded-full bg-turquoise py-3 active:opacity-80"
+                    style={shadow.turquoise}
+                  >
+                    <Text className="font-body-bold text-sm text-night">Avaliar um lugar</Text>
+                  </Pressable>
+                </Link>
+              </TourTarget>
+              <TourTarget id="relato" style={{ flex: 1 }}>
+                <Link href="/registrar" asChild>
+                  <Pressable
+                    className="items-center rounded-full bg-coral py-3 active:opacity-80"
+                    style={shadow.coral}
+                  >
+                    <Text className="font-body-bold text-sm text-night">Registrar relato</Text>
+                  </Pressable>
+                </Link>
+              </TourTarget>
+            </View>
           </View>
-          <Text className="font-display text-3xl uppercase tracking-wide text-paper">
-            {loading ? "Localizando…" : (city?.name ?? "Sem cidade")}
-          </Text>
-          <CityPicker tone="dark" />
-          <RainbowLine />
-          <Text className="font-body text-sm text-paper/75">
-            O mapa dos lugares onde a gente é{" "}
-            <Text className="font-body-bold text-yellow">bem-vinde</Text>, feito por nós. Diga
-            quanta cor tem os lugares por onde você passa. E registre, sem se identificar, o que não
-            deveria ter acontecido.
-          </Text>
-          <View className="flex-row gap-2 pt-1">
-            <TourTarget id="avaliar" style={{ flex: 1 }}>
-              <Link href="/lugares" asChild>
-                <Pressable
-                  className="items-center rounded-full bg-turquoise py-3 active:opacity-80"
-                  style={shadow.turquoise}
-                >
-                  <Text className="font-body-bold text-sm text-night">Avaliar um lugar</Text>
-                </Pressable>
-              </Link>
-            </TourTarget>
-            <TourTarget id="relato" style={{ flex: 1 }}>
-              <Link href="/registrar" asChild>
-                <Pressable
-                  className="items-center rounded-full bg-coral py-3 active:opacity-80"
-                  style={shadow.coral}
-                >
-                  <Text className="font-body-bold text-sm text-night">Registrar relato</Text>
-                </Pressable>
-              </Link>
-            </TourTarget>
-          </View>
-        </View>
+        )}
 
         {/* Gamificação: semana, cidade, caixinha e a medalha mais perto. Some se o banco não tiver. */}
         {gami ? (
@@ -243,6 +304,10 @@ export default function HomeScreen() {
           )}
         </View>
 
+        {irise && (
+          <FaixaSempreOnline personagem={irise.n} nome={irise.nome} onPress={() => abrirChat(sugestaoAbertura)} />
+        )}
+
         <View className="gap-1 pt-2">
           <Text className="font-body-bold text-base text-ink">Segurança na cidade</Text>
           <Text className="font-body text-xs text-dim">
@@ -286,8 +351,28 @@ export default function HomeScreen() {
 
         <DangerRanking items={ranking} title="Bairros com mais relatos" />
       </ScrollView>
-      {cfg?.irise_ativa && (
-        <IriseFab cityId={city?.id} cityName={city?.name} userLocation={userLocation} />
+
+      {irise && (
+        <IrisePilula
+          personagem={irise.n}
+          nome={irise.nome}
+          visivel={pilulaVisivel}
+          bottom={insets.paddingBottom}
+          onPress={() => abrirChat(sugestaoAbertura)}
+        />
+      )}
+
+      <CityPicker tone="dark" open={cidadeAberta} onOpenChange={setCidadeAberta} hideTrigger />
+      {irise && (
+        <IriseSheet
+          visible={chatAberta}
+          onClose={() => setChatAberta(false)}
+          cityId={city?.id}
+          cityName={city?.name}
+          userLocation={userLocation}
+          personagem={irise.n}
+          abertura={chatAbertura ? { texto: chatAbertura.abertura, respostas: chatAbertura.rapidas } : undefined}
+        />
       )}
     </View>
   );

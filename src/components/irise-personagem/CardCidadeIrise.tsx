@@ -1,0 +1,125 @@
+import { Image, Pressable, Text, View } from "react-native";
+import Animated, { useAnimatedStyle } from "react-native-reanimated";
+import Svg, { Defs, RadialGradient, Rect, Stop } from "react-native-svg";
+
+import { IriseBalao, useRodadaFalas } from "@/components/irise-personagem/IriseBalao";
+import { FALAS, type Fala } from "@/lib/iriseFalas";
+import { avatarCardSrc } from "@/lib/iriseImagensEscuras";
+
+const ARCO = ["#FF6964", "#FFA353", "#FFD066", "#49DCC0", "#59A7FF", "#A889FF"];
+
+/** Ocupa a largura toda da tela (sem padding lateral do pai). Substitui o card escuro da cidade. */
+export function CardCidadeIrise({
+  personagem,
+  nomeIrise,
+  cidade,
+  uf,
+  bemVinde,
+  onTrocarCidade,
+  onAvaliar,
+  onRelato,
+  onCta,
+  onAbrirChat,
+  falas = FALAS,
+}: {
+  personagem: number;
+  nomeIrise: string;
+  cidade: string;
+  uf: string;
+  bemVinde: string;
+  onTrocarCidade: () => void;
+  onAvaliar: () => void;
+  onRelato: () => void;
+  onCta: (f: Fala) => void;
+  onAbrirChat: (f: Fala) => void;
+  falas?: Fala[];
+}) {
+  const r = useRodadaFalas(falas);
+  const estiloAvatar = useAnimatedStyle(() => ({ opacity: r.opacidade.get() }));
+  return (
+    <View style={{ marginTop: 10 }}>
+      {r.visivel ? (
+        <IriseBalao
+          nome={nomeIrise}
+          fala={r.fala}
+          total={falas.length}
+          indice={r.i}
+          opacidade={r.opacidade}
+          onPular={r.pular}
+          onCta={() => onCta(r.fala)}
+          onFechar={r.fechar}
+        />
+      ) : (
+        <View style={{ height: 50 }} />
+      )}
+
+      <View style={{ marginHorizontal: 12, marginTop: 8, height: 248 }}>
+        <View style={{ flex: 1, borderRadius: 30, backgroundColor: "#171A2B", overflow: "hidden" }}>
+          <Svg width={150} height={150} style={{ position: "absolute", right: -4, top: -20 }} pointerEvents="none">
+            <Defs>
+              <RadialGradient id="glIrise" cx="50%" cy="50%" r="50%">
+                <Stop offset="0" stopColor="#A889FF" stopOpacity={0.35} />
+                <Stop offset="0.68" stopColor="#A889FF" stopOpacity={0} />
+              </RadialGradient>
+            </Defs>
+            <Rect width={150} height={150} fill="url(#glIrise)" />
+          </Svg>
+          <View style={{ position: "absolute", left: 18, top: 20, width: 196 }}>
+            <Text style={{ fontFamily: "SpaceGrotesk_700Bold", fontSize: 9, letterSpacing: 1.26, color: "#B7BCCB" }}>
+              SUA CIDADE
+            </Text>
+            <Text style={{ marginTop: 6, fontFamily: "Oswald_700Bold", fontSize: 28, color: "#FFFFFF" }}>
+              {cidade.toUpperCase()}
+            </Text>
+            <Pressable onPress={onTrocarCidade}>
+              <Text style={{ marginTop: 2, fontFamily: "SpaceGrotesk_400Regular", fontSize: 11, color: "#C9CDD8" }}>
+                {cidade} · {uf} ⌄
+              </Text>
+            </Pressable>
+            <View style={{ marginTop: 12, width: 96, height: 4, borderRadius: 2, overflow: "hidden", flexDirection: "row" }}>
+              {ARCO.map((c) => (
+                <View key={c} style={{ flex: 1, backgroundColor: c }} />
+              ))}
+            </View>
+          </View>
+          <Text
+            style={{
+              position: "absolute",
+              left: 18,
+              right: 18,
+              top: 148,
+              fontFamily: "SpaceGrotesk_400Regular",
+              fontSize: 11.5,
+              lineHeight: 16.3,
+              color: "#C9CDD8",
+            }}
+          >
+            O mapa dos lugares onde a gente é{" "}
+            <Text style={{ fontFamily: "SpaceGrotesk_700Bold", color: "#FFD066" }}>{bemVinde}</Text>, feito por nós. Diga
+            quanta cor tem os lugares por onde você passa.
+          </Text>
+          <View style={{ position: "absolute", left: 18, right: 18, bottom: 18, flexDirection: "row", gap: 8 }}>
+            <Pressable
+              onPress={onAvaliar}
+              style={{ flex: 1, height: 36, borderRadius: 18, backgroundColor: "#49DCC0", alignItems: "center", justifyContent: "center" }}
+            >
+              <Text style={{ fontFamily: "SpaceGrotesk_700Bold", fontSize: 11, color: "#141829" }}>Avaliar um lugar</Text>
+            </Pressable>
+            <Pressable
+              onPress={onRelato}
+              style={{ flex: 1, height: 36, borderRadius: 18, backgroundColor: "#FF6964", alignItems: "center", justifyContent: "center" }}
+            >
+              <Text style={{ fontFamily: "SpaceGrotesk_700Bold", fontSize: 11, color: "#141829" }}>Registrar relato</Text>
+            </Pressable>
+          </View>
+        </View>
+        {/* Irise fora do overflow do card: só a pontinha do cabelo passa da borda (top -4). */}
+        <Pressable onPress={() => onAbrirChat(r.fala)} hitSlop={6} style={{ position: "absolute", right: 18, top: -4 }}>
+          <Animated.View style={[{ width: 108, height: 140 }, estiloAvatar]}>
+            <Image source={avatarCardSrc(r.fala.pose, personagem)} style={{ width: 108, height: 140 }} />
+          </Animated.View>
+        </Pressable>
+      </View>
+    </View>
+  );
+}

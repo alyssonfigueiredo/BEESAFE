@@ -217,13 +217,14 @@ function TypingDots() {
 let seq = 0;
 const uid = () => `l${seq++}`;
 
-function IriseSheet({
+export function IriseSheet({
   visible,
   onClose,
   cityId,
   cityName,
   userLocation,
   personagem,
+  abertura,
 }: {
   visible: boolean;
   onClose: () => void;
@@ -231,6 +232,9 @@ function IriseSheet({
   cityName: string | undefined;
   userLocation: { lat: number; lng: number } | null;
   personagem: number | null;
+  /** Primeira mensagem + respostas rápidas, pra quando o chat abre a partir de uma fala do irise
+   * na Início (card/balão/faixa/pílula) em vez do fluxo genérico de busca. */
+  abertura?: { texto: string; respostas: { t: string; resposta: string }[] };
 }) {
   const { height } = useWindowDimensions();
   const [log, setLog] = useState<LogItem[]>([]);
@@ -406,7 +410,22 @@ function IriseSheet({
   }
 
   function onOpen() {
-    if (log.length === 0) flowIntro();
+    if (log.length === 0) {
+      if (abertura) {
+        addBubble(abertura.texto);
+        addChips(
+          abertura.respostas.map((r) => ({
+            label: r.t,
+            onPick: () => {
+              addBubble(r.t, true);
+              addBubble(r.resposta);
+            },
+          })),
+        );
+      } else {
+        flowIntro();
+      }
+    }
     // O jeito mais natural de usar isso é digitando — os chips são só um atalho, não a entrada
     // obrigatória. Focar o campo deixa isso claro na hora que a folha abre (04/10/2026).
     setTimeout(() => inputRef.current?.focus(), 260);
