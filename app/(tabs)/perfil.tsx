@@ -269,6 +269,16 @@ export default function PerfilScreen() {
             </Pressable>
           </Link>
         )}
+        {profile?.role === "admin" && (
+          <Link href="/admin/irise" asChild>
+            <Pressable
+              className="h-[52px] items-center justify-center rounded-full bg-solid active:opacity-80"
+              style={shadow.field}
+            >
+              <Text className="font-body-bold text-base text-ink">Personagens do irise</Text>
+            </Pressable>
+          </Link>
+        )}
         <View className="gap-2 pt-1">
           <Pressable
             onPress={() => supabase.auth.signOut()}
