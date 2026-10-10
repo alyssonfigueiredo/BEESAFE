@@ -1,30 +1,60 @@
 import { useEffect, useRef, useState } from "react";
 import { Pressable, Text, View } from "react-native";
-import Animated, { Easing, type SharedValue, useAnimatedStyle, useSharedValue, withRepeat, withTiming } from "react-native-reanimated";
+import Animated, {
+  Easing,
+  type SharedValue,
+  useAnimatedStyle,
+  useReducedMotion,
+  useSharedValue,
+  withRepeat,
+  withTiming,
+} from "react-native-reanimated";
 import Svg, { G, Path, Rect } from "react-native-svg";
 
 import type { Fala } from "@/lib/iriseFalas";
 
 const PASSO = 4000;
 
-/** Rodada única: passa por todas as falas (4 s cada) e para na última. */
+/** Rodada única: passa por todas as falas (4 s cada) e para na última. Com uma fala só (ou
+ * nenhuma), não tem o que rodar — fica parado na primeira, sem travar. */
 export function useRodadaFalas(falas: Fala[]) {
   const [i, setI] = useState(0);
   const [visivel, setVisivel] = useState(true);
   const opacidade = useSharedValue(1);
+  const reduce = useReducedMotion();
   const timer = useRef<ReturnType<typeof setInterval> | null>(null);
+  const trocaTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const parar = () => {
     if (timer.current) clearInterval(timer.current);
     timer.current = null;
+    if (trocaTimer.current) clearTimeout(trocaTimer.current);
+    trocaTimer.current = null;
   };
   const ir = (n: number) => {
+    if (reduce) {
+      setI(n);
+      opacidade.set(1);
+      return;
+    }
     opacidade.set(withTiming(0, { duration: 125 }));
-    setTimeout(() => {
+    trocaTimer.current = setTimeout(() => {
       setI(n);
       opacidade.set(withTiming(1, { duration: 125 }));
+      trocaTimer.current = null;
     }, 125);
   };
+  // A lista de falas mudou (ex.: um relato surgiu/sumiu) — volta pra primeira. Feito durante o
+  // render (padrão do React pra "ajustar estado quando algo muda"), não num efeito: setState direto
+  // no corpo de um efeito encadeia renders à toa.
+  const [tamanhoAnterior, setTamanhoAnterior] = useState(falas.length);
+  if (falas.length !== tamanhoAnterior) {
+    setTamanhoAnterior(falas.length);
+    setI(0);
+    opacidade.set(1);
+  }
+
   useEffect(() => {
+    if (falas.length <= 1) return parar;
     let n = 0;
     timer.current = setInterval(() => {
       n += 1;
@@ -36,7 +66,7 @@ export function useRodadaFalas(falas: Fala[]) {
   }, [falas.length]);
   return {
     i,
-    fala: falas[i],
+    fala: falas[Math.min(i, Math.max(falas.length - 1, 0))],
     visivel,
     opacidade,
     pular: (n: number) => {
@@ -72,9 +102,11 @@ export function IriseBalao({
 }) {
   const [{ w, h }, setTam] = useState({ w: 0, h: 0 });
   const bob = useSharedValue(0);
+  const reduce = useReducedMotion();
   useEffect(() => {
+    if (reduce) return;
     bob.set(withRepeat(withTiming(1, { duration: 1700, easing: Easing.inOut(Easing.ease) }), -1, true));
-  }, [bob]);
+  }, [bob, reduce]);
   const estiloBob = useAnimatedStyle(() => ({ transform: [{ translateY: -1.5 * bob.get() }] }));
   const estiloTexto = useAnimatedStyle(() => ({ opacity: opacidade.get() }));
   // Ponta: sai da borda de baixo, entre 100 e 74 pt antes da borda direita; desce 14 pt. Nunca encosta no cabelo.

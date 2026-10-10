@@ -2,11 +2,13 @@ import { Image, Pressable, Text, View } from "react-native";
 import Animated, { useAnimatedStyle } from "react-native-reanimated";
 import Svg, { Defs, RadialGradient, Rect, Stop } from "react-native-svg";
 
+import { TourTarget } from "@/components/Tour";
 import { IriseAvatar } from "@/components/irise-personagem/IriseAvatar";
 import { IriseBalao, useRodadaFalas } from "@/components/irise-personagem/IriseBalao";
 import { FALAS, type Fala } from "@/lib/iriseFalas";
 import { avatarCardSrc } from "@/lib/iriseImagensEscuras";
 import { BUNDLED_N } from "@/lib/irisePersonagens";
+import { shadow } from "@/theme/tokens";
 
 const ARCO = ["#FF6964", "#FFA353", "#FFD066", "#49DCC0", "#59A7FF", "#A889FF"];
 
@@ -33,14 +35,17 @@ export function CardCidadeIrise({
   onAvaliar: () => void;
   onRelato: () => void;
   onCta: (f: Fala) => void;
-  onAbrirChat: (f: Fala) => void;
+  onAbrirChat: (f: Fala | null) => void;
   falas?: Fala[];
 }) {
   const r = useRodadaFalas(falas);
   const estiloAvatar = useAnimatedStyle(() => ({ opacity: r.opacidade.get() }));
+  // Sem fala nenhuma (filtradas fora na Início), não tem o que mostrar no balão — mas o irise
+  // continua no card, com a pose padrão (1).
+  const pose = falas.length > 0 ? r.fala.pose : 1;
   return (
     <View style={{ marginTop: 10 }}>
-      {r.visivel ? (
+      {falas.length > 0 && r.visivel ? (
         <IriseBalao
           nome={nomeIrise}
           fala={r.fala}
@@ -101,29 +106,59 @@ export function CardCidadeIrise({
             quanta cor tem os lugares por onde você passa.
           </Text>
           <View style={{ position: "absolute", left: 18, right: 18, bottom: 18, flexDirection: "row", gap: 8 }}>
-            <Pressable
-              onPress={onAvaliar}
-              style={{ flex: 1, height: 36, borderRadius: 18, backgroundColor: "#49DCC0", alignItems: "center", justifyContent: "center" }}
-            >
-              <Text style={{ fontFamily: "SpaceGrotesk_700Bold", fontSize: 11, color: "#141829" }}>Avaliar um lugar</Text>
-            </Pressable>
-            <Pressable
-              onPress={onRelato}
-              style={{ flex: 1, height: 36, borderRadius: 18, backgroundColor: "#FF6964", alignItems: "center", justifyContent: "center" }}
-            >
-              <Text style={{ fontFamily: "SpaceGrotesk_700Bold", fontSize: 11, color: "#141829" }}>Registrar relato</Text>
-            </Pressable>
+            <TourTarget id="avaliar" style={{ flex: 1 }}>
+              <Pressable
+                onPress={onAvaliar}
+                style={({ pressed }) => [
+                  {
+                    flex: 1,
+                    height: 36,
+                    borderRadius: 18,
+                    backgroundColor: "#49DCC0",
+                    alignItems: "center",
+                    justifyContent: "center",
+                  },
+                  shadow.turquoise,
+                  pressed && { opacity: 0.8 },
+                ]}
+              >
+                <Text style={{ fontFamily: "SpaceGrotesk_700Bold", fontSize: 11, color: "#141829" }}>Avaliar um lugar</Text>
+              </Pressable>
+            </TourTarget>
+            <TourTarget id="relato" style={{ flex: 1 }}>
+              <Pressable
+                onPress={onRelato}
+                style={({ pressed }) => [
+                  {
+                    flex: 1,
+                    height: 36,
+                    borderRadius: 18,
+                    backgroundColor: "#FF6964",
+                    alignItems: "center",
+                    justifyContent: "center",
+                  },
+                  shadow.coral,
+                  pressed && { opacity: 0.8 },
+                ]}
+              >
+                <Text style={{ fontFamily: "SpaceGrotesk_700Bold", fontSize: 11, color: "#141829" }}>Registrar relato</Text>
+              </Pressable>
+            </TourTarget>
           </View>
         </View>
         {/* Irise fora do overflow do card: só a pontinha do cabelo passa da borda (top -4). */}
-        <Pressable onPress={() => onAbrirChat(r.fala)} hitSlop={6} style={{ position: "absolute", right: 18, top: -4 }}>
+        <Pressable
+          onPress={() => onAbrirChat(falas.length > 0 ? r.fala : null)}
+          hitSlop={6}
+          style={({ pressed }) => [{ position: "absolute", right: 18, top: -4 }, pressed && { opacity: 0.8 }]}
+        >
           <Animated.View style={[{ width: 108, height: 140 }, estiloAvatar]}>
             {BUNDLED_N.has(personagem) ? (
-              <Image source={avatarCardSrc(r.fala.pose, personagem)} style={{ width: 108, height: 140 }} />
+              <Image source={avatarCardSrc(pose, personagem)} style={{ width: 108, height: 140 }} />
             ) : (
               // Personagem criado pelo admin: não tem a versão "avatar-card" pronta (precisa de
               // composição gráfica à parte), então monta o avatar na hora, com fundo escuro.
-              <IriseAvatar personagem={personagem} pose={r.fala.pose} size={108} fundo="escuro" />
+              <IriseAvatar personagem={personagem} pose={pose} size={108} fundo="escuro" />
             )}
           </Animated.View>
         </Pressable>

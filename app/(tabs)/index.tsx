@@ -21,7 +21,7 @@ import { SearchField } from "@/components/SearchField";
 import { StatCard } from "@/components/StatCard";
 import { TourTarget } from "@/components/Tour";
 import { useCityStats } from "@/hooks/useCityStats";
-import { useAppConfig, useGamification } from "@/hooks/useGamification";
+import { useAppConfig, useForma, useGamification, quaseLa } from "@/hooks/useGamification";
 import { useIrisePersonagens } from "@/hooks/useIrisePersonagens";
 import { useAreaRisk, useOccurrences } from "@/hooks/useOccurrences";
 import { usePlaces, useSearchPlaces, useWelcoming } from "@/hooks/usePlaces";
@@ -29,13 +29,25 @@ import { useProfile } from "@/hooks/useProfile";
 import { useScreenInsets } from "@/hooks/useScreenInsets";
 import { rolarInicio, useTourScroll } from "@/hooks/useTour";
 import { distanceMeters } from "@/lib/geo";
-import { FALAS, type Fala } from "@/lib/iriseFalas";
+import { falasDoIrise, type Fala } from "@/lib/iriseFalas";
+import type { OrchestratedPlace } from "@/hooks/useIrise";
 import { useCity } from "@/providers/CityProvider";
-import { OCCURRENCE_TYPES, PLACE_CATEGORIES, RATING_MIN, type PlaceCategory } from "@/theme/domain";
+import { OCCURRENCE_TYPES, PLACE_CATEGORIES, RATING_MIN, flexiona, type PlaceCategory } from "@/theme/domain";
 import { colors, shadow } from "@/theme/tokens";
 
 // Busca sem acento e sem caixa: "cafe" acha "Café".
 const simplifica = (s: string) => s.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "");
+
+// Função fora do componente (não "durante o render"): o lint de pureza do React barra Date.now()
+// direto no corpo de um componente, mas não dentro de uma função comum chamada por ele.
+function relatoDasUltimas24h<T extends { created_at: string }>(occurrences: T[]): T | null {
+  const agora = Date.now();
+  return (
+    occurrences
+      .filter((o) => agora - new Date(o.created_at).getTime() < 24 * 60 * 60 * 1000)
+      .sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())[0] ?? null
+  );
+}
 
 type Filtro = PlaceCategory | "all" | "rated";
 
@@ -62,10 +74,11 @@ export default function HomeScreen() {
   // funcionalidade ligada (admin); sem isso, o card escuro de sempre continua do jeito que é.
   const personagem = cfg?.irise_ativa ? (profile?.irise_personagem ?? null) : null;
   const irise = personagem ? irises.find((p) => p.n === personagem) : null;
+  const forma = useForma();
   const [cidadeAberta, setCidadeAberta] = useState(false);
   const [chatAberta, setChatAberta] = useState(false);
   const [chatAbertura, setChatAbertura] = useState<Fala | null>(null);
-  const [scrollY, setScrollY] = useState(0);
+  const [passouDoCard, setPassouDoCard] = useState(false);
   const [cardBaixoY, setCardBaixoY] = useState<number | null>(null);
 
   function abrirChat(fala: Fala | null) {
@@ -84,14 +97,45 @@ export default function HomeScreen() {
     else rolarInicio(0);
   }
 
-  const sugestaoAbertura = useMemo(() => FALAS.find((f) => f.id === "sugestao") ?? null, []);
-
   // O ranking só aceita lugar com RATING_MIN avaliações, e nos primeiros meses isso é ninguém.
   // Até lá mostra quem já recebeu alguma nota: a seção precisa provar que o app está vivo.
   const primeiros = places
     .filter((p) => p.rating_count > 0)
     .sort((a, b) => b.rating_count - a.rating_count)
     .slice(0, 5);
+
+  // Falas do balão: só as que fazem sentido agora, com o nome/gênero do irise já certos (nunca o
+  // pronome da pessoa). "Missão do dia" não tem dado próprio ainda nos hooks desta tela — nenhuma
+  // consulta nova foi criada pra isso — então por ora ela sempre entra.
+  const falasIrise = useMemo(() => falasDoIrise(irise ?? null), [irise]);
+  const quaseLaMedalha = quaseLa(gami);
+  const semanaOuConquista = !!gami && (gami.semana.acesa || gami.conquistadas.some((c) => !c.visto));
+  const temSugestao = welcoming.length > 0 || primeiros.length > 0;
+  const relatoRecente = relatoDasUltimas24h(occurrences);
+  const falasCard = useMemo(
+    () =>
+      falasIrise
+        .filter((f) => {
+          if (f.id === "falta") return !!quaseLaMedalha;
+          if (f.id === "sugestao") return temSugestao;
+          if (f.id === "alerta") return !!relatoRecente;
+          if (f.id === "conquista") return semanaOuConquista;
+          return true; // "missao"
+        })
+        .map((f) => {
+          if (f.id !== "alerta" || !relatoRecente) return f;
+          const bairro = relatoRecente.neighborhood ?? "perto de você";
+          return { ...f, texto: f.texto.replace("Centro", bairro), abertura: f.abertura.replace("Centro", bairro) };
+        }),
+    [falasIrise, quaseLaMedalha, temSugestao, relatoRecente, semanaOuConquista],
+  );
+
+  // Sugestão sem lugar nenhum pra mostrar era o bug: agora a abertura já vem com os 3 primeiros de
+  // welcoming/primeiros, que já estão carregados nesta tela (sem consulta nova).
+  const lugaresSugestao: OrchestratedPlace[] = (welcoming.length > 0 ? welcoming : primeiros)
+    .slice(0, 3)
+    .map((p) => ({ ...p, reason: null }));
+  const sugestaoAbertura = useMemo(() => falasIrise.find((f) => f.id === "sugestao") ?? null, [falasIrise]);
 
   // Busca e filtro direto no Início: quem abre o app querendo achar um bar não deve ter que
   // trocar de aba. Sem termo e sem filtro, a seção volta a ser "mais acolhedores".
@@ -123,7 +167,7 @@ export default function HomeScreen() {
     places.some((p) => p.category === c),
   );
 
-  const pilulaVisivel = !!irise && cardBaixoY != null && scrollY > cardBaixoY;
+  const pilulaVisivel = !!irise && passouDoCard;
 
   return (
     <View className="flex-1">
@@ -132,7 +176,11 @@ export default function HomeScreen() {
         ref={prenderRolagem}
         onScroll={(e) => {
           aoRolar(e);
-          setScrollY(e.nativeEvent.contentOffset.y);
+          // Booleano em vez da posição exata: só dispara um novo render quando o valor realmente
+          // vira (React ignora um set com o mesmo valor), em vez de a cada tick de rolagem.
+          if (cardBaixoY != null) {
+            setPassouDoCard(e.nativeEvent.contentOffset.y > cardBaixoY);
+          }
         }}
         scrollEventThrottle={64}
         className="flex-1"
@@ -146,7 +194,7 @@ export default function HomeScreen() {
 
         {irise ? (
           <View
-            style={{ marginHorizontal: -16 }}
+            style={{ marginHorizontal: -16, marginBottom: -4 }}
             onLayout={(e) => setCardBaixoY(e.nativeEvent.layout.y + e.nativeEvent.layout.height)}
           >
             <CardCidadeIrise
@@ -154,12 +202,13 @@ export default function HomeScreen() {
               nomeIrise={irise.nome}
               cidade={loading ? "Localizando…" : (city?.name ?? "Sem cidade")}
               uf={city?.state ?? ""}
-              bemVinde="bem-vinde"
+              bemVinde={flexiona("bem-vind", forma)}
               onTrocarCidade={() => setCidadeAberta(true)}
               onAvaliar={() => router.push("/lugares")}
               onRelato={() => router.push("/registrar")}
               onCta={ctaDaFala}
               onAbrirChat={abrirChat}
+              falas={falasCard}
             />
           </View>
         ) : (
@@ -168,7 +217,7 @@ export default function HomeScreen() {
              precisar — nenhum dos dois pode parecer secundário). */
           <View
             className="gap-3 rounded-[28px] p-5"
-            style={[{ backgroundColor: colors.night }, shadow.lift]}
+            style={[{ backgroundColor: colors.night, marginBottom: -4 }, shadow.lift]}
           >
             <View className="flex-row items-center gap-3">
               <View
@@ -218,13 +267,15 @@ export default function HomeScreen() {
         )}
 
         {/* Gamificação: semana, cidade, caixinha e a medalha mais perto. Some se o banco não tiver. */}
-        {gami ? (
-          <TourTarget id="gami">
+        <View style={{ marginBottom: -4 }}>
+          {gami ? (
+            <TourTarget id="gami">
+              <GamiHomeCards />
+            </TourTarget>
+          ) : (
             <GamiHomeCards />
-          </TourTarget>
-        ) : (
-          <GamiHomeCards />
-        )}
+          )}
+        </View>
 
         <View className="gap-2">
           <SearchField
@@ -372,7 +423,16 @@ export default function HomeScreen() {
           cityName={city?.name}
           userLocation={userLocation}
           personagem={irise.n}
-          abertura={chatAbertura ? { texto: chatAbertura.abertura, respostas: chatAbertura.rapidas } : undefined}
+          abertura={
+            chatAbertura
+              ? {
+                  texto: chatAbertura.abertura,
+                  pose: chatAbertura.pose,
+                  respostas: chatAbertura.rapidas,
+                  lugares: chatAbertura.id === "sugestao" ? lugaresSugestao : undefined,
+                }
+              : undefined
+          }
         />
       )}
     </View>

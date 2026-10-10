@@ -1,3 +1,5 @@
+import { flexionar, type Forma } from "@/lib/irisePersonagens";
+
 export type Fala = {
   id: "missao" | "falta" | "sugestao" | "alerta" | "conquista";
   tag: string;
@@ -77,3 +79,24 @@ export const FALAS: Fala[] = [
     ],
   },
 ];
+
+function formaDoPronome(pronomes: string): Forma {
+  if (pronomes.startsWith("ela")) return 0;
+  if (pronomes.startsWith("ele")) return 1;
+  return 2;
+}
+
+/** `FALAS` com o nome e o gênero certos do irise escolhido — nunca o pronome da pessoa, que é
+ * outra coisa. Não muda `FALAS`, só devolve uma cópia com o "Ali"/"orgulhoso" fixos resolvidos. */
+export function falasDoIrise(irise: { nome: string; pronomes: string } | null): Fala[] {
+  if (!irise) return FALAS;
+  const forma = formaDoPronome(irise.pronomes);
+  return FALAS.map((f) => {
+    if (f.id !== "conquista") return f;
+    return {
+      ...f,
+      abertura: f.abertura.replace("Tô orgulhoso!", flexionar("Tô orgulhos{a|o|e}!", forma)),
+      rapidas: f.rapidas.map((r) => (r.t === "Valeu, Ali!" ? { ...r, t: `Valeu, ${irise.nome}!` } : r)),
+    };
+  });
+}

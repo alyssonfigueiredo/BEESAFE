@@ -235,13 +235,22 @@ export function IriseSheet({
   personagem: number | null;
   /** Primeira mensagem + respostas rápidas, pra quando o chat abre a partir de uma fala do irise
    * na Início (card/balão/faixa/pílula) em vez do fluxo genérico de busca. */
-  abertura?: { texto: string; respostas: { t: string; resposta: string }[] };
+  abertura?: {
+    texto: string;
+    /** Pose do avatar no cabeçalho enquanto essa abertura está em cena. Sem ela, pose 1. */
+    pose?: number;
+    respostas: { t: string; resposta: string; pose?: number }[];
+    /** Lugares pra mostrar junto da mensagem (ex.: a sugestão já vem com os 3 da Início). */
+    lugares?: OrchestratedPlace[];
+  };
 }) {
   const { height } = useWindowDimensions();
   const [log, setLog] = useState<LogItem[]>([]);
   const [texto, setTexto] = useState("");
+  const [poseAtual, setPoseAtual] = useState(1);
   const scrollRef = useRef<ScrollView>(null);
   const inputRef = useRef<TextInput>(null);
+  const ultimaAbertura = useRef<string | null>(null);
   const suggest = useIriseSuggest();
   const near = useIriseNear();
   const orchestrate = useIriseOrchestrate();
@@ -412,15 +421,26 @@ export function IriseSheet({
   }
 
   function onOpen() {
-    if (log.length === 0) {
+    // Chave da abertura atual: quem abre pelo alerta, fecha e abre de novo pela faixa (abertura
+    // diferente) não pode ver a conversa anterior — mesmo com log.length > 0.
+    const chave = abertura?.texto ?? null;
+    const trocouAbertura = chave !== null && chave !== ultimaAbertura.current;
+    if (log.length === 0 || trocouAbertura) {
+      ultimaAbertura.current = chave;
+      setLog([]);
+      setPoseAtual(abertura?.pose ?? 1);
       if (abertura) {
         addBubble(abertura.texto);
+        if (abertura.lugares && abertura.lugares.length > 0) {
+          push({ kind: "results", id: uid(), places: abertura.lugares });
+        }
         addChips(
           abertura.respostas.map((r) => ({
             label: r.t,
             onPick: () => {
               addBubble(r.t, true);
               addBubble(r.resposta);
+              if (r.pose != null) setPoseAtual(r.pose);
             },
           })),
         );
@@ -444,7 +464,7 @@ export function IriseSheet({
           <View style={{ width: 44, height: 5, borderRadius: 3, backgroundColor: "#D9D5CD", alignSelf: "center", marginTop: 10 }} />
           {personagem ? (
             <View className="flex-row items-end justify-between border-b border-border px-[18px] pb-3 pt-1">
-              <IriseAvatar personagem={personagem} size={84} />
+              <IriseAvatar personagem={personagem} pose={poseAtual} size={84} />
               <View style={{ flex: 1, minWidth: 0, marginLeft: 14, marginBottom: 8 }}>
                 <Text className="font-display text-[20px] text-ink">
                   {(irises.find((p) => p.n === personagem)?.nome ?? "Irise").toUpperCase()}

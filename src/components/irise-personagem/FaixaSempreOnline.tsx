@@ -9,19 +9,22 @@ export function FaixaSempreOnline({ personagem, nome, onPress }: { personagem: n
   return (
     <Pressable
       onPress={onPress}
-      style={{
-        marginHorizontal: 12,
-        marginVertical: 28,
-        height: 96,
-        borderRadius: 28,
-        backgroundColor: "#171A2B",
-        paddingVertical: 16,
-        paddingRight: 16,
-        paddingLeft: 118,
-        flexDirection: "row",
-        alignItems: "center",
-        gap: 10,
-      }}
+      style={({ pressed }) => [
+        {
+          marginHorizontal: 12,
+          marginVertical: 12,
+          height: 96,
+          borderRadius: 28,
+          backgroundColor: "#171A2B",
+          paddingVertical: 16,
+          paddingRight: 16,
+          paddingLeft: 118,
+          flexDirection: "row",
+          alignItems: "center",
+          gap: 10,
+        },
+        pressed && { opacity: 0.8 },
+      ]}
     >
       {BUNDLED_N.has(personagem) ? (
         <Image source={avatarCardSrc(5, personagem)} style={{ position: "absolute", left: 12, bottom: 10, width: 92, height: 120 }} />

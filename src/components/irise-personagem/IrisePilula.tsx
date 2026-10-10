@@ -32,17 +32,20 @@ export function IrisePilula({
     >
       <Pressable
         onPress={onPress}
-        style={{
-          height: 56,
-          borderRadius: 28,
-          paddingLeft: 6,
-          paddingRight: 18,
-          flexDirection: "row",
-          alignItems: "center",
-          gap: 10,
-          backgroundColor: "#171A2B",
-          boxShadow: "0 12px 28px rgba(20,24,41,0.28)",
-        }}
+        style={({ pressed }) => [
+          {
+            height: 56,
+            borderRadius: 28,
+            paddingLeft: 6,
+            paddingRight: 18,
+            flexDirection: "row",
+            alignItems: "center",
+            gap: 10,
+            backgroundColor: "#171A2B",
+            boxShadow: "0 12px 28px rgba(20,24,41,0.28)",
+          },
+          pressed && { opacity: 0.8 },
+        ]}
       >
         <View style={{ width: 44, height: 44 }}>
           <Image source={ANEL_MINI} style={{ position: "absolute", width: 44, height: 44 }} />
