@@ -7,9 +7,9 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import { Aurora } from "@/components/Aurora";
 import { CaixaDeFala } from "@/components/irise-personagem/CaixaDeFala";
-import { useIrisePersonagens } from "@/hooks/useIrisePersonagens";
+import { useCorpoResolvido, useIrisePersonagens } from "@/hooks/useIrisePersonagens";
 import { useScreenInsets } from "@/hooks/useScreenInsets";
-import { corpoSrc, FALAS_APRESENTACAO, flexionar, type Forma } from "@/lib/irisePersonagens";
+import { FALAS_APRESENTACAO, flexionar, type Forma } from "@/lib/irisePersonagens";
 import { colors } from "@/theme/tokens";
 
 /**
@@ -28,6 +28,7 @@ export default function IrisePreviewApresentacao() {
   const forma = (Number(formaParam ?? 2) || 2) as Forma;
   const { data: irises = [] } = useIrisePersonagens();
   const personagem = irises.find((p) => p.n === Number(iriseParam)) ?? irises[0];
+  const { source: corpoSource, onError: corpoOnError } = useCorpoResolvido(personagem.n);
   const [passo, setPasso] = useState(0);
 
   const fala = FALAS_APRESENTACAO[passo];
@@ -55,7 +56,8 @@ export default function IrisePreviewApresentacao() {
           style={{ flex: 1, width: "100%", alignItems: "center", justifyContent: "center" }}
         >
           <Image
-            source={corpoSrc(fala.pose, personagem.n)}
+            source={corpoSource}
+            onError={corpoOnError}
             style={{ width: 260, height: 400 }}
             resizeMode="contain"
           />

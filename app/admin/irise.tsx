@@ -16,6 +16,7 @@ import {
 
 import { Aurora } from "@/components/Aurora";
 import { Busto } from "@/components/irise-personagem/Busto";
+import { Corpo } from "@/components/irise-personagem/Corpo";
 import {
   useAdminIriseFotoEnviar,
   useAdminIrisePersonagemExcluir,
@@ -353,7 +354,17 @@ function EditorModal({
           </View>
 
           {!criando && (
-            <Campo label="Fotos (precisam de 300×460, fundo transparente)">
+            <Campo label="Foto de corpo inteiro (pra apresentação, 300×460, fundo transparente)">
+              <Pressable onPress={() => trocarFoto(0)} className="items-start gap-1">
+                <View style={{ opacity: enviarFoto.isPending ? 0.5 : 1 }}>
+                  <Corpo personagem={local.n} width={70} />
+                </View>
+                <Text className="font-body text-[11px] text-turquoiseInk">Trocar</Text>
+              </Pressable>
+            </Campo>
+          )}
+          {!criando && (
+            <Campo label="Fotos de busto (precisam de 300×460, fundo transparente)">
               <View className="flex-row flex-wrap gap-3">
                 {[1, 2, 3, 4, 5, 6].map((pose) => (
                   <Pressable key={pose} onPress={() => trocarFoto(pose)} className="items-center gap-1">

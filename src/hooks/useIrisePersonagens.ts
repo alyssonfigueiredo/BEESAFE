@@ -3,7 +3,7 @@ import { useState } from "react";
 import type { ImageSourcePropType } from "react-native";
 
 import { supabase } from "@/lib/supabase";
-import { BUNDLED_N, bustoSrc, IRISES, type Irise } from "@/lib/irisePersonagens";
+import { BUNDLED_N, bustoSrc, corpoSrc, IRISES, type Irise } from "@/lib/irisePersonagens";
 
 type LinhaBanco = {
   n: number;
@@ -123,6 +123,25 @@ export function useBustoResolvido(pose: number, personagem: number) {
   return { source: bustoSrc(pose, personagem) as ImageSourcePropType, onError: undefined };
 }
 
+/**
+ * Mesma ideia do `useBustoResolvido`, mas pro corpo inteiro (pose "0" no Storage, pasta
+ * `<personagem>/0.webp`). Personagem fora dos 9 sem foto própria ainda cai no corpo do Kai
+ * (fallback já embutido em `corpoSrc`) em vez de ficar com imagem quebrada.
+ */
+export function useCorpoResolvido(personagem: number) {
+  const linha = useLinhaBanco(personagem);
+  const [remotoFalhou, setRemotoFalhou] = useState(false);
+  const embutido = BUNDLED_N.has(personagem);
+  const tocado = !!linha && linha.atualizado_em !== linha.criado_em;
+  const tentarRemoto = (!embutido || tocado) && !remotoFalhou;
+
+  if (tentarRemoto) {
+    const source: ImageSourcePropType = { uri: urlRemota(0, personagem, linha?.atualizado_em) };
+    return { source, onError: () => setRemotoFalhou(true) };
+  }
+  return { source: corpoSrc(1, personagem) as ImageSourcePropType, onError: undefined };
+}
+
 // ---------- admin ----------
 
 export type IrisePersonagemAdmin = LinhaBanco;
@@ -190,9 +209,10 @@ export function useAdminIrisePersonagemExcluir() {
   });
 }
 
-/** Sobe uma foto (pose 1 a 6) pro Storage e avisa o banco que a imagem desse personagem mudou
- * (vira a versão usada no `?v=` pra forçar o app a buscar de novo em vez de ficar com a antiga em
- * cache). Caminho `<personagem>/<pose>.webp`, igual ao que o app lê. */
+/** Sobe uma foto (pose 0 = corpo inteiro, 1 a 6 = busto) pro Storage e avisa o banco que a imagem
+ * desse personagem mudou (vira a versão usada no `?v=` pra forçar o app a buscar de novo em vez de
+ * ficar com a antiga em cache). Caminho `<personagem>/<pose>.webp`, igual ao que o app lê. Vale
+ * tanto pra personagem novo quanto pra um dos 9 originais — troca a foto embutida pela do Storage. */
 export function useAdminIriseFotoEnviar() {
   const client = useQueryClient();
   return useMutation({
