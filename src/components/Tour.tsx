@@ -30,7 +30,7 @@ import { Busto } from "@/components/irise-personagem/Busto";
 import { useGamification } from "@/hooks/useGamification";
 import { useProfile } from "@/hooks/useProfile";
 import { tabBarBottom } from "@/hooks/useScreenInsets";
-import { IRISES } from "@/lib/irisePersonagens";
+import { useIrisePersonagens } from "@/hooks/useIrisePersonagens";
 import {
   fecharTour,
   medirAlvo,
@@ -351,7 +351,8 @@ export function Tour() {
   const forma = useGamification().data?.forma ?? 2;
   // Prévia (09/10/2026): o irise espia no canto do balão quando a pessoa já tem um escolhido.
   const personagemId = useProfile().data?.irise_personagem ?? null;
-  const personagem = personagemId ? IRISES.find((p) => p.n === personagemId) : null;
+  const { data: irises = [] } = useIrisePersonagens();
+  const personagem = personagemId ? irises.find((p) => p.n === personagemId) : null;
   const [tam, setTam] = useState({ w: win.width, h: win.height });
   const [fase, setFase] = useState<"boasvindas" | "holofote">("boasvindas");
   const [passos, setPassos] = useState<Passo[]>([]);

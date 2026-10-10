@@ -19,9 +19,10 @@ import { Aurora } from "@/components/Aurora";
 import { Glass } from "@/components/Glass";
 import { Busto } from "@/components/irise-personagem/Busto";
 import { IriseAvatar } from "@/components/irise-personagem/IriseAvatar";
+import { useIrisePersonagens } from "@/hooks/useIrisePersonagens";
 import { useScreenInsets } from "@/hooks/useScreenInsets";
 import { useSetIrisePersonagem } from "@/hooks/useProfile";
-import { IRISES, STATS, type Forma } from "@/lib/irisePersonagens";
+import { STATS, type Forma } from "@/lib/irisePersonagens";
 import { colors, mark } from "@/theme/tokens";
 
 const HERO = 250; // protótipo aprovado 10/10/2026: busto grande pra ver rosto, cabelo e roupa
@@ -51,13 +52,26 @@ export default function IrisePreviewEscolha() {
   const forma = (Number(formaParam ?? 2) || 2) as Forma;
   const doPerfil = modo === "perfil";
   const setPersonagem = useSetIrisePersonagem();
+  const { data: irises = [] } = useIrisePersonagens();
   const [indice, setIndice] = useState(() => {
-    const i = IRISES.findIndex((p) => p.n === Number(atualParam));
+    const i = irises.findIndex((p) => p.n === Number(atualParam));
     return i >= 0 ? i : 0;
   });
 
-  const total = IRISES.length;
-  const atual = IRISES[indice];
+  const total = irises.length;
+  // O catálogo pode encolher (admin apaga um personagem) enquanto a tela já estava aberta — trava
+  // num índice válido em vez de quebrar.
+  const indiceSeguro = total > 0 ? Math.min(indice, total - 1) : 0;
+  // Os 9 originais garantem que a lista nunca chega vazia (placeholderData) — o reserva aqui é só
+  // pro TypeScript não reclamar de undefined, não deve aparecer na prática.
+  const atual = irises[indiceSeguro] ?? {
+    n: 0,
+    nome: "",
+    pronomes: "",
+    classe: "",
+    bio: "",
+    stats: [0, 0, 0, 0] as [number, number, number, number],
+  };
 
   // Posição contínua do carrossel (pode passar de 0/total — o wrap acontece por item, no render).
   const indiceSV = useSharedValue(indice);
@@ -142,7 +156,7 @@ export default function IrisePreviewEscolha() {
           <View className="flex-row items-end justify-between">
             <Text className="font-display text-[32px] text-ink">ESCOLHA SEU IRISE</Text>
             <Text className="font-body-bold text-sm text-dim">
-              {indice + 1}/{total}
+              {indiceSeguro + 1}/{total}
             </Text>
           </View>
         </View>
@@ -172,8 +186,8 @@ export default function IrisePreviewEscolha() {
             </Svg>
           </Animated.View>
 
-          {IRISES.map((p, i) => {
-            const off = distanciaCircular(i - indice, total);
+          {irises.map((p, i) => {
+            const off = distanciaCircular(i - indiceSeguro, total);
             return (
               <CarrosselAvatar
                 key={p.n}
@@ -206,8 +220,8 @@ export default function IrisePreviewEscolha() {
         </View>
 
         <View className="flex-row justify-center gap-2 py-3">
-          {IRISES.map((p, i) => (
-            <Miniatura key={p.n} personagem={p.n} selecionada={i === indice} onPress={() => irPara(i)} />
+          {irises.map((p, i) => (
+            <Miniatura key={p.n} personagem={p.n} selecionada={i === indiceSeguro} onPress={() => irPara(i)} />
           ))}
         </View>
 

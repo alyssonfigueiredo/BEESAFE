@@ -22,6 +22,7 @@ import { StatCard } from "@/components/StatCard";
 import { TourTarget } from "@/components/Tour";
 import { useCityStats } from "@/hooks/useCityStats";
 import { useAppConfig, useGamification } from "@/hooks/useGamification";
+import { useIrisePersonagens } from "@/hooks/useIrisePersonagens";
 import { useAreaRisk, useOccurrences } from "@/hooks/useOccurrences";
 import { usePlaces, useSearchPlaces, useWelcoming } from "@/hooks/usePlaces";
 import { useProfile } from "@/hooks/useProfile";
@@ -29,7 +30,6 @@ import { useScreenInsets } from "@/hooks/useScreenInsets";
 import { rolarInicio, useTourScroll } from "@/hooks/useTour";
 import { distanceMeters } from "@/lib/geo";
 import { FALAS, type Fala } from "@/lib/iriseFalas";
-import { IRISES } from "@/lib/irisePersonagens";
 import { useCity } from "@/providers/CityProvider";
 import { OCCURRENCE_TYPES, PLACE_CATEGORIES, RATING_MIN, type PlaceCategory } from "@/theme/domain";
 import { colors, shadow } from "@/theme/tokens";
@@ -56,11 +56,12 @@ export default function HomeScreen() {
   const { data: gami } = useGamification();
   const { data: cfg } = useAppConfig();
   const { data: profile } = useProfile();
+  const { data: irises = [] } = useIrisePersonagens();
 
   // Irise na Início (protótipo aprovado 10/10/2026): só entra com personagem escolhido e a
   // funcionalidade ligada (admin); sem isso, o card escuro de sempre continua do jeito que é.
   const personagem = cfg?.irise_ativa ? (profile?.irise_personagem ?? null) : null;
-  const irise = personagem ? IRISES.find((p) => p.n === personagem) : null;
+  const irise = personagem ? irises.find((p) => p.n === personagem) : null;
   const [cidadeAberta, setCidadeAberta] = useState(false);
   const [chatAberta, setChatAberta] = useState(false);
   const [chatAbertura, setChatAbertura] = useState<Fala | null>(null);

@@ -19,6 +19,10 @@ export type Irise = {
   stats: [number, number, number, number];
 };
 
+/** Os 9 personagens com fotos embutidas no app (offline, sem rede). Qualquer outro número vem do
+ * banco (`irise_personagens`, migration 71) e as fotos vêm do Storage — ver `useIrisePersonagens`. */
+export const BUNDLED_N = new Set([10, 11, 12, 13, 14, 15, 16, 17, 18]);
+
 export const IRISES: Irise[] = [
   { n: 10, nome: "Kai", pronomes: "elu/delu", classe: "DJ do Rolê", bio: "Conhece toda balada acolhedora da cidade e a playlist de cada uma.", stats: [3, 4, 3, 5] },
   { n: 11, nome: "Léo", pronomes: "ele/dele", classe: "Guardião", bio: "Papo reto e ombro firme. Avisa antes de você chegar num lugar furado.", stats: [4, 3, 5, 3] },
@@ -64,8 +68,11 @@ const CORPO: Record<number, Record<number, number>> = {
   },
 };
 
+// Personagem criado pelo admin (fora dos 9 originais) ainda não tem foto de corpo inteiro — só
+// busto (ver LEIA do pacote de imagens). Até existir essa peça, a apresentação usa o corpo do Kai
+// no lugar: mostra o rosto errado por alguns segundos, mas não quebra a tela.
 export function corpoSrc(pose: number, personagem: number): number {
-  return CORPO[pose]?.[personagem] ?? CORPO[1][personagem];
+  return CORPO[pose]?.[personagem] ?? CORPO[1][personagem] ?? CORPO[1][10];
 }
 
 // Busto (300×460): feito sob medida pro avatar circular — nunca usar o corpo inteiro (acima) num

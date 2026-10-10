@@ -12,9 +12,9 @@ import {
 import { AnimatedMedal } from "@/components/gami/MedalView";
 import { Busto } from "@/components/irise-personagem/Busto";
 import { useGamification, useMarkSeen, useRewardOpen } from "@/hooks/useGamification";
+import { useIrisePersonagens } from "@/hooks/useIrisePersonagens";
 import { useProfile } from "@/hooks/useProfile";
 import { getMedalha, nomeDa } from "@/lib/medals";
-import { IRISES } from "@/lib/irisePersonagens";
 import { colors } from "@/theme/tokens";
 import { useFolhaAberta } from "@/hooks/useDiscovery";
 
@@ -37,8 +37,9 @@ export function MedalCelebration() {
   const [aberta, setAberta] = useState<string[] | null>(null);
   const [story, setStory] = useState<Compartilhavel | null>(null);
   const { data: profile } = useProfile();
+  const { data: irises = [] } = useIrisePersonagens();
   const personagem = profile?.irise_personagem
-    ? IRISES.find((p) => p.n === profile.irise_personagem)
+    ? irises.find((p) => p.n === profile.irise_personagem)
     : null;
 
   const novas = useMemo(

@@ -2,8 +2,9 @@ import { router } from "expo-router";
 import { Pressable, Text, View } from "react-native";
 
 import { IriseAvatar } from "@/components/irise-personagem/IriseAvatar";
+import { useIrisePersonagens } from "@/hooks/useIrisePersonagens";
 import { useProfile } from "@/hooks/useProfile";
-import { IRISES, STATS } from "@/lib/irisePersonagens";
+import { STATS } from "@/lib/irisePersonagens";
 import { colors, shadow } from "@/theme/tokens";
 
 /**
@@ -12,7 +13,8 @@ import { colors, shadow } from "@/theme/tokens";
  */
 export function IriseCard() {
   const { data: profile } = useProfile();
-  const atual = IRISES.find((p) => p.n === profile?.irise_personagem);
+  const { data: irises = [] } = useIrisePersonagens();
+  const atual = irises.find((p) => p.n === profile?.irise_personagem);
 
   function trocar() {
     router.push({

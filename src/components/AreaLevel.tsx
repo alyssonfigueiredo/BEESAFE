@@ -2,8 +2,8 @@ import { AlertTriangle } from "lucide-react-native";
 import { Text, View } from "react-native";
 
 import { Busto } from "@/components/irise-personagem/Busto";
+import { useIrisePersonagens } from "@/hooks/useIrisePersonagens";
 import { useProfile } from "@/hooks/useProfile";
-import { IRISES } from "@/lib/irisePersonagens";
 import { colors } from "@/theme/tokens";
 
 /** Nível de atenção da REGIÃO em volta. Nunca é nota do lugar: o bar recebe cor, a rua recebe aviso. */
@@ -49,8 +49,9 @@ export function AreaLevel({ level, size = "sm" }: { level: AreaLevelKey; size?: 
 /** Separado só pra poder chamar useProfile sem mexer no corpo do componente principal. */
 function AreaLevelGrande({ n }: { n: (typeof NIVEIS)[AreaLevelKey] }) {
   const { data: profile } = useProfile();
+  const { data: irises = [] } = useIrisePersonagens();
   const personagem = profile?.irise_personagem
-    ? IRISES.find((p) => p.n === profile.irise_personagem)
+    ? irises.find((p) => p.n === profile.irise_personagem)
     : null;
 
   return (

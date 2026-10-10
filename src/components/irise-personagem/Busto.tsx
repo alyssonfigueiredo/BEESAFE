@@ -1,6 +1,7 @@
 import { Image, View } from "react-native";
 
-import { bustoSrc, BUSTO_ASPECTO } from "@/lib/irisePersonagens";
+import { useBustoResolvido } from "@/hooks/useIrisePersonagens";
+import { BUSTO_ASPECTO } from "@/lib/irisePersonagens";
 import { colors } from "@/theme/tokens";
 
 /**
@@ -20,6 +21,7 @@ export function Busto({
 }) {
   const h = size * BUSTO_ASPECTO;
   const top = -(h - size) * 0.22;
+  const { source, onError } = useBustoResolvido(pose, personagem);
   return (
     <View
       style={{
@@ -31,7 +33,8 @@ export function Busto({
       }}
     >
       <Image
-        source={bustoSrc(pose, personagem)}
+        source={source}
+        onError={onError}
         style={{ position: "absolute", top, left: 0, width: size, height: h }}
         resizeMode="cover"
       />

@@ -1,6 +1,8 @@
 import { Image, Pressable, Text, View } from "react-native";
 import Animated, { FadeIn, FadeOut } from "react-native-reanimated";
 
+import { useBustoResolvido } from "@/hooks/useIrisePersonagens";
+import { BUNDLED_N } from "@/lib/irisePersonagens";
 import { bustoEscuroSrc } from "@/lib/iriseImagensEscuras";
 
 const ANEL_MINI = require("../../../assets/irise-personagens/anel-miniatura.png");
@@ -19,6 +21,8 @@ export function IrisePilula({
   bottom: number;
   onPress: () => void;
 }) {
+  // Precisa ser chamado sempre (mesmo com !visivel), pra não variar a ordem dos hooks.
+  const resolvido = useBustoResolvido(1, personagem);
   if (!visivel) return null;
   return (
     <Animated.View
@@ -55,7 +59,8 @@ export function IrisePilula({
             }}
           >
             <Image
-              source={bustoEscuroSrc(1, personagem)}
+              source={BUNDLED_N.has(personagem) ? bustoEscuroSrc(1, personagem) : resolvido.source}
+              onError={BUNDLED_N.has(personagem) ? undefined : resolvido.onError}
               style={{ position: "absolute", top: 0, left: -3.6, width: 47.2, height: 47.2 * (460 / 300) }}
             />
           </View>

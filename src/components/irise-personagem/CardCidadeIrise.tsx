@@ -2,9 +2,11 @@ import { Image, Pressable, Text, View } from "react-native";
 import Animated, { useAnimatedStyle } from "react-native-reanimated";
 import Svg, { Defs, RadialGradient, Rect, Stop } from "react-native-svg";
 
+import { IriseAvatar } from "@/components/irise-personagem/IriseAvatar";
 import { IriseBalao, useRodadaFalas } from "@/components/irise-personagem/IriseBalao";
 import { FALAS, type Fala } from "@/lib/iriseFalas";
 import { avatarCardSrc } from "@/lib/iriseImagensEscuras";
+import { BUNDLED_N } from "@/lib/irisePersonagens";
 
 const ARCO = ["#FF6964", "#FFA353", "#FFD066", "#49DCC0", "#59A7FF", "#A889FF"];
 
@@ -116,7 +118,13 @@ export function CardCidadeIrise({
         {/* Irise fora do overflow do card: só a pontinha do cabelo passa da borda (top -4). */}
         <Pressable onPress={() => onAbrirChat(r.fala)} hitSlop={6} style={{ position: "absolute", right: 18, top: -4 }}>
           <Animated.View style={[{ width: 108, height: 140 }, estiloAvatar]}>
-            <Image source={avatarCardSrc(r.fala.pose, personagem)} style={{ width: 108, height: 140 }} />
+            {BUNDLED_N.has(personagem) ? (
+              <Image source={avatarCardSrc(r.fala.pose, personagem)} style={{ width: 108, height: 140 }} />
+            ) : (
+              // Personagem criado pelo admin: não tem a versão "avatar-card" pronta (precisa de
+              // composição gráfica à parte), então monta o avatar na hora, com fundo escuro.
+              <IriseAvatar personagem={personagem} pose={r.fala.pose} size={108} fundo="escuro" />
+            )}
           </Animated.View>
         </Pressable>
       </View>

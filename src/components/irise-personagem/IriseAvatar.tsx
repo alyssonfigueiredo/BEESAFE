@@ -1,7 +1,8 @@
 import { Image, StyleSheet, View } from "react-native";
 import Svg, { Circle, Defs, LinearGradient, Stop } from "react-native-svg";
 
-import { bustoSrc, BUSTO_ASPECTO } from "@/lib/irisePersonagens";
+import { useBustoResolvido } from "@/hooks/useIrisePersonagens";
+import { BUSTO_ASPECTO } from "@/lib/irisePersonagens";
 import { colors, mark } from "@/theme/tokens";
 
 /**
@@ -15,6 +16,7 @@ export function IriseAvatar({
   size,
   anel = true,
   cinza = false,
+  fundo = "claro",
 }: {
   personagem: number;
   pose?: number;
@@ -22,11 +24,16 @@ export function IriseAvatar({
   anel?: boolean;
   /** vizinhos do carrossel: sem anel, apagado */
   cinza?: boolean;
+  /** Pra usar em cima do card/faixa/pílula escuros (personagem fora dos 9 originais, que não tem
+   * a versão `avatar-card`/`-escuro` pronta — ver `iriseImagensEscuras.ts`). O miolo do anel vira
+   * a cor do card em vez de branco; o resto não muda. */
+  fundo?: "claro" | "escuro";
 }) {
   const altura = size * 1.24;
   const r = (size - 6) / 2;
   const imgW = size * 1.12;
   const imgH = imgW * BUSTO_ASPECTO;
+  const { source, onError } = useBustoResolvido(pose, personagem);
   return (
     <View style={{ width: size, height: altura, opacity: cinza ? 0.45 : 1 }}>
       <View style={{ position: "absolute", left: 0, bottom: 0, width: size, height: size }}>
@@ -42,7 +49,7 @@ export function IriseAvatar({
             cx={size / 2}
             cy={size / 2}
             r={size / 2 - 1.5}
-            fill={cinza ? colors.subtle : colors.solid}
+            fill={cinza ? colors.subtle : fundo === "escuro" ? "#171A2B" : colors.solid}
             stroke={anel && !cinza ? "url(#iaRing)" : colors.border}
             strokeWidth={3}
           />
@@ -61,7 +68,8 @@ export function IriseAvatar({
         }}
       >
         <Image
-          source={bustoSrc(pose, personagem)}
+          source={source}
+          onError={onError}
           style={{
             position: "absolute",
             top: 0,

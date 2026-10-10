@@ -18,8 +18,8 @@ import { PlaceCard } from "@/components/PlaceCard";
 import { Busto } from "@/components/irise-personagem/Busto";
 import { IriseAvatar } from "@/components/irise-personagem/IriseAvatar";
 import { useIriseNear, useIriseOrchestrate, useIriseSuggest, type OrchestratedPlace } from "@/hooks/useIrise";
+import { useIrisePersonagens } from "@/hooks/useIrisePersonagens";
 import { useProfile } from "@/hooks/useProfile";
-import { IRISES } from "@/lib/irisePersonagens";
 import type { PlaceCategory } from "@/theme/domain";
 import { colors, shadow } from "@/theme/tokens";
 
@@ -113,8 +113,9 @@ export function IriseInviteCard({
 }) {
   const [aberta, setAberta] = useState(false);
   const { data: profile } = useProfile();
+  const { data: irises = [] } = useIrisePersonagens();
   const personagem = profile?.irise_personagem ?? null;
-  const atual = IRISES.find((p) => p.n === personagem);
+  const atual = irises.find((p) => p.n === personagem);
   if (!personagem || !atual) return null;
 
   return (
@@ -244,6 +245,7 @@ export function IriseSheet({
   const suggest = useIriseSuggest();
   const near = useIriseNear();
   const orchestrate = useIriseOrchestrate();
+  const { data: irises = [] } = useIrisePersonagens();
 
   function push(item: LogItem) {
     setLog((l) => [...l, item]);
@@ -445,10 +447,10 @@ export function IriseSheet({
               <IriseAvatar personagem={personagem} size={84} />
               <View style={{ flex: 1, minWidth: 0, marginLeft: 14, marginBottom: 8 }}>
                 <Text className="font-display text-[20px] text-ink">
-                  {(IRISES.find((p) => p.n === personagem)?.nome ?? "Irise").toUpperCase()}
+                  {(irises.find((p) => p.n === personagem)?.nome ?? "Irise").toUpperCase()}
                 </Text>
                 <Text className="font-body text-[12px] text-dim">
-                  {IRISES.find((p) => p.n === personagem)?.classe}
+                  {irises.find((p) => p.n === personagem)?.classe}
                 </Text>
               </View>
               <Pressable

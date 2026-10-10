@@ -7,8 +7,9 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import { Aurora } from "@/components/Aurora";
 import { CaixaDeFala } from "@/components/irise-personagem/CaixaDeFala";
+import { useIrisePersonagens } from "@/hooks/useIrisePersonagens";
 import { useScreenInsets } from "@/hooks/useScreenInsets";
-import { corpoSrc, FALAS_APRESENTACAO, flexionar, IRISES, type Forma } from "@/lib/irisePersonagens";
+import { corpoSrc, FALAS_APRESENTACAO, flexionar, type Forma } from "@/lib/irisePersonagens";
 import { colors } from "@/theme/tokens";
 
 /**
@@ -24,7 +25,8 @@ export default function IrisePreviewApresentacao() {
     irise: string;
   }>();
   const forma = (Number(formaParam ?? 2) || 2) as Forma;
-  const personagem = IRISES.find((p) => p.n === Number(iriseParam)) ?? IRISES[0];
+  const { data: irises = [] } = useIrisePersonagens();
+  const personagem = irises.find((p) => p.n === Number(iriseParam)) ?? irises[0];
   const [passo, setPasso] = useState(0);
 
   const fala = FALAS_APRESENTACAO[passo];
