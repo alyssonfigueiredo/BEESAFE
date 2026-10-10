@@ -33,10 +33,12 @@ export function IriseNudge() {
         <View style={{ width: 56, height: 56 }}>
           <AnelArcoIris size={56} />
           <View
-            style={{ position: "absolute", top: 0, left: 0, right: 0, bottom: 0 }}
+            style={{ position: "absolute", inset: 3, borderRadius: 25, backgroundColor: colors.subtle }}
             className="items-center justify-center"
           >
-            <Text className="font-body-bold text-xl text-solid">?</Text>
+            <Text className="font-body-bold text-xl" style={{ color: colors.ink }}>
+              ?
+            </Text>
           </View>
         </View>
         <Text className="min-w-0 flex-1 font-body text-[13px] leading-[18px] text-ink">

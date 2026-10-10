@@ -3,7 +3,7 @@ import { useState } from "react";
 import { Pressable, Text, View } from "react-native";
 
 import { IriseAvatar } from "@/components/irise-personagem/IriseAvatar";
-import { IriseSheet } from "@/components/irise/Irise";
+import { AnelArcoIris, IriseSheet } from "@/components/irise/Irise";
 import { useAppConfig, useForma } from "@/hooks/useGamification";
 import { useIrisePersonagens } from "@/hooks/useIrisePersonagens";
 import { useProfile } from "@/hooks/useProfile";
@@ -40,6 +40,8 @@ export function abrirEscolhaIrise({
  * Cartão do Perfil: o personagem do irise. Avatar saindo por cima (igual ao protótipo aprovado
  * 10/10/2026), com os atributos à mostra — sem XP, sem aparecer em outra tela além daqui e do chat.
  */
+const AVATAR = 98;
+
 export function IriseCard() {
   const { data: cfg } = useAppConfig();
   const { data: profile } = useProfile();
@@ -58,16 +60,28 @@ export function IriseCard() {
   if (!atual) {
     return (
       <View className="flex-row items-center gap-4 rounded-[30px] bg-surface px-6 py-6" style={shadow.card}>
-        <View className="h-[56px] w-[56px] items-center justify-center rounded-full bg-subtle">
-          <Text className="font-body-bold text-xl text-dim">?</Text>
+        <View style={{ width: 56, height: 56 }}>
+          <AnelArcoIris size={56} />
+          <View
+            style={{ position: "absolute", inset: 3, borderRadius: 25, backgroundColor: colors.subtle }}
+            className="items-center justify-center"
+          >
+            <Text className="font-body-bold text-xl" style={{ color: colors.ink }}>
+              ?
+            </Text>
+          </View>
         </View>
-        <View className="min-w-0 flex-1 gap-0.5">
+        <View className="gap-0.5" style={{ flex: 1, minWidth: 0 }}>
           <Text className="font-body-medium text-[17px] text-ink">Escolha um irise</Text>
           <Text className="font-body text-[12.5px] leading-[17px] text-dim">
-            Um personagem pra te acompanhar no chat da Irise.
+            Um personagem pra te acompanhar no app.
           </Text>
         </View>
-        <Pressable onPress={trocar} className="rounded-full bg-subtle px-4 py-2.5 active:opacity-70">
+        <Pressable
+          onPress={trocar}
+          className="rounded-full bg-subtle px-4 py-2.5 active:opacity-70"
+          style={{ flexShrink: 0 }}
+        >
           <Text className="font-body-bold text-[13px] text-ink">Escolher</Text>
         </Pressable>
       </View>
@@ -80,10 +94,13 @@ export function IriseCard() {
       style={[shadow.card, { marginTop: 40 }]}
     >
       <View style={{ position: "absolute", right: 18, top: -34 }}>
-        <IriseAvatar personagem={atual.n} size={98} />
+        <IriseAvatar personagem={atual.n} size={AVATAR} />
       </View>
-      <View style={{ maxWidth: "62%" }}>
-        <Text className="font-body-bold text-[11px] uppercase tracking-[0.1em] text-yellowInk">
+      <View style={{ paddingRight: AVATAR - 16 }}>
+        <Text
+          numberOfLines={1}
+          className="font-body-bold text-[11px] uppercase tracking-[0.1em] text-yellowInk"
+        >
           Seu irise · {atual.classe}
         </Text>
         <Text className="mt-1.5 font-display text-[28px] text-ink">{atual.nome}</Text>

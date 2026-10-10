@@ -7,6 +7,9 @@ Leia este arquivo inteiro antes de agir. Detalhes em PLANO.md, README.md, supaba
 Alysson (também assina Leandro). Português. Sem cumprimentos, sem formalidade, respostas curtas e diretas.
 Não pergunte o que dá para decidir sozinho. Ele não é dev: dê comandos prontos para colar no Terminal
 do Mac e SQL pronto para colar no SQL Editor do Supabase. Nunca peça nem aceite chaves secretas em chat.
+**Regra dele (10/10/2026): avisar ANTES de qualquer coisa que gaste cota ou dinheiro** — `eas-cli build`,
+`eas-cli update`, Google Places, Cloud Vision, envio de push em massa, Actions pesadas. Dizer o que gasta e
+quanto, e esperar o ok. `npx expo run:ios` / `expo start` são locais e não gastam nada.
 
 ## O que é
 
