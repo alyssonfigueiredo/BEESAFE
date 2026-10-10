@@ -8,11 +8,13 @@ import Animated, {
   withRepeat,
   withTiming,
 } from "react-native-reanimated";
-import Svg, { Circle, Defs, LinearGradient, RadialGradient, Stop } from "react-native-svg";
+import Svg, { Circle, Defs, RadialGradient, Stop } from "react-native-svg";
 
 import { useBustoResolvido } from "@/hooks/useIrisePersonagens";
 import { BUSTO_ASPECTO } from "@/lib/irisePersonagens";
-import { colors, mark } from "@/theme/tokens";
+import { colors } from "@/theme/tokens";
+
+const ANEL_ARCOIRIS = require("../../../assets/irise-personagens/anel-arcoiris.png");
 
 /**
  * Avatar do protótipo aprovado (10/10/2026): o busto sai do círculo. O corpo é cortado pela curva
@@ -56,19 +58,9 @@ export function IriseAvatar({
 
   return (
     <View style={{ width: size, height: altura, opacity: cinza ? 0.45 : 1 }}>
-      <Animated.View
-        style={[
-          { position: "absolute", left: 0, bottom: 0, width: size, height: size },
-          anel && !cinza ? estiloGiro : null,
-        ]}
-      >
+      <View style={{ position: "absolute", left: 0, bottom: 0, width: size, height: size }}>
         <Svg width={size} height={size}>
           <Defs>
-            <LinearGradient id="iaRing" x1="0" y1="0" x2="1" y2="1">
-              {mark.ring.map((c, i) => (
-                <Stop key={c} offset={i / (mark.ring.length - 1)} stopColor={c} />
-              ))}
-            </LinearGradient>
             <RadialGradient id="iaFundo" cx="50%" cy="30%" r="75%">
               <Stop offset="0" stopColor="#FFFFFF" />
               <Stop offset="1" stopColor="#ECE5FF" />
@@ -79,11 +71,14 @@ export function IriseAvatar({
             cy={size / 2}
             r={size / 2 - espessura / 2}
             fill={cinza ? colors.subtle : fundo === "escuro" ? "#171A2B" : "url(#iaFundo)"}
-            stroke={anel && !cinza ? "url(#iaRing)" : colors.border}
+            stroke={anel && !cinza ? "none" : colors.border}
             strokeWidth={espessura}
           />
         </Svg>
-      </Animated.View>
+        {anel && !cinza && (
+          <Animated.Image source={ANEL_ARCOIRIS} style={[{ position: "absolute", width: size, height: size }, estiloGiro]} />
+        )}
+      </View>
       <View
         style={{
           position: "absolute",

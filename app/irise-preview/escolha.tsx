@@ -13,8 +13,6 @@ import Animated, {
   withTiming,
   type SharedValue,
 } from "react-native-reanimated";
-import Svg, { Defs, RadialGradient, Rect, Stop } from "react-native-svg";
-
 import { Aurora } from "@/components/Aurora";
 import { Glass } from "@/components/Glass";
 import { Busto } from "@/components/irise-personagem/Busto";
@@ -23,11 +21,12 @@ import { useIrisePersonagens } from "@/hooks/useIrisePersonagens";
 import { useScreenInsets } from "@/hooks/useScreenInsets";
 import { useProfile, useSetIrisePersonagem } from "@/hooks/useProfile";
 import { STATS, type Forma } from "@/lib/irisePersonagens";
-import { colors, mark } from "@/theme/tokens";
+import { colors } from "@/theme/tokens";
 
 const HERO = 250; // protótipo aprovado 10/10/2026: busto grande pra ver rosto, cabelo e roupa
 const HERO_ALTURA = HERO * 1.3; // área 250×325: cabeça passa por cima do anel
 const ANEL_MINI = require("../../assets/irise-personagens/anel-miniatura.png");
+const BRILHO_ARCOIRIS = require("../../assets/irise-personagens/brilho-arcoiris.png");
 const ESPACAMENTO = 168; // distância entre o centro de cada personagem no carrossel (mesmo valor do protótipo)
 const DURACAO_CARROSSEL = 500;
 const CURVA_CARROSSEL = Easing.bezier(0.2, 0.7, 0.2, 1);
@@ -183,17 +182,7 @@ export default function IrisePreviewEscolha() {
               estiloBrilho,
             ]}
           >
-            <Svg width={BRILHO} height={BRILHO}>
-              <Defs>
-                <RadialGradient id="brilho" cx="50%" cy="50%" r="50%">
-                  <Stop offset="0.35" stopColor={mark.ring[5]} stopOpacity={0.55} />
-                  <Stop offset="0.6" stopColor={mark.ring[3]} stopOpacity={0.3} />
-                  <Stop offset="0.8" stopColor={mark.ring[1]} stopOpacity={0.15} />
-                  <Stop offset="1" stopColor={mark.ring[0]} stopOpacity={0} />
-                </RadialGradient>
-              </Defs>
-              <Rect width={BRILHO} height={BRILHO} fill="url(#brilho)" />
-            </Svg>
+            <Image source={BRILHO_ARCOIRIS} style={{ width: BRILHO, height: BRILHO }} />
           </Animated.View>
 
           {irises.map((p, i) => {
