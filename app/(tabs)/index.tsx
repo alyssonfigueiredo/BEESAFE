@@ -22,7 +22,7 @@ import { StatCard } from "@/components/StatCard";
 import { TourTarget } from "@/components/Tour";
 import { useAlgumNudgeVisivel } from "@/hooks/useDiscovery";
 import { useCityStats } from "@/hooks/useCityStats";
-import { useAppConfig, useForma, useGamification, quaseLa } from "@/hooks/useGamification";
+import { useAppConfig, useAvaliouHoje, useForma, useGamification, quaseLa } from "@/hooks/useGamification";
 import { useIrisePersonagens } from "@/hooks/useIrisePersonagens";
 import { useAreaRisk, useOccurrences } from "@/hooks/useOccurrences";
 import { usePlaces, useSearchPlaces, useWelcoming } from "@/hooks/usePlaces";
@@ -67,6 +67,7 @@ export default function HomeScreen() {
   // Tour: rola o Início até os alvos; os cartões da gamificação só viram alvo quando aparecem.
   const { anexar: prenderRolagem, onScroll: aoRolar } = useTourScroll();
   const { data: gami } = useGamification();
+  const { data: avaliouHoje = false } = useAvaliouHoje();
   const { data: cfg } = useAppConfig();
   const { data: profile } = useProfile();
   const { data: irises = [] } = useIrisePersonagens();
@@ -109,9 +110,8 @@ export default function HomeScreen() {
     .slice(0, 5);
 
   // Falas do balão: só as que fazem sentido agora, com o nome/gênero do irise e o dado real da
-  // gamificação já resolvidos (figurinha mais perto, conquista do momento). "Missão do dia" não tem
-  // dado próprio ainda nos hooks desta tela (nenhum registro de "já avaliou hoje") — nenhuma consulta
-  // nova foi criada pra isso — então por ora ela sempre entra.
+  // gamificação já resolvidos (figurinha mais perto, conquista do momento). "Missão do dia" sai
+  // quando já existe avaliação minha hoje.
   const falasIrise = useMemo(() => falasDoIrise(irise ?? null, gami), [irise, gami]);
   const quaseLaMedalha = quaseLa(gami);
   const semanaOuConquista = !!gami && (gami.semana.acesa || gami.conquistadas.some((c) => !c.visto));
@@ -125,7 +125,7 @@ export default function HomeScreen() {
           if (f.id === "sugestao") return temSugestao;
           if (f.id === "alerta") return !!relatoRecente;
           if (f.id === "conquista") return semanaOuConquista;
-          return true; // "missao"
+          return !avaliouHoje; // "missao"
         })
         .map((f) => {
           if (f.id !== "alerta" || !relatoRecente) return f;
@@ -136,7 +136,7 @@ export default function HomeScreen() {
             abertura: f.abertura.replace("{local}", local),
           };
         }),
-    [falasIrise, quaseLaMedalha, temSugestao, relatoRecente, semanaOuConquista],
+    [falasIrise, quaseLaMedalha, temSugestao, relatoRecente, semanaOuConquista, avaliouHoje],
   );
 
   // Sugestão sem lugar nenhum pra mostrar era o bug: agora a abertura já vem com os 3 primeiros de

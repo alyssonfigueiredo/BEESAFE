@@ -9,6 +9,7 @@ import { Aurora } from "@/components/Aurora";
 import { CaixaDeFala } from "@/components/irise-personagem/CaixaDeFala";
 import { useCorpoResolvido, useIrisePersonagens } from "@/hooks/useIrisePersonagens";
 import { useScreenInsets } from "@/hooks/useScreenInsets";
+import { formaDoPronome } from "@/lib/iriseFalas";
 import { FALAS_APRESENTACAO, flexionar, type Forma } from "@/lib/irisePersonagens";
 import { colors } from "@/theme/tokens";
 
@@ -69,7 +70,7 @@ export default function IrisePreviewApresentacao() {
           style={{ position: "absolute", left: 16, right: 16, bottom: insets.paddingBottom + 16 }}
         >
           <CaixaDeFala
-            nome="Irise desbloqueade"
+            nome={flexionar("Irise desbloquead{a|o|e}", formaDoPronome(personagem.pronomes))}
             texto={texto}
             passos={FALAS_APRESENTACAO.length}
             passoAtual={passo}

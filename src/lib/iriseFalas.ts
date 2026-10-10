@@ -47,7 +47,7 @@ export const FALAS: Fala[] = [
     cta: "Ver figurinha",
     abertura: "Você tá perto da próxima figurinha. Quer ver o que falta?",
     rapidas: [
-      { t: "Avaliar agora", resposta: "Boa! Te levo pra avaliação.", pose: 4, acao: "avaliar" },
+      { t: "Avaliar agora", resposta: "Bora! Escolhe o lugar.", pose: 4, acao: "avaliar" },
       {
         t: "Como funciona?",
         resposta: "Cada semana acesa conta. Com 4 semanas seguidas, a figurinha é tua.",
@@ -109,7 +109,7 @@ export const FALAS: Fala[] = [
   },
 ];
 
-function formaDoPronome(pronomes: string): Forma {
+export function formaDoPronome(pronomes: string): Forma {
   if (pronomes.startsWith("ela")) return 0;
   if (pronomes.startsWith("ele")) return 1;
   return 2;

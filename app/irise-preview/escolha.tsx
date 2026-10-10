@@ -17,8 +17,8 @@ import Svg, { Defs, RadialGradient, Rect, Stop } from "react-native-svg";
 
 import { Aurora } from "@/components/Aurora";
 import { Glass } from "@/components/Glass";
+import { AnelArcoIris } from "@/components/irise/Irise";
 import { Busto } from "@/components/irise-personagem/Busto";
-import { IriseAvatar } from "@/components/irise-personagem/IriseAvatar";
 import { useIrisePersonagens } from "@/hooks/useIrisePersonagens";
 import { useScreenInsets } from "@/hooks/useScreenInsets";
 import { useProfile, useSetIrisePersonagem } from "@/hooks/useProfile";
@@ -26,6 +26,7 @@ import { STATS, type Forma } from "@/lib/irisePersonagens";
 import { colors, mark } from "@/theme/tokens";
 
 const HERO = 250; // protótipo aprovado 10/10/2026: busto grande pra ver rosto, cabelo e roupa
+const ANEL = 8; // espessura do anel arco-íris em volta do busto
 const ESPACAMENTO = 168; // distância entre o centro de cada personagem no carrossel (mesmo valor do protótipo)
 const DURACAO_CARROSSEL = 500;
 const CURVA_CARROSSEL = Easing.bezier(0.2, 0.7, 0.2, 1);
@@ -56,11 +57,7 @@ export default function IrisePreviewEscolha() {
   const { data: profile } = useProfile();
   const { data: todos = [] } = useIrisePersonagens();
   // Personagem desativado não deve entrar como opção nova no carrossel — mas quem já tinha
-  // escolhido um continua vendo o seu (não "perde" o personagem de repente).
-  // Nota: hoje a RLS de `irise_personagens` já só devolve os ativos pra leitura comum (`using
-  // (ativo)`), então na prática `todos` nunca chega a trazer um inativo — este filtro é a regra
-  // certa se isso mudar, mas sozinho não resolve quem JÁ tem um personagem inativo escolhido: esse
-  // caso seguiria sem aparecer em lugar nenhum do app (seção E da revisão, sinalizado à parte).
+  // escolhido um continua vendo o seu (a RLS devolve esse inativo, migration 73).
   const irises = useMemo(
     () => todos.filter((p) => p.ativo || p.n === profile?.irise_personagem),
     [todos, profile?.irise_personagem],
@@ -175,13 +172,13 @@ export default function IrisePreviewEscolha() {
 
         <View
           {...arraste.panHandlers}
-          style={{ height: HERO * 1.24 + 16, marginTop: 6 }}
+          style={{ height: HERO + 16, marginTop: 6 }}
           className="items-center justify-end"
         >
           <Animated.View
             pointerEvents="none"
             style={[
-              { position: "absolute", width: BRILHO, height: BRILHO, bottom: HERO / 2 - BRILHO / 2 + 8 },
+              { position: "absolute", width: BRILHO, height: BRILHO, bottom: HERO / 2 - BRILHO / 2 },
               estiloBrilho,
             ]}
           >
@@ -343,13 +340,17 @@ function CarrosselAvatar({
     const off = distanciaCircular(i - indiceSV.get(), total);
     const a = Math.min(Math.abs(off), 2);
     return {
-      opacity: interpolate(a, [0, 1, 2], [1, 0.5, 0], Extrapolation.CLAMP),
+      opacity: interpolate(a, [0, 1, 2], [1, 0.45, 0], Extrapolation.CLAMP),
       transform: [
         { translateX: off * ESPACAMENTO },
         { scale: interpolate(a, [0, 1], [1, 0.5], Extrapolation.CLAMP) },
       ],
       zIndex: Math.round(10 - a),
     };
+  });
+  const estiloCinza = useAnimatedStyle(() => {
+    const a = Math.min(Math.abs(distanciaCircular(i - indiceSV.get(), total)), 1);
+    return { opacity: a };
   });
   return (
     <Animated.View
@@ -361,14 +362,41 @@ function CarrosselAvatar({
           bottom: 0,
           marginLeft: -HERO / 2,
           width: HERO,
-          height: HERO * 1.24,
+          height: HERO,
+          borderRadius: HERO / 2,
           transformOrigin: "50% 100%",
         },
         estilo,
       ]}
     >
-      <Pressable onPress={onPress} disabled={!tocavel} style={{ width: "100%", height: "100%" }}>
-        <IriseAvatar personagem={personagem} size={HERO} />
+      <Pressable onPress={onPress} disabled={!tocavel} style={{ width: HERO, height: HERO }}>
+        <AnelArcoIris size={HERO} />
+        <View style={{ position: "absolute", top: ANEL, left: ANEL }}>
+          <Busto personagem={personagem} size={HERO - ANEL * 2} />
+        </View>
+        {/* Vizinho em escala de cinza: a mesma imagem sem cor por cima, que some ao chegar no centro. */}
+        <Animated.View
+          pointerEvents="none"
+          style={[{ position: "absolute", top: 0, left: 0, width: HERO, height: HERO }, estiloCinza]}
+        >
+          <View style={{ filter: [{ grayscale: 1 }] }}>
+            <AnelArcoIris size={HERO} />
+            <View style={{ position: "absolute", top: ANEL, left: ANEL }}>
+              <Busto personagem={personagem} size={HERO - ANEL * 2} />
+            </View>
+          </View>
+          <View
+            style={{
+              position: "absolute",
+              top: 0,
+              left: 0,
+              width: HERO,
+              height: HERO,
+              borderRadius: HERO / 2,
+              backgroundColor: "rgba(241,245,250,0.35)",
+            }}
+          />
+        </Animated.View>
       </Pressable>
     </Animated.View>
   );
