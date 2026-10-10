@@ -200,19 +200,7 @@ export default function IrisePreviewEscolha() {
 
         <View className="flex-row justify-center gap-2 py-3">
           {IRISES.map((p, i) => (
-            <Pressable key={p.n} onPress={() => setIndice(i)} hitSlop={4}>
-              <View
-                style={{
-                  borderRadius: 18,
-                  borderWidth: i === indice ? 2 : 0,
-                  borderColor: colors.turquoiseInk,
-                  opacity: i === indice ? 1 : 0.6,
-                  transform: [{ scale: i === indice ? 1.12 : 1 }],
-                }}
-              >
-                <Busto personagem={p.n} size={32} />
-              </View>
-            </Pressable>
+            <Miniatura key={p.n} personagem={p.n} selecionada={i === indice} onPress={() => setIndice(i)} />
           ))}
         </View>
 
@@ -280,5 +268,29 @@ export default function IrisePreviewEscolha() {
         </Glass>
       </View>
     </>
+  );
+}
+
+/** Miniatura da fileira: anel, opacidade e escala animam ao trocar de selecionada, em vez de pular. */
+function Miniatura({
+  personagem,
+  selecionada,
+  onPress,
+}: {
+  personagem: number;
+  selecionada: boolean;
+  onPress: () => void;
+}) {
+  const estilo = useAnimatedStyle(() => ({
+    borderWidth: withTiming(selecionada ? 2 : 0, { duration: 220 }),
+    opacity: withTiming(selecionada ? 1 : 0.6, { duration: 220 }),
+    transform: [{ scale: withTiming(selecionada ? 1.12 : 1, { duration: 220 }) }],
+  }));
+  return (
+    <Pressable onPress={onPress} hitSlop={4}>
+      <Animated.View style={[{ borderRadius: 18, borderColor: colors.turquoiseInk }, estilo]}>
+        <Busto personagem={personagem} size={32} />
+      </Animated.View>
+    </Pressable>
   );
 }
