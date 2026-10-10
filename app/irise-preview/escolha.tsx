@@ -218,7 +218,7 @@ export default function IrisePreviewEscolha() {
           </Pressable>
         </View>
 
-        <View className="flex-row justify-center gap-2 py-3">
+        <View className="flex-row justify-center gap-1 py-3">
           {irises.map((p, i) => (
             <Miniatura key={p.n} personagem={p.n} selecionada={i === indiceSeguro} onPress={() => irPara(i)} />
           ))}
@@ -227,24 +227,22 @@ export default function IrisePreviewEscolha() {
         <Glass
           tint="strong"
           style={{
-            borderTopLeftRadius: 38,
-            borderTopRightRadius: 38,
+            marginTop: "auto",
+            marginHorizontal: 12,
+            marginBottom: Math.max(12, insets.paddingBottom),
+            borderRadius: 38,
             paddingHorizontal: 22,
             paddingTop: 18,
-            paddingBottom: Math.max(16, insets.paddingBottom),
-            flex: 1,
-            justifyContent: "space-between",
+            paddingBottom: 18,
           }}
         >
           <Animated.View key={atual.n} entering={FadeIn.duration(220)}>
             <Text className="font-display text-[34px] text-ink">{atual.nome}</Text>
-            <View className="mt-1 flex-row flex-wrap gap-2">
-              <View className="rounded-full px-3 py-1" style={{ backgroundColor: colors.yellow }}>
+            <View className="mt-1 flex-row items-center justify-between">
+              <View className="rounded-full bg-subtle px-3 py-1">
                 <Text className="font-body-bold text-[11px] uppercase text-ink">{atual.pronomes}</Text>
               </View>
-              <View className="rounded-full bg-subtle px-3 py-1">
-                <Text className="font-body-bold text-[11px] uppercase text-yellowInk">{atual.classe}</Text>
-              </View>
+              <Text className="font-body-bold text-[11px] uppercase text-yellowInk">{atual.classe}</Text>
             </View>
             <Text className="mt-3 font-body text-[13.5px] leading-[19px] text-muted">{atual.bio}</Text>
 
@@ -401,17 +399,23 @@ function Miniatura({
   const estilo = useAnimatedStyle(() => ({
     transform: [{ scale: withTiming(selecionada ? 1.12 : 1, { duration: 220 }) }],
   }));
+  // O anel fica por fora (absoluto), sem crescer a caixa do item: senão as 9 miniaturas não cabem
+  // nos 390 pt de largura da tela.
+  const folga = (MINI_ANEL - MINI) / 2;
   return (
     <Pressable onPress={onPress} hitSlop={4}>
-      <Animated.View
-        style={[{ width: MINI_ANEL, height: MINI_ANEL, alignItems: "center", justifyContent: "center" }, estilo]}
-      >
+      <Animated.View style={[{ width: MINI, height: MINI }, estilo]}>
         {selecionada ? (
-          <Image source={ANEL_MINI} style={{ position: "absolute", width: MINI_ANEL, height: MINI_ANEL }} />
+          <Image
+            source={ANEL_MINI}
+            style={{ position: "absolute", left: -folga, top: -folga, width: MINI_ANEL, height: MINI_ANEL }}
+          />
         ) : (
           <View
             style={{
               position: "absolute",
+              left: -folga,
+              top: -folga,
               width: MINI_ANEL,
               height: MINI_ANEL,
               borderRadius: MINI_ANEL / 2,
