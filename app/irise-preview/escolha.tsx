@@ -218,7 +218,7 @@ export default function IrisePreviewEscolha() {
           </Pressable>
         </View>
 
-        <View className="flex-row justify-center gap-1 py-3">
+        <View className="flex-row justify-center gap-1 py-3" style={{ overflow: "visible" }}>
           {irises.map((p, i) => (
             <Miniatura key={p.n} personagem={p.n} selecionada={i === indiceSeguro} onPress={() => irPara(i)} />
           ))}
@@ -229,7 +229,7 @@ export default function IrisePreviewEscolha() {
           style={{
             marginTop: "auto",
             marginHorizontal: 12,
-            marginBottom: Math.max(12, insets.paddingBottom),
+            marginBottom: 12 + insets.paddingBottom,
             borderRadius: 38,
             paddingHorizontal: 22,
             paddingTop: 18,
