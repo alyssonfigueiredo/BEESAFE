@@ -6,10 +6,16 @@ import { useScreenInsets } from "@/hooks/useScreenInsets";
 import { Aurora } from "@/components/Aurora";
 import { Chip } from "@/components/Chip";
 import { QueroIrChip } from "@/components/QueroIr";
+import { IriseSheet } from "@/components/irise/Irise";
+import { IrisePilula } from "@/components/irise-personagem/IrisePilula";
 import { PlaceCard } from "@/components/PlaceCard";
 import { SearchField } from "@/components/SearchField";
 import { Segmented } from "@/components/Segmented";
+import { useAlgumNudgeVisivel } from "@/hooks/useDiscovery";
+import { useAppConfig } from "@/hooks/useGamification";
+import { useIrisePersonagens } from "@/hooks/useIrisePersonagens";
 import { useNearPlaces, usePlaceCount, usePlaces, useSearchPlaces } from "@/hooks/usePlaces";
+import { useProfile } from "@/hooks/useProfile";
 import { distanceMeters } from "@/lib/geo";
 import { useCity } from "@/providers/CityProvider";
 import { PLACE_CATEGORIES, type PlaceCategory } from "@/theme/domain";
@@ -44,6 +50,16 @@ export default function LugaresScreen() {
   // lugar por ele faria a violência parecer atributo do bar, e puniria quem só está perto.
   // O alerta aparece como contexto no cartão e como área no Mapa, que é onde ele é verdadeiro.
   const [recorte, setRecorte] = useState<"tudo" | "avaliados">("tudo");
+
+  // Irise: mesma pílula da Início, aqui sempre visível (não depende de rolagem) — some só quando
+  // o "Passou por aqui?" estiver em cena.
+  const { data: cfg } = useAppConfig();
+  const { data: profile } = useProfile();
+  const { data: irises = [] } = useIrisePersonagens();
+  const personagem = cfg?.irise_ativa ? (profile?.irise_personagem ?? null) : null;
+  const irise = personagem ? irises.find((p) => p.n === personagem) : null;
+  const nudgeVisivel = useAlgumNudgeVisivel();
+  const [chatAberta, setChatAberta] = useState(false);
 
   // Categorias na ordem do domínio, só as que existem nesta cidade, com a contagem.
   const avaliados = useMemo(() => places.filter((p) => p.rating_count > 0).length, [places]);
@@ -93,13 +109,16 @@ export default function LugaresScreen() {
     );
   }
 
+  // A pílula fica por cima do fim da lista — sobra de 72pt pra não cobrir o último item.
+  const listaInsets = { ...insets, paddingBottom: insets.paddingBottom + (irise ? 72 : 0) };
+
   return (
     <View className="flex-1">
       <Aurora />
       <FlatList
         className="flex-1"
         contentContainerClassName="gap-3 px-4"
-        contentContainerStyle={insets}
+        contentContainerStyle={listaInsets}
         data={lista}
         keyExtractor={(item) => item.place.id}
         keyboardShouldPersistTaps="handled"
@@ -169,6 +188,25 @@ export default function LugaresScreen() {
           </Link>
         }
       />
+      {irise && (
+        <IrisePilula
+          personagem={irise.n}
+          nome={irise.nome}
+          visivel={!nudgeVisivel}
+          bottom={insets.paddingBottom}
+          onPress={() => setChatAberta(true)}
+        />
+      )}
+      {irise && (
+        <IriseSheet
+          visible={chatAberta}
+          onClose={() => setChatAberta(false)}
+          cityId={city?.id}
+          cityName={city?.name}
+          userLocation={userLocation}
+          personagem={irise.n}
+        />
+      )}
     </View>
   );
 }

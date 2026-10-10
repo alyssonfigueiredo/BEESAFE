@@ -172,3 +172,21 @@ export function marcarMostradoNaSessao() {
 export function useMostradoNaSessao() {
   return useSyncExternalStore(assinar, () => mostradoNaSessao);
 }
+
+// "Passou por aqui?" em cena: a pílula do irise soma no mesmo canto e não pode ficar escondida
+// atrás dele. Mesmo padrão do `useFolhaAberta` acima — quem o declara avisa quando some sozinho.
+let nudgesVisiveis = 0;
+export function useNudgeVisivel(visivel: boolean) {
+  useEffect(() => {
+    if (!visivel) return;
+    nudgesVisiveis++;
+    avisar();
+    return () => {
+      nudgesVisiveis--;
+      avisar();
+    };
+  }, [visivel]);
+}
+export function useAlgumNudgeVisivel() {
+  return useSyncExternalStore(assinar, () => nudgesVisiveis > 0);
+}

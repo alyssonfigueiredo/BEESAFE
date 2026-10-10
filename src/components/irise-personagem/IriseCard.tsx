@@ -1,11 +1,14 @@
 import { router } from "expo-router";
+import { useState } from "react";
 import { Pressable, Text, View } from "react-native";
 
 import { IriseAvatar } from "@/components/irise-personagem/IriseAvatar";
+import { IriseSheet } from "@/components/irise/Irise";
 import { useForma } from "@/hooks/useGamification";
 import { useIrisePersonagens } from "@/hooks/useIrisePersonagens";
 import { useProfile } from "@/hooks/useProfile";
 import { STATS } from "@/lib/irisePersonagens";
+import { useCity } from "@/providers/CityProvider";
 import { colors, shadow } from "@/theme/tokens";
 
 /**
@@ -16,6 +19,8 @@ export function IriseCard() {
   const { data: profile } = useProfile();
   const { data: irises = [] } = useIrisePersonagens();
   const forma = useForma();
+  const { city, userLocation } = useCity();
+  const [chatAberta, setChatAberta] = useState(false);
   const atual = irises.find((p) => p.n === profile?.irise_personagem);
 
   function trocar() {
@@ -66,6 +71,12 @@ export function IriseCard() {
         <Text className="mt-1.5 font-display text-[28px] text-ink">{atual.nome.toUpperCase()}</Text>
         <Text className="mt-1 font-body text-[12.5px] text-dim">{atual.pronomes}</Text>
       </View>
+      <Pressable
+        onPress={() => setChatAberta(true)}
+        className="mt-3 h-9 flex-row items-center justify-center self-start rounded-full bg-turquoise px-4 active:opacity-80"
+      >
+        <Text className="font-body-bold text-sm text-night">Conversar com {atual.nome}</Text>
+      </Pressable>
       <View className="mt-3.5 flex-row flex-wrap gap-x-5 gap-y-2.5">
         {STATS.map((s, i) => (
           <View key={s.key} style={{ width: "44%" }}>
@@ -87,6 +98,14 @@ export function IriseCard() {
       <Pressable onPress={trocar} className="mt-4 self-start rounded-full bg-subtle px-4 py-2.5 active:opacity-70">
         <Text className="font-body-bold text-[13px] text-ink">Trocar irise</Text>
       </Pressable>
+      <IriseSheet
+        visible={chatAberta}
+        onClose={() => setChatAberta(false)}
+        cityId={city?.id}
+        cityName={city?.name}
+        userLocation={userLocation}
+        personagem={atual.n}
+      />
     </View>
   );
 }

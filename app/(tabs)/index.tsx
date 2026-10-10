@@ -20,6 +20,7 @@ import { RainbowLine } from "@/components/Rainbow";
 import { SearchField } from "@/components/SearchField";
 import { StatCard } from "@/components/StatCard";
 import { TourTarget } from "@/components/Tour";
+import { useAlgumNudgeVisivel } from "@/hooks/useDiscovery";
 import { useCityStats } from "@/hooks/useCityStats";
 import { useAppConfig, useForma, useGamification, quaseLa } from "@/hooks/useGamification";
 import { useIrisePersonagens } from "@/hooks/useIrisePersonagens";
@@ -167,7 +168,8 @@ export default function HomeScreen() {
     places.some((p) => p.category === c),
   );
 
-  const pilulaVisivel = !!irise && passouDoCard;
+  const nudgeVisivel = useAlgumNudgeVisivel();
+  const pilulaVisivel = !!irise && passouDoCard && !nudgeVisivel;
 
   return (
     <View className="flex-1">

@@ -31,6 +31,7 @@ import {
   useDescobertaHoje,
   useDiscoverySlate,
   useMostradoNaSessao,
+  useNudgeVisivel,
   useRelatoNaSessao,
 } from "@/hooks/useDiscovery";
 import { useGamification, useRewardOpen } from "@/hooks/useGamification";
@@ -172,10 +173,13 @@ export function DiscoveryNudge() {
     return () => clearTimeout(t);
   }, [mostrandoAceso]);
 
-  if (!cartao || !lugar) return null;
   const visivel =
-    livre && (cartao.fase === "pergunta" || cartao.fase === "tchau" || mostrandoAceso);
-  if (!visivel) return null;
+    !!cartao &&
+    !!lugar &&
+    livre &&
+    (cartao.fase === "pergunta" || cartao.fase === "tchau" || mostrandoAceso);
+  useNudgeVisivel(visivel);
+  if (!cartao || !lugar || !visivel) return null;
 
   const slot = cartao.slot + 1;
   const fechar = () => {
