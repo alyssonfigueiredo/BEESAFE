@@ -1,7 +1,7 @@
 import { router, Stack, useLocalSearchParams } from "expo-router";
 import { ChevronLeft, ChevronRight, X } from "lucide-react-native";
 import { useEffect, useMemo, useState } from "react";
-import { PanResponder, Pressable, Text, View } from "react-native";
+import { Image, PanResponder, Pressable, Text, View } from "react-native";
 import Animated, {
   Easing,
   Extrapolation,
@@ -17,8 +17,8 @@ import Svg, { Defs, RadialGradient, Rect, Stop } from "react-native-svg";
 
 import { Aurora } from "@/components/Aurora";
 import { Glass } from "@/components/Glass";
-import { AnelArcoIris } from "@/components/irise/Irise";
 import { Busto } from "@/components/irise-personagem/Busto";
+import { IriseAvatar } from "@/components/irise-personagem/IriseAvatar";
 import { useIrisePersonagens } from "@/hooks/useIrisePersonagens";
 import { useScreenInsets } from "@/hooks/useScreenInsets";
 import { useProfile, useSetIrisePersonagem } from "@/hooks/useProfile";
@@ -26,7 +26,8 @@ import { STATS, type Forma } from "@/lib/irisePersonagens";
 import { colors, mark } from "@/theme/tokens";
 
 const HERO = 250; // protótipo aprovado 10/10/2026: busto grande pra ver rosto, cabelo e roupa
-const ANEL = 8; // espessura do anel arco-íris em volta do busto
+const HERO_ALTURA = HERO * 1.3; // área 250×325: cabeça passa por cima do anel
+const ANEL_MINI = require("../../assets/irise-personagens/anel-miniatura.png");
 const ESPACAMENTO = 168; // distância entre o centro de cada personagem no carrossel (mesmo valor do protótipo)
 const DURACAO_CARROSSEL = 500;
 const CURVA_CARROSSEL = Easing.bezier(0.2, 0.7, 0.2, 1);
@@ -172,7 +173,7 @@ export default function IrisePreviewEscolha() {
 
         <View
           {...arraste.panHandlers}
-          style={{ height: HERO + 16, marginTop: 6 }}
+          style={{ height: HERO_ALTURA + 16, marginTop: 6 }}
           className="items-center justify-end"
         >
           <Animated.View
@@ -362,28 +363,21 @@ function CarrosselAvatar({
           bottom: 0,
           marginLeft: -HERO / 2,
           width: HERO,
-          height: HERO,
-          borderRadius: HERO / 2,
+          height: HERO_ALTURA,
           transformOrigin: "50% 100%",
         },
         estilo,
       ]}
     >
-      <Pressable onPress={onPress} disabled={!tocavel} style={{ width: HERO, height: HERO }}>
-        <AnelArcoIris size={HERO} />
-        <View style={{ position: "absolute", top: ANEL, left: ANEL }}>
-          <Busto personagem={personagem} size={HERO - ANEL * 2} />
-        </View>
+      <Pressable onPress={onPress} disabled={!tocavel} style={{ width: HERO, height: HERO_ALTURA }}>
+        <IriseAvatar personagem={personagem} size={HERO} />
         {/* Vizinho em escala de cinza: a mesma imagem sem cor por cima, que some ao chegar no centro. */}
         <Animated.View
           pointerEvents="none"
-          style={[{ position: "absolute", top: 0, left: 0, width: HERO, height: HERO }, estiloCinza]}
+          style={[{ position: "absolute", top: 0, left: 0, width: HERO, height: HERO_ALTURA }, estiloCinza]}
         >
           <View style={{ filter: [{ grayscale: 1 }] }}>
-            <AnelArcoIris size={HERO} />
-            <View style={{ position: "absolute", top: ANEL, left: ANEL }}>
-              <Busto personagem={personagem} size={HERO - ANEL * 2} />
-            </View>
+            <IriseAvatar personagem={personagem} size={HERO} />
           </View>
           <View
             style={{
@@ -391,8 +385,7 @@ function CarrosselAvatar({
               top: 0,
               left: 0,
               width: HERO,
-              height: HERO,
-              borderRadius: HERO / 2,
+              height: HERO_ALTURA,
               backgroundColor: "rgba(241,245,250,0.35)",
             }}
           />
@@ -402,7 +395,11 @@ function CarrosselAvatar({
   );
 }
 
-/** Miniatura da fileira: anel, opacidade e escala animam ao trocar de selecionada, em vez de pular. */
+const MINI = 36;
+const MINI_ANEL = MINI + 6; // anel de 3 pt de espessura, por fora do busto
+
+/** Miniatura da fileira: anel (arco-íris na selecionada, branco nas outras) e escala animam ao
+ * trocar de selecionada, em vez de pular. Opacidade não muda. */
 function Miniatura({
   personagem,
   selecionada,
@@ -413,14 +410,28 @@ function Miniatura({
   onPress: () => void;
 }) {
   const estilo = useAnimatedStyle(() => ({
-    borderWidth: withTiming(selecionada ? 2 : 0, { duration: 220 }),
-    opacity: withTiming(selecionada ? 1 : 0.6, { duration: 220 }),
     transform: [{ scale: withTiming(selecionada ? 1.12 : 1, { duration: 220 }) }],
   }));
   return (
     <Pressable onPress={onPress} hitSlop={4}>
-      <Animated.View style={[{ borderRadius: 18, borderColor: colors.turquoiseInk }, estilo]}>
-        <Busto personagem={personagem} size={32} />
+      <Animated.View
+        style={[{ width: MINI_ANEL, height: MINI_ANEL, alignItems: "center", justifyContent: "center" }, estilo]}
+      >
+        {selecionada ? (
+          <Image source={ANEL_MINI} style={{ position: "absolute", width: MINI_ANEL, height: MINI_ANEL }} />
+        ) : (
+          <View
+            style={{
+              position: "absolute",
+              width: MINI_ANEL,
+              height: MINI_ANEL,
+              borderRadius: MINI_ANEL / 2,
+              borderWidth: 3,
+              borderColor: "#FFFFFF",
+            }}
+          />
+        )}
+        <Busto personagem={personagem} size={MINI} />
       </Animated.View>
     </Pressable>
   );
