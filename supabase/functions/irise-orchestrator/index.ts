@@ -193,7 +193,13 @@ Deno.serve(async (req) => {
   const user = await userFromRequest(req);
   if (!user) return json(401, { error: "Entre na conta para usar a Irise." });
 
-  let body: { texto?: string; cidade?: string; cityId?: number; perto?: { lat: number; lng: number } | null };
+  let body: {
+    texto?: string;
+    cidade?: string;
+    cityId?: number;
+    perto?: { lat: number; lng: number } | null;
+    personagem?: number | null;
+  };
   try {
     body = await req.json();
   } catch {
@@ -205,10 +211,25 @@ Deno.serve(async (req) => {
   const db = adminClient();
 
   try {
-    // Texto extra de voz/personalidade, editável no admin sem precisar de deploy (migration 58).
+    // Texto extra de voz/personalidade, editável no admin sem precisar de deploy (migration 58),
+    // mais o texto específico do personagem escolhido no chat, se houver (migration 71): os dois
+    // somam ao texto-base, nessa ordem.
     const { data: vozRow } = await db.from("app_settings").select("value").eq("key", "irise_voz_extra").maybeSingle();
     const vozExtra = typeof vozRow?.value === "string" ? vozRow.value.trim() : "";
-    const systemPrompt = vozExtra ? `${SYSTEM_PROMPT}\n\n${vozExtra}` : SYSTEM_PROMPT;
+
+    let vozPersonagem = "";
+    if (body.personagem) {
+      const { data: personagensRow } = await db
+        .from("app_settings")
+        .select("value")
+        .eq("key", "irise_voz_personagens")
+        .maybeSingle();
+      const mapa = (personagensRow?.value ?? {}) as Record<string, string>;
+      const v = mapa[String(body.personagem)];
+      vozPersonagem = typeof v === "string" ? v.trim() : "";
+    }
+
+    const systemPrompt = [SYSTEM_PROMPT, vozExtra, vozPersonagem].filter(Boolean).join("\n\n");
 
     const messages: GroqMessage[] = [
       { role: "system", content: systemPrompt },

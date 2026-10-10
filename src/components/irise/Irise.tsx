@@ -414,6 +414,7 @@ export function IriseSheet({
           cidade: cityName ?? "sua cidade",
           cityId,
           perto: userLocation,
+          personagem,
         });
         if (message) addBubble(message);
         if (places) mostrarOuVazio(places, false);

@@ -1659,6 +1659,20 @@ async function viewConfig(ctx) {
 }
 
 // ================================================================ 13. Chaves de API
+// Mesmos personagens de src/lib/irisePersonagens.ts (n 10 a 18) — nomes só pra identificar o campo
+// de voz aqui no painel, não precisam ficar em sincronia byte a byte com o app.
+const IRISE_PERSONAGENS = [
+  { n: 10, nome: "Kai" },
+  { n: 11, nome: "Léo" },
+  { n: 12, nome: "Theo" },
+  { n: 13, nome: "Bento" },
+  { n: 14, nome: "Dante" },
+  { n: 15, nome: "Rafa" },
+  { n: 16, nome: "Yara" },
+  { n: 17, nome: "Dandara" },
+  { n: 18, nome: "Luna" },
+];
+
 const API_KEYS = [
   { name: "GROQ_API_KEY", label: "Groq", hint: "Conversa e decisão da Irise. console.groq.com → API Keys (grátis)." },
   { name: "GEMINI_API_KEY", label: "Gemini", hint: "Ranqueia e explica os lugares achados. aistudio.google.com (grátis)." },
@@ -1673,6 +1687,9 @@ async function viewChaves(ctx) {
     const cfg = Object.fromEntries((status || []).map((s) => [s.name, s.configurado]));
     const iriseAtiva = !!(settings || {}).irise_ativa;
     const vozExtra = typeof (settings || {}).irise_voz_extra === "string" ? (settings || {}).irise_voz_extra : "";
+    const vozPersonagens = (settings || {}).irise_voz_personagens && typeof (settings || {}).irise_voz_personagens === "object"
+      ? (settings || {}).irise_voz_personagens
+      : {};
     box.innerHTML = `
       <form class="card form" id="iriseForm" style="margin-bottom:14px">
         <h2>Botão da Irise no app</h2>
@@ -1681,9 +1698,19 @@ async function viewChaves(ctx) {
       </form>
       <form class="card form" id="vozForm" style="margin-bottom:14px">
         <h2>Voz da Irise</h2>
-        <p class="small muted">Texto extra de tom/personalidade, colado depois das regras fixas (nunca inventar lugar, nunca dizer "seguro" etc. continuam protegidas no código). Salva na hora, sem precisar publicar nada no Supabase.</p>
+        <p class="small muted">Texto extra de tom/personalidade, colado depois das regras fixas (nunca inventar lugar, nunca dizer "seguro" etc. continuam protegidas no código) e antes do texto do personagem escolhido, aqui embaixo. Vale pra conversa de todo mundo, mesmo quem está sem personagem.</p>
         <textarea class="input" id="vozExtra" rows="4" placeholder="Ex.: usa mais gíria tal, evita tal expressão…">${esc(vozExtra)}</textarea>
         <div class="foot"><button class="btn" type="submit">Salvar voz</button></div>
+      </form>
+      <form class="card form" id="vozPersonagemForm" style="margin-bottom:14px">
+        <h2>Voz de cada personagem</h2>
+        <p class="small muted">Texto extra só desse personagem, somado depois da voz geral acima quando a pessoa escolhe ele no chat. Em branco, o personagem fala só com o texto-base + a voz geral.</p>
+        <label class="small muted" for="vpSelect">Personagem</label>
+        <select class="input" id="vpSelect" style="margin-bottom:10px">
+          ${IRISE_PERSONAGENS.map((p) => `<option value="${p.n}">${esc(p.nome)}</option>`).join("")}
+        </select>
+        <textarea class="input" id="vpTexto" rows="4" placeholder="Ex.: fala mais pausado, gosta de citar um refrão…"></textarea>
+        <div class="foot"><button class="btn" type="submit">Salvar voz do personagem</button></div>
       </form>` + API_KEYS.map((k) => `
       <form class="card form" data-key="${k.name}" style="margin-bottom:14px">
         <h2>${esc(k.label)} <span class="small ${cfg[k.name] ? "ok" : "dim"}">${cfg[k.name] ? "· configurada" : "· não configurada"}</span></h2>
@@ -1710,6 +1737,20 @@ async function viewChaves(ctx) {
       ev.preventDefault();
       busy($("button", ev.currentTarget), async () => {
         await rpc("admin_setting_set", { p_key: "irise_voz_extra", p_value: $("#vozExtra", box).value.trim() });
+        toast("Salvo");
+      });
+    });
+    const vpSelect = $("#vpSelect", box), vpTexto = $("#vpTexto", box);
+    const vpCarregar = () => { vpTexto.value = vozPersonagens[vpSelect.value] || ""; };
+    vpSelect.addEventListener("change", vpCarregar);
+    vpCarregar();
+    $("#vozPersonagemForm", box).addEventListener("submit", (ev) => {
+      ev.preventDefault();
+      busy($("button", ev.currentTarget), async () => {
+        const n = Number(vpSelect.value);
+        const texto = vpTexto.value.trim();
+        await rpc("admin_personagem_voz_set", { p_personagem: n, p_voz: texto });
+        vozPersonagens[String(n)] = texto;
         toast("Salvo");
       });
     });
