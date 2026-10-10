@@ -13,8 +13,9 @@ import { corpoSrc, FALAS_APRESENTACAO, flexionar, type Forma } from "@/lib/irise
 import { colors } from "@/theme/tokens";
 
 /**
- * Prévia do personagem do irise — apresentação. Três falas, depois "BORA!" volta pro app de
- * verdade. Protótipo: nada grava (nem o personagem escolhido, nem o nome/pronome).
+ * Apresentação do irise: três falas, depois "BORA!" volta pro Início. Só é alcançada na primeira
+ * vez que a pessoa escolhe um irise pelo Perfil (`escolha.tsx` já salvou antes de mandar pra cá,
+ * com `router.replace` — fechar ou "BORA!" não volta pra tela de escolha).
  */
 export default function IrisePreviewApresentacao() {
   const insets = useScreenInsets({ tabs: false });

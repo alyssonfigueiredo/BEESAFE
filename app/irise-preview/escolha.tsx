@@ -21,7 +21,7 @@ import { Busto } from "@/components/irise-personagem/Busto";
 import { IriseAvatar } from "@/components/irise-personagem/IriseAvatar";
 import { useIrisePersonagens } from "@/hooks/useIrisePersonagens";
 import { useScreenInsets } from "@/hooks/useScreenInsets";
-import { useSetIrisePersonagem } from "@/hooks/useProfile";
+import { useProfile, useSetIrisePersonagem } from "@/hooks/useProfile";
 import { STATS, type Forma } from "@/lib/irisePersonagens";
 import { colors, mark } from "@/theme/tokens";
 
@@ -43,15 +43,17 @@ function distanciaCircular(off: number, total: number) {
  */
 export default function IrisePreviewEscolha() {
   const insets = useScreenInsets({ tabs: false });
-  const { nome, forma: formaParam, modo, atual: atualParam } = useLocalSearchParams<{
+  const { nome, forma: formaParam, modo, atual: atualParam, primeiraVez } = useLocalSearchParams<{
     nome: string;
     forma: string;
     modo: string;
     atual: string;
+    primeiraVez: string;
   }>();
   const forma = (Number(formaParam ?? 2) || 2) as Forma;
   const doPerfil = modo === "perfil";
   const setPersonagem = useSetIrisePersonagem();
+  const { data: profile } = useProfile();
   const { data: irises = [] } = useIrisePersonagens();
   const [indice, setIndice] = useState(() => {
     const i = irises.findIndex((p) => p.n === Number(atualParam));
@@ -271,7 +273,21 @@ export default function IrisePreviewEscolha() {
             disabled={setPersonagem.isPending}
             onPress={() => {
               if (doPerfil) {
-                setPersonagem.mutate(atual.n, { onSuccess: () => router.back() });
+                setPersonagem.mutate(atual.n, {
+                  onSuccess: () => {
+                    if (primeiraVez) {
+                      // Primeira escolha: mostra a apresentação do irise em vez de só voltar
+                      // calado. `replace` (não `push`) pra fechar/voltar da apresentação já cair
+                      // direto no Perfil, sem passar de novo por esta tela.
+                      router.replace({
+                        pathname: "/irise-preview/apresentacao",
+                        params: { nome: profile?.nickname ?? "", forma: String(forma), irise: String(atual.n) },
+                      });
+                    } else {
+                      router.back();
+                    }
+                  },
+                });
                 return;
               }
               router.push({

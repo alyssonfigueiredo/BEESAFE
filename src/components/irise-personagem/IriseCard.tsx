@@ -2,6 +2,7 @@ import { router } from "expo-router";
 import { Pressable, Text, View } from "react-native";
 
 import { IriseAvatar } from "@/components/irise-personagem/IriseAvatar";
+import { useForma } from "@/hooks/useGamification";
 import { useIrisePersonagens } from "@/hooks/useIrisePersonagens";
 import { useProfile } from "@/hooks/useProfile";
 import { STATS } from "@/lib/irisePersonagens";
@@ -14,12 +15,20 @@ import { colors, shadow } from "@/theme/tokens";
 export function IriseCard() {
   const { data: profile } = useProfile();
   const { data: irises = [] } = useIrisePersonagens();
+  const forma = useForma();
   const atual = irises.find((p) => p.n === profile?.irise_personagem);
 
   function trocar() {
     router.push({
       pathname: "/irise-preview/escolha",
-      params: { modo: "perfil", atual: atual ? String(atual.n) : "1", forma: "2" },
+      params: {
+        modo: "perfil",
+        atual: atual ? String(atual.n) : "1",
+        forma: String(forma),
+        // Primeira escolha (não tinha nenhuma antes): depois de salvar, mostra a apresentação do
+        // irise em vez de só voltar calado pro Perfil.
+        primeiraVez: atual ? "" : "1",
+      },
     });
   }
 
