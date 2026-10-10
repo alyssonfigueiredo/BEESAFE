@@ -821,6 +821,13 @@ quando o repositório passa a trazer `publicado: true`. A aba "Lista, dia a dia"
   escolher a branch de trabalho — o menu vem na branch padrão, que é a antiga. Se o site parar de
   atualizar, olhar primeiro em Actions → Pages se o run está verde e se não há “pages build and
   deployment” rodando junto.
+- **iOS 27 fecha na abertura app sem UIScene (10/10/2026):** crash em
+  `_UIApplicationEvaluateRuntimeIssueForNoSceneLifecycleAdoption`, antes do JS, sem tela de erro. O modelo do
+  Expo 57 cria a janela no AppDelegate; `plugins/withSceneLifecycle.js` passa para um `SceneDelegate` e registra
+  `UIApplicationSceneManifest`. Build local no Mac: `IRISA_LOCAL=1 npx expo prebuild -p ios --clean` uma vez e
+  `IRISA_LOCAL=1 npx expo run:ios --device --configuration Release` (o `IRISA_LOCAL=1` desliga o EAS Update, senão
+  a 2ª abertura roda o JS de produção e não o da branch). Próxima build EAS já leva o plugin; conferir link frio
+  (`irisa://auth/callback` com o app fechado) nela.
 - Overpass devolve 406 sem Content-Type/User-Agent; script já tem 3 mirrors.
 - `st_makevalid` pode gerar GeometryCollection: usar `st_collectionextract(..., 3)`.
 - Bairro é atribuído no insert do relato; após importar bairros, rodar o UPDATE de reprocessamento (supabase/README.md).
