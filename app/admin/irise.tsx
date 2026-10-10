@@ -1,7 +1,7 @@
-import { Stack } from "expo-router";
+import { router, Stack } from "expo-router";
 import * as ImagePicker from "expo-image-picker";
 import { Plus, X } from "lucide-react-native";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   ActivityIndicator,
   Alert,
@@ -63,6 +63,13 @@ export default function AdminIriseScreen() {
   const [editando, setEditando] = useState<IrisePersonagemForm | null>(null);
   const [criando, setCriando] = useState(false);
 
+  useEffect(() => {
+    if (profile && !isAdmin) {
+      if (router.canGoBack()) router.back();
+      else router.replace("/(tabs)/perfil");
+    }
+  }, [profile, isAdmin]);
+
   function abrirNovo() {
     const proximo = personagens.length > 0 ? Math.max(...personagens.map((p) => p.n)) + 1 : 1;
     setCriando(true);
@@ -83,11 +90,7 @@ export default function AdminIriseScreen() {
       />
       <View className="flex-1">
         <Aurora />
-        {!isAdmin ? (
-          <View style={{ paddingTop: insets.paddingTop }} className="px-4">
-            <Text className="font-body text-muted">Área restrita à administração.</Text>
-          </View>
-        ) : (
+        {!isAdmin ? null : (
           <ScrollView className="flex-1" contentContainerClassName="gap-3 px-4" contentContainerStyle={insets}>
             <Pressable
               onPress={abrirNovo}
