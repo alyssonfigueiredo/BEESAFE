@@ -4,13 +4,14 @@ import { useEffect, useMemo, useState } from "react";
 import { PanResponder, Pressable, Text, View } from "react-native";
 import Animated, {
   Easing,
+  Extrapolation,
   FadeIn,
-  FadeOut,
+  interpolate,
   useAnimatedStyle,
   useSharedValue,
   withRepeat,
-  withSpring,
   withTiming,
+  type SharedValue,
 } from "react-native-reanimated";
 import Svg, { Defs, RadialGradient, Rect, Stop } from "react-native-svg";
 
@@ -24,12 +25,20 @@ import { IRISES, STATS, type Forma } from "@/lib/irisePersonagens";
 import { colors, mark } from "@/theme/tokens";
 
 const HERO = 250; // protótipo aprovado 10/10/2026: busto grande pra ver rosto, cabelo e roupa
-const VIZINHO = 120;
-const LIMITE_ARRASTE = 40;
+const ESPACAMENTO = 168; // distância entre o centro de cada personagem no carrossel (mesmo valor do protótipo)
+const DURACAO_CARROSSEL = 500;
+const CURVA_CARROSSEL = Easing.bezier(0.2, 0.7, 0.2, 1);
+
+/** Menor distância circular entre dois índices (ex.: do último pro primeiro é +1, não -8). */
+function distanciaCircular(off: number, total: number) {
+  "worklet";
+  return off - total * Math.round(off / total);
+}
 
 /**
- * Escolha seu irise. Busto grande saindo do círculo com anel arco-íris, brilho arco-íris pulsando
- * atrás, vizinhos em cinza nas laterais. Troca por setas, por arrastar ou pelas miniaturas.
+ * Escolha seu irise. Carrossel de verdade: os 9 personagens ficam sempre montados, cada um numa
+ * posição/escala/opacidade calculada pela distância até o selecionado — ao trocar, todo mundo
+ * desliza e muda de tamanho junto (protótipo aprovado), em vez de só aparecer/sumir no lugar.
  */
 export default function IrisePreviewEscolha() {
   const insets = useScreenInsets({ tabs: false });
@@ -48,35 +57,49 @@ export default function IrisePreviewEscolha() {
   });
 
   const total = IRISES.length;
-  const mover = (d: number) => setIndice((i) => (i + d + total) % total);
   const atual = IRISES[indice];
-  const anterior = IRISES[(indice - 1 + total) % total];
-  const proximo = IRISES[(indice + 1) % total];
 
-  // Acompanha o dedo em tempo real (até uma folga) e volta suave no solta — em vez de só
-  // disparar a troca na hora que passa o limite, sem nada acontecer até lá.
-  const dragX = useSharedValue(0);
-  const FOLGA_ARRASTE = 70;
+  // Posição contínua do carrossel (pode passar de 0/total — o wrap acontece por item, no render).
+  const indiceSV = useSharedValue(indice);
+
+  function mover(d: number) {
+    setIndice((i) => (i + d + total) % total);
+    indiceSV.set(withTiming(indiceSV.get() + d, { duration: DURACAO_CARROSSEL, easing: CURVA_CARROSSEL }));
+  }
+
+  function irPara(i: number) {
+    const delta = distanciaCircular(i - indice, total);
+    setIndice(i);
+    indiceSV.set(withTiming(indiceSV.get() + delta, { duration: DURACAO_CARROSSEL, easing: CURVA_CARROSSEL }));
+  }
+
+  // Arraste: a posição do carrossel segue o dedo 1:1 (sem clamp — é um carrossel de verdade, não
+  // um "puxa e volta"); ao soltar, encaixa no personagem mais próximo.
+  const dragBase = useSharedValue(0);
   const arraste = useMemo(
     () =>
       PanResponder.create({
         onMoveShouldSetPanResponder: (_, g) => Math.abs(g.dx) > 10 && Math.abs(g.dx) > Math.abs(g.dy),
-        onPanResponderMove: (_, g) => {
-          dragX.set(Math.max(-FOLGA_ARRASTE, Math.min(FOLGA_ARRASTE, g.dx)));
+        onPanResponderGrant: () => {
+          dragBase.set(indiceSV.get());
         },
-        onPanResponderRelease: (_, g) => {
-          dragX.set(withSpring(0, { damping: 16, stiffness: 180 }));
-          if (g.dx <= -LIMITE_ARRASTE) mover(1);
-          else if (g.dx >= LIMITE_ARRASTE) mover(-1);
+        onPanResponderMove: (_, g) => {
+          indiceSV.set(dragBase.get() - g.dx / ESPACAMENTO);
+        },
+        onPanResponderRelease: () => {
+          const alvo = Math.round(indiceSV.get());
+          indiceSV.set(withTiming(alvo, { duration: 320, easing: CURVA_CARROSSEL }));
+          setIndice(((alvo % total) + total) % total);
         },
         onPanResponderTerminate: () => {
-          dragX.set(withSpring(0, { damping: 16, stiffness: 180 }));
+          const alvo = Math.round(indiceSV.get());
+          indiceSV.set(withTiming(alvo, { duration: 320, easing: CURVA_CARROSSEL }));
+          setIndice(((alvo % total) + total) % total);
         },
       }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [total],
   );
-  const estiloArraste = useAnimatedStyle(() => ({ transform: [{ translateX: dragX.get() }] }));
 
   const pulso = useSharedValue(0);
   useEffect(() => {
@@ -149,41 +172,25 @@ export default function IrisePreviewEscolha() {
             </Svg>
           </Animated.View>
 
-          <Animated.View
-            pointerEvents="box-none"
-            style={[{ alignItems: "center", justifyContent: "flex-end" }, estiloArraste]}
-          >
-            <Pressable
-              onPress={() => mover(-1)}
-              style={{ position: "absolute", left: -VIZINHO * 0.45, bottom: 30 }}
-            >
-              <Animated.View key={anterior.n} entering={FadeIn.duration(260)} exiting={FadeOut.duration(180)}>
-                <IriseAvatar personagem={anterior.n} size={VIZINHO} cinza />
-              </Animated.View>
-            </Pressable>
-            <Pressable
-              onPress={() => mover(1)}
-              style={{ position: "absolute", right: -VIZINHO * 0.45, bottom: 30 }}
-            >
-              <Animated.View key={proximo.n} entering={FadeIn.duration(260)} exiting={FadeOut.duration(180)}>
-                <IriseAvatar personagem={proximo.n} size={VIZINHO} cinza />
-              </Animated.View>
-            </Pressable>
-
-            <Animated.View
-              key={atual.n}
-              entering={FadeIn.duration(380)}
-              exiting={FadeOut.duration(220)}
-              style={{ marginBottom: 8 }}
-            >
-              <IriseAvatar personagem={atual.n} size={HERO} />
-            </Animated.View>
-          </Animated.View>
+          {IRISES.map((p, i) => {
+            const off = distanciaCircular(i - indice, total);
+            return (
+              <CarrosselAvatar
+                key={p.n}
+                i={i}
+                total={total}
+                personagem={p.n}
+                indiceSV={indiceSV}
+                tocavel={Math.abs(off) === 1}
+                onPress={() => mover(off)}
+              />
+            );
+          })}
 
           <Pressable
             onPress={() => mover(-1)}
             hitSlop={8}
-            className="absolute left-4 z-10 h-[46px] w-[46px] items-center justify-center rounded-full bg-solid active:opacity-80"
+            className="absolute left-4 z-20 h-[46px] w-[46px] items-center justify-center rounded-full bg-solid active:opacity-80"
             style={{ bottom: HERO / 2 - 15, boxShadow: "0 4px 14px rgba(20,24,41,0.14)" }}
           >
             <ChevronLeft size={20} color={colors.ink} />
@@ -191,7 +198,7 @@ export default function IrisePreviewEscolha() {
           <Pressable
             onPress={() => mover(1)}
             hitSlop={8}
-            className="absolute right-4 z-10 h-[46px] w-[46px] items-center justify-center rounded-full bg-solid active:opacity-80"
+            className="absolute right-4 z-20 h-[46px] w-[46px] items-center justify-center rounded-full bg-solid active:opacity-80"
             style={{ bottom: HERO / 2 - 15, boxShadow: "0 4px 14px rgba(20,24,41,0.14)" }}
           >
             <ChevronRight size={20} color={colors.ink} />
@@ -200,7 +207,7 @@ export default function IrisePreviewEscolha() {
 
         <View className="flex-row justify-center gap-2 py-3">
           {IRISES.map((p, i) => (
-            <Miniatura key={p.n} personagem={p.n} selecionada={i === indice} onPress={() => setIndice(i)} />
+            <Miniatura key={p.n} personagem={p.n} selecionada={i === indice} onPress={() => irPara(i)} />
           ))}
         </View>
 
@@ -268,6 +275,62 @@ export default function IrisePreviewEscolha() {
         </Glass>
       </View>
     </>
+  );
+}
+
+/**
+ * Um personagem do carrossel: sempre montado, posição/escala/opacidade calculadas pela distância
+ * até o selecionado (`indiceSV`). O selecionado fica no centro em tamanho cheio; cada vizinho fica
+ * `ESPACAMENTO`px pro lado e na metade do tamanho; dois ou mais de distância, invisível (mas ainda
+ * montado, pra a transição ficar contínua em vez de aparecer do nada).
+ */
+function CarrosselAvatar({
+  i,
+  total,
+  personagem,
+  indiceSV,
+  tocavel,
+  onPress,
+}: {
+  i: number;
+  total: number;
+  personagem: number;
+  indiceSV: SharedValue<number>;
+  tocavel: boolean;
+  onPress: () => void;
+}) {
+  const estilo = useAnimatedStyle(() => {
+    const off = distanciaCircular(i - indiceSV.get(), total);
+    const a = Math.min(Math.abs(off), 2);
+    return {
+      opacity: interpolate(a, [0, 1, 2], [1, 0.5, 0], Extrapolation.CLAMP),
+      transform: [
+        { translateX: off * ESPACAMENTO },
+        { scale: interpolate(a, [0, 1], [1, 0.5], Extrapolation.CLAMP) },
+      ],
+      zIndex: Math.round(10 - a),
+    };
+  });
+  return (
+    <Animated.View
+      pointerEvents={tocavel ? "auto" : "none"}
+      style={[
+        {
+          position: "absolute",
+          left: "50%",
+          bottom: 0,
+          marginLeft: -HERO / 2,
+          width: HERO,
+          height: HERO * 1.24,
+          transformOrigin: "50% 100%",
+        },
+        estilo,
+      ]}
+    >
+      <Pressable onPress={onPress} disabled={!tocavel} style={{ width: "100%", height: "100%" }}>
+        <IriseAvatar personagem={personagem} size={HERO} />
+      </Pressable>
+    </Animated.View>
   );
 }
 
