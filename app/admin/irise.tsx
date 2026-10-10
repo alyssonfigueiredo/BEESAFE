@@ -381,6 +381,10 @@ function EditorModal({
                   <Text className="font-body text-xs text-dim">Enviando…</Text>
                 </View>
               )}
+              <Text className="pt-1 font-body text-xs text-dim">
+                Use PNG ou WebP com fundo transparente, 300×460, cabeça no topo e corte na curva do
+                círculo.
+              </Text>
             </Campo>
           )}
           {criando && (

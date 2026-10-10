@@ -17,9 +17,11 @@ import Svg, { Defs, LinearGradient, Rect, Stop } from "react-native-svg";
 import { PlaceCard } from "@/components/PlaceCard";
 import { Busto } from "@/components/irise-personagem/Busto";
 import { IriseAvatar } from "@/components/irise-personagem/IriseAvatar";
+import { useAppConfig } from "@/hooks/useGamification";
 import { useIriseNear, useIriseOrchestrate, useIriseSuggest, type OrchestratedPlace } from "@/hooks/useIrise";
 import { useIrisePersonagens } from "@/hooks/useIrisePersonagens";
 import { useProfile } from "@/hooks/useProfile";
+import type { Acao } from "@/lib/iriseFalas";
 import type { PlaceCategory } from "@/theme/domain";
 import { colors, shadow } from "@/theme/tokens";
 
@@ -112,11 +114,12 @@ export function IriseInviteCard({
   userLocation?: { lat: number; lng: number } | null;
 }) {
   const [aberta, setAberta] = useState(false);
+  const { data: cfg } = useAppConfig();
   const { data: profile } = useProfile();
   const { data: irises = [] } = useIrisePersonagens();
   const personagem = profile?.irise_personagem ?? null;
   const atual = irises.find((p) => p.n === personagem);
-  if (!personagem || !atual) return null;
+  if (!cfg?.irise_ativa || !personagem || !atual) return null;
 
   return (
     <>
@@ -133,7 +136,7 @@ export function IriseInviteCard({
             Sempre on-line
           </Text>
           <Text className="mt-1.5 font-display text-[19px] leading-[21px] text-ink">
-            CONVERSAR COM {atual.nome.toUpperCase()}
+            Conversar com {atual.nome}
           </Text>
           <Text className="mt-1.5 font-body text-[12.5px] leading-[17px] text-dim">
             Pra desabafar, tirar dúvida ou pensar no que fazer.
@@ -152,8 +155,9 @@ export function IriseInviteCard({
   );
 }
 
-/** Anel em arco-íris (o mesmo gradiente da marca) — botão flutuante e título da folha. */
-function AnelArcoIris({ size = 54 }: { size?: number }) {
+/** Anel em arco-íris (o mesmo gradiente da marca) — botão flutuante, título da folha e o convite
+ * de "escolher um irise" (`IriseNudge`) sem personagem ainda. */
+export function AnelArcoIris({ size = 54 }: { size?: number }) {
   return (
     <Svg width={size} height={size} viewBox="0 0 54 54">
       <Defs>
@@ -226,6 +230,7 @@ export function IriseSheet({
   userLocation,
   personagem,
   abertura,
+  onAcao,
 }: {
   visible: boolean;
   onClose: () => void;
@@ -239,10 +244,13 @@ export function IriseSheet({
     texto: string;
     /** Pose do avatar no cabeçalho enquanto essa abertura está em cena. Sem ela, pose 1. */
     pose?: number;
-    respostas: { t: string; resposta: string; pose?: number }[];
+    respostas: { t: string; resposta: string; pose?: number; acao?: Acao }[];
     /** Lugares pra mostrar junto da mensagem (ex.: a sugestão já vem com os 3 da Início). */
     lugares?: OrchestratedPlace[];
   };
+  /** Chamado 600ms depois de tocar numa resposta com `acao` (menos "sugerir", que busca lugares
+   * sem fechar o chat) — o sheet já fechou sozinho antes de chamar. */
+  onAcao?: (a: Acao) => void;
 }) {
   const { height } = useWindowDimensions();
   const [log, setLog] = useState<LogItem[]>([]);
@@ -410,10 +418,10 @@ export function IriseSheet({
         if (message) addBubble(message);
         if (places) mostrarOuVazio(places, false);
       } catch (err) {
-        // Mensagem técnica à vista de propósito (nada sensível passa por aqui — nunca a chave em
-        // si): sem acesso ao log do Supabase, é o único jeito de saber o que quebrou.
+        // Detalhe técnico só no console — pra quem usa o app, só a mensagem simples.
         const detalhe = err instanceof Error ? err.message : String(err);
-        addBubble(`Não consegui pensar nisso agora — escolhe um dos botões abaixo. ✨\n\n(${detalhe})`);
+        console.warn("Irise orchestrator falhou:", detalhe);
+        addBubble("Não consegui pensar nisso agora. Escolhe um dos botões abaixo. ✨");
         flowIntro();
         return;
       }
@@ -441,6 +449,15 @@ export function IriseSheet({
               addBubble(r.t, true);
               addBubble(r.resposta);
               if (r.pose != null) setPoseAtual(r.pose);
+              if (r.acao === "sugerir") {
+                void buscarPorChip(null, false, "Separei esses pra você:");
+              } else if (r.acao) {
+                const a = r.acao;
+                setTimeout(() => {
+                  onClose();
+                  onAcao?.(a);
+                }, 600);
+              }
             },
           })),
         );
@@ -467,7 +484,7 @@ export function IriseSheet({
               <IriseAvatar personagem={personagem} pose={poseAtual} size={84} />
               <View style={{ flex: 1, minWidth: 0, marginLeft: 14, marginBottom: 8 }}>
                 <Text className="font-display text-[20px] text-ink">
-                  {(irises.find((p) => p.n === personagem)?.nome ?? "Irise").toUpperCase()}
+                  {irises.find((p) => p.n === personagem)?.nome ?? "Irise"}
                 </Text>
                 <Text className="font-body text-[12px] text-dim">
                   {irises.find((p) => p.n === personagem)?.classe}

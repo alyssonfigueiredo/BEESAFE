@@ -135,7 +135,7 @@ export function IriseBalao({
             {Array.from({ length: total }).map((_, k) => (
               <Pressable
                 key={k}
-                hitSlop={6}
+                hitSlop={8}
                 onPress={() => onPular(k)}
                 style={{
                   width: k === indice ? 16 : 5,
@@ -146,10 +146,10 @@ export function IriseBalao({
               />
             ))}
           </View>
-          <Pressable hitSlop={6} onPress={onCta} style={{ marginLeft: 8 }}>
+          <Pressable hitSlop={10} onPress={onCta} style={{ marginLeft: 8 }}>
             <Text style={{ fontFamily: "SpaceGrotesk_700Bold", fontSize: 11, color: "#0A8B7A" }}>{fala.cta}</Text>
           </Pressable>
-          <Pressable hitSlop={8} onPress={onFechar} style={{ marginLeft: 6 }}>
+          <Pressable hitSlop={10} onPress={onFechar} style={{ marginLeft: 6 }}>
             <Text style={{ fontSize: 13, color: "#8E96AE" }}>×</Text>
           </Pressable>
         </View>

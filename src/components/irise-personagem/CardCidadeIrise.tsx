@@ -5,6 +5,7 @@ import Svg, { Defs, RadialGradient, Rect, Stop } from "react-native-svg";
 import { TourTarget } from "@/components/Tour";
 import { IriseAvatar } from "@/components/irise-personagem/IriseAvatar";
 import { IriseBalao, useRodadaFalas } from "@/components/irise-personagem/IriseBalao";
+import { useFotoTrocada } from "@/hooks/useIrisePersonagens";
 import { FALAS, type Fala } from "@/lib/iriseFalas";
 import { avatarCardSrc } from "@/lib/iriseImagensEscuras";
 import { BUNDLED_N } from "@/lib/irisePersonagens";
@@ -43,6 +44,10 @@ export function CardCidadeIrise({
   // Sem fala nenhuma (filtradas fora na Início), não tem o que mostrar no balão — mas o irise
   // continua no card, com a pose padrão (1).
   const pose = falas.length > 0 ? r.fala.pose : 1;
+  // Foto trocada pelo admin: mesmo um dos 9 originais passa a montar o avatar na hora (como um
+  // personagem novo), em vez de ficar preso na versão "avatar-card" embutida e desatualizada.
+  const fotoTrocada = useFotoTrocada(personagem);
+  const usaEmbutido = BUNDLED_N.has(personagem) && !fotoTrocada;
   return (
     <View style={{ marginTop: 10 }}>
       {falas.length > 0 && r.visivel ? (
@@ -109,6 +114,7 @@ export function CardCidadeIrise({
             <TourTarget id="avaliar" style={{ flex: 1 }}>
               <Pressable
                 onPress={onAvaliar}
+                hitSlop={{ top: 4, bottom: 4 }}
                 style={({ pressed }) => [
                   {
                     flex: 1,
@@ -128,6 +134,7 @@ export function CardCidadeIrise({
             <TourTarget id="relato" style={{ flex: 1 }}>
               <Pressable
                 onPress={onRelato}
+                hitSlop={{ top: 4, bottom: 4 }}
                 style={({ pressed }) => [
                   {
                     flex: 1,
@@ -153,7 +160,7 @@ export function CardCidadeIrise({
           style={({ pressed }) => [{ position: "absolute", right: 18, top: -4 }, pressed && { opacity: 0.8 }]}
         >
           <Animated.View style={[{ width: 108, height: 140 }, estiloAvatar]}>
-            {BUNDLED_N.has(personagem) ? (
+            {usaEmbutido ? (
               <Image source={avatarCardSrc(pose, personagem)} style={{ width: 108, height: 140 }} />
             ) : (
               // Personagem criado pelo admin: não tem a versão "avatar-card" pronta (precisa de

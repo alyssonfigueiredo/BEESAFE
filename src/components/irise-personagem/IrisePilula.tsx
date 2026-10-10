@@ -1,7 +1,7 @@
 import { Image, Pressable, Text, View } from "react-native";
 import Animated, { FadeIn, FadeOut } from "react-native-reanimated";
 
-import { useBustoResolvido } from "@/hooks/useIrisePersonagens";
+import { useBustoResolvido, useFotoTrocada } from "@/hooks/useIrisePersonagens";
 import { BUNDLED_N } from "@/lib/irisePersonagens";
 import { bustoEscuroSrc } from "@/lib/iriseImagensEscuras";
 
@@ -23,6 +23,8 @@ export function IrisePilula({
 }) {
   // Precisa ser chamado sempre (mesmo com !visivel), pra não variar a ordem dos hooks.
   const resolvido = useBustoResolvido(1, personagem);
+  const fotoTrocada = useFotoTrocada(personagem);
+  const usaEmbutido = BUNDLED_N.has(personagem) && !fotoTrocada;
   if (!visivel) return null;
   return (
     <Animated.View
@@ -62,8 +64,8 @@ export function IrisePilula({
             }}
           >
             <Image
-              source={BUNDLED_N.has(personagem) ? bustoEscuroSrc(1, personagem) : resolvido.source}
-              onError={BUNDLED_N.has(personagem) ? undefined : resolvido.onError}
+              source={usaEmbutido ? bustoEscuroSrc(1, personagem) : resolvido.source}
+              onError={usaEmbutido ? undefined : resolvido.onError}
               style={{ position: "absolute", top: 0, left: -3.6, width: 47.2, height: 47.2 * (460 / 300) }}
             />
           </View>

@@ -54,7 +54,17 @@ export default function IrisePreviewEscolha() {
   const doPerfil = modo === "perfil";
   const setPersonagem = useSetIrisePersonagem();
   const { data: profile } = useProfile();
-  const { data: irises = [] } = useIrisePersonagens();
+  const { data: todos = [] } = useIrisePersonagens();
+  // Personagem desativado não deve entrar como opção nova no carrossel — mas quem já tinha
+  // escolhido um continua vendo o seu (não "perde" o personagem de repente).
+  // Nota: hoje a RLS de `irise_personagens` já só devolve os ativos pra leitura comum (`using
+  // (ativo)`), então na prática `todos` nunca chega a trazer um inativo — este filtro é a regra
+  // certa se isso mudar, mas sozinho não resolve quem JÁ tem um personagem inativo escolhido: esse
+  // caso seguiria sem aparecer em lugar nenhum do app (seção E da revisão, sinalizado à parte).
+  const irises = useMemo(
+    () => todos.filter((p) => p.ativo || p.n === profile?.irise_personagem),
+    [todos, profile?.irise_personagem],
+  );
   const [indice, setIndice] = useState(() => {
     const i = irises.findIndex((p) => p.n === Number(atualParam));
     return i >= 0 ? i : 0;
@@ -240,7 +250,7 @@ export default function IrisePreviewEscolha() {
           }}
         >
           <Animated.View key={atual.n} entering={FadeIn.duration(220)}>
-            <Text className="font-display text-[34px] text-ink">{atual.nome.toUpperCase()}</Text>
+            <Text className="font-display text-[34px] text-ink">{atual.nome}</Text>
             <View className="mt-1 flex-row flex-wrap gap-2">
               <View className="rounded-full px-3 py-1" style={{ backgroundColor: colors.yellow }}>
                 <Text className="font-body-bold text-[11px] uppercase text-ink">{atual.pronomes}</Text>
@@ -299,7 +309,7 @@ export default function IrisePreviewEscolha() {
             style={{ backgroundColor: colors.turquoise }}
           >
             <Text className="font-display text-[19px] text-ink">
-              {doPerfil ? "USAR" : "ESCOLHER"} {atual.nome.toUpperCase()}
+              {doPerfil ? "Usar" : "Escolher"} {atual.nome}
             </Text>
           </Pressable>
         </Glass>

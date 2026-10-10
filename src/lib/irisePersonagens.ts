@@ -17,6 +17,7 @@ export type Irise = {
   classe: string;
   bio: string;
   stats: [number, number, number, number];
+  ativo: boolean;
 };
 
 /** Os 9 personagens com fotos embutidas no app (offline, sem rede). Qualquer outro número vem do
@@ -24,15 +25,15 @@ export type Irise = {
 export const BUNDLED_N = new Set([10, 11, 12, 13, 14, 15, 16, 17, 18]);
 
 export const IRISES: Irise[] = [
-  { n: 10, nome: "Kai", pronomes: "elu/delu", classe: "DJ do Rolê", bio: "Conhece toda balada acolhedora da cidade e a playlist de cada uma.", stats: [3, 4, 3, 5] },
-  { n: 11, nome: "Léo", pronomes: "ele/dele", classe: "Guardião", bio: "Papo reto e ombro firme. Avisa antes de você chegar num lugar furado.", stats: [4, 3, 5, 3] },
-  { n: 12, nome: "Ali", pronomes: "ele/dele", classe: "Conselheiro", bio: "Escuta sem julgar e sempre sabe de algum lugar por perto que vai te garantir boas risadas.", stats: [5, 3, 3, 3] },
-  { n: 13, nome: "Bento", pronomes: "ele/dele", classe: "Anfitrião", bio: "Faz questão de te apresentar todo mundo. Sabe o nome de metade da cidade.", stats: [5, 4, 3, 4] },
-  { n: 14, nome: "Dante", pronomes: "ele/dele", classe: "Protetor", bio: "Grandão, de voz mansa. Te acompanha até a porta sem fazer drama.", stats: [4, 3, 4, 3] },
-  { n: 15, nome: "Rafa", pronomes: "ele/dele", classe: "Cartógrafo", bio: "Nerd do mapa. Sabe a nota de cada bairro e explica sem pressa.", stats: [4, 3, 4, 3] },
-  { n: 16, nome: "Yara", pronomes: "ela/dela", classe: "Exploradora", bio: "Vive achando lugar novo. Te chama pra ser a primeira cor do mapa.", stats: [3, 4, 4, 5] },
-  { n: 17, nome: "Dandara", pronomes: "ela/dela", classe: "Matriarca", bio: "Mãe do grupo. Cuida, cobra água e pergunta se você chegou bem.", stats: [5, 4, 4, 3] },
-  { n: 18, nome: "Luna", pronomes: "ela/dela", classe: "Confidente", bio: "Escuta antes de opinar. Sempre acha uma frase que acalma.", stats: [5, 3, 4, 3] },
+  { n: 10, nome: "Kai", pronomes: "elu/delu", classe: "DJ do Rolê", bio: "Conhece toda balada acolhedora da cidade e a playlist de cada uma.", stats: [3, 4, 3, 5], ativo: true },
+  { n: 11, nome: "Léo", pronomes: "ele/dele", classe: "Guardião", bio: "Papo reto e ombro firme. Avisa antes de você chegar num lugar furado.", stats: [4, 3, 5, 3], ativo: true },
+  { n: 12, nome: "Ali", pronomes: "ele/dele", classe: "Conselheiro", bio: "Escuta sem julgar e sempre sabe de algum lugar por perto que vai te garantir boas risadas.", stats: [5, 3, 3, 3], ativo: true },
+  { n: 13, nome: "Bento", pronomes: "ele/dele", classe: "Anfitrião", bio: "Faz questão de te apresentar todo mundo. Sabe o nome de metade da cidade.", stats: [5, 4, 3, 4], ativo: true },
+  { n: 14, nome: "Dante", pronomes: "ele/dele", classe: "Protetor", bio: "Grandão, de voz mansa. Te acompanha até a porta sem fazer drama.", stats: [4, 3, 4, 3], ativo: true },
+  { n: 15, nome: "Rafa", pronomes: "ele/dele", classe: "Cartógrafo", bio: "Nerd do mapa. Sabe a nota de cada bairro e explica sem pressa.", stats: [4, 3, 4, 3], ativo: true },
+  { n: 16, nome: "Yara", pronomes: "ela/dela", classe: "Exploradora", bio: "Vive achando lugar novo. Te chama pra ser a primeira cor do mapa.", stats: [3, 4, 4, 5], ativo: true },
+  { n: 17, nome: "Dandara", pronomes: "ela/dela", classe: "Matriarca", bio: "Mãe do grupo. Cuida, cobra água e pergunta se você chegou bem.", stats: [5, 4, 4, 3], ativo: true },
+  { n: 18, nome: "Luna", pronomes: "ela/dela", classe: "Confidente", bio: "Escuta antes de opinar. Sempre acha uma frase que acalma.", stats: [5, 3, 4, 3], ativo: true },
 ];
 
 export const PRONOMES = ["ela/dela", "ele/dele", "elu/delu", "qualquer pronome", "outro"] as const;
@@ -47,7 +48,7 @@ export function flexionar(texto: string, forma: Forma): string {
 // Sem XP/nível (decisão do Alysson, 06/10/2026) e só no chat (não acompanha o app inteiro).
 export const FALAS_APRESENTACAO = [
   { texto: "Oi, {nome}! Eu sou {irise}, seu irise. Prazer!", pose: 1 },
-  { texto: "Fico te esperando ali no chat, sempre que quiser uma sugestão ou só conversar.", pose: 1 },
+  { texto: "Fico te esperando no chat, sempre que quiser uma sugestão ou só conversar.", pose: 1 },
   { texto: "Quer trocar de irise ou de pronome depois? É só ir no seu perfil. Bora?", pose: 1 },
 ] as const;
 

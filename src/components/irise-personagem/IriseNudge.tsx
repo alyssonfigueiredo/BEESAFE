@@ -3,35 +3,49 @@ import { useState } from "react";
 import { Pressable, Text, View } from "react-native";
 import Animated, { FadeInDown } from "react-native-reanimated";
 
-import { Busto } from "@/components/irise-personagem/Busto";
+import { AnelArcoIris } from "@/components/irise/Irise";
+import { abrirEscolhaIrise } from "@/components/irise-personagem/IriseCard";
+import { useAppConfig, useForma } from "@/hooks/useGamification";
 import { useProfile } from "@/hooks/useProfile";
 import { colors, shadow } from "@/theme/tokens";
 
 /**
- * Prévia (09/10/2026): lembrete do irise no Início, acima do painel da cidade — não mexe no
- * painel nem no resto da tela. Só aparece com um personagem escolhido; texto fixo por ora,
- * sem ligar em nenhum sistema de missão (isso não existe ainda).
+ * Convite pra escolher um irise (gap sinalizado em 10/10/2026: não havia nenhum clique na Início
+ * pra quem ainda não tinha personagem). Mesmo visual do antigo lembrete que ficava só pra quem já
+ * tinha irise escolhido — o balão do `CardCidadeIrise` já cumpre esse papel agora, então os dois
+ * nunca aparecem juntos: este só aparece SEM personagem.
  */
 export function IriseNudge() {
+  const { data: cfg } = useAppConfig();
   const { data: profile } = useProfile();
+  const forma = useForma();
   const [fechado, setFechado] = useState(false);
-  const personagem = profile?.irise_personagem ?? null;
-  if (!personagem || fechado) return null;
+  const semPersonagem = !profile?.irise_personagem;
+  if (!cfg?.irise_ativa || !semPersonagem || fechado) return null;
 
   return (
     <Animated.View entering={FadeInDown.duration(380)}>
-      <View
-        className="flex-row items-center gap-3 rounded-3xl bg-surface p-3.5"
+      <Pressable
+        onPress={() => abrirEscolhaIrise({ atual: null, forma, primeiraVez: true })}
+        className="flex-row items-center gap-3 rounded-3xl bg-surface p-3.5 active:opacity-90"
         style={shadow.card}
       >
-        <Busto personagem={personagem} pose={4} size={56} />
+        <View style={{ width: 56, height: 56 }}>
+          <AnelArcoIris size={56} />
+          <View
+            style={{ position: "absolute", top: 0, left: 0, right: 0, bottom: 0 }}
+            className="items-center justify-center"
+          >
+            <Text className="font-body-bold text-xl text-solid">?</Text>
+          </View>
+        </View>
         <Text className="min-w-0 flex-1 font-body text-[13px] leading-[18px] text-ink">
-          Já avaliou algum lugar essa semana? Eu ajudo a achar um pertinho.
+          Escolha um irise pra te acompanhar no app.
         </Text>
         <Pressable onPress={() => setFechado(true)} hitSlop={10} accessibilityLabel="Fechar">
           <X color={colors.dim} size={16} />
         </Pressable>
-      </View>
+      </Pressable>
     </Animated.View>
   );
 }

@@ -18,6 +18,9 @@ type LinhaBanco = {
   ativo: boolean;
   criado_em: string;
   atualizado_em: string;
+  /** Só muda quando uma foto é enviada (`admin_irise_personagem_tocar`) — editar texto não mexe
+   * aqui. É o que decide se vale tentar o Storage antes da imagem embutida (ver `useFotoTrocada`). */
+  foto_atualizada_em: string | null;
 };
 
 function paraIrise(l: LinhaBanco): Irise {
@@ -28,6 +31,7 @@ function paraIrise(l: LinhaBanco): Irise {
     classe: l.classe,
     bio: l.bio,
     stats: [l.stat_acolhimento, l.stat_humor, l.stat_papo_reto, l.stat_role],
+    ativo: l.ativo,
   };
 }
 
@@ -82,6 +86,7 @@ export function useIrisePersonagens() {
       ativo: true,
       criado_em: "",
       atualizado_em: "",
+      foto_atualizada_em: null,
     })),
     staleTime: 5 * 60_000,
   });
@@ -104,23 +109,31 @@ function urlRemota(pose: number, personagem: number, versao?: string): string {
  * Resolve a imagem de um busto considerando que o admin pode ter trocado a foto pelo painel —
  * inclusive de um dos 9 personagens originais, cuja foto normalmente vem embutida no app.
  * - Personagem fora dos 9: sempre tenta o Storage (não tem versão embutida).
- * - Um dos 9: só tenta o Storage se a linha dele no banco já foi tocada (editada ou com
- *   `admin_irise_personagem_tocar` depois de subir foto nova) — do contrário usa a embutida
- *   direto, sem gastar uma requisição de rede à toa. Se o Storage falhar (lugar comum: ainda não
- *   tem foto nova lá, só o texto mudou), volta pra embutida sozinho.
+ * - Um dos 9: só tenta o Storage se `foto_atualizada_em` existir (migration 72; só
+ *   `admin_irise_personagem_tocar` grava ali, depois de subir foto nova — editar só o texto não
+ *   mexe nessa coluna) — do contrário usa a embutida direto, sem gastar uma requisição à toa. Se o
+ *   Storage falhar mesmo assim, volta pra embutida sozinho.
  */
 export function useBustoResolvido(pose: number, personagem: number) {
   const linha = useLinhaBanco(personagem);
   const [remotoFalhou, setRemotoFalhou] = useState(false);
   const embutido = BUNDLED_N.has(personagem);
-  const tocado = !!linha && linha.atualizado_em !== linha.criado_em;
+  const tocado = !!linha?.foto_atualizada_em;
   const tentarRemoto = (!embutido || tocado) && !remotoFalhou;
 
   if (tentarRemoto) {
-    const source: ImageSourcePropType = { uri: urlRemota(pose, personagem, linha?.atualizado_em) };
+    const source: ImageSourcePropType = { uri: urlRemota(pose, personagem, linha?.foto_atualizada_em ?? undefined) };
     return { source, onError: embutido ? () => setRemotoFalhou(true) : undefined };
   }
   return { source: bustoSrc(pose, personagem) as ImageSourcePropType, onError: undefined };
+}
+
+/** Se a foto desse personagem já foi trocada pelo painel (mesma regra do `useBustoResolvido` acima,
+ * sem resolver imagem nenhuma) — usado por quem decide ENTRE a versão embutida e a montada na hora
+ * (`CardCidadeIrise`, `FaixaSempreOnline`, `IrisePilula`), que hoje só olhavam `BUNDLED_N`. */
+export function useFotoTrocada(personagem: number) {
+  const linha = useLinhaBanco(personagem);
+  return !!linha?.foto_atualizada_em;
 }
 
 /**
@@ -132,11 +145,11 @@ export function useCorpoResolvido(personagem: number) {
   const linha = useLinhaBanco(personagem);
   const [remotoFalhou, setRemotoFalhou] = useState(false);
   const embutido = BUNDLED_N.has(personagem);
-  const tocado = !!linha && linha.atualizado_em !== linha.criado_em;
+  const tocado = !!linha?.foto_atualizada_em;
   const tentarRemoto = (!embutido || tocado) && !remotoFalhou;
 
   if (tentarRemoto) {
-    const source: ImageSourcePropType = { uri: urlRemota(0, personagem, linha?.atualizado_em) };
+    const source: ImageSourcePropType = { uri: urlRemota(0, personagem, linha?.foto_atualizada_em ?? undefined) };
     return { source, onError: () => setRemotoFalhou(true) };
   }
   return { source: corpoSrc(1, personagem) as ImageSourcePropType, onError: undefined };

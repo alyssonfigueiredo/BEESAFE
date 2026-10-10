@@ -30,7 +30,7 @@ import { useProfile } from "@/hooks/useProfile";
 import { useScreenInsets } from "@/hooks/useScreenInsets";
 import { rolarInicio, useTourScroll } from "@/hooks/useTour";
 import { distanceMeters } from "@/lib/geo";
-import { falasDoIrise, type Fala } from "@/lib/iriseFalas";
+import { falasDoIrise, type Acao, type Fala } from "@/lib/iriseFalas";
 import type { OrchestratedPlace } from "@/hooks/useIrise";
 import { useCity } from "@/providers/CityProvider";
 import { OCCURRENCE_TYPES, PLACE_CATEGORIES, RATING_MIN, flexiona, type PlaceCategory } from "@/theme/domain";
@@ -81,6 +81,9 @@ export default function HomeScreen() {
   const [chatAbertura, setChatAbertura] = useState<Fala | null>(null);
   const [passouDoCard, setPassouDoCard] = useState(false);
   const [cardBaixoY, setCardBaixoY] = useState<number | null>(null);
+  const [faixaY, setFaixaY] = useState<number | null>(null);
+  const [faixaAltura, setFaixaAltura] = useState(0);
+  const [faixaNaTela, setFaixaNaTela] = useState(false);
 
   function abrirChat(fala: Fala | null) {
     setChatAbertura(fala);
@@ -105,10 +108,11 @@ export default function HomeScreen() {
     .sort((a, b) => b.rating_count - a.rating_count)
     .slice(0, 5);
 
-  // Falas do balão: só as que fazem sentido agora, com o nome/gênero do irise já certos (nunca o
-  // pronome da pessoa). "Missão do dia" não tem dado próprio ainda nos hooks desta tela — nenhuma
-  // consulta nova foi criada pra isso — então por ora ela sempre entra.
-  const falasIrise = useMemo(() => falasDoIrise(irise ?? null), [irise]);
+  // Falas do balão: só as que fazem sentido agora, com o nome/gênero do irise e o dado real da
+  // gamificação já resolvidos (figurinha mais perto, conquista do momento). "Missão do dia" não tem
+  // dado próprio ainda nos hooks desta tela (nenhum registro de "já avaliou hoje") — nenhuma consulta
+  // nova foi criada pra isso — então por ora ela sempre entra.
+  const falasIrise = useMemo(() => falasDoIrise(irise ?? null, gami), [irise, gami]);
   const quaseLaMedalha = quaseLa(gami);
   const semanaOuConquista = !!gami && (gami.semana.acesa || gami.conquistadas.some((c) => !c.visto));
   const temSugestao = welcoming.length > 0 || primeiros.length > 0;
@@ -125,8 +129,12 @@ export default function HomeScreen() {
         })
         .map((f) => {
           if (f.id !== "alerta" || !relatoRecente) return f;
-          const bairro = relatoRecente.neighborhood ?? "perto de você";
-          return { ...f, texto: f.texto.replace("Centro", bairro), abertura: f.abertura.replace("Centro", bairro) };
+          const local = relatoRecente.neighborhood ? `do ${relatoRecente.neighborhood}` : "de você";
+          return {
+            ...f,
+            texto: f.texto.replace("{local}", local),
+            abertura: f.abertura.replace("{local}", local),
+          };
         }),
     [falasIrise, quaseLaMedalha, temSugestao, relatoRecente, semanaOuConquista],
   );
@@ -137,6 +145,16 @@ export default function HomeScreen() {
     .slice(0, 3)
     .map((p) => ({ ...p, reason: null }));
   const sugestaoAbertura = useMemo(() => falasIrise.find((f) => f.id === "sugestao") ?? null, [falasIrise]);
+  // A faixa e a pílula prometiam 3 lugares mesmo sem ter nenhum — sem lugar, cai no fluxo genérico.
+  function abrirChatSugestao() {
+    abrirChat(lugaresSugestao.length > 0 ? sugestaoAbertura : null);
+  }
+  function onAcaoChat(a: Acao) {
+    if (a === "mapa") router.push("/mapa");
+    else if (a === "apoio") router.push("/apoio");
+    else if (a === "conquistas") router.push("/conquistas");
+    else router.push("/lugares"); // "lugares" e "avaliar"
+  }
 
   // Busca e filtro direto no Início: quem abre o app querendo achar um bar não deve ter que
   // trocar de aba. Sem termo e sem filtro, a seção volta a ser "mais acolhedores".
@@ -169,7 +187,7 @@ export default function HomeScreen() {
   );
 
   const nudgeVisivel = useAlgumNudgeVisivel();
-  const pilulaVisivel = !!irise && passouDoCard && !nudgeVisivel;
+  const pilulaVisivel = !!irise && passouDoCard && !nudgeVisivel && !faixaNaTela;
 
   return (
     <View className="flex-1">
@@ -178,10 +196,15 @@ export default function HomeScreen() {
         ref={prenderRolagem}
         onScroll={(e) => {
           aoRolar(e);
-          // Booleano em vez da posição exata: só dispara um novo render quando o valor realmente
+          // Booleanos em vez da posição exata: só disparam um novo render quando o valor realmente
           // vira (React ignora um set com o mesmo valor), em vez de a cada tick de rolagem.
+          const y = e.nativeEvent.contentOffset.y;
           if (cardBaixoY != null) {
-            setPassouDoCard(e.nativeEvent.contentOffset.y > cardBaixoY);
+            setPassouDoCard(y > cardBaixoY);
+          }
+          if (faixaY != null) {
+            const alturaTela = e.nativeEvent.layoutMeasurement.height;
+            setFaixaNaTela(y + alturaTela > faixaY && y < faixaY + faixaAltura);
           }
         }}
         scrollEventThrottle={64}
@@ -190,8 +213,10 @@ export default function HomeScreen() {
         contentContainerStyle={insets}
         keyboardShouldPersistTaps="handled"
       >
-        {/* O balão do CardCidadeIrise já lembra/sugere — mostrar os dois juntos duplicaria o aviso. */}
-        {!irise && <IriseNudge />}
+        {/* Convite pra quem não tem irise ainda — o próprio componente decide quando aparece (sem
+            personagem e com a função ligada); sem irise escolhido o balão nem existe, então não
+            duplica aviso nenhum. */}
+        <IriseNudge />
         <AvisoCard />
 
         {irise ? (
@@ -359,7 +384,12 @@ export default function HomeScreen() {
         </View>
 
         {irise && (
-          <FaixaSempreOnline personagem={irise.n} nome={irise.nome} onPress={() => abrirChat(sugestaoAbertura)} />
+          <View onLayout={(e) => {
+            setFaixaY(e.nativeEvent.layout.y);
+            setFaixaAltura(e.nativeEvent.layout.height);
+          }}>
+            <FaixaSempreOnline personagem={irise.n} nome={irise.nome} onPress={abrirChatSugestao} />
+          </View>
         )}
 
         <View className="gap-1 pt-2">
@@ -412,7 +442,7 @@ export default function HomeScreen() {
           nome={irise.nome}
           visivel={pilulaVisivel}
           bottom={insets.paddingBottom}
-          onPress={() => abrirChat(sugestaoAbertura)}
+          onPress={abrirChatSugestao}
         />
       )}
 
@@ -435,6 +465,7 @@ export default function HomeScreen() {
                 }
               : undefined
           }
+          onAcao={onAcaoChat}
         />
       )}
     </View>

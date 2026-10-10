@@ -4,7 +4,7 @@ import { Pressable, Text, View } from "react-native";
 
 import { IriseAvatar } from "@/components/irise-personagem/IriseAvatar";
 import { IriseSheet } from "@/components/irise/Irise";
-import { useForma } from "@/hooks/useGamification";
+import { useAppConfig, useForma } from "@/hooks/useGamification";
 import { useIrisePersonagens } from "@/hooks/useIrisePersonagens";
 import { useProfile } from "@/hooks/useProfile";
 import { STATS } from "@/lib/irisePersonagens";
@@ -12,10 +12,36 @@ import { useCity } from "@/providers/CityProvider";
 import { colors, shadow } from "@/theme/tokens";
 
 /**
+ * Abre o carrossel de escolha (Perfil → "Escolher"/"Trocar irise", ou o convite da Início sem
+ * personagem ainda) — compartilhado pra não duplicar a navegação em mais de um lugar.
+ * `primeiraVez`: depois de salvar, mostra a apresentação do irise em vez de só voltar calado.
+ */
+export function abrirEscolhaIrise({
+  atual,
+  forma,
+  primeiraVez,
+}: {
+  atual: number | null;
+  forma: number;
+  primeiraVez: boolean;
+}) {
+  router.push({
+    pathname: "/irise-preview/escolha",
+    params: {
+      modo: "perfil",
+      atual: atual != null ? String(atual) : "1",
+      forma: String(forma),
+      primeiraVez: primeiraVez ? "1" : "",
+    },
+  });
+}
+
+/**
  * Cartão do Perfil: o personagem do irise. Avatar saindo por cima (igual ao protótipo aprovado
  * 10/10/2026), com os atributos à mostra — sem XP, sem aparecer em outra tela além daqui e do chat.
  */
 export function IriseCard() {
+  const { data: cfg } = useAppConfig();
   const { data: profile } = useProfile();
   const { data: irises = [] } = useIrisePersonagens();
   const forma = useForma();
@@ -23,18 +49,10 @@ export function IriseCard() {
   const [chatAberta, setChatAberta] = useState(false);
   const atual = irises.find((p) => p.n === profile?.irise_personagem);
 
+  if (!cfg?.irise_ativa) return null;
+
   function trocar() {
-    router.push({
-      pathname: "/irise-preview/escolha",
-      params: {
-        modo: "perfil",
-        atual: atual ? String(atual.n) : "1",
-        forma: String(forma),
-        // Primeira escolha (não tinha nenhuma antes): depois de salvar, mostra a apresentação do
-        // irise em vez de só voltar calado pro Perfil.
-        primeiraVez: atual ? "" : "1",
-      },
-    });
+    abrirEscolhaIrise({ atual: atual?.n ?? null, forma, primeiraVez: !atual });
   }
 
   if (!atual) {
@@ -68,11 +86,12 @@ export function IriseCard() {
         <Text className="font-body-bold text-[11px] uppercase tracking-[0.1em] text-yellowInk">
           Seu irise · {atual.classe}
         </Text>
-        <Text className="mt-1.5 font-display text-[28px] text-ink">{atual.nome.toUpperCase()}</Text>
+        <Text className="mt-1.5 font-display text-[28px] text-ink">{atual.nome}</Text>
         <Text className="mt-1 font-body text-[12.5px] text-dim">{atual.pronomes}</Text>
       </View>
       <Pressable
         onPress={() => setChatAberta(true)}
+        hitSlop={{ top: 4, bottom: 4 }}
         className="mt-3 h-9 flex-row items-center justify-center self-start rounded-full bg-turquoise px-4 active:opacity-80"
       >
         <Text className="font-body-bold text-sm text-night">Conversar com {atual.nome}</Text>

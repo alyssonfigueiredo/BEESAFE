@@ -2,10 +2,13 @@ import { ChevronRight } from "lucide-react-native";
 import { Image, Pressable, Text, View } from "react-native";
 
 import { IriseAvatar } from "@/components/irise-personagem/IriseAvatar";
+import { useFotoTrocada } from "@/hooks/useIrisePersonagens";
 import { avatarCardSrc } from "@/lib/iriseImagensEscuras";
 import { BUNDLED_N } from "@/lib/irisePersonagens";
 
 export function FaixaSempreOnline({ personagem, nome, onPress }: { personagem: number; nome: string; onPress: () => void }) {
+  const fotoTrocada = useFotoTrocada(personagem);
+  const usaEmbutido = BUNDLED_N.has(personagem) && !fotoTrocada;
   return (
     <Pressable
       onPress={onPress}
@@ -26,7 +29,7 @@ export function FaixaSempreOnline({ personagem, nome, onPress }: { personagem: n
         pressed && { opacity: 0.8 },
       ]}
     >
-      {BUNDLED_N.has(personagem) ? (
+      {usaEmbutido ? (
         <Image source={avatarCardSrc(5, personagem)} style={{ position: "absolute", left: 12, bottom: 10, width: 92, height: 120 }} />
       ) : (
         <View style={{ position: "absolute", left: 12, bottom: 10 }}>
