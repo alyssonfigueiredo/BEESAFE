@@ -1,32 +1,39 @@
 import { router, Stack, useLocalSearchParams } from "expo-router";
 import { ChevronLeft, ChevronRight, X } from "lucide-react-native";
-import { useState } from "react";
-import { Pressable, Text, View } from "react-native";
-import Animated, { FadeIn } from "react-native-reanimated";
+import { useEffect, useMemo, useState } from "react";
+import { PanResponder, Pressable, Text, View } from "react-native";
+import Animated, {
+  Easing,
+  FadeIn,
+  useAnimatedStyle,
+  useSharedValue,
+  withRepeat,
+  withTiming,
+} from "react-native-reanimated";
+import Svg, { Defs, RadialGradient, Rect, Stop } from "react-native-svg";
 
 import { Aurora } from "@/components/Aurora";
 import { Glass } from "@/components/Glass";
 import { Busto } from "@/components/irise-personagem/Busto";
-import { HeroAvatar } from "@/components/irise-personagem/HeroAvatar";
+import { IriseAvatar } from "@/components/irise-personagem/IriseAvatar";
 import { useScreenInsets } from "@/hooks/useScreenInsets";
 import { useSetIrisePersonagem } from "@/hooks/useProfile";
 import { IRISES, STATS, type Forma } from "@/lib/irisePersonagens";
-import { colors } from "@/theme/tokens";
+import { colors, mark } from "@/theme/tokens";
 
-const HERO = 150; // diâmetro do avatar em destaque — igual ao protótipo aprovado
+const HERO = 250; // protótipo aprovado 10/10/2026: busto grande pra ver rosto, cabelo e roupa
+const VIZINHO = 120;
+const LIMITE_ARRASTE = 40;
 
 /**
- * Prévia do personagem do irise — tela 2 de 2 (escolha). Avatar grande (disco branco + anel
- * arco-íris) no centro, setas pros lados pra trocar, fileira de miniaturas embaixo. A folha de
- * baixo não rola — cabe tudo (nome, pronome, classe, bio e atributos). Protótipo: nada grava além
- * do personagem escolhido.
+ * Escolha seu irise. Busto grande saindo do círculo com anel arco-íris, brilho arco-íris pulsando
+ * atrás, vizinhos em cinza nas laterais. Troca por setas, por arrastar ou pelas miniaturas.
  */
 export default function IrisePreviewEscolha() {
   const insets = useScreenInsets({ tabs: false });
   const { nome, forma: formaParam, modo, atual: atualParam } = useLocalSearchParams<{
     nome: string;
     forma: string;
-    /** "perfil": veio de Trocar irise no Perfil — escolher só salva e volta, sem apresentação. */
     modo: string;
     atual: string;
   }>();
@@ -34,16 +41,39 @@ export default function IrisePreviewEscolha() {
   const doPerfil = modo === "perfil";
   const setPersonagem = useSetIrisePersonagem();
   const [indice, setIndice] = useState(() => {
-    const n = Number(atualParam);
-    const i = IRISES.findIndex((p) => p.n === n);
+    const i = IRISES.findIndex((p) => p.n === Number(atualParam));
     return i >= 0 ? i : 0;
   });
 
-  function mover(d: number) {
-    setIndice((i) => (i + d + IRISES.length) % IRISES.length);
-  }
-
+  const total = IRISES.length;
+  const mover = (d: number) => setIndice((i) => (i + d + total) % total);
   const atual = IRISES[indice];
+  const anterior = IRISES[(indice - 1 + total) % total];
+  const proximo = IRISES[(indice + 1) % total];
+
+  const arraste = useMemo(
+    () =>
+      PanResponder.create({
+        onMoveShouldSetPanResponder: (_, g) => Math.abs(g.dx) > 10 && Math.abs(g.dx) > Math.abs(g.dy),
+        onPanResponderRelease: (_, g) => {
+          if (g.dx <= -LIMITE_ARRASTE) mover(1);
+          else if (g.dx >= LIMITE_ARRASTE) mover(-1);
+        },
+      }),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [total],
+  );
+
+  const pulso = useSharedValue(0);
+  useEffect(() => {
+    pulso.set(withRepeat(withTiming(1, { duration: 1500, easing: Easing.inOut(Easing.ease) }), -1, true));
+  }, [pulso]);
+  const estiloBrilho = useAnimatedStyle(() => ({
+    opacity: 0.55 + pulso.get() * 0.35,
+    transform: [{ scale: 0.94 + pulso.get() * 0.1 }],
+  }));
+
+  const BRILHO = HERO * 1.35;
 
   return (
     <>
@@ -69,36 +99,74 @@ export default function IrisePreviewEscolha() {
       <View className="flex-1">
         <Aurora />
         <View style={{ paddingTop: insets.paddingTop }} className="gap-1 px-6">
-          <Text className="font-body-bold text-[11px] uppercase tracking-[0.1em] text-turquoiseInk">
+          <Text className="font-body-bold text-[11px] uppercase tracking-[0.14em] text-turquoiseInk">
             Fase 2 de 2 · Seu parceiro de jogo
           </Text>
           <View className="flex-row items-end justify-between">
-            <Text className="font-display text-[26px] text-ink">ESCOLHA SEU IRISE</Text>
+            <Text className="font-display text-[32px] text-ink">ESCOLHA SEU IRISE</Text>
             <Text className="font-body-bold text-sm text-dim">
-              {indice + 1}/{IRISES.length}
+              {indice + 1}/{total}
             </Text>
           </View>
         </View>
 
-        <View style={{ height: HERO + 24, marginTop: 10 }} className="flex-row items-center justify-center">
+        <View
+          {...arraste.panHandlers}
+          style={{ height: HERO * 1.24 + 16, marginTop: 6 }}
+          className="items-center justify-end"
+        >
+          <Animated.View
+            pointerEvents="none"
+            style={[
+              { position: "absolute", width: BRILHO, height: BRILHO, bottom: HERO / 2 - BRILHO / 2 + 8 },
+              estiloBrilho,
+            ]}
+          >
+            <Svg width={BRILHO} height={BRILHO}>
+              <Defs>
+                <RadialGradient id="brilho" cx="50%" cy="50%" r="50%">
+                  <Stop offset="0.35" stopColor={mark.ring[5]} stopOpacity={0.55} />
+                  <Stop offset="0.6" stopColor={mark.ring[3]} stopOpacity={0.3} />
+                  <Stop offset="0.8" stopColor={mark.ring[1]} stopOpacity={0.15} />
+                  <Stop offset="1" stopColor={mark.ring[0]} stopOpacity={0} />
+                </RadialGradient>
+              </Defs>
+              <Rect width={BRILHO} height={BRILHO} fill="url(#brilho)" />
+            </Svg>
+          </Animated.View>
+
+          <Pressable
+            onPress={() => mover(-1)}
+            style={{ position: "absolute", left: -VIZINHO * 0.45, bottom: 30 }}
+          >
+            <IriseAvatar personagem={anterior.n} size={VIZINHO} cinza />
+          </Pressable>
+          <Pressable
+            onPress={() => mover(1)}
+            style={{ position: "absolute", right: -VIZINHO * 0.45, bottom: 30 }}
+          >
+            <IriseAvatar personagem={proximo.n} size={VIZINHO} cinza />
+          </Pressable>
+
+          <Animated.View key={atual.n} entering={FadeIn.duration(500)} style={{ marginBottom: 8 }}>
+            <IriseAvatar personagem={atual.n} size={HERO} />
+          </Animated.View>
+
           <Pressable
             onPress={() => mover(-1)}
             hitSlop={8}
-            className="absolute left-5 z-10 h-[38px] w-[38px] items-center justify-center rounded-full bg-solid active:opacity-80"
-            style={{ boxShadow: "0 4px 14px rgba(20,24,41,0.14)" }}
+            className="absolute left-4 z-10 h-[46px] w-[46px] items-center justify-center rounded-full bg-solid active:opacity-80"
+            style={{ bottom: HERO / 2 - 15, boxShadow: "0 4px 14px rgba(20,24,41,0.14)" }}
           >
-            <ChevronLeft size={18} color={colors.ink} />
+            <ChevronLeft size={20} color={colors.ink} />
           </Pressable>
-          <Animated.View key={atual.n} entering={FadeIn.duration(200)}>
-            <HeroAvatar personagem={atual.n} size={HERO} />
-          </Animated.View>
           <Pressable
             onPress={() => mover(1)}
             hitSlop={8}
-            className="absolute right-5 z-10 h-[38px] w-[38px] items-center justify-center rounded-full bg-solid active:opacity-80"
-            style={{ boxShadow: "0 4px 14px rgba(20,24,41,0.14)" }}
+            className="absolute right-4 z-10 h-[46px] w-[46px] items-center justify-center rounded-full bg-solid active:opacity-80"
+            style={{ bottom: HERO / 2 - 15, boxShadow: "0 4px 14px rgba(20,24,41,0.14)" }}
           >
-            <ChevronRight size={18} color={colors.ink} />
+            <ChevronRight size={20} color={colors.ink} />
           </Pressable>
         </View>
 
@@ -111,7 +179,7 @@ export default function IrisePreviewEscolha() {
                   borderWidth: i === indice ? 2 : 0,
                   borderColor: colors.turquoiseInk,
                   opacity: i === indice ? 1 : 0.6,
-                  transform: [{ scale: i === indice ? 1.08 : 1 }],
+                  transform: [{ scale: i === indice ? 1.12 : 1 }],
                 }}
               >
                 <Busto personagem={p.n} size={32} />
@@ -133,15 +201,13 @@ export default function IrisePreviewEscolha() {
           }}
         >
           <Animated.View key={atual.n} entering={FadeIn.duration(220)}>
-            <View className="flex-row items-center gap-2">
-              <Text className="font-display text-[26px] text-ink">{atual.nome.toUpperCase()}</Text>
-            </View>
+            <Text className="font-display text-[34px] text-ink">{atual.nome.toUpperCase()}</Text>
             <View className="mt-1 flex-row flex-wrap gap-2">
               <View className="rounded-full px-3 py-1" style={{ backgroundColor: colors.yellow }}>
                 <Text className="font-body-bold text-[11px] uppercase text-ink">{atual.pronomes}</Text>
               </View>
               <View className="rounded-full bg-subtle px-3 py-1">
-                <Text className="font-body-bold text-[11px] uppercase text-muted">{atual.classe}</Text>
+                <Text className="font-body-bold text-[11px] uppercase text-yellowInk">{atual.classe}</Text>
               </View>
             </View>
             <Text className="mt-3 font-body text-[13.5px] leading-[19px] text-muted">{atual.bio}</Text>
@@ -155,9 +221,7 @@ export default function IrisePreviewEscolha() {
                       <View
                         key={seg}
                         className="h-[8px] flex-1 rounded-full"
-                        style={{
-                          backgroundColor: seg < atual.stats[i] ? s.color : colors.border,
-                        }}
+                        style={{ backgroundColor: seg < atual.stats[i] ? s.color : colors.border }}
                       />
                     ))}
                   </View>
@@ -178,10 +242,10 @@ export default function IrisePreviewEscolha() {
                 params: { nome, forma: String(forma), irise: String(atual.n) },
               });
             }}
-            className="mt-5 h-[52px] items-center justify-center rounded-full active:opacity-85 active:scale-[0.98]"
+            className="mt-5 h-[54px] items-center justify-center rounded-full active:opacity-85 active:scale-[0.98]"
             style={{ backgroundColor: colors.turquoise }}
           >
-            <Text className="font-display text-[17px] text-ink">
+            <Text className="font-display text-[19px] text-ink">
               {doPerfil ? "USAR" : "ESCOLHER"} {atual.nome.toUpperCase()}
             </Text>
           </Pressable>
