@@ -3,7 +3,7 @@ import { useState } from "react";
 import { Pressable, Text, View } from "react-native";
 
 import { IriseAvatar } from "@/components/irise-personagem/IriseAvatar";
-import { IriseSheet } from "@/components/irise/Irise";
+import { AnelArcoIris, IriseSheet } from "@/components/irise/Irise";
 import { useAppConfig, useForma } from "@/hooks/useGamification";
 import { useIrisePersonagens } from "@/hooks/useIrisePersonagens";
 import { useProfile } from "@/hooks/useProfile";
@@ -60,8 +60,16 @@ export function IriseCard() {
   if (!atual) {
     return (
       <View className="flex-row items-center gap-4 rounded-[30px] bg-surface px-6 py-6" style={shadow.card}>
-        <View className="h-[56px] w-[56px] items-center justify-center rounded-full bg-subtle">
-          <Text className="font-body-bold text-xl text-dim">?</Text>
+        <View style={{ width: 56, height: 56 }}>
+          <AnelArcoIris size={56} />
+          <View
+            style={{ position: "absolute", inset: 3, borderRadius: 25, backgroundColor: colors.subtle }}
+            className="items-center justify-center"
+          >
+            <Text className="font-body-bold text-xl" style={{ color: colors.ink }}>
+              ?
+            </Text>
+          </View>
         </View>
         <View className="gap-0.5" style={{ flex: 1, minWidth: 0 }}>
           <Text className="font-body-medium text-[17px] text-ink">Escolha um irise</Text>
