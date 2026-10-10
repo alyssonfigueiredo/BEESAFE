@@ -5,9 +5,11 @@ import { PanResponder, Pressable, Text, View } from "react-native";
 import Animated, {
   Easing,
   FadeIn,
+  FadeOut,
   useAnimatedStyle,
   useSharedValue,
   withRepeat,
+  withSpring,
   withTiming,
 } from "react-native-reanimated";
 import Svg, { Defs, RadialGradient, Rect, Stop } from "react-native-svg";
@@ -51,18 +53,30 @@ export default function IrisePreviewEscolha() {
   const anterior = IRISES[(indice - 1 + total) % total];
   const proximo = IRISES[(indice + 1) % total];
 
+  // Acompanha o dedo em tempo real (até uma folga) e volta suave no solta — em vez de só
+  // disparar a troca na hora que passa o limite, sem nada acontecer até lá.
+  const dragX = useSharedValue(0);
+  const FOLGA_ARRASTE = 70;
   const arraste = useMemo(
     () =>
       PanResponder.create({
         onMoveShouldSetPanResponder: (_, g) => Math.abs(g.dx) > 10 && Math.abs(g.dx) > Math.abs(g.dy),
+        onPanResponderMove: (_, g) => {
+          dragX.set(Math.max(-FOLGA_ARRASTE, Math.min(FOLGA_ARRASTE, g.dx)));
+        },
         onPanResponderRelease: (_, g) => {
+          dragX.set(withSpring(0, { damping: 16, stiffness: 180 }));
           if (g.dx <= -LIMITE_ARRASTE) mover(1);
           else if (g.dx >= LIMITE_ARRASTE) mover(-1);
+        },
+        onPanResponderTerminate: () => {
+          dragX.set(withSpring(0, { damping: 16, stiffness: 180 }));
         },
       }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [total],
   );
+  const estiloArraste = useAnimatedStyle(() => ({ transform: [{ translateX: dragX.get() }] }));
 
   const pulso = useSharedValue(0);
   useEffect(() => {
@@ -135,21 +149,35 @@ export default function IrisePreviewEscolha() {
             </Svg>
           </Animated.View>
 
-          <Pressable
-            onPress={() => mover(-1)}
-            style={{ position: "absolute", left: -VIZINHO * 0.45, bottom: 30 }}
+          <Animated.View
+            pointerEvents="box-none"
+            style={[{ alignItems: "center", justifyContent: "flex-end" }, estiloArraste]}
           >
-            <IriseAvatar personagem={anterior.n} size={VIZINHO} cinza />
-          </Pressable>
-          <Pressable
-            onPress={() => mover(1)}
-            style={{ position: "absolute", right: -VIZINHO * 0.45, bottom: 30 }}
-          >
-            <IriseAvatar personagem={proximo.n} size={VIZINHO} cinza />
-          </Pressable>
+            <Pressable
+              onPress={() => mover(-1)}
+              style={{ position: "absolute", left: -VIZINHO * 0.45, bottom: 30 }}
+            >
+              <Animated.View key={anterior.n} entering={FadeIn.duration(260)} exiting={FadeOut.duration(180)}>
+                <IriseAvatar personagem={anterior.n} size={VIZINHO} cinza />
+              </Animated.View>
+            </Pressable>
+            <Pressable
+              onPress={() => mover(1)}
+              style={{ position: "absolute", right: -VIZINHO * 0.45, bottom: 30 }}
+            >
+              <Animated.View key={proximo.n} entering={FadeIn.duration(260)} exiting={FadeOut.duration(180)}>
+                <IriseAvatar personagem={proximo.n} size={VIZINHO} cinza />
+              </Animated.View>
+            </Pressable>
 
-          <Animated.View key={atual.n} entering={FadeIn.duration(500)} style={{ marginBottom: 8 }}>
-            <IriseAvatar personagem={atual.n} size={HERO} />
+            <Animated.View
+              key={atual.n}
+              entering={FadeIn.duration(380)}
+              exiting={FadeOut.duration(220)}
+              style={{ marginBottom: 8 }}
+            >
+              <IriseAvatar personagem={atual.n} size={HERO} />
+            </Animated.View>
           </Animated.View>
 
           <Pressable
