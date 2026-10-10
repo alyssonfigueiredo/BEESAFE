@@ -16,8 +16,10 @@ import Svg, { Defs, LinearGradient, Rect, Stop } from "react-native-svg";
 
 import { PlaceCard } from "@/components/PlaceCard";
 import { Busto } from "@/components/irise-personagem/Busto";
+import { IriseAvatar } from "@/components/irise-personagem/IriseAvatar";
 import { useIriseNear, useIriseOrchestrate, useIriseSuggest, type OrchestratedPlace } from "@/hooks/useIrise";
 import { useProfile } from "@/hooks/useProfile";
+import { IRISES } from "@/lib/irisePersonagens";
 import type { PlaceCategory } from "@/theme/domain";
 import { colors, shadow } from "@/theme/tokens";
 
@@ -83,6 +85,59 @@ export function IriseFab({
             <Sparkles color="#fff" size={20} strokeWidth={2.2} />
           </View>
         )}
+      </Pressable>
+      <IriseSheet
+        visible={aberta}
+        onClose={() => setAberta(false)}
+        cityId={cityId}
+        cityName={cityName}
+        userLocation={userLocation}
+        personagem={personagem}
+      />
+    </>
+  );
+}
+
+/**
+ * Cartão "Conversar com {nome}" — convite pro chat a partir do Apoio (protótipo aprovado
+ * 10/10/2026). Só aparece com um irise escolhido; some calado sem ele, como o resto da prévia.
+ */
+export function IriseInviteCard({
+  cityId,
+  cityName,
+  userLocation = null,
+}: {
+  cityId: number | undefined;
+  cityName: string | undefined;
+  userLocation?: { lat: number; lng: number } | null;
+}) {
+  const [aberta, setAberta] = useState(false);
+  const { data: profile } = useProfile();
+  const personagem = profile?.irise_personagem ?? null;
+  const atual = IRISES.find((p) => p.n === personagem);
+  if (!personagem || !atual) return null;
+
+  return (
+    <>
+      <Pressable
+        onPress={() => setAberta(true)}
+        className="rounded-[30px] bg-surface px-5 pb-5 pt-6 active:opacity-90"
+        style={[shadow.card, { marginTop: 22 }]}
+      >
+        <View style={{ position: "absolute", right: 16, top: -26 }}>
+          <IriseAvatar personagem={atual.n} size={78} />
+        </View>
+        <View style={{ maxWidth: "58%" }}>
+          <Text className="font-body-bold text-[11px] uppercase tracking-[0.1em] text-lilacInk">
+            Sempre on-line
+          </Text>
+          <Text className="mt-1.5 font-display text-[19px] leading-[21px] text-ink">
+            CONVERSAR COM {atual.nome.toUpperCase()}
+          </Text>
+          <Text className="mt-1.5 font-body text-[12.5px] leading-[17px] text-dim">
+            Pra desabafar, tirar dúvida ou pensar no que fazer.
+          </Text>
+        </View>
       </Pressable>
       <IriseSheet
         visible={aberta}
@@ -366,15 +421,36 @@ function IriseSheet({
       >
         <View className="bg-solid" style={{ borderTopLeftRadius: 34, borderTopRightRadius: 34, overflow: "hidden" }}>
           <View style={{ width: 44, height: 5, borderRadius: 3, backgroundColor: "#D9D5CD", alignSelf: "center", marginTop: 10 }} />
-          <View className="flex-row items-center justify-between border-b border-border px-[18px] pb-3 pt-2">
-            <View className="flex-row items-center gap-2.5">
-              {personagem ? <Busto personagem={personagem} size={36} /> : <AnelArcoIris size={22} />}
-              <Text className="font-body-bold text-[16px] text-ink">Irise</Text>
+          {personagem ? (
+            <View className="flex-row items-end justify-between border-b border-border px-[18px] pb-3 pt-1">
+              <IriseAvatar personagem={personagem} size={84} />
+              <View style={{ flex: 1, minWidth: 0, marginLeft: 14, marginBottom: 8 }}>
+                <Text className="font-display text-[20px] text-ink">
+                  {(IRISES.find((p) => p.n === personagem)?.nome ?? "Irise").toUpperCase()}
+                </Text>
+                <Text className="font-body text-[12px] text-dim">
+                  {IRISES.find((p) => p.n === personagem)?.classe}
+                </Text>
+              </View>
+              <Pressable
+                onPress={onClose}
+                hitSlop={10}
+                className="mb-8 h-[30px] w-[30px] items-center justify-center rounded-full bg-subtle"
+              >
+                <X size={14} color={colors.ink} />
+              </Pressable>
             </View>
-            <Pressable onPress={onClose} hitSlop={10} className="h-[30px] w-[30px] items-center justify-center rounded-full bg-subtle">
-              <X size={14} color={colors.ink} />
-            </Pressable>
-          </View>
+          ) : (
+            <View className="flex-row items-center justify-between border-b border-border px-[18px] pb-3 pt-2">
+              <View className="flex-row items-center gap-2.5">
+                <AnelArcoIris size={22} />
+                <Text className="font-body-bold text-[16px] text-ink">Irise</Text>
+              </View>
+              <Pressable onPress={onClose} hitSlop={10} className="h-[30px] w-[30px] items-center justify-center rounded-full bg-subtle">
+                <X size={14} color={colors.ink} />
+              </Pressable>
+            </View>
+          )}
           <ScrollView
             ref={scrollRef}
             style={{ maxHeight: height * 0.62 }}
