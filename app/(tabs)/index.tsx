@@ -10,7 +10,6 @@ import { DangerRanking } from "@/components/DangerRanking";
 import { AvisoCard, GamiHomeCards } from "@/components/gami/HomeCards";
 import { IriseSheet } from "@/components/irise/Irise";
 import { CardCidadeIrise } from "@/components/irise-personagem/CardCidadeIrise";
-import { FaixaSempreOnline } from "@/components/irise-personagem/FaixaSempreOnline";
 import { IriseNudge } from "@/components/irise-personagem/IriseNudge";
 import { IrisePilula } from "@/components/irise-personagem/IrisePilula";
 import { Mark } from "@/components/Mark";
@@ -380,10 +379,6 @@ export default function HomeScreen() {
             </View>
           )}
         </View>
-
-        {irise && (
-          <FaixaSempreOnline personagem={irise.n} nome={irise.nome} onPress={abrirChatSugestao} />
-        )}
 
         <View className="gap-1 pt-2">
           <Text className="font-body-bold text-base text-ink">Segurança na cidade</Text>
