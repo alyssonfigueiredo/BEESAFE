@@ -431,7 +431,7 @@
  },
  {
   "id": "carrossel-8",
-  "aprovado": false,
+  "aprovado": true,
   "quando": "2026-10-11T12:00:00-03:00",
   "tipo": "POST",
   "midias": [
@@ -445,7 +445,9 @@
   ],
   "legenda": "Sair do armário é um dia. Escolher onde ir de mão dada é todo fim de semana.\n\n11 de outubro é o Dia de Sair do Armário. E a Irisa quer falar do lado de fora da porta: o bar, o café, o hotel, o banheiro.\n\nNão é fase. É endereço.\n\nAntes, a pergunta ficava no grupo: \"aquele lugar é de boa pra gente?\". Agora quem esteve lá responde em quatro perguntas: atendimento, afeto, banheiro, clientela.\n\nNão é a bandeira na porta que diz. É a gente.\n\nE se hoje ainda não dá para sair do armário, você também conta: sem nome, sem perfil, ninguém sabe quem avaliou.\n\nQual foi o primeiro lugar onde você se sentiu bem-vinde depois de sair do armário? Conta aqui. 🌈\n\nO link está na bio. iPhone na App Store; Android ainda em teste.\n\n#Irisa #LGBTQIA #Orgulho #AppLGBT #DiaDeSairDoArmário",
   "primeiro_comentario": "appirisa.com.br",
-  "publicado": false
+  "publicado": false,
+  "publicar_agora": true,
+  "nota": "Publicar agora (pedido dele, 11/10): fura a fila pro horário de hoje."
  },
  {
   "id": "reels-ombro",
