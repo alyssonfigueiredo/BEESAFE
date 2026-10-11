@@ -1,6 +1,6 @@
-# Para aprovação — Irise (Etapa 2 aplicada)
+# Irise — pacote final aprovado (Etapa 2 + ajustes)
 
-11/10/2026 · tudo abaixo já está no código (branches atualizadas) e sai por EAS Update, sem build.
+11/10/2026 · **tudo abaixo está aprovado e no app**: já no código (branches atualizadas), sai por EAS Update, sem build.
 Prints em anexo: `print-escolha.png`, `print-inicio.png`, `print-inicio-rolada.png`, `print-chat.png`
 (mock fiel ao código, 390×844) e `anel-girando.gif`.
 
@@ -26,12 +26,10 @@ Prints em anexo: `print-escolha.png`, `print-inicio.png`, `print-inicio-rolada.p
 **Fotos**
 - Os 18 arquivos do Ali (pacote 17, poses 1–6 nas versões clara, -escuro e avatar-card) estão no app, conferidos byte a byte.
 
-## Ajuste já feito a pedido de vocês (conferir no print da Escolha)
+## Ajustes finais (aprovados em 11/10/2026)
 
 - **Vizinhos do carrossel:** imagem original a 0,5 + cópia tingida `#8E96AE` a 0,6 por cima (o tintColor sozinho virava silhueta chapada). O conjunto ainda fica a 0,5 pela distância do carrossel.
+- **Anel do avatar: GIRANDO** — 1 volta a cada 40 s (`anel-girando.gif` compara com o parado); com "reduzir movimento" ligado no celular, para sozinho. Decisão do Alysson, aprovada.
+- **Balão da Início alinhado aos cards:** a borda direita termina a 12 pt da tela (igual ao card da cidade), não mais a 44; a ponta andou +32 pt pra dentro e segue caindo no mesmo lugar, à esquerda da cabeça do irise, sem encostar no cabelo.
 
-## O que precisa de decisão de vocês
-
-1. **Anel do avatar girando.** A resposta do pacote 14 dizia "parado", mas o Alysson viu o comparativo e **prefere girando** — 1 volta a cada 40 s, bem sutil (`anel-girando.gif` mostra os dois lado a lado; com "reduzir movimento" ligado no celular, o anel para sozinho). Está girando no app agora. Confirmam?
-
-Qualquer outro ajuste, mandar no formato de sempre (lista do que mudar, com medidas).
+Fechado. Ajuste novo, mandar no formato de sempre (lista do que mudar, com medidas).
