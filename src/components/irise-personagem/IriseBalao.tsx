@@ -122,15 +122,18 @@ export function IriseBalao({
   }, [bob, reduce]);
   const estiloBob = useAnimatedStyle(() => ({ transform: [{ translateY: -1.5 * bob.get() }] }));
   const estiloTexto = useAnimatedStyle(() => ({ opacity: opacidade.get() }));
-  // Ponta: sai da borda de baixo, entre 100 e 74 pt antes da borda direita; desce 14 pt. Nunca encosta no cabelo.
-  const ponta = `M${w - 100} ${h - 1} H${w - 74} C${w - 74} ${h + 6} ${w - 72} ${h + 11} ${w - 67} ${h + 14} C${w - 81} ${h + 15} ${w - 94} ${h + 10} ${w - 100} ${h - 1} Z`;
+  
+  // Pedido do Alysson (11/10/2026): o balão termina rente aos cards (12 pt da tela, igual ao card
+  // da cidade), não mais a 44. A ponta anda +32 pra dentro pra continuar caindo no MESMO lugar da
+  // tela de antes — à esquerda da cabeça do irise, que ela nunca pode encostar.
+  const ponta = `M${w - 132} ${h - 1} H${w - 106} C${w - 106} ${h + 6} ${w - 104} ${h + 11} ${w - 99} ${h + 14} C${w - 113} ${h + 15} ${w - 126} ${h + 10} ${w - 132} ${h - 1} Z`;
   return (
     <Animated.View
       onLayout={(e) => setTam({ w: e.nativeEvent.layout.width, h: e.nativeEvent.layout.height })}
       style={[
         {
           alignSelf: "flex-end",
-          marginRight: 44,
+          marginRight: 12,
           minWidth: 220,
           maxWidth: 310,
           // Sombra do conjunto (SPEC-inicio §3). Props clássicas, não boxShadow: o iOS desenha a
