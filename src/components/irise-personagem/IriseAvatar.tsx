@@ -1,13 +1,4 @@
-import { useEffect } from "react";
-import { Image, StyleSheet, View } from "react-native";
-import Animated, {
-  Easing,
-  useAnimatedStyle,
-  useReducedMotion,
-  useSharedValue,
-  withRepeat,
-  withTiming,
-} from "react-native-reanimated";
+import { Image, View } from "react-native";
 import Svg, { Circle, Defs, RadialGradient, Stop } from "react-native-svg";
 
 import { useBustoResolvido } from "@/hooks/useIrisePersonagens";
@@ -17,10 +8,10 @@ import { colors } from "@/theme/tokens";
 const ANEL_ARCOIRIS = require("../../../assets/irise-personagens/anel-arcoiris.png");
 
 /**
- * Avatar do protótipo aprovado (10/10/2026): o busto sai do círculo. O corpo é cortado pela curva
- * de baixo do círculo e a cabeça passa por cima da borda. Altura total = size * 1.3.
- * Espessura do anel = 2,4% do size (6 px num avatar de 250). Não substitui o Busto (que continua
- * nas miniaturas e cartões).
+ * Avatar da referência aprovada (pacote 13 + respostas do pacote 14): anel arco-íris de 2,4% do
+ * tamanho, PARADO (decisão do design, dúvida 2), fundo radial claro com sombra lilás no círculo,
+ * busto a 118% da área interna cortado pela curva de baixo — a cabeça passa por cima da borda.
+ * Altura total = size * 1.3. Não substitui o Busto (que continua nos cartões pequenos).
  */
 export function IriseAvatar({
   personagem,
@@ -34,34 +25,38 @@ export function IriseAvatar({
   pose?: number;
   size: number;
   anel?: boolean;
-  /** vizinhos do carrossel: sem anel, apagado */
+  /** Vizinhos do carrossel: a mesma imagem tingida de cinza por cima (tintColor funciona no iOS
+   * e no Android; o `filter: grayscale` do RN é só Android). Anel e fundo ficam como são. */
   cinza?: boolean;
   /** Pra usar em cima do card/faixa/pílula escuros (personagem fora dos 9 originais, que não tem
    * a versão `avatar-card`/`-escuro` pronta — ver `iriseImagensEscuras.ts`). O miolo do anel vira
-   * a cor do card em vez de branco; o resto não muda. */
+   * a cor do card em vez do degradê claro; o resto não muda. */
   fundo?: "claro" | "escuro";
 }) {
   const altura = size * 1.3;
   const espessura = size * 0.024;
-  const r = size / 2 - espessura;
-  const imgW = size * 1.12;
+  const interno = size - espessura * 2;
+  const r = interno / 2;
+  const imgW = interno * 1.18;
   const imgH = imgW * BUSTO_ASPECTO;
   const { source, onError } = useBustoResolvido(pose, personagem);
 
-  const reduzido = useReducedMotion();
-  const giro = useSharedValue(0);
-  useEffect(() => {
-    if (reduzido) return;
-    giro.set(withRepeat(withTiming(360, { duration: 40000, easing: Easing.linear }), -1));
-  }, [giro, reduzido]);
-  const estiloGiro = useAnimatedStyle(() => ({ transform: [{ rotate: `${giro.get()}deg` }] }));
-
   return (
-    <View style={{ width: size, height: altura, opacity: cinza ? 0.45 : 1 }}>
-      <View style={{ position: "absolute", left: 0, bottom: 0, width: size, height: size }}>
+    <View style={{ width: size, height: altura }}>
+      <View
+        style={{
+          position: "absolute",
+          left: 0,
+          bottom: 0,
+          width: size,
+          height: size,
+          borderRadius: size / 2,
+          boxShadow: "0 24px 50px rgba(96,55,240,0.18)",
+        }}
+      >
         <Svg width={size} height={size}>
           <Defs>
-            <RadialGradient id="iaFundo" cx="50%" cy="30%" r="75%">
+            <RadialGradient id="iaFundo" cx="50%" cy="28%" r="78%">
               <Stop offset="0" stopColor="#FFFFFF" />
               <Stop offset="1" stopColor="#ECE5FF" />
             </RadialGradient>
@@ -70,13 +65,13 @@ export function IriseAvatar({
             cx={size / 2}
             cy={size / 2}
             r={size / 2 - espessura / 2}
-            fill={cinza ? colors.subtle : fundo === "escuro" ? "#171A2B" : "url(#iaFundo)"}
-            stroke={anel && !cinza ? "none" : colors.border}
+            fill={fundo === "escuro" ? "#171A2B" : "url(#iaFundo)"}
+            stroke={anel ? "none" : colors.border}
             strokeWidth={espessura}
           />
         </Svg>
-        {anel && !cinza && (
-          <Animated.Image source={ANEL_ARCOIRIS} style={[{ position: "absolute", width: size, height: size }, estiloGiro]} />
+        {anel && (
+          <Image source={ANEL_ARCOIRIS} style={{ position: "absolute", width: size, height: size }} />
         )}
       </View>
       <View
@@ -94,19 +89,22 @@ export function IriseAvatar({
         <Image
           source={source}
           onError={onError}
-          style={{
-            position: "absolute",
-            top: 0,
-            left: (size - espessura * 2 - imgW) / 2,
-            width: imgW,
-            height: imgH,
-          }}
+          style={{ position: "absolute", top: 0, left: (interno - imgW) / 2, width: imgW, height: imgH }}
           resizeMode="cover"
         />
         {cinza && (
-          <View
-            pointerEvents="none"
-            style={[StyleSheet.absoluteFill, { backgroundColor: "rgba(241,245,250,0.55)" }]}
+          <Image
+            source={source}
+            tintColor="#C9CFDA"
+            style={{
+              position: "absolute",
+              top: 0,
+              left: (interno - imgW) / 2,
+              width: imgW,
+              height: imgH,
+              opacity: 0.55,
+            }}
+            resizeMode="cover"
           />
         )}
       </View>

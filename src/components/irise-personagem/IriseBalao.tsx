@@ -80,6 +80,19 @@ export function useRodadaFalas(falas: Fala[]) {
   };
 }
 
+/** Pontinho da rodada: largura e cor animam na troca (transição de .3 s, SPEC-inicio §3). */
+function Ponto({ ativo, onPress }: { ativo: boolean; onPress: () => void }) {
+  const estilo = useAnimatedStyle(() => ({
+    width: withTiming(ativo ? 16 : 5, { duration: 300 }),
+    backgroundColor: withTiming(ativo ? "#141829" : "rgba(20,24,41,0.22)", { duration: 300 }),
+  }));
+  return (
+    <Pressable hitSlop={8} onPress={onPress}>
+      <Animated.View style={[{ height: 4, borderRadius: 2 }, estilo]} />
+    </Pressable>
+  );
+}
+
 /** Balão de uma peça só (retângulo raio 18 + ponta), branco com opacidade .55 no conjunto, sem blur. */
 export function IriseBalao({
   nome,
@@ -114,7 +127,21 @@ export function IriseBalao({
   return (
     <Animated.View
       onLayout={(e) => setTam({ w: e.nativeEvent.layout.width, h: e.nativeEvent.layout.height })}
-      style={[{ alignSelf: "flex-end", marginRight: 44, minWidth: 220, maxWidth: 310 }, estiloBob]}
+      style={[
+        {
+          alignSelf: "flex-end",
+          marginRight: 44,
+          minWidth: 220,
+          maxWidth: 310,
+          // Sombra do conjunto (SPEC-inicio §3). Props clássicas, não boxShadow: o iOS desenha a
+          // sombra pelo recorte do conteúdo transparente, não pelo retângulo da caixa.
+          shadowColor: "#6037F0",
+          shadowOpacity: 0.14,
+          shadowRadius: 9,
+          shadowOffset: { width: 0, height: 10 },
+        },
+        estiloBob,
+      ]}
     >
       {w > 0 && (
         <Svg width={w} height={h + 16} style={{ position: "absolute", left: 0, top: 0, overflow: "visible" }} pointerEvents="none">
@@ -133,17 +160,7 @@ export function IriseBalao({
           </Animated.Text>
           <View style={{ marginLeft: "auto", flexDirection: "row", alignItems: "center", gap: 3 }}>
             {Array.from({ length: total }).map((_, k) => (
-              <Pressable
-                key={k}
-                hitSlop={8}
-                onPress={() => onPular(k)}
-                style={{
-                  width: k === indice ? 16 : 5,
-                  height: 4,
-                  borderRadius: 2,
-                  backgroundColor: k === indice ? "#141829" : "rgba(20,24,41,0.22)",
-                }}
-              />
+              <Ponto key={k} ativo={k === indice} onPress={() => onPular(k)} />
             ))}
           </View>
           <Pressable hitSlop={10} onPress={onCta} style={{ marginLeft: 8 }}>

@@ -221,7 +221,9 @@ export default function HomeScreen() {
 
         {irise ? (
           <View
-            style={{ marginHorizontal: -16, marginBottom: -4 }}
+            // marginTop -16 anula o padding do scroll: o espaço cabeçalho→balão fica ~10 pt,
+            // igual ao espaço balão→card (SPEC-inicio §1).
+            style={{ marginHorizontal: -16, marginTop: -16, marginBottom: -4 }}
             onLayout={(e) => setCardBaixoY(e.nativeEvent.layout.y + e.nativeEvent.layout.height)}
           >
             <CardCidadeIrise

@@ -30,14 +30,38 @@ export function FaixaSempreOnline({ personagem, nome, onPress }: { personagem: n
       ]}
     >
       {usaEmbutido ? (
-        <Image source={avatarCardSrc(5, personagem)} style={{ position: "absolute", left: 12, bottom: 10, width: 92, height: 120 }} />
+        <Image
+          source={avatarCardSrc(5, personagem)}
+          style={{
+            position: "absolute",
+            left: 12,
+            bottom: 10,
+            width: 92,
+            height: 120,
+            // Sombra do irise (SPEC-inicio §5); iOS recorta pela transparência da imagem.
+            shadowColor: "#000000",
+            shadowOpacity: 0.3,
+            shadowRadius: 9,
+            shadowOffset: { width: 0, height: 10 },
+          }}
+        />
       ) : (
-        <View style={{ position: "absolute", left: 12, bottom: 10 }}>
+        <View
+          style={{
+            position: "absolute",
+            left: 12,
+            bottom: 10,
+            shadowColor: "#000000",
+            shadowOpacity: 0.3,
+            shadowRadius: 9,
+            shadowOffset: { width: 0, height: 10 },
+          }}
+        >
           <IriseAvatar personagem={personagem} pose={5} size={92} fundo="escuro" />
         </View>
       )}
       <View style={{ flex: 1, minWidth: 0 }}>
-        <Text numberOfLines={1} style={{ fontFamily: "SpaceGrotesk_700Bold", fontSize: 10, letterSpacing: 1.2, color: "#49DCC0" }}>
+        <Text numberOfLines={1} style={{ fontFamily: "SpaceGrotesk_700Bold", fontSize: 10, letterSpacing: 1.4, color: "#49DCC0" }}>
           {nome} · SEMPRE ON-LINE
         </Text>
         <Text numberOfLines={3} style={{ marginTop: 4, fontFamily: "SpaceGrotesk_400Regular", fontSize: 13, lineHeight: 17.5, color: "#FFFFFF" }}>

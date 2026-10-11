@@ -9,7 +9,6 @@ import { useFotoTrocada } from "@/hooks/useIrisePersonagens";
 import { FALAS, type Fala } from "@/lib/iriseFalas";
 import { avatarCardSrc } from "@/lib/iriseImagensEscuras";
 import { BUNDLED_N } from "@/lib/irisePersonagens";
-import { shadow } from "@/theme/tokens";
 
 const ARCO = ["#FF6964", "#FFA353", "#FFD066", "#49DCC0", "#59A7FF", "#A889FF"];
 
@@ -124,7 +123,6 @@ export function CardCidadeIrise({
                     alignItems: "center",
                     justifyContent: "center",
                   },
-                  shadow.turquoise,
                   pressed && { opacity: 0.8 },
                 ]}
               >
@@ -144,7 +142,6 @@ export function CardCidadeIrise({
                     alignItems: "center",
                     justifyContent: "center",
                   },
-                  shadow.coral,
                   pressed && { opacity: 0.8 },
                 ]}
               >
@@ -159,7 +156,20 @@ export function CardCidadeIrise({
           hitSlop={6}
           style={({ pressed }) => [{ position: "absolute", right: 18, top: -4 }, pressed && { opacity: 0.8 }]}
         >
-          <Animated.View style={[{ width: 108, height: 140 }, estiloAvatar]}>
+          <Animated.View
+          style={[
+            {
+              width: 108,
+              height: 140,
+              // Sombra do irise (SPEC-inicio §2). Props clássicas: o iOS recorta pela transparência.
+              shadowColor: "#000000",
+              shadowOpacity: 0.35,
+              shadowRadius: 11,
+              shadowOffset: { width: 0, height: 14 },
+            },
+            estiloAvatar,
+          ]}
+        >
             {usaEmbutido ? (
               <Image source={avatarCardSrc(pose, personagem)} style={{ width: 108, height: 140 }} />
             ) : (
