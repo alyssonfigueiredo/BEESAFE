@@ -1,4 +1,13 @@
+import { useEffect } from "react";
 import { Image, View } from "react-native";
+import Animated, {
+  Easing,
+  useAnimatedStyle,
+  useReducedMotion,
+  useSharedValue,
+  withRepeat,
+  withTiming,
+} from "react-native-reanimated";
 import Svg, { Circle, Defs, RadialGradient, Stop } from "react-native-svg";
 
 import { useBustoResolvido } from "@/hooks/useIrisePersonagens";
@@ -9,7 +18,8 @@ const ANEL_ARCOIRIS = require("../../../assets/irise-personagens/anel-arcoiris.p
 
 /**
  * Avatar da referência aprovada (pacote 13 + respostas do pacote 14): anel arco-íris de 2,4% do
- * tamanho, PARADO (decisão do design, dúvida 2), fundo radial claro com sombra lilás no círculo,
+ * tamanho, girando devagar (1 volta a cada 40 s — o Alysson preferiu o giro, 11/10/2026, por cima
+ * da resposta do design), fundo radial claro com sombra lilás no círculo,
  * busto a 118% da área interna cortado pela curva de baixo — a cabeça passa por cima da borda.
  * Altura total = size * 1.3. Não substitui o Busto (que continua nos cartões pequenos).
  */
@@ -41,6 +51,14 @@ export function IriseAvatar({
   const imgH = imgW * BUSTO_ASPECTO;
   const { source, onError } = useBustoResolvido(pose, personagem);
 
+  const reduzido = useReducedMotion();
+  const giro = useSharedValue(0);
+  useEffect(() => {
+    if (reduzido) return;
+    giro.set(withRepeat(withTiming(360, { duration: 40000, easing: Easing.linear }), -1));
+  }, [giro, reduzido]);
+  const estiloGiro = useAnimatedStyle(() => ({ transform: [{ rotate: `${giro.get()}deg` }] }));
+
   return (
     <View style={{ width: size, height: altura }}>
       <View
@@ -71,7 +89,10 @@ export function IriseAvatar({
           />
         </Svg>
         {anel && (
-          <Image source={ANEL_ARCOIRIS} style={{ position: "absolute", width: size, height: size }} />
+          <Animated.Image
+            source={ANEL_ARCOIRIS}
+            style={[{ position: "absolute", width: size, height: size }, estiloGiro]}
+          />
         )}
       </View>
       <View
@@ -89,20 +110,29 @@ export function IriseAvatar({
         <Image
           source={source}
           onError={onError}
-          style={{ position: "absolute", top: 0, left: (interno - imgW) / 2, width: imgW, height: imgH }}
+          style={{
+            position: "absolute",
+            top: 0,
+            left: (interno - imgW) / 2,
+            width: imgW,
+            height: imgH,
+            // Cinza: tintColor sozinho vira silhueta chapada — a original fica a 0.5 e a cópia
+            // tingida entra por cima a 0.6 (ajuste do design, 11/10/2026).
+            opacity: cinza ? 0.5 : 1,
+          }}
           resizeMode="cover"
         />
         {cinza && (
           <Image
             source={source}
-            tintColor="#C9CFDA"
+            tintColor="#8E96AE"
             style={{
               position: "absolute",
               top: 0,
               left: (interno - imgW) / 2,
               width: imgW,
               height: imgH,
-              opacity: 0.55,
+              opacity: 0.6,
             }}
             resizeMode="cover"
           />
