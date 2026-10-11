@@ -56,7 +56,9 @@ export default function IrisePreviewEscolha() {
     atual: string;
     primeiraVez: string;
   }>();
-  const forma = (Number(formaParam ?? 2) || 2) as Forma;
+  // Forma 0 ("a") é válida: `Number("0") || 2` virava 2 e trocava "bem-vinda" por "bem-vinde".
+  const formaN = Number(formaParam);
+  const forma = (formaN === 0 || formaN === 1 ? formaN : 2) as Forma;
   const doPerfil = modo === "perfil";
   const setPersonagem = useSetIrisePersonagem();
   const { data: profile } = useProfile();
