@@ -1,7 +1,7 @@
 import { router, Stack, useLocalSearchParams } from "expo-router";
 import { ChevronLeft, ChevronRight, X } from "lucide-react-native";
 import { useEffect, useMemo, useState } from "react";
-import { Image, PanResponder, Pressable, Text, useWindowDimensions, View } from "react-native";
+import { Alert, Image, PanResponder, Pressable, Text, useWindowDimensions, View } from "react-native";
 import Animated, {
   Easing,
   Extrapolation,
@@ -107,7 +107,18 @@ export default function IrisePreviewEscolha() {
   // Posição contínua do carrossel (pode passar de 0/total — o wrap acontece por item, no render).
   const indiceSV = useSharedValue(indice);
 
+  // O catálogo abre nos 9 embutidos: personagem criado pelo admin só aparece quando o banco
+  // responde, e aí o índice inicial (achado na lista provisória) aponta pro personagem errado.
+  // Reposiciona quando o atual entra na lista — só enquanto a pessoa ainda não mexeu no carrossel.
+  const [mexeu, setMexeu] = useState(false);
+  const indiceDoAtual = irises.findIndex((p) => p.n === Number(atualParam));
+  if (!mexeu && indiceDoAtual >= 0 && indiceDoAtual !== indice) {
+    setIndice(indiceDoAtual);
+    indiceSV.set(indiceDoAtual);
+  }
+
   function mover(d: number) {
+    setMexeu(true);
     setIndice((i) => (i + d + total) % total);
     indiceSV.set(withTiming(indiceSV.get() + d, { duration: DURACAO_CARROSSEL, easing: CURVA_CARROSSEL }));
   }
@@ -120,6 +131,7 @@ export default function IrisePreviewEscolha() {
       PanResponder.create({
         onMoveShouldSetPanResponder: (_, g) => Math.abs(g.dx) > 10 && Math.abs(g.dx) > Math.abs(g.dy),
         onPanResponderGrant: () => {
+          setMexeu(true);
           dragBase.set(indiceSV.get());
         },
         onPanResponderMove: (_, g) => {
@@ -297,6 +309,10 @@ export default function IrisePreviewEscolha() {
               onPress={() => {
                 if (doPerfil) {
                   setPersonagem.mutate(atual.n, {
+                    // Sem isto, salvar sem internet não fazia nada: o botão soltava e a tela ficava
+                    // parada, sem dizer que não gravou.
+                    onError: (e) =>
+                      Alert.alert("Não deu pra salvar agora", e instanceof Error ? e.message : String(e)),
                     onSuccess: () => {
                       if (primeiraVez) {
                         // Primeira escolha: mostra a apresentação do irise em vez de só voltar

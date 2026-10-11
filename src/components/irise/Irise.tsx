@@ -293,11 +293,17 @@ export function IriseSheet({
         addBubble("Ainda não sei sua cidade — escolha uma no Início antes de pedir pra mim.");
         return;
       }
-      const places = await suggest.mutateAsync({ cityId, categories, semNota });
-      mostrarOuVazio(
-        places.map((p) => ({ ...p, reason: null })),
-        semNota,
-      );
+      // Sem isto, uma falha de rede matava o chip em silêncio: os pontinhos sumiam e nada aparecia.
+      try {
+        const places = await suggest.mutateAsync({ cityId, categories, semNota });
+        mostrarOuVazio(
+          places.map((p) => ({ ...p, reason: null })),
+          semNota,
+        );
+      } catch (err) {
+        console.warn("irise_suggest_places falhou:", err instanceof Error ? err.message : String(err));
+        addBubble("Não consegui buscar agora. Tenta de novo em instantes. ✨");
+      }
     });
   }
 
@@ -308,11 +314,16 @@ export function IriseSheet({
         addBubble("Preciso da sua localização pra isso — ative o GPS e tente de novo.");
         return;
       }
-      const places = await near.mutateAsync(userLocation);
-      mostrarOuVazio(
-        places.map((p) => ({ ...p, reason: null })),
-        false,
-      );
+      try {
+        const places = await near.mutateAsync(userLocation);
+        mostrarOuVazio(
+          places.map((p) => ({ ...p, reason: null })),
+          false,
+        );
+      } catch (err) {
+        console.warn("places_near falhou:", err instanceof Error ? err.message : String(err));
+        addBubble("Não consegui buscar agora. Tenta de novo em instantes. ✨");
+      }
     });
   }
 
