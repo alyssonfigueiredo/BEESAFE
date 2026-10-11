@@ -12,51 +12,28 @@ export function FaixaSempreOnline({ personagem, nome, onPress }: { personagem: n
   return (
     <Pressable
       onPress={onPress}
-      style={({ pressed }) => [
-        {
-          marginHorizontal: 12,
-          marginVertical: 28,
-          height: 96,
-          borderRadius: 28,
-          backgroundColor: "#171A2B",
-          paddingVertical: 16,
-          paddingRight: 16,
-          paddingLeft: 118,
-          flexDirection: "row",
-          alignItems: "center",
-          gap: 10,
-        },
-        pressed && { opacity: 0.8 },
-      ]}
+      className="active:opacity-80"
+      style={{
+        marginHorizontal: 12,
+        marginVertical: 28,
+        height: 96,
+        borderRadius: 28,
+        backgroundColor: "#171A2B",
+        paddingVertical: 16,
+        paddingRight: 16,
+        paddingLeft: 118,
+        flexDirection: "row",
+        alignItems: "center",
+        gap: 10,
+      }}
     >
       {usaEmbutido ? (
         <Image
           source={avatarCardSrc(5, personagem)}
-          style={{
-            position: "absolute",
-            left: 12,
-            bottom: 10,
-            width: 92,
-            height: 120,
-            // Sombra do irise (SPEC-inicio §5); iOS recorta pela transparência da imagem.
-            shadowColor: "#000000",
-            shadowOpacity: 0.3,
-            shadowRadius: 9,
-            shadowOffset: { width: 0, height: 10 },
-          }}
+          style={{ position: "absolute", left: 12, bottom: 10, width: 92, height: 120 }}
         />
       ) : (
-        <View
-          style={{
-            position: "absolute",
-            left: 12,
-            bottom: 10,
-            shadowColor: "#000000",
-            shadowOpacity: 0.3,
-            shadowRadius: 9,
-            shadowOffset: { width: 0, height: 10 },
-          }}
-        >
+        <View style={{ position: "absolute", left: 12, bottom: 10 }}>
           <IriseAvatar personagem={personagem} pose={5} size={92} fundo="escuro" />
         </View>
       )}

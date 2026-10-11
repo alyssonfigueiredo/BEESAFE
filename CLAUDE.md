@@ -813,6 +813,17 @@ quando o repositório passa a trazer `publicado: true`. A aba "Lista, dia a dia"
 
 ## Armadilhas já resolvidas (não repetir)
 
+- **Pressable com `style` em FUNÇÃO não aplica estilo neste app (11/10/2026, visto em aparelho real):**
+  `style={({ pressed }) => [...]}` chegou ao iPhone com TODOS os estilos ignorados (faixa Sempre on-line
+  transparente e sem altura, botões do card da cidade sem fundo, avatar fora do lugar — o NativeWind v4
+  intercepta o Pressable e perde a função). Só os componentes do irise usavam o padrão, e eles nunca tinham
+  rodado em aparelho (só mock) — por isso ninguém viu antes. Regra: Pressable sempre com `style` plano +
+  `className="active:opacity-80"`, como o resto do app. Mock em HTML NÃO pega isso: flexbox de navegador
+  aplica a função normalmente.
+- **Sombra iOS (`shadowColor/shadowOffset`...) em Image/SVG transparente sai como RETÂNGULO cinza no
+  aparelho** (vista atrás do avatar da faixa em 11/10/2026). As sombras do balão e dos avatares do irise
+  foram removidas por isso; se o design quiser sombra, tem que vir desenhada dentro do PNG.
+
 - **Token da Meta vazou em 28/09/2026** (`META_IG_USER_ID` estava com o token; o erro da Graph API
   devolveu o token e o robô gravou em `docs/legendas/fila.json`, público). Desde 29/09 a Meta responde
   "API access blocked". Desde 30/09 o script passa todo erro por `semSegredo()`. O token segue no

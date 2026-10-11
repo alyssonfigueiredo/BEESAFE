@@ -114,17 +114,15 @@ export function CardCidadeIrise({
               <Pressable
                 onPress={onAvaliar}
                 hitSlop={{ top: 4, bottom: 4 }}
-                style={({ pressed }) => [
-                  {
-                    flex: 1,
-                    height: 36,
-                    borderRadius: 18,
-                    backgroundColor: "#49DCC0",
-                    alignItems: "center",
-                    justifyContent: "center",
-                  },
-                  pressed && { opacity: 0.8 },
-                ]}
+                className="active:opacity-80"
+                style={{
+                  flex: 1,
+                  height: 36,
+                  borderRadius: 18,
+                  backgroundColor: "#49DCC0",
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
               >
                 <Text style={{ fontFamily: "SpaceGrotesk_700Bold", fontSize: 11, color: "#141829" }}>Avaliar um lugar</Text>
               </Pressable>
@@ -133,17 +131,15 @@ export function CardCidadeIrise({
               <Pressable
                 onPress={onRelato}
                 hitSlop={{ top: 4, bottom: 4 }}
-                style={({ pressed }) => [
-                  {
-                    flex: 1,
-                    height: 36,
-                    borderRadius: 18,
-                    backgroundColor: "#FF6964",
-                    alignItems: "center",
-                    justifyContent: "center",
-                  },
-                  pressed && { opacity: 0.8 },
-                ]}
+                className="active:opacity-80"
+                style={{
+                  flex: 1,
+                  height: 36,
+                  borderRadius: 18,
+                  backgroundColor: "#FF6964",
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
               >
                 <Text style={{ fontFamily: "SpaceGrotesk_700Bold", fontSize: 11, color: "#141829" }}>Registrar relato</Text>
               </Pressable>
@@ -154,22 +150,10 @@ export function CardCidadeIrise({
         <Pressable
           onPress={() => onAbrirChat(falas.length > 0 ? r.fala : null)}
           hitSlop={6}
-          style={({ pressed }) => [{ position: "absolute", right: 18, top: -4 }, pressed && { opacity: 0.8 }]}
+          className="active:opacity-80"
+          style={{ position: "absolute", right: 18, top: -4 }}
         >
-          <Animated.View
-          style={[
-            {
-              width: 108,
-              height: 140,
-              // Sombra do irise (SPEC-inicio §2). Props clássicas: o iOS recorta pela transparência.
-              shadowColor: "#000000",
-              shadowOpacity: 0.35,
-              shadowRadius: 11,
-              shadowOffset: { width: 0, height: 14 },
-            },
-            estiloAvatar,
-          ]}
-        >
+          <Animated.View style={[{ width: 108, height: 140 }, estiloAvatar]}>
             {usaEmbutido ? (
               <Image source={avatarCardSrc(pose, personagem)} style={{ width: 108, height: 140 }} />
             ) : (
