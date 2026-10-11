@@ -643,6 +643,19 @@ Nome: **Irisa** (INPI livre; @appirisa livre). Bundle id Android `br.com.irisa.a
   sempre, sem desenho de coração) e linha "Saiu do Quero ir e foi para Já fui" na `RewardSheet`. Sem a migration no
   banco, o coração, o chip e o cartão somem calados.
 
+- **Irise: rodada de design fechada e publicada (11/10/2026).** Pacotes 13–21 do revisor externo:
+  auditoria (Etapa 1, tabela em `AUDITORIA-IRISE.md`) e correção (Etapa 2, resumo em `APROVACAO-IRISE.md`).
+  Escolha sem miniaturas, cartão flutuante absoluto (12 pt + safe area; o busto de 250 só encolhe se a tela
+  for curta — mede cartão e palco), título misto Oswald 500+700, setas de vidro, vizinhos = original 0,5 +
+  cópia tingida #8E96AE 0,6 (tintColor puro vira silhueta; filter grayscale não roda no iOS). Anel do avatar
+  GIRANDO (40 s/volta — decisão do Alysson por cima da resposta do design, que pedia parado). Balão da
+  Início: sombra lilás, pontinhos animados, borda direita a 12 pt da tela (ponta andou +32 pra dentro, segue
+  à esquerda da cabeça). Fotos do Ali (12): entrega-ali-v5 completa (18 arquivos). Falas seguem as honestas
+  do app (sem "+3 gomos", sem lugar inventado) — design aceitou. Tudo JS/asset: **EAS Update publicado em
+  11/10/2026 no canal production, runtime 0.1.2, commit `18befcc`** (grupo e19238c5-e035-4c69-b20d-e45bd6f0114c).
+  Mocks de print: Playwright + Chromium, fontes reais embutidas (padrão descrito nos handoffs; scripts só no
+  scratchpad das sessões cloud).
+
 ## Stack
 
 Expo SDK 57, Expo Router, NativeWind v4, TypeScript, TanStack Query, MapLibre React Native v11 com tiles Esri
