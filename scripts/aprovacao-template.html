@@ -499,9 +499,33 @@ const ACOES = {
   desarquivar: {arquivado:false},
 };
 const AVISO_JAJA = 'Furar a fila com essa peça?\n\nEla fica aprovada e marcada pra sair na próxima rodada, sem esperar a data agendada. A publicação em si não sai daqui: eu vejo a marca e solto.';
+
+// confirm() nativo não funciona dentro do artefato (iframe sandboxed bloqueia o diálogo
+// e o clique simplesmente não faz nada); por isso um overlay próprio, no estilo da página.
+function confirmarAqui(msg){
+  return new Promise(resolve=>{
+    const ov = document.createElement('div');
+    ov.style.cssText = 'position:fixed;inset:0;background:rgba(10,12,26,.55);display:flex;align-items:center;justify-content:center;z-index:50;padding:20px';
+    ov.innerHTML = `
+      <div style="background:var(--surface);border-radius:16px;max-width:360px;padding:18px;box-shadow:0 10px 40px rgba(0,0,0,.25)">
+        <p style="margin:0 0 16px;font-size:13.5px;line-height:1.5;white-space:pre-wrap">${esc(msg)}</p>
+        <div style="display:flex;gap:8px;justify-content:flex-end">
+          <button type="button" class="btn" data-r="0">Cancelar</button>
+          <button type="button" class="btn btn-jaja" data-r="1">Confirmar</button>
+        </div>
+      </div>`;
+    ov.addEventListener('click', e=>{
+      if(e.target===ov){ document.body.removeChild(ov); resolve(false); return; }
+      const r = e.target.closest('button[data-r]');
+      if(r){ document.body.removeChild(ov); resolve(r.dataset.r==='1'); }
+    });
+    document.body.appendChild(ov);
+  });
+}
+
 async function acao(id, qual, btn){
   if(!dbNs) return;
-  if(qual==='jaja' && !confirm(AVISO_JAJA)) return;
+  if(qual==='jaja' && !(await confirmarAqui(AVISO_JAJA))) return;
   if(btn) btn.disabled = true;
   try {
     await gravarAprovacao(id, ACOES[qual]);
