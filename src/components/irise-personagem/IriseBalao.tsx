@@ -58,8 +58,14 @@ export function useRodadaFalas(falas: Fala[]) {
     let n = 0;
     timer.current = setInterval(() => {
       n += 1;
+      // Última fala: para SÓ o relógio da rodada. Chamar parar() depois do ir() matava o
+      // trocaTimer que o ir() tinha acabado de armar — a opacidade ficava presa em 0 e o texto
+      // do balão E o irise do card sumiam da Início (visto em aparelho real, 11/10/2026).
+      if (n >= falas.length - 1 && timer.current) {
+        clearInterval(timer.current);
+        timer.current = null;
+      }
       ir(n);
-      if (n >= falas.length - 1) parar();
     }, PASSO);
     return parar;
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -75,6 +81,9 @@ export function useRodadaFalas(falas: Fala[]) {
     },
     fechar: () => {
       parar();
+      // A opacidade é compartilhada com o irise do card: se o × pegar o meio de uma troca
+      // (fade em 0, timer cancelado), devolve pra 1 pra o boneco não sumir junto com o balão.
+      opacidade.set(1);
       setVisivel(false);
     },
   };

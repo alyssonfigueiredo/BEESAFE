@@ -82,9 +82,6 @@ export default function HomeScreen() {
   const [chatAbertura, setChatAbertura] = useState<Fala | null>(null);
   const [passouDoCard, setPassouDoCard] = useState(false);
   const [cardBaixoY, setCardBaixoY] = useState<number | null>(null);
-  const [faixaY, setFaixaY] = useState<number | null>(null);
-  const [faixaAltura, setFaixaAltura] = useState(0);
-  const [faixaNaTela, setFaixaNaTela] = useState(false);
 
   function abrirChat(fala: Fala | null) {
     setChatAbertura(fala);
@@ -187,7 +184,10 @@ export default function HomeScreen() {
   );
 
   const nudgeVisivel = useAlgumNudgeVisivel();
-  const pilulaVisivel = !!irise && passouDoCard && !nudgeVisivel && !faixaNaTela;
+  // Sem a trava "faixa na tela": a faixa entra pelo pé da tela ANTES de o card sair pelo topo,
+  // então nunca existia um momento em que a pílula pudesse aparecer (visto em aparelho real,
+  // 11/10/2026). O spec só pede: aparece quando o card da cidade sai da tela.
+  const pilulaVisivel = !!irise && passouDoCard && !nudgeVisivel;
 
   return (
     <View className="flex-1">
@@ -201,10 +201,6 @@ export default function HomeScreen() {
           const y = e.nativeEvent.contentOffset.y;
           if (cardBaixoY != null) {
             setPassouDoCard(y > cardBaixoY);
-          }
-          if (faixaY != null) {
-            const alturaTela = e.nativeEvent.layoutMeasurement.height;
-            setFaixaNaTela(y + alturaTela > faixaY && y < faixaY + faixaAltura);
           }
         }}
         scrollEventThrottle={64}
@@ -386,12 +382,7 @@ export default function HomeScreen() {
         </View>
 
         {irise && (
-          <View onLayout={(e) => {
-            setFaixaY(e.nativeEvent.layout.y);
-            setFaixaAltura(e.nativeEvent.layout.height);
-          }}>
-            <FaixaSempreOnline personagem={irise.n} nome={irise.nome} onPress={abrirChatSugestao} />
-          </View>
+          <FaixaSempreOnline personagem={irise.n} nome={irise.nome} onPress={abrirChatSugestao} />
         )}
 
         <View className="gap-1 pt-2">
