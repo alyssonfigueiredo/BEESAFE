@@ -24,10 +24,9 @@ Cada lugar que você avaliou, cada tela que travou no seu celular, cada toque qu
 tudo isso virou conserto antes de o app encontrar o público. O mapa que qualquer pessoa abre hoje
 no iPhone passou primeiro pelas suas mãos. Obrigade, de verdade.
 
-**E no Android?** Seguimos em fase de teste — é a última etapa antes de abrir pra todo mundo na
-Play Store também, e ela depende de uma regra do Google: o grupo de testadores precisa se manter
-ativo por um período seguido. Ou seja: **continuar com o app instalado e dar uma passada nele de
-vez em quando é, literalmente, o que destrava o lançamento.** Não desinstala agora que falta pouco. 🙏
+**E no Android?** Graças a vocês, o teste cumpriu o período que o Google exige — o lançamento
+aberto na Play Store é o próximo passo, e você vai saber em primeira mão. Até lá, o app continua
+funcionando normalmente no seu celular, e as novidades chegam primeiro pra quem está no teste.
 
 Enquanto isso, uma atualização nova já está a caminho da sua tela: conquistas, medalhas, a sua
 evolução no app e um Início repaginado.
