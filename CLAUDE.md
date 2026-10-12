@@ -813,6 +813,12 @@ quando o repositório passa a trazer `publicado: true`. A aba "Lista, dia a dia"
 
 ## Armadilhas já resolvidas (não repetir)
 
+- **Build do EAS SÓ por `bash scripts/buildar.sh ios|android` (12/10/2026):** em 11/10 um `git pull`
+  falhou calado no Mac (mudança local em package.json → "Aborting" no meio de uma parede de texto) e
+  4 builds saíram da versão antiga (0.1.2 em vez de 0.1.3) — cota jogada fora. O script para em
+  qualquer mudança local, faz `git pull --ff-only`, mostra a versão e pede confirmação antes de
+  gastar. Nunca mais passar `npx eas-cli build` cru pro Alysson colar; sempre o script.
+
 - **Pressable com `style` em FUNÇÃO não aplica estilo neste app (11/10/2026, visto em aparelho real):**
   `style={({ pressed }) => [...]}` chegou ao iPhone com TODOS os estilos ignorados (faixa Sempre on-line
   transparente e sem altura, botões do card da cidade sem fundo, avatar fora do lugar — o NativeWind v4
