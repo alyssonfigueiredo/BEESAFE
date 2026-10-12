@@ -674,8 +674,10 @@ git pull
 npx expo run:ios --device                 # reinstala no iPhone (precisa a cada 7 dias)
 npx expo start --dev-client               # Metro; tecla r recarrega
 npx expo run:ios --device --configuration Release   # sem Metro, para prints
-npx eas-cli build -p android --profile preview      # APK por link
-npx eas-cli build -p android --profile production   # AAB para a Play Store
+bash scripts/buildar.sh ios                 # build de loja (gasta cota) — NUNCA eas-cli build cru
+bash scripts/buildar.sh android             # idem; os dois conferem branch/pull/versão antes
+bash scripts/publicar.sh "Mensagem"         # EAS Update com as mesmas travas
+npx eas-cli build -p android --profile preview      # APK por link (teste; também gasta cota)
 set -a && source .env.scripts && set +a           # carrega SUPABASE_SERVICE_ROLE_KEY e GOOGLE_MAPS_API_KEY
 node scripts/import-neighborhoods.mjs <ibge>
 node scripts/import-districts-ibge.mjs 3550308     # bairros pelos distritos do IBGE (onde o OSM não cobre)
@@ -813,11 +815,17 @@ quando o repositório passa a trazer `publicado: true`. A aba "Lista, dia a dia"
 
 ## Armadilhas já resolvidas (não repetir)
 
-- **Build do EAS SÓ por `bash scripts/buildar.sh ios|android` (12/10/2026):** em 11/10 um `git pull`
-  falhou calado no Mac (mudança local em package.json → "Aborting" no meio de uma parede de texto) e
-  4 builds saíram da versão antiga (0.1.2 em vez de 0.1.3) — cota jogada fora. O script para em
-  qualquer mudança local, faz `git pull --ff-only`, mostra a versão e pede confirmação antes de
-  gastar. Nunca mais passar `npx eas-cli build` cru pro Alysson colar; sempre o script.
+- **Build SÓ por `bash scripts/buildar.sh ios|android`; update SÓ por `bash scripts/publicar.sh "msg"`
+  (12/10/2026):** em 11/10 um `git pull` falhou calado no Mac (mudança local em package.json →
+  "Aborting" no meio de uma parede de texto) e 4 builds saíram da versão antiga (0.1.2 em vez de
+  0.1.3) — cota jogada fora. Os scripts param em branch errada, em mudança local e em pull que não
+  avança; mostram a versão e pedem confirmação antes de gastar. Regras pra sessão também:
+  (1) nunca passar `eas-cli build`/`eas-cli update` cru pro Alysson colar; (2) nunca emendar
+  `git pull` com outro comando na mesma colada (o erro do pull some na rolagem); (3) antes de pedir
+  build, conferir se a versão do app.config é MAIOR que a publicada nas lojas — a Apple não aceita
+  build novo em versão já publicada (foi o que inutilizou as builds 11 e 14); (4) mudança de versão
+  (`version` no app.config/package.json) avisa o Alysson pra ele fazer `git pull` em TODA janela
+  aberta antes de qualquer build.
 
 - **Pressable com `style` em FUNÇÃO não aplica estilo neste app (11/10/2026, visto em aparelho real):**
   `style={({ pressed }) => [...]}` chegou ao iPhone com TODOS os estilos ignorados (faixa Sempre on-line
