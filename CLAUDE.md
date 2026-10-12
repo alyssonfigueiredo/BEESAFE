@@ -706,6 +706,14 @@ O smoke usa stubs de pg_net (`supabase/dev/pg_net/`), storage, vault e pgcrypto 
 
 ## Próximos passos (em ordem)
 
+0.5. **Arquivo de desofuscação na Play Console (prazo que o Google mostra: até 2027; decisão dele em
+   12/10/2026 de deixar pra próxima build):** o AAB sobe sem mapping porque o Expo não liga o
+   R8/proguard por padrão. Na PRÓXIMA build Android (não gastar cota só pra isso): adicionar
+   `expo-build-properties` no app.config.ts com `android: { enableProguardInReleaseBuilds: true,
+   enableShrinkResourcesInReleaseBuilds: true }`, testar com `--profile preview` (APK) antes —
+   proguard pode quebrar lib nativa (MapLibre, Firebase) e aí precisa de regras keep. Com isso o
+   mapping.txt sai junto do build e o aviso some.
+
 1. Teste fechado no Google Play: 12 testadores já na lista e a contagem dos 14 dias em andamento (dito por ele
    em 30/09/2026). No fim, "Solicitar acesso à produção". Não deixar cair abaixo de 12 (reinicia a contagem).
 2. Bairros de Brasília, São Luís e Palmas — tem que existir fonte, o OSM é que não cobre. Pistas
