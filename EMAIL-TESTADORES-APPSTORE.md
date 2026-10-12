@@ -32,8 +32,8 @@ vocês: foi o grupo de teste que cumpriu, de ponta a ponta, o período que o Goo
 liberar. O app segue normal no seu celular, e as novidades continuam chegando primeiro pra quem
 está no grupo.
 
-Enquanto isso, uma atualização nova já está a caminho da sua tela: conquistas, medalhas, a sua
-evolução no app e um Início repaginado.
+E tem mais: a atualização nova já está na loja — conquistas, medalhas, a sua evolução no app e um
+Início repaginado. É só atualizar a Irisa e ver a diferença.
 
 Agora é espalhar: qualquer pessoa do seu rolê já consegue baixar.
 
