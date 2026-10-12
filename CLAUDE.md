@@ -643,6 +643,33 @@ Nome: **Irisa** (INPI livre; @appirisa livre). Bundle id Android `br.com.irisa.a
   sempre, sem desenho de coração) e linha "Saiu do Quero ir e foi para Já fui" na `RewardSheet`. Sem a migration no
   banco, o coração, o chip e o cartão somem calados.
 
+- **Rodada 0.1.3 (12/10/2026) — estado ao fim da sessão:**
+  - Versão do app subiu para **0.1.3** (package.json + app.config, commit e7c82b4) depois que 4 builds
+    saíram errados como 0.1.2 (ver armadilha do buildar.sh). Builds válidos: **iOS build 15** (enviado à
+    Apple por `--auto-submit`; no App Store Connect a versão 0.1.3 estava com a build 15 selecionada e o
+    Alysson colando as novidades — **conferir se ele concluiu "Adicionar para revisão" → "Enviar"**) e
+    **Android AAB 19**, em análise na Play Console (Produção, "Iniciar o lançamento completo").
+  - **DESCOBERTA IMPORTANTE: o Android NUNCA esteve público.** A faixa de produção estava sem país
+    configurado — o link https://play.google.com/store/apps/details?id=br.com.irisa.app dá "URL não
+    encontrado". Os "14 dispositivos ativos" são os testadores do teste fechado. A correção está na
+    mesma análise em curso ("Adicionar 1 país/região: Brasil" + 0.1.3): quando o Google aprovar, a
+    ficha passa a existir. Até lá, o único caminho Android é o link de participação do teste.
+    Consequência: landing, bio e posts dizem "nas duas lojas" mas o botão do Google Play leva a 404
+    até a aprovação (ele não pediu pra trocar; ofereci "Chegando ao Google Play" temporário).
+  - **E-mail de agradecimento aos testadores do Android pronto** (`EMAIL-TESTADORES-APPSTORE.html`,
+    texto diz "a atualização nova já está na loja"): **só enviar quando a 0.1.3 aprovar NAS DUAS
+    lojas.** Fluxo: abrir o html no navegador, Cmd+A/Cmd+C, colar no Gmail da Irisa, endereços em Cco;
+    lista: `select string_agg(email, ', ') from tester_signups where platform='android' and added_at is not null;`.
+  - Quando o Android abrir de verdade: **gravar a data do Abre-Alas** em https://appirisa.com.br/admin/
+    (sem isso a medalha dos primeiros continua sendo dada a todo mundo).
+  - Faixa de **teste aberto**: inativa, sem versão — foi aberta por engano e descartada; ignorar o
+    checklist "Lançar o app" do Painel. Pode ter sobrado um **rascunho vazio** em Produção → Versões;
+    descartar só ele (não mexe na versão em análise).
+  - Painel da versão 0.1.3 no Play: aviso DEX/ofuscação = o item 0.5 dos Próximos passos (fev/2027);
+    e 2 recomendações pra build futura: APIs de ponta a ponta descontinuadas (Android 15) e remover
+    restrições de redimensionamento/orientação pra telas grandes.
+  - Screenshots da Play desatualizados (decisão dele: fazer depois; não gasta build): capturar com
+    `bash scripts/screenshots.sh` no Simulador e subir em Presença na loja → Página principal da loja.
 - **Irise: rodada de design fechada e publicada (11/10/2026).** Pacotes 13–21 do revisor externo:
   auditoria (Etapa 1, tabela em `AUDITORIA-IRISE.md`) e correção (Etapa 2, resumo em `APROVACAO-IRISE.md`).
   Escolha sem miniaturas, cartão flutuante absoluto (12 pt + safe area; o busto de 250 só encolhe se a tela
