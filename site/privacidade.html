@@ -16,15 +16,17 @@ footer{color:var(--muted);font-size:13px;text-align:center;padding:24px}
 <body><header><img src="icon.png" alt=""><a href="./">IRIS<b>A</b></a>
 <nav><a href="privacidade.html">Privacidade</a><a href="termos.html">Termos</a><a href="excluir-conta.html">Excluir conta</a></nav></header>
 <main><h1>Política de Privacidade — Irisa</h1>
-<p>Última atualização: 24 de setembro de 2026.</p>
+<p>Última atualização: 2 de outubro de 2026.</p>
 <p>A Irisa é um aplicativo comunitário para pessoas LGBTQIA+ registrarem, de forma anônima, ocorrências de LGBTIfobia e avaliarem lugares acolhedores. Esta política explica quais dados coletamos, por que, e o que fazemos com eles, em conformidade com a Lei Geral de Proteção de Dados (Lei 13.709/2018).</p>
 <h2>1. Quem é o controlador</h2>
 <p>Irisa (projeto independente, sem fins lucrativos). Contato: appirisa@gmail.com.</p>
 <h2>2. Quais dados coletamos</h2>
 <ul>
-<li><strong>Conta</strong>: e-mail e senha (com hash), ou identificador fornecido pelo Google ou pela Apple quando você entra com essas contas. Usamos apenas para autenticar e para impedir spam. Não pedimos nome, CPF, telefone ou orientação sexual.</li>
+<li><strong>Conta</strong>: e-mail e senha (com hash), ou identificador fornecido pelo Google ou pela Apple quando você entra com essas contas. Usamos apenas para autenticar e para impedir spam. Não pedimos nome, CPF, telefone ou orientação sexual. Se você entra com a Apple, guardamos também o token de atualização que a Apple emite para o app, exclusivamente para desfazer o vínculo com sua conta Apple quando você excluir a conta; ele não é usado para mais nada e nenhum usuário do app tem acesso a ele.</li>
+<li><strong>Bloqueios</strong>: se você bloquear alguém, guardamos o par "quem bloqueou / quem foi bloqueado" para deixar de mostrar a você o que essa conta publica. Só você vê e desfaz seus bloqueios; a pessoa bloqueada não é informada.</li>
 <li><strong>Relatos</strong>: tipo, gravidade, data, ponto no mapa e descrição opcional. O relato fica vinculado à sua conta apenas no banco de dados, para fins de segurança e moderação. Esse vínculo nunca é exibido a ninguém, nem a moderadores.</li>
 <li><strong>Lugares e avaliações</strong>: nome do lugar, categoria, endereço, ponto no mapa, notas dos quatro eixos de acolhimento e comentário. Avaliações e mensagens mostram apenas o apelido que você escolher (ou "Anônimo").</li>
+<li><strong>Fotos de lugares</strong>: se você escolher anexar uma foto ao avaliar um lugar, guardamos essa imagem (uma por lugar e por conta) e ela fica ligada à sua conta apenas no banco de dados, nunca exibida. Nenhuma foto aparece no app antes de revisão: ela é analisada por uma pessoa da moderação (e, se houver, por um filtro automático de conteúdo impróprio). Não envie fotos em que apareçam pessoas sem a autorização delas. Você pode denunciar fotos de outras pessoas. Se você excluir a conta, as fotos que enviou são apagadas.</li>
 <li><strong>Localização</strong>: usada no aparelho para centralizar o mapa e marcar um ponto quando você pede. Não guardamos histórico de localização.</li>
 <li><strong>Inscrição no teste (site)</strong>: se você pede para testar o app pelo site, guardamos o e-mail informado e o tipo de celular (Android ou iPhone). Usamos só para liberar o acesso ao teste na Google Play ou avisar quando sair no iPhone. Não enviamos propaganda nem compartilhamos esse e-mail. Para apagar, escreva para appirisa@gmail.com.</li>
 <li><strong>Dados técnicos</strong>: logs de acesso mantidos pelo provedor de infraestrutura (Supabase) por até 7 dias, para segurança.</li>
@@ -41,12 +43,13 @@ footer{color:var(--muted);font-size:13px;text-align:center;padding:24px}
 <p>Não vendemos nem compartilhamos dados pessoais, salvo por ordem judicial ou requisição de autoridade competente com base legal, limitada ao estritamente necessário (Marco Civil da Internet, arts. 10 e 22). Dados agregados e anônimos (contagens por bairro, por exemplo) podem ser publicados ou repassados a organizações da sociedade civil e órgãos públicos para políticas de enfrentamento à LGBTIfobia.</p>
 <h2>6. Provedores</h2>
 <ul>
-<li>Supabase (banco de dados e autenticação), servidores na região de São Paulo.</li>
-<li>Esri (mapas base), que recebe requisições de imagens de mapa sem identificação da sua conta.</li>
+<li>Supabase (banco de dados, autenticação e armazenamento das fotos), servidores na região de Virgínia, nos Estados Unidos. Isso é uma transferência internacional de dados (LGPD, art. 33), feita com base no seu consentimento e nas garantias contratuais do provedor.</li>
+<li>OpenFreeMap (mapas base, dados do OpenStreetMap), que recebe requisições de blocos de mapa sem identificação da sua conta.</li>
+<li>OpenStreetMap Nominatim, somente se você tocar em "Achar esse endereço no mapa": o endereço digitado é enviado a esse serviço, sem identificar sua conta.</li>
 <li>Google e Apple, apenas se você optar por entrar com essas contas.</li>
 </ul>
 <h2>7. Retenção e exclusão</h2>
-<p>Você pode excluir sua conta a qualquer momento em Perfil → Excluir minha conta. Seus relatos e mensagens permanecem, sem qualquer vínculo com você. Avaliações e curtidas são apagadas.</p>
+<p>Você pode excluir sua conta a qualquer momento em Perfil → Excluir minha conta. Seus relatos e mensagens permanecem, sem qualquer vínculo com você. As avaliações que você fez também permanecem, sem vínculo com você. Fotos que você enviou, curtidas e bloqueios são apagados. Se você entrou com a Apple, o vínculo do app com sua conta Apple é revogado junto da Apple no mesmo momento.</p>
 <h2>8. Seus direitos</h2>
 <p>Confirmação, acesso, correção, anonimização, portabilidade, eliminação e revogação do consentimento, conforme o art. 18 da LGPD. Solicite pelo e-mail de contato.</p>
 <h2>9. Crianças e adolescentes</h2>
