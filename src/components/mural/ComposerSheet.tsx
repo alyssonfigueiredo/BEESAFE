@@ -12,10 +12,12 @@ import {
   TextInput,
   View,
 } from "react-native";
+import { GestureDetector } from "react-native-gesture-handler";
 import Animated, { Easing, FadeIn, SlideInDown, useReducedMotion } from "react-native-reanimated";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import { usePostSupportMessage, type WeeklyQuestion } from "@/hooks/useSupport";
+import { useSheetDismiss } from "@/hooks/useSheetDismiss";
 import { authMessage } from "@/lib/authErrors";
 import { Toggle } from "@/components/Toggle";
 import type { SupportCategory } from "@/theme/domain";
@@ -78,6 +80,7 @@ function SheetBody({
   const reduce = useReducedMotion();
   const safe = useSafeAreaInsets();
   const post = usePostSupportMessage();
+  const { gesture: dragGesture, style: dragStyle } = useSheetDismiss(onClose);
   const [category, setCategory] = useState(request.category);
   const [question, setQuestion] = useState(request.question ?? null);
   const [text, setText] = useState("");
@@ -133,22 +136,25 @@ function SheetBody({
       <Animated.View
         entering={reduce ? undefined : SlideInDown.duration(420).easing(Easing.out(Easing.cubic))}
         className="rounded-t-[34px]"
-        style={{ backgroundColor: "#FBFCFE", maxHeight: "90%" }}
+        style={[{ backgroundColor: "#FBFCFE", maxHeight: "90%" }, dragStyle]}
       >
+        <GestureDetector gesture={dragGesture}>
+          <View style={{ paddingTop: 12, alignItems: "center" }} hitSlop={{ top: 10, bottom: 10, left: 60, right: 60 }}>
+            <View
+              className="h-[5px] w-11 rounded-full"
+              style={{ backgroundColor: "#D3DBE6" }}
+            />
+          </View>
+        </GestureDetector>
         <ScrollView
           keyboardShouldPersistTaps="handled"
           contentContainerStyle={{
             paddingHorizontal: 22,
-            paddingTop: 12,
+            paddingTop: 6,
             paddingBottom: Math.max(safe.bottom, 16) + 16,
             gap: 14,
           }}
         >
-          <View
-            className="h-[5px] w-11 self-center rounded-full"
-            style={{ backgroundColor: "#D3DBE6" }}
-          />
-
           <View className="flex-row items-center gap-4">
             <RainbowAvatar name={showsAnon ? "Anônimo" : nickname} size={44} />
             <View className="min-w-0 flex-1">

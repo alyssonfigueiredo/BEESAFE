@@ -11,6 +11,7 @@ import {
   View,
   useWindowDimensions,
 } from "react-native";
+import { GestureDetector } from "react-native-gesture-handler";
 import Animated, { FadeInDown } from "react-native-reanimated";
 import Svg, { Defs, LinearGradient, Rect, Stop } from "react-native-svg";
 
@@ -21,6 +22,7 @@ import { useAppConfig } from "@/hooks/useGamification";
 import { useIriseNear, useIriseOrchestrate, useIriseSuggest, type OrchestratedPlace } from "@/hooks/useIrise";
 import { useIrisePersonagens } from "@/hooks/useIrisePersonagens";
 import { useProfile } from "@/hooks/useProfile";
+import { useSheetDismiss } from "@/hooks/useSheetDismiss";
 import type { Acao } from "@/lib/iriseFalas";
 import type { PlaceCategory } from "@/theme/domain";
 import { colors, shadow } from "@/theme/tokens";
@@ -263,6 +265,7 @@ export function IriseSheet({
   const near = useIriseNear();
   const orchestrate = useIriseOrchestrate();
   const { data: irises = [] } = useIrisePersonagens();
+  const { gesture: dragGesture, style: dragStyle } = useSheetDismiss(onClose);
 
   function push(item: LogItem) {
     setLog((l) => [...l, item]);
@@ -489,8 +492,15 @@ export function IriseSheet({
         behavior={Platform.OS === "ios" ? "padding" : undefined}
         style={{ position: "absolute", left: 0, right: 0, bottom: 0, maxHeight: height * 0.86 }}
       >
-        <View className="bg-solid" style={{ borderTopLeftRadius: 34, borderTopRightRadius: 34, overflow: "hidden" }}>
-          <View style={{ width: 44, height: 5, borderRadius: 3, backgroundColor: "#D9D5CD", alignSelf: "center", marginTop: 10 }} />
+        <Animated.View
+          className="bg-solid"
+          style={[{ borderTopLeftRadius: 34, borderTopRightRadius: 34, overflow: "hidden" }, dragStyle]}
+        >
+          <GestureDetector gesture={dragGesture}>
+            <View style={{ paddingVertical: 10, alignItems: "center" }} hitSlop={{ top: 10, bottom: 10, left: 60, right: 60 }}>
+              <View style={{ width: 44, height: 5, borderRadius: 3, backgroundColor: "#D9D5CD" }} />
+            </View>
+          </GestureDetector>
           {personagem ? (
             <View className="flex-row items-end justify-between border-b border-border px-[18px] pb-3 pt-1">
               <IriseAvatar personagem={personagem} pose={poseAtual} size={84} />
@@ -568,7 +578,7 @@ export function IriseSheet({
               </Pressable>
             </View>
           </View>
-        </View>
+        </Animated.View>
       </KeyboardAvoidingView>
     </Modal>
   );

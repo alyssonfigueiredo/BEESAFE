@@ -1,10 +1,12 @@
 import { X } from "lucide-react-native";
 import type { ReactNode } from "react";
 import { Modal, Pressable, ScrollView, Text, View } from "react-native";
+import { GestureDetector } from "react-native-gesture-handler";
 import Animated, { FadeIn, SlideInDown } from "react-native-reanimated";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import Svg, { Circle, Text as SvgText } from "react-native-svg";
 
+import { useSheetDismiss } from "@/hooks/useSheetDismiss";
 import { OCCURRENCE_TYPES, type OccurrenceType } from "@/theme/domain";
 import { colors, fonts } from "@/theme/tokens";
 
@@ -22,6 +24,7 @@ type Props = {
 /** "O que é cada coisa": a legenda do mapa e o filtro por tipo de relato. */
 export function LegendSheet({ visible, onClose, types, onToggleType, counts }: Props) {
   const safe = useSafeAreaInsets();
+  const { gesture: dragGesture, style: dragStyle } = useSheetDismiss(onClose);
   return (
     <Modal visible={visible} transparent animationType="fade" onRequestClose={onClose}>
       <Pressable
@@ -31,35 +34,41 @@ export function LegendSheet({ visible, onClose, types, onToggleType, counts }: P
       />
       <Animated.View
         entering={SlideInDown.duration(450)}
-        style={{
-          position: "absolute",
-          left: 0,
-          right: 0,
-          bottom: 0,
-          maxHeight: "88%",
-          backgroundColor: "#FBFCFE",
-          borderTopLeftRadius: 34,
-          borderTopRightRadius: 34,
-        }}
+        style={[
+          {
+            position: "absolute",
+            left: 0,
+            right: 0,
+            bottom: 0,
+            maxHeight: "88%",
+            backgroundColor: "#FBFCFE",
+            borderTopLeftRadius: 34,
+            borderTopRightRadius: 34,
+          },
+          dragStyle,
+        ]}
       >
+        <GestureDetector gesture={dragGesture}>
+          <View style={{ paddingTop: 12, alignItems: "center" }} hitSlop={{ top: 10, bottom: 10, left: 60, right: 60 }}>
+            <View
+              style={{
+                width: 44,
+                height: 5,
+                borderRadius: 3,
+                backgroundColor: "#D3DBE6",
+              }}
+            />
+          </View>
+        </GestureDetector>
         <ScrollView
           contentContainerStyle={{
             paddingHorizontal: 22,
-            paddingTop: 12,
+            paddingTop: 2,
             paddingBottom: Math.max(safe.bottom, 16) + 18,
             gap: 14,
           }}
           showsVerticalScrollIndicator={false}
         >
-          <View
-            style={{
-              alignSelf: "center",
-              width: 44,
-              height: 5,
-              borderRadius: 3,
-              backgroundColor: "#D3DBE6",
-            }}
-          />
           <View className="flex-row items-start justify-between" style={{ gap: 12 }}>
             <View className="flex-1">
               <Text className="font-display text-[28px] uppercase leading-[33px] text-ink">

@@ -1,5 +1,5 @@
 import { Image, Pressable, Text, View } from "react-native";
-import Animated, { useAnimatedStyle } from "react-native-reanimated";
+import Animated, { LinearTransition, useAnimatedStyle } from "react-native-reanimated";
 import Svg, { Defs, RadialGradient, Rect, Stop } from "react-native-svg";
 
 import { TourTarget } from "@/components/Tour";
@@ -48,7 +48,7 @@ export function CardCidadeIrise({
   const fotoTrocada = useFotoTrocada(personagem);
   const usaEmbutido = BUNDLED_N.has(personagem) && !fotoTrocada;
   return (
-    <View style={{ marginTop: 10 }}>
+    <Animated.View layout={LinearTransition.duration(220)} style={{ marginTop: 10 }}>
       {falas.length > 0 && r.visivel ? (
         <IriseBalao
           nome={nomeIrise}
@@ -60,7 +60,12 @@ export function CardCidadeIrise({
           onCta={() => onCta(r.fala)}
           onFechar={r.fechar}
         />
+      ) : falas.length > 0 ? (
+        // Balão fechado pela pessoa (×): sem ele, o card sobe e fica rente ao cabeçalho (13/10/2026,
+        // pedido do Leandro) — antes ficava um vão de 50 px reservado à toa.
+        null
       ) : (
+        // Sem fala nenhuma pra mostrar (filtradas fora): mantém o espaço pro irise na pose padrão.
         <View style={{ height: 50 }} />
       )}
 
@@ -164,6 +169,6 @@ export function CardCidadeIrise({
           </Animated.View>
         </Pressable>
       </View>
-    </View>
+    </Animated.View>
   );
 }

@@ -1,6 +1,8 @@
 import { Flag, PenLine } from "lucide-react-native";
 import { useState } from "react";
 import { Alert, Modal, Pressable, Text, View } from "react-native";
+import { GestureDetector } from "react-native-gesture-handler";
+import Animated from "react-native-reanimated";
 
 import { PrimaryButton } from "@/components/Button";
 import { Chip } from "@/components/Chip";
@@ -8,6 +10,7 @@ import { Field } from "@/components/Field";
 import { useReportContent, type ReportTarget } from "@/hooks/useModeration";
 import { colors } from "@/theme/tokens";
 import { useFolhaAberta } from "@/hooks/useDiscovery";
+import { useSheetDismiss } from "@/hooks/useSheetDismiss";
 
 const REASONS = [
   "Conteúdo falso",
@@ -30,6 +33,7 @@ export function ReportButton({
   useFolhaAberta(open);
   const [reason, setReason] = useState("");
   const report = useReportContent();
+  const { gesture: dragGesture, style: dragStyle } = useSheetDismiss(() => setOpen(false));
 
   async function submit() {
     if (reason.trim().length < 3) return Alert.alert("Escolha ou escreva um motivo.");
@@ -58,16 +62,22 @@ export function ReportButton({
           style={{ backgroundColor: "rgba(20,24,41,0.38)" }}
           onPress={() => setOpen(false)}
         >
+          <Animated.View
+            style={[{ borderTopLeftRadius: 34, borderTopRightRadius: 34, backgroundColor: "#FBFCFE" }, dragStyle]}
+          >
+            <GestureDetector gesture={dragGesture}>
+              <View style={{ paddingTop: 10, alignItems: "center" }} hitSlop={{ top: 10, bottom: 10, left: 60, right: 60 }}>
+                {/* Alça da folha, a mesma das folhas novas. */}
+                <View
+                  className="h-[5px] w-11 rounded-full"
+                  style={{ backgroundColor: colors.border }}
+                />
+              </View>
+            </GestureDetector>
           <Pressable
-            className="gap-3 rounded-t-[34px] px-6 pb-10 pt-3"
-            style={{ backgroundColor: "#FBFCFE" }}
+            className="gap-3 px-6 pb-10 pt-1"
             onPress={() => {}}
           >
-            {/* Alça da folha, a mesma das folhas novas. */}
-            <View
-              className="mb-2 h-[5px] w-11 self-center rounded-full"
-              style={{ backgroundColor: colors.border }}
-            />
             <Text className="font-display text-2xl uppercase tracking-wide text-ink">
               Denunciar
             </Text>
@@ -96,6 +106,7 @@ export function ReportButton({
               onPress={submit}
             />
           </Pressable>
+          </Animated.View>
         </Pressable>
       </Modal>
     </>

@@ -1,12 +1,14 @@
 import { useEffect } from "react";
 import { Modal, Pressable, Text, View } from "react-native";
-import { useReducedMotion } from "react-native-reanimated";
+import { GestureDetector } from "react-native-gesture-handler";
+import Animated, { useReducedMotion } from "react-native-reanimated";
 
 import { HeartIcon } from "@/components/FavHeart";
 import { Counter, FadeUp, ProgressEdge } from "@/components/gami/Anim";
 import { AnimatedMedal } from "@/components/gami/MedalView";
 import { SliceRing } from "@/components/gami/Rings";
 import { quaseLa, setRewardOpen, useGamification } from "@/hooks/useGamification";
+import { useSheetDismiss } from "@/hooks/useSheetDismiss";
 import { getMedalha, nomeDa } from "@/lib/medals";
 import { nivelDe, nomeNivel, NIVEIS_EVO } from "@/lib/niveis";
 import { colors, shadow } from "@/theme/tokens";
@@ -37,6 +39,7 @@ export function RewardSheet({
 }) {
   const { data: g, isFetching } = useGamification();
   const reduce = useReducedMotion();
+  const { gesture: dragGesture, style: dragStyle } = useSheetDismiss(onClose);
 
   useEffect(() => {
     setRewardOpen(visible);
@@ -71,25 +74,36 @@ export function RewardSheet({
         style={{ backgroundColor: "rgba(20,24,41,0.38)" }}
         onPress={onClose}
       />
+      <Animated.View
+        style={[
+          {
+            position: "absolute",
+            left: 0,
+            right: 0,
+            bottom: 0,
+            borderTopLeftRadius: 34,
+            borderTopRightRadius: 34,
+            backgroundColor: "#FBFCFE",
+          },
+          dragStyle,
+        ]}
+      >
+        <GestureDetector gesture={dragGesture}>
+          <View style={{ paddingTop: 12, alignItems: "center" }} hitSlop={{ top: 10, bottom: 10, left: 60, right: 60 }}>
+            <View className="h-[5px] w-11 rounded-full" style={{ backgroundColor: "#D5DDE7" }} />
+          </View>
+        </GestureDetector>
       <FadeUp
         duration={360}
         distance={12}
         style={{
-          position: "absolute",
-          left: 0,
-          right: 0,
-          bottom: 0,
           alignItems: "center",
           gap: 4,
-          borderTopLeftRadius: 34,
-          borderTopRightRadius: 34,
           paddingHorizontal: 24,
           paddingBottom: 40,
-          paddingTop: 12,
-          backgroundColor: "#FBFCFE",
+          paddingTop: 4,
         }}
       >
-        <View className="h-[5px] w-11 rounded-full" style={{ backgroundColor: "#D5DDE7" }} />
         {g ? (
           <>
             <View
@@ -235,6 +249,7 @@ export function RewardSheet({
           <Text className="font-body-bold text-[15px] text-paper">Continuar</Text>
         </Pressable>
       </FadeUp>
+      </Animated.View>
     </Modal>
   );
 }
