@@ -104,7 +104,6 @@ body{display:flex;align-items:center;justify-content:center;height:100vh;font-fa
   <div class="scene" id="s4">
     <h1 class="disp c" id="t4" style="font-size:100px"><span class="w" style="font-weight:300">Manda pra quem</span><br><span class="w rainbow">sai com você.</span></h1>
     <p class="body c" id="b4" style="margin-top:56px">Quero ir é novidade na Irisa — o mapa dos lugares onde a gente é bem-vinde, feito por nós. Já no iPhone. Android em fase de testes.</p>
-    <div class="handle" id="handle" style="margin-top:70px"><svg class="mark" style="width:78px;height:78px" viewBox="0 0 100 100"><use href="#radarmark"></use></svg><span>@appirisa</span></div>
   </div>
 
   <div class="brand" id="brand"><svg class="mark" viewBox="0 0 100 100"><use href="#radarmin"></use></svg><span>Iris<b>a</b></span></div>
@@ -156,7 +155,6 @@ A($("#b3"),IN_BLUR,18700,700);
 scene("#s4",20200,TOTAL+1000);
 words("#t4",20400,1000,900);
 A($("#b4"),IN_BLUR,21600,900);
-A($("#handle"),[{opacity:0,transform:"translateY(50px)",filter:"blur(12px)"},{opacity:1,transform:"none",filter:"blur(0)"}],22400,900);
 window.__setT=function(t){document.getAnimations().forEach(a=>{a.pause();a.currentTime=t});ticks.forEach(f=>f(t))};
 window.__TOTAL=TOTAL*K;
 const fit=()=>{const k=Math.min(innerWidth/1080,innerHeight/1920);$("#stage").style.transform="scale("+k+")"};
