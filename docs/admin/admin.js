@@ -1183,7 +1183,7 @@ async function viewDenuncias(ctx) {
 
 // ================================================================ 9. Fotos
 async function viewFotos(ctx) {
-  ctx.el.innerHTML = headHTML("Fotos na fila", "Fotos que as pessoas mandaram ao avaliar. Nenhuma entra no ar sozinha. Quem mandou não aparece aqui.", `<button class="btn sm ghost" id="fReload">Atualizar</button>`) + `<div id="fbox"></div>`;
+  ctx.el.innerHTML = headHTML("Fotos na fila", "Fotos que as pessoas mandaram ao avaliar. Nenhuma entra no ar sozinha.", `<button class="btn sm ghost" id="fReload">Atualizar</button>`) + `<div id="fbox"></div>`;
   const box = $("#fbox", ctx.el);
   let rows = [];
   const draw = () => {
@@ -1191,6 +1191,7 @@ async function viewFotos(ctx) {
     box.innerHTML = `<div class="cards">${rows.map((p, i) => `<div class="card mod-card">
         <a href="${esc(p.url)}" target="_blank" rel="noopener noreferrer"><img class="thumb" src="${esc(p.url)}" alt="Foto enviada para ${esc(p.place_name || "um lugar")}" loading="lazy" referrerpolicy="no-referrer"></a>
         <div class="top"><strong>${esc(p.place_name || "Lugar sem nome")}</strong></div>
+        <div class="sub">${esc(p.enviado_por || "Sem apelido")}</div>
         <div class="top">${chip(p.review, FOTO_REVIEW[p.review] || p.review)} <span class="small dim">${esc(rel(p.created_at))}</span></div>
         ${p.review_note ? `<p class="small muted">${esc(p.review_note)}</p>` : ""}
         <div class="actions"><button class="btn sm ok" data-f="1" data-i="${i}">Aprovar</button><button class="btn sm danger" data-f="0" data-i="${i}">Recusar</button></div>
@@ -1255,7 +1256,7 @@ async function viewLugares(ctx) {
       <tbody>${rows.map((p, i) => `<tr class="click" tabindex="0" data-i="${i}">
         <td>${p.foto_url ? `<img class="thumb-sm" src="${esc(p.foto_url)}" alt="" loading="lazy" referrerpolicy="no-referrer">` : `<span class="thumb-sm" aria-hidden="true"></span>`}</td>
         <td><div class="who">${esc(p.nome)}${p.verificado ? ` <span class="small" style="color:var(--turq-ink)" title="Verificado pela equipe">✓</span>` : ""}</div>
-            <div class="sub">${esc([CATEGORIA[p.categoria] || p.categoria, p.bairro].filter(Boolean).join(" · "))} · entrou ${esc(rel(p.criado_em))}</div></td>
+            <div class="sub">${esc([CATEGORIA[p.categoria] || p.categoria, p.bairro].filter(Boolean).join(" · "))} · entrou ${esc(rel(p.criado_em))}${p.criado_por ? ` · por ${esc(p.criado_por)}` : ""}</div></td>
         <td class="nowrap">${esc(p.cidade || "—")}</td>
         <td class="nowrap">${p.nota != null && Number(p.avaliacoes) ? `<strong>${esc(Number(p.nota).toFixed(1))}</strong><span class="small dim"> (${num(p.avaliacoes)})</span>` : `<span class="dim">sem nota</span>`}${p.selo ? `<div class="sub">${esc(SELO[p.selo] || p.selo)}</div>` : ""}</td>
         <td>${p.descricao ? chip("on", "tem") : chip("off", "falta")}</td>
@@ -1302,6 +1303,7 @@ async function viewLugares(ctx) {
       { titulo: "Selo", valor: (p) => SELO[p.selo] || p.selo },
       { titulo: "Descrição", valor: (p) => p.descricao },
       { titulo: "Entrou em", valor: (p) => fmtD(p.criado_em) },
+      { titulo: "Cadastrado por", valor: (p) => p.criado_por },
     ], todos);
     toast(`${todos.length} lugares exportados.`);
   }));
@@ -1962,9 +1964,10 @@ function showFatal(msg) {
   app.innerHTML = gateHTML(`<h1>Painel fora do ar</h1><p class="lead">${esc(msg)}</p>`);
 }
 
-// O login da Apple pelo navegador precisa do Services ID e da Secret Key no provider Apple da Supabase.
-// Sem isso a Supabase responde "Unsupported provider: missing OAuth secret". Ligar quando estiver configurado.
-const APPLE_WEB = false;
+// O login da Apple pelo navegador precisa do Services ID e da Secret Key no provider Apple da Supabase
+// (passo a passo em CLAUDE.md, pedido do Leandro em 13/10/2026). Sem isso configurado lá, o botão
+// aparece mas o clique dá "Unsupported provider: missing OAuth secret" — ligar só depois de configurar.
+const APPLE_WEB = true;
 
 function showLogin(errMsg = "") {
   app.innerHTML = gateHTML(`

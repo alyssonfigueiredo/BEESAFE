@@ -694,6 +694,27 @@ Nome: **Irisa** (INPI livre; @appirisa livre). Bundle id Android `br.com.irisa.a
   (cópia de `assets/irise-personagens/`; pose 0 = corpo inteiro). A 75 também deu SELECT ao admin no bucket `irise`
   (upsert no Storage pede SELECT, mesmo caso da 68). **Mexeu nas fotos embutidas do app: copiar de novo para lá.**
 
+- **Moderação mostra quem cadastra lugar e quem manda foto (migration 77, 13/10/2026, pedido do
+  Leandro):** antes só avaliação e mural mostravam apelido pra quem modera (desde a migration 39);
+  lugar e foto escondiam de propósito. Agora `admin_places`/`admin_places_export` ganharam
+  `criado_por` e `fotos_para_moderar` ganhou `enviado_por` (apelido, ou e-mail sem apelido). Relato
+  continua sem autor — é anônimo por natureza, isso não mudou.
+- **Login por Apple no painel ligado (13/10/2026, pedido do Leandro):** `APPLE_WEB` em
+  `docs/admin/admin.js` virou `true`. O código já existia (ficou desligado em 05/10 por falta do
+  Services ID + Secret Key no provider Apple da Supabase); **falta a configuração, que só o Leandro
+  consegue fazer** (contas da Apple e da Supabase, fora do alcance de uma sessão aqui):
+  1. developer.apple.com/account → Certificates, Identifiers & Profiles → Identifiers → "+" →
+     **Services IDs**. Identifier novo (ex. `br.com.irisa.web`), descrição "Irisa Admin".
+  2. Marcar **Sign In with Apple** → Configure: Primary App ID = `br.com.irisa.ios`; Domains =
+     `appirisa.com.br`; Return URLs = `https://ntjirpqulrnieeglpiei.supabase.co/auth/v1/callback`.
+  3. Supabase → Authentication → Providers → Apple → **Client IDs**: acrescentar esse Services ID
+     novo aos que já estão lá (`br.com.irisa.ios,br.com.irisa.app,<novo>`), separado por vírgula.
+  4. Nos campos de Team ID / Key ID / Private Key do mesmo provider, usar os MESMOS valores já
+     gravados como secrets da Edge Function de revogação (`APPLE_TEAM_ID`, `APPLE_KEY_ID`,
+     `APPLE_PRIVATE_KEY`) — a Supabase monta o JWT da secret sozinha a partir deles.
+  Sem isso configurado, o botão aparece no painel mas o clique dá "Unsupported provider: missing
+  OAuth secret" (mesmo erro de 05/10).
+
 ## Stack
 
 Expo SDK 57, Expo Router, NativeWind v4, TypeScript, TanStack Query, MapLibre React Native v11 com tiles Esri
