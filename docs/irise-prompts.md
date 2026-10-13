@@ -19,7 +19,8 @@ Fluxo igual ao das medalhas: você gera, me manda as folhas, eu recorto e compon
 > no mesmo estilo 3D estilizado de animação, mesmas proporções e mesma idade.
 > Corpo inteiro, câmera na altura dos olhos, leve 3/4. Iluminação suave de estúdio, sombras macias.
 > Fundo liso branco (sem cenário, sem chão desenhado — só uma sombra suave de contato).
-> Sem texto, sem logo, sem marca d'água, sem bandeira como objeto principal.
+> Sem texto, sem logo, sem marca d'água, sem bandeira como objeto principal. O colar/pingente
+> fica PEQUENO e discreto como na referência — nunca vira cruz nem outro símbolo religioso.
 > CENA: {uma das cenas abaixo}
 
 **Variação com cenário** (pra peça-herói): troque a linha do fundo por
