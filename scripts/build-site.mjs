@@ -82,6 +82,9 @@ copyFileSync("docs/og.png", "site/og.png");
 // Telas reais do app usadas na landing (docs/telas/*.webp, 600 px de largura).
 mkdirSync("site/telas", { recursive: true });
 for (const f of readdirSync("docs/telas")) copyFileSync(`docs/telas/${f}`, `site/telas/${f}`);
+// Seção de novidades da landing: irises, medalhas 3D e níveis (docs/novidades/*.webp).
+mkdirSync("site/novidades", { recursive: true });
+for (const f of readdirSync("docs/novidades")) copyFileSync(`docs/novidades/${f}`, `site/novidades/${f}`);
 // Domínio próprio (registro.br): appirisa.com.br, apontado por A/AAAA pro GitHub Pages.
 writeFileSync("site/CNAME", "appirisa.com.br\n");
 console.log("site/ gerado");
