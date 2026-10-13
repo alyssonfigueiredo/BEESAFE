@@ -324,7 +324,13 @@ export function useMarkSeen() {
       const { error } = await supabase.rpc("mark_medals_seen", { p_ids: ids });
       if (error) throw error;
     },
-    onMutate: (ids) => {
+    // Sem cancelar busca em andamento, uma tela aberta ao mesmo tempo (Início, Perfil) podia
+    // devolver o "visto" antigo e sobrescrever esse ajuste otimista — a medalha fechava e
+    // reaparecia sozinha. `cancelQueries` evita a corrida; `onError` desfaz se o RPC falhar de
+    // verdade; `onSettled` confirma com o banco no fim, com ou sem erro.
+    onMutate: async (ids) => {
+      await client.cancelQueries({ queryKey: ["gamificacao"] });
+      const anteriores = client.getQueriesData<Gamificacao | null>({ queryKey: ["gamificacao"] });
       client.setQueriesData<Gamificacao | null>({ queryKey: ["gamificacao"] }, (g) =>
         g
           ? {
@@ -335,7 +341,12 @@ export function useMarkSeen() {
             }
           : g,
       );
+      return { anteriores };
     },
+    onError: (_err, _ids, ctx) => {
+      ctx?.anteriores.forEach(([key, data]) => client.setQueryData(key, data));
+    },
+    onSettled: () => client.invalidateQueries({ queryKey: ["gamificacao"] }),
   });
 }
 
