@@ -7,13 +7,16 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import { Aurora } from "@/components/Aurora";
 import { CaixaDeFala } from "@/components/irise-personagem/CaixaDeFala";
+import { useCorpoResolvido, useIrisePersonagens } from "@/hooks/useIrisePersonagens";
 import { useScreenInsets } from "@/hooks/useScreenInsets";
-import { corpoSrc, FALAS_APRESENTACAO, flexionar, IRISES, type Forma } from "@/lib/irisePersonagens";
+import { formaDoPronome } from "@/lib/iriseFalas";
+import { FALAS_APRESENTACAO, flexionar, type Forma } from "@/lib/irisePersonagens";
 import { colors } from "@/theme/tokens";
 
 /**
- * Prévia do personagem do irise — apresentação. Três falas, depois "BORA!" volta pro app de
- * verdade. Protótipo: nada grava (nem o personagem escolhido, nem o nome/pronome).
+ * Apresentação do irise: três falas, depois "BORA!" volta pro Início. Só é alcançada na primeira
+ * vez que a pessoa escolhe um irise pelo Perfil (`escolha.tsx` já salvou antes de mandar pra cá,
+ * com `router.replace` — fechar ou "BORA!" não volta pra tela de escolha).
  */
 export default function IrisePreviewApresentacao() {
   const insets = useScreenInsets({ tabs: false });
@@ -23,8 +26,12 @@ export default function IrisePreviewApresentacao() {
     forma: string;
     irise: string;
   }>();
-  const forma = (Number(formaParam ?? 2) || 2) as Forma;
-  const personagem = IRISES.find((p) => p.n === Number(iriseParam)) ?? IRISES[0];
+  // Forma 0 ("a") é válida: `Number("0") || 2` virava 2 e trocava "bem-vinda" por "bem-vinde".
+  const formaN = Number(formaParam);
+  const forma = (formaN === 0 || formaN === 1 ? formaN : 2) as Forma;
+  const { data: irises = [] } = useIrisePersonagens();
+  const personagem = irises.find((p) => p.n === Number(iriseParam)) ?? irises[0];
+  const { source: corpoSource, onError: corpoOnError } = useCorpoResolvido(personagem.n);
   const [passo, setPasso] = useState(0);
 
   const fala = FALAS_APRESENTACAO[passo];
@@ -52,7 +59,8 @@ export default function IrisePreviewApresentacao() {
           style={{ flex: 1, width: "100%", alignItems: "center", justifyContent: "center" }}
         >
           <Image
-            source={corpoSrc(fala.pose, personagem.n)}
+            source={corpoSource}
+            onError={corpoOnError}
             style={{ width: 260, height: 400 }}
             resizeMode="contain"
           />
@@ -64,7 +72,7 @@ export default function IrisePreviewApresentacao() {
           style={{ position: "absolute", left: 16, right: 16, bottom: insets.paddingBottom + 16 }}
         >
           <CaixaDeFala
-            nome="Irise desbloqueade"
+            nome={flexionar("Irise desbloquead{a|o|e}", formaDoPronome(personagem.pronomes))}
             texto={texto}
             passos={FALAS_APRESENTACAO.length}
             passoAtual={passo}

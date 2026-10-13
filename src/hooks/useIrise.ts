@@ -55,9 +55,16 @@ export function useIriseOrchestrate() {
       cidade: string;
       cityId: number | undefined;
       perto: { lat: number; lng: number } | null;
+      personagem?: number | null;
     }) => {
       const { data, error } = await supabase.functions.invoke<OrchestratorResponse>("irise-orchestrator", {
-        body: { texto: args.texto, cidade: args.cidade, cityId: args.cityId, perto: args.perto },
+        body: {
+          texto: args.texto,
+          cidade: args.cidade,
+          cityId: args.cityId,
+          perto: args.perto,
+          personagem: args.personagem ?? null,
+        },
       });
       if (error || !data || data.error) {
         throw new Error(data?.error ?? error?.message ?? "A Irise não conseguiu entender agora.");

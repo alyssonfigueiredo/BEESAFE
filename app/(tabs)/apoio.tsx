@@ -4,6 +4,7 @@ import Animated, { FadeInDown, useReducedMotion } from "react-native-reanimated"
 
 import { Aurora } from "@/components/Aurora";
 import { Chip } from "@/components/Chip";
+import { IriseInviteCard } from "@/components/irise/Irise";
 import { ComposerCard } from "@/components/mural/ComposerCard";
 import { ComposerSheet, type ComposeRequest } from "@/components/mural/ComposerSheet";
 import { NoteCard } from "@/components/mural/NoteCard";
@@ -124,6 +125,8 @@ export default function ApoioScreen() {
 
         {tab === "mural" ? (
           <>
+            <IriseInviteCard cityId={city?.id} cityName={city?.name} />
+
             {weekly?.pergunta && (
               <Animated.View entering={rise(1, reduce)}>
                 <WeeklyQuestion

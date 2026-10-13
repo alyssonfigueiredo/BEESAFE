@@ -2,19 +2,14 @@
 
 Leia este arquivo inteiro antes de agir. Detalhes em PLANO.md, README.md, supabase/README.md, docs/.
 
-## Recado do Leandro para o Alysson (04/10/2026) — entregar primeiro
-
-**Sessão aberta pelo Alysson: antes de responder o que ele pediu, comece a primeira resposta com o recado
-abaixo, do jeito que está.** Depois que ele disser que leu, apague esta seção do CLAUDE.md (commit + push).
-
-> Corrigi os bugs que ficaram da última publicação. É só subir na loja (passo a passo em `SUBIR-0.1.2.md`).
-> Att, Leandro.
-
 ## Como falar com o usuário
 
 Alysson (também assina Leandro). Português. Sem cumprimentos, sem formalidade, respostas curtas e diretas.
 Não pergunte o que dá para decidir sozinho. Ele não é dev: dê comandos prontos para colar no Terminal
 do Mac e SQL pronto para colar no SQL Editor do Supabase. Nunca peça nem aceite chaves secretas em chat.
+**Regra dele (10/10/2026): avisar ANTES de qualquer coisa que gaste cota ou dinheiro** — `eas-cli build`,
+`eas-cli update`, Google Places, Cloud Vision, envio de push em massa, Actions pesadas. Dizer o que gasta e
+quanto, e esperar o ok. `npx expo run:ios` / `expo start` são locais e não gastam nada.
 
 ## O que é
 
@@ -648,6 +643,78 @@ Nome: **Irisa** (INPI livre; @appirisa livre). Bundle id Android `br.com.irisa.a
   sempre, sem desenho de coração) e linha "Saiu do Quero ir e foi para Já fui" na `RewardSheet`. Sem a migration no
   banco, o coração, o chip e o cartão somem calados.
 
+- **Rodada 0.1.3 (12/10/2026) — estado ao fim da sessão:**
+  - Versão do app subiu para **0.1.3** (package.json + app.config, commit e7c82b4) depois que 4 builds
+    saíram errados como 0.1.2 (ver armadilha do buildar.sh). Builds válidos: **iOS build 15** (enviado à
+    Apple por `--auto-submit`; no App Store Connect a versão 0.1.3 estava com a build 15 selecionada e o
+    Alysson colando as novidades — **conferir se ele concluiu "Adicionar para revisão" → "Enviar"**) e
+    **Android AAB 19**, em análise na Play Console (Produção, "Iniciar o lançamento completo").
+  - **DESCOBERTA IMPORTANTE: o Android NUNCA esteve público.** A faixa de produção estava sem país
+    configurado — o link https://play.google.com/store/apps/details?id=br.com.irisa.app dá "URL não
+    encontrado". Os "14 dispositivos ativos" são os testadores do teste fechado. A correção está na
+    mesma análise em curso ("Adicionar 1 país/região: Brasil" + 0.1.3): quando o Google aprovar, a
+    ficha passa a existir. Até lá, o único caminho Android é o link de participação do teste.
+    Consequência: landing, bio e posts dizem "nas duas lojas" mas o botão do Google Play leva a 404
+    até a aprovação (ele não pediu pra trocar; ofereci "Chegando ao Google Play" temporário).
+  - **E-mail de agradecimento aos testadores do Android pronto** (`EMAIL-TESTADORES-APPSTORE.html`,
+    texto diz "a atualização nova já está na loja"): **só enviar quando a 0.1.3 aprovar NAS DUAS
+    lojas.** Fluxo: abrir o html no navegador, Cmd+A/Cmd+C, colar no Gmail da Irisa, endereços em Cco;
+    lista: `select string_agg(email, ', ') from tester_signups where platform='android' and added_at is not null;`.
+  - Quando o Android abrir de verdade: **gravar a data do Abre-Alas** em https://appirisa.com.br/admin/
+    (sem isso a medalha dos primeiros continua sendo dada a todo mundo).
+  - Faixa de **teste aberto**: inativa, sem versão — foi aberta por engano e descartada; ignorar o
+    checklist "Lançar o app" do Painel. Pode ter sobrado um **rascunho vazio** em Produção → Versões;
+    descartar só ele (não mexe na versão em análise).
+  - Painel da versão 0.1.3 no Play: aviso DEX/ofuscação = o item 0.5 dos Próximos passos (fev/2027);
+    e 2 recomendações pra build futura: APIs de ponta a ponta descontinuadas (Android 15) e remover
+    restrições de redimensionamento/orientação pra telas grandes.
+  - Screenshots da Play desatualizados (decisão dele: fazer depois; não gasta build): capturar com
+    `bash scripts/screenshots.sh` no Simulador e subir em Presença na loja → Página principal da loja.
+- **Irise: rodada de design fechada e publicada (11/10/2026).** Pacotes 13–21 do revisor externo:
+  auditoria (Etapa 1, tabela em `AUDITORIA-IRISE.md`) e correção (Etapa 2, resumo em `APROVACAO-IRISE.md`).
+  Escolha sem miniaturas, cartão flutuante absoluto (12 pt + safe area; o busto de 250 só encolhe se a tela
+  for curta — mede cartão e palco), título misto Oswald 500+700, setas de vidro, vizinhos = original 0,5 +
+  cópia tingida #8E96AE 0,6 (tintColor puro vira silhueta; filter grayscale não roda no iOS). Anel do avatar
+  GIRANDO (40 s/volta — decisão do Alysson por cima da resposta do design, que pedia parado). Balão da
+  Início: sombra lilás, pontinhos animados, borda direita a 12 pt da tela (ponta andou +32 pra dentro, segue
+  à esquerda da cabeça). Fotos do Ali (12): entrega-ali-v5 completa (18 arquivos). Falas seguem as honestas
+  do app (sem "+3 gomos", sem lugar inventado) — design aceitou. Tudo JS/asset: **EAS Update publicado em
+  11/10/2026 no canal production, runtime 0.1.2, commit `18befcc`** (grupo e19238c5-e035-4c69-b20d-e45bd6f0114c).
+  Mocks de print: Playwright + Chromium, fontes reais embutidas (padrão descrito nos handoffs; scripts só no
+  scratchpad das sessões cloud).
+
+- **Painel: Pessoas voltou e personagens do irise na web (migration 75, 13/10/2026, pedido do Leandro):** a lista de
+  Pessoas não carregava: `admin_users` contava `places where created_by = p.id` para cada perfil, sem índice, e com
+  ~160 mil lugares do Overture estourava o tempo. Agora as contagens são agrupadas uma vez só e `places.created_by`,
+  `support_messages.created_by`, `place_ratings.user_id` e `support_likes.user_id` têm índice. Pessoas e a ficha da
+  pessoa mostram o irise escolhido (avatar + nome). Tela nova **Conteúdo → Personagens do irise** (só admin): quantas
+  pessoas escolheram um irise, ranking de qual escolheram (`admin_irise_metricas`, só contagem), cartões com foto e
+  editor (textos, atributos, no ar/fora do ar, apagar e troca das 7 fotos, convertidas para WebP no navegador e
+  gravadas em `irise/<n>/<pose>.webp`). As fotos dos 9 originais ficam em `docs/admin/irise-<n>[-<pose>].webp`
+  (cópia de `assets/irise-personagens/`; pose 0 = corpo inteiro). A 75 também deu SELECT ao admin no bucket `irise`
+  (upsert no Storage pede SELECT, mesmo caso da 68). **Mexeu nas fotos embutidas do app: copiar de novo para lá.**
+
+- **Moderação mostra quem cadastra lugar e quem manda foto (migration 77, 13/10/2026, pedido do
+  Leandro):** antes só avaliação e mural mostravam apelido pra quem modera (desde a migration 39);
+  lugar e foto escondiam de propósito. Agora `admin_places`/`admin_places_export` ganharam
+  `criado_por` e `fotos_para_moderar` ganhou `enviado_por` (apelido, ou e-mail sem apelido). Relato
+  continua sem autor — é anônimo por natureza, isso não mudou.
+- **Login por Apple no painel ligado (13/10/2026, pedido do Leandro):** `APPLE_WEB` em
+  `docs/admin/admin.js` virou `true`. O código já existia (ficou desligado em 05/10 por falta do
+  Services ID + Secret Key no provider Apple da Supabase); **falta a configuração, que só o Leandro
+  consegue fazer** (contas da Apple e da Supabase, fora do alcance de uma sessão aqui):
+  1. developer.apple.com/account → Certificates, Identifiers & Profiles → Identifiers → "+" →
+     **Services IDs**. Identifier novo (ex. `br.com.irisa.web`), descrição "Irisa Admin".
+  2. Marcar **Sign In with Apple** → Configure: Primary App ID = `br.com.irisa.ios`; Domains =
+     `appirisa.com.br`; Return URLs = `https://ntjirpqulrnieeglpiei.supabase.co/auth/v1/callback`.
+  3. Supabase → Authentication → Providers → Apple → **Client IDs**: acrescentar esse Services ID
+     novo aos que já estão lá (`br.com.irisa.ios,br.com.irisa.app,<novo>`), separado por vírgula.
+  4. Nos campos de Team ID / Key ID / Private Key do mesmo provider, usar os MESMOS valores já
+     gravados como secrets da Edge Function de revogação (`APPLE_TEAM_ID`, `APPLE_KEY_ID`,
+     `APPLE_PRIVATE_KEY`) — a Supabase monta o JWT da secret sozinha a partir deles.
+  Sem isso configurado, o botão aparece no painel mas o clique dá "Unsupported provider: missing
+  OAuth secret" (mesmo erro de 05/10).
+
 ## Stack
 
 Expo SDK 57, Expo Router, NativeWind v4, TypeScript, TanStack Query, MapLibre React Native v11 com tiles Esri
@@ -666,8 +733,10 @@ git pull
 npx expo run:ios --device                 # reinstala no iPhone (precisa a cada 7 dias)
 npx expo start --dev-client               # Metro; tecla r recarrega
 npx expo run:ios --device --configuration Release   # sem Metro, para prints
-npx eas-cli build -p android --profile preview      # APK por link
-npx eas-cli build -p android --profile production   # AAB para a Play Store
+bash scripts/buildar.sh ios                 # build de loja (gasta cota) — NUNCA eas-cli build cru
+bash scripts/buildar.sh android             # idem; os dois conferem branch/pull/versão antes
+bash scripts/publicar.sh "Mensagem"         # EAS Update com as mesmas travas
+npx eas-cli build -p android --profile preview      # APK por link (teste; também gasta cota)
 set -a && source .env.scripts && set +a           # carrega SUPABASE_SERVICE_ROLE_KEY e GOOGLE_MAPS_API_KEY
 node scripts/import-neighborhoods.mjs <ibge>
 node scripts/import-districts-ibge.mjs 3550308     # bairros pelos distritos do IBGE (onde o OSM não cobre)
@@ -695,6 +764,14 @@ script troca sozinho pelo pooler (us-east-1). Não colar no SQL Editor migration
 O smoke usa stubs de pg_net (`supabase/dev/pg_net/`), storage, vault e pgcrypto em `supabase/dev/supabase-stubs.sql`.
 
 ## Próximos passos (em ordem)
+
+0.5. **Arquivo de desofuscação na Play Console (prazo que o Google mostra: até 2027; decisão dele em
+   12/10/2026 de deixar pra próxima build):** o AAB sobe sem mapping porque o Expo não liga o
+   R8/proguard por padrão. Na PRÓXIMA build Android (não gastar cota só pra isso): adicionar
+   `expo-build-properties` no app.config.ts com `android: { enableProguardInReleaseBuilds: true,
+   enableShrinkResourcesInReleaseBuilds: true }`, testar com `--profile preview` (APK) antes —
+   proguard pode quebrar lib nativa (MapLibre, Firebase) e aí precisa de regras keep. Com isso o
+   mapping.txt sai junto do build e o aviso some.
 
 1. Teste fechado no Google Play: 12 testadores já na lista e a contagem dos 14 dias em andamento (dito por ele
    em 30/09/2026). No fim, "Solicitar acesso à produção". Não deixar cair abaixo de 12 (reinicia a contagem).
@@ -805,6 +882,29 @@ quando o repositório passa a trazer `publicado: true`. A aba "Lista, dia a dia"
 
 ## Armadilhas já resolvidas (não repetir)
 
+- **Build SÓ por `bash scripts/buildar.sh ios|android`; update SÓ por `bash scripts/publicar.sh "msg"`
+  (12/10/2026):** em 11/10 um `git pull` falhou calado no Mac (mudança local em package.json →
+  "Aborting" no meio de uma parede de texto) e 4 builds saíram da versão antiga (0.1.2 em vez de
+  0.1.3) — cota jogada fora. Os scripts param em branch errada, em mudança local e em pull que não
+  avança; mostram a versão e pedem confirmação antes de gastar. Regras pra sessão também:
+  (1) nunca passar `eas-cli build`/`eas-cli update` cru pro Alysson colar; (2) nunca emendar
+  `git pull` com outro comando na mesma colada (o erro do pull some na rolagem); (3) antes de pedir
+  build, conferir se a versão do app.config é MAIOR que a publicada nas lojas — a Apple não aceita
+  build novo em versão já publicada (foi o que inutilizou as builds 11 e 14); (4) mudança de versão
+  (`version` no app.config/package.json) avisa o Alysson pra ele fazer `git pull` em TODA janela
+  aberta antes de qualquer build.
+
+- **Pressable com `style` em FUNÇÃO não aplica estilo neste app (11/10/2026, visto em aparelho real):**
+  `style={({ pressed }) => [...]}` chegou ao iPhone com TODOS os estilos ignorados (faixa Sempre on-line
+  transparente e sem altura, botões do card da cidade sem fundo, avatar fora do lugar — o NativeWind v4
+  intercepta o Pressable e perde a função). Só os componentes do irise usavam o padrão, e eles nunca tinham
+  rodado em aparelho (só mock) — por isso ninguém viu antes. Regra: Pressable sempre com `style` plano +
+  `className="active:opacity-80"`, como o resto do app. Mock em HTML NÃO pega isso: flexbox de navegador
+  aplica a função normalmente.
+- **Sombra iOS (`shadowColor/shadowOffset`...) em Image/SVG transparente sai como RETÂNGULO cinza no
+  aparelho** (vista atrás do avatar da faixa em 11/10/2026). As sombras do balão e dos avatares do irise
+  foram removidas por isso; se o design quiser sombra, tem que vir desenhada dentro do PNG.
+
 - **Token da Meta vazou em 28/09/2026** (`META_IG_USER_ID` estava com o token; o erro da Graph API
   devolveu o token e o robô gravou em `docs/legendas/fila.json`, público). Desde 29/09 a Meta responde
   "API access blocked". Desde 30/09 o script passa todo erro por `semSegredo()`. O token segue no
@@ -826,6 +926,13 @@ quando o repositório passa a trazer `publicado: true`. A aba "Lista, dia a dia"
   escolher a branch de trabalho — o menu vem na branch padrão, que é a antiga. Se o site parar de
   atualizar, olhar primeiro em Actions → Pages se o run está verde e se não há “pages build and
   deployment” rodando junto.
+- **iOS 27 fecha na abertura app sem UIScene (10/10/2026):** crash em
+  `_UIApplicationEvaluateRuntimeIssueForNoSceneLifecycleAdoption`, antes do JS, sem tela de erro. O modelo do
+  Expo 57 cria a janela no AppDelegate; `plugins/withSceneLifecycle.js` passa para um `SceneDelegate` e registra
+  `UIApplicationSceneManifest`. Build local no Mac: `IRISA_LOCAL=1 npx expo prebuild -p ios --clean` uma vez e
+  `IRISA_LOCAL=1 npx expo run:ios --device --configuration Release` (o `IRISA_LOCAL=1` desliga o EAS Update, senão
+  a 2ª abertura roda o JS de produção e não o da branch). Próxima build EAS já leva o plugin; conferir link frio
+  (`irisa://auth/callback` com o app fechado) nela.
 - Overpass devolve 406 sem Content-Type/User-Agent; script já tem 3 mirrors.
 - `st_makevalid` pode gerar GeometryCollection: usar `st_collectionextract(..., 3)`.
 - Bairro é atribuído no insert do relato; após importar bairros, rodar o UPDATE de reprocessamento (supabase/README.md).

@@ -53,6 +53,28 @@ export function useGamification() {
   });
 }
 
+/** Já existe avaliação minha hoje (dia de Brasília)? Tira a "Missão do dia" do balão da Início. */
+export function useAvaliouHoje() {
+  const { session } = useAuth();
+  const userId = session?.user.id;
+  return useQuery({
+    queryKey: ["gamificacao", "avaliou-hoje", userId ?? null, hojeSP()],
+    enabled: !!userId,
+    retry: false,
+    staleTime: 30_000,
+    queryFn: async () => {
+      // Brasília é UTC−3 o ano todo (sem horário de verão desde 2019).
+      const { count, error } = await supabase
+        .from("place_ratings")
+        .select("id", { count: "exact", head: true })
+        .eq("user_id", userId!)
+        .gte("created_at", `${hojeSP()}T00:00:00-03:00`);
+      if (error) throw error;
+      return (count ?? 0) > 0;
+    },
+  });
+}
+
 /** "3 de 15 avaliações", "2 de 3 semanas". */
 export function progressoTexto(m: MedalhaProgresso) {
   return `${m.valor} de ${m.alvo}${m.unidade ? ` ${m.unidade}` : ""}`;
@@ -302,7 +324,13 @@ export function useMarkSeen() {
       const { error } = await supabase.rpc("mark_medals_seen", { p_ids: ids });
       if (error) throw error;
     },
-    onMutate: (ids) => {
+    // Sem cancelar busca em andamento, uma tela aberta ao mesmo tempo (Início, Perfil) podia
+    // devolver o "visto" antigo e sobrescrever esse ajuste otimista — a medalha fechava e
+    // reaparecia sozinha. `cancelQueries` evita a corrida; `onError` desfaz se o RPC falhar de
+    // verdade; `onSettled` confirma com o banco no fim, com ou sem erro.
+    onMutate: async (ids) => {
+      await client.cancelQueries({ queryKey: ["gamificacao"] });
+      const anteriores = client.getQueriesData<Gamificacao | null>({ queryKey: ["gamificacao"] });
       client.setQueriesData<Gamificacao | null>({ queryKey: ["gamificacao"] }, (g) =>
         g
           ? {
@@ -313,7 +341,12 @@ export function useMarkSeen() {
             }
           : g,
       );
+      return { anteriores };
     },
+    onError: (_err, _ids, ctx) => {
+      ctx?.anteriores.forEach(([key, data]) => client.setQueryData(key, data));
+    },
+    onSettled: () => client.invalidateQueries({ queryKey: ["gamificacao"] }),
   });
 }
 

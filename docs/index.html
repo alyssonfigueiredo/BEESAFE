@@ -4,10 +4,10 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Irisa · Quanta cor tem aqui?</title>
-<meta name="description" content="O mapa dos lugares onde a gente é bem-vinde, feito pela comunidade LGBTQIA+. Diga quanta cor tem cada lugar e registre, sem nome, a LGBTIfobia na rua. Na App Store e em teste no Android.">
+<meta name="description" content="O mapa dos lugares onde a gente é bem-vinde, feito pela comunidade LGBTQIA+. Diga quanta cor tem cada lugar e registre, sem nome, a LGBTIfobia na rua. Na App Store. Chegando ao Google Play.">
 <meta property="og:type" content="website">
 <meta property="og:title" content="Irisa · Quanta cor tem aqui?">
-<meta property="og:description" content="O mapa dos lugares onde a gente é bem-vinde, feito por nós. Já na App Store. No Android, em fase de testes.">
+<meta property="og:description" content="O mapa dos lugares onde a gente é bem-vinde, feito por nós. Já na App Store. Chegando ao Google Play.">
 <meta property="og:image" content="https://appirisa.com.br/og.png">
 <meta property="og:url" content="https://appirisa.com.br/">
 <meta name="twitter:card" content="summary_large_image">
@@ -311,6 +311,35 @@ footer .sos-line{width:100%;color:var(--coralInk);font-weight:600;text-transform
 .xc .xp.open{margin-top:0}
 .xc .xp-in{margin:0 22px 22px;padding-left:16px}
 
+/* novidades de outubro */
+section[id],#testar{scroll-margin-top:86px}
+.irise-nv{display:grid;grid-template-columns:1fr 1.15fr;gap:30px;align-items:center;padding:32px;border-radius:var(--r-xl);margin-top:32px}
+@media(max-width:780px){.irise-nv{grid-template-columns:1fr;padding:26px 22px}}
+.avs{display:flex;justify-content:center}
+.avs img{width:100px;height:auto;margin-left:-24px;filter:drop-shadow(0 12px 20px rgba(20,24,41,.22));transition:transform .5s var(--spring)}
+.avs img:first-child{margin-left:0}
+.avs img:nth-child(even){transform:translateY(10px)}
+.avs img:hover{transform:translateY(-6px) scale(1.06);position:relative;z-index:2}
+.balao{position:relative;margin:28px auto 0;max-width:340px;background:var(--surface);border-radius:20px;padding:16px 18px;box-shadow:var(--shadow-card),var(--glass-inset)}
+.balao::before{content:"";position:absolute;top:-7px;left:48px;width:15px;height:15px;background:var(--surface);transform:rotate(45deg);border-radius:4px}
+.balao small{display:block;font-weight:700;text-transform:uppercase;letter-spacing:.12em;font-size:11px;color:var(--turqInk);margin-bottom:6px}
+.balao p{font-size:15px;color:var(--ink)}
+.balao .resp{display:flex;gap:8px;margin-top:12px}
+.balao .resp span{padding:7px 14px;border-radius:999px;font-size:13.5px;font-weight:600;background:color-mix(in srgb,var(--turq) 18%,#fff);color:var(--turqInk)}
+.balao .resp span+span{background:var(--subtle);color:var(--muted)}
+.nv-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:18px;margin-top:18px}
+.nv{padding:26px;border-radius:var(--r-lg)}
+.nv h3{font-size:20px;margin-bottom:10px}
+.nv p{color:var(--muted);font-size:15.5px}
+.medals{display:grid;grid-template-columns:repeat(4,1fr);gap:14px 6px;margin:18px 0 2px}
+.medals figure{margin:0;text-align:center}
+.medals img{width:70px;height:70px;object-fit:contain;filter:drop-shadow(0 10px 14px rgba(20,24,41,.16));transition:transform .5s var(--spring)}
+.medals figure:hover img{transform:translateY(-5px) rotate(-4deg)}
+.medals figcaption{font-size:11px;font-weight:600;color:var(--dim);margin-top:4px}
+.rchips{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}
+.rchips span{padding:8px 15px;border-radius:999px;font-size:13.5px;font-weight:600}
+.qih{width:54px;height:54px;display:block;margin-bottom:12px;filter:drop-shadow(0 10px 16px rgba(20,24,41,.18))}
+
 /* revelar ao rolar (só com JS; sem JS tudo aparece) */
 .js .rv{opacity:0;transform:translateY(28px);filter:blur(6px);transition:opacity .9s ease,transform .9s var(--ease),filter .9s ease}
 .js .rv.in{opacity:1;transform:none;filter:none}
@@ -343,6 +372,7 @@ footer .sos-line{width:100%;color:var(--coralInk);font-weight:600;text-transform
   <div class="links">
     <a href="#lugares">Como funciona</a>
     <a href="#seguranca">Relatos</a>
+    <a href="#novidades">Novidades</a>
     <a href="#ongs">Para ONGs</a>
     <a class="btn coral" href="#baixar">Baixar</a>
   </div>
@@ -358,9 +388,10 @@ footer .sos-line{width:100%;color:var(--coralInk);font-weight:600;text-transform
       <p class="lead rv d3">O mapa dos lugares onde a gente é bem-vinde, feito por nós. Diga quanta cor tem cada lugar que você frequenta. E guarde, sem nome, o que não deveria ter acontecido na rua. Feito por quem viveu, para quem vem depois.</p>
       <div class="btns rv d4">
         <a class="btn night store" href="https://apps.apple.com/br/app/irisa/id6816761128" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M16.37 1.43c0 1.14-.42 2.2-1.25 3.06-.9.93-1.98 1.47-3.16 1.38a3.6 3.6 0 0 1-.03-.43c0-1.1.48-2.27 1.33-3.14.42-.44.96-.8 1.6-1.09.65-.28 1.26-.44 1.83-.47.02.23.03.46.03.69zm4.3 15.6c-.35.82-.77 1.57-1.25 2.26-.66.94-1.2 1.6-1.61 1.96-.65.6-1.34.9-2.09.92-.53 0-1.18-.15-1.93-.46-.75-.31-1.45-.46-2.08-.46-.66 0-1.37.15-2.13.46-.76.31-1.37.47-1.84.49-.71.03-1.42-.28-2.13-.95-.45-.39-1.02-1.07-1.69-2.03-.72-1.03-1.32-2.22-1.78-3.58-.5-1.47-.75-2.89-.75-4.27 0-1.58.34-2.94 1.02-4.08a6 6 0 0 1 2.14-2.17 5.76 5.76 0 0 1 2.9-.82c.56 0 1.3.17 2.22.52.92.35 1.5.52 1.76.52.2 0 .86-.2 1.98-.62 1.06-.38 1.95-.54 2.68-.48 1.98.16 3.47.94 4.46 2.35-1.77 1.07-2.65 2.58-2.63 4.51.02 1.51.56 2.76 1.63 3.75.48.46 1.02.81 1.62 1.06-.13.38-.27.74-.41 1.09z"/></svg><span><small>Baixar na</small><span>App Store</span></span></a>
-        <a class="btn turq store" href="#testar"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.6 9.48l1.84-3.18c.16-.31.04-.69-.26-.85a.64.64 0 0 0-.83.22l-1.88 3.24a11.43 11.43 0 0 0-8.94 0L5.65 5.67a.64.64 0 0 0-.87-.2c-.28.18-.37.54-.22.83L6.4 9.48A10.81 10.81 0 0 0 1 18h22a10.81 10.81 0 0 0-5.4-8.52zM7 15.25a1.25 1.25 0 1 1 0-2.5 1.25 1.25 0 0 1 0 2.5zm10 0a1.25 1.25 0 1 1 0-2.5 1.25 1.25 0 0 1 0 2.5z"/></svg><span><small>Android</small><span>Entrar no teste</span></span></a>
+<!-- TEMPORÁRIO (13/10/2026): a ficha do Google Play ainda não existe (produção sem país até a análise da 0.1.3 aprovar; o link da loja dá 404). Quando aprovar, devolver o botão "Baixar no Google Play" com href https://play.google.com/store/apps/details?id=br.com.irisa.app aqui, no bloco Baixar e no rodapé, e voltar os textos "No Google Play"/"no Google Play". -->
+        <a class="btn turq store" href="#testar"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.6 9.48l1.84-3.18c.16-.31.04-.69-.26-.85a.64.64 0 0 0-.83.22l-1.88 3.24a11.43 11.43 0 0 0-8.94 0L5.65 5.67a.64.64 0 0 0-.87-.2c-.28.18-.37.54-.22.83L6.4 9.48A10.81 10.81 0 0 0 1 18h22a10.81 10.81 0 0 0-5.4-8.52zM7 15.25a1.25 1.25 0 1 1 0-2.5 1.25 1.25 0 0 1 0 2.5zm10 0a1.25 1.25 0 1 1 0-2.5 1.25 1.25 0 0 1 0 2.5z"/></svg><span><small>Chegando ao</small><span>Google Play</span></span></a>
       </div>
-      <div class="meta rv d4"><span>Na App Store</span><span style="--c:var(--yellow)">Em teste no Android</span><span style="--c:var(--lilac)">Anônimo por construção</span></div>
+      <div class="meta rv d4"><span>Na App Store</span><span style="--c:var(--yellow)">Chegando ao Google Play</span><span style="--c:var(--lilac)">Anônimo por construção</span></div>
     </div>
     <div class="stage deal" aria-hidden="true">
       <div class="ph p1 float"><img src="telas/04-mapa.webp" alt="" width="600" height="1346" fetchpriority="high"></div>
@@ -374,7 +405,7 @@ footer .sos-line{width:100%;color:var(--coralInk);font-weight:600;text-transform
 </section>
 
 <div class="marquee pane" aria-hidden="true"><div class="track">
-  <span>Nesse bar pode.</span><svg class="dot" viewBox="0 0 100 100"><use href="#radarmin"/></svg><span class="l">Nessa rua, de noite, não.</span><svg class="dot" viewBox="0 0 100 100"><use href="#radarmin"/></svg><span>Quanta <span class="rainbow">cor</span> tem esse lugar?</span><svg class="dot" viewBox="0 0 100 100"><use href="#radarmin"/></svg><span class="l">Dito por quem viveu.</span><svg class="dot" viewBox="0 0 100 100"><use href="#radarmin"/></svg><span>Guardado sem nome.</span><svg class="dot" viewBox="0 0 100 100"><use href="#radarmin"/></svg><span class="l">Lido por quem vem depois.</span><svg class="dot" viewBox="0 0 100 100"><use href="#radarmin"/></svg><span>Já na App Store.</span><svg class="dot" viewBox="0 0 100 100"><use href="#radarmin"/></svg><span>Nesse bar pode.</span><svg class="dot" viewBox="0 0 100 100"><use href="#radarmin"/></svg><span class="l">Nessa rua, de noite, não.</span><svg class="dot" viewBox="0 0 100 100"><use href="#radarmin"/></svg><span>Quanta <span class="rainbow">cor</span> tem esse lugar?</span><svg class="dot" viewBox="0 0 100 100"><use href="#radarmin"/></svg><span class="l">Dito por quem viveu.</span><svg class="dot" viewBox="0 0 100 100"><use href="#radarmin"/></svg><span>Guardado sem nome.</span><svg class="dot" viewBox="0 0 100 100"><use href="#radarmin"/></svg><span class="l">Lido por quem vem depois.</span><svg class="dot" viewBox="0 0 100 100"><use href="#radarmin"/></svg><span>Já na App Store.</span><svg class="dot" viewBox="0 0 100 100"><use href="#radarmin"/></svg>
+  <span>Nesse bar pode.</span><svg class="dot" viewBox="0 0 100 100"><use href="#radarmin"/></svg><span class="l">Nessa rua, de noite, não.</span><svg class="dot" viewBox="0 0 100 100"><use href="#radarmin"/></svg><span>Quanta <span class="rainbow">cor</span> tem esse lugar?</span><svg class="dot" viewBox="0 0 100 100"><use href="#radarmin"/></svg><span class="l">Dito por quem viveu.</span><svg class="dot" viewBox="0 0 100 100"><use href="#radarmin"/></svg><span>Guardado sem nome.</span><svg class="dot" viewBox="0 0 100 100"><use href="#radarmin"/></svg><span class="l">Lido por quem vem depois.</span><svg class="dot" viewBox="0 0 100 100"><use href="#radarmin"/></svg><span>Na App Store. Chegando ao Google Play.</span><svg class="dot" viewBox="0 0 100 100"><use href="#radarmin"/></svg><span>Nesse bar pode.</span><svg class="dot" viewBox="0 0 100 100"><use href="#radarmin"/></svg><span class="l">Nessa rua, de noite, não.</span><svg class="dot" viewBox="0 0 100 100"><use href="#radarmin"/></svg><span>Quanta <span class="rainbow">cor</span> tem esse lugar?</span><svg class="dot" viewBox="0 0 100 100"><use href="#radarmin"/></svg><span class="l">Dito por quem viveu.</span><svg class="dot" viewBox="0 0 100 100"><use href="#radarmin"/></svg><span>Guardado sem nome.</span><svg class="dot" viewBox="0 0 100 100"><use href="#radarmin"/></svg><span class="l">Lido por quem vem depois.</span><svg class="dot" viewBox="0 0 100 100"><use href="#radarmin"/></svg><span>Na App Store. Chegando ao Google Play.</span><svg class="dot" viewBox="0 0 100 100"><use href="#radarmin"/></svg>
 </div></div>
 
 <!-- IRISAR -->
@@ -560,6 +591,95 @@ footer .sos-line{width:100%;color:var(--coralInk);font-weight:600;text-transform
   </div>
 </section>
 
+<!-- NOVIDADES -->
+<section class="block" id="novidades" style="padding-top:0">
+  <div class="wrap">
+    <div class="eyebrow c-lilac rv">Atualização de outubro</div>
+    <h2 class="big rv d1" style="margin-top:14px"><span class="lt">O app</span><br><span class="rainbow">cresceu</span></h2>
+    <p class="lead rv d2" style="margin-top:20px">Quem baixou no lançamento abre outro app hoje: chegou companhia, conquista e um jeito novo de guardar lugar. Tudo dentro da mesma regra de sempre — nada disso é público, e relato nunca vira pontuação.</p>
+
+    <div class="pane irise-nv rv d2">
+      <div>
+        <div class="avs" aria-hidden="true">
+          <img src="novidades/irise-10.webp" alt="" width="240" height="263" loading="lazy">
+          <img src="novidades/irise-12.webp" alt="" width="240" height="263" loading="lazy">
+          <img src="novidades/irise-14.webp" alt="" width="240" height="263" loading="lazy">
+          <img src="novidades/irise-16.webp" alt="" width="240" height="263" loading="lazy">
+          <img src="novidades/irise-18.webp" alt="" width="240" height="263" loading="lazy">
+        </div>
+        <div class="balao" aria-hidden="true"><small>Missão do dia</small><p>Bora colorir 1 lugar hoje? Quer que eu sugira um perto de você?</p><div class="resp"><span>Sugere um</span><span>Hoje não</span></div></div>
+      </div>
+      <div>
+        <h3 style="font-size:26px">Agora tem alguém <span class="rainbow">com você</span></h3>
+        <p class="lead" style="margin-top:12px">As irises moram no Início: você escolhe quem caminha com você. Elas trazem a missão do dia, avisam quando falta pouco pra uma conquista e procuram lugar perto de você — sempre lugar de verdade, que já está no mapa. Irise não inventa endereço.</p>
+      </div>
+    </div>
+
+    <div class="nv-grid">
+      <div class="pane nv rv d1">
+        <h3>32 conquistas pra desbloquear</h3>
+        <p>Avaliar, cadastrar lugar, voltar na semana seguinte: o app celebra com objetos que são a sua cara. Só você vê — e conquista boa dá pra levar pro seu story, sem nome de lugar e sem relato.</p>
+        <div class="medals">
+          <figure><img src="novidades/m-deu-close.webp" alt="" loading="lazy"><figcaption>Deu Close</figcaption></figure>
+          <figure><img src="novidades/m-figurinha.webp" alt="" loading="lazy"><figcaption>Figurinha</figcaption></figure>
+          <figure><img src="novidades/m-famosinha.webp" alt="" loading="lazy"><figcaption>Famosinhe</figcaption></figure>
+          <figure><img src="novidades/m-mala-pronta.webp" alt="" loading="lazy"><figcaption>Mala Pronta</figcaption></figure>
+          <figure><img src="novidades/m-acendeu-a-luz.webp" alt="" loading="lazy"><figcaption>Acendeu a Luz</figcaption></figure>
+          <figure><img src="novidades/m-ombro-amigo.webp" alt="" loading="lazy"><figcaption>Ombro Amigo</figcaption></figure>
+          <figure><img src="novidades/m-bateu-leque.webp" alt="" loading="lazy"><figcaption>Bateu Leque</figcaption></figure>
+          <figure><img src="novidades/m-inaugurou.webp" alt="" loading="lazy"><figcaption>Inaugurou</figcaption></figure>
+        </div>
+      </div>
+      <div class="pane nv rv d2">
+        <h3>Sua evolução</h3>
+        <p>O anel da marca agora é seu: 48 gomos que acendem com o que você faz pela cidade. A cada etapa, um título novo — de Curiose a Patrimônio LGBTQIA+.</p>
+        <div class="medals">
+          <figure><img src="novidades/n-0.webp" alt="" loading="lazy"><figcaption>Curiose</figcaption></figure>
+          <figure><img src="novidades/n-1.webp" alt="" loading="lazy"><figcaption>Entendide</figcaption></figure>
+          <figure><img src="novidades/n-2.webp" alt="" loading="lazy"><figcaption>Irisade</figcaption></figure>
+          <figure><img src="novidades/n-3.webp" alt="" loading="lazy"><figcaption>Close Certo</figcaption></figure>
+          <figure><img src="novidades/n-4.webp" alt="" loading="lazy"><figcaption>Do Babado</figcaption></figure>
+          <figure><img src="novidades/n-5.webp" alt="" loading="lazy"><figcaption>Mapa Vivo</figcaption></figure>
+          <figure><img src="novidades/n-6.webp" alt="" loading="lazy"><figcaption>Lenda Local</figcaption></figure>
+          <figure><img src="novidades/n-7.webp" alt="" loading="lazy"><figcaption>Patrimônio LGBTQIA+</figcaption></figure>
+        </div>
+      </div>
+      <div class="pane nv rv d1">
+        <svg class="qih" viewBox="0 0 100 100" aria-hidden="true"><defs><linearGradient id="qig" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#FF6964"/><stop offset=".2" stop-color="#FFA353"/><stop offset=".4" stop-color="#FFD066"/><stop offset=".6" stop-color="#49DCC0"/><stop offset=".8" stop-color="#59A7FF"/><stop offset="1" stop-color="#A889FF"/></linearGradient></defs><path d="M50 86 C28 68 10 53 10 34 C10 22 19 13 30.5 13 C38.5 13 45.5 18 50 25 C54.5 18 61.5 13 69.5 13 C81 13 90 22 90 34 C90 53 72 68 50 86 Z" fill="url(#qig)"/></svg>
+        <h3>Quero ir</h3>
+        <p>Viu um lugar com a sua cara? Toca no coração e ele entra na sua lista, com o caminho pronto e uma camada só dele no mapa. Foi lá e avaliou? Ele passa sozinho pra "Já fui".</p>
+      </div>
+      <div class="pane nv rv d2">
+        <h3>O mural ganhou reação</h3>
+        <p>Seis reações desenhadas pra gente, a pergunta da semana e o jeito Anônimo de publicar. E texto que parece relato recebe o convite de virar relato — anônimo, como todo relato aqui.</p>
+        <div class="rchips">
+          <span style="background:color-mix(in srgb,var(--coral) 20%,#fff);color:var(--coralInk)">Te abraço</span>
+          <span style="background:color-mix(in srgb,var(--yellow) 26%,#fff);color:var(--yellowInk)">Arrasou</span>
+          <span style="background:color-mix(in srgb,var(--turq) 20%,#fff);color:var(--turqInk)">Tô contigo</span>
+          <span style="background:color-mix(in srgb,var(--lilac) 20%,#fff);color:var(--lilacInk)">Sinto muito</span>
+          <span style="background:color-mix(in srgb,var(--orange) 22%,#fff);color:var(--orangeInk)">Acendeu</span>
+          <span style="background:var(--pane);box-shadow:var(--glass-inset)"><span class="rainbow">Mais cor</span></span>
+        </div>
+      </div>
+      <div class="pane nv rv d1">
+        <h3>A foto é de quem foi</h3>
+        <p>Quem avalia pode mandar a foto do lugar. Nenhuma imagem entra no ar sozinha: toda foto passa por revisão antes de aparecer na ficha.</p>
+      </div>
+      <div class="pane nv rv d2">
+        <h3>E ainda</h3>
+        <div class="mini" style="margin-top:6px">
+          <span>Mapa com camadas e grupos</span>
+          <span>Lugares perto de você</span>
+          <span>Tour de boas-vindas</span>
+          <span>Seu pronome no Perfil — a, o ou e</span>
+          <span>Bloquear usuário</span>
+          <span>Notificações</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
 <!-- CIDADES -->
 <section class="block" style="padding-top:0">
   <div class="wrap">
@@ -594,9 +714,10 @@ footer .sos-line{width:100%;color:var(--coralInk);font-weight:600;text-transform
         <div class="ph" aria-hidden="true"><img src="telas/01-inicio.webp" alt="" width="600" height="1346" loading="lazy"></div>
       </div>
       <div class="pane rv d2" id="testar">
-        <div class="eyebrow">Android · em fase de testes</div>
-        <h3><span class="lt">Seja uma das</span><br>primeiras pessoas</h3>
-        <p class="lead">No Android, a Irisa está em fase de testes. Quem entra agora usa antes de todo mundo e ajuda a desenhar o mapa desde o primeiro lugar.</p>
+        <div class="eyebrow">Android</div>
+        <h3><span class="lt">Chegando ao</span><br>Google Play</h3>
+        <p class="lead">A versão aberta pra todo mundo está em análise no Google e sai em breve — pelas mãos de quem testou primeiro. Obrigade a cada pessoa do grupo de teste.</p>
+        <p class="lead">Enquanto a loja não abre, o grupo de teste é o caminho pra usar a Irisa no Android agora:</p>
         <form class="signup" id="signup" novalidate>
           <div class="field">
             <input id="email" type="email" name="email" inputmode="email" autocomplete="email" autocapitalize="off" spellcheck="false" required placeholder="seu-email@gmail.com" aria-describedby="hint" aria-label="E-mail da conta Google do seu Android">
@@ -648,6 +769,7 @@ footer .sos-line{width:100%;color:var(--coralInk);font-weight:600;text-transform
     <a class="brand" href="#"><svg class="mark" viewBox="0 0 100 100" aria-hidden="true"><use href="#radarmin"/></svg><span>Iris<b>a</b></span></a>
     <nav>
       <a href="https://apps.apple.com/br/app/irisa/id6816761128" target="_blank" rel="noopener">App Store</a>
+      <a href="#testar">Google Play (em breve)</a>
       <a href="privacidade.html">Privacidade</a>
       <a href="termos.html">Termos</a>
       <a href="excluir-conta.html">Excluir conta</a>

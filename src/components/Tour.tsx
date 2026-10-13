@@ -26,8 +26,11 @@ import Animated, {
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import Svg, { Circle, Defs, LinearGradient, Path, Rect, Stop } from "react-native-svg";
 
+import { Busto } from "@/components/irise-personagem/Busto";
 import { useGamification } from "@/hooks/useGamification";
+import { useProfile } from "@/hooks/useProfile";
 import { tabBarBottom } from "@/hooks/useScreenInsets";
+import { useIrisePersonagens } from "@/hooks/useIrisePersonagens";
 import {
   fecharTour,
   medirAlvo,
@@ -346,6 +349,10 @@ export function Tour() {
   const insets = useSafeAreaInsets();
   const reduce = useReducedMotion();
   const forma = useGamification().data?.forma ?? 2;
+  // Prévia (09/10/2026): o irise espia no canto do balão quando a pessoa já tem um escolhido.
+  const personagemId = useProfile().data?.irise_personagem ?? null;
+  const { data: irises = [] } = useIrisePersonagens();
+  const personagem = personagemId ? irises.find((p) => p.n === personagemId) : null;
   const [tam, setTam] = useState({ w: win.width, h: win.height });
   const [fase, setFase] = useState<"boasvindas" | "holofote">("boasvindas");
   const [passos, setPassos] = useState<Passo[]>([]);
@@ -516,6 +523,11 @@ export function Tour() {
               onLayout={(e) => setBolhaH(e.nativeEvent.layout.height)}
             >
               <View style={[styles.seta, { left: setaX }, abaixo ? { top: -7 } : { bottom: -7 }]} />
+              {!!personagem && (
+                <View style={{ position: "absolute", top: -32, left: 16 }}>
+                  <Busto personagem={personagem.n} pose={6} size={56} />
+                </View>
+              )}
               <Text className="font-display text-[22px] uppercase leading-[27px] text-ink">
                 {p.t}
               </Text>

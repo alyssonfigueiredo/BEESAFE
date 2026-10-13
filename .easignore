@@ -1,0 +1,69 @@
+# Learn more https://docs.github.com/en/get-started/getting-started-with-git/ignoring-files
+
+# dependencies
+node_modules/
+
+# Expo
+.expo/
+dist/
+web-build/
+expo-env.d.ts
+
+# Native
+.kotlin/
+*.orig.*
+*.jks
+*.p8
+*.p12
+*.key
+*.mobileprovision
+
+# Metro
+.metro-health-check*
+
+# debug
+npm-debug.*
+yarn-debug.*
+yarn-error.*
+
+# macOS
+.DS_Store
+*.pem
+
+# local env files
+.env*.local
+
+# typescript
+*.tsbuildinfo
+
+# generated native folders
+/ios
+/android
+
+# env
+.env
+screenshots/
+.env.scripts
+.claude/settings.local.json
+
+# A pasta que scripts/artefato-aprovacao.mjs monta para publicar no artefato (cópia do que já está em docs/).
+build/
+
+# Controle de alertas de publicação já enviados por e-mail (rotina de aviso, não é conteúdo do projeto).
+scripts/.alertas-enviados.json
+import-rm.log
+supabase/.temp/
+google-services.json
+
+# Cópias que o build do site gera a partir de docs/ (o Pages monta tudo no CI; não versionar de novo)
+site/reels-*.html
+site/Irisa-reels-*.mp4
+site/admin/
+
+# EAS: nada disto entra no app — só aumenta o upload do build (docs/ tem ~200 MB de vídeo)
+docs/
+site/
+supabase/
+scripts/
+.github/
+*.md

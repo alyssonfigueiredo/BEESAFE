@@ -375,6 +375,7 @@ const ROUTES = {
   relatos: { title: "Relatos", group: "Moderação", render: (c) => viewMod(c, MOD.relatos) },
   lugares: { title: "Lugares", group: "Conteúdo", render: viewLugares },
   servicos: { title: "Serviços de apoio", admin: true, group: "Conteúdo", render: viewServicos },
+  personagens: { title: "Personagens do irise", admin: true, group: "Conteúdo", render: viewPersonagens },
   config: { title: "Configurações", admin: true, group: "Ajustes", render: viewConfig },
   chaves: { title: "Chaves de API", admin: true, group: "Ajustes", render: viewChaves },
 };
@@ -626,13 +627,17 @@ async function viewPessoas(ctx) {
   $("#pOrdem", ctx.el).value = pessoasState.ordem;
   const box = $("#pbox", ctx.el);
   const reload = () => load(box, async () => {
-    const rows = (await rpc("admin_users", { p_busca: pessoasState.busca || null, p_limite: PAGE, p_offset: pessoasState.offset, p_ordem: pessoasState.ordem })) || [];
+    const [rows] = await Promise.all([
+      rpc("admin_users", { p_busca: pessoasState.busca || null, p_limite: PAGE, p_offset: pessoasState.offset, p_ordem: pessoasState.ordem }).then((r) => r || []),
+      iriseCatalogo ? null : carregarIrises().catch(() => null), // só para a foto do irise; sem ela, a coluna mostra a inicial
+    ]);
     if (!ctx.alive()) return;
     const total = rows[0]?.total || 0;
     box.innerHTML = rows.length ? `<div class="table-wrap"><table>
       <thead><tr><th>Pessoa</th><th>Cidade</th><th>Cadastro</th><th>Abriu o app</th><th class="r">Dias em 30</th><th>Última interação</th><th>Notificação</th><th class="r">Avaliações</th><th class="r">Mensagens</th><th class="r">Medalhas</th><th>Papel</th></tr></thead>
       <tbody>${rows.map((u) => `<tr class="click" tabindex="0" data-id="${esc(u.id)}">
-        <td><div class="who">${esc(u.apelido || "Sem apelido")}</div><div class="sub">${esc(u.email || "sem e-mail")}</div></td>
+        <td><div class="iri-in">${u.irise ? iriseAvatar(iriseCatalogo?.[u.irise] || { n: u.irise, nome: u.irise_nome }, 34) : `<span class="iri sem" style="width:34px;height:34px;opacity:.5" data-ini="–" title="Sem irise"></span>`}
+          <div><div class="who">${esc(u.apelido || "Sem apelido")}</div><div class="sub">${esc(u.email || "sem e-mail")}${u.irise ? ` · irise ${esc(u.irise_nome || `nº ${u.irise}`)}` : ""}</div></div></div></td>
         <td class="nowrap">${esc(u.cidade || "—")}</td>
         <td class="nowrap">${esc(fmtD(u.criado_em))}<div class="sub">${esc(rel(u.criado_em))}</div></td>
         <td class="nowrap">${!u.ultimo_dia ? `<span class="dim">nunca</span>` : relDay(u.ultimo_dia) === "hoje" ? chip("today", "hoje") : esc(relDay(u.ultimo_dia))}</td>
@@ -738,6 +743,7 @@ function renderPessoa(box, u, reload) {
         <div><span class="k">Cadastro</span><span class="v">${esc(fmtDT(u.criado_em))}</span></div>
         <div><span class="k">Último login</span><span class="v">${esc(fmtDT(u.ultimo_login))}</span></div>
         <div><span class="k">Medalhas chamam de</span><span class="v">${esc(FAMOSINHA[forma] || "—")}</span></div>
+        <div><span class="k">Irise</span><span class="v">${u.irise ? `<a class="iri-in" href="#personagens">${iriseAvatar(iriseCatalogo?.[u.irise] || { n: u.irise, nome: u.irise_nome }, 28)}${esc(u.irise_nome || `nº ${u.irise}`)}</a>` : `<span class="dim">ainda não escolheu</span>`}</span></div>
         <div><span class="k">Notificação</span><span class="v">${aparelhos}</span></div>
         <div><span class="k">Notificações abertas</span><span class="v">${num(u.pushs_abertos)}</span></div>
       </div>
@@ -1177,7 +1183,7 @@ async function viewDenuncias(ctx) {
 
 // ================================================================ 9. Fotos
 async function viewFotos(ctx) {
-  ctx.el.innerHTML = headHTML("Fotos na fila", "Fotos que as pessoas mandaram ao avaliar. Nenhuma entra no ar sozinha. Quem mandou não aparece aqui.", `<button class="btn sm ghost" id="fReload">Atualizar</button>`) + `<div id="fbox"></div>`;
+  ctx.el.innerHTML = headHTML("Fotos na fila", "Fotos que as pessoas mandaram ao avaliar. Nenhuma entra no ar sozinha.", `<button class="btn sm ghost" id="fReload">Atualizar</button>`) + `<div id="fbox"></div>`;
   const box = $("#fbox", ctx.el);
   let rows = [];
   const draw = () => {
@@ -1185,6 +1191,7 @@ async function viewFotos(ctx) {
     box.innerHTML = `<div class="cards">${rows.map((p, i) => `<div class="card mod-card">
         <a href="${esc(p.url)}" target="_blank" rel="noopener noreferrer"><img class="thumb" src="${esc(p.url)}" alt="Foto enviada para ${esc(p.place_name || "um lugar")}" loading="lazy" referrerpolicy="no-referrer"></a>
         <div class="top"><strong>${esc(p.place_name || "Lugar sem nome")}</strong></div>
+        <div class="sub">${esc(p.enviado_por || "Sem apelido")}</div>
         <div class="top">${chip(p.review, FOTO_REVIEW[p.review] || p.review)} <span class="small dim">${esc(rel(p.created_at))}</span></div>
         ${p.review_note ? `<p class="small muted">${esc(p.review_note)}</p>` : ""}
         <div class="actions"><button class="btn sm ok" data-f="1" data-i="${i}">Aprovar</button><button class="btn sm danger" data-f="0" data-i="${i}">Recusar</button></div>
@@ -1249,7 +1256,7 @@ async function viewLugares(ctx) {
       <tbody>${rows.map((p, i) => `<tr class="click" tabindex="0" data-i="${i}">
         <td>${p.foto_url ? `<img class="thumb-sm" src="${esc(p.foto_url)}" alt="" loading="lazy" referrerpolicy="no-referrer">` : `<span class="thumb-sm" aria-hidden="true"></span>`}</td>
         <td><div class="who">${esc(p.nome)}${p.verificado ? ` <span class="small" style="color:var(--turq-ink)" title="Verificado pela equipe">✓</span>` : ""}</div>
-            <div class="sub">${esc([CATEGORIA[p.categoria] || p.categoria, p.bairro].filter(Boolean).join(" · "))} · entrou ${esc(rel(p.criado_em))}</div></td>
+            <div class="sub">${esc([CATEGORIA[p.categoria] || p.categoria, p.bairro].filter(Boolean).join(" · "))} · entrou ${esc(rel(p.criado_em))}${p.criado_por ? ` · por ${esc(p.criado_por)}` : ""}</div></td>
         <td class="nowrap">${esc(p.cidade || "—")}</td>
         <td class="nowrap">${p.nota != null && Number(p.avaliacoes) ? `<strong>${esc(Number(p.nota).toFixed(1))}</strong><span class="small dim"> (${num(p.avaliacoes)})</span>` : `<span class="dim">sem nota</span>`}${p.selo ? `<div class="sub">${esc(SELO[p.selo] || p.selo)}</div>` : ""}</td>
         <td>${p.descricao ? chip("on", "tem") : chip("off", "falta")}</td>
@@ -1296,6 +1303,7 @@ async function viewLugares(ctx) {
       { titulo: "Selo", valor: (p) => SELO[p.selo] || p.selo },
       { titulo: "Descrição", valor: (p) => p.descricao },
       { titulo: "Entrou em", valor: (p) => fmtD(p.criado_em) },
+      { titulo: "Cadastrado por", valor: (p) => p.criado_por },
     ], todos);
     toast(`${todos.length} lugares exportados.`);
   }));
@@ -1527,6 +1535,182 @@ function serviceEditor(s, reload) {
   });
 }
 
+// ================================================================ Personagens do irise
+// Os 9 originais (10 a 18) vêm com foto embutida (docs/admin/irise-<n>.webp, a mesma do app); qualquer outro,
+// ou um original cuja foto foi trocada pelo painel, vem do Storage `irise/<n>/<pose>.webp`.
+const IRISE_EMBUTIDOS = new Set([10, 11, 12, 13, 14, 15, 16, 17, 18]);
+const POSES = [[1, "Mão no peito (padrão)"], [2, "Comemorando"], [3, "Preocupade"], [4, "Acolhendo"], [5, "Piscadinha"], [6, "Apoio"], [0, "Corpo inteiro"]];
+const STATS_IRISE = [["stat_acolhimento", "Acolhimento"], ["stat_humor", "Humor"], ["stat_papo_reto", "Papo reto"], ["stat_role", "Rolê"]];
+let iriseCatalogo = null; // n → personagem, para a lista de Pessoas
+
+function iriseFoto(p, pose = 1) {
+  const n = Number(p?.n ?? p);
+  const remoto = p?.foto_atualizada_em || !IRISE_EMBUTIDOS.has(n);
+  if (!remoto) return pose === 1 ? `irise-${n}.webp` : `irise-${n}-${pose}.webp`;
+  const v = p?.foto_atualizada_em ? `?v=${encodeURIComponent(p.foto_atualizada_em)}` : "";
+  return `${SB_URL}/storage/v1/object/public/irise/${n}/${pose}.webp${v}`;
+}
+// Avatar redondo; se a foto não existir, cai na inicial do nome (e um original volta para a foto embutida).
+function iriseAvatar(p, size = 40) {
+  const n = Number(p?.n);
+  const reserva = IRISE_EMBUTIDOS.has(n) ? `irise-${n}.webp` : "";
+  return `<span class="iri" style="width:${size}px;height:${size}px" data-ini="${esc((p?.nome || "?")[0])}"><img src="${esc(iriseFoto(p))}" alt="" loading="lazy"
+    onerror="if(this.dataset.r!=='1'&&'${reserva}'){this.dataset.r='1';this.src='${reserva}'}else{this.parentNode.classList.add('sem');this.remove()}"></span>`;
+}
+async function carregarIrises() {
+  const rows = (await rpc("admin_irise_personagens")) || [];
+  iriseCatalogo = Object.fromEntries(rows.map((p) => [p.n, p]));
+  return rows;
+}
+
+async function viewPersonagens(ctx) {
+  ctx.el.innerHTML = headHTML("Personagens do irise", "Quem a pessoa escolhe no Perfil para conversar no chat da Irise. Mudanças aqui chegam no app sem versão nova.",
+    `<button class="btn" id="irNovo">Novo personagem</button>`) + `<div id="irbox"></div>`;
+  const box = $("#irbox", ctx.el);
+  const reload = () => load(box, async () => {
+    const [lista, m] = await Promise.all([carregarIrises(), rpc("admin_irise_metricas")]);
+    if (!ctx.alive()) return;
+    const por = Object.fromEntries((m?.por_personagem || []).map((x) => [x.n, Number(x.pessoas)]));
+    const com = Number(m?.com_irise || 0), total = Number(m?.pessoas || 0);
+    const pct = (v, de) => (de ? Math.round((v / de) * 100) : 0);
+    const ranking = [...lista].sort((a, b) => (por[b.n] || 0) - (por[a.n] || 0) || a.n - b.n);
+    const max = Math.max(1, ...ranking.map((p) => por[p.n] || 0));
+    // escolhido que não está mais no catálogo (apagado): aparece no ranking sem foto
+    const orfaos = Object.keys(por).filter((n) => !iriseCatalogo[n]).map((n) => ({ n: Number(n), nome: `nº ${n}`, ativo: false, orfao: true }));
+    box.innerHTML = `
+      <div class="tiles">
+        <div class="tile"><b>${num(com)}</b><span>escolheram um irise (${pct(com, total)}% das contas)</span></div>
+        <div class="tile"><b>${num(total - com)}</b><span>ainda sem irise</span></div>
+        <div class="tile"><b>${num(lista.filter((p) => p.ativo).length)}</b><span>personagens no ar</span></div>
+        <div class="tile"><b>${ranking[0] && por[ranking[0].n] ? esc(ranking[0].nome) : "—"}</b><span>o mais escolhido</span></div>
+      </div>
+      <div class="card"><h2>Quem escolheu qual</h2><p class="small muted" style="margin:4px 0 12px">Só contagem. Para ver o irise de alguém, abra a pessoa em Pessoas.</p>
+        <div class="irank">${[...ranking, ...orfaos].map((p) => {
+          const v = por[p.n] || 0;
+          return `<div class="ir">${p.orfao ? `<span class="iri sem" style="width:36px;height:36px" data-ini="?"></span>` : iriseAvatar(p, 36)}
+            <div class="nm"><div><strong>${esc(p.nome)}</strong> ${p.ativo ? "" : chip("warn", p.orfao ? "apagado" : "fora do ar")}</div><div class="bar"><i style="width:${pct(v, max)}%"></i></div></div>
+            <div class="n"><b>${num(v)}</b><span>${pct(v, com)}%</span></div></div>`;
+        }).join("")}</div>
+      </div>
+      <div class="igrid">${lista.map((p) => `<button class="icard" data-n="${p.n}">
+          ${iriseAvatar(p, 88)}
+          <div class="t">${esc(p.nome)} <span class="small dim">nº ${p.n}</span></div>
+          <div class="small muted">${esc(p.pronomes)} · ${esc(p.classe)}</div>
+          <div class="small">${plural(por[p.n] || 0, "pessoa", "pessoas")}</div>
+          ${p.ativo ? chip("on", "no ar") : chip("warn", "fora do ar")}
+        </button>`).join("")}</div>`;
+    $$(".icard", box).forEach((b) => b.addEventListener("click", () => iriseEditor(iriseCatalogo[b.dataset.n], por[b.dataset.n] || 0, reload)));
+  }, ctx);
+  $("#irNovo", ctx.el).addEventListener("click", () => iriseEditor(null, 0, reload));
+  await reload();
+}
+
+// Converte para WebP no navegador (o app sempre lê `<pose>.webp`), mantendo o fundo transparente.
+async function paraWebp(file) {
+  const img = await createImageBitmap(file);
+  const escala = Math.min(1, 1200 / Math.max(img.width, img.height));
+  const c = document.createElement("canvas");
+  c.width = Math.round(img.width * escala); c.height = Math.round(img.height * escala);
+  c.getContext("2d").drawImage(img, 0, 0, c.width, c.height);
+  const blob = await new Promise((r) => c.toBlob(r, "image/webp", 0.9));
+  if (!blob || blob.type !== "image/webp") throw new Error("Este navegador não converte para WebP. Tente pelo Chrome.");
+  if (blob.size > 2 * 1024 * 1024) throw new Error("A imagem passa de 2 MB mesmo convertida. Use uma menor.");
+  return blob;
+}
+
+function iriseEditor(p, pessoas, reload) {
+  const novo = !p;
+  const proximo = Math.max(18, ...Object.keys(iriseCatalogo || {}).map(Number)) + 1;
+  p = p ? { ...p } : { n: proximo, nome: "", pronomes: "ela/dela", classe: "", bio: "", stat_acolhimento: 3, stat_humor: 3, stat_papo_reto: 3, stat_role: 3, ativo: true };
+  let mudou = false;
+  const d = openDialog(`
+    <h2>${novo ? "Novo personagem" : esc(p.nome)}</h2>
+    ${novo ? `<div class="note info"><span>Salve os textos primeiro; as fotos entram depois, no mesmo lugar. Sem foto, o app mostra a inicial.</span></div>`
+      : `<p class="small muted">${plural(pessoas, "pessoa escolheu", "pessoas escolheram")} este irise.</p>`}
+    <form class="form" id="irf" novalidate>
+      <div class="row">
+        <label class="f">Número <input class="input" name="n" type="number" min="1" max="999" value="${p.n}" ${novo ? "" : "disabled"}></label>
+        <label class="f">Nome <input class="input" name="nome" maxlength="30" required value="${esc(p.nome)}"></label>
+      </div>
+      <div class="row">
+        <label class="f">Pronomes <input class="input" name="pronomes" maxlength="30" required value="${esc(p.pronomes)}"></label>
+        <label class="f">Classe <input class="input" name="classe" maxlength="40" required value="${esc(p.classe)}" placeholder="Ex.: Cartógrafo"></label>
+      </div>
+      <label class="f">Bio <span class="hint" id="irBioN"></span><textarea class="input" name="bio" rows="3" maxlength="200" required>${esc(p.bio)}</textarea></label>
+      <div class="row">${STATS_IRISE.map(([k, t]) => `<label class="f">${t} <select class="input" name="${k}">${[0, 1, 2, 3, 4, 5].map((v) => `<option ${v === Number(p[k]) ? "selected" : ""}>${v}</option>`).join("")}</select></label>`).join("")}</div>
+      <label class="check"><input type="checkbox" name="ativo" ${p.ativo ? "checked" : ""}> Aparece para escolher no app <span class="small dim">(quem já escolheu continua com ele)</span></label>
+      <div class="foot">${novo ? "" : `<button type="button" class="btn danger" id="irDel" style="margin-right:auto">Apagar</button>`}<button type="button" class="btn ghost" data-close>Fechar</button><button class="btn" type="submit" id="irSave">Salvar textos</button></div>
+    </form>
+    <div id="irFotos"></div>`, { wide: true, onClose: () => { if (mudou) reload(); } });
+  const f = $("#irf", d);
+  counter(f.bio, $("#irBioN", d), 200);
+  const drawFotos = () => {
+    const host = $("#irFotos", d);
+    if (novo && !mudou) { host.innerHTML = ""; return; }
+    host.innerHTML = `<h3 style="margin-top:18px">Fotos</h3>
+      <p class="small muted" style="margin:4px 0 10px">Busto 300 × 460 com fundo transparente (PNG ou WebP), igual às do app; corpo inteiro também transparente. A troca vale para todo mundo na hora.</p>
+      <div class="poses">${POSES.map(([pose, t]) => `<div class="pose">
+          <div class="pv"><img src="${esc(iriseFoto(p, pose))}${p.foto_atualizada_em || IRISE_EMBUTIDOS.has(Number(p.n)) ? "" : `?t=${Date.now()}`}" alt=""
+            onerror="if(this.dataset.r!=='1'&&${IRISE_EMBUTIDOS.has(Number(p.n))}){this.dataset.r='1';this.src='${pose === 1 ? `irise-${p.n}.webp` : `irise-${p.n}-${pose}.webp`}'}else{this.replaceWith(Object.assign(document.createElement('span'),{className:'small dim',textContent:'sem foto'}))}"></div>
+          <div class="small">${esc(t)}</div>
+          <button type="button" class="btn sm ghost" data-pick="${pose}">Trocar</button><input type="file" accept="image/png,image/webp" data-pose="${pose}" hidden>
+        </div>`).join("")}</div>`;
+    $$("[data-pick]", host).forEach((btn) => btn.addEventListener("click", () => $(`input[data-pose="${btn.dataset.pick}"]`, host).click()));
+    $$("input[data-pose]", host).forEach((inp) => inp.addEventListener("change", () => {
+      const file = inp.files[0];
+      inp.value = "";
+      if (!file) return;
+      busy($(`[data-pick="${inp.dataset.pose}"]`, host), async () => {
+        if (!/^image\/(png|webp)$/.test(file.type)) throw new Error("Use PNG ou WebP com fundo transparente.");
+        const blob = await paraWebp(file);
+        const up = await sb.storage.from("irise").upload(`${p.n}/${inp.dataset.pose}.webp`, blob, { contentType: "image/webp", upsert: true });
+        if (up.error) throw new Error(ptErr(up.error));
+        await rpc("admin_irise_personagem_tocar", { p_n: p.n });
+        p.foto_atualizada_em = new Date().toISOString();
+        mudou = true;
+        toast("Foto trocada");
+        drawFotos();
+      });
+    }));
+  };
+  drawFotos();
+  f.addEventListener("submit", (ev) => {
+    ev.preventDefault();
+    busy($("#irSave", d), async () => {
+      const n = Number(f.n.value);
+      if (!Number.isInteger(n) || n < 1 || n > 999) throw new Error("O número vai de 1 a 999.");
+      if (novo && iriseCatalogo?.[n]) throw new Error(`Já existe um personagem com o número ${n}.`);
+      const txt = (k) => f[k].value.trim();
+      if (!txt("nome") || !txt("pronomes") || !txt("classe") || !txt("bio")) throw new Error("Preencha nome, pronomes, classe e bio.");
+      const salvo = await rpc("admin_irise_personagem_upsert", {
+        p_n: n, p_nome: txt("nome"), p_pronomes: txt("pronomes"), p_classe: txt("classe"), p_bio: txt("bio"),
+        p_acolhimento: Number(f.stat_acolhimento.value), p_humor: Number(f.stat_humor.value),
+        p_papo_reto: Number(f.stat_papo_reto.value), p_role: Number(f.stat_role.value), p_ativo: f.ativo.checked,
+      });
+      Object.assign(p, salvo || {}, { n });
+      f.n.disabled = true;
+      mudou = true;
+      toast("Salvo");
+      drawFotos();
+    });
+  });
+  $("#irDel", d)?.addEventListener("click", async (ev) => {
+    const btn = ev.currentTarget;
+    const ok = await confirmBox({
+      title: `Apagar ${p.nome}?`,
+      text: pessoas ? `${plural(pessoas, "pessoa fica", "pessoas ficam")} sem irise e volta${pessoas === 1 ? "" : "m"} a escolher. Para só tirar da lista de escolha, desmarque "Aparece para escolher".` : "Some do app e do painel.",
+      ok: "Apagar", danger: true,
+    });
+    if (!ok) return;
+    await busy(btn, async () => {
+      await rpc("admin_irise_personagem_excluir", { p_n: p.n });
+      toast("Apagado");
+      mudou = true;
+      d.close();
+    });
+  });
+}
+
 // ================================================================ 12. Configurações
 async function viewConfig(ctx) {
   ctx.el.innerHTML = headHTML("Configurações", "Ajustes que mudam o app na hora, sem versão nova.") + `<div id="cbox"></div>`;
@@ -1668,11 +1852,22 @@ async function viewChaves(ctx) {
   ctx.el.innerHTML = headHTML("Chaves de API", "Cole aqui em vez de mexer no painel do Supabase. A chave fica criptografada — nem o painel consegue mostrar de volta, só sobrescrever.") + `<div id="kbox"></div>`;
   const box = $("#kbox", ctx.el);
   await load(box, async () => {
-    const [status, settings] = await Promise.all([rpc("admin_api_keys_status"), rpc("admin_settings")]);
+    const [status, settings, personagens] = await Promise.all([
+      rpc("admin_api_keys_status"),
+      rpc("admin_settings"),
+      rpc("admin_irise_personagens"),
+    ]);
     if (!ctx.alive()) return;
     const cfg = Object.fromEntries((status || []).map((s) => [s.name, s.configurado]));
     const iriseAtiva = !!(settings || {}).irise_ativa;
     const vozExtra = typeof (settings || {}).irise_voz_extra === "string" ? (settings || {}).irise_voz_extra : "";
+    const vozPersonagens = (settings || {}).irise_voz_personagens && typeof (settings || {}).irise_voz_personagens === "object"
+      ? (settings || {}).irise_voz_personagens
+      : {};
+    // Catálogo de verdade (migration 71): o painel já deixa criar/renomear/apagar personagem, então
+    // a voz tem que listar o que existe agora, não uma lista fixa. Inclui inativos — dá pra escrever
+    // a voz antes de ligar o personagem pro público.
+    const listaPersonagens = personagens || [];
     box.innerHTML = `
       <form class="card form" id="iriseForm" style="margin-bottom:14px">
         <h2>Botão da Irise no app</h2>
@@ -1681,9 +1876,21 @@ async function viewChaves(ctx) {
       </form>
       <form class="card form" id="vozForm" style="margin-bottom:14px">
         <h2>Voz da Irise</h2>
-        <p class="small muted">Texto extra de tom/personalidade, colado depois das regras fixas (nunca inventar lugar, nunca dizer "seguro" etc. continuam protegidas no código). Salva na hora, sem precisar publicar nada no Supabase.</p>
+        <p class="small muted">Texto extra de tom/personalidade, colado depois das regras fixas (nunca inventar lugar, nunca dizer "seguro" etc. continuam protegidas no código) e antes do texto do personagem escolhido, aqui embaixo. Vale pra conversa de todo mundo, mesmo quem está sem personagem.</p>
         <textarea class="input" id="vozExtra" rows="4" placeholder="Ex.: usa mais gíria tal, evita tal expressão…">${esc(vozExtra)}</textarea>
         <div class="foot"><button class="btn" type="submit">Salvar voz</button></div>
+      </form>
+      <form class="card form" id="vozPersonagemForm" style="margin-bottom:14px">
+        <h2>Voz de cada personagem</h2>
+        <p class="small muted">Texto extra só desse personagem, somado depois da voz geral acima quando a pessoa escolhe ele no chat. Em branco, o personagem fala só com o texto-base + a voz geral.</p>
+        ${listaPersonagens.length ? `
+        <label class="small muted" for="vpSelect">Personagem</label>
+        <select class="input" id="vpSelect" style="margin-bottom:10px">
+          ${listaPersonagens.map((p) => `<option value="${p.n}">${esc(p.nome)}${p.ativo ? "" : " · inativo"}</option>`).join("")}
+        </select>
+        <textarea class="input" id="vpTexto" rows="4" placeholder="Ex.: fala mais pausado, gosta de citar um refrão…"></textarea>
+        <div class="foot"><button class="btn" type="submit">Salvar voz do personagem</button></div>
+        ` : `<p class="small muted">Nenhum personagem cadastrado ainda — crie um em Personagens do Irise.</p>`}
       </form>` + API_KEYS.map((k) => `
       <form class="card form" data-key="${k.name}" style="margin-bottom:14px">
         <h2>${esc(k.label)} <span class="small ${cfg[k.name] ? "ok" : "dim"}">${cfg[k.name] ? "· configurada" : "· não configurada"}</span></h2>
@@ -1710,6 +1917,23 @@ async function viewChaves(ctx) {
       ev.preventDefault();
       busy($("button", ev.currentTarget), async () => {
         await rpc("admin_setting_set", { p_key: "irise_voz_extra", p_value: $("#vozExtra", box).value.trim() });
+        toast("Salvo");
+      });
+    });
+    const vpSelect = $("#vpSelect", box), vpTexto = $("#vpTexto", box);
+    if (vpSelect && vpTexto) {
+      const vpCarregar = () => { vpTexto.value = vozPersonagens[vpSelect.value] || ""; };
+      vpSelect.addEventListener("change", vpCarregar);
+      vpCarregar();
+    }
+    $("#vozPersonagemForm", box).addEventListener("submit", (ev) => {
+      ev.preventDefault();
+      if (!vpSelect || !vpTexto) return;
+      busy($("button", ev.currentTarget), async () => {
+        const n = Number(vpSelect.value);
+        const texto = vpTexto.value.trim();
+        await rpc("admin_personagem_voz_set", { p_personagem: n, p_voz: texto });
+        vozPersonagens[String(n)] = texto;
         toast("Salvo");
       });
     });
@@ -1740,9 +1964,10 @@ function showFatal(msg) {
   app.innerHTML = gateHTML(`<h1>Painel fora do ar</h1><p class="lead">${esc(msg)}</p>`);
 }
 
-// O login da Apple pelo navegador precisa do Services ID e da Secret Key no provider Apple da Supabase.
-// Sem isso a Supabase responde "Unsupported provider: missing OAuth secret". Ligar quando estiver configurado.
-const APPLE_WEB = false;
+// O login da Apple pelo navegador precisa do Services ID e da Secret Key no provider Apple da Supabase
+// (passo a passo em CLAUDE.md, pedido do Leandro em 13/10/2026). Sem isso configurado lá, o botão
+// aparece mas o clique dá "Unsupported provider: missing OAuth secret" — ligar só depois de configurar.
+const APPLE_WEB = true;
 
 function showLogin(errMsg = "") {
   app.innerHTML = gateHTML(`

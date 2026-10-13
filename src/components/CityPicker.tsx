@@ -10,10 +10,26 @@ import { useCity } from "@/providers/CityProvider";
 import { colors } from "@/theme/tokens";
 import { useFolhaAberta } from "@/hooks/useDiscovery";
 
-export function CityPicker({ tone = "light" }: { tone?: "light" | "dark" } = {}) {
+export function CityPicker({
+  tone = "light",
+  open: openProp,
+  onOpenChange,
+  hideTrigger,
+}: {
+  tone?: "light" | "dark";
+  /** Controla a abertura de fora (ex.: um toque no texto da cidade em outro componente). Sem
+   * isso, o botão próprio abre/fecha sozinho, como sempre. */
+  open?: boolean;
+  onOpenChange?: (open: boolean) => void;
+  /** Esconde o botão "Cidade · UF ⌄" próprio, pra quando outro componente já mostra esse texto
+   * e só precisa do modal por trás dele. */
+  hideTrigger?: boolean;
+} = {}) {
   const cor = tone === "dark" ? colors.paper : colors.turquoiseInk;
   const { city, setCity } = useCity();
-  const [open, setOpen] = useState(false);
+  const [openState, setOpenState] = useState(false);
+  const open = openProp ?? openState;
+  const setOpen = onOpenChange ?? setOpenState;
   useFolhaAberta(open);
   const [q, setQ] = useState("");
   const term = q.trim();
@@ -30,12 +46,14 @@ export function CityPicker({ tone = "light" }: { tone?: "light" | "dark" } = {})
 
   return (
     <>
-      <Pressable onPress={() => setOpen(true)} className="flex-row items-center gap-1 self-start">
-        <Text className="font-body-medium text-sm" style={{ color: cor }}>
-          {city ? `${city.name} · ${city.state}` : "Escolher cidade"}
-        </Text>
-        <ChevronDown color={cor} size={16} />
-      </Pressable>
+      {!hideTrigger && (
+        <Pressable onPress={() => setOpen(true)} className="flex-row items-center gap-1 self-start">
+          <Text className="font-body-medium text-sm" style={{ color: cor }}>
+            {city ? `${city.name} · ${city.state}` : "Escolher cidade"}
+          </Text>
+          <ChevronDown color={cor} size={16} />
+        </Pressable>
+      )}
       <Modal visible={open} animationType="slide" onRequestClose={() => setOpen(false)}>
         <View className="flex-1 gap-4 px-4 pt-14" style={{ backgroundColor: "#FBFCFE" }}>
           <View className="flex-row items-center justify-between">

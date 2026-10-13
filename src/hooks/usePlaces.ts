@@ -243,17 +243,22 @@ export function useCreatePlace() {
   });
 }
 
-export type RatingInput = Record<Axis, number> & { comment: string };
+export type RatingInput = Record<Axis, number> & { comment: string; anonymous: boolean };
 
 export function useRatePlace(placeId: string) {
   const client = useQueryClient();
   return useMutation({
-    mutationFn: async ({ comment, ...axes }: RatingInput) => {
+    mutationFn: async ({ comment, anonymous, ...axes }: RatingInput) => {
       // `stars` é derivada dos eixos por trigger no banco.
       const { error } = await supabase
         .from("place_ratings")
         .upsert(
-          { place_id: placeId, ...axes, comment: comment.trim() || null },
+          {
+            place_id: placeId,
+            ...axes,
+            comment: comment.trim() || null,
+            is_anonymous: anonymous,
+          },
           { onConflict: "place_id,user_id" },
         );
       if (error) throw translate(error);
@@ -266,6 +271,8 @@ export function useRatePlace(placeId: string) {
       client.invalidateQueries({ queryKey: ["welcoming"] });
       // Lugar do Quero ir avaliado vai para Já fui (trigger da migration 65).
       client.invalidateQueries({ queryKey: ["favoritos"] });
+      // Inclui o "avaliei hoje" que tira a Missão do dia da Início.
+      client.invalidateQueries({ queryKey: ["gamificacao"] });
     },
   });
 }

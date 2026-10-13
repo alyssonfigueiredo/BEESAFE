@@ -1,4 +1,4 @@
-import { Link } from "expo-router";
+import { Link, router } from "expo-router";
 import { Clock, FileText, MapPin, MessageCircle } from "lucide-react-native";
 import { useMemo, useState } from "react";
 import { Pressable, ScrollView, Text, View } from "react-native";
@@ -8,7 +8,10 @@ import { Chip } from "@/components/Chip";
 import { CityPicker } from "@/components/CityPicker";
 import { DangerRanking } from "@/components/DangerRanking";
 import { AvisoCard, GamiHomeCards } from "@/components/gami/HomeCards";
-import { IriseFab } from "@/components/irise/Irise";
+import { IriseSheet } from "@/components/irise/Irise";
+import { CardCidadeIrise } from "@/components/irise-personagem/CardCidadeIrise";
+import { IriseNudge } from "@/components/irise-personagem/IriseNudge";
+import { IrisePilula } from "@/components/irise-personagem/IrisePilula";
 import { Mark } from "@/components/Mark";
 import { OccurrenceCard } from "@/components/OccurrenceCard";
 import { PlaceCard } from "@/components/PlaceCard";
@@ -16,19 +19,35 @@ import { RainbowLine } from "@/components/Rainbow";
 import { SearchField } from "@/components/SearchField";
 import { StatCard } from "@/components/StatCard";
 import { TourTarget } from "@/components/Tour";
+import { useAlgumNudgeVisivel } from "@/hooks/useDiscovery";
 import { useCityStats } from "@/hooks/useCityStats";
-import { useAppConfig, useGamification } from "@/hooks/useGamification";
+import { useAppConfig, useAvaliouHoje, useForma, useGamification, quaseLa } from "@/hooks/useGamification";
+import { useIrisePersonagens } from "@/hooks/useIrisePersonagens";
 import { useAreaRisk, useOccurrences } from "@/hooks/useOccurrences";
 import { usePlaces, useSearchPlaces, useWelcoming } from "@/hooks/usePlaces";
+import { useProfile } from "@/hooks/useProfile";
 import { useScreenInsets } from "@/hooks/useScreenInsets";
-import { useTourScroll } from "@/hooks/useTour";
+import { rolarInicio, useTourScroll } from "@/hooks/useTour";
 import { distanceMeters } from "@/lib/geo";
+import { falasDoIrise, type Acao, type Fala } from "@/lib/iriseFalas";
+import type { OrchestratedPlace } from "@/hooks/useIrise";
 import { useCity } from "@/providers/CityProvider";
-import { OCCURRENCE_TYPES, PLACE_CATEGORIES, RATING_MIN, type PlaceCategory } from "@/theme/domain";
+import { OCCURRENCE_TYPES, PLACE_CATEGORIES, RATING_MIN, flexiona, type PlaceCategory } from "@/theme/domain";
 import { colors, shadow } from "@/theme/tokens";
 
 // Busca sem acento e sem caixa: "cafe" acha "Café".
 const simplifica = (s: string) => s.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "");
+
+// Função fora do componente (não "durante o render"): o lint de pureza do React barra Date.now()
+// direto no corpo de um componente, mas não dentro de uma função comum chamada por ele.
+function relatoDasUltimas24h<T extends { created_at: string }>(occurrences: T[]): T | null {
+  const agora = Date.now();
+  return (
+    occurrences
+      .filter((o) => agora - new Date(o.created_at).getTime() < 24 * 60 * 60 * 1000)
+      .sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())[0] ?? null
+  );
+}
 
 type Filtro = PlaceCategory | "all" | "rated";
 
@@ -47,7 +66,37 @@ export default function HomeScreen() {
   // Tour: rola o Início até os alvos; os cartões da gamificação só viram alvo quando aparecem.
   const { anexar: prenderRolagem, onScroll: aoRolar } = useTourScroll();
   const { data: gami } = useGamification();
+  const { data: avaliouHoje = false } = useAvaliouHoje();
   const { data: cfg } = useAppConfig();
+  const { data: profile } = useProfile();
+  const { data: irises = [] } = useIrisePersonagens();
+
+  // Irise na Início (protótipo aprovado 10/10/2026): só entra com personagem escolhido e a
+  // funcionalidade ligada (admin); sem isso, o card escuro de sempre continua do jeito que é.
+  const personagem = cfg?.irise_ativa ? (profile?.irise_personagem ?? null) : null;
+  const irise = personagem ? irises.find((p) => p.n === personagem) : null;
+  const forma = useForma();
+  const [cidadeAberta, setCidadeAberta] = useState(false);
+  const [chatAberta, setChatAberta] = useState(false);
+  const [chatAbertura, setChatAbertura] = useState<Fala | null>(null);
+  const [passouDoCard, setPassouDoCard] = useState(false);
+  const [cardBaixoY, setCardBaixoY] = useState<number | null>(null);
+
+  function abrirChat(fala: Fala | null) {
+    setChatAbertura(fala);
+    setChatAberta(true);
+  }
+
+  // O CTA do balão vai direto pro destino, sem abrir o chat. "Ver os dias" (fala de conquista)
+  // não tem tela própria — aqui ainda não existe fora do cartão "Sua semana" — então só rola até
+  // ele, que é o mais perto que dá de "o destino" sem mexer no card (regra do pacote).
+  function ctaDaFala(fala: Fala) {
+    if (fala.id === "missao") router.push("/lugares");
+    else if (fala.id === "falta") router.push("/conquistas");
+    else if (fala.id === "sugestao") router.push("/lugares");
+    else if (fala.id === "alerta") router.push("/mapa");
+    else rolarInicio(0);
+  }
 
   // O ranking só aceita lugar com RATING_MIN avaliações, e nos primeiros meses isso é ninguém.
   // Até lá mostra quem já recebeu alguma nota: a seção precisa provar que o app está vivo.
@@ -55,6 +104,53 @@ export default function HomeScreen() {
     .filter((p) => p.rating_count > 0)
     .sort((a, b) => b.rating_count - a.rating_count)
     .slice(0, 5);
+
+  // Falas do balão: só as que fazem sentido agora, com o nome/gênero do irise e o dado real da
+  // gamificação já resolvidos (figurinha mais perto, conquista do momento). "Missão do dia" sai
+  // quando já existe avaliação minha hoje.
+  const falasIrise = useMemo(() => falasDoIrise(irise ?? null, gami), [irise, gami]);
+  const quaseLaMedalha = quaseLa(gami);
+  const semanaOuConquista = !!gami && (gami.semana.acesa || gami.conquistadas.some((c) => !c.visto));
+  const temSugestao = welcoming.length > 0 || primeiros.length > 0;
+  const relatoRecente = relatoDasUltimas24h(occurrences);
+  const falasCard = useMemo(
+    () =>
+      falasIrise
+        .filter((f) => {
+          if (f.id === "falta") return !!quaseLaMedalha;
+          if (f.id === "sugestao") return temSugestao;
+          if (f.id === "alerta") return !!relatoRecente;
+          if (f.id === "conquista") return semanaOuConquista;
+          return !avaliouHoje; // "missao"
+        })
+        .map((f) => {
+          if (f.id !== "alerta" || !relatoRecente) return f;
+          const local = relatoRecente.neighborhood ? `do ${relatoRecente.neighborhood}` : "de você";
+          return {
+            ...f,
+            texto: f.texto.replace("{local}", local),
+            abertura: f.abertura.replace("{local}", local),
+          };
+        }),
+    [falasIrise, quaseLaMedalha, temSugestao, relatoRecente, semanaOuConquista, avaliouHoje],
+  );
+
+  // Sugestão sem lugar nenhum pra mostrar era o bug: agora a abertura já vem com os 3 primeiros de
+  // welcoming/primeiros, que já estão carregados nesta tela (sem consulta nova).
+  const lugaresSugestao: OrchestratedPlace[] = (welcoming.length > 0 ? welcoming : primeiros)
+    .slice(0, 3)
+    .map((p) => ({ ...p, reason: null }));
+  const sugestaoAbertura = useMemo(() => falasIrise.find((f) => f.id === "sugestao") ?? null, [falasIrise]);
+  // A faixa e a pílula prometiam 3 lugares mesmo sem ter nenhum — sem lugar, cai no fluxo genérico.
+  function abrirChatSugestao() {
+    abrirChat(lugaresSugestao.length > 0 ? sugestaoAbertura : null);
+  }
+  function onAcaoChat(a: Acao) {
+    if (a === "mapa") router.push("/mapa");
+    else if (a === "apoio") router.push("/apoio");
+    else if (a === "conquistas") router.push("/conquistas");
+    else router.push("/lugares"); // "lugares" e "avaliar"
+  }
 
   // Busca e filtro direto no Início: quem abre o app querendo achar um bar não deve ter que
   // trocar de aba. Sem termo e sem filtro, a seção volta a ser "mais acolhedores".
@@ -86,81 +182,131 @@ export default function HomeScreen() {
     places.some((p) => p.category === c),
   );
 
+  const nudgeVisivel = useAlgumNudgeVisivel();
+  // Sem a trava "faixa na tela": a faixa entra pelo pé da tela ANTES de o card sair pelo topo,
+  // então nunca existia um momento em que a pílula pudesse aparecer (visto em aparelho real,
+  // 11/10/2026). O spec só pede: aparece quando o card da cidade sai da tela.
+  const pilulaVisivel = !!irise && passouDoCard && !nudgeVisivel;
+
   return (
     <View className="flex-1">
       <Aurora />
       <ScrollView
         ref={prenderRolagem}
-        onScroll={aoRolar}
+        onScroll={(e) => {
+          aoRolar(e);
+          // Booleanos em vez da posição exata: só disparam um novo render quando o valor realmente
+          // vira (React ignora um set com o mesmo valor), em vez de a cada tick de rolagem.
+          const y = e.nativeEvent.contentOffset.y;
+          if (cardBaixoY != null) {
+            // Vão de 40 px antes de reaparecer o card (13/10/2026, achado pelo Leandro: sem o vão,
+            // parar de rolar bem em cima da borda do card fazia a pílula entrar e sair repetido —
+            // parecia "não fixar" — porque o limiar virava a cada tick minúsculo de rolagem).
+            setPassouDoCard((prev) => {
+              if (!prev && y > cardBaixoY) return true;
+              if (prev && y < cardBaixoY - 40) return false;
+              return prev;
+            });
+          }
+        }}
         scrollEventThrottle={64}
         className="flex-1"
         contentContainerClassName="gap-4 px-4"
         contentContainerStyle={insets}
         keyboardShouldPersistTaps="handled"
       >
+        {/* Convite pra quem não tem irise ainda — o próprio componente decide quando aparece (sem
+            personagem e com a função ligada); sem irise escolhido o balão nem existe, então não
+            duplica aviso nenhum. */}
+        <IriseNudge />
         <AvisoCard />
 
-        {/* Cartão principal escuro: a marca em azulejo, a cidade, o fio arco-íris e as duas ações
-            do mesmo tamanho (avaliar é o uso de toda semana, registrar é o que ninguém quer
-            precisar — nenhum dos dois pode parecer secundário). */}
-        <View
-          className="gap-3 rounded-[28px] p-5"
-          style={[{ backgroundColor: colors.night }, shadow.lift]}
-        >
-          <View className="flex-row items-center gap-3">
-            <View
-              className="h-9 w-9 items-center justify-center rounded-xl"
-              style={{ backgroundColor: "rgba(255,255,255,0.10)" }}
-            >
-              <Mark size={24} />
+        {irise ? (
+          <View
+            // marginTop -16 anula o padding do scroll: o espaço cabeçalho→balão fica ~10 pt,
+            // igual ao espaço balão→card (SPEC-inicio §1).
+            style={{ marginHorizontal: -16, marginTop: -16, marginBottom: -4 }}
+            onLayout={(e) => setCardBaixoY(e.nativeEvent.layout.y + e.nativeEvent.layout.height)}
+          >
+            <CardCidadeIrise
+              personagem={irise.n}
+              nomeIrise={irise.nome}
+              cidade={loading ? "Localizando…" : (city?.name ?? "Sem cidade")}
+              uf={city?.state ?? ""}
+              bemVinde={flexiona("bem-vind", forma)}
+              onTrocarCidade={() => setCidadeAberta(true)}
+              onAvaliar={() => router.push("/lugares")}
+              onRelato={() => router.push("/registrar")}
+              onCta={ctaDaFala}
+              onAbrirChat={abrirChat}
+              falas={falasCard}
+            />
+          </View>
+        ) : (
+          /* Cartão principal escuro: a marca em azulejo, a cidade, o fio arco-íris e as duas ações
+             do mesmo tamanho (avaliar é o uso de toda semana, registrar é o que ninguém quer
+             precisar — nenhum dos dois pode parecer secundário). */
+          <View
+            className="gap-3 rounded-[28px] p-5"
+            style={[{ backgroundColor: colors.night, marginBottom: -4 }, shadow.lift]}
+          >
+            <View className="flex-row items-center gap-3">
+              <View
+                className="h-9 w-9 items-center justify-center rounded-xl"
+                style={{ backgroundColor: "rgba(255,255,255,0.10)" }}
+              >
+                <Mark size={24} />
+              </View>
+              <Text className="font-body-medium text-[11px] uppercase tracking-wider text-paper/60">
+                Sua cidade
+              </Text>
             </View>
-            <Text className="font-body-medium text-[11px] uppercase tracking-wider text-paper/60">
-              Sua cidade
+            <Text className="font-display text-3xl uppercase tracking-wide text-paper">
+              {loading ? "Localizando…" : (city?.name ?? "Sem cidade")}
             </Text>
+            <CityPicker tone="dark" />
+            <RainbowLine />
+            <Text className="font-body text-sm text-paper/75">
+              O mapa dos lugares onde a gente é{" "}
+              <Text className="font-body-bold text-yellow">bem-vinde</Text>, feito por nós. Diga
+              quanta cor tem os lugares por onde você passa. E registre, sem se identificar, o que não
+              deveria ter acontecido.
+            </Text>
+            <View className="flex-row gap-2 pt-1">
+              <TourTarget id="avaliar" style={{ flex: 1 }}>
+                <Link href="/lugares" asChild>
+                  <Pressable
+                    className="items-center rounded-full bg-turquoise py-3 active:opacity-80"
+                    style={shadow.turquoise}
+                  >
+                    <Text className="font-body-bold text-sm text-night">Avaliar um lugar</Text>
+                  </Pressable>
+                </Link>
+              </TourTarget>
+              <TourTarget id="relato" style={{ flex: 1 }}>
+                <Link href="/registrar" asChild>
+                  <Pressable
+                    className="items-center rounded-full bg-coral py-3 active:opacity-80"
+                    style={shadow.coral}
+                  >
+                    <Text className="font-body-bold text-sm text-night">Registrar relato</Text>
+                  </Pressable>
+                </Link>
+              </TourTarget>
+            </View>
           </View>
-          <Text className="font-display text-3xl uppercase tracking-wide text-paper">
-            {loading ? "Localizando…" : (city?.name ?? "Sem cidade")}
-          </Text>
-          <CityPicker tone="dark" />
-          <RainbowLine />
-          <Text className="font-body text-sm text-paper/75">
-            O mapa dos lugares onde a gente é{" "}
-            <Text className="font-body-bold text-yellow">bem-vinde</Text>, feito por nós. Diga
-            quanta cor tem os lugares por onde você passa. E registre, sem se identificar, o que não
-            deveria ter acontecido.
-          </Text>
-          <View className="flex-row gap-2 pt-1">
-            <TourTarget id="avaliar" style={{ flex: 1 }}>
-              <Link href="/lugares" asChild>
-                <Pressable
-                  className="items-center rounded-full bg-turquoise py-3 active:opacity-80"
-                  style={shadow.turquoise}
-                >
-                  <Text className="font-body-bold text-sm text-night">Avaliar um lugar</Text>
-                </Pressable>
-              </Link>
-            </TourTarget>
-            <TourTarget id="relato" style={{ flex: 1 }}>
-              <Link href="/registrar" asChild>
-                <Pressable
-                  className="items-center rounded-full bg-coral py-3 active:opacity-80"
-                  style={shadow.coral}
-                >
-                  <Text className="font-body-bold text-sm text-night">Registrar relato</Text>
-                </Pressable>
-              </Link>
-            </TourTarget>
-          </View>
-        </View>
+        )}
 
         {/* Gamificação: semana, cidade, caixinha e a medalha mais perto. Some se o banco não tiver. */}
-        {gami ? (
-          <TourTarget id="gami">
+        <View style={{ marginBottom: -4 }}>
+          {gami ? (
+            <TourTarget id="gami">
+              <GamiHomeCards />
+            </TourTarget>
+          ) : (
             <GamiHomeCards />
-          </TourTarget>
-        ) : (
-          <GamiHomeCards />
-        )}
+          )}
+        </View>
 
         <View className="gap-2">
           <SearchField
@@ -284,8 +430,38 @@ export default function HomeScreen() {
 
         <DangerRanking items={ranking} title="Bairros com mais relatos" />
       </ScrollView>
-      {cfg?.irise_ativa && (
-        <IriseFab cityId={city?.id} cityName={city?.name} userLocation={userLocation} />
+
+      {irise && (
+        <IrisePilula
+          personagem={irise.n}
+          nome={irise.nome}
+          visivel={pilulaVisivel}
+          bottom={insets.paddingBottom}
+          onPress={abrirChatSugestao}
+        />
+      )}
+
+      <CityPicker tone="dark" open={cidadeAberta} onOpenChange={setCidadeAberta} hideTrigger />
+      {irise && (
+        <IriseSheet
+          visible={chatAberta}
+          onClose={() => setChatAberta(false)}
+          cityId={city?.id}
+          cityName={city?.name}
+          userLocation={userLocation}
+          personagem={irise.n}
+          abertura={
+            chatAbertura
+              ? {
+                  texto: chatAbertura.abertura,
+                  pose: chatAbertura.pose,
+                  respostas: chatAbertura.rapidas,
+                  lugares: chatAbertura.id === "sugestao" ? lugaresSugestao : undefined,
+                }
+              : undefined
+          }
+          onAcao={onAcaoChat}
+        />
       )}
     </View>
   );

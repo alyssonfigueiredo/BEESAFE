@@ -16,8 +16,13 @@ import Svg, { Defs, LinearGradient, Rect, Stop } from "react-native-svg";
 
 import { PlaceCard } from "@/components/PlaceCard";
 import { Busto } from "@/components/irise-personagem/Busto";
+import { IriseAvatar } from "@/components/irise-personagem/IriseAvatar";
+import { useAppConfig } from "@/hooks/useGamification";
 import { useIriseNear, useIriseOrchestrate, useIriseSuggest, type OrchestratedPlace } from "@/hooks/useIrise";
+import { useIrisePersonagens } from "@/hooks/useIrisePersonagens";
 import { useProfile } from "@/hooks/useProfile";
+import { useSheetDismiss } from "@/hooks/useSheetDismiss";
+import type { Acao } from "@/lib/iriseFalas";
 import type { PlaceCategory } from "@/theme/domain";
 import { colors, shadow } from "@/theme/tokens";
 
@@ -96,8 +101,64 @@ export function IriseFab({
   );
 }
 
-/** Anel em arco-íris (o mesmo gradiente da marca) — botão flutuante e título da folha. */
-function AnelArcoIris({ size = 54 }: { size?: number }) {
+/**
+ * Cartão "Conversar com {nome}" — convite pro chat a partir do Apoio (protótipo aprovado
+ * 10/10/2026). Só aparece com um irise escolhido; some calado sem ele, como o resto da prévia.
+ */
+export function IriseInviteCard({
+  cityId,
+  cityName,
+  userLocation = null,
+}: {
+  cityId: number | undefined;
+  cityName: string | undefined;
+  userLocation?: { lat: number; lng: number } | null;
+}) {
+  const [aberta, setAberta] = useState(false);
+  const { data: cfg } = useAppConfig();
+  const { data: profile } = useProfile();
+  const { data: irises = [] } = useIrisePersonagens();
+  const personagem = profile?.irise_personagem ?? null;
+  const atual = irises.find((p) => p.n === personagem);
+  if (!cfg?.irise_ativa || !personagem || !atual) return null;
+
+  return (
+    <>
+      <Pressable
+        onPress={() => setAberta(true)}
+        className="rounded-[30px] bg-surface px-5 pb-5 pt-6 active:opacity-90"
+        style={[shadow.card, { marginTop: 22 }]}
+      >
+        <View style={{ position: "absolute", right: 16, top: -26 }}>
+          <IriseAvatar personagem={atual.n} size={78} />
+        </View>
+        <View style={{ maxWidth: "58%" }}>
+          <Text className="font-body-bold text-[11px] uppercase tracking-[0.1em] text-lilacInk">
+            Sempre on-line
+          </Text>
+          <Text className="mt-1.5 font-display text-[19px] leading-[21px] text-ink">
+            Conversar com {atual.nome}
+          </Text>
+          <Text className="mt-1.5 font-body text-[12.5px] leading-[17px] text-dim">
+            Pra desabafar, tirar dúvida ou pensar no que fazer.
+          </Text>
+        </View>
+      </Pressable>
+      <IriseSheet
+        visible={aberta}
+        onClose={() => setAberta(false)}
+        cityId={cityId}
+        cityName={cityName}
+        userLocation={userLocation}
+        personagem={personagem}
+      />
+    </>
+  );
+}
+
+/** Anel em arco-íris (o mesmo gradiente da marca) — botão flutuante, título da folha e o convite
+ * de "escolher um irise" (`IriseNudge`) sem personagem ainda. */
+export function AnelArcoIris({ size = 54 }: { size?: number }) {
   return (
     <Svg width={size} height={size} viewBox="0 0 54 54">
       <Defs>
@@ -162,13 +223,15 @@ function TypingDots() {
 let seq = 0;
 const uid = () => `l${seq++}`;
 
-function IriseSheet({
+export function IriseSheet({
   visible,
   onClose,
   cityId,
   cityName,
   userLocation,
   personagem,
+  abertura,
+  onAcao,
 }: {
   visible: boolean;
   onClose: () => void;
@@ -176,15 +239,32 @@ function IriseSheet({
   cityName: string | undefined;
   userLocation: { lat: number; lng: number } | null;
   personagem: number | null;
+  /** Primeira mensagem + respostas rápidas, pra quando o chat abre a partir de uma fala do irise
+   * na Início (card/balão/faixa/pílula) em vez do fluxo genérico de busca. */
+  abertura?: {
+    texto: string;
+    /** Pose do avatar no cabeçalho enquanto essa abertura está em cena. Sem ela, pose 1. */
+    pose?: number;
+    respostas: { t: string; resposta: string; pose?: number; acao?: Acao }[];
+    /** Lugares pra mostrar junto da mensagem (ex.: a sugestão já vem com os 3 da Início). */
+    lugares?: OrchestratedPlace[];
+  };
+  /** Chamado 600ms depois de tocar numa resposta com `acao` (menos "sugerir", que busca lugares
+   * sem fechar o chat) — o sheet já fechou sozinho antes de chamar. */
+  onAcao?: (a: Acao) => void;
 }) {
   const { height } = useWindowDimensions();
   const [log, setLog] = useState<LogItem[]>([]);
   const [texto, setTexto] = useState("");
+  const [poseAtual, setPoseAtual] = useState(1);
   const scrollRef = useRef<ScrollView>(null);
   const inputRef = useRef<TextInput>(null);
+  const ultimaAbertura = useRef<string | null>(null);
   const suggest = useIriseSuggest();
   const near = useIriseNear();
   const orchestrate = useIriseOrchestrate();
+  const { data: irises = [] } = useIrisePersonagens();
+  const { panHandlers: dragHandlers, style: dragStyle } = useSheetDismiss(onClose);
 
   function push(item: LogItem) {
     setLog((l) => [...l, item]);
@@ -215,11 +295,17 @@ function IriseSheet({
         addBubble("Ainda não sei sua cidade — escolha uma no Início antes de pedir pra mim.");
         return;
       }
-      const places = await suggest.mutateAsync({ cityId, categories, semNota });
-      mostrarOuVazio(
-        places.map((p) => ({ ...p, reason: null })),
-        semNota,
-      );
+      // Sem isto, uma falha de rede matava o chip em silêncio: os pontinhos sumiam e nada aparecia.
+      try {
+        const places = await suggest.mutateAsync({ cityId, categories, semNota });
+        mostrarOuVazio(
+          places.map((p) => ({ ...p, reason: null })),
+          semNota,
+        );
+      } catch (err) {
+        console.warn("irise_suggest_places falhou:", err instanceof Error ? err.message : String(err));
+        addBubble("Não consegui buscar agora. Tenta de novo em instantes. ✨");
+      }
     });
   }
 
@@ -230,11 +316,16 @@ function IriseSheet({
         addBubble("Preciso da sua localização pra isso — ative o GPS e tente de novo.");
         return;
       }
-      const places = await near.mutateAsync(userLocation);
-      mostrarOuVazio(
-        places.map((p) => ({ ...p, reason: null })),
-        false,
-      );
+      try {
+        const places = await near.mutateAsync(userLocation);
+        mostrarOuVazio(
+          places.map((p) => ({ ...p, reason: null })),
+          false,
+        );
+      } catch (err) {
+        console.warn("places_near falhou:", err instanceof Error ? err.message : String(err));
+        addBubble("Não consegui buscar agora. Tenta de novo em instantes. ✨");
+      }
     });
   }
 
@@ -336,14 +427,15 @@ function IriseSheet({
           cidade: cityName ?? "sua cidade",
           cityId,
           perto: userLocation,
+          personagem,
         });
         if (message) addBubble(message);
         if (places) mostrarOuVazio(places, false);
       } catch (err) {
-        // Mensagem técnica à vista de propósito (nada sensível passa por aqui — nunca a chave em
-        // si): sem acesso ao log do Supabase, é o único jeito de saber o que quebrou.
+        // Detalhe técnico só no console — pra quem usa o app, só a mensagem simples.
         const detalhe = err instanceof Error ? err.message : String(err);
-        addBubble(`Não consegui pensar nisso agora — escolhe um dos botões abaixo. ✨\n\n(${detalhe})`);
+        console.warn("Irise orchestrator falhou:", detalhe);
+        addBubble("Não consegui pensar nisso agora. Escolhe um dos botões abaixo. ✨");
         flowIntro();
         return;
       }
@@ -351,7 +443,42 @@ function IriseSheet({
   }
 
   function onOpen() {
-    if (log.length === 0) flowIntro();
+    // Chave da abertura atual: quem abre pelo alerta, fecha e abre de novo pela faixa (abertura
+    // diferente) não pode ver a conversa anterior — mesmo com log.length > 0.
+    const chave = abertura?.texto ?? null;
+    const trocouAbertura = chave !== null && chave !== ultimaAbertura.current;
+    if (log.length === 0 || trocouAbertura) {
+      ultimaAbertura.current = chave;
+      setLog([]);
+      setPoseAtual(abertura?.pose ?? 1);
+      if (abertura) {
+        addBubble(abertura.texto);
+        if (abertura.lugares && abertura.lugares.length > 0) {
+          push({ kind: "results", id: uid(), places: abertura.lugares });
+        }
+        addChips(
+          abertura.respostas.map((r) => ({
+            label: r.t,
+            onPick: () => {
+              addBubble(r.t, true);
+              addBubble(r.resposta);
+              if (r.pose != null) setPoseAtual(r.pose);
+              if (r.acao === "sugerir") {
+                void buscarPorChip(null, false, "Separei esses pra você:");
+              } else if (r.acao) {
+                const a = r.acao;
+                setTimeout(() => {
+                  onClose();
+                  onAcao?.(a);
+                }, 600);
+              }
+            },
+          })),
+        );
+      } else {
+        flowIntro();
+      }
+    }
     // O jeito mais natural de usar isso é digitando — os chips são só um atalho, não a entrada
     // obrigatória. Focar o campo deixa isso claro na hora que a folha abre (04/10/2026).
     setTimeout(() => inputRef.current?.focus(), 260);
@@ -364,17 +491,47 @@ function IriseSheet({
         behavior={Platform.OS === "ios" ? "padding" : undefined}
         style={{ position: "absolute", left: 0, right: 0, bottom: 0, maxHeight: height * 0.86 }}
       >
-        <View className="bg-solid" style={{ borderTopLeftRadius: 34, borderTopRightRadius: 34, overflow: "hidden" }}>
-          <View style={{ width: 44, height: 5, borderRadius: 3, backgroundColor: "#D9D5CD", alignSelf: "center", marginTop: 10 }} />
-          <View className="flex-row items-center justify-between border-b border-border px-[18px] pb-3 pt-2">
-            <View className="flex-row items-center gap-2">
-              {personagem ? <Busto personagem={personagem} size={26} /> : <AnelArcoIris size={22} />}
-              <Text className="font-body-bold text-[15px] text-ink">Irise</Text>
-            </View>
-            <Pressable onPress={onClose} hitSlop={10} className="h-[30px] w-[30px] items-center justify-center rounded-full bg-subtle">
-              <X size={14} color={colors.ink} />
-            </Pressable>
+        <Animated.View
+          className="bg-solid"
+          style={[{ borderTopLeftRadius: 34, borderTopRightRadius: 34, overflow: "hidden" }, dragStyle]}
+        >
+          <View
+            {...dragHandlers}
+            style={{ paddingVertical: 10, alignItems: "center" }}
+            hitSlop={{ top: 10, bottom: 10, left: 60, right: 60 }}
+          >
+            <View style={{ width: 44, height: 5, borderRadius: 3, backgroundColor: "#D9D5CD" }} />
           </View>
+          {personagem ? (
+            <View className="flex-row items-end justify-between border-b border-border px-[18px] pb-3 pt-1">
+              <IriseAvatar personagem={personagem} pose={poseAtual} size={84} />
+              <View style={{ flex: 1, minWidth: 0, marginLeft: 14, marginBottom: 8 }}>
+                <Text className="font-display text-[20px] text-ink">
+                  {irises.find((p) => p.n === personagem)?.nome ?? "Irise"}
+                </Text>
+                <Text className="font-body text-[12px] text-dim">
+                  {irises.find((p) => p.n === personagem)?.classe}
+                </Text>
+              </View>
+              <Pressable
+                onPress={onClose}
+                hitSlop={10}
+                className="mb-8 h-[30px] w-[30px] items-center justify-center rounded-full bg-subtle"
+              >
+                <X size={14} color={colors.ink} />
+              </Pressable>
+            </View>
+          ) : (
+            <View className="flex-row items-center justify-between border-b border-border px-[18px] pb-3 pt-2">
+              <View className="flex-row items-center gap-2.5">
+                <AnelArcoIris size={22} />
+                <Text className="font-body-bold text-[16px] text-ink">Irise</Text>
+              </View>
+              <Pressable onPress={onClose} hitSlop={10} className="h-[30px] w-[30px] items-center justify-center rounded-full bg-subtle">
+                <X size={14} color={colors.ink} />
+              </Pressable>
+            </View>
+          )}
           <ScrollView
             ref={scrollRef}
             style={{ maxHeight: height * 0.62 }}
@@ -422,7 +579,7 @@ function IriseSheet({
               </Pressable>
             </View>
           </View>
-        </View>
+        </Animated.View>
       </KeyboardAvoidingView>
     </Modal>
   );

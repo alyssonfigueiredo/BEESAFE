@@ -13,7 +13,7 @@ const config: ExpoConfig = {
   slug: "irisa",
   owner: "alyssondfa",
   scheme: "irisa",
-  version: "0.1.2",
+  version: "0.1.3",
   orientation: "portrait",
   icon: "./assets/icon.png",
   userInterfaceStyle: "light",
@@ -53,6 +53,7 @@ const config: ExpoConfig = {
     ...(appleSignIn ? ["expo-apple-authentication"] : ["./plugins/withoutAppleSignIn"]),
     "@maplibre/maplibre-react-native",
     "./plugins/withInstagramStories",
+    "./plugins/withSceneLifecycle",
     [
       "expo-image-picker",
       {
@@ -94,6 +95,9 @@ const config: ExpoConfig = {
   // O canal vem do eas.json nos builds do EAS; build feita direto no Xcode (Archive) fica no de
   // produção, para também receber os updates.
   updates: {
+    // IRISA_LOCAL=1 no build do Mac (prints, teste): sem isso o app baixa o JS de produção e roda
+    // ele na segunda abertura, em vez do código da branch.
+    enabled: process.env.IRISA_LOCAL !== "1",
     url: "https://u.expo.dev/38a09fd2-63cc-4a90-912d-0f73022944ff",
     requestHeaders: { "expo-channel-name": "production" },
   },

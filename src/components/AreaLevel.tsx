@@ -1,6 +1,9 @@
 import { AlertTriangle } from "lucide-react-native";
 import { Text, View } from "react-native";
 
+import { Busto } from "@/components/irise-personagem/Busto";
+import { useIrisePersonagens } from "@/hooks/useIrisePersonagens";
+import { useProfile } from "@/hooks/useProfile";
 import { colors } from "@/theme/tokens";
 
 /** Nível de atenção da REGIÃO em volta. Nunca é nota do lugar: o bar recebe cor, a rua recebe aviso. */
@@ -40,6 +43,17 @@ export function AreaLevel({ level, size = "sm" }: { level: AreaLevelKey; size?: 
   }
 
   // Na ficha o aviso precisa dizer de quem ele é — senão vira acusação ao estabelecimento.
+  return <AreaLevelGrande n={n} />;
+}
+
+/** Separado só pra poder chamar useProfile sem mexer no corpo do componente principal. */
+function AreaLevelGrande({ n }: { n: (typeof NIVEIS)[AreaLevelKey] }) {
+  const { data: profile } = useProfile();
+  const { data: irises = [] } = useIrisePersonagens();
+  const personagem = profile?.irise_personagem
+    ? irises.find((p) => p.n === profile.irise_personagem)
+    : null;
+
   return (
     <View
       className="mt-1 gap-1 rounded-xl p-3"
@@ -55,6 +69,17 @@ export function AreaLevel({ level, size = "sm" }: { level: AreaLevelKey; size?: 
       <Text className="font-body text-xs text-dim">
         É sobre a rua em volta, num raio de 100 m — não sobre este lugar, e não afeta a nota dele.
       </Text>
+      {!!personagem && (
+        <View
+          className="mt-2 flex-row items-center gap-2.5 border-t pt-2"
+          style={{ borderColor: n.cor + "66", borderStyle: "dashed" }}
+        >
+          <Busto personagem={personagem.n} pose={3} size={52} />
+          <Text className="min-w-0 flex-1 font-body text-xs leading-[16px] text-ink">
+            Sem relato não quer dizer segura — quer dizer que ninguém registrou.
+          </Text>
+        </View>
+      )}
     </View>
   );
 }

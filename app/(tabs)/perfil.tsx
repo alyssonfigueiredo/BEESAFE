@@ -24,6 +24,7 @@ import { ConquistasCard } from "@/components/gami/ConquistasCard";
 import { QueroIrCard } from "@/components/QueroIr";
 import { EvolucaoCard } from "@/components/gami/Evolucao";
 import { FormaCard } from "@/components/gami/FormaCard";
+import { DicasToggle } from "@/components/irise-personagem/DicasToggle";
 import { IriseCard } from "@/components/irise-personagem/IriseCard";
 import { useScreenInsets } from "@/hooks/useScreenInsets";
 import { abrirTour } from "@/hooks/useTour";
@@ -173,6 +174,9 @@ export default function PerfilScreen() {
           </View>
         </View>
 
+        <IriseCard />
+        <DicasToggle />
+
         <EvolucaoCard />
         <ConquistasCard />
         <QueroIrCard />
@@ -201,7 +205,6 @@ export default function PerfilScreen() {
         </View>
 
         <FormaCard />
-        <IriseCard />
 
         <View className="rounded-[30px] bg-surface px-6 py-3" style={shadow.card}>
           <ListRow icon={ShieldCheck} color={colors.yellowInk} title="Privacidade">
@@ -263,6 +266,16 @@ export default function PerfilScreen() {
               style={shadow.lilac}
             >
               <Text className="font-body-bold text-base text-night">Fila de moderação</Text>
+            </Pressable>
+          </Link>
+        )}
+        {profile?.role === "admin" && (
+          <Link href="/admin/irise" asChild>
+            <Pressable
+              className="h-[52px] items-center justify-center rounded-full bg-solid active:opacity-80"
+              style={shadow.field}
+            >
+              <Text className="font-body-bold text-base text-ink">Personagens do irise</Text>
             </Pressable>
           </Link>
         )}
