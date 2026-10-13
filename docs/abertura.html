@@ -54,6 +54,7 @@
     background-image:radial-gradient(60% 40% at 0% 0%,color-mix(in srgb,var(--turq) 18%,transparent),transparent 60%),
                      radial-gradient(50% 35% at 100% 100%,color-mix(in srgb,var(--lilac) 20%,transparent),transparent 60%)}
   [data-bg="night"]{--ink:#FFFFFF;--muted:#C9CCDA;--subtle:rgba(255,255,255,.14)}
+  [data-bg="branco"] .splash{background:#FFFFFF;background-image:none}
   [data-bg="verde"] .splash{background:#00FF00;background-image:none}
   [data-bg="verde"]{--subtle:rgba(0,0,0,.18)}
 
@@ -168,7 +169,7 @@
 <script>
 const q=new URLSearchParams(location.search);
 const formato=q.get("formato")==="quadrado"?"quadrado":"story";
-const bg=["night","verde"].includes(q.get("bg"))?q.get("bg"):"paper";
+const bg=["night","verde","branco"].includes(q.get("bg"))?q.get("bg"):"paper";
 const K=Math.max(.5,Number(q.get("k"))||1);
 const SEMFIM=q.has("semfim");
 const V=["1","2","3","apple"].includes(q.get("v"))?q.get("v"):"radar";
