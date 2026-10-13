@@ -58,7 +58,7 @@ gerar cada uma separada (mesma luz, mesmo fundo branco) e eu componho o grupo na
 
 **FEITO (13/10):** ele gerou as 8 em pé, corpo inteiro, fundo branco (salvas em
 `assets/irise-gerados/<nome>/corpo-branco.webp`) e também uma imagem de grupo que manteve a
-identidade de todes — exceção que deu certo. Falta o arquivo do grupo chegar (veio só como prévia).
+identidade de todes — exceção que deu certo. Grupo salvo em `assets/irise-gerados/grupo-branco.webp` (1920×1280).
 
 ## Checklist antes de mandar
 
