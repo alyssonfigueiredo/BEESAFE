@@ -43,6 +43,9 @@ export function CardCidadeIrise({
   // Sem fala nenhuma (filtradas fora na Início), não tem o que mostrar no balão — mas o irise
   // continua no card, com a pose padrão (1).
   const pose = falas.length > 0 ? r.fala.pose : 1;
+  // Balão fechado pela pessoa: sem ele mostrar, o card sobe. 8 ainda deixava folga maior que o
+  // vão pros cartões de baixo (13/10/2026, pedido do Leandro: equidistante).
+  const balaoFechado = falas.length > 0 && !r.visivel;
   // Foto trocada pelo admin: mesmo um dos 9 originais passa a montar o avatar na hora (como um
   // personagem novo), em vez de ficar preso na versão "avatar-card" embutida e desatualizada.
   const fotoTrocada = useFotoTrocada(personagem);
@@ -69,7 +72,7 @@ export function CardCidadeIrise({
         <View style={{ height: 50 }} />
       )}
 
-      <View style={{ marginHorizontal: 12, marginTop: 8, height: 248 }}>
+      <View style={{ marginHorizontal: 12, marginTop: balaoFechado ? 2 : 8, height: 248 }}>
         <View style={{ flex: 1, borderRadius: 30, backgroundColor: "#171A2B", overflow: "hidden" }}>
           <Svg width={150} height={150} style={{ position: "absolute", right: -4, top: -20 }} pointerEvents="none">
             <Defs>

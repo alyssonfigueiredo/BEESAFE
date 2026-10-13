@@ -11,7 +11,7 @@ import {
   View,
   useWindowDimensions,
 } from "react-native";
-import { GestureDetector } from "react-native-gesture-handler";
+import { GestureDetector, GestureHandlerRootView } from "react-native-gesture-handler";
 import Animated, { FadeInDown } from "react-native-reanimated";
 import Svg, { Defs, LinearGradient, Rect, Stop } from "react-native-svg";
 
@@ -487,6 +487,10 @@ export function IriseSheet({
 
   return (
     <Modal visible={visible} transparent animationType="fade" onShow={onOpen} onRequestClose={onClose} statusBarTranslucent>
+      {/* O Modal nativo abre numa hierarquia própria (outra window no Android, outro root no iOS)
+          que não herda o GestureHandlerRootView do app/_layout.tsx — sem este aqui, a alça de
+          arrastar pra fechar não reage ao dedo (13/10/2026, achado pelo Leandro em aparelho real). */}
+      <GestureHandlerRootView style={{ flex: 1 }}>
       <Pressable style={{ flex: 1, backgroundColor: "rgba(20,24,41,0.4)" }} onPress={onClose} />
       <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "padding" : undefined}
@@ -580,6 +584,7 @@ export function IriseSheet({
           </View>
         </Animated.View>
       </KeyboardAvoidingView>
+      </GestureHandlerRootView>
     </Modal>
   );
 }

@@ -12,7 +12,7 @@ import {
   TextInput,
   View,
 } from "react-native";
-import { GestureDetector } from "react-native-gesture-handler";
+import { GestureDetector, GestureHandlerRootView } from "react-native-gesture-handler";
 import Animated, { Easing, FadeIn, SlideInDown, useReducedMotion } from "react-native-reanimated";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
@@ -123,6 +123,10 @@ function SheetBody({
   }
 
   return (
+    // O Modal nativo abre numa hierarquia própria, que não herda o GestureHandlerRootView do
+    // app/_layout.tsx — sem este aqui, a alça de arrastar pra fechar não reage ao dedo
+    // (13/10/2026, achado em aparelho real).
+    <GestureHandlerRootView style={{ flex: 1 }}>
     <KeyboardAvoidingView
       style={{ flex: 1 }}
       behavior={Platform.OS === "ios" ? "padding" : undefined}
@@ -317,5 +321,6 @@ function SheetBody({
         </ScrollView>
       </Animated.View>
     </KeyboardAvoidingView>
+    </GestureHandlerRootView>
   );
 }

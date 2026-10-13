@@ -199,7 +199,14 @@ export default function HomeScreen() {
           // vira (React ignora um set com o mesmo valor), em vez de a cada tick de rolagem.
           const y = e.nativeEvent.contentOffset.y;
           if (cardBaixoY != null) {
-            setPassouDoCard(y > cardBaixoY);
+            // Vão de 40 px antes de reaparecer o card (13/10/2026, achado pelo Leandro: sem o vão,
+            // parar de rolar bem em cima da borda do card fazia a pílula entrar e sair repetido —
+            // parecia "não fixar" — porque o limiar virava a cada tick minúsculo de rolagem).
+            setPassouDoCard((prev) => {
+              if (!prev && y > cardBaixoY) return true;
+              if (prev && y < cardBaixoY - 40) return false;
+              return prev;
+            });
           }
         }}
         scrollEventThrottle={64}

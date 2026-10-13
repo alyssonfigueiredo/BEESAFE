@@ -1,7 +1,7 @@
 import { X } from "lucide-react-native";
 import type { ReactNode } from "react";
 import { Modal, Pressable, ScrollView, Text, View } from "react-native";
-import { GestureDetector } from "react-native-gesture-handler";
+import { GestureDetector, GestureHandlerRootView } from "react-native-gesture-handler";
 import Animated, { FadeIn, SlideInDown } from "react-native-reanimated";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import Svg, { Circle, Text as SvgText } from "react-native-svg";
@@ -27,6 +27,10 @@ export function LegendSheet({ visible, onClose, types, onToggleType, counts }: P
   const { gesture: dragGesture, style: dragStyle } = useSheetDismiss(onClose);
   return (
     <Modal visible={visible} transparent animationType="fade" onRequestClose={onClose}>
+      {/* O Modal nativo abre numa hierarquia própria, que não herda o GestureHandlerRootView do
+          app/_layout.tsx — sem este aqui, a alça de arrastar pra fechar não reage ao dedo
+          (13/10/2026, achado em aparelho real). */}
+      <GestureHandlerRootView style={{ flex: 1 }}>
       <Pressable
         onPress={onClose}
         accessibilityLabel="Fechar"
@@ -212,6 +216,7 @@ export function LegendSheet({ visible, onClose, types, onToggleType, counts }: P
           </Animated.Text>
         </ScrollView>
       </Animated.View>
+      </GestureHandlerRootView>
     </Modal>
   );
 }
