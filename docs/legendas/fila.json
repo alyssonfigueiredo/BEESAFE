@@ -18,7 +18,7 @@
  {
   "id": "story-arcoiris",
   "aprovado": false,
-  "quando": "2026-09-27T17:00:00-03:00",
+  "quando": "2026-10-14T12:00:00-03:00",
   "tipo": "STORY",
   "midias": [
    "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/story-arcoiris.png"
@@ -323,7 +323,7 @@
  {
   "id": "story-04",
   "aprovado": false,
-  "quando": "2026-10-05T12:00:00-03:00",
+  "quando": "2026-10-16T12:00:00-03:00",
   "tipo": "STORY",
   "midias": [
    "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/stories-2/04.png"
@@ -359,7 +359,7 @@
  {
   "id": "reels-9",
   "aprovado": false,
-  "quando": "2026-10-05T19:00:00-03:00",
+  "quando": "2026-10-16T19:00:00-03:00",
   "tipo": "REELS",
   "midias": [
    "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/Irisa-reels-9.mp4"
@@ -371,7 +371,7 @@
  {
   "id": "carrossel-6",
   "aprovado": false,
-  "quando": "2026-10-06T19:00:00-03:00",
+  "quando": "2026-10-23T19:00:00-03:00",
   "tipo": "POST",
   "midias": [
    "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/carrossel-6/01.png",
@@ -390,7 +390,7 @@
  {
   "id": "reels-7",
   "aprovado": false,
-  "quando": "2026-10-07T19:00:00-03:00",
+  "quando": "2026-10-20T19:00:00-03:00",
   "tipo": "REELS",
   "midias": [
    "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/Irisa-reels-7.mp4"
@@ -402,7 +402,7 @@
  {
   "id": "carrossel-7",
   "aprovado": false,
-  "quando": "2026-10-08T19:00:00-03:00",
+  "quando": "2026-10-25T19:00:00-03:00",
   "tipo": "POST",
   "midias": [
    "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/carrossel-7/01.png",
@@ -420,7 +420,7 @@
  {
   "id": "reels-8",
   "aprovado": false,
-  "quando": "2026-10-09T22:00:00-03:00",
+  "quando": "2026-10-24T19:00:00-03:00",
   "tipo": "REELS",
   "midias": [
    "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/Irisa-reels-8.mp4"
@@ -445,7 +445,8 @@
   ],
   "legenda": "Sair do armário é um dia. Escolher onde ir de mão dada é todo fim de semana.\n\n11 de outubro é o Dia de Sair do Armário. E a Irisa quer falar do lado de fora da porta: o bar, o café, o hotel, o banheiro.\n\nNão é fase. É endereço.\n\nAntes, a pergunta ficava no grupo: \"aquele lugar é de boa pra gente?\". Agora quem esteve lá responde em quatro perguntas: atendimento, afeto, banheiro, clientela.\n\nNão é a bandeira na porta que diz. É a gente.\n\nE se hoje ainda não dá para sair do armário, você também conta: sem nome, sem perfil, ninguém sabe quem avaliou.\n\nQual foi o primeiro lugar onde você se sentiu bem-vinde depois de sair do armário? Conta aqui. 🌈\n\nO link está na bio. Na App Store. Android em fase de testes.\n\n#Irisa #LGBTQIA #Orgulho #AppLGBT #DiaDeSairDoArmário",
   "primeiro_comentario": "appirisa.com.br",
-  "publicado": false
+  "publicado": false,
+  "arquivado": true
  },
  {
   "id": "reels-ombro",
@@ -494,7 +495,7 @@
  {
   "id": "carrossel-10",
   "aprovado": true,
-  "quando": "2026-10-15T19:00:00-03:00",
+  "quando": "2026-10-19T19:00:00-03:00",
   "tipo": "POST",
   "midias": [
    "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/carrossel-10/01.png",
@@ -526,7 +527,7 @@
  {
   "id": "carrossel-11",
   "aprovado": true,
-  "quando": "2026-10-17T19:00:00-03:00",
+  "quando": "2026-10-21T19:00:00-03:00",
   "tipo": "POST",
   "midias": [
    "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/carrossel-11/01.png",
@@ -545,7 +546,7 @@
  {
   "id": "reels-3",
   "aprovado": false,
-  "quando": "2026-10-18T19:00:00-03:00",
+  "quando": "2026-10-29T19:00:00-03:00",
   "tipo": "REELS",
   "midias": [
    "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/Irisa-reels-3.mp4"
@@ -557,7 +558,7 @@
  {
   "id": "reels-4",
   "aprovado": false,
-  "quando": "2026-10-19T19:00:00-03:00",
+  "quando": "2026-10-30T19:00:00-03:00",
   "tipo": "REELS",
   "midias": [
    "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/Irisa-reels-4.mp4"
@@ -569,7 +570,7 @@
  {
   "id": "reels-5",
   "aprovado": false,
-  "quando": "2026-10-20T19:00:00-03:00",
+  "quando": "2026-10-26T19:00:00-03:00",
   "tipo": "REELS",
   "midias": [
    "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/Irisa-reels-5.mp4"
@@ -581,7 +582,7 @@
  {
   "id": "carrossel-12",
   "aprovado": false,
-  "quando": "2026-10-12T19:00:00-03:00",
+  "quando": "2026-10-13T19:00:00-03:00",
   "tipo": "POST",
   "midias": [
    "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/carrossel-12/01.png",
@@ -597,7 +598,7 @@
  {
   "id": "carrossel-15",
   "aprovado": false,
-  "quando": "2026-10-14T19:00:00-03:00",
+  "quando": "2026-10-17T19:00:00-03:00",
   "tipo": "POST",
   "midias": [
    "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/carrossel-15/01.png",
@@ -615,7 +616,7 @@
  {
   "id": "carrossel-13",
   "aprovado": false,
-  "quando": "2026-10-13T19:00:00-03:00",
+  "quando": "2026-10-15T19:00:00-03:00",
   "tipo": "POST",
   "midias": [
    "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/carrossel-13/01.png",
@@ -633,7 +634,7 @@
  {
   "id": "carrossel-14",
   "aprovado": false,
-  "quando": "2026-10-16T22:00:00-03:00",
+  "quando": "2026-10-27T19:00:00-03:00",
   "tipo": "POST",
   "midias": [
    "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/carrossel-14/01.png",
@@ -649,7 +650,7 @@
  {
   "id": "reels-10",
   "aprovado": false,
-  "quando": "2026-10-10T22:00:00-03:00",
+  "quando": "2026-10-14T19:00:00-03:00",
   "tipo": "REELS",
   "video": "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/Irisa-reels-10.mp4",
   "legenda": "A Irisa mal chegou e já vem novidade. 🌈\n\nConquistas, medalhas, uma evolução que cresce com você — já disponível na atualização pra quem usa iPhone; no Android, chega na próxima atualização da loja.\n\nO link está na bio.\n\n#Irisa #LGBTQIA #Orgulho #AppLGBT #Conquistas",
@@ -659,7 +660,7 @@
  {
   "id": "reels-queroir",
   "aprovado": false,
-  "quando": "2026-10-21T19:00:00-03:00",
+  "quando": "2026-10-18T19:00:00-03:00",
   "tipo": "REELS",
   "midias": [
    "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/Irisa-reels-queroir.mp4"
@@ -671,7 +672,7 @@
  {
   "id": "reels-mural",
   "aprovado": false,
-  "quando": "2026-10-23T19:00:00-03:00",
+  "quando": "2026-10-22T19:00:00-03:00",
   "tipo": "REELS",
   "midias": [
    "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/Irisa-reels-mural.mp4"
@@ -683,7 +684,7 @@
  {
   "id": "reels-suascores",
   "aprovado": false,
-  "quando": "2026-10-25T19:00:00-03:00",
+  "quando": "2026-10-28T19:00:00-03:00",
   "tipo": "REELS",
   "midias": [
    "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/Irisa-reels-suascores.mp4"
