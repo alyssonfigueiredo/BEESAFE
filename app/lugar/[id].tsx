@@ -12,7 +12,6 @@ import { RewardSheet } from "@/components/gami/RewardSheet";
 import { FavHeart } from "@/components/FavHeart";
 import { Toggle } from "@/components/Toggle";
 import { useNaLista } from "@/hooks/useFavoritos";
-import { useProfile } from "@/hooks/useProfile";
 import {
   fraseDescoberta,
   logDescoberta,
@@ -58,7 +57,6 @@ export default function PlaceScreen() {
   const daDescoberta = origem === ORIGEM_DESCOBERTA;
   const { data: place, isLoading } = usePlace(id);
   const { data: ratings = [] } = usePlaceRatings(id);
-  const { data: profile } = useProfile();
   const rate = useRatePlace(id);
   const enviarFoto = useEnviarFotoDoLugar(id);
   const mine = ratings.find((r) => r.is_mine);
@@ -96,7 +94,9 @@ export default function PlaceScreen() {
           restroom: mine?.restroom ?? 0,
           crowd: mine?.crowd ?? 0,
           comment: mine?.comment ?? "",
-          anon: mine?.is_anonymous ?? false,
+          // Anônimo nasce LIGADO (13/10/2026, pedido do Leandro): publicar com apelido é a
+          // exceção que a pessoa escolhe, não o padrão.
+          anon: mine?.is_anonymous ?? true,
         };
   const missing = AXIS_KEYS.filter((k) => !current[k]);
   // Lugar sem nota: cada pergunta respondida devolve um quarto da cor à foto.
@@ -349,13 +349,8 @@ export default function PlaceScreen() {
                 onChangeText={(v) => setDraft({ ...current, comment: v })}
               />
               <View className="flex-row items-center justify-between gap-3 rounded-2xl bg-solid px-3 py-2.5">
-                <Text className="min-w-0 flex-1 font-body text-[13px] leading-[18px] text-muted">
-                  <Text className="font-body-bold text-ink">Publicar como Anônimo</Text>
-                  {"\n"}
-                  {current.anon
-                    ? "Aparece como Anônimo pra quem lê."
-                    : `Aparece como ${profile?.nickname?.trim() || "Anônimo"} pra quem lê.`}{" "}
-                  A conta continua ligada à avaliação por dentro, para moderação.
+                <Text className="min-w-0 flex-1 font-body-bold text-[14px] text-ink">
+                  Publicar como Anônimo
                 </Text>
                 <Toggle
                   value={current.anon}

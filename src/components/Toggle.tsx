@@ -25,6 +25,9 @@ export function Toggle({
     p.set(reduce ? (value ? 1 : 0) : withTiming(value ? 1 : 0, { duration: 250 }));
   }, [value, reduce, p]);
   const knob = useAnimatedStyle(() => ({ transform: [{ translateX: p.get() * 18 }] }));
+  // Bolinha no FLUXO (padding centraliza), nunca position:absolute: no aparelho a absoluta saía
+  // deslocada pra fora do trilho (13/10/2026). Estilo direto, sem className, pra não depender da
+  // ordem de resolução do nativewind no Pressable.
   return (
     <Pressable
       onPress={() => onChange(!value)}
@@ -32,15 +35,18 @@ export function Toggle({
       accessibilityLabel={label}
       accessibilityState={{ checked: value }}
       hitSlop={8}
-      className="h-7 w-[46px] rounded-full"
-      style={{ backgroundColor: value ? colors.turquoise : colors.border }}
+      style={{
+        width: 46,
+        height: 28,
+        borderRadius: 14,
+        padding: 3,
+        justifyContent: "center",
+        backgroundColor: value ? colors.turquoise : colors.border,
+      }}
     >
       <Animated.View
         style={[
           {
-            position: "absolute",
-            top: 3,
-            left: 3,
             width: 22,
             height: 22,
             borderRadius: 11,
