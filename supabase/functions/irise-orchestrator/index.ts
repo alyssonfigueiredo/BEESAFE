@@ -15,6 +15,7 @@
 // Secrets: GROQ_API_KEY (obrigatório) e GEMINI_API_KEY (opcional — sem ela, os resultados vêm na
 // ordem que o banco já devolve, só sem o "porquê" por lugar).
 import { adminClient, getApiKey, json, userFromRequest } from "../_shared/supabase.ts";
+import { MEDALHAS, NIVEIS } from "./catalogo.ts";
 
 // llama-3.3-70b-versatile (Groq) e gemini-1.5-flash foram aposentados pelos provedores em 2026
 // — troca pra cá quando acontecer de novo, sem mexer no resto da função.
@@ -45,11 +46,31 @@ REGRAS DE LINGUAGEM, SEMPRE:
 - NUNCA invente nome de lugar, nota, endereço ou qualquer dado — você não tem acesso ao banco
   diretamente. Para recomendar um lugar, SEMPRE chame a ferramenta buscar_lugares.
 
-O QUE VOCÊ FAZ SEM FERRAMENTA (responda direto, com o que você sabe sobre o app):
-- Perguntas sobre como a Irisa funciona: avaliação em 4 eixos, selo só depois de 5 avaliações,
-  relato é anônimo e nunca derruba a nota do lugar (só relato que aponta o próprio lugar conta),
-  botão de emergência liga 190/192/100/188, "o lugar recebe cor, a rua recebe aviso".
-- Conversa casual, agradecimentos, perguntas que não pedem lugar nenhum.
+TAMANHO E JEITO DE RESPONDER (economia de verdade, sem perder o calor):
+- No máximo 3 frases curtas (uns 60 palavras). Lista só quando a pessoa pede medalhas ou números, e
+  aí no máximo 4 itens, um por linha começando com "• ". Texto puro: nada de markdown, asterisco ou #.
+- Nunca feche seco. Toda resposta termina com calor humano: um incentivo, um "tô aqui" ou uma pergunta
+  curta que deixa a porta aberta pro próximo passo no app.
+
+O QUE VOCÊ FAZ SEM FERRAMENTA (responda direto):
+- Como a Irisa funciona: avaliação em 4 eixos, selo só depois de 5 avaliações, relato é anônimo,
+  nunca pontua e nunca derruba a nota do lugar (só relato que aponta o próprio lugar conta), botão
+  de emergência liga 190/192/100/188, "o lugar recebe cor, a rua recebe aviso".
+- Progresso da pessoa no app (nível, gomos, o que falta pra subir, medalhas que tem e que faltam,
+  quantos lugares avaliou, semana, faíscas, caixinhas): use SÓ o bloco "DADOS DO APP DESTA PESSOA"
+  quando ele vier na mensagem. Fale os números exatos de lá, nunca invente nem arredonde. Ao dizer o
+  que falta, aponte a ação concreta (ex.: "mais 2 avaliações em semanas diferentes"). Lembre, se
+  couber, que cada semana acende no máximo 4 gomos — então subir é constância, não maratona. Se a
+  pessoa perguntar do progresso e o bloco não vier, chame a ferramenta meu_progresso.
+- Acolhimento: se a pessoa estiver triste, sozinha, com medo ou passou por algo ruim, valide o que ela
+  sente em uma frase, com carinho e sem julgamento, e ofereça um caminho do app: a aba Apoio (mural e
+  serviços da cidade), registrar um relato anônimo se ela quiser, 190 se estiver em perigo agora, CVV
+  188 se estiver pensando em se machucar. Não peça detalhes, não faça terapia, não prolongue o assunto.
+- Conversa casual e agradecimentos: responda com leveza, curto.
+
+O QUE VOCÊ NÃO FAZ: assunto fora da Irisa que pede conversa longa ou especialista (trabalho, escola,
+código, política, notícias, saúde, jurídico, dinheiro, briga de relacionamento). Não entre nele: diga
+com carinho, em uma frase, que seu forte é o mapa e o app, e ofereça algo que você pode fazer agora.
 
 O QUE EXIGE A FERRAMENTA buscar_lugares:
 - Qualquer pedido pra descobrir, encontrar, recomendar ou sugerir um lugar (bar, restaurante,
@@ -97,6 +118,16 @@ const TOOL_BUSCAR = {
   },
 };
 
+const TOOL_PROGRESSO = {
+  type: "function",
+  function: {
+    name: "meu_progresso",
+    description:
+      "Traz os números reais da pessoa no app: nível, gomos, o que falta pro próximo nível, medalhas que tem e as mais perto, avaliações, semana, faíscas e caixinhas. Chame quando a pessoa perguntar do próprio progresso e os dados não vierem na mensagem.",
+    parameters: { type: "object", properties: {} },
+  },
+};
+
 type GroqMessage = {
   role: "system" | "user" | "assistant" | "tool";
   content: string | null;
@@ -104,7 +135,12 @@ type GroqMessage = {
   tool_call_id?: string;
 };
 
-async function chamarGroq(db: ReturnType<typeof adminClient>, messages: GroqMessage[], comFerramenta: boolean) {
+async function chamarGroq(
+  db: ReturnType<typeof adminClient>,
+  messages: GroqMessage[],
+  comFerramenta: boolean,
+  comProgresso = true,
+) {
   const key = await getApiKey(db, "GROQ_API_KEY");
   if (!key) throw new Error("GROQ_API_KEY não configurada (secrets da função ou painel admin).");
   const res = await fetch("https://api.groq.com/openai/v1/chat/completions", {
@@ -115,7 +151,9 @@ async function chamarGroq(db: ReturnType<typeof adminClient>, messages: GroqMess
       temperature: 0.85,
       max_tokens: 300,
       messages,
-      ...(comFerramenta ? { tools: [TOOL_BUSCAR], tool_choice: "auto" } : {}),
+      ...(comFerramenta
+        ? { tools: comProgresso ? [TOOL_BUSCAR, TOOL_PROGRESSO] : [TOOL_BUSCAR], tool_choice: "auto" }
+        : {}),
     }),
   });
   const corpo = await res.json();
@@ -186,6 +224,71 @@ Responda SOMENTE com JSON: {"ranking": [{"place_id": "...", "reasons": ["...", "
   return (parsed.ranking ?? []).filter((r) => validos.has(r.place_id));
 }
 
+
+// Perguntas sobre o próprio progresso: com elas, os dados já vão na primeira chamada (uma ida ao modelo
+// em vez de duas). O que escapar da regex ainda pode chamar a ferramenta meu_progresso.
+const PERGUNTA_PROGRESSO =
+  /n[ií]vel|medalh|conquist|ins[ií]gni|avaliei|avalia[çc][õo]es|gomo|fa[ií]sca|caixinha|semana|progress|evolu|subir|pontos|\bxp\b|quant[oa]s? (lugar|avalia|medalh)|o que (me )?falta|meu perfil|meus dados/i;
+
+type Stats = {
+  gomos?: number;
+  gomos_semana?: number;
+  gomos_semana_max?: number;
+  semana?: { dias?: number; acesa?: boolean };
+  semanas_acesas?: number;
+  faiscas?: { total?: number; rumo?: number };
+  caixinhas?: number;
+  avaliacoes?: number;
+  lugares?: number;
+  fotos?: number;
+  bairros?: number;
+  cidades?: number;
+  medalhas?: { id: string; ok?: boolean; valor?: number; alvo?: number; unidade?: string }[];
+};
+
+/** Resumo curto, em texto, do progresso da pessoa — só números que o app mostra, nada de id interno. */
+async function resumoProgresso(db: ReturnType<typeof adminClient>, userId: string): Promise<string> {
+  const [{ data: st, error }, { data: perfil }] = await Promise.all([
+    db.rpc("gami_stats", { p_user: userId }),
+    db.from("profiles").select("medal_form").eq("id", userId).maybeSingle(),
+  ]);
+  if (error || !st) return "Não consegui ler o progresso agora.";
+  const s = st as Stats;
+  const forma = Math.min(2, Math.max(0, Number(perfil?.medal_form ?? 2)));
+  const nome = (f: string[]) => f[forma] ?? f[0];
+  const gomos = Number(s.gomos ?? 0);
+  let i = 0;
+  NIVEIS.forEach((n, k) => { if (gomos >= n.g) i = k; });
+  const prox = NIVEIS[i + 1];
+  const linhas = [
+    `Nível ${i + 1} de ${NIVEIS.length}: ${nome(NIVEIS[i].f)} (${gomos} de 48 gomos).` +
+      (prox ? ` Próximo: ${nome(prox.f)} aos ${prox.g} gomos (faltam ${prox.g - gomos}).` : " Já está no nível máximo."),
+    `Gomos acesos nesta semana: ${s.gomos_semana ?? 0} de ${s.gomos_semana_max ?? 4} possíveis. Um gomo vem de: avaliação, 5ª avaliação de um lugar, lugar cadastrado, foto aprovada.`,
+    `Avaliações: ${s.avaliacoes ?? 0} · lugares cadastrados: ${s.lugares ?? 0} · fotos aprovadas: ${s.fotos ?? 0} · bairros diferentes: ${s.bairros ?? 0} · cidades: ${s.cidades ?? 0}.`,
+    `Semana: app aberto em ${s.semana?.dias ?? 0} de 4 dias${s.semana?.acesa ? " (semana acesa)" : ""}. Semanas acesas no total: ${s.semanas_acesas ?? 0}. Faíscas: ${s.faiscas?.total ?? 0} (${s.faiscas?.rumo ?? 0}/10 pra próxima caixinha). Caixinhas pra abrir: ${s.caixinhas ?? 0}.`,
+  ];
+  const lista = (s.medalhas ?? []).filter((m) => MEDALHAS[m.id]);
+  const tem = lista.filter((m) => m.ok);
+  linhas.push(
+    `Medalhas: ${tem.length} de ${Object.keys(MEDALHAS).length}` +
+      (tem.length ? ` — ${tem.map((m) => nome(MEDALHAS[m.id].t)).join(", ")}.` : " (nenhuma ainda)."),
+  );
+  const perto = lista
+    .filter((m) => !m.ok && Number(m.alvo) > 0)
+    .sort((a, b) => Number(b.valor ?? 0) / Number(b.alvo) - Number(a.valor ?? 0) / Number(a.alvo))
+    .slice(0, 4);
+  if (perto.length) {
+    linhas.push(
+      "Mais perto de ganhar: " +
+        perto
+          .map((m) => `${nome(MEDALHAS[m.id].t)} ${m.valor ?? 0}/${m.alvo}${m.unidade ? " " + m.unidade : ""} (${MEDALHAS[m.id].cond.replace(/\.$/, "")})`)
+          .join("; ") +
+        ".",
+    );
+  }
+  return linhas.join("\n");
+}
+
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") return json(204, {});
   if (req.method !== "POST") return json(405, { error: "método não aceito" });
@@ -231,16 +334,30 @@ Deno.serve(async (req) => {
 
     const systemPrompt = [SYSTEM_PROMPT, vozExtra, vozPersonagem].filter(Boolean).join("\n\n");
 
+    const querProgresso = PERGUNTA_PROGRESSO.test(texto);
+    const dados = querProgresso ? await resumoProgresso(db, user.id) : "";
     const messages: GroqMessage[] = [
       { role: "system", content: systemPrompt },
-      { role: "user", content: `Cidade da pessoa: ${cidade}. Mensagem: "${texto}"` },
+      {
+        role: "user",
+        content:
+          `Cidade da pessoa: ${cidade}. Mensagem: "${texto}"` +
+          (dados ? `\n\nDADOS DO APP DESTA PESSOA (use só o que a pergunta pedir):\n${dados}` : ""),
+      },
     ];
-    const primeira = await chamarGroq(db, messages, true);
+    const primeira = await chamarGroq(db, messages, true, !querProgresso);
     const chamada = primeira.tool_calls?.[0];
 
     if (!chamada) {
-      // Não precisou buscar lugar: resposta direta (conversa, FAQ do app).
+      // Não precisou buscar lugar: resposta direta (conversa, progresso, FAQ do app, acolhimento).
       return json(200, { message: primeira.content ?? "", places: null });
+    }
+
+    if (chamada.function.name === "meu_progresso") {
+      messages.push(primeira);
+      messages.push({ role: "tool", tool_call_id: chamada.id, content: await resumoProgresso(db, user.id) });
+      const resposta = await chamarGroq(db, messages, false);
+      return json(200, { message: resposta.content ?? "", places: null });
     }
 
     let args: { categories?: Categoria[]; sem_nota?: boolean; perto?: boolean };

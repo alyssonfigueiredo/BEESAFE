@@ -715,6 +715,17 @@ Nome: **Irisa** (INPI livre; @appirisa livre). Bundle id Android `br.com.irisa.a
   Sem isso configurado, o botão aparece no painel mas o clique dá "Unsupported provider: missing
   OAuth secret" (mesmo erro de 05/10).
 
+- **Irise responde sobre o próprio progresso e acolhe (13/10/2026, pedido do Leandro):** o chat
+  (`supabase/functions/irise-orchestrator`) não serve só pra sugerir lugar. Pergunta sobre nível, gomos,
+  o que falta pra subir, medalhas que tem e que faltam, avaliações, semana, faíscas ou caixinhas
+  (regex `PERGUNTA_PROGRESSO`) já leva na mesma chamada um resumo de `gami_stats` (nomes de medalha e
+  nível com a flexão do Perfil); o que escapar da regex chama a ferramenta `meu_progresso`. Nomes e
+  condições vêm de `catalogo.ts`, **gerado** por `node scripts/irise-catalogo.mjs` a partir de
+  `src/lib/medals.ts` e `src/lib/niveis.ts` — mudou medalha ou nível, rodar de novo. Prompt: no
+  máximo 3 frases curtas, texto puro, nunca fecha seco (sempre termina com calor/porta aberta);
+  acolhimento em uma frase + caminho do app (Apoio, relato anônimo, 190, CVV 188), sem terapia nem
+  pedir detalhe; assunto fora do app que pede conversa longa é recusado com carinho e redirecionado.
+
 ## Stack
 
 Expo SDK 57, Expo Router, NativeWind v4, TypeScript, TanStack Query, MapLibre React Native v11 com tiles Esri
