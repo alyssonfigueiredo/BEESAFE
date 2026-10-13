@@ -12,7 +12,6 @@ import {
   TextInput,
   View,
 } from "react-native";
-import { GestureDetector, GestureHandlerRootView } from "react-native-gesture-handler";
 import Animated, { Easing, FadeIn, SlideInDown, useReducedMotion } from "react-native-reanimated";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
@@ -80,7 +79,7 @@ function SheetBody({
   const reduce = useReducedMotion();
   const safe = useSafeAreaInsets();
   const post = usePostSupportMessage();
-  const { gesture: dragGesture, style: dragStyle } = useSheetDismiss(onClose);
+  const { panHandlers: dragHandlers, style: dragStyle } = useSheetDismiss(onClose);
   const [category, setCategory] = useState(request.category);
   const [question, setQuestion] = useState(request.question ?? null);
   const [text, setText] = useState("");
@@ -123,10 +122,6 @@ function SheetBody({
   }
 
   return (
-    // O Modal nativo abre numa hierarquia própria, que não herda o GestureHandlerRootView do
-    // app/_layout.tsx — sem este aqui, a alça de arrastar pra fechar não reage ao dedo
-    // (13/10/2026, achado em aparelho real).
-    <GestureHandlerRootView style={{ flex: 1 }}>
     <KeyboardAvoidingView
       style={{ flex: 1 }}
       behavior={Platform.OS === "ios" ? "padding" : undefined}
@@ -142,14 +137,16 @@ function SheetBody({
         className="rounded-t-[34px]"
         style={[{ backgroundColor: "#FBFCFE", maxHeight: "90%" }, dragStyle]}
       >
-        <GestureDetector gesture={dragGesture}>
-          <View style={{ paddingTop: 12, alignItems: "center" }} hitSlop={{ top: 10, bottom: 10, left: 60, right: 60 }}>
-            <View
-              className="h-[5px] w-11 rounded-full"
-              style={{ backgroundColor: "#D3DBE6" }}
-            />
-          </View>
-        </GestureDetector>
+        <View
+          {...dragHandlers}
+          style={{ paddingTop: 12, alignItems: "center" }}
+          hitSlop={{ top: 10, bottom: 10, left: 60, right: 60 }}
+        >
+          <View
+            className="h-[5px] w-11 rounded-full"
+            style={{ backgroundColor: "#D3DBE6" }}
+          />
+        </View>
         <ScrollView
           keyboardShouldPersistTaps="handled"
           contentContainerStyle={{
@@ -321,6 +318,5 @@ function SheetBody({
         </ScrollView>
       </Animated.View>
     </KeyboardAvoidingView>
-    </GestureHandlerRootView>
   );
 }

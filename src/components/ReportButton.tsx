@@ -1,7 +1,6 @@
 import { Flag, PenLine } from "lucide-react-native";
 import { useState } from "react";
 import { Alert, Modal, Pressable, Text, View } from "react-native";
-import { GestureDetector, GestureHandlerRootView } from "react-native-gesture-handler";
 import Animated from "react-native-reanimated";
 
 import { PrimaryButton } from "@/components/Button";
@@ -33,7 +32,7 @@ export function ReportButton({
   useFolhaAberta(open);
   const [reason, setReason] = useState("");
   const report = useReportContent();
-  const { gesture: dragGesture, style: dragStyle } = useSheetDismiss(() => setOpen(false));
+  const { panHandlers: dragHandlers, style: dragStyle } = useSheetDismiss(() => setOpen(false));
 
   async function submit() {
     if (reason.trim().length < 3) return Alert.alert("Escolha ou escreva um motivo.");
@@ -57,10 +56,6 @@ export function ReportButton({
         {!compact && <Text className="font-body text-xs text-dim">Denunciar</Text>}
       </Pressable>
       <Modal visible={open} transparent animationType="fade" onRequestClose={() => setOpen(false)}>
-        {/* O Modal nativo abre numa hierarquia própria, que não herda o GestureHandlerRootView do
-            app/_layout.tsx — sem este aqui, a alça de arrastar pra fechar não reage ao dedo
-            (13/10/2026, achado em aparelho real). */}
-        <GestureHandlerRootView style={{ flex: 1 }}>
         <Pressable
           className="flex-1 justify-end"
           style={{ backgroundColor: "rgba(20,24,41,0.38)" }}
@@ -69,15 +64,17 @@ export function ReportButton({
           <Animated.View
             style={[{ borderTopLeftRadius: 34, borderTopRightRadius: 34, backgroundColor: "#FBFCFE" }, dragStyle]}
           >
-            <GestureDetector gesture={dragGesture}>
-              <View style={{ paddingTop: 10, alignItems: "center" }} hitSlop={{ top: 10, bottom: 10, left: 60, right: 60 }}>
-                {/* Alça da folha, a mesma das folhas novas. */}
-                <View
-                  className="h-[5px] w-11 rounded-full"
-                  style={{ backgroundColor: colors.border }}
-                />
-              </View>
-            </GestureDetector>
+            <View
+              {...dragHandlers}
+              style={{ paddingTop: 10, alignItems: "center" }}
+              hitSlop={{ top: 10, bottom: 10, left: 60, right: 60 }}
+            >
+              {/* Alça da folha, a mesma das folhas novas. */}
+              <View
+                className="h-[5px] w-11 rounded-full"
+                style={{ backgroundColor: colors.border }}
+              />
+            </View>
           <Pressable
             className="gap-3 px-6 pb-10 pt-1"
             onPress={() => {}}
@@ -112,7 +109,6 @@ export function ReportButton({
           </Pressable>
           </Animated.View>
         </Pressable>
-        </GestureHandlerRootView>
       </Modal>
     </>
   );

@@ -1,6 +1,5 @@
 import { useEffect } from "react";
 import { Modal, Pressable, Text, View } from "react-native";
-import { GestureDetector, GestureHandlerRootView } from "react-native-gesture-handler";
 import Animated, { useReducedMotion } from "react-native-reanimated";
 
 import { HeartIcon } from "@/components/FavHeart";
@@ -39,7 +38,7 @@ export function RewardSheet({
 }) {
   const { data: g, isFetching } = useGamification();
   const reduce = useReducedMotion();
-  const { gesture: dragGesture, style: dragStyle } = useSheetDismiss(onClose);
+  const { panHandlers: dragHandlers, style: dragStyle } = useSheetDismiss(onClose);
 
   useEffect(() => {
     setRewardOpen(visible);
@@ -69,10 +68,6 @@ export function RewardSheet({
       onRequestClose={onClose}
       statusBarTranslucent
     >
-      {/* O Modal nativo abre numa hierarquia própria, que não herda o GestureHandlerRootView do
-          app/_layout.tsx — sem este aqui, a alça de arrastar pra fechar não reage ao dedo
-          (13/10/2026, achado em aparelho real). */}
-      <GestureHandlerRootView style={{ flex: 1 }}>
       <Pressable
         className="flex-1"
         style={{ backgroundColor: "rgba(20,24,41,0.38)" }}
@@ -92,11 +87,13 @@ export function RewardSheet({
           dragStyle,
         ]}
       >
-        <GestureDetector gesture={dragGesture}>
-          <View style={{ paddingTop: 12, alignItems: "center" }} hitSlop={{ top: 10, bottom: 10, left: 60, right: 60 }}>
-            <View className="h-[5px] w-11 rounded-full" style={{ backgroundColor: "#D5DDE7" }} />
-          </View>
-        </GestureDetector>
+        <View
+          {...dragHandlers}
+          style={{ paddingTop: 12, alignItems: "center" }}
+          hitSlop={{ top: 10, bottom: 10, left: 60, right: 60 }}
+        >
+          <View className="h-[5px] w-11 rounded-full" style={{ backgroundColor: "#D5DDE7" }} />
+        </View>
       <FadeUp
         duration={360}
         distance={12}
@@ -254,7 +251,6 @@ export function RewardSheet({
         </Pressable>
       </FadeUp>
       </Animated.View>
-      </GestureHandlerRootView>
     </Modal>
   );
 }

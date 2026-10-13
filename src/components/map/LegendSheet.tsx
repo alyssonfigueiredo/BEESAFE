@@ -1,7 +1,6 @@
 import { X } from "lucide-react-native";
 import type { ReactNode } from "react";
 import { Modal, Pressable, ScrollView, Text, View } from "react-native";
-import { GestureDetector, GestureHandlerRootView } from "react-native-gesture-handler";
 import Animated, { FadeIn, SlideInDown } from "react-native-reanimated";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import Svg, { Circle, Text as SvgText } from "react-native-svg";
@@ -24,13 +23,9 @@ type Props = {
 /** "O que é cada coisa": a legenda do mapa e o filtro por tipo de relato. */
 export function LegendSheet({ visible, onClose, types, onToggleType, counts }: Props) {
   const safe = useSafeAreaInsets();
-  const { gesture: dragGesture, style: dragStyle } = useSheetDismiss(onClose);
+  const { panHandlers: dragHandlers, style: dragStyle } = useSheetDismiss(onClose);
   return (
     <Modal visible={visible} transparent animationType="fade" onRequestClose={onClose}>
-      {/* O Modal nativo abre numa hierarquia própria, que não herda o GestureHandlerRootView do
-          app/_layout.tsx — sem este aqui, a alça de arrastar pra fechar não reage ao dedo
-          (13/10/2026, achado em aparelho real). */}
-      <GestureHandlerRootView style={{ flex: 1 }}>
       <Pressable
         onPress={onClose}
         accessibilityLabel="Fechar"
@@ -52,18 +47,20 @@ export function LegendSheet({ visible, onClose, types, onToggleType, counts }: P
           dragStyle,
         ]}
       >
-        <GestureDetector gesture={dragGesture}>
-          <View style={{ paddingTop: 12, alignItems: "center" }} hitSlop={{ top: 10, bottom: 10, left: 60, right: 60 }}>
-            <View
-              style={{
-                width: 44,
-                height: 5,
-                borderRadius: 3,
-                backgroundColor: "#D3DBE6",
-              }}
-            />
-          </View>
-        </GestureDetector>
+        <View
+          {...dragHandlers}
+          style={{ paddingTop: 12, alignItems: "center" }}
+          hitSlop={{ top: 10, bottom: 10, left: 60, right: 60 }}
+        >
+          <View
+            style={{
+              width: 44,
+              height: 5,
+              borderRadius: 3,
+              backgroundColor: "#D3DBE6",
+            }}
+          />
+        </View>
         <ScrollView
           contentContainerStyle={{
             paddingHorizontal: 22,
@@ -216,7 +213,6 @@ export function LegendSheet({ visible, onClose, types, onToggleType, counts }: P
           </Animated.Text>
         </ScrollView>
       </Animated.View>
-      </GestureHandlerRootView>
     </Modal>
   );
 }
