@@ -81,6 +81,7 @@ export type PublicPlaceRating = {
   comment: string | null;
   updated_at: string;
   nickname: string;
+  is_anonymous: boolean;
   is_mine: boolean;
   welcome: number | null;
   affection: number | null;

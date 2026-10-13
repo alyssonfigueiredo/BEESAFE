@@ -10,7 +10,9 @@ import { PrimaryButton, SecondaryButton } from "@/components/Button";
 import { TextArea } from "@/components/Field";
 import { RewardSheet } from "@/components/gami/RewardSheet";
 import { FavHeart } from "@/components/FavHeart";
+import { Toggle } from "@/components/Toggle";
 import { useNaLista } from "@/hooks/useFavoritos";
+import { useProfile } from "@/hooks/useProfile";
 import {
   fraseDescoberta,
   logDescoberta,
@@ -42,7 +44,7 @@ import {
 import type { Axis } from "@/theme/domain";
 import { colors, shadow } from "@/theme/tokens";
 
-type Draft = Record<Axis, number> & { key: string; comment: string };
+type Draft = Record<Axis, number> & { key: string; comment: string; anon: boolean };
 
 export default function PlaceScreen() {
   const insets = useScreenInsets({ tabs: false });
@@ -56,6 +58,7 @@ export default function PlaceScreen() {
   const daDescoberta = origem === ORIGEM_DESCOBERTA;
   const { data: place, isLoading } = usePlace(id);
   const { data: ratings = [] } = usePlaceRatings(id);
+  const { data: profile } = useProfile();
   const rate = useRatePlace(id);
   const enviarFoto = useEnviarFotoDoLugar(id);
   const mine = ratings.find((r) => r.is_mine);
@@ -93,6 +96,7 @@ export default function PlaceScreen() {
           restroom: mine?.restroom ?? 0,
           crowd: mine?.crowd ?? 0,
           comment: mine?.comment ?? "",
+          anon: mine?.is_anonymous ?? false,
         };
   const missing = AXIS_KEYS.filter((k) => !current[k]);
   // Lugar sem nota: cada pergunta respondida devolve um quarto da cor à foto.
@@ -115,6 +119,7 @@ export default function PlaceScreen() {
         restroom: current.restroom,
         crowd: current.crowd,
         comment: current.comment,
+        anonymous: current.anon,
       });
       if (mine) {
         Alert.alert("Avaliação atualizada", "Obrigado por ajudar a comunidade.");
@@ -343,6 +348,21 @@ export default function PlaceScreen() {
                 value={current.comment}
                 onChangeText={(v) => setDraft({ ...current, comment: v })}
               />
+              <View className="flex-row items-center justify-between gap-3 rounded-2xl bg-solid px-3 py-2.5">
+                <Text className="min-w-0 flex-1 font-body text-[13px] leading-[18px] text-muted">
+                  <Text className="font-body-bold text-ink">Publicar como Anônimo</Text>
+                  {"\n"}
+                  {current.anon
+                    ? "Aparece como Anônimo pra quem lê."
+                    : `Aparece como ${profile?.nickname?.trim() || "Anônimo"} pra quem lê.`}{" "}
+                  A conta continua ligada à avaliação por dentro, para moderação.
+                </Text>
+                <Toggle
+                  value={current.anon}
+                  onChange={(v) => setDraft({ ...current, anon: v })}
+                  label="Publicar como Anônimo"
+                />
+              </View>
               <SecondaryButton
                 label={
                   enviarFoto.isPending
