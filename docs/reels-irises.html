@@ -57,7 +57,7 @@ body{display:flex;align-items:center;justify-content:center;height:100vh;font-fa
   <div class="scene" id="s0">
     <div class="small c" id="e0" style="color:var(--lilacInk)">as irises</div>
     <h1 class="disp c" id="h0" style="font-size:92px;margin-top:20px"><span class="w" style="font-weight:300">Tem gente nova</span><br><span class="w">na Irisa.</span></h1>
-    <p class="body c" id="b0" style="margin-top:40px">Nove pra você escolher quem anda com você.</p>
+    <p class="body c" id="b0" style="margin-top:40px">Oito pra você escolher quem anda com você.</p>
   </div>
 
   <div id="beats"></div>
@@ -65,7 +65,7 @@ body{display:flex;align-items:center;justify-content:center;height:100vh;font-fa
   <div class="scene" id="s9">
     <h1 class="disp c" id="t9" style="font-size:94px"><span class="w" style="font-weight:300">Escolhe quem</span><br><span class="w rainbow">anda contigo.</span></h1>
     <p class="body c" id="b9" style="margin-top:56px">Ile mora no seu Início: traz a missão do dia, avisa quando falta pouco pra uma conquista e sugere lugar de verdade, do mapa. Já no iPhone. Android em fase de testes.</p>
-    <p class="body c" id="c9" style="margin-top:34px;font-weight:600;color:var(--ink)">Comenta: qual das nove é a sua?</p>
+    <p class="body c" id="c9" style="margin-top:34px;font-weight:600;color:var(--ink)">Comenta: qual delas é a sua?</p>
   </div>
 
   <div class="brand" id="brand"><svg class="mark" viewBox="0 0 100 100"><use href="#radarmin"></use></svg><span>Iris<b>a</b></span></div>
@@ -91,12 +91,11 @@ const IRISES=[
  [15,"Rafa","Cartógrafo","ele/dele","Nerd do mapa. Explica sem pressa.","--blue","--blueInk"],
  [16,"Yara","Exploradora","ela/dela","Te chama pra ser a primeira cor do mapa.","--orange","--orangeInk"],
  [17,"Dandara","Matriarca","ela/dela","Cuida, cobra água e pergunta se você chegou bem.","--lilac","--lilacInk"],
- [18,"Luna","Confidente","ela/dela","Sempre acha uma frase que acalma.","--turq","--turqInk"],
 ];
 const box=$("#beats");
 IRISES.forEach(([n,nome,classe,pron,bio,cor,ink],i)=>{
   const d=document.createElement("div");d.className="beat";d.id="bt"+i;
-  d.innerHTML=`<div class="num">${i+1}/9</div>
+  d.innerHTML=`<div class="num">${i+1}/8</div>
    <div class="nome" style="color:var(${ink})">${nome}</div>
    <div class="tags"><span class="cl" style="background:var(${cor});color:var(--night)">${classe}</span><span class="pr">${pron}</span></div>
    <div class="palco"><div class="glow" style="background:var(${cor})"></div>
@@ -105,7 +104,7 @@ IRISES.forEach(([n,nome,classe,pron,bio,cor,ink],i)=>{
    <div class="bio">${bio}</div>`;
   box.appendChild(d);
 });
-const TOTAL=33000, INI=4400, DUR=2600;
+const TOTAL=30500, INI=4400, DUR=2600;
 // cinza vira cor quando Kai entra (4600 ms)
 A($("#col"),[{filter:"grayscale(1)"},{filter:"grayscale(1)",offset:0.92},{filter:"grayscale(0)"}],0,5000,"linear",{composite:"add"});
 A($("#brand"),[{opacity:0},{opacity:1}],400,600,"linear");

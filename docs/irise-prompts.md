@@ -6,7 +6,7 @@ Fluxo igual ao das medalhas: você gera, me manda as folhas, eu recorto e compon
 
 1. Anexe a **imagem de referência** do personagem (corpo inteiro, fundo transparente):
    `assets/irise-personagens/p1-10.webp` (Kai), `p1-11` (Léo), `p1-12` (Ali), `p1-13` (Bento),
-   `p1-14` (Dante), `p1-15` (Rafa), `p1-16` (Yara), `p1-17` (Dandara), `p1-18` (Luna).
+   `p1-14` (Dante), `p1-15` (Rafa), `p1-16` (Yara), `p1-17` (Dandara). (Luna, `p1-18`, está fora do ar no app — fica de fora por enquanto.)
    (Estão na pasta do projeto no Mac depois do `git pull`.)
 2. Cole o **prompt base** + a **cena** escolhida (abaixo).
 3. Gere em alta (1024 px ou mais), **um personagem por imagem**.
@@ -48,7 +48,7 @@ Fluxo igual ao das medalhas: você gera, me manda as folhas, eu recorto e compon
 | Rafa | Cartógrafo | segurando um mapa de papel aberto, apontando um ponto nele, óculos escorregando |
 | Yara | Exploradora | caminhando pra frente com mochila pequena, olhando o horizonte, vento no cabelo |
 | Dandara | Matriarca | estendendo uma garrafinha de água pra câmera, sorriso de mãe |
-| Luna | Confidente | sentada no chão com as pernas cruzadas, xícara nas mãos, olhar calmo pra câmera |
+| ~~Luna~~ | Confidente | FORA DO AR no app (13/10) — não gerar por enquanto |
 
 ## Grupo
 
