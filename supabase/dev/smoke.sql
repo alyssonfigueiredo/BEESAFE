@@ -243,5 +243,11 @@ select public.admin_push_create('Só pra você', 'Corpo', now() + interval '1 da
                                 array['66666666-6666-6666-6666-666666666666'::uuid]) as envio2 \gset
 select cidade from public.admin_push_list() where id = :envio2;
 select public.admin_push_cancel(:envio2);
+-- migration 75: lista de Pessoas com irise e métricas dos personagens
+select public.set_my_irise_personagem(12::smallint);
+select count(*) > 0 as admin_users_ok from public.admin_users(null, 50, 0, 'interacao');
+select irise_nome = 'Ali' as admin_users_irise from public.admin_users(null, 200, 0, 'recente') where id = '66666666-6666-6666-6666-666666666666';
+select public.admin_user('66666666-6666-6666-6666-666666666666')->>'irise_nome' = 'Ali' as admin_user_irise;
+select (public.admin_irise_metricas()->>'com_irise')::int >= 1 as metricas_ok;
 reset role;
 
