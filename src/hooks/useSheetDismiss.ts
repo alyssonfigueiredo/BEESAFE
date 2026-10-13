@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { PanResponder } from "react-native";
+import type { GestureResponderEvent } from "react-native";
 import { useAnimatedStyle, useSharedValue, withTiming } from "react-native-reanimated";
 
 /**
@@ -8,32 +8,29 @@ import { useAnimatedStyle, useSharedValue, withTiming } from "react-native-reani
  * escuro atrás fechava). Só a alça carrega o gesto, não a folha inteira: assim o toque em botão,
  * chip ou campo de texto dentro da folha continua funcionando normal.
  *
- * 3ª rodada (13/10/2026): o gesto reivindica o responder NO INÍCIO do toque
- * (`onStartShouldSetPanResponder: true`), não na negociação de movimento. No New Architecture
- * (Fabric, obrigatório no Expo 57) dentro de Modal, depender só de `onMoveShouldSetPanResponder`
- * era o que falhava no aparelho — e na folha de denúncia nem chegava a negociar: o Pressable do
- * fundo é PAI da folha e reivindicava o responder no toque inicial, ganhando do handle pra sempre.
- * Como a alça é o único dono do gesto e não tem nada clicável dentro, reivindicar no início não
- * custa nada (toque curto solta com dy<60 e nada acontece). `onPanResponderTerminationRequest:
- * false` impede que outro componente roube o gesto no meio do arrasto.
+ * 4ª rodada (13/10/2026, iOS): eventos de TOQUE CRUS (`onTouchStart/Move/End`), sem sistema de
+ * responder nenhum. As três tentativas anteriores morreram todas na mesma fase — a NEGOCIAÇÃO de
+ * quem fica com o gesto (Gesture.Pan do gesture-handler, Gesture.Pan + GestureHandlerRootView no
+ * Modal, PanResponder negociando por movimento e depois reivindicando no início) — e nenhuma
+ * reagiu no aparelho, o que aponta pra negociação em si falhando dentro do Modal nativo no Fabric.
+ * onTouchStart/Move/End não negociam nada: disparam pra qualquer View no caminho do toque, e o
+ * stream nativo continua entregando os moves à view do touch-down mesmo com o dedo já fora dela.
+ * Não reivindicar responder também significa não bloquear ninguém: toque curto na alça não faz
+ * nada e os botões da folha continuam intactos.
  *
- * Instância ESTÁVEL (useState com inicializador preguiçoso): recriar o PanResponder a cada render
- * troca os handlers no meio do gesto quando a folha re-renderiza durante o arrasto (chat da
- * Irise, animações da recompensa), e a instância nova nunca recebeu o grant — o arrasto morre em
- * silêncio. O onClose mais recente chega por ref atualizado em useEffect e lido só dentro dos
- * callbacks (o lint de hooks barra `.current` durante o render); `useSharedValue` devolve sempre
- * o mesmo objeto, então o closure do primeiro render continua válido.
+ * `collapsable: false` viaja junto no spread: no Android, view transparente só com props de
+ * layout é achatada da árvore nativa e deixaria de receber toque.
  *
- * PanResponder (sistema de toque clássico do RN) em vez de Gesture.Pan do gesture-handler
- * (2ª tentativa): o Modal nativo abre numa hierarquia própria, e mesmo com GestureHandlerRootView
- * envolvendo o conteúdo do Modal o arrasto não reagiu. PanResponder atualiza o shared value do
- * Reanimated direto (callbacks já rodam na JS thread), então a folha anima pelo mesmo
- * `useAnimatedStyle` de sempre.
+ * Instância ESTÁVEL (useState preguiçoso) com o `y0` do gesto no closure: recriar handlers a cada
+ * render perderia o ponto inicial no meio do arrasto quando a folha re-renderiza (chat da Irise,
+ * animações da recompensa). O onClose mais recente chega pela caixa `latest`, lida só dentro dos
+ * callbacks (o lint de hooks barra `.current`/mutação durante o render); `useSharedValue` devolve
+ * sempre o mesmo objeto, então o closure do primeiro render continua válido.
  */
 export function useSheetDismiss(onClose: () => void) {
   const y = useSharedValue(0);
   // Caixa estável em vez de useRef: o lint de hooks barra passar ref pra função durante o render,
-  // e o PanResponder.create roda no inicializador do useState (que é render).
+  // e os handlers nascem no inicializador do useState (que é render).
   const [latest] = useState(() => ({ onClose }));
   useEffect(() => {
     // Padrão "latest box" de propósito: fora do render, só o gesto lê. O lint não distingue
@@ -41,24 +38,31 @@ export function useSheetDismiss(onClose: () => void) {
     // eslint-disable-next-line react-hooks/immutability
     latest.onClose = onClose;
   });
-  const [panHandlers] = useState(
-    () =>
-      PanResponder.create({
-        onStartShouldSetPanResponder: () => true,
-        onMoveShouldSetPanResponder: (_, g) => g.dy > 4 && Math.abs(g.dy) > Math.abs(g.dx),
-        onPanResponderTerminationRequest: () => false,
-        onPanResponderMove: (_, g) => {
-          if (g.dy > 0) y.set(g.dy);
-        },
-        onPanResponderRelease: (_, g) => {
-          if (g.dy > 60 || g.vy > 0.6) latest.onClose();
-          y.set(withTiming(0, { duration: 200 }));
-        },
-        onPanResponderTerminate: () => {
-          y.set(withTiming(0, { duration: 200 }));
-        },
-      }).panHandlers,
-  );
+  const [panHandlers] = useState(() => {
+    let y0: number | null = null;
+    const solta = (dy: number) => {
+      y0 = null;
+      if (dy > 60) latest.onClose();
+      y.set(withTiming(0, { duration: 200 }));
+    };
+    return {
+      collapsable: false as const,
+      onTouchStart: (e: GestureResponderEvent) => {
+        y0 = e.nativeEvent.pageY;
+      },
+      onTouchMove: (e: GestureResponderEvent) => {
+        if (y0 == null) return;
+        const dy = e.nativeEvent.pageY - y0;
+        if (dy > 0) y.set(dy);
+      },
+      onTouchEnd: (e: GestureResponderEvent) => {
+        if (y0 != null) solta(e.nativeEvent.pageY - y0);
+      },
+      onTouchCancel: () => {
+        if (y0 != null) solta(0);
+      },
+    };
+  });
   const style = useAnimatedStyle(() => ({ transform: [{ translateY: y.get() }] }));
   return { panHandlers, style };
 }

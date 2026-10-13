@@ -94,7 +94,9 @@ export default function PlaceScreen() {
           restroom: mine?.restroom ?? 0,
           crowd: mine?.crowd ?? 0,
           comment: mine?.comment ?? "",
-          anon: mine?.is_anonymous ?? false,
+          // Anônimo nasce LIGADO (13/10/2026, pedido do Leandro): publicar com apelido é a
+          // exceção que a pessoa escolhe, não o padrão.
+          anon: mine?.is_anonymous ?? true,
         };
   const missing = AXIS_KEYS.filter((k) => !current[k]);
   // Lugar sem nota: cada pergunta respondida devolve um quarto da cor à foto.
