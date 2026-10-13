@@ -48,7 +48,7 @@ Fluxo igual ao das medalhas: você gera, me manda as folhas, eu recorto e compon
 | Dante | Protetor | parado sob a luz de um poste à noite, mãos nos bolsos, expressão serena |
 | Rafa | Cartógrafo | segurando um mapa de papel aberto, apontando um ponto nele, óculos escorregando |
 | Yara | Exploradora | caminhando pra frente com mochila pequena, olhando o horizonte, vento no cabelo |
-| Dandara | Matriarca | digitando no celular com sorriso carinhoso, como quem manda "chegou bem?" (tela em branco) — ou: sentada no braço do sofá com uma caneca, olhar de quem escuta e aconselha |
+| Dandara | Matriarca | FEITA (13/10): braços cruzados fundo branco + sofá com livro. Não gerar de novo |
 | ~~Luna~~ | Confidente | FORA DO AR no app (13/10) — não gerar por enquanto |
 
 ## Grupo

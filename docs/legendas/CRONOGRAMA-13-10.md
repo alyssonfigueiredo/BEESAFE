@@ -10,7 +10,7 @@ claro/escuro da grade sozinha. Nenhum `aprovado` foi tocado.
 | 13/10 | carrossel-12 | abre a narrativa da gamificação ("ganhou um joguinho") |
 | 14/10 | reels-10 + story-arcoiris 12h | reels da novidade cola no 12 |
 | 15/10 | carrossel-13 | medalhas |
-| 16/10 | reels-9 + story-04 12h | sua cidade |
+| 16/10 | reels-irises (desfile) + story-04 12h | reels-9 foi pra 31/10 |
 | 17/10 | carrossel-15 | sua evolução |
 | 18/10 | reels-queroir | |
 | 19/10 | carrossel-10 | APROVADO (banheiro 25%) |
@@ -22,7 +22,7 @@ claro/escuro da grade sozinha. Nenhum `aprovado` foi tocado.
 | 25/10 | carrossel-7 | ficha do bairro |
 | 26/10 | reels-5 | ficha do bairro (pareia com o 7) |
 | 27/10 | carrossel-14 | compartilhar no story — DE PROPÓSITO no fim: precisa da build 0.1.3 aprovada; se até lá o recurso não estiver nas lojas, empurrar de novo |
-| 28–30/10 | reels-suascores, reels-3, reels-4 | **dívida do xadrez: 3 reels seguidos no fim** (sobraram 10 reels pra 8 posts). A próxima peça ESTÁTICA nova entra entre 28 e 30/10 pra quitar |
+| 28–31/10 | reels-suascores, reels-3, reels-4, reels-9 | **dívida do xadrez: 3 reels seguidos no fim** (sobraram 10 reels pra 8 posts). A próxima peça ESTÁTICA nova entra entre 28 e 30/10 pra quitar |
 
 - **carrossel-8 (Dia de Sair do Armário, 11/10) foi `arquivado`**: a data passou sem publicar.
   "Reaproveitar" no artefato devolve pra fila em 2027 (ou noutra data que couber).
