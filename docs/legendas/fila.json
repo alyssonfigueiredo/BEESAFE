@@ -679,5 +679,17 @@
   "legenda": "Tem dia que a gente só precisa de um \"tô contigo\".\n\nO mural da Irisa tem seis reações desenhadas pra gente — Te abraço, Arrasou, Tô contigo, Sinto muito, Acendeu, Mais cor — a pergunta da semana e o jeito Anônimo de publicar. Sem seguidor, sem mensagem direta.\n\nIrisa: o mapa dos lugares onde a gente é bem-vinde, feito por nós. Na App Store. Android em fase de testes.\n\nResponde aqui nos comentários: qual lugar te fez sentir em casa? 🌈\n\n#Irisa #LGBTQIA #Orgulho #AppLGBT #Acolhimento",
   "primeiro_comentario": "appirisa.com.br",
   "publicado": false
+ },
+ {
+  "id": "reels-suascores",
+  "aprovado": false,
+  "quando": "2026-10-25T19:00:00-03:00",
+  "tipo": "REELS",
+  "midias": [
+   "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/Irisa-reels-suascores.mp4"
+  ],
+  "legenda": "Sabe quem lê a sua avaliação?\n\nVocê responde quatro perguntas em um minuto — e a avaliação fica acesa no mapa pra quem vem depois. Em Suas cores, no seu perfil, o app te mostra o rastro: os lugares que você coloriu, os bairros que alcançou e quem abriu a ficha depois de você.\n\nIrisa: o mapa dos lugares onde a gente é bem-vinde, feito por nós. Na App Store. Android em fase de testes.\n\nConta aqui: qual foi o último lugar que você coloriu? 🌈\n\n#Irisa #LGBTQIA #Orgulho #AppLGBT #SuasCores",
+  "primeiro_comentario": "appirisa.com.br",
+  "publicado": false
  }
 ]
