@@ -1,6 +1,7 @@
 import { Flag, PenLine } from "lucide-react-native";
 import { useState } from "react";
 import { Alert, Modal, Pressable, Text, View } from "react-native";
+import Animated from "react-native-reanimated";
 
 import { PrimaryButton } from "@/components/Button";
 import { Chip } from "@/components/Chip";
@@ -8,6 +9,7 @@ import { Field } from "@/components/Field";
 import { useReportContent, type ReportTarget } from "@/hooks/useModeration";
 import { colors } from "@/theme/tokens";
 import { useFolhaAberta } from "@/hooks/useDiscovery";
+import { useSheetDismiss } from "@/hooks/useSheetDismiss";
 
 const REASONS = [
   "Conteúdo falso",
@@ -30,6 +32,7 @@ export function ReportButton({
   useFolhaAberta(open);
   const [reason, setReason] = useState("");
   const report = useReportContent();
+  const { panHandlers: dragHandlers, style: dragStyle } = useSheetDismiss(() => setOpen(false));
 
   async function submit() {
     if (reason.trim().length < 3) return Alert.alert("Escolha ou escreva um motivo.");
@@ -53,21 +56,43 @@ export function ReportButton({
         {!compact && <Text className="font-body text-xs text-dim">Denunciar</Text>}
       </Pressable>
       <Modal visible={open} transparent animationType="fade" onRequestClose={() => setOpen(false)}>
+        {/* Fundo como IRMÃO da folha, não pai (13/10/2026, achado na auditoria: um Pressable
+            ANCESTRAL da alça reivindica o responder no touch-down antes do PanResponder da alça
+            ter chance de reagir no move — por isso o arrastar nunca pegava aqui, diferente das
+            outras 4 folhas, que já tinham o fundo como irmão). */}
         <Pressable
-          className="flex-1 justify-end"
-          style={{ backgroundColor: "rgba(20,24,41,0.38)" }}
+          style={{ flex: 1, backgroundColor: "rgba(20,24,41,0.38)" }}
           onPress={() => setOpen(false)}
+        />
+        <Animated.View
+          style={[
+            {
+              position: "absolute",
+              left: 0,
+              right: 0,
+              bottom: 0,
+              borderTopLeftRadius: 34,
+              borderTopRightRadius: 34,
+              backgroundColor: "#FBFCFE",
+            },
+            dragStyle,
+          ]}
         >
-          <Pressable
-            className="gap-3 rounded-t-[34px] px-6 pb-10 pt-3"
-            style={{ backgroundColor: "#FBFCFE" }}
-            onPress={() => {}}
+          <View
+            {...dragHandlers}
+            style={{ paddingTop: 10, alignItems: "center" }}
+            hitSlop={{ top: 10, bottom: 10, left: 60, right: 60 }}
           >
             {/* Alça da folha, a mesma das folhas novas. */}
             <View
-              className="mb-2 h-[5px] w-11 self-center rounded-full"
+              className="h-[5px] w-11 rounded-full"
               style={{ backgroundColor: colors.border }}
             />
+          </View>
+          <Pressable
+            className="gap-3 px-6 pb-10 pt-1"
+            onPress={() => {}}
+          >
             <Text className="font-display text-2xl uppercase tracking-wide text-ink">
               Denunciar
             </Text>
@@ -96,7 +121,7 @@ export function ReportButton({
               onPress={submit}
             />
           </Pressable>
-        </Pressable>
+        </Animated.View>
       </Modal>
     </>
   );

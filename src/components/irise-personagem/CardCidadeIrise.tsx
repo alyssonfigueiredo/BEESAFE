@@ -1,5 +1,5 @@
 import { Image, Pressable, Text, View } from "react-native";
-import Animated, { useAnimatedStyle } from "react-native-reanimated";
+import Animated, { LinearTransition, useAnimatedStyle } from "react-native-reanimated";
 import Svg, { Defs, RadialGradient, Rect, Stop } from "react-native-svg";
 
 import { TourTarget } from "@/components/Tour";
@@ -43,12 +43,15 @@ export function CardCidadeIrise({
   // Sem fala nenhuma (filtradas fora na Início), não tem o que mostrar no balão — mas o irise
   // continua no card, com a pose padrão (1).
   const pose = falas.length > 0 ? r.fala.pose : 1;
+  // Balão fechado pela pessoa: sem ele mostrar, o card sobe. 8 ainda deixava folga maior que o
+  // vão pros cartões de baixo (13/10/2026, pedido do Leandro: equidistante).
+  const balaoFechado = falas.length > 0 && !r.visivel;
   // Foto trocada pelo admin: mesmo um dos 9 originais passa a montar o avatar na hora (como um
   // personagem novo), em vez de ficar preso na versão "avatar-card" embutida e desatualizada.
   const fotoTrocada = useFotoTrocada(personagem);
   const usaEmbutido = BUNDLED_N.has(personagem) && !fotoTrocada;
   return (
-    <View style={{ marginTop: 10 }}>
+    <Animated.View layout={LinearTransition.duration(220)} style={{ marginTop: 10 }}>
       {falas.length > 0 && r.visivel ? (
         <IriseBalao
           nome={nomeIrise}
@@ -60,11 +63,16 @@ export function CardCidadeIrise({
           onCta={() => onCta(r.fala)}
           onFechar={r.fechar}
         />
+      ) : falas.length > 0 ? (
+        // Balão fechado pela pessoa (×): sem ele, o card sobe e fica rente ao cabeçalho (13/10/2026,
+        // pedido do Leandro) — antes ficava um vão de 50 px reservado à toa.
+        null
       ) : (
+        // Sem fala nenhuma pra mostrar (filtradas fora): mantém o espaço pro irise na pose padrão.
         <View style={{ height: 50 }} />
       )}
 
-      <View style={{ marginHorizontal: 12, marginTop: 8, height: 248 }}>
+      <View style={{ marginHorizontal: 12, marginTop: balaoFechado ? 2 : 8, height: 248 }}>
         <View style={{ flex: 1, borderRadius: 30, backgroundColor: "#171A2B", overflow: "hidden" }}>
           <Svg width={150} height={150} style={{ position: "absolute", right: -4, top: -20 }} pointerEvents="none">
             <Defs>
@@ -164,6 +172,6 @@ export function CardCidadeIrise({
           </Animated.View>
         </Pressable>
       </View>
-    </View>
+    </Animated.View>
   );
 }

@@ -1,6 +1,6 @@
 import { useRouter } from "expo-router";
 import { X } from "lucide-react-native";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import {
   Alert,
   KeyboardAvoidingView,
@@ -12,19 +12,13 @@ import {
   TextInput,
   View,
 } from "react-native";
-import Animated, {
-  Easing,
-  FadeIn,
-  SlideInDown,
-  useAnimatedStyle,
-  useReducedMotion,
-  useSharedValue,
-  withTiming,
-} from "react-native-reanimated";
+import Animated, { Easing, FadeIn, SlideInDown, useReducedMotion } from "react-native-reanimated";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import { usePostSupportMessage, type WeeklyQuestion } from "@/hooks/useSupport";
+import { useSheetDismiss } from "@/hooks/useSheetDismiss";
 import { authMessage } from "@/lib/authErrors";
+import { Toggle } from "@/components/Toggle";
 import type { SupportCategory } from "@/theme/domain";
 import { colors, shadow } from "@/theme/tokens";
 
@@ -85,6 +79,7 @@ function SheetBody({
   const reduce = useReducedMotion();
   const safe = useSafeAreaInsets();
   const post = usePostSupportMessage();
+  const { panHandlers: dragHandlers, style: dragStyle } = useSheetDismiss(onClose);
   const [category, setCategory] = useState(request.category);
   const [question, setQuestion] = useState(request.question ?? null);
   const [text, setText] = useState("");
@@ -140,22 +135,27 @@ function SheetBody({
       <Animated.View
         entering={reduce ? undefined : SlideInDown.duration(420).easing(Easing.out(Easing.cubic))}
         className="rounded-t-[34px]"
-        style={{ backgroundColor: "#FBFCFE", maxHeight: "90%" }}
+        style={[{ backgroundColor: "#FBFCFE", maxHeight: "90%" }, dragStyle]}
       >
+        <View
+          {...dragHandlers}
+          style={{ paddingTop: 12, alignItems: "center" }}
+          hitSlop={{ top: 10, bottom: 10, left: 60, right: 60 }}
+        >
+          <View
+            className="h-[5px] w-11 rounded-full"
+            style={{ backgroundColor: "#D3DBE6" }}
+          />
+        </View>
         <ScrollView
           keyboardShouldPersistTaps="handled"
           contentContainerStyle={{
             paddingHorizontal: 22,
-            paddingTop: 12,
+            paddingTop: 6,
             paddingBottom: Math.max(safe.bottom, 16) + 16,
             gap: 14,
           }}
         >
-          <View
-            className="h-[5px] w-11 self-center rounded-full"
-            style={{ backgroundColor: "#D3DBE6" }}
-          />
-
           <View className="flex-row items-center gap-4">
             <RainbowAvatar name={showsAnon ? "Anônimo" : nickname} size={44} />
             <View className="min-w-0 flex-1">
@@ -318,49 +318,5 @@ function SheetBody({
         </ScrollView>
       </Animated.View>
     </KeyboardAvoidingView>
-  );
-}
-
-function Toggle({
-  value,
-  onChange,
-  label,
-}: {
-  value: boolean;
-  onChange: (v: boolean) => void;
-  label: string;
-}) {
-  const reduce = useReducedMotion();
-  const p = useSharedValue(value ? 1 : 0);
-  useEffect(() => {
-    p.set(reduce ? (value ? 1 : 0) : withTiming(value ? 1 : 0, { duration: 250 }));
-  }, [value, reduce, p]);
-  const knob = useAnimatedStyle(() => ({ transform: [{ translateX: p.get() * 18 }] }));
-  return (
-    <Pressable
-      onPress={() => onChange(!value)}
-      accessibilityRole="switch"
-      accessibilityLabel={label}
-      accessibilityState={{ checked: value }}
-      hitSlop={8}
-      className="h-7 w-[46px] rounded-full"
-      style={{ backgroundColor: value ? colors.turquoise : colors.border }}
-    >
-      <Animated.View
-        style={[
-          {
-            position: "absolute",
-            top: 3,
-            left: 3,
-            width: 22,
-            height: 22,
-            borderRadius: 11,
-            backgroundColor: "#FFFFFF",
-            boxShadow: "0 1px 3px rgba(20,24,41,0.2)",
-          },
-          knob,
-        ]}
-      />
-    </Pressable>
   );
 }

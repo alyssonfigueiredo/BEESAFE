@@ -30,7 +30,10 @@ export function IrisePilula({
     <Animated.View
       entering={FadeIn.duration(200)}
       exiting={FadeOut.duration(200)}
-      style={{ position: "absolute", right: 14, bottom }}
+      // zIndex/elevation explícitos (13/10/2026, achado em aparelho real): sem eles, no Android a
+      // pílula ficava por baixo dos cartões da rolagem assim que eles tinham sombra própria — parecia
+      // "não fixar", mas era só perder a ordem de pintura pro conteúdo por baixo.
+      style={{ position: "absolute", right: 14, bottom, zIndex: 50, elevation: 50 }}
     >
       <Pressable
         onPress={onPress}
