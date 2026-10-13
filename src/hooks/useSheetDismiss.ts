@@ -22,16 +22,29 @@ import { useAnimatedStyle, useSharedValue, withTiming } from "react-native-reani
 export function useSheetDismiss(onClose: () => void) {
   const y = useSharedValue(0);
   const panResponder = PanResponder.create({
-    onStartShouldSetPanResponder: () => false,
-    onMoveShouldSetPanResponder: (_, g) => g.dy > 4 && Math.abs(g.dy) > Math.abs(g.dx),
+    onStartShouldSetPanResponder: () => {
+      console.log("[sheetDismiss] onStartShouldSetPanResponder → false (de propósito, só ativa no move)");
+      return false;
+    },
+    onMoveShouldSetPanResponder: (_, g) => {
+      const pega = g.dy > 4 && Math.abs(g.dy) > Math.abs(g.dx);
+      console.log("[sheetDismiss] onMoveShouldSetPanResponder", { dy: g.dy, dx: g.dx, pega });
+      return pega;
+    },
+    onPanResponderGrant: () => {
+      console.log("[sheetDismiss] onPanResponderGrant — ganhou o responder");
+    },
     onPanResponderMove: (_, g) => {
+      console.log("[sheetDismiss] onPanResponderMove", g.dy);
       if (g.dy > 0) y.set(g.dy);
     },
     onPanResponderRelease: (_, g) => {
+      console.log("[sheetDismiss] onPanResponderRelease", { dy: g.dy, vy: g.vy });
       if (g.dy > 60 || g.vy > 0.6) onClose();
       y.set(withTiming(0, { duration: 200 }));
     },
     onPanResponderTerminate: () => {
+      console.log("[sheetDismiss] onPanResponderTerminate — alguém roubou o responder no meio");
       y.set(withTiming(0, { duration: 200 }));
     },
   });
