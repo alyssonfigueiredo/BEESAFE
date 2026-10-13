@@ -683,6 +683,17 @@ Nome: **Irisa** (INPI livre; @appirisa livre). Bundle id Android `br.com.irisa.a
   Mocks de print: Playwright + Chromium, fontes reais embutidas (padrão descrito nos handoffs; scripts só no
   scratchpad das sessões cloud).
 
+- **Painel: Pessoas voltou e personagens do irise na web (migration 75, 13/10/2026, pedido do Leandro):** a lista de
+  Pessoas não carregava: `admin_users` contava `places where created_by = p.id` para cada perfil, sem índice, e com
+  ~160 mil lugares do Overture estourava o tempo. Agora as contagens são agrupadas uma vez só e `places.created_by`,
+  `support_messages.created_by`, `place_ratings.user_id` e `support_likes.user_id` têm índice. Pessoas e a ficha da
+  pessoa mostram o irise escolhido (avatar + nome). Tela nova **Conteúdo → Personagens do irise** (só admin): quantas
+  pessoas escolheram um irise, ranking de qual escolheram (`admin_irise_metricas`, só contagem), cartões com foto e
+  editor (textos, atributos, no ar/fora do ar, apagar e troca das 7 fotos, convertidas para WebP no navegador e
+  gravadas em `irise/<n>/<pose>.webp`). As fotos dos 9 originais ficam em `docs/admin/irise-<n>[-<pose>].webp`
+  (cópia de `assets/irise-personagens/`; pose 0 = corpo inteiro). A 75 também deu SELECT ao admin no bucket `irise`
+  (upsert no Storage pede SELECT, mesmo caso da 68). **Mexeu nas fotos embutidas do app: copiar de novo para lá.**
+
 ## Stack
 
 Expo SDK 57, Expo Router, NativeWind v4, TypeScript, TanStack Query, MapLibre React Native v11 com tiles Esri
