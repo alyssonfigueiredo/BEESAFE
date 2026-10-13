@@ -56,6 +56,10 @@ Fluxo igual ao das medalhas: você gera, me manda as folhas, eu recorto e compon
 Gerar as nove juntas numa imagem só NÃO costuma manter a identidade de cada uma — o jeito certo é
 gerar cada uma separada (mesma luz, mesmo fundo branco) e eu componho o grupo na montagem.
 
+**FEITO (13/10):** ele gerou as 8 em pé, corpo inteiro, fundo branco (salvas em
+`assets/irise-gerados/<nome>/corpo-branco.webp`) e também uma imagem de grupo que manteve a
+identidade de todes — exceção que deu certo. Falta o arquivo do grupo chegar (veio só como prévia).
+
 ## Checklist antes de mandar
 
 - [ ] Rosto é a mesma pessoa da referência (não "parecide" — igual).
