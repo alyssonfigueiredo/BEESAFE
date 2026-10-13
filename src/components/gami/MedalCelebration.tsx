@@ -1,5 +1,5 @@
 import { router } from "expo-router";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Modal, Pressable, Text, View } from "react-native";
 import { useReducedMotion } from "react-native-reanimated";
 
@@ -36,6 +36,10 @@ export function MedalCelebration() {
   const reduce = useReducedMotion();
   const [aberta, setAberta] = useState<string[] | null>(null);
   const [story, setStory] = useState<Compartilhavel | null>(null);
+  // Ids já fechados nesta sessão do app: mesmo que uma invalidação concorrente (ex.: useTrackOpen ao
+  // voltar da tela de trás) traga de volta o servidor ainda com visto=false antes do mark_medals_seen
+  // confirmar, a medalha não reabre — "fecho e volta sozinha" não depende mais de vencer essa corrida.
+  const fechadosRef = useRef<Set<string>>(new Set());
   const { data: profile } = useProfile();
   const { data: irises = [] } = useIrisePersonagens();
   const personagem = profile?.irise_personagem
@@ -43,7 +47,10 @@ export function MedalCelebration() {
     : null;
 
   const novas = useMemo(
-    () => (g?.conquistadas ?? []).filter((c) => !c.visto && getMedalha(c.id)).map((c) => c.id),
+    () =>
+      (g?.conquistadas ?? [])
+        .filter((c) => !c.visto && getMedalha(c.id) && !fechadosRef.current.has(c.id))
+        .map((c) => c.id),
     [g],
   );
 
@@ -54,7 +61,10 @@ export function MedalCelebration() {
   }, [novas, aberta, rewardOpen]);
 
   function fechar(irConquistas: boolean) {
-    if (aberta) marcar.mutate(aberta);
+    if (aberta) {
+      aberta.forEach((id) => fechadosRef.current.add(id));
+      marcar.mutate(aberta);
+    }
     setAberta(null);
     if (irConquistas) router.push("/conquistas");
   }
