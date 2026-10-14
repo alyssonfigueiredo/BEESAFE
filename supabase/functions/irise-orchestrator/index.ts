@@ -147,6 +147,7 @@ async function chamarGroq(
   messages: GroqMessage[],
   comFerramenta: boolean,
   comProgresso = true,
+  temperatura = 0.85,
 ) {
   const key = await getApiKey(db, "GROQ_API_KEY");
   if (!key) throw new Error("GROQ_API_KEY não configurada (secrets da função ou painel admin).");
@@ -155,7 +156,7 @@ async function chamarGroq(
     headers: { "Content-Type": "application/json", Authorization: `Bearer ${key}` },
     body: JSON.stringify({
       model: GROQ_MODEL,
-      temperature: 0.85,
+      temperature: temperatura,
       max_tokens: 300,
       messages,
       ...(comFerramenta
@@ -232,6 +233,30 @@ Responda SOMENTE com JSON: {"ranking": [{"place_id": "...", "reasons": ["...", "
 }
 
 
+// Rede de segurança: personagem com gíria 0 ou 1 não solta vocativo da comunidade, mesmo se o modelo
+// escorregar. Só tira a palavra quando ela não está escrita na voz do personagem.
+const VOCATIVOS = ["mona", "monas", "bofe", "bofes", "amapô", "migs", "bee", "mana", "diva", "deusa", "gata", "amiga", "amigue"];
+// Estas nunca são palavra comum: saem até no meio da frase. As outras ("amiga", "diva"…) só como vocativo.
+const SO_GIRIA = new Set(["mona", "monas", "bofe", "bofes", "amapô", "migs", "bee"]);
+function semGiriaAlheia(texto: string, agente: Agente | null | undefined): string {
+  if (agente === undefined) return texto; // sem personagem: voz da Irise, livre
+  if ((agente?.giria ?? 1) >= 2) return texto;
+  const voz = (agente?.voz ?? "").toLowerCase();
+  let t = texto;
+  for (const w of VOCATIVOS) {
+    if (voz.includes(w)) continue;
+    const L = "\\p{L}";
+    t = t
+      // "Oi, mona!" · "tô contigo, mona." · "fica tranquilo mona"
+      .replace(new RegExp(`,?\\s+${w}(?!${L})(?=\\s*[!?.,…]|\\s*$)`, "giu"), "")
+      // "Mona, bora?" no começo de frase
+      .replace(new RegExp(`(^|[.!?]\\s+)${w}(?!${L})[,!]?\\s+`, "giu"), "$1");
+    if (SO_GIRIA.has(w)) t = t.replace(new RegExp(`(?<!${L})${w}(?!${L})`, "giu"), "");
+  }
+  t = t.replace(/\s{2,}/g, " ").replace(/\s+([,.!?])/g, "$1").replace(/^[,\s]+/, "").trim();
+  return t.charAt(0).toUpperCase() + t.slice(1);
+}
+
 type Personagem = {
   n: number;
   nome: string;
@@ -245,10 +270,11 @@ type Personagem = {
 };
 type Agente = { voz: string; giria: number; emoji: number };
 
+// Sem citar as gírias pelo nome: listar "não use mona, bofe…" puxava o modelo a usar justamente essas.
 const GIRIA = [
-  "Sem gíria. Nunca use mona, bofe, amapô, babado, arrasou, deusa, fervo, close nem outra gíria da comunidade; fala cuidada e simples.",
-  "Gíria leve do dia a dia (bora, massa, de boa, tranquilo). Gíria da comunidade (mona, bofe, amapô, babado, arrasou, fervo) só se a voz abaixo pedir.",
-  "Pode usar gíria da comunidade (mona, babado, arrasou, fervo) com naturalidade, sem virar caricatura.",
+  "Sem gíria nenhuma. Português simples, cuidado e direto, como alguém educado falando com uma pessoa querida.",
+  "Gíria só a do dia a dia de qualquer brasileiro (bora, massa, de boa). Nada de gíria da comunidade, a não ser palavra que esteja escrita na sua voz abaixo.",
+  "Pode usar gíria da comunidade LGBTQIA+ com naturalidade, sem virar caricatura.",
 ];
 const EMOJI = [
   "Não usa emoji.",
@@ -383,6 +409,8 @@ Deno.serve(async (req) => {
 
     const n = perfil?.irise_personagem ?? body.personagem ?? null;
     let quemSou = "";
+    let nomePersonagem = "";
+    let agente: Agente | null = null;
     if (n) {
       const [{ data: p }, { data: ag }] = await Promise.all([
         db.from("irise_personagens")
@@ -391,12 +419,20 @@ Deno.serve(async (req) => {
           .maybeSingle(),
         db.from("irise_agentes").select("voz, giria, emoji").eq("n", n).maybeSingle(),
       ]);
-      if (p) quemSou = blocoPersonagem(p as Personagem, (ag as Agente | null) ?? null);
+      if (p) {
+        quemSou = blocoPersonagem(p as Personagem, (ag as Agente | null) ?? null);
+        nomePersonagem = (p as Personagem).nome;
+        agente = (ag as Agente | null) ?? null;
+      }
+      console.log(`irise-orchestrator: personagem ${n} (${nomePersonagem || "não achado"}), gíria ${agente?.giria ?? "padrão"}`);
     }
 
     // Com personagem, nem a voz da Irise nem a "voz geral" do painel entram: elas trazem gíria e
     // bordão da Irise, e o modelo misturava.
-    const systemPrompt = (quemSou ? [SYSTEM_PROMPT, quemSou] : [SYSTEM_PROMPT, VOZ_IRISE, vozExtra])
+    // Com personagem, a identidade vem PRIMEIRO (o modelo pesa mais o começo) e de novo no fim.
+    const systemPrompt = (quemSou
+      ? [quemSou, SYSTEM_PROMPT, `Lembrete final: você é ${nomePersonagem}. Fale só do jeito de ${nomePersonagem}.`]
+      : [SYSTEM_PROMPT, VOZ_IRISE, vozExtra])
       .filter(Boolean)
       .join("\n\n");
 
@@ -411,19 +447,21 @@ Deno.serve(async (req) => {
           (dados ? `\n\nDADOS DO APP DESTA PESSOA (use só o que a pergunta pedir):\n${dados}` : ""),
       },
     ];
-    const primeira = await chamarGroq(db, messages, true, !querProgresso);
+    const temp = quemSou ? 0.6 : 0.85;
+    const limpar = (t: string | null | undefined) => semGiriaAlheia(t ?? "", quemSou ? agente : undefined);
+    const primeira = await chamarGroq(db, messages, true, !querProgresso, temp);
     const chamada = primeira.tool_calls?.[0];
 
     if (!chamada) {
       // Não precisou buscar lugar: resposta direta (conversa, progresso, FAQ do app, acolhimento).
-      return json(200, { message: primeira.content ?? "", places: null });
+      return json(200, { message: limpar(primeira.content), places: null });
     }
 
     if (chamada.function.name === "meu_progresso") {
       messages.push(primeira);
       messages.push({ role: "tool", tool_call_id: chamada.id, content: await resumoProgresso(db, user.id) });
-      const resposta = await chamarGroq(db, messages, false);
-      return json(200, { message: resposta.content ?? "", places: null });
+      const resposta = await chamarGroq(db, messages, false, true, temp);
+      return json(200, { message: limpar(resposta.content), places: null });
     }
 
     let args: { categories?: Categoria[]; sem_nota?: boolean; perto?: boolean };
@@ -479,9 +517,9 @@ Deno.serve(async (req) => {
       tool_call_id: chamada.id,
       content: JSON.stringify({ encontrados: top.length, resumo }),
     });
-    const segunda = await chamarGroq(db, messages, false);
+    const segunda = await chamarGroq(db, messages, false, true, temp);
 
-    return json(200, { message: segunda.content ?? "Separei esses pra você:", places: top });
+    return json(200, { message: limpar(segunda.content) || "Separei esses pra você:", places: top });
   } catch (err) {
     const msg = err instanceof Error ? err.message : String(err);
     console.error("irise-orchestrator:", msg);
