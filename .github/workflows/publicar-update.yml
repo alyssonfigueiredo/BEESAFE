@@ -29,7 +29,11 @@ jobs:
           echo "Versão (app.config/package.json): $(node -p "require('./package.json').version")"
           echo "Branch: ${{ github.ref_name }}"
           echo "Mensagem: ${{ inputs.mensagem }}"
-      - name: Publica
+      - name: Publica (Android)
         env:
           EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
-        run: npx eas-cli update --branch production --platform ios,android --message "${{ inputs.mensagem }}" --non-interactive
+        run: npx eas-cli update --branch production --platform android --message "${{ inputs.mensagem }}" --non-interactive
+      - name: Publica (iOS)
+        env:
+          EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
+        run: npx eas-cli update --branch production --platform ios --message "${{ inputs.mensagem }}" --non-interactive
