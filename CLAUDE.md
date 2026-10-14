@@ -773,6 +773,13 @@ Nome: **Irisa** (INPI livre; @appirisa livre). Bundle id Android `br.com.irisa.a
   mostra os botões "Ligar para o CVV · 188" (`tel:188`) e "Conversar pelo chat do CVV" (cvv.org.br/chat).
   O servidor já responde assim; o app novo nem chega a chamar o servidor. Botão só com EAS Update.
 
+- **Busto desfocado na Escolha (14/10/2026, achado pelo Leandro):** a tela Escolha mostra o busto com ~870 px
+  de largura no iPhone, e o painel gravava 300 × 460 reduzindo num drawImage só (o navegador perde nitidez).
+  Agora `paraWebp` em `docs/admin/admin.js` grava o busto em **900 × 1380** (mesma proporção; o app só usa a
+  proporção, `BUSTO_ASPECTO`), reduzindo pela metade de cada vez, WebP 0,92, e avisa quando a foto é pequena.
+  Corpo (pose 0) até 1600 de altura. **As fotos já enviadas continuam 300 × 460: reenviar pelo painel.**
+  O Ali (12) está bom porque usa a embutida (feita com redução de qualidade), não a do Storage.
+
 ## Stack
 
 Expo SDK 57, Expo Router, NativeWind v4, TypeScript, TanStack Query, MapLibre React Native v11 com tiles Esri

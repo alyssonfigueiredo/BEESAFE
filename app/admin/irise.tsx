@@ -439,7 +439,7 @@ function EditorModal({
             </Campo>
           )}
           {!criando && (
-            <Campo label="Fotos de busto (precisam de 300×460, fundo transparente)">
+            <Campo label="Fotos de busto (900×1380, proporção 300×460, fundo transparente)">
               <View className="flex-row flex-wrap gap-3">
                 {[1, 2, 3, 4, 5, 6].map((pose) => (
                   <Pressable key={pose} onPress={() => trocarFoto(pose)} className="items-center gap-1">
@@ -457,7 +457,7 @@ function EditorModal({
                 </View>
               )}
               <Text className="pt-1 font-body text-xs text-dim">
-                Use PNG ou WebP com fundo transparente, 300×460, cabeça no topo e corte na curva do
+                Use PNG ou WebP com fundo transparente, 900×1380 (menor fica desfocado), cabeça no topo e corte na curva do
                 círculo.
               </Text>
             </Campo>

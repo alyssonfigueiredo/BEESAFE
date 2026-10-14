@@ -1607,10 +1607,24 @@ async function viewPersonagens(ctx) {
 }
 
 // Converte para WebP no navegador (o app sempre lê `<pose>.webp`), mantendo o fundo transparente.
-// Converte para WebP no navegador (o app sempre lê `<pose>.webp`), mantendo o fundo transparente.
-// Busto (poses 1 a 6) sai sempre 300 × 460, sem esticar: corta o vazio, escala igual nos dois eixos
-// (corpo com ~272 de largura e chegando pelo menos a 340 de altura), cabeça no centro a 4 px do topo.
-// Corpo inteiro (pose 0) mantém a proporção, com 640 de altura.
+// Busto (poses 1 a 6) sai em 900 × 1380 (a proporção 300 × 460 em 3×: a tela Escolha mostra o busto
+// com ~870 px de largura no iPhone, e em 300 × 460 ficava desfocado, 14/10/2026), sem esticar: corta o
+// vazio, escala igual nos dois eixos (corpo com ~816 de largura e chegando pelo menos a 1020 de
+// altura), cabeça no centro a 12 px do topo. Corpo inteiro (pose 0) mantém a proporção, com até
+// 1600 de altura. A redução é feita pela metade de cada vez: num drawImage só, o navegador perde nitidez.
+const BUSTO_K = 3;
+function reduzir(img, sx, sy, sw, sh, dw, dh) {
+  let src = img, x = sx, y = sy, w = sw, h = sh;
+  while (w / 2 > dw && h / 2 > dh) {
+    const c = document.createElement("canvas");
+    c.width = Math.round(w / 2); c.height = Math.round(h / 2);
+    const cx = c.getContext("2d");
+    cx.imageSmoothingQuality = "high";
+    cx.drawImage(src, x, y, w, h, 0, 0, c.width, c.height);
+    src = c; x = 0; y = 0; w = c.width; h = c.height;
+  }
+  return { src, x, y, w, h };
+}
 async function paraWebp(file, pose) {
   const img = await createImageBitmap(file);
   const tmp = document.createElement("canvas");
@@ -1626,13 +1640,16 @@ async function paraWebp(file, pose) {
   const bw = x1 - x0 + 1, bh = y1 - y0 + 1;
   const c = document.createElement("canvas");
   const ctx = c.getContext("2d");
+  ctx.imageSmoothingQuality = "high";
   if (Number(pose) === 0) {
-    const s = Math.min(1, 640 / bh);
+    const s = Math.min(1, 1600 / bh);
     c.width = Math.round(bw * s); c.height = Math.round(bh * s);
-    ctx.drawImage(img, x0, y0, bw, bh, 0, 0, c.width, c.height);
+    const r = reduzir(img, x0, y0, bw, bh, c.width, c.height);
+    ctx.drawImage(r.src, r.x, r.y, r.w, r.h, 0, 0, c.width, c.height);
   } else {
-    c.width = 300; c.height = 460;
-    const s = Math.max(272 / bw, 340 / bh);
+    const K = BUSTO_K;
+    c.width = 300 * K; c.height = 460 * K;
+    const s = Math.max((272 * K) / bw, (340 * K) / bh);
     // centro da cabeça = meio do que aparece nas primeiras linhas do recorte
     const faixa = Math.max(8, Math.round(bh / 8));
     let hx0 = bw, hx1 = -1;
@@ -1640,9 +1657,14 @@ async function paraWebp(file, pose) {
       if (px[(y * img.width + x) * 4 + 3] > 24) { if (x - x0 < hx0) hx0 = x - x0; if (x - x0 > hx1) hx1 = x - x0; }
     }
     const cx = hx1 >= 0 ? (hx0 + hx1) / 2 : bw / 2;
-    ctx.drawImage(img, x0, y0, bw, bh, 150 - cx * s, 4, bw * s, bh * s);
+    if (s > 1.5 && !confirm("Essa foto é pequena e vai aparecer desfocada no app (o ideal é pelo menos 900 px de largura). Enviar mesmo assim?")) {
+      throw new Error("Envio cancelado.");
+    }
+    const dw = bw * s, dh = bh * s;
+    const r = reduzir(img, x0, y0, bw, bh, dw, dh);
+    ctx.drawImage(r.src, r.x, r.y, r.w, r.h, 150 * K - cx * s, 4 * K, dw, dh);
   }
-  const blob = await new Promise((r) => c.toBlob(r, "image/webp", 0.9));
+  const blob = await new Promise((r) => c.toBlob(r, "image/webp", 0.92));
   if (!blob || blob.type !== "image/webp") throw new Error("Este navegador não converte para WebP. Tente pelo Chrome.");
   if (blob.size > 2 * 1024 * 1024) throw new Error("A imagem passa de 2 MB mesmo convertida. Use uma menor.");
   return blob;
@@ -1683,7 +1705,7 @@ function iriseEditor(p, pessoas, reload, agente) {
     const host = $("#irFotos", d);
     if (novo && !mudou) { host.innerHTML = ""; return; }
     host.innerHTML = `<h3 style="margin-top:18px">Fotos</h3>
-      <p class="small muted" style="margin:4px 0 10px">PNG ou WebP com fundo transparente, de qualquer tamanho: o painel enquadra sozinho em 300 × 460 (busto) sem esticar, com a cabeça no topo. A troca vale para todo mundo na hora.</p>
+      <p class="small muted" style="margin:4px 0 10px">PNG ou WebP com fundo transparente, de qualquer tamanho: o painel enquadra sozinho em 900 × 1380 (busto, proporção 300 × 460) sem esticar, com a cabeça no topo. A troca vale para todo mundo na hora.</p>
       <div class="poses">${POSES.map(([pose, t]) => `<div class="pose">
           <div class="pv"><img src="${esc(iriseFoto(p, pose))}${p.foto_atualizada_em || IRISE_EMBUTIDOS.has(Number(p.n)) ? "" : `?t=${Date.now()}`}" alt=""
             onerror="if(this.dataset.r!=='1'&&${IRISE_EMBUTIDOS.has(Number(p.n))}){this.dataset.r='1';this.src='${pose === 1 ? `irise-${p.n}.webp` : `irise-${p.n}-${pose}.webp`}'}else{this.replaceWith(Object.assign(document.createElement('span'),{className:'small dim',textContent:'sem foto'}))}"></div>
