@@ -1607,12 +1607,41 @@ async function viewPersonagens(ctx) {
 }
 
 // Converte para WebP no navegador (o app sempre lê `<pose>.webp`), mantendo o fundo transparente.
-async function paraWebp(file) {
+// Converte para WebP no navegador (o app sempre lê `<pose>.webp`), mantendo o fundo transparente.
+// Busto (poses 1 a 6) sai sempre 300 × 460, sem esticar: corta o vazio, escala igual nos dois eixos
+// (corpo com ~272 de largura e chegando pelo menos a 340 de altura), cabeça no centro a 4 px do topo.
+// Corpo inteiro (pose 0) mantém a proporção, com 640 de altura.
+async function paraWebp(file, pose) {
   const img = await createImageBitmap(file);
-  const escala = Math.min(1, 1200 / Math.max(img.width, img.height));
+  const tmp = document.createElement("canvas");
+  tmp.width = img.width; tmp.height = img.height;
+  const tc = tmp.getContext("2d");
+  tc.drawImage(img, 0, 0);
+  const px = tc.getImageData(0, 0, img.width, img.height).data;
+  let x0 = img.width, y0 = img.height, x1 = -1, y1 = -1;
+  for (let y = 0; y < img.height; y++) for (let x = 0; x < img.width; x++) {
+    if (px[(y * img.width + x) * 4 + 3] > 24) { if (x < x0) x0 = x; if (x > x1) x1 = x; if (y < y0) y0 = y; if (y > y1) y1 = y; }
+  }
+  if (x1 < 0) throw new Error("A imagem está vazia (toda transparente).");
+  const bw = x1 - x0 + 1, bh = y1 - y0 + 1;
   const c = document.createElement("canvas");
-  c.width = Math.round(img.width * escala); c.height = Math.round(img.height * escala);
-  c.getContext("2d").drawImage(img, 0, 0, c.width, c.height);
+  const ctx = c.getContext("2d");
+  if (Number(pose) === 0) {
+    const s = Math.min(1, 640 / bh);
+    c.width = Math.round(bw * s); c.height = Math.round(bh * s);
+    ctx.drawImage(img, x0, y0, bw, bh, 0, 0, c.width, c.height);
+  } else {
+    c.width = 300; c.height = 460;
+    const s = Math.max(272 / bw, 340 / bh);
+    // centro da cabeça = meio do que aparece nas primeiras linhas do recorte
+    const faixa = Math.max(8, Math.round(bh / 8));
+    let hx0 = bw, hx1 = -1;
+    for (let y = y0; y < y0 + faixa; y++) for (let x = x0; x <= x1; x++) {
+      if (px[(y * img.width + x) * 4 + 3] > 24) { if (x - x0 < hx0) hx0 = x - x0; if (x - x0 > hx1) hx1 = x - x0; }
+    }
+    const cx = hx1 >= 0 ? (hx0 + hx1) / 2 : bw / 2;
+    ctx.drawImage(img, x0, y0, bw, bh, 150 - cx * s, 4, bw * s, bh * s);
+  }
   const blob = await new Promise((r) => c.toBlob(r, "image/webp", 0.9));
   if (!blob || blob.type !== "image/webp") throw new Error("Este navegador não converte para WebP. Tente pelo Chrome.");
   if (blob.size > 2 * 1024 * 1024) throw new Error("A imagem passa de 2 MB mesmo convertida. Use uma menor.");
@@ -1654,7 +1683,7 @@ function iriseEditor(p, pessoas, reload, agente) {
     const host = $("#irFotos", d);
     if (novo && !mudou) { host.innerHTML = ""; return; }
     host.innerHTML = `<h3 style="margin-top:18px">Fotos</h3>
-      <p class="small muted" style="margin:4px 0 10px">Busto 300 × 460 com fundo transparente (PNG ou WebP), igual às do app; corpo inteiro também transparente. A troca vale para todo mundo na hora.</p>
+      <p class="small muted" style="margin:4px 0 10px">PNG ou WebP com fundo transparente, de qualquer tamanho: o painel enquadra sozinho em 300 × 460 (busto) sem esticar, com a cabeça no topo. A troca vale para todo mundo na hora.</p>
       <div class="poses">${POSES.map(([pose, t]) => `<div class="pose">
           <div class="pv"><img src="${esc(iriseFoto(p, pose))}${p.foto_atualizada_em || IRISE_EMBUTIDOS.has(Number(p.n)) ? "" : `?t=${Date.now()}`}" alt=""
             onerror="if(this.dataset.r!=='1'&&${IRISE_EMBUTIDOS.has(Number(p.n))}){this.dataset.r='1';this.src='${pose === 1 ? `irise-${p.n}.webp` : `irise-${p.n}-${pose}.webp`}'}else{this.replaceWith(Object.assign(document.createElement('span'),{className:'small dim',textContent:'sem foto'}))}"></div>
@@ -1668,7 +1697,7 @@ function iriseEditor(p, pessoas, reload, agente) {
       if (!file) return;
       busy($(`[data-pick="${inp.dataset.pose}"]`, host), async () => {
         if (!/^image\/(png|webp)$/.test(file.type)) throw new Error("Use PNG ou WebP com fundo transparente.");
-        const blob = await paraWebp(file);
+        const blob = await paraWebp(file, inp.dataset.pose);
         const up = await sb.storage.from("irise").upload(`${p.n}/${inp.dataset.pose}.webp`, blob, { contentType: "image/webp", upsert: true });
         if (up.error) throw new Error(ptErr(up.error));
         await rpc("admin_irise_personagem_tocar", { p_n: p.n });

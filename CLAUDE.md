@@ -740,6 +740,16 @@ Nome: **Irisa** (INPI livre; @appirisa livre). Bundle id Android `br.com.irisa.a
   personagem; com personagem vai só o bloco dele. Gíria nível 0/1 proíbe gíria da comunidade (1 só
   libera se a voz escrita pedir).
 
+- **Poses dos irises sem achatar (14/10/2026, pedido do Leandro):** as poses 1–6 (claro, `-escuro` e
+  `avatar-card-`) dos 8 originais menos o Ali tinham sido esticadas à força para 300 × 460 e saíam
+  espremidas. Refeitas a partir das imagens sem fundo (zip do Drive `TODAS_IMAGENS_SEM_FUNDO`) por
+  `python3 scripts/irise-poses-refazer.py <pasta>`: escala igual nos dois eixos, cabeça a 4 px do topo,
+  mesma cabeça em todas as poses do personagem, cartão escuro montado com `anel-arcoiris.png` igual ao
+  do Ali (pedaço solto fora do anel é removido). Mapa: 10 Kai = pessoa-nao-binarie-asiatica, 11 Léo =
+  leandro, 13 Bento = homem-gay-gordo, 14 Dante = homem-gay-urso, 15 Rafa = homem-trans-ruivo, 16 Yara =
+  mulher-bissexual-indigena, 17 Dandara = mulher-lesbica-negra, 18 Luna = mulher-trans; Ali (12) não mexe.
+  Imagem embutida: chega no app por EAS Update. O painel web enquadra sozinho qualquer foto enviada.
+
 ## Stack
 
 Expo SDK 57, Expo Router, NativeWind v4, TypeScript, TanStack Query, MapLibre React Native v11 com tiles Esri
