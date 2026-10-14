@@ -792,6 +792,16 @@ Nome: **Irisa** (INPI livre; @appirisa livre). Bundle id Android `br.com.irisa.a
   **Decisão: o texto das conversas NÃO é guardado** (dado sensível pela LGPD — saúde, orientação sexual — de um
   público em risco; guardar escondido continua sendo tratamento). Crise (CVV) conta sem a pessoa.
 
+- **Cota do Groq e gasto por mensagem (migration 81, 14/10/2026):** plano grátis do gpt-oss-120b = 30 pedidos/min,
+  1.000/dia, **8 mil tokens/min e 200 mil tokens/dia** para o app inteiro (a 81 grava 200 mil como referência do
+  painel). Cada mensagem gastava ~3 mil tokens (prompt de ~1.700 + ferramentas + histórico + o pensamento do modelo) e
+  uma busca o dobro. Enxugado: prompt de ~600 tokens; regras de lugar (`REGRAS_BUSCA`) e a ferramenta de busca só vão
+  quando a mensagem tem cara de pedido de lugar (`PEDE_LUGAR`) ou o irise acabou de oferecer um (`OFERECEU_LUGAR`);
+  ferramenta de progresso só com `PODE_SER_PROGRESSO`; histórico 8 falas de até 300 letras; a 2ª chamada da busca
+  usa só o jeito do irise + `FINAL_BUSCA`. **Groq em 429 → a conversa sai pelo Gemini** (`conversarGemini`, sem busca,
+  thinking desligado); o ranking do Gemini também com `thinkingBudget: 0` (o pensamento cortava o JSON).
+  `llama-prompt-guard` do Groq não conversa: é classificador de tentativa de manipulação, só devolve nota.
+
 ## Stack
 
 Expo SDK 57, Expo Router, NativeWind v4, TypeScript, TanStack Query, MapLibre React Native v11 com tiles Esri

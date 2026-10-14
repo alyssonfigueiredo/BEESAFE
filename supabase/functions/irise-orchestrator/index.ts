@@ -25,85 +25,55 @@ const GEMINI_MODEL = Deno.env.get("GEMINI_MODEL") ?? "gemini-2.5-flash";
 const CATEGORIAS = ["bar", "restaurante", "balada", "cafe", "hotel"] as const;
 type Categoria = (typeof CATEGORIAS)[number];
 
+// Prompt enxuto de propósito (14/10/2026): o plano grátis do Groq dá 200 mil tokens por dia e 8 mil
+// por minuto para o app inteiro, e este texto vai em toda mensagem. As regras de busca só entram
+// quando a mensagem tem cara de pedido de lugar (REGRAS_BUSCA).
 const SYSTEM_PROMPT = `
-Você é o irise da pessoa — assistente de descoberta dentro da Irisa — app brasileiro da comunidade LGBTQIA+
-que avalia lugares em quatro eixos de acolhimento (atendimento, afeto, banheiro, clientela) e tem
-relatos anônimos de LGBTIfobia.
+Você é o irise da pessoa no app Irisa (comunidade LGBTQIA+): lugares avaliados em 4 eixos de
+acolhimento (atendimento, afeto, banheiro, clientela) e relatos anônimos de LGBTIfobia.
 
-REGRAS DE LINGUAGEM, SEMPRE:
-- Português do Brasil, linguagem neutra de gênero ao falar COM a pessoa (bem-vinde, identificade,
-  acolhide): nunca "ele/ela", nunca flexão binária, nunca presuma o gênero de quem escreveu. Ao falar
-  de você mesme, use os seus próprios pronomes (os do bloco "QUEM VOCÊ É", quando vier).
-- NUNCA diga "seguro", "lugar seguro" ou "região tranquila" — o app nunca garante isso.
-- NUNCA invente nome de lugar, nota, endereço ou qualquer dado — você não tem acesso ao banco
-  diretamente. Para recomendar um lugar, SEMPRE chame a ferramenta buscar_lugares.
+SEMPRE:
+- Português do Brasil; com a pessoa, linguagem neutra (bem-vinde, acolhide), nunca presuma gênero. De
+  você, use seus pronomes.
+- Nunca diga "seguro", "lugar seguro" ou "região tranquila".
+- Nunca invente lugar, nota, endereço ou número.
+- Use o que a pessoa já disse nesta conversa (como está, o que pediu, o que você já sugeriu). Sempre responda.
 
-CONVERSA COM CONTINUIDADE: as mensagens anteriores desta conversa vêm antes da atual. Use o que a
-pessoa já contou (como ela está, o que pediu, a cidade, o que você já sugeriu) e não repita pergunta já
-respondida nem se apresente de novo. Se ela disse que está triste ou passou por algo ruim, retome com
-cuidado e calor, sem mudar de assunto de repente. Você sempre responde: nunca deixe a pessoa sem resposta.
+JEITO (o mais importante): amigo no WhatsApp, não atendente.
+- 1 ou 2 frases. Lista só se pedirem medalhas/números (até 4 itens com "• "). Texto puro, sem markdown.
+- Cumprimento só na sua primeira mensagem; depois nunca comece com "oi"/"olá" nem se apresente de novo.
+- Não repita abertura, frase de carinho nem oferta já feita. Reaja ao que a pessoa disse, com as palavras dela.
+- Nem toda mensagem termina em pergunta. Nada de frase de manual ("entendo como você se sente",
+  "estou aqui para ajudar", "como posso te ajudar?"). Se ela só quer conversar, converse.
 
-JEITO DE CONVERSAR (o mais importante): fale como amigo no WhatsApp, não como app nem atendente.
-- Curto: quase sempre 1 ou 2 frases. Só passa disso quando a pessoa pede lista de medalhas ou números
-  (aí no máximo 4 itens, um por linha começando com "• "). Texto puro: nada de markdown, asterisco ou #.
-- Cumprimento só uma vez: se já tem mensagem sua antes nesta conversa, NUNCA comece com "oi", "olá",
-  "e aí" nem se apresente de novo. Vá direto ao assunto, como numa conversa que já está rolando.
-- Não repita: nem a mesma abertura, nem a mesma frase de carinho, nem a mesma oferta que você já fez
-  antes nesta conversa. Varie o jeito de falar. Reaja ao que a pessoa acabou de dizer, com as palavras
-  dela, e não a uma frase pronta.
-- Não termine toda mensagem com pergunta. Às vezes uma pergunta curta, às vezes só uma frase de
-  presença ("tô aqui", "faz sentido"), às vezes nada a mais. Nunca resposta seca ou burocrática.
-- Nada de frase de manual ("entendo como você se sente", "estou aqui para ajudar", "como posso te
-  ajudar hoje?"). Se a pessoa só quer conversar, converse.
+SEM FERRAMENTA:
+- Como o app funciona: selo só com 5 avaliações; relato é anônimo, não pontua e não derruba a nota do
+  lugar (só se apontar o próprio lugar); emergência liga 190/192/100/188.
+- Progresso (nível, gomos, medalhas, avaliações, semana, faíscas, caixinhas): só com os números do bloco
+  "DADOS DO APP DESTA PESSOA", exatos, dizendo a ação que falta. Cada semana acende no máximo 4 gomos.
+- Pessoa triste, sozinha ou com medo: primeiro só esteja com ela, algo verdadeiro e curto; se couber,
+  pergunte com delicadeza o que houve. Aba Apoio ou relato no máximo uma vez na conversa e só quando
+  cabe (relato só se ela contar discriminação ou violência). Perigo agora: 190. Qualquer sinal de se
+  machucar ou não querer viver: CVV 188 (grátis, 24 h), antes de tudo. Sem terapia, sem interrogatório.
+- Assunto fora do app que pede conversa longa ou especialista (trabalho, código, política, saúde,
+  jurídico, dinheiro): diga com carinho, numa frase, que seu forte é o mapa, e ofereça algo do app.
+`.trim();
 
-O QUE VOCÊ FAZ SEM FERRAMENTA (responda direto):
-- Como a Irisa funciona: avaliação em 4 eixos, selo só depois de 5 avaliações, relato é anônimo,
-  nunca pontua e nunca derruba a nota do lugar (só relato que aponta o próprio lugar conta), botão
-  de emergência liga 190/192/100/188, "o lugar recebe cor, a rua recebe aviso".
-- Progresso da pessoa no app (nível, gomos, o que falta pra subir, medalhas que tem e que faltam,
-  quantos lugares avaliou, semana, faíscas, caixinhas): use SÓ o bloco "DADOS DO APP DESTA PESSOA"
-  quando ele vier na mensagem. Fale os números exatos de lá, nunca invente nem arredonde. Ao dizer o
-  que falta, aponte a ação concreta (ex.: "mais 2 avaliações em semanas diferentes"). Lembre, se
-  couber, que cada semana acende no máximo 4 gomos — então subir é constância, não maratona. Se a
-  pessoa perguntar do progresso e o bloco não vier, chame a ferramenta meu_progresso.
-- Acolhimento: se a pessoa estiver triste, sozinha ou com medo, primeiro só esteja com ela: diga algo
-  verdadeiro e curto sobre o que ela contou e, se couber, pergunte com delicadeza o que aconteceu ou do
-  que ela precisa agora. NÃO mande pra aba Apoio nem pra relato logo de cara, e no máximo uma vez na
-  conversa inteira (veja se você já ofereceu antes). Relato só se ela contar que sofreu discriminação ou
-  violência. Apoio só se ela pedir ajuda ou a conversa mostrar que ela precisa de mais que um papo.
-  Perigo agora: 190. Qualquer sinal de pensar em se machucar ou em não querer viver: CVV 188 (Centro de
-  Valorização da Vida, grátis, 24 h), com o número escrito, antes de tudo. Não faça terapia nem
-  interrogatório.
-- Conversa casual e agradecimentos: responda com leveza, curto.
+const REGRAS_BUSCA = `
+LUGARES (ferramenta buscar_lugares):
+- Todo pedido de lugar, mesmo vago ("quero sair"), chama a ferramenta. Nunca cite lugar sem ela.
+- Se você ofereceu um tipo ("cafés tranquilos") e a pessoa topou, busque exatamente essa categoria.
+- Pessoa que não está bem: acolha primeiro; se ela não pediu lugar, pergunte se quer um canto tranquilo
+  e espere topar. Ao buscar pra ela: acolhedor=true e café (ou o que pediu), nunca balada sem pedir.
+- A busca só filtra bar, restaurante, balada, café, hotel. Tipo de cozinha, prato ou preço não: use a
+  categoria larga e nunca finja que achou o tipo exato.
+`.trim();
 
-O QUE VOCÊ NÃO FAZ: assunto fora da Irisa que pede conversa longa ou especialista (trabalho, escola,
-código, política, notícias, saúde, jurídico, dinheiro, briga de relacionamento). Não entre nele: diga
-com carinho, em uma frase, que seu forte é o mapa e o app, e ofereça algo que você pode fazer agora.
-
-QUANDO A PESSOA NÃO ESTÁ BEM E O ASSUNTO É LUGAR: primeiro acolha (uma frase de verdade sobre o que ela
-disse, sem pressa). Se ela ainda não pediu lugar, pergunte com carinho se ela quer uma sugestão de um
-canto tranquilo pra ficar um pouco, e espere ela topar. Quando buscar pra alguém assim, use
-acolhedor=true e prefira categoria café (ou o que ela pediu), nunca balada ou bar animado sem ela pedir.
-Se você mesmo ofereceu um tipo de lugar ("cafés acolhedores") e a pessoa topou, busque exatamente essa
-categoria.
-
-O QUE EXIGE A FERRAMENTA buscar_lugares:
-- Qualquer pedido pra descobrir, encontrar, recomendar ou sugerir um lugar (bar, restaurante,
-  balada, café, hotel) — mesmo que vago ("quero sair", "to afim de alguma coisa hoje").
-- Nunca responda com um lugar sem ter chamado a ferramenta e recebido os resultados.
-
-LIMITAÇÃO IMPORTANTE DA BUSCA: o banco só filtra pelas categorias largas (bar, restaurante, balada,
-café, hotel) — NÃO existe filtro por tipo de cozinha (japonês, italiano, árabe etc.), nem por prato,
-nem por preço. Se a pessoa pedir um tipo específico dentro de "restaurante", chame a ferramenta com
-category "restaurante" mesmo assim, mas na resposta final NUNCA finja que achou exatamente aquele
-tipo — só diga isso se o motivo de algum lugar (que vem da busca) confirmar de verdade. Sem
-confirmação, seja honesta: diga que ainda não dá pra filtrar por tipo de comida e que separou os
-restaurantes mais bem avaliados da cidade pra pessoa conferir.
-
-Depois que a ferramenta devolver os lugares (já ranqueados, com motivo de cada um), escreva UMA
-mensagem curta (1 a 2 frases) apresentando o resultado, sem repetir nome de lugar nem nota — isso a
-tela já mostra nos cartões. Se a busca não achar nada, diga isso com leveza e sugira a pessoa ser
-quem avalia o primeiro lugar daquele tipo.
+// Segunda chamada, depois da busca: só isto + quem é o irise, sem o prompt inteiro nem ferramentas.
+const FINAL_BUSCA = `
+Os lugares já aparecem em cartões na tela. Escreva 1 frase curta, calorosa e natural apresentando o que
+achou, no seu jeito, sem citar nome de lugar nem nota, sem "oi". Achou 0: diga com leveza e convide a
+pessoa a avaliar o primeiro. Nunca diga "seguro". Linguagem neutra com a pessoa.
 `.trim();
 
 // Voz da Irise, a assistente sem personagem. Só entra quando a pessoa NÃO escolheu um irise: com
@@ -181,11 +151,49 @@ type GroqMessage = {
   tool_call_id?: string;
 };
 
+// Cota do Groq estourada (por minuto ou por dia): o chat passa a responder pelo Gemini, sem ferramenta.
+class LimiteGroq extends Error {}
+
+// Reserva quando o Groq bate o limite: mesma conversa, só texto, pelo Gemini (thinking desligado,
+// senão o pensamento come o limite de saída).
+async function conversarGemini(
+  db: ReturnType<typeof adminClient>,
+  system: string,
+  messages: GroqMessage[],
+  usos?: Uso[],
+): Promise<string> {
+  const key = await getApiKey(db, "GEMINI_API_KEY");
+  if (!key) return "";
+  const contents = messages
+    .filter((m) => (m.role === "user" || m.role === "assistant") && typeof m.content === "string" && m.content)
+    .map((m) => ({ role: m.role === "user" ? "user" : "model", parts: [{ text: m.content as string }] }));
+  const res = await fetch(
+    `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent?key=${key}`,
+    {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        systemInstruction: { parts: [{ text: system }] },
+        contents,
+        generationConfig: { temperature: 0.7, maxOutputTokens: 300, thinkingConfig: { thinkingBudget: 0 } },
+      }),
+    },
+  );
+  const corpo = await res.json();
+  if (!res.ok) throw new Error(corpo?.error?.message ?? `Gemini recusou (HTTP ${res.status})`);
+  usos?.push({
+    provedor: "gemini",
+    tipo: "conversa",
+    tokens_in: corpo.usageMetadata?.promptTokenCount ?? 0,
+    tokens_out: corpo.usageMetadata?.candidatesTokenCount ?? 0,
+  });
+  return ((corpo.candidates?.[0]?.content?.parts ?? []) as { text?: string }[]).map((x) => x.text ?? "").join("").trim();
+}
+
 async function chamarGroq(
   db: ReturnType<typeof adminClient>,
   messages: GroqMessage[],
-  comFerramenta: boolean,
-  comProgresso = true,
+  ferramentas: unknown[],
   temperatura = 0.85,
   usos?: Uso[],
   tipo: Uso["tipo"] = "conversa",
@@ -204,12 +212,11 @@ async function chamarGroq(
       max_completion_tokens: 1000,
       ...(GROQ_MODEL.includes("gpt-oss") ? { reasoning_effort: "low" } : {}),
       messages,
-      ...(comFerramenta
-        ? { tools: comProgresso ? [TOOL_BUSCAR, TOOL_PROGRESSO] : [TOOL_BUSCAR], tool_choice: "auto" }
-        : {}),
+      ...(ferramentas.length ? { tools: ferramentas, tool_choice: "auto" } : {}),
     }),
   });
   const corpo = await res.json();
+  if (res.status === 429) throw new LimiteGroq(corpo?.error?.message ?? "limite do Groq");
   if (!res.ok) throw new Error(corpo?.error?.message ?? `Groq recusou (HTTP ${res.status})`);
   usos?.push({
     provedor: "groq",
@@ -294,7 +301,13 @@ Responda SOMENTE com JSON: {"ranking": [{"place_id": "...", "reasons": ["...", "
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         contents: [{ role: "user", parts: [{ text: prompt }] }],
-        generationConfig: { temperature: 0.2, responseMimeType: "application/json", maxOutputTokens: 500 },
+        generationConfig: {
+          temperature: 0.2,
+          responseMimeType: "application/json",
+          maxOutputTokens: 600,
+          // Sem isto o 2.5 Flash "pensa" e o pensamento sai do mesmo limite de 500: o JSON vinha cortado.
+          thinkingConfig: { thinkingBudget: 0 },
+        },
       }),
     },
   );
@@ -392,6 +405,14 @@ function blocoPersonagem(p: Personagem, a: Agente | null): string {
     .filter(Boolean)
     .join("\n");
 }
+
+// Cara de pedido de lugar (liga a ferramenta de busca e as regras de lugar no prompt).
+const PEDE_LUGAR =
+  /lugar|\bbar(es)?\b|caf[eé]|restaurante|balada|hotel|pousada|hospeda|comer|beber|almo[cç]|jant|lanch|pizza|drink|cerveja|vinho|sair\b|sa[ií]da|rol[eê]|date|encontro|festa|dan[cç]ar|show|indica|sugest|recomend|perto|onde (eu )?(posso|vou|tem)|algum canto|me leva/i;
+// O irise acabou de oferecer lugar: "pode ser", "bora", "sim" precisam da busca.
+const OFERECEU_LUGAR = /lugar|caf[eé]|\bbar\b|restaurante|canto|sugest|te mostr|procur|buscar|rol[eê]/i;
+// Pode ser pergunta de progresso que escapou da regex de baixo: só aí a ferramenta vai junto.
+const PODE_SER_PROGRESSO = /\bmeu|\bminha|\bquant[oa]s?\b|\bfalta|\btenho\b/i;
 
 // Perguntas sobre o próprio progresso: com elas, os dados já vão na primeira chamada (uma ida ao modelo
 // em vez de duas). O que escapar da regex ainda pode chamar a ferramenta meu_progresso.
@@ -548,18 +569,28 @@ Deno.serve(async (req) => {
     // Com personagem, nem a voz da Irise nem a "voz geral" do painel entram: elas trazem gíria e
     // bordão da Irise, e o modelo misturava.
     // Com personagem, a identidade vem PRIMEIRO (o modelo pesa mais o começo) e de novo no fim.
+    const historicoBruto = (Array.isArray(body.historico) ? body.historico : [])
+      .filter((h) => typeof h?.texto === "string" && h.texto.trim())
+      .slice(-8);
+    const ultimaDoIrise = [...historicoBruto].reverse().find((h) => h.de !== "eu")?.texto ?? "";
+    // Ferramenta de busca e regras de lugar só quando a mensagem tem cara de pedido de lugar, ou
+    // quando o irise acabou de oferecer um ("quer um café tranquilo?" → "pode ser").
+    const precisaBusca = PEDE_LUGAR.test(texto) || OFERECEU_LUGAR.test(ultimaDoIrise);
+    const querProgresso = PERGUNTA_PROGRESSO.test(texto);
+    const ferramentas = [
+      ...(precisaBusca ? [TOOL_BUSCAR] : []),
+      ...(!querProgresso && PODE_SER_PROGRESSO.test(texto) ? [TOOL_PROGRESSO] : []),
+    ];
+    const jeito = quemSou ? [quemSou] : [VOZ_IRISE, vozExtra];
     const systemPrompt = (quemSou
-      ? [quemSou, SYSTEM_PROMPT, `Lembrete final: você é ${nomePersonagem}. Fale só do jeito de ${nomePersonagem}.`]
-      : [SYSTEM_PROMPT, VOZ_IRISE, vozExtra])
+      ? [quemSou, SYSTEM_PROMPT, precisaBusca ? REGRAS_BUSCA : "", `Lembrete final: você é ${nomePersonagem}. Fale só do jeito de ${nomePersonagem}.`]
+      : [SYSTEM_PROMPT, precisaBusca ? REGRAS_BUSCA : "", VOZ_IRISE, vozExtra])
       .filter(Boolean)
       .join("\n\n");
 
-    const querProgresso = PERGUNTA_PROGRESSO.test(texto);
     const dados = querProgresso ? await resumoProgresso(db, user.id) : "";
-    const historico: GroqMessage[] = (Array.isArray(body.historico) ? body.historico : [])
-      .filter((h) => typeof h?.texto === "string" && h.texto.trim())
-      .slice(-10)
-      .map((h) => ({ role: h.de === "eu" ? "user" : "assistant", content: h.texto!.trim().slice(0, 400) }));
+    const historico: GroqMessage[] = historicoBruto
+      .map((h) => ({ role: h.de === "eu" ? "user" : "assistant", content: h.texto!.trim().slice(0, 300) }));
     // O Gemini só via a última frase ("pode ser") e não sabia que a pessoa estava triste nem que
     // tinha topado café: vai junto o que ela disse antes.
     const pedidoComContexto = [
@@ -593,11 +624,23 @@ Deno.serve(async (req) => {
       let r = limpar(t);
       if (!r) {
         console.warn("irise-orchestrator: resposta vazia, tentando de novo");
-        r = limpar((await chamarGroq(db, messages, false, true, temp, usos)).content);
+        r = limpar((await chamarGroq(db, messages, [], temp, usos).catch(() => ({ content: null }))).content);
       }
       return r || reserva;
     };
-    const primeira = await chamarGroq(db, messages, true, !querProgresso, temp, usos, querProgresso ? "progresso" : "conversa");
+    let primeira: GroqMessage;
+    try {
+      primeira = await chamarGroq(db, messages, ferramentas, temp, usos, querProgresso ? "progresso" : "conversa");
+    } catch (e) {
+      if (!(e instanceof LimiteGroq)) throw e;
+      // Groq no limite: conversa pelo Gemini, sem busca (os lugares seguem no mapa e em Lugares).
+      console.warn("irise-orchestrator: Groq no limite, respondendo pelo Gemini");
+      const system = [systemPrompt.replace(REGRAS_BUSCA, ""),
+        "Agora você não consegue buscar lugares. Se pedirem, diga com leveza que dá pra ver no Mapa ou em Lugares do app."].join("\n\n");
+      const message = limpar(await conversarGemini(db, system, messages, usos).catch(() => "")) || reserva;
+      await registrarUso(db, user.id, usos);
+      return json(200, { message, places: null });
+    }
     const chamada = primeira.tool_calls?.[0];
 
     if (!chamada) {
@@ -610,7 +653,7 @@ Deno.serve(async (req) => {
     if (chamada.function.name === "meu_progresso") {
       messages.push(primeira);
       messages.push({ role: "tool", tool_call_id: chamada.id, content: await resumoProgresso(db, user.id) });
-      const resposta = await chamarGroq(db, messages, false, true, temp, usos, "progresso");
+      const resposta = await chamarGroq(db, messages, [], temp, usos, "progresso");
       const message = await semVazio(resposta.content);
       await registrarUso(db, user.id, usos);
       return json(200, { message, places: null });
@@ -678,13 +721,18 @@ Deno.serve(async (req) => {
     // Segunda chamada ao Groq: ele escreve a resposta final já sabendo o que foi achado,
     // mas sem repetir nome/nota (a UI mostra isso nos cartões).
     const resumo = top.map((c) => ({ category: c.category, badge: c.badge, reason: c.reason }));
-    messages.push(primeira);
-    messages.push({
-      role: "tool",
-      tool_call_id: chamada.id,
-      content: JSON.stringify({ encontrados: top.length, resumo }),
+    // Segunda chamada pequena: só quem é o irise + como apresentar, sem o prompt inteiro nem ferramentas
+    // (era a metade do gasto de uma busca).
+    const segunda = await chamarGroq(db, [
+      { role: "system", content: [...jeito, FINAL_BUSCA].filter(Boolean).join("\n\n") },
+      {
+        role: "user",
+        content: `O que a pessoa disse: "${pedidoComContexto}". Resultado da busca: ${JSON.stringify({ encontrados: top.length, resumo })}`,
+      },
+    ], [], temp, usos, "busca").catch((e) => {
+      if (e instanceof LimiteGroq) return { role: "assistant", content: null } as GroqMessage;
+      throw e;
     });
-    const segunda = await chamarGroq(db, messages, false, true, temp, usos, "busca");
     await registrarUso(db, user.id, usos);
 
     return json(200, { message: limpar(segunda.content) || "Separei esses pra você:", places: top });
@@ -692,6 +740,9 @@ Deno.serve(async (req) => {
     const msg = err instanceof Error ? err.message : String(err);
     console.error("irise-orchestrator:", msg);
     await registrarUso(db, user.id, usos);
+    if (err instanceof LimiteGroq) {
+      return json(200, { message: "Tô com a cabeça cheia agora, me dá um minutinho e me chama de novo?", places: null });
+    }
     return json(502, { error: msg });
   }
 });
