@@ -1,0 +1,35 @@
+name: Publicar Update (EAS)
+
+# Mesmo que "bash scripts/publicar.sh", mas disparado pelo GitHub (app do celular ou navegador),
+# sem precisar de terminal. Publica EAS Update na versão que estiver em app.config.ts/package.json
+# na branch escolhida — confere a versão antes de rodar, igual ao script.
+
+on:
+  workflow_dispatch:
+    inputs:
+      mensagem:
+        description: "Mensagem do update (aparece no painel do EAS)"
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+jobs:
+  publicar:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: npm ci
+      - name: Mostra a versão que vai publicar
+        run: |
+          echo "Versão (app.config/package.json): $(node -p "require('./package.json').version")"
+          echo "Branch: ${{ github.ref_name }}"
+          echo "Mensagem: ${{ inputs.mensagem }}"
+      - name: Publica
+        env:
+          EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
+        run: npx eas-cli update --branch production --message "${{ inputs.mensagem }}" --non-interactive
