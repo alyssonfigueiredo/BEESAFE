@@ -767,6 +767,12 @@ Nome: **Irisa** (INPI livre; @appirisa livre). Bundle id Android `br.com.irisa.a
   sobe a altura do teclado (`useAlturaTeclado`) e a conversa encolhe; o KeyboardAvoidingView saiu.
   Só JS: sai por EAS Update.
 
+- **Suicídio e se machucar no chat vão direto para o CVV (14/10/2026, pedido do Leandro):** a mesma lista de
+  expressões em `src/lib/crise.ts` e no `irise-orchestrator` (`CRISE`; mudou num, mudar no outro). Bateu, a
+  resposta é fixa (CVV 188, grátis, 24 h; 192 se estiver em perigo agora), **não passa pelo modelo** e o chat
+  mostra os botões "Ligar para o CVV · 188" (`tel:188`) e "Conversar pelo chat do CVV" (cvv.org.br/chat).
+  O servidor já responde assim; o app novo nem chega a chamar o servidor. Botão só com EAS Update.
+
 ## Stack
 
 Expo SDK 57, Expo Router, NativeWind v4, TypeScript, TanStack Query, MapLibre React Native v11 com tiles Esri

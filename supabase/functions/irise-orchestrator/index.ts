@@ -62,7 +62,8 @@ O QUE VOCÊ FAZ SEM FERRAMENTA (responda direto):
 - Acolhimento: se a pessoa estiver triste, sozinha, com medo ou passou por algo ruim, valide o que ela
   sente em uma frase, com carinho e sem julgamento, e ofereça um caminho do app: a aba Apoio (mural e
   serviços da cidade), registrar um relato anônimo se ela quiser, 190 se estiver em perigo agora, CVV
-  188 se estiver pensando em se machucar. Não peça detalhes, não faça terapia, não prolongue o assunto.
+  188 (Centro de Valorização da Vida, grátis, 24 h) se houver qualquer sinal de pensar em se machucar ou
+  em não querer viver — nesse caso o CVV vem primeiro, com o número escrito. Não peça detalhes, não faça terapia, não prolongue o assunto.
 - Conversa casual e agradecimentos: responda com leveza, curto.
 
 O QUE VOCÊ NÃO FAZ: assunto fora da Irisa que pede conversa longa ou especialista (trabalho, escola,
@@ -139,6 +140,17 @@ const TOOL_PROGRESSO = {
     parameters: { type: "object", properties: {} },
   },
 };
+
+// Assunto de suicídio ou de se machucar (pedido do Leandro, 14/10/2026): vai direto para o CVV, sem
+// gastar chamada de modelo e sem risco de resposta improvisada. Mesma lista de src/lib/crise.ts —
+// mudou lá, mudar aqui.
+const CRISE =
+  /suicid|me matar|matar a mim|me mato|quero morrer|queria morrer|vontade de morrer|prefiro morrer|melhor (eu )?morrer|morrer logo|nao quero (mais )?viver|nao aguento mais viver|cansad[oae] de viver|sem vontade de viver|tirar (a )?minha (propria )?vida|acabar com (a )?minha vida|acabar com tudo|dar fim (a|na) minha vida|por fim (a|na) minha vida|me cortar|me corto|me machucar|me machuco|automutil|auto ?lesao|me enforcar|tomar (todos os|uns|varios) remedios|overdose|pular (da|de uma|do) (ponte|predio|janela|sacada)|me jogar (da|de uma|do|na frente)|seria melhor sem mim|melhor sem mim|ninguem sentiria (a )?minha falta|nao vale a pena viver|sumir pra sempre|desaparecer pra sempre/;
+function ehCrise(texto: string) {
+  return CRISE.test(texto.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, ""));
+}
+const MENSAGEM_CRISE =
+  "Que bom que você falou. Você não precisa passar por isso sozinhe. Liga agora pro CVV, o Centro de Valorização da Vida: 188, de graça, 24 horas, com gente pronta pra te ouvir. Se estiver em perigo agora, liga 192. Eu sigo aqui com você.";
 
 type GroqMessage = {
   role: "system" | "user" | "assistant" | "tool";
@@ -408,6 +420,9 @@ Deno.serve(async (req) => {
   }
   const texto = (body.texto ?? "").trim().slice(0, 300);
   if (!texto) return json(400, { error: "texto vazio" });
+  // Suicídio ou se machucar: nunca passa pelo modelo. Resposta fixa com o CVV, e o app mostra o
+  // botão de ligar (`crise: true`).
+  if (ehCrise(texto)) return json(200, { message: MENSAGEM_CRISE, places: null, crise: true });
   const cidade = (body.cidade ?? "").trim().slice(0, 80) || "sua cidade";
   const db = adminClient();
 

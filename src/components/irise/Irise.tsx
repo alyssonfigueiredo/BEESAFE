@@ -1,7 +1,8 @@
-import { Sparkles, X, Send } from "lucide-react-native";
+import { MessageCircle, Phone, Sparkles, X, Send } from "lucide-react-native";
 import { useEffect, useRef, useState } from "react";
 import {
   Keyboard,
+  Linking,
   Modal,
   Platform,
   Pressable,
@@ -22,6 +23,7 @@ import { useIriseNear, useIriseOrchestrate, useIriseSuggest, type OrchestratedPl
 import { useIrisePersonagens } from "@/hooks/useIrisePersonagens";
 import { useProfile } from "@/hooks/useProfile";
 import { useSheetDismiss } from "@/hooks/useSheetDismiss";
+import { CVV_CHAT, CVV_TEL, MENSAGEM_CRISE, ehCrise } from "@/lib/crise";
 import type { Acao } from "@/lib/iriseFalas";
 import type { PlaceCategory } from "@/theme/domain";
 import { colors, shadow } from "@/theme/tokens";
@@ -40,7 +42,8 @@ type LogItem =
   | { kind: "chips"; id: string; options: { label: string; onPick: () => void }[] }
   | { kind: "typing"; id: string }
   | { kind: "results"; id: string; places: OrchestratedPlace[] }
-  | { kind: "empty"; id: string; text: string };
+  | { kind: "empty"; id: string; text: string }
+  | { kind: "crise"; id: string };
 
 const INTENCAO_CHIPS: { label: string; categories: PlaceCategory[] | null }[] = [
   { label: "🍽️ Comer", categories: ["restaurante"] },
@@ -190,6 +193,30 @@ function Bubble({ text, mine }: { text: string; mine?: boolean }) {
           {text}
         </Text>
       </View>
+    </Animated.View>
+  );
+}
+
+/** Botões do CVV embaixo da resposta de crise: ligar 188 direto e, para quem não consegue falar, o chat. */
+function CriseCard() {
+  return (
+    <Animated.View entering={FadeInDown.duration(260)} style={{ gap: 8 }}>
+      <Pressable
+        onPress={() => void Linking.openURL(CVV_TEL)}
+        className="flex-row items-center justify-center gap-2 rounded-full active:opacity-80"
+        style={{ backgroundColor: colors.coral, paddingVertical: 14 }}
+      >
+        <Phone size={17} color={colors.night} strokeWidth={2.4} />
+        <Text className="font-body-bold text-[15px] text-night">Ligar para o CVV · 188</Text>
+      </Pressable>
+      <Pressable
+        onPress={() => void Linking.openURL(CVV_CHAT)}
+        className="flex-row items-center justify-center gap-2 rounded-full bg-solid active:opacity-80"
+        style={[{ paddingVertical: 12 }, shadow.card]}
+      >
+        <MessageCircle size={16} color={colors.ink} strokeWidth={2.2} />
+        <Text className="font-body-bold text-[14px] text-ink">Conversar pelo chat do CVV</Text>
+      </Pressable>
     </Animated.View>
   );
 }
@@ -460,9 +487,15 @@ export function IriseSheet({
       .map((i) => ({ de: i.mine ? ("eu" as const) : ("irise" as const), texto: i.text }));
     setTexto("");
     addBubble(t, true);
+    // Suicídio ou se machucar: resposta fixa com o CVV na hora, sem ir ao servidor nem ao modelo.
+    if (ehCrise(t)) {
+      addBubble(MENSAGEM_CRISE);
+      push({ kind: "crise", id: uid() });
+      return;
+    }
     await withTyping(async () => {
       try {
-        const { message, places } = await orchestrate.mutateAsync({
+        const { message, places, crise } = await orchestrate.mutateAsync({
           texto: t,
           cidade: cityName ?? "sua cidade",
           cityId,
@@ -471,6 +504,7 @@ export function IriseSheet({
           historico,
         });
         addBubble(message || "Tô aqui com você. Me conta um pouco mais?");
+        if (crise) push({ kind: "crise", id: uid() });
         if (places) mostrarOuVazio(places, false);
       } catch (err) {
         // Detalhe técnico só no console — pra quem usa o app, só a mensagem simples.
@@ -585,6 +619,7 @@ export function IriseSheet({
               if (item.kind === "chips") return <ChipsRow key={item.id} options={item.options} />;
               if (item.kind === "typing") return <TypingDots key={item.id} />;
               if (item.kind === "empty") return <Bubble key={item.id} text={item.text} />;
+              if (item.kind === "crise") return <CriseCard key={item.id} />;
               return (
                 <View key={item.id} style={{ gap: 6 }}>
                   {item.places.map((p, i) => (
