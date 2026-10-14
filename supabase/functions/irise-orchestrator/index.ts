@@ -43,11 +43,18 @@ pessoa já contou (como ela está, o que pediu, a cidade, o que você já sugeri
 respondida nem se apresente de novo. Se ela disse que está triste ou passou por algo ruim, retome com
 cuidado e calor, sem mudar de assunto de repente. Você sempre responde: nunca deixe a pessoa sem resposta.
 
-TAMANHO E JEITO DE RESPONDER (economia de verdade, sem perder o calor):
-- No máximo 3 frases curtas (uns 60 palavras). Lista só quando a pessoa pede medalhas ou números, e
-  aí no máximo 4 itens, um por linha começando com "• ". Texto puro: nada de markdown, asterisco ou #.
-- Nunca feche seco. Toda resposta termina com calor humano: um incentivo, um "tô aqui" ou uma pergunta
-  curta que deixa a porta aberta pro próximo passo no app.
+JEITO DE CONVERSAR (o mais importante): fale como amigo no WhatsApp, não como app nem atendente.
+- Curto: quase sempre 1 ou 2 frases. Só passa disso quando a pessoa pede lista de medalhas ou números
+  (aí no máximo 4 itens, um por linha começando com "• "). Texto puro: nada de markdown, asterisco ou #.
+- Cumprimento só uma vez: se já tem mensagem sua antes nesta conversa, NUNCA comece com "oi", "olá",
+  "e aí" nem se apresente de novo. Vá direto ao assunto, como numa conversa que já está rolando.
+- Não repita: nem a mesma abertura, nem a mesma frase de carinho, nem a mesma oferta que você já fez
+  antes nesta conversa. Varie o jeito de falar. Reaja ao que a pessoa acabou de dizer, com as palavras
+  dela, e não a uma frase pronta.
+- Não termine toda mensagem com pergunta. Às vezes uma pergunta curta, às vezes só uma frase de
+  presença ("tô aqui", "faz sentido"), às vezes nada a mais. Nunca resposta seca ou burocrática.
+- Nada de frase de manual ("entendo como você se sente", "estou aqui para ajudar", "como posso te
+  ajudar hoje?"). Se a pessoa só quer conversar, converse.
 
 O QUE VOCÊ FAZ SEM FERRAMENTA (responda direto):
 - Como a Irisa funciona: avaliação em 4 eixos, selo só depois de 5 avaliações, relato é anônimo,
@@ -59,16 +66,26 @@ O QUE VOCÊ FAZ SEM FERRAMENTA (responda direto):
   que falta, aponte a ação concreta (ex.: "mais 2 avaliações em semanas diferentes"). Lembre, se
   couber, que cada semana acende no máximo 4 gomos — então subir é constância, não maratona. Se a
   pessoa perguntar do progresso e o bloco não vier, chame a ferramenta meu_progresso.
-- Acolhimento: se a pessoa estiver triste, sozinha, com medo ou passou por algo ruim, valide o que ela
-  sente em uma frase, com carinho e sem julgamento, e ofereça um caminho do app: a aba Apoio (mural e
-  serviços da cidade), registrar um relato anônimo se ela quiser, 190 se estiver em perigo agora, CVV
-  188 (Centro de Valorização da Vida, grátis, 24 h) se houver qualquer sinal de pensar em se machucar ou
-  em não querer viver — nesse caso o CVV vem primeiro, com o número escrito. Não peça detalhes, não faça terapia, não prolongue o assunto.
+- Acolhimento: se a pessoa estiver triste, sozinha ou com medo, primeiro só esteja com ela: diga algo
+  verdadeiro e curto sobre o que ela contou e, se couber, pergunte com delicadeza o que aconteceu ou do
+  que ela precisa agora. NÃO mande pra aba Apoio nem pra relato logo de cara, e no máximo uma vez na
+  conversa inteira (veja se você já ofereceu antes). Relato só se ela contar que sofreu discriminação ou
+  violência. Apoio só se ela pedir ajuda ou a conversa mostrar que ela precisa de mais que um papo.
+  Perigo agora: 190. Qualquer sinal de pensar em se machucar ou em não querer viver: CVV 188 (Centro de
+  Valorização da Vida, grátis, 24 h), com o número escrito, antes de tudo. Não faça terapia nem
+  interrogatório.
 - Conversa casual e agradecimentos: responda com leveza, curto.
 
 O QUE VOCÊ NÃO FAZ: assunto fora da Irisa que pede conversa longa ou especialista (trabalho, escola,
 código, política, notícias, saúde, jurídico, dinheiro, briga de relacionamento). Não entre nele: diga
 com carinho, em uma frase, que seu forte é o mapa e o app, e ofereça algo que você pode fazer agora.
+
+QUANDO A PESSOA NÃO ESTÁ BEM E O ASSUNTO É LUGAR: primeiro acolha (uma frase de verdade sobre o que ela
+disse, sem pressa). Se ela ainda não pediu lugar, pergunte com carinho se ela quer uma sugestão de um
+canto tranquilo pra ficar um pouco, e espere ela topar. Quando buscar pra alguém assim, use
+acolhedor=true e prefira categoria café (ou o que ela pediu), nunca balada ou bar animado sem ela pedir.
+Se você mesmo ofereceu um tipo de lugar ("cafés acolhedores") e a pessoa topou, busque exatamente essa
+categoria.
 
 O QUE EXIGE A FERRAMENTA buscar_lugares:
 - Qualquer pedido pra descobrir, encontrar, recomendar ou sugerir um lugar (bar, restaurante,
@@ -126,6 +143,11 @@ const TOOL_BUSCAR = {
           type: "boolean",
           description: "true se a pessoa pediu algo perto de onde ela está agora.",
         },
+        acolhedor: {
+          type: "boolean",
+          description:
+            "true quando a pessoa não está bem, pediu um lugar tranquilo/acolhedor ou quer se sentir bem-vinde: prioriza lugares com selo e nota alta em atendimento e afeto.",
+        },
       },
     },
   },
@@ -165,6 +187,8 @@ async function chamarGroq(
   comFerramenta: boolean,
   comProgresso = true,
   temperatura = 0.85,
+  usos?: Uso[],
+  tipo: Uso["tipo"] = "conversa",
 ) {
   const key = await getApiKey(db, "GROQ_API_KEY");
   if (!key) throw new Error("GROQ_API_KEY não configurada (secrets da função ou painel admin).");
@@ -187,10 +211,37 @@ async function chamarGroq(
   });
   const corpo = await res.json();
   if (!res.ok) throw new Error(corpo?.error?.message ?? `Groq recusou (HTTP ${res.status})`);
+  usos?.push({
+    provedor: "groq",
+    tipo,
+    tokens_in: corpo.usage?.prompt_tokens ?? 0,
+    tokens_out: corpo.usage?.completion_tokens ?? 0,
+    rl_pedidos_limite: numHeader(res.headers, "x-ratelimit-limit-requests"),
+    rl_pedidos_restantes: numHeader(res.headers, "x-ratelimit-remaining-requests"),
+  });
   const m = corpo.choices[0].message as GroqMessage & { reasoning?: string };
   // Só o que pode voltar pro modelo na próxima chamada (o campo "reasoning" não pode).
   return { role: "assistant", content: m.content ?? null, ...(m.tool_calls ? { tool_calls: m.tool_calls } : {}) } as GroqMessage;
 }
+
+// Uso de tokens (migration 80): só números, nunca o texto da conversa.
+type Uso = {
+  provedor: "groq" | "gemini" | "nenhum";
+  tipo: "conversa" | "busca" | "progresso" | "ranking" | "crise" | "limite";
+  tokens_in: number;
+  tokens_out: number;
+  rl_pedidos_limite?: number | null;
+  rl_pedidos_restantes?: number | null;
+};
+async function registrarUso(db: ReturnType<typeof adminClient>, userId: string | null, usos: Uso[]) {
+  if (!usos.length) return;
+  const { error } = await db.from("irise_uso").insert(usos.map((u) => ({ ...u, user_id: userId })));
+  if (error) console.warn("irise-orchestrator: não registrou uso:", error.message);
+}
+const numHeader = (h: Headers, k: string) => {
+  const v = Number(h.get(k));
+  return Number.isFinite(v) && h.get(k) !== null ? v : null;
+};
 
 type Candidato = {
   id: string;
@@ -214,17 +265,20 @@ async function chamarGemini(
   db: ReturnType<typeof adminClient>,
   texto: string,
   candidatos: Candidato[],
+  usos?: Uso[],
 ): Promise<Ranking> {
   const key = await getApiKey(db, "GEMINI_API_KEY");
   if (!key || candidatos.length === 0) return candidatos.map((c) => ({ place_id: c.id, reasons: [] }));
 
   const prompt = `
-Pedido da pessoa: "${texto}"
+Pedido da pessoa (com o que ela já tinha dito na conversa): "${texto}"
 
 Candidatos reais (JSON, cada um já existe no banco da Irisa):
 ${JSON.stringify(candidatos)}
 
-Ranqueie do que melhor combina com o pedido para o que menos combina. Para cada um, até 2 motivos
+Ranqueie do que melhor combina com o pedido para o que menos combina. Se a pessoa disse que não está
+bem ou pediu algo acolhedor/tranquilo, ponha na frente quem tem selo e nota alta em atendimento e afeto,
+e deixe lugar agitado (balada, bar de música alta) por último. Para cada um, até 2 motivos
 curtos (3 a 6 palavras), baseados SOMENTE nos campos dados (categoria, eixos de acolhimento, selo,
 bairro, nº de avaliações, e a "description" quando existir — um resumo escrito por nós, pode citar
 com confiança) — nunca invente nada que não esteja nos dados. Sem nota (score null) e sem
@@ -246,6 +300,12 @@ Responda SOMENTE com JSON: {"ranking": [{"place_id": "...", "reasons": ["...", "
   );
   const corpo = await res.json();
   if (!res.ok) throw new Error(corpo?.error?.message ?? `Gemini recusou (HTTP ${res.status})`);
+  usos?.push({
+    provedor: "gemini",
+    tipo: "ranking",
+    tokens_in: corpo.usageMetadata?.promptTokenCount ?? 0,
+    tokens_out: (corpo.usageMetadata?.candidatesTokenCount ?? 0) + (corpo.usageMetadata?.thoughtsTokenCount ?? 0),
+  });
   const texto2 = (corpo.candidates[0].content.parts[0].text as string)
     .replace(/^```(?:json)?\s*/i, "")
     .replace(/```\s*$/i, "")
@@ -397,6 +457,16 @@ async function resumoProgresso(db: ReturnType<typeof adminClient>, userId: strin
   return linhas.join("\n");
 }
 
+// Quem tem selo e nota alta em atendimento/afeto primeiro; sem nota depois; balada por último.
+function acolhedoresPrimeiro(lista: Candidato[]) {
+  const peso = (c: Candidato) =>
+    (c.badge === "bem" ? 40 : c.badge === "acolhedor" ? 30 : 0) +
+    ((c.score_welcome ?? 0) + (c.score_affection ?? 0)) * 4 +
+    (c.score != null ? 5 : 0) -
+    (c.category === "balada" ? 50 : 0);
+  return [...lista].sort((a, b) => peso(b) - peso(a));
+}
+
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") return json(204, {});
   if (req.method !== "POST") return json(405, { error: "método não aceito" });
@@ -422,9 +492,14 @@ Deno.serve(async (req) => {
   if (!texto) return json(400, { error: "texto vazio" });
   // Suicídio ou se machucar: nunca passa pelo modelo. Resposta fixa com o CVV, e o app mostra o
   // botão de ligar (`crise: true`).
-  if (ehCrise(texto)) return json(200, { message: MENSAGEM_CRISE, places: null, crise: true });
-  const cidade = (body.cidade ?? "").trim().slice(0, 80) || "sua cidade";
   const db = adminClient();
+  if (ehCrise(texto)) {
+    // Só a contagem, sem a pessoa: ligar quem pediu ajuda a um registro seria dado de saúde.
+    await registrarUso(db, null, [{ provedor: "nenhum", tipo: "crise", tokens_in: 0, tokens_out: 0 }]);
+    return json(200, { message: MENSAGEM_CRISE, places: null, crise: true });
+  }
+  const cidade = (body.cidade ?? "").trim().slice(0, 80) || "sua cidade";
+  const usos: Uso[] = [];
 
   try {
     // Voz geral (migration 58) + quem é o irise escolhido (migrations 71 e 79). O personagem vem do
@@ -434,6 +509,21 @@ Deno.serve(async (req) => {
       db.from("profiles").select("irise_personagem").eq("id", user.id).maybeSingle(),
     ]);
     const vozExtra = typeof vozRow?.value === "string" ? vozRow.value.trim() : "";
+
+    // Limite de mensagens por pessoa por dia (painel → Uso do irise; vazio = sem limite).
+    const { data: limRow } = await db.from("app_settings").select("value").eq("key", "irise_limite_msgs_pessoa").maybeSingle();
+    const limite = typeof limRow?.value === "number" ? limRow.value : null;
+    if (limite) {
+      const { data: usadas } = await db.rpc("irise_msgs_hoje", { p_user: user.id });
+      if (typeof usadas === "number" && usadas >= limite) {
+        await registrarUso(db, user.id, [{ provedor: "nenhum", tipo: "limite", tokens_in: 0, tokens_out: 0 }]);
+        return json(200, {
+          message:
+            "Hoje a gente já conversou bastante e eu preciso descansar um pouco. Amanhã eu volto. Enquanto isso, o mapa e a aba Apoio estão aí pra você.",
+          places: null,
+        });
+      }
+    }
 
     const n = perfil?.irise_personagem ?? body.personagem ?? null;
     let quemSou = "";
@@ -470,6 +560,12 @@ Deno.serve(async (req) => {
       .filter((h) => typeof h?.texto === "string" && h.texto.trim())
       .slice(-10)
       .map((h) => ({ role: h.de === "eu" ? "user" : "assistant", content: h.texto!.trim().slice(0, 400) }));
+    // O Gemini só via a última frase ("pode ser") e não sabia que a pessoa estava triste nem que
+    // tinha topado café: vai junto o que ela disse antes.
+    const pedidoComContexto = [
+      ...historico.filter((h) => h.role === "user").slice(-3).map((h) => h.content as string),
+      texto,
+    ].join(" / ").slice(0, 600);
     const messages: GroqMessage[] = [
       { role: "system", content: systemPrompt },
       ...historico,
@@ -481,7 +577,15 @@ Deno.serve(async (req) => {
       },
     ];
     const temp = quemSou ? 0.6 : 0.85;
-    const limpar = (t: string | null | undefined) => semGiriaAlheia(t ?? "", quemSou ? agente : undefined);
+    // Rede de segurança contra o "oi" em toda mensagem: com conversa em andamento, tira o cumprimento
+    // do começo (o prompt já pede isso, mas o modelo escorrega).
+    const jaFalou = historico.some((h) => h.role === "assistant");
+    const semOi = (t: string) => {
+      if (!jaFalou) return t;
+      const r = t.replace(/^\s*(oi+|ol[áa]|e a[íi]|eai|opa|hey|ei)\b(,?\s*[^.!?,\n]{0,20})?[!,.?]+\s*/i, "");
+      return r ? r.charAt(0).toUpperCase() + r.slice(1) : t;
+    };
+    const limpar = (t: string | null | undefined) => semOi(semGiriaAlheia(t ?? "", quemSou ? agente : undefined));
     // Nunca mudo: se o modelo devolver vazio, tenta mais uma vez sem ferramenta; se ainda vier
     // vazio, uma frase de acolhimento no lugar do silêncio.
     const reserva = "Tô aqui com você. Me conta um pouco mais do que tá rolando?";
@@ -489,26 +593,30 @@ Deno.serve(async (req) => {
       let r = limpar(t);
       if (!r) {
         console.warn("irise-orchestrator: resposta vazia, tentando de novo");
-        r = limpar((await chamarGroq(db, messages, false, true, temp)).content);
+        r = limpar((await chamarGroq(db, messages, false, true, temp, usos)).content);
       }
       return r || reserva;
     };
-    const primeira = await chamarGroq(db, messages, true, !querProgresso, temp);
+    const primeira = await chamarGroq(db, messages, true, !querProgresso, temp, usos, querProgresso ? "progresso" : "conversa");
     const chamada = primeira.tool_calls?.[0];
 
     if (!chamada) {
       // Não precisou buscar lugar: resposta direta (conversa, progresso, FAQ do app, acolhimento).
-      return json(200, { message: await semVazio(primeira.content), places: null });
+      const message = await semVazio(primeira.content);
+      await registrarUso(db, user.id, usos);
+      return json(200, { message, places: null });
     }
 
     if (chamada.function.name === "meu_progresso") {
       messages.push(primeira);
       messages.push({ role: "tool", tool_call_id: chamada.id, content: await resumoProgresso(db, user.id) });
-      const resposta = await chamarGroq(db, messages, false, true, temp);
-      return json(200, { message: await semVazio(resposta.content), places: null });
+      const resposta = await chamarGroq(db, messages, false, true, temp, usos, "progresso");
+      const message = await semVazio(resposta.content);
+      await registrarUso(db, user.id, usos);
+      return json(200, { message, places: null });
     }
 
-    let args: { categories?: Categoria[]; sem_nota?: boolean; perto?: boolean };
+    let args: { categories?: Categoria[]; sem_nota?: boolean; perto?: boolean; acolhedor?: boolean };
     try {
       args = JSON.parse(chamada.function.arguments || "{}");
     } catch {
@@ -519,14 +627,26 @@ Deno.serve(async (req) => {
       : null;
 
     let candidatos: Candidato[] = [];
+    const pediuCategoria = !!(categories && categories.length);
     if (args.perto && body.perto) {
-      const { data, error } = await db.rpc("places_near", {
-        p_lat: body.perto.lat,
-        p_lng: body.perto.lng,
-        p_limit: 12,
-      });
-      if (error) throw error;
-      candidatos = (data ?? []) as Candidato[];
+      // Antes o "perto" ignorava a categoria e trazia os 12 mais próximos de qualquer tipo (pediu
+      // café acolhedor, veio bar de vinho, bar de rock e pizzaria — 14/10/2026). Agora busca por
+      // categoria e, com várias, junta as listas.
+      const listas = await Promise.all(
+        (pediuCategoria ? categories! : [null]).map(async (cat) => {
+          const { data, error } = await db.rpc("places_near", {
+            p_lat: body.perto!.lat,
+            p_lng: body.perto!.lng,
+            p_category: cat,
+            p_limit: args.acolhedor ? 60 : 24,
+          });
+          if (error) throw error;
+          return (data ?? []) as Candidato[];
+        }),
+      );
+      candidatos = listas.flat();
+      if (args.acolhedor) candidatos = acolhedoresPrimeiro(candidatos);
+      candidatos = candidatos.slice(0, 12);
     } else if (body.cityId) {
       const { data, error } = await db.rpc("irise_suggest_places", {
         p_city_id: body.cityId,
@@ -536,11 +656,14 @@ Deno.serve(async (req) => {
       });
       if (error) throw error;
       candidatos = (data ?? []) as Candidato[];
+      if (args.acolhedor) candidatos = acolhedoresPrimeiro(candidatos);
     }
+    // Rede de segurança: nunca sai lugar fora da categoria pedida.
+    if (pediuCategoria) candidatos = candidatos.filter((c) => categories!.includes(c.category as Categoria));
 
     let ranking: Ranking = candidatos.map((c) => ({ place_id: c.id, reasons: [] }));
     try {
-      ranking = await chamarGemini(db, texto, candidatos);
+      ranking = await chamarGemini(db, pedidoComContexto, candidatos, usos);
     } catch (e) {
       console.error("irise-orchestrator: Gemini falhou, seguindo sem ranking:", e);
     }
@@ -561,12 +684,14 @@ Deno.serve(async (req) => {
       tool_call_id: chamada.id,
       content: JSON.stringify({ encontrados: top.length, resumo }),
     });
-    const segunda = await chamarGroq(db, messages, false, true, temp);
+    const segunda = await chamarGroq(db, messages, false, true, temp, usos, "busca");
+    await registrarUso(db, user.id, usos);
 
     return json(200, { message: limpar(segunda.content) || "Separei esses pra você:", places: top });
   } catch (err) {
     const msg = err instanceof Error ? err.message : String(err);
     console.error("irise-orchestrator:", msg);
+    await registrarUso(db, user.id, usos);
     return json(502, { error: msg });
   }
 });

@@ -780,6 +780,18 @@ Nome: **Irisa** (INPI livre; @appirisa livre). Bundle id Android `br.com.irisa.a
   Corpo (pose 0) até 1600 de altura. **As fotos já enviadas continuam 300 × 460: reenviar pelo painel.**
   O Ali (12) está bom porque usa a embutida (feita com redução de qualidade), não a do Storage.
 
+- **Chat mais natural, busca acolhedora e uso de tokens no painel (migration 80, 14/10/2026, retorno do Leandro):**
+  pediu café acolhedor e vieram bar de vinho, bar de rock e pizzaria: o caminho "perto de você" chamava
+  `places_near` sem categoria. Agora busca por categoria, ganhou `acolhedor` (selo e nota de atendimento/afeto
+  primeiro, balada por último), nunca devolve lugar fora da categoria pedida e o Gemini recebe as últimas falas da
+  pessoa, não só "pode ser". Prompt: 1–2 frases, cumprimento só na primeira, sem repetir oferta, sem frase de
+  manual, Apoio/relato no máximo uma vez e só quando cabe; `semOi` tira o "oi" do começo com conversa em andamento.
+  **Painel → Ajustes → Uso do irise:** tokens de hoje (Groq/Gemini), pedidos que sobram na cota do Groq (lido dos
+  cabeçalhos `x-ratelimit-*`), 14 dias, quem usou hoje e limites (tokens/dia só referência; mensagens por pessoa/dia
+  trava de verdade). Tabela `irise_uso` **só com números** (quem, quando, tokens, tipo), apagada depois de 180 dias.
+  **Decisão: o texto das conversas NÃO é guardado** (dado sensível pela LGPD — saúde, orientação sexual — de um
+  público em risco; guardar escondido continua sendo tratamento). Crise (CVV) conta sem a pessoa.
+
 ## Stack
 
 Expo SDK 57, Expo Router, NativeWind v4, TypeScript, TanStack Query, MapLibre React Native v11 com tiles Esri
