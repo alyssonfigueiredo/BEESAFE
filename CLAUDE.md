@@ -760,6 +760,13 @@ Nome: **Irisa** (INPI livre; @appirisa livre). Bundle id Android `br.com.irisa.a
   celular; o servidor não guarda) e o prompt pede continuidade. A parte do servidor vale na hora; o
   histórico só chega com EAS Update.
 
+- **Medalha voltando em loop e teclado no chat (14/10/2026, vídeos do Leandro):** a causa do loop era
+  `useMarkSeen`: `setQueriesData(["gamificacao"])` também pega `["gamificacao","avaliou-hoje",…]`
+  (booleano); com `true`, `g.conquistadas.map` quebrava o `onMutate` e o `mark_medals_seen` nunca
+  rodava. Agora só atualiza o que é objeto de gamificação (`ehGami`). Chat do irise no iOS: a folha
+  sobe a altura do teclado (`useAlturaTeclado`) e a conversa encolhe; o KeyboardAvoidingView saiu.
+  Só JS: sai por EAS Update.
+
 ## Stack
 
 Expo SDK 57, Expo Router, NativeWind v4, TypeScript, TanStack Query, MapLibre React Native v11 com tiles Esri

@@ -1,7 +1,7 @@
 import { Sparkles, X, Send } from "lucide-react-native";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
-  KeyboardAvoidingView,
+  Keyboard,
   Modal,
   Platform,
   Pressable,
@@ -223,6 +223,32 @@ function TypingDots() {
 let seq = 0;
 const uid = () => `l${seq++}`;
 
+/**
+ * Altura do teclado no iOS. O KeyboardAvoidingView com `position: absolute` dentro do Modal só
+ * empurrava a folha sem encolher a conversa (a ScrollView tinha altura fixa e o `overflow: hidden`
+ * cortava o campo de texto embaixo do teclado, visto em aparelho em 14/10/2026). Aqui a folha sobe
+ * a altura exata do teclado e a conversa encolhe para caber. Android segue como antes.
+ */
+function useAlturaTeclado() {
+  const [altura, setAltura] = useState(0);
+  useEffect(() => {
+    if (Platform.OS !== "ios") return;
+    const show = Keyboard.addListener("keyboardWillShow", (e) => {
+      Keyboard.scheduleLayoutAnimation(e);
+      setAltura(e.endCoordinates.height);
+    });
+    const hide = Keyboard.addListener("keyboardWillHide", (e) => {
+      Keyboard.scheduleLayoutAnimation(e);
+      setAltura(0);
+    });
+    return () => {
+      show.remove();
+      hide.remove();
+    };
+  }, []);
+  return altura;
+}
+
 export function IriseSheet({
   visible,
   onClose,
@@ -254,6 +280,9 @@ export function IriseSheet({
   onAcao?: (a: Acao) => void;
 }) {
   const { height } = useWindowDimensions();
+  const teclado = useAlturaTeclado();
+  // Folga em cima para a folha nunca passar da ilha/status bar quando o teclado sobe.
+  const alturaMax = teclado > 0 ? height - teclado - 56 : height * 0.86;
   const [log, setLog] = useState<LogItem[]>([]);
   const [texto, setTexto] = useState("");
   const [poseAtual, setPoseAtual] = useState(1);
@@ -265,6 +294,10 @@ export function IriseSheet({
   const orchestrate = useIriseOrchestrate();
   const { data: irises = [] } = useIrisePersonagens();
   const { panHandlers: dragHandlers, style: dragStyle } = useSheetDismiss(onClose);
+  // A conversa encolhe quando o teclado sobe: rola até a última mensagem para ela não sumir.
+  useEffect(() => {
+    if (teclado > 0) setTimeout(() => scrollRef.current?.scrollToEnd({ animated: true }), 280);
+  }, [teclado]);
 
   function push(item: LogItem) {
     setLog((l) => [...l, item]);
@@ -495,13 +528,13 @@ export function IriseSheet({
   return (
     <Modal visible={visible} transparent animationType="fade" onShow={onOpen} onRequestClose={onClose} statusBarTranslucent>
       <Pressable style={{ flex: 1, backgroundColor: "rgba(20,24,41,0.4)" }} onPress={onClose} />
-      <KeyboardAvoidingView
-        behavior={Platform.OS === "ios" ? "padding" : undefined}
-        style={{ position: "absolute", left: 0, right: 0, bottom: 0, maxHeight: height * 0.86 }}
-      >
+      <View style={{ position: "absolute", left: 0, right: 0, bottom: teclado, maxHeight: alturaMax }}>
         <Animated.View
           className="bg-solid"
-          style={[{ borderTopLeftRadius: 34, borderTopRightRadius: 34, overflow: "hidden" }, dragStyle]}
+          style={[
+            { borderTopLeftRadius: 34, borderTopRightRadius: 34, overflow: "hidden", maxHeight: alturaMax },
+            dragStyle,
+          ]}
         >
           <View
             {...dragHandlers}
@@ -542,8 +575,9 @@ export function IriseSheet({
           )}
           <ScrollView
             ref={scrollRef}
-            style={{ maxHeight: height * 0.62 }}
+            style={{ maxHeight: height * 0.62, flexGrow: 0, flexShrink: 1 }}
             contentContainerStyle={{ padding: 18, gap: 12 }}
+            keyboardShouldPersistTaps="handled"
             showsVerticalScrollIndicator={false}
           >
             {log.map((item) => {
@@ -567,7 +601,10 @@ export function IriseSheet({
               );
             })}
           </ScrollView>
-          <View className="gap-2 border-t border-border px-[14px] pb-[max(14px,env(safe-area-inset-bottom))] pt-[10px]">
+          <View
+            className="gap-2 border-t border-border px-[14px] pb-[max(14px,env(safe-area-inset-bottom))] pt-[10px]"
+            style={teclado > 0 ? { paddingBottom: 10 } : undefined}
+          >
             <View className="h-[46px] flex-row items-center gap-2 rounded-full bg-subtle pl-4 pr-1.5">
               <TextInput
                 ref={inputRef}
@@ -588,7 +625,7 @@ export function IriseSheet({
             </View>
           </View>
         </Animated.View>
-      </KeyboardAvoidingView>
+      </View>
     </Modal>
   );
 }
