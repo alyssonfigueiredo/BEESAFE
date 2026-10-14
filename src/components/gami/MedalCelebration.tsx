@@ -1,5 +1,6 @@
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { router } from "expo-router";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Modal, Pressable, Text, View } from "react-native";
 import { useReducedMotion } from "react-native-reanimated";
 
@@ -25,6 +26,28 @@ const ATRASO = 300; // o anel começa depois que a tela escureceu
 const ANEL = 1200; // o anel desenha em 1,2 s (AnimatedMedal), depois a cor aparece
 const T_NOME = ATRASO + ANEL - 200;
 
+// Ids de medalha já fechados no aparelho: gravado de verdade (AsyncStorage), não só em memória do
+// componente. Uma lembrança em useRef some quando a tela remonta (volta de uma avaliação, troca de
+// tela) — foi o que fazia a MESMA medalha reaparecer mesmo depois de fechada, mesmo o
+// mark_medals_seen tendo sido chamado. Carregado uma vez por processo do app; grava a cada fechar().
+const FECHADOS_KEY = "irisa.medalhas.fechadas.v1";
+let fechados: Set<string> | null = null;
+async function carregarFechados() {
+  if (fechados) return fechados;
+  try {
+    const salvo = await AsyncStorage.getItem(FECHADOS_KEY);
+    fechados = new Set(salvo ? (JSON.parse(salvo) as string[]) : []);
+  } catch {
+    fechados = new Set();
+  }
+  return fechados;
+}
+function marcarFechado(ids: string[]) {
+  if (!fechados) fechados = new Set();
+  ids.forEach((id) => fechados!.add(id));
+  AsyncStorage.setItem(FECHADOS_KEY, JSON.stringify([...fechados])).catch(() => {});
+}
+
 /**
  * Medalha nova, em tela cheia. Fica no layout raiz e aparece sozinha quando o banco desbloqueia
  * alguma medalha que a pessoa ainda não viu; espera a folha da avaliação fechar.
@@ -36,10 +59,10 @@ export function MedalCelebration() {
   const reduce = useReducedMotion();
   const [aberta, setAberta] = useState<string[] | null>(null);
   const [story, setStory] = useState<Compartilhavel | null>(null);
-  // Ids já fechados nesta sessão do app: mesmo que uma invalidação concorrente (ex.: useTrackOpen ao
-  // voltar da tela de trás) traga de volta o servidor ainda com visto=false antes do mark_medals_seen
-  // confirmar, a medalha não reabre — "fecho e volta sozinha" não depende mais de vencer essa corrida.
-  const fechadosRef = useRef<Set<string>>(new Set());
+  const [prontoFechados, setProntoFechados] = useState(false);
+  useEffect(() => {
+    carregarFechados().then(() => setProntoFechados(true));
+  }, []);
   const { data: profile } = useProfile();
   const { data: irises = [] } = useIrisePersonagens();
   const personagem = profile?.irise_personagem
@@ -48,10 +71,12 @@ export function MedalCelebration() {
 
   const novas = useMemo(
     () =>
-      (g?.conquistadas ?? [])
-        .filter((c) => !c.visto && getMedalha(c.id) && !fechadosRef.current.has(c.id))
-        .map((c) => c.id),
-    [g],
+      prontoFechados
+        ? (g?.conquistadas ?? [])
+            .filter((c) => !c.visto && getMedalha(c.id) && !fechados?.has(c.id))
+            .map((c) => c.id)
+        : [],
+    [g, prontoFechados],
   );
 
   useEffect(() => {
@@ -62,7 +87,7 @@ export function MedalCelebration() {
 
   function fechar(irConquistas: boolean) {
     if (aberta) {
-      aberta.forEach((id) => fechadosRef.current.add(id));
+      marcarFechado(aberta);
       marcar.mutate(aberta);
     }
     setAberta(null);
