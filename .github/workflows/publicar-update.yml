@@ -32,4 +32,4 @@ jobs:
       - name: Publica
         env:
           EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
-        run: npx eas-cli update --branch production --message "${{ inputs.mensagem }}" --non-interactive
+        run: npx eas-cli update --branch production --platform ios,android --message "${{ inputs.mensagem }}" --non-interactive
