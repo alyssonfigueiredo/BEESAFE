@@ -249,5 +249,10 @@ select count(*) > 0 as admin_users_ok from public.admin_users(null, 50, 0, 'inte
 select irise_nome = 'Ali' as admin_users_irise from public.admin_users(null, 200, 0, 'recente') where id = '66666666-6666-6666-6666-666666666666';
 select public.admin_user('66666666-6666-6666-6666-666666666666')->>'irise_nome' = 'Ali' as admin_user_irise;
 select (public.admin_irise_metricas()->>'com_irise')::int >= 1 as metricas_ok;
+-- migration 79: agente por personagem
+select (public.admin_irise_agente_set(12::smallint, 'Fala pausado.', 2::smallint, 0::smallint)).giria = 2 as agente_ok;
+select count(*) >= 1 as agentes_lista_ok from public.admin_irise_agentes();
+select public.admin_personagem_voz_set(12::smallint, 'Voz nova.');
+select voz = 'Voz nova.' and giria = 2 as voz_antiga_compat from public.admin_irise_agentes() where n = 12;
 reset role;
 

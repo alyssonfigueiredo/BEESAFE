@@ -726,6 +726,16 @@ Nome: **Irisa** (INPI livre; @appirisa livre). Bundle id Android `br.com.irisa.a
   acolhimento em uma frase + caminho do app (Apoio, relato anônimo, 190, CVV 188), sem terapia nem
   pedir detalhe; assunto fora do app que pede conversa longa é recusado com carinho e redirecionado.
 
+- **Chat fala como o irise escolhido (migration 79, 14/10/2026, pedido do Leandro):** a função
+  `irise-orchestrator` lê o personagem do PERFIL (`profiles.irise_personagem`; o `personagem` do corpo
+  só se o perfil não tiver) e monta o bloco "QUEM VOCÊ É": nome, pronomes, classe, bio, atributos
+  (4–5 = traço forte, 0–2 = traço contido), gíria, emoji e a voz livre. Sem personagem, segue a voz
+  padrão da Irise. Config de conversa por personagem na tabela `irise_agentes` (sem policy: só
+  `admin_irise_agentes`/`admin_irise_agente_set` e a função leem; `irise_personagens` é público),
+  com a voz que estava em `app_settings.irise_voz_personagens` migrada; `admin_personagem_voz_set`
+  continua e grava lá. Editar: painel web → Personagens do irise → abrir → "Como ele conversa no
+  chat", ou app → admin do irise (só JS, chega por EAS Update). A voz geral segue em Chaves de API.
+
 ## Stack
 
 Expo SDK 57, Expo Router, NativeWind v4, TypeScript, TanStack Query, MapLibre React Native v11 com tiles Esri

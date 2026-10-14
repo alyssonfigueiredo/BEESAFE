@@ -26,11 +26,12 @@ const CATEGORIAS = ["bar", "restaurante", "balada", "cafe", "hotel"] as const;
 type Categoria = (typeof CATEGORIAS)[number];
 
 const SYSTEM_PROMPT = `
-Você é a Irise, assistente de descoberta dentro da Irisa — app brasileiro da comunidade LGBTQIA+
+Você é a Irise (ou o irise que a pessoa escolheu, se vier o bloco "QUEM VOCÊ É" no fim), assistente
+de descoberta dentro da Irisa — app brasileiro da comunidade LGBTQIA+
 que avalia lugares em quatro eixos de acolhimento (atendimento, afeto, banheiro, clientela) e tem
 relatos anônimos de LGBTIfobia.
 
-SUA VOZ: bicha, afiada, calorosa — fala como uma amiga gay que manja de todo rolê da cidade, não
+SUA VOZ PADRÃO (vale quando não vier personagem; com personagem, o bloco "QUEM VOCÊ É" manda): bicha, afiada, calorosa — fala como uma amiga gay que manja de todo rolê da cidade, não
 como um assistente de app. Solta gíria de boca (mona, bofe, arrasou, fervo, sapataria, deusa,
 cê é cria, partiu, é dahora) do jeito que sai na conversa de verdade, sem forçar nem em toda
 frase. Pode usar "kkk" e emoji com moderação. Tem opinião, reage com entusiasmo de verdade
@@ -40,8 +41,9 @@ da comunidade (ballroom, bicha preta, etc.) fora de contexto, e nunca exagera a 
 caricatura — é gente de verdade, não personagem de piada.
 
 REGRAS DE LINGUAGEM, SEMPRE:
-- Português do Brasil, linguagem neutra de gênero (bem-vinde, identificade, acolhide): nunca
-  "ele/ela", nunca flexão binária, nunca presuma o gênero de quem escreveu.
+- Português do Brasil, linguagem neutra de gênero ao falar COM a pessoa (bem-vinde, identificade,
+  acolhide): nunca "ele/ela", nunca flexão binária, nunca presuma o gênero de quem escreveu. Ao falar
+  de você mesme, use os seus próprios pronomes (os do bloco "QUEM VOCÊ É", quando vier).
 - NUNCA diga "seguro", "lugar seguro" ou "região tranquila" — o app nunca garante isso.
 - NUNCA invente nome de lugar, nota, endereço ou qualquer dado — você não tem acesso ao banco
   diretamente. Para recomendar um lugar, SEMPRE chame a ferramenta buscar_lugares.
@@ -225,6 +227,57 @@ Responda SOMENTE com JSON: {"ranking": [{"place_id": "...", "reasons": ["...", "
 }
 
 
+type Personagem = {
+  n: number;
+  nome: string;
+  pronomes: string;
+  classe: string;
+  bio: string;
+  stat_acolhimento: number;
+  stat_humor: number;
+  stat_papo_reto: number;
+  stat_role: number;
+};
+type Agente = { voz: string; giria: number; emoji: number };
+
+const GIRIA = [
+  "Quase sem gíria: fala carinhosa e clara, no máximo uma expressão leve de vez em quando.",
+  "Gíria na medida: uma ou outra expressão da comunidade quando sai natural.",
+  "Solta bastante gíria da comunidade, do jeito que sai numa conversa entre amigues — sem virar caricatura.",
+];
+const EMOJI = [
+  "Não usa emoji.",
+  "No máximo um emoji por resposta, e só quando ajuda.",
+  "Usa emoji à vontade, até dois por resposta.",
+];
+
+/** Bloco de identidade: o chat fala com o nome, os pronomes e o jeito do irise escolhido. */
+function blocoPersonagem(p: Personagem, a: Agente | null): string {
+  const tracos: string[] = [];
+  const nivel = (v: number, alto: string, baixo: string) => {
+    if (v >= 4) tracos.push(alto);
+    else if (v <= 2) tracos.push(baixo);
+  };
+  nivel(p.stat_acolhimento, "muito acolhedor: valida o que a pessoa sente antes de qualquer coisa", "acolhe sem melação, mais prático");
+  nivel(p.stat_humor, "bem-humorado: brinca e zoa com leveza", "humor contido, mais sereno");
+  nivel(p.stat_papo_reto, "papo reto: vai direto ao ponto, sem rodeio", "delicado: escolhe as palavras com cuidado");
+  nivel(p.stat_role, "animado com rolê: adora sugerir sair e descobrir lugar", "mais caseiro: prefere lugar tranquilo e conversa boa");
+  const giria = a ? GIRIA[a.giria] ?? GIRIA[1] : GIRIA[1];
+  const emoji = a ? EMOJI[a.emoji] ?? EMOJI[1] : EMOJI[1];
+  return [
+    `QUEM VOCÊ É (tem prioridade sobre a voz padrão acima; as regras de linguagem e de nunca inventar continuam valendo):`,
+    `Seu nome é ${p.nome} (${p.pronomes}), ${p.classe} da Irisa — o irise que a pessoa escolheu pra conversar.`,
+    `Se perguntarem seu nome ou quem você é, responda como ${p.nome}. A Irisa é o app; você é ${p.nome}. Nunca diga que é "a Irise".`,
+    `Quem você é: ${p.bio}`,
+    tracos.length ? `Seu jeito: ${tracos.join("; ")}.` : "",
+    `Gíria: ${giria}`,
+    `Emoji: ${emoji}`,
+    a?.voz ? `Voz e personalidade de ${p.nome}, escritas pela equipe:\n${a.voz}` : "",
+  ]
+    .filter(Boolean)
+    .join("\n");
+}
+
 // Perguntas sobre o próprio progresso: com elas, os dados já vão na primeira chamada (uma ida ao modelo
 // em vez de duas). O que escapar da regex ainda pode chamar a ferramenta meu_progresso.
 const PERGUNTA_PROGRESSO =
@@ -314,25 +367,28 @@ Deno.serve(async (req) => {
   const db = adminClient();
 
   try {
-    // Texto extra de voz/personalidade, editável no admin sem precisar de deploy (migration 58),
-    // mais o texto específico do personagem escolhido no chat, se houver (migration 71): os dois
-    // somam ao texto-base, nessa ordem.
-    const { data: vozRow } = await db.from("app_settings").select("value").eq("key", "irise_voz_extra").maybeSingle();
+    // Voz geral (migration 58) + quem é o irise escolhido (migrations 71 e 79). O personagem vem do
+    // perfil, não do celular: o app pode estar com o catálogo velho, o banco é quem sabe a escolha.
+    const [{ data: vozRow }, { data: perfil }] = await Promise.all([
+      db.from("app_settings").select("value").eq("key", "irise_voz_extra").maybeSingle(),
+      db.from("profiles").select("irise_personagem").eq("id", user.id).maybeSingle(),
+    ]);
     const vozExtra = typeof vozRow?.value === "string" ? vozRow.value.trim() : "";
 
-    let vozPersonagem = "";
-    if (body.personagem) {
-      const { data: personagensRow } = await db
-        .from("app_settings")
-        .select("value")
-        .eq("key", "irise_voz_personagens")
-        .maybeSingle();
-      const mapa = (personagensRow?.value ?? {}) as Record<string, string>;
-      const v = mapa[String(body.personagem)];
-      vozPersonagem = typeof v === "string" ? v.trim() : "";
+    const n = perfil?.irise_personagem ?? body.personagem ?? null;
+    let quemSou = "";
+    if (n) {
+      const [{ data: p }, { data: ag }] = await Promise.all([
+        db.from("irise_personagens")
+          .select("n, nome, pronomes, classe, bio, stat_acolhimento, stat_humor, stat_papo_reto, stat_role")
+          .eq("n", n)
+          .maybeSingle(),
+        db.from("irise_agentes").select("voz, giria, emoji").eq("n", n).maybeSingle(),
+      ]);
+      if (p) quemSou = blocoPersonagem(p as Personagem, (ag as Agente | null) ?? null);
     }
 
-    const systemPrompt = [SYSTEM_PROMPT, vozExtra, vozPersonagem].filter(Boolean).join("\n\n");
+    const systemPrompt = [SYSTEM_PROMPT, vozExtra, quemSou].filter(Boolean).join("\n\n");
 
     const querProgresso = PERGUNTA_PROGRESSO.test(texto);
     const dados = querProgresso ? await resumoProgresso(db, user.id) : "";

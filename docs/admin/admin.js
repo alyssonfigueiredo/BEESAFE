@@ -1568,7 +1568,8 @@ async function viewPersonagens(ctx) {
     `<button class="btn" id="irNovo">Novo personagem</button>`) + `<div id="irbox"></div>`;
   const box = $("#irbox", ctx.el);
   const reload = () => load(box, async () => {
-    const [lista, m] = await Promise.all([carregarIrises(), rpc("admin_irise_metricas")]);
+    const [lista, m, ags] = await Promise.all([carregarIrises(), rpc("admin_irise_metricas"), rpc("admin_irise_agentes").catch(() => [])]);
+    const agentes = Object.fromEntries((ags || []).map((x) => [x.n, x]));
     if (!ctx.alive()) return;
     const por = Object.fromEntries((m?.por_personagem || []).map((x) => [x.n, Number(x.pessoas)]));
     const com = Number(m?.com_irise || 0), total = Number(m?.pessoas || 0);
@@ -1599,9 +1600,9 @@ async function viewPersonagens(ctx) {
           <div class="small">${plural(por[p.n] || 0, "pessoa", "pessoas")}</div>
           ${p.ativo ? chip("on", "no ar") : chip("warn", "fora do ar")}
         </button>`).join("")}</div>`;
-    $$(".icard", box).forEach((b) => b.addEventListener("click", () => iriseEditor(iriseCatalogo[b.dataset.n], por[b.dataset.n] || 0, reload)));
+    $$(".icard", box).forEach((b) => b.addEventListener("click", () => iriseEditor(iriseCatalogo[b.dataset.n], por[b.dataset.n] || 0, reload, agentes[b.dataset.n])));
   }, ctx);
-  $("#irNovo", ctx.el).addEventListener("click", () => iriseEditor(null, 0, reload));
+  $("#irNovo", ctx.el).addEventListener("click", () => iriseEditor(null, 0, reload, null));
   await reload();
 }
 
@@ -1618,7 +1619,11 @@ async function paraWebp(file) {
   return blob;
 }
 
-function iriseEditor(p, pessoas, reload) {
+const GIRIA_OPC = ["Quase nenhuma", "Na medida", "Bastante"];
+const EMOJI_OPC = ["Nunca", "No máximo um", "À vontade"];
+
+function iriseEditor(p, pessoas, reload, agente) {
+  let ag = agente ? { ...agente } : { voz: "", giria: 1, emoji: 1 };
   const novo = !p;
   const proximo = Math.max(18, ...Object.keys(iriseCatalogo || {}).map(Number)) + 1;
   p = p ? { ...p } : { n: proximo, nome: "", pronomes: "ela/dela", classe: "", bio: "", stat_acolhimento: 3, stat_humor: 3, stat_papo_reto: 3, stat_role: 3, ativo: true };
@@ -1641,6 +1646,7 @@ function iriseEditor(p, pessoas, reload) {
       <label class="check"><input type="checkbox" name="ativo" ${p.ativo ? "checked" : ""}> Aparece para escolher no app <span class="small dim">(quem já escolheu continua com ele)</span></label>
       <div class="foot">${novo ? "" : `<button type="button" class="btn danger" id="irDel" style="margin-right:auto">Apagar</button>`}<button type="button" class="btn ghost" data-close>Fechar</button><button class="btn" type="submit" id="irSave">Salvar textos</button></div>
     </form>
+    <div id="irAgente"></div>
     <div id="irFotos"></div>`, { wide: true, onClose: () => { if (mudou) reload(); } });
   const f = $("#irf", d);
   counter(f.bio, $("#irBioN", d), 200);
@@ -1673,6 +1679,36 @@ function iriseEditor(p, pessoas, reload) {
       });
     }));
   };
+  const drawAgente = () => {
+    const host = $("#irAgente", d);
+    if (novo && !mudou) { host.innerHTML = ""; return; }
+    const opts = (lista, sel) => lista.map((t, i) => `<option value="${i}" ${i === Number(sel) ? "selected" : ""}>${esc(t)}</option>`).join("");
+    host.innerHTML = `<form class="form" id="irAgForm" novalidate style="margin-top:18px">
+      <h3>Como ${esc(p.nome || "ele")} conversa no chat</h3>
+      <p class="small muted" style="margin:4px 0 2px">O chat responde com o nome, os pronomes, a classe e a bio acima. Atributo 4 ou 5 vira traço forte (ex.: humor 5 = brinca e zoa) e 0 a 2 vira traço contido. As regras fixas (nunca inventar lugar, nunca dizer "seguro", respostas curtas e acolhedoras) valem para todos.</p>
+      <label class="f">Voz e personalidade <span class="hint" id="irVozN"></span>
+        <textarea class="input" name="voz" rows="5" maxlength="1500" placeholder="Ex.: fala pausado, chama todo mundo de 'meu bem', adora citar música, termina dizendo 'tô contigo'.">${esc(ag.voz || "")}</textarea></label>
+      <div class="row">
+        <label class="f">Gíria <select class="input" name="giria">${opts(GIRIA_OPC, ag.giria)}</select></label>
+        <label class="f">Emoji <select class="input" name="emoji">${opts(EMOJI_OPC, ag.emoji)}</select></label>
+      </div>
+      <div class="foot"><button class="btn" type="submit" id="irAgSave">Salvar conversa</button></div>
+    </form>`;
+    const af = $("#irAgForm", host);
+    counter(af.voz, $("#irVozN", host), 1500);
+    af.addEventListener("submit", (ev) => {
+      ev.preventDefault();
+      busy($("#irAgSave", host), async () => {
+        const salvo = await rpc("admin_irise_agente_set", {
+          p_n: Number(p.n), p_voz: af.voz.value.trim(), p_giria: Number(af.giria.value), p_emoji: Number(af.emoji.value),
+        });
+        ag = salvo || ag;
+        mudou = true;
+        toast("Salvo. Vale na próxima mensagem do chat.");
+      });
+    });
+  };
+  drawAgente();
   drawFotos();
   f.addEventListener("submit", (ev) => {
     ev.preventDefault();
@@ -1691,6 +1727,7 @@ function iriseEditor(p, pessoas, reload) {
       f.n.disabled = true;
       mudou = true;
       toast("Salvo");
+      drawAgente();
       drawFotos();
     });
   });
@@ -1852,22 +1889,11 @@ async function viewChaves(ctx) {
   ctx.el.innerHTML = headHTML("Chaves de API", "Cole aqui em vez de mexer no painel do Supabase. A chave fica criptografada — nem o painel consegue mostrar de volta, só sobrescrever.") + `<div id="kbox"></div>`;
   const box = $("#kbox", ctx.el);
   await load(box, async () => {
-    const [status, settings, personagens] = await Promise.all([
-      rpc("admin_api_keys_status"),
-      rpc("admin_settings"),
-      rpc("admin_irise_personagens"),
-    ]);
+    const [status, settings] = await Promise.all([rpc("admin_api_keys_status"), rpc("admin_settings")]);
     if (!ctx.alive()) return;
     const cfg = Object.fromEntries((status || []).map((s) => [s.name, s.configurado]));
     const iriseAtiva = !!(settings || {}).irise_ativa;
     const vozExtra = typeof (settings || {}).irise_voz_extra === "string" ? (settings || {}).irise_voz_extra : "";
-    const vozPersonagens = (settings || {}).irise_voz_personagens && typeof (settings || {}).irise_voz_personagens === "object"
-      ? (settings || {}).irise_voz_personagens
-      : {};
-    // Catálogo de verdade (migration 71): o painel já deixa criar/renomear/apagar personagem, então
-    // a voz tem que listar o que existe agora, não uma lista fixa. Inclui inativos — dá pra escrever
-    // a voz antes de ligar o personagem pro público.
-    const listaPersonagens = personagens || [];
     box.innerHTML = `
       <form class="card form" id="iriseForm" style="margin-bottom:14px">
         <h2>Botão da Irise no app</h2>
@@ -1876,22 +1902,12 @@ async function viewChaves(ctx) {
       </form>
       <form class="card form" id="vozForm" style="margin-bottom:14px">
         <h2>Voz da Irise</h2>
-        <p class="small muted">Texto extra de tom/personalidade, colado depois das regras fixas (nunca inventar lugar, nunca dizer "seguro" etc. continuam protegidas no código) e antes do texto do personagem escolhido, aqui embaixo. Vale pra conversa de todo mundo, mesmo quem está sem personagem.</p>
+        <p class="small muted">Texto extra de tom/personalidade, colado depois das regras fixas (nunca inventar lugar, nunca dizer "seguro" etc. continuam protegidas no código) e antes do jeito do personagem escolhido. Vale pra conversa de todo mundo, mesmo quem está sem personagem.</p>
         <textarea class="input" id="vozExtra" rows="4" placeholder="Ex.: usa mais gíria tal, evita tal expressão…">${esc(vozExtra)}</textarea>
         <div class="foot"><button class="btn" type="submit">Salvar voz</button></div>
       </form>
-      <form class="card form" id="vozPersonagemForm" style="margin-bottom:14px">
-        <h2>Voz de cada personagem</h2>
-        <p class="small muted">Texto extra só desse personagem, somado depois da voz geral acima quando a pessoa escolhe ele no chat. Em branco, o personagem fala só com o texto-base + a voz geral.</p>
-        ${listaPersonagens.length ? `
-        <label class="small muted" for="vpSelect">Personagem</label>
-        <select class="input" id="vpSelect" style="margin-bottom:10px">
-          ${listaPersonagens.map((p) => `<option value="${p.n}">${esc(p.nome)}${p.ativo ? "" : " · inativo"}</option>`).join("")}
-        </select>
-        <textarea class="input" id="vpTexto" rows="4" placeholder="Ex.: fala mais pausado, gosta de citar um refrão…"></textarea>
-        <div class="foot"><button class="btn" type="submit">Salvar voz do personagem</button></div>
-        ` : `<p class="small muted">Nenhum personagem cadastrado ainda — crie um em Personagens do Irise.</p>`}
-      </form>` + API_KEYS.map((k) => `
+      <div class="card" style="margin-bottom:14px"><h2>Voz de cada personagem</h2>
+        <p class="small muted">Agora fica em <a href="#personagens">Conteúdo → Personagens do irise</a>: abra o personagem e use "Como ele conversa no chat" (voz, gíria e emoji).</p></div>` + API_KEYS.map((k) => `
       <form class="card form" data-key="${k.name}" style="margin-bottom:14px">
         <h2>${esc(k.label)} <span class="small ${cfg[k.name] ? "ok" : "dim"}">${cfg[k.name] ? "· configurada" : "· não configurada"}</span></h2>
         <p class="small muted">${esc(k.hint)}</p>
@@ -1917,23 +1933,6 @@ async function viewChaves(ctx) {
       ev.preventDefault();
       busy($("button", ev.currentTarget), async () => {
         await rpc("admin_setting_set", { p_key: "irise_voz_extra", p_value: $("#vozExtra", box).value.trim() });
-        toast("Salvo");
-      });
-    });
-    const vpSelect = $("#vpSelect", box), vpTexto = $("#vpTexto", box);
-    if (vpSelect && vpTexto) {
-      const vpCarregar = () => { vpTexto.value = vozPersonagens[vpSelect.value] || ""; };
-      vpSelect.addEventListener("change", vpCarregar);
-      vpCarregar();
-    }
-    $("#vozPersonagemForm", box).addEventListener("submit", (ev) => {
-      ev.preventDefault();
-      if (!vpSelect || !vpTexto) return;
-      busy($("button", ev.currentTarget), async () => {
-        const n = Number(vpSelect.value);
-        const texto = vpTexto.value.trim();
-        await rpc("admin_personagem_voz_set", { p_personagem: n, p_voz: texto });
-        vozPersonagens[String(n)] = texto;
         toast("Salvo");
       });
     });
