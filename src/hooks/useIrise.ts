@@ -56,6 +56,7 @@ export function useIriseOrchestrate() {
       cityId: number | undefined;
       perto: { lat: number; lng: number } | null;
       personagem?: number | null;
+      historico?: { de: "eu" | "irise"; texto: string }[];
     }) => {
       const { data, error } = await supabase.functions.invoke<OrchestratorResponse>("irise-orchestrator", {
         body: {
@@ -64,6 +65,7 @@ export function useIriseOrchestrate() {
           cityId: args.cityId,
           perto: args.perto,
           personagem: args.personagem ?? null,
+          historico: args.historico ?? [],
         },
       });
       if (error || !data || data.error) {

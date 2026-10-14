@@ -750,6 +750,16 @@ Nome: **Irisa** (INPI livre; @appirisa livre). Bundle id Android `br.com.irisa.a
   mulher-bissexual-indigena, 17 Dandara = mulher-lesbica-negra, 18 Luna = mulher-trans; Ali (12) não mexe.
   Imagem embutida: chega no app por EAS Update. O painel web enquadra sozinho qualquer foto enviada.
 
+- **Chat mudo e sem memória (14/10/2026, achado pelo Leandro: disse que estava triste e o irise
+  parou de responder):** o `openai/gpt-oss-120b` pensa antes de responder e o pensamento sai do mesmo
+  limite; com `max_tokens: 300` às vezes acabava tudo pensando, a resposta vinha vazia e o app (`if
+  (message) addBubble`) não mostrava nada. Agora `max_completion_tokens: 1000` + `reasoning_effort: low`,
+  o campo `reasoning` não volta pro modelo, resposta vazia tenta de novo sem ferramenta e, se ainda vier
+  vazia, sai uma frase de acolhimento; o app também nunca fica mudo. **Histórico:** o app manda as
+  últimas 10 falas da conversa aberta (`historico: [{de: "eu"|"irise", texto}]`, só texto, ficam no
+  celular; o servidor não guarda) e o prompt pede continuidade. A parte do servidor vale na hora; o
+  histórico só chega com EAS Update.
+
 ## Stack
 
 Expo SDK 57, Expo Router, NativeWind v4, TypeScript, TanStack Query, MapLibre React Native v11 com tiles Esri

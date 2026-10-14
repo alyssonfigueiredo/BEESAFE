@@ -418,6 +418,13 @@ export function IriseSheet({
   async function handleFreeText() {
     const t = texto.trim();
     if (!t) return;
+    // O que já foi dito nesta conversa (só o texto dos balões, as últimas 10 falas): é o que deixa o
+    // irise lembrar que a pessoa disse que estava triste, o que pediu, o que já sugeriu. Fica no
+    // celular; o servidor não guarda.
+    const historico = log
+      .filter((i): i is Extract<LogItem, { kind: "bubble" }> => i.kind === "bubble")
+      .slice(-10)
+      .map((i) => ({ de: i.mine ? ("eu" as const) : ("irise" as const), texto: i.text }));
     setTexto("");
     addBubble(t, true);
     await withTyping(async () => {
@@ -428,8 +435,9 @@ export function IriseSheet({
           cityId,
           perto: userLocation,
           personagem,
+          historico,
         });
-        if (message) addBubble(message);
+        addBubble(message || "Tô aqui com você. Me conta um pouco mais?");
         if (places) mostrarOuVazio(places, false);
       } catch (err) {
         // Detalhe técnico só no console — pra quem usa o app, só a mensagem simples.

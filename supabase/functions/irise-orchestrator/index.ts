@@ -38,6 +38,11 @@ REGRAS DE LINGUAGEM, SEMPRE:
 - NUNCA invente nome de lugar, nota, endereço ou qualquer dado — você não tem acesso ao banco
   diretamente. Para recomendar um lugar, SEMPRE chame a ferramenta buscar_lugares.
 
+CONVERSA COM CONTINUIDADE: as mensagens anteriores desta conversa vêm antes da atual. Use o que a
+pessoa já contou (como ela está, o que pediu, a cidade, o que você já sugeriu) e não repita pergunta já
+respondida nem se apresente de novo. Se ela disse que está triste ou passou por algo ruim, retome com
+cuidado e calor, sem mudar de assunto de repente. Você sempre responde: nunca deixe a pessoa sem resposta.
+
 TAMANHO E JEITO DE RESPONDER (economia de verdade, sem perder o calor):
 - No máximo 3 frases curtas (uns 60 palavras). Lista só quando a pessoa pede medalhas ou números, e
   aí no máximo 4 itens, um por linha começando com "• ". Texto puro: nada de markdown, asterisco ou #.
@@ -157,7 +162,11 @@ async function chamarGroq(
     body: JSON.stringify({
       model: GROQ_MODEL,
       temperature: temperatura,
-      max_tokens: 300,
+      // O gpt-oss "pensa" antes de responder e esse pensamento sai do mesmo limite: com 300 ele às
+      // vezes gastava tudo pensando e a resposta vinha vazia (o chat ficava mudo). O tamanho da
+      // resposta quem segura é o prompt (3 frases); aqui é só teto.
+      max_completion_tokens: 1000,
+      ...(GROQ_MODEL.includes("gpt-oss") ? { reasoning_effort: "low" } : {}),
       messages,
       ...(comFerramenta
         ? { tools: comProgresso ? [TOOL_BUSCAR, TOOL_PROGRESSO] : [TOOL_BUSCAR], tool_choice: "auto" }
@@ -166,7 +175,9 @@ async function chamarGroq(
   });
   const corpo = await res.json();
   if (!res.ok) throw new Error(corpo?.error?.message ?? `Groq recusou (HTTP ${res.status})`);
-  return corpo.choices[0].message as GroqMessage;
+  const m = corpo.choices[0].message as GroqMessage & { reasoning?: string };
+  // Só o que pode voltar pro modelo na próxima chamada (o campo "reasoning" não pode).
+  return { role: "assistant", content: m.content ?? null, ...(m.tool_calls ? { tool_calls: m.tool_calls } : {}) } as GroqMessage;
 }
 
 type Candidato = {
@@ -387,6 +398,8 @@ Deno.serve(async (req) => {
     cityId?: number;
     perto?: { lat: number; lng: number } | null;
     personagem?: number | null;
+    /** Últimas mensagens da conversa aberta no app (só o texto; fica no celular, não é guardado aqui). */
+    historico?: { de?: string; texto?: string }[];
   };
   try {
     body = await req.json();
@@ -438,8 +451,13 @@ Deno.serve(async (req) => {
 
     const querProgresso = PERGUNTA_PROGRESSO.test(texto);
     const dados = querProgresso ? await resumoProgresso(db, user.id) : "";
+    const historico: GroqMessage[] = (Array.isArray(body.historico) ? body.historico : [])
+      .filter((h) => typeof h?.texto === "string" && h.texto.trim())
+      .slice(-10)
+      .map((h) => ({ role: h.de === "eu" ? "user" : "assistant", content: h.texto!.trim().slice(0, 400) }));
     const messages: GroqMessage[] = [
       { role: "system", content: systemPrompt },
+      ...historico,
       {
         role: "user",
         content:
@@ -449,19 +467,30 @@ Deno.serve(async (req) => {
     ];
     const temp = quemSou ? 0.6 : 0.85;
     const limpar = (t: string | null | undefined) => semGiriaAlheia(t ?? "", quemSou ? agente : undefined);
+    // Nunca mudo: se o modelo devolver vazio, tenta mais uma vez sem ferramenta; se ainda vier
+    // vazio, uma frase de acolhimento no lugar do silêncio.
+    const reserva = "Tô aqui com você. Me conta um pouco mais do que tá rolando?";
+    const semVazio = async (t: string | null | undefined) => {
+      let r = limpar(t);
+      if (!r) {
+        console.warn("irise-orchestrator: resposta vazia, tentando de novo");
+        r = limpar((await chamarGroq(db, messages, false, true, temp)).content);
+      }
+      return r || reserva;
+    };
     const primeira = await chamarGroq(db, messages, true, !querProgresso, temp);
     const chamada = primeira.tool_calls?.[0];
 
     if (!chamada) {
       // Não precisou buscar lugar: resposta direta (conversa, progresso, FAQ do app, acolhimento).
-      return json(200, { message: limpar(primeira.content), places: null });
+      return json(200, { message: await semVazio(primeira.content), places: null });
     }
 
     if (chamada.function.name === "meu_progresso") {
       messages.push(primeira);
       messages.push({ role: "tool", tool_call_id: chamada.id, content: await resumoProgresso(db, user.id) });
       const resposta = await chamarGroq(db, messages, false, true, temp);
-      return json(200, { message: limpar(resposta.content), places: null });
+      return json(200, { message: await semVazio(resposta.content), places: null });
     }
 
     let args: { categories?: Categoria[]; sem_nota?: boolean; perto?: boolean };
