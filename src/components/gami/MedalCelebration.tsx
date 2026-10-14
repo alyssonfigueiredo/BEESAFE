@@ -60,6 +60,11 @@ export function MedalCelebration() {
   const [aberta, setAberta] = useState<string[] | null>(null);
   const [story, setStory] = useState<Compartilhavel | null>(null);
   const [prontoFechados, setProntoFechados] = useState(false);
+  // Contador que força o `novas` abaixo recalcular (14/10/2026, causa real do loop: `fechados` é um
+  // Set mutável fora do React — marcar um id nele não reexecuta o useMemo, que não tinha esse Set
+  // nas dependências. O `novas` ficava "velho", ainda com o id recém-fechado, e o efeito reabria com
+  // ele — sempre, determinístico, nada a ver com timing do servidor).
+  const [versaoFechados, setVersaoFechados] = useState(0);
   useEffect(() => {
     carregarFechados().then(() => setProntoFechados(true));
   }, []);
@@ -76,7 +81,10 @@ export function MedalCelebration() {
             .filter((c) => !c.visto && getMedalha(c.id) && !fechados?.has(c.id))
             .map((c) => c.id)
         : [],
-    [g, prontoFechados],
+    // versaoFechados não aparece no corpo: é só pra forçar recalcular quando `fechados` (Set fora
+    // do React) muda — sem ele, fechar() não fazia efeito nenhum aqui.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [g, prontoFechados, versaoFechados],
   );
 
   useEffect(() => {
@@ -88,6 +96,9 @@ export function MedalCelebration() {
   function fechar(irConquistas: boolean) {
     if (aberta) {
       marcarFechado(aberta);
+      // Sem isso, o `novas` memoizado não percebe que `fechados` mudou (ele não é estado do React)
+      // e o efeito abaixo reabre a mesma medalha com o array velho.
+      setVersaoFechados((v) => v + 1);
       marcar.mutate(aberta);
     }
     setAberta(null);
