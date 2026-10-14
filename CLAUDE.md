@@ -735,6 +735,10 @@ Nome: **Irisa** (INPI livre; @appirisa livre). Bundle id Android `br.com.irisa.a
   com a voz que estava em `app_settings.irise_voz_personagens` migrada; `admin_personagem_voz_set`
   continua e grava lá. Editar: painel web → Personagens do irise → abrir → "Como ele conversa no
   chat", ou app → admin do irise (só JS, chega por EAS Update). A voz geral segue em Chaves de API.
+  **Com personagem, a voz da Irise NÃO entra (14/10/2026, achado pelo Leandro com o Léo falando "mona"):**
+  `VOZ_IRISE` e a "Voz da Irise" do painel (`irise_voz_extra`) só vão no prompt de quem está sem
+  personagem; com personagem vai só o bloco dele. Gíria nível 0/1 proíbe gíria da comunidade (1 só
+  libera se a voz escrita pedir).
 
 ## Stack
 

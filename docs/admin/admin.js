@@ -1902,7 +1902,7 @@ async function viewChaves(ctx) {
       </form>
       <form class="card form" id="vozForm" style="margin-bottom:14px">
         <h2>Voz da Irise</h2>
-        <p class="small muted">Texto extra de tom/personalidade, colado depois das regras fixas (nunca inventar lugar, nunca dizer "seguro" etc. continuam protegidas no código) e antes do jeito do personagem escolhido. Vale pra conversa de todo mundo, mesmo quem está sem personagem.</p>
+        <p class="small muted">Jeito de falar da Irise, a assistente de quem ainda não escolheu personagem. Quem escolheu um irise conversa só com o jeito dele (Conteúdo → Personagens do irise), sem este texto. As regras fixas (nunca inventar lugar, nunca dizer "seguro" etc.) valem para todos.</p>
         <textarea class="input" id="vozExtra" rows="4" placeholder="Ex.: usa mais gíria tal, evita tal expressão…">${esc(vozExtra)}</textarea>
         <div class="foot"><button class="btn" type="submit">Salvar voz</button></div>
       </form>
