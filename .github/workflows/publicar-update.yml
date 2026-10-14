@@ -49,8 +49,8 @@ jobs:
       - name: Publica (Android)
         env:
           EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
-        run: npx eas-cli update --branch production --platform android --message "${{ inputs.mensagem }}" --non-interactive
+        run: npx eas-cli update --branch production --platform android --message "${{ inputs.mensagem }}" --non-interactive --environment production
       - name: Publica (iOS)
         env:
           EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
-        run: npx eas-cli update --branch production --platform ios --message "${{ inputs.mensagem }}" --non-interactive
+        run: npx eas-cli update --branch production --platform ios --message "${{ inputs.mensagem }}" --non-interactive --environment production
