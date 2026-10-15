@@ -1,0 +1,7 @@
+# Exemplo de texto para narrar um story. Linha com # não vai para a voz.
+# Pausa: <break time="1.0s" />
+# Rode: node scripts/narrar.mjs docs/narracao/exemplo.txt --video docs/Irisa-story.mp4
+Aquele bar novo é de boa pra gente? <break time="0.8s" />
+Na Irisa, quem esteve lá responde. <break time="0.6s" />
+O lugar recebe cor. A rua recebe aviso.
+O link está na bio.

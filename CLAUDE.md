@@ -802,6 +802,14 @@ Nome: **Irisa** (INPI livre; @appirisa livre). Bundle id Android `br.com.irisa.a
   thinking desligado); o ranking do Gemini também com `thinkingBudget: 0` (o pensamento cortava o JSON).
   `llama-prompt-guard` do Groq não conversa: é classificador de tentativa de manipulação, só devolve nota.
 
+- **Narração de story pela ElevenLabs (14/10/2026, pedido do Leandro):** `scripts/narrar.mjs` lê um texto (ex.
+  `docs/narracao/*.txt`; `#` é comentário, pausa com `<break time="1.0s" />`), mostra quantos caracteres vai gastar e
+  quanto sobra na conta, **pede confirmação** e grava o MP3 ao lado; `--video docs/X.mp4` gera `X-narrado.mp4` (voz
+  meio segundo depois do começo, o vídeo manda no tamanho, música entra no Instagram). `--vozes` lista as vozes sem
+  gastar. Chave `ELEVENLABS_API_KEY` (e opcional `ELEVENLABS_VOICE_ID`) no `.env.scripts` do Mac ou nas variáveis do
+  ambiente cloud; `--sim` pula a pergunta e só a sessão do Claude usa, depois do ok dele no chat. Plano grátis da
+  ElevenLabs não permite uso comercial: para post da Irisa, plano pago.
+
 ## Stack
 
 Expo SDK 57, Expo Router, NativeWind v4, TypeScript, TanStack Query, MapLibre React Native v11 com tiles Esri
