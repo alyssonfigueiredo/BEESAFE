@@ -378,6 +378,7 @@ const ROUTES = {
   personagens: { title: "Personagens do irise", admin: true, group: "Conteúdo", render: viewPersonagens },
   config: { title: "Configurações", admin: true, group: "Ajustes", render: viewConfig },
   chaves: { title: "Chaves de API", admin: true, group: "Ajustes", render: viewChaves },
+  iriseuso: { title: "Uso do irise", admin: true, group: "Ajustes", render: viewIriseUso },
 };
 const canSee = (key) => !!ROUTES[key] && (!ROUTES[key].admin || me.role === "admin");
 const homeRoute = () => (me.role === "admin" ? "visao" : "denuncias");
@@ -1935,6 +1936,77 @@ const API_KEYS = [
   { name: "GROQ_API_KEY", label: "Groq", hint: "Conversa e decisão da Irise. console.groq.com → API Keys (grátis)." },
   { name: "GEMINI_API_KEY", label: "Gemini", hint: "Ranqueia e explica os lugares achados. aistudio.google.com (grátis)." },
 ];
+
+// Uso do chat do irise (migration 80): tokens por dia, cota do Groq e quem usou hoje. Só números —
+// o texto das conversas não é guardado em lugar nenhum (dado sensível, LGPD).
+async function viewIriseUso(ctx) {
+  ctx.el.innerHTML = headHTML("Uso do irise", "Quanto o chat gasta por dia e quem está usando. O que as pessoas escrevem não fica guardado: só a contagem.") + `<div id="iubox"></div>`;
+  const box = $("#iubox", ctx.el);
+  const reload = () => load(box, async () => {
+    const u = await rpc("admin_irise_uso", { p_dias: 14 });
+    if (!ctx.alive()) return;
+    const h = u?.hoje_resumo || {};
+    const groq = Number(h.groq || 0), gemini = Number(h.gemini || 0);
+    const limite = typeof u?.limite_tokens_dia === "number" ? u.limite_tokens_dia : null;
+    const limMsgs = typeof u?.limite_msgs_pessoa === "number" ? u.limite_msgs_pessoa : null;
+    const cota = u?.cota_groq || null;
+    const pctTok = limite ? Math.min(100, Math.round((groq / limite) * 100)) : null;
+    // série de 14 dias com os dias sem uso em zero
+    const porDia = Object.fromEntries((u?.por_dia || []).map((d) => [d.dia, d]));
+    const hoje = new Date(`${u?.hoje || new Date().toISOString().slice(0, 10)}T12:00:00`);
+    const serie = Array.from({ length: 14 }, (_, i) => {
+      const d = new Date(hoje); d.setDate(d.getDate() - (13 - i));
+      const k = d.toISOString().slice(0, 10), x = porDia[k] || {};
+      return { dia: k, tokens: Number(x.groq || 0) + Number(x.gemini || 0), mensagens: Number(x.mensagens || 0), pessoas: Number(x.pessoas || 0) };
+    });
+    const quem = u?.quem_hoje || [];
+    box.innerHTML = `
+      <h2 class="sec-title">Hoje</h2>
+      <div class="tiles">
+        <div class="tile"><b>${num(groq)}</b><span>tokens do Groq (conversa)${limite ? ` · ${pctTok}% de ${num(limite)}` : ""}</span>
+          ${limite ? `<div style="margin-top:6px;height:8px;border-radius:99px;background:var(--line-2);overflow:hidden"><i style="display:block;height:100%;width:${pctTok}%;border-radius:99px;background:${pctTok >= 85 ? "var(--coral, #FF6964)" : "linear-gradient(90deg,#FF6964,#FFA353,#FFD066,#49DCC0,#59A7FF,#A889FF)"}"></i></div>` : ""}</div>
+        <div class="tile"><b>${num(gemini)}</b><span>tokens do Gemini (ordenar lugares)</span></div>
+        <div class="tile"><b>${cota ? num(cota.restantes) : "—"}</b><span>${cota ? `pedidos que ainda sobram hoje na cota do Groq (de ${num(cota.limite)})` : "cota do Groq aparece depois da 1ª conversa"}</span></div>
+        <div class="tile"><b>${num(h.mensagens)}</b><span>mensagens de ${plural(Number(h.pessoas || 0), "pessoa", "pessoas")}</span></div>
+        <div class="tile"><b>${num(h.buscas)}</b><span>buscas de lugar</span></div>
+        <div class="tile"><b>${num(h.crises)}</b><span>vezes que o chat mostrou o CVV (sem saber quem)</span></div>
+        ${Number(h.barradas || 0) ? `<div class="tile"><b>${num(h.barradas)}</b><span>mensagens barradas pelo limite por pessoa</span></div>` : ""}
+      </div>
+      <h2 class="sec-title">Últimos 14 dias</h2>
+      <div class="charts">
+        ${chartCard(serie, "tokens", "Tokens (Groq + Gemini)", "token", "tokens", "soma")}
+        ${chartCard(serie, "mensagens", "Mensagens no chat", "mensagem", "mensagens", "soma")}
+        ${chartCard(serie, "pessoas", "Pessoas que usaram", "pessoa", "pessoas", "media")}
+      </div>
+      <h2 class="sec-title">Quem usou hoje</h2>
+      ${quem.length ? `<div class="table-wrap"><table><thead><tr><th>Pessoa</th><th class="r">Mensagens</th><th class="r">Tokens</th></tr></thead>
+        <tbody>${quem.map((q) => `<tr class="click" data-id="${esc(q.id)}"><td>${esc(q.nome)}</td><td class="r num">${num(q.mensagens)}</td><td class="r num">${num(q.tokens)}</td></tr>`).join("")}</tbody></table></div>`
+        : `<div class="card empty">Ninguém conversou com o irise hoje.</div>`}
+      <form class="card form" id="iuLim" style="margin-top:18px">
+        <h2>Limites</h2>
+        <p class="small muted">Tokens por dia é só a referência da barra acima (o plano grátis do Groq tem teto diário; confira o número em console.groq.com → Settings → Limits). Mensagens por pessoa trava de verdade: passou, o irise avisa com carinho que volta amanhã, sem gastar IA. Vazio = sem limite.</p>
+        <div class="row" style="gap:10px;flex-wrap:wrap">
+          <label style="flex:1;min-width:180px">Tokens por dia (Groq)<input class="input" id="iuTok" type="number" min="1" placeholder="sem limite" value="${limite ?? ""}"></label>
+          <label style="flex:1;min-width:180px">Mensagens por pessoa por dia<input class="input" id="iuMsg" type="number" min="1" placeholder="sem limite" value="${limMsgs ?? ""}"></label>
+        </div>
+        <div class="foot"><button class="btn" type="submit">Salvar limites</button></div>
+      </form>
+      <div class="card" style="margin-top:14px"><h2>Conversas não ficam guardadas</h2>
+        <p class="small muted">De propósito. No chat as pessoas contam como estão, se sofreram violência, às vezes que pensam em se machucar — é dado sensível pela LGPD (saúde e orientação sexual), de um público que já corre risco. Guardar, mesmo escondido, é tratamento de dado: pode vazar num backup, numa chave ou ser pedido por ordem judicial. Aqui fica só quando, quem, quantos tokens e que tipo de pedido. O histórico da conversa fica só no celular da pessoa, enquanto o app está aberto. Os números saem sozinhos depois de 180 dias.</p></div>`;
+    bindCharts(box);
+    $$("tr.click", box).forEach((tr) => tr.addEventListener("click", () => { location.hash = "#pessoa/" + tr.dataset.id; }));
+    $("#iuLim", box).addEventListener("submit", (e) => {
+      e.preventDefault();
+      const v = (id) => { const x = $(id, box).value.trim(); return x ? Math.max(1, Math.round(Number(x))) : null; };
+      busy(e.submitter, async () => {
+        await rpc("admin_irise_limites_set", { p_tokens_dia: v("#iuTok"), p_msgs_pessoa: v("#iuMsg") });
+        toast("Limites salvos.");
+        reload();
+      });
+    });
+  }, ctx);
+  await reload();
+}
 
 async function viewChaves(ctx) {
   ctx.el.innerHTML = headHTML("Chaves de API", "Cole aqui em vez de mexer no painel do Supabase. A chave fica criptografada — nem o painel consegue mostrar de volta, só sobrescrever.") + `<div id="kbox"></div>`;
