@@ -24,6 +24,25 @@ export type Irise = {
  * banco (`irise_personagens`, migration 71) e as fotos vêm do Storage — ver `useIrisePersonagens`. */
 export const BUNDLED_N = new Set([10, 11, 12, 13, 14, 15, 16, 17, 18]);
 
+/** Quando a foto EMBUTIDA de cada personagem mudou pela última vez (data do commit que trocou
+ * `assets/irise-personagens/*-<n>.webp` / `avatar-card-*-<n>.png`). `useBustoResolvido` compara
+ * com `foto_atualizada_em` do banco (gravado quando alguém troca a foto pelo painel) e usa quem
+ * for mais recente — sem isso, uma foto trocada pelo painel ficava valendo pra sempre, mesmo
+ * depois de o repositório trazer uma embutida nova e melhor (foi o caso do Ali em 15/10/2026).
+ * Atualizar a data aqui sempre que recompuser as fotos embutidas de um personagem (ex.:
+ * `scripts/irise-poses-refazer.py`), senão a embutida nova perde pra uma foto antiga do painel. */
+export const EMBUTIDA_ATUALIZADA_EM: Record<number, string> = {
+  10: "2026-10-14T01:51:43Z",
+  11: "2026-10-14T01:51:43Z",
+  12: "2026-10-15T01:43:22Z",
+  13: "2026-10-14T01:51:43Z",
+  14: "2026-10-14T01:51:43Z",
+  15: "2026-10-14T01:51:43Z",
+  16: "2026-10-14T01:51:43Z",
+  17: "2026-10-14T01:51:43Z",
+  18: "2026-10-14T01:51:43Z",
+};
+
 export const IRISES: Irise[] = [
   { n: 10, nome: "Kai", pronomes: "elu/delu", classe: "DJ do Rolê", bio: "Conhece toda balada acolhedora da cidade e a playlist de cada uma.", stats: [3, 4, 3, 5], ativo: true },
   { n: 11, nome: "Léo", pronomes: "ele/dele", classe: "Guardião", bio: "Papo reto e ombro firme. Avisa antes de você chegar num lugar furado.", stats: [4, 3, 5, 3], ativo: true },

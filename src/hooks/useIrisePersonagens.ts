@@ -3,7 +3,7 @@ import { useState } from "react";
 import type { ImageSourcePropType } from "react-native";
 
 import { supabase } from "@/lib/supabase";
-import { BUNDLED_N, bustoSrc, corpoSrc, IRISES, type Irise } from "@/lib/irisePersonagens";
+import { BUNDLED_N, EMBUTIDA_ATUALIZADA_EM, bustoSrc, corpoSrc, IRISES, type Irise } from "@/lib/irisePersonagens";
 
 type LinhaBanco = {
   n: number;
@@ -105,20 +105,31 @@ function urlRemota(pose: number, personagem: number, versao?: string): string {
   return `${base}/storage/v1/object/public/irise/${personagem}/${pose}.webp${v}`;
 }
 
+/** A foto do painel (`foto_atualizada_em`) só vence a embutida se for MAIS NOVA que ela —
+ * `EMBUTIDA_ATUALIZADA_EM` (ver `irisePersonagens.ts`). Assim, recompor as fotos embutidas de um
+ * personagem (ex.: `irise-poses-refazer.py`) volta a valer sozinho, sem precisar zerar
+ * `foto_atualizada_em` no banco — e uma foto trocada pelo painel DEPOIS da embutida continua
+ * valendo, como sempre. Personagem fora dos 9 não tem embutida: a do painel sempre vence. */
+function fotoDoPainelVence(personagem: number, fotoAtualizadaEm: string | null | undefined): boolean {
+  if (!fotoAtualizadaEm) return false;
+  const embutidaEm = EMBUTIDA_ATUALIZADA_EM[personagem];
+  if (!embutidaEm) return true;
+  return new Date(fotoAtualizadaEm).getTime() > new Date(embutidaEm).getTime();
+}
+
 /**
  * Resolve a imagem de um busto considerando que o admin pode ter trocado a foto pelo painel —
  * inclusive de um dos 9 personagens originais, cuja foto normalmente vem embutida no app.
  * - Personagem fora dos 9: sempre tenta o Storage (não tem versão embutida).
- * - Um dos 9: só tenta o Storage se `foto_atualizada_em` existir (migration 72; só
- *   `admin_irise_personagem_tocar` grava ali, depois de subir foto nova — editar só o texto não
- *   mexe nessa coluna) — do contrário usa a embutida direto, sem gastar uma requisição à toa. Se o
- *   Storage falhar mesmo assim, volta pra embutida sozinho.
+ * - Um dos 9: só tenta o Storage se a foto do painel for mais nova que a embutida (ver
+ *   `fotoDoPainelVence`) — do contrário usa a embutida direto, sem gastar uma requisição à toa. Se
+ *   o Storage falhar mesmo assim, volta pra embutida sozinho.
  */
 export function useBustoResolvido(pose: number, personagem: number) {
   const linha = useLinhaBanco(personagem);
   const [remotoFalhou, setRemotoFalhou] = useState(false);
   const embutido = BUNDLED_N.has(personagem);
-  const tocado = !!linha?.foto_atualizada_em;
+  const tocado = fotoDoPainelVence(personagem, linha?.foto_atualizada_em);
   const tentarRemoto = (!embutido || tocado) && !remotoFalhou;
 
   if (tentarRemoto) {
@@ -128,12 +139,12 @@ export function useBustoResolvido(pose: number, personagem: number) {
   return { source: bustoSrc(pose, personagem) as ImageSourcePropType, onError: undefined };
 }
 
-/** Se a foto desse personagem já foi trocada pelo painel (mesma regra do `useBustoResolvido` acima,
+/** Se a foto do painel vale mais que a embutida agora (mesma regra do `useBustoResolvido` acima,
  * sem resolver imagem nenhuma) — usado por quem decide ENTRE a versão embutida e a montada na hora
  * (`CardCidadeIrise`, `FaixaSempreOnline`, `IrisePilula`), que hoje só olhavam `BUNDLED_N`. */
 export function useFotoTrocada(personagem: number) {
   const linha = useLinhaBanco(personagem);
-  return !!linha?.foto_atualizada_em;
+  return fotoDoPainelVence(personagem, linha?.foto_atualizada_em);
 }
 
 /**
@@ -145,7 +156,7 @@ export function useCorpoResolvido(personagem: number) {
   const linha = useLinhaBanco(personagem);
   const [remotoFalhou, setRemotoFalhou] = useState(false);
   const embutido = BUNDLED_N.has(personagem);
-  const tocado = !!linha?.foto_atualizada_em;
+  const tocado = fotoDoPainelVence(personagem, linha?.foto_atualizada_em);
   const tentarRemoto = (!embutido || tocado) && !remotoFalhou;
 
   if (tentarRemoto) {
