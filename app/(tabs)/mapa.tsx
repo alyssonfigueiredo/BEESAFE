@@ -14,7 +14,7 @@ import { NearPlaceCard, OpenCard, RelatoMiniCard } from "@/components/map/NearCa
 import { NearSheet, type SheetCard } from "@/components/map/NearSheet";
 import { useFavoritos, useLugaresFavoritos } from "@/hooks/useFavoritos";
 import { useAreaRisk, useOccurrences } from "@/hooks/useOccurrences";
-import { useNearPlaces, usePlaces } from "@/hooks/usePlaces";
+import { useBboxPlaces, useNearPlaces, usePlaces, type Bbox } from "@/hooks/usePlaces";
 import { tabBarBottom, useScreenInsets } from "@/hooks/useScreenInsets";
 import { distanceMeters, formatDistance } from "@/lib/geo";
 import type { PublicPlace } from "@/lib/types";
@@ -50,6 +50,11 @@ export default function MapaScreen() {
   const { data: cityPlaces = [], isLoading: loadingCity } = usePlaces(city?.id);
   // Com localização, os lugares mais perto de quem usa, de qualquer cidade (migration 41).
   const near = useNearPlaces(userLocation, null);
+  // Área visível da câmera (migration 82): sem isso, cidade grande sempre mostra o mesmo recorte
+  // de até 1.000 lugares, não importa pra onde o mapa se move. `bounds` só existe depois do
+  // primeiro onRegionDidChange — até lá o mapa mostra o lote da cidade (mapPlaces de baixo).
+  const [bounds, setBounds] = useState<Bbox | null>(null);
+  const bbox = useBboxPlaces(bounds);
 
   const [mode, setMode] = useState<MapMode>("mapa");
   const [layers, setLayers] = useState({ lugares: true, relatos: true });
@@ -78,18 +83,29 @@ export default function MapaScreen() {
   );
   const nearMode = !!userLocation && nearPlaces.length > 0;
 
-  // O mapa mostra o lote da cidade somado aos de perto (quem está na cidade vizinha também vê).
+  // Reinicia a área visível ao trocar de cidade (a MapaMap troca de key e manda um bbox novo em
+  // seguida; até lá, mapPlaces cai pro lote da cidade de baixo). Ajuste de estado durante a
+  // renderização, não em efeito — padrão recomendado pra "resetar estado quando uma prop muda".
+  const [boundsCity, setBoundsCity] = useState(city?.id);
+  if (city?.id !== boundsCity) {
+    setBoundsCity(city?.id);
+    setBounds(null);
+  }
+
+  // O mapa mostra o que está na área visível da câmera; antes do primeiro onRegionDidChange (ou
+  // se a busca por área falhar), cai pro lote da cidade somado aos de perto.
   const mapPlaces = useMemo(() => {
     if (queroOn) return favPlaces;
+    const base = bounds && !bbox.isError && bbox.data ? bbox.data : [...cityPlaces, ...nearPlaces];
     const seen = new Set<string>();
     const out: PublicPlace[] = [];
-    for (const p of [...cityPlaces, ...nearPlaces]) {
+    for (const p of base) {
       if (seen.has(p.id)) continue;
       seen.add(p.id);
       out.push(p);
     }
     return out;
-  }, [cityPlaces, nearPlaces, queroOn, favPlaces]);
+  }, [bounds, bbox.isError, bbox.data, cityPlaces, nearPlaces, queroOn, favPlaces]);
 
   const visibleOcc = useMemo(
     () => occurrences.filter((o) => types.has(o.type)),
@@ -339,6 +355,7 @@ export default function MapaScreen() {
         }
         onSelectArea={(a) => setSel({ kind: "area", area: a })}
         onPressEmpty={() => setSel(null)}
+        onBoundsChange={setBounds}
       />
 
       {mode === "lista" && (

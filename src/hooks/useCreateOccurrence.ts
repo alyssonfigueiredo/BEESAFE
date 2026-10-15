@@ -1,5 +1,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
+import { logEvent } from "@/lib/events";
 import { supabase } from "@/lib/supabase";
 import type { DayPeriod, OccurrenceSetting, OccurrenceType, Severity } from "@/theme/domain";
 
@@ -40,6 +41,7 @@ export function useCreateOccurrence() {
       if (error) throw new Error(MESSAGES[error.code ?? ""] ?? error.message);
     },
     onSuccess: () => {
+      logEvent("relatou");
       client.invalidateQueries({ queryKey: ["occurrences"] });
       client.invalidateQueries({ queryKey: ["area-risk"] });
       client.invalidateQueries({ queryKey: ["city-stats"] });
