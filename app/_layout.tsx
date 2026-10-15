@@ -12,12 +12,14 @@ import { useFonts } from "expo-font";
 import { Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import { StatusBar } from "expo-status-bar";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 
 import { queryClient } from "@/lib/query";
+import { logEvent } from "@/lib/events";
 import { AuthProvider, useAuth } from "@/providers/AuthProvider";
+import { ErrorBoundary } from "@/components/ErrorBoundary";
 import { Splash } from "@/components/Splash";
 import { SubiuDeNivel } from "@/components/gami/Evolucao";
 import { MedalCelebration } from "@/components/gami/MedalCelebration";
@@ -38,6 +40,14 @@ function RootNavigator({ pronto }: { pronto: boolean }) {
   usePush(session?.user.id, pronto && tour === "fechado");
   // Gamificação: marca o dia em que a pessoa abriu o app (só a data) e celebra medalha nova.
   useTrackOpen();
+  // Evento mínimo de produto, uma vez por sessão (não por tela).
+  const logged = useRef(false);
+  useEffect(() => {
+    if (session && pronto && !logged.current) {
+      logged.current = true;
+      logEvent("abriu");
+    }
+  }, [session, pronto]);
   if (loading) return null;
   return (
     <>
@@ -99,7 +109,9 @@ export default function RootLayout() {
           <AuthProvider>
             <CityProvider>
               <StatusBar style="dark" />
-              <RootNavigator pronto={!abrindo} />
+              <ErrorBoundary>
+                <RootNavigator pronto={!abrindo} />
+              </ErrorBoundary>
               {abrindo && <Splash onDone={fecharSplash} />}
             </CityProvider>
           </AuthProvider>

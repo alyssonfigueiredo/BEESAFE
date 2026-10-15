@@ -56,6 +56,9 @@ export function EmergencyButton() {
     <>
       <Pressable
         onPress={() => setOpen(true)}
+        accessibilityRole="button"
+        accessibilityLabel="Emergência"
+        accessibilityHint="Abre os números de emergência e apoio"
         className="mr-4 h-10 w-10 items-center justify-center"
       >
         <Animated.View
@@ -87,7 +90,12 @@ export function EmergencyButton() {
               <Text className="font-display text-2xl uppercase tracking-wide text-ink">
                 Emergência
               </Text>
-              <Pressable onPress={() => setOpen(false)} hitSlop={12}>
+              <Pressable
+                onPress={() => setOpen(false)}
+                hitSlop={12}
+                accessibilityRole="button"
+                accessibilityLabel="Fechar"
+              >
                 <X color={colors.muted} size={24} />
               </Pressable>
             </View>
