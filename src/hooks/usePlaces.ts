@@ -104,7 +104,7 @@ export function useNearPlaces(
 export type Bbox = { west: number; south: number; east: number; north: number };
 
 /**
- * Lugares dentro do retângulo visível do mapa (migration 80, 15/10/2026). O mapa usava o mesmo
+ * Lugares dentro do retângulo visível do mapa (migration 82, 15/10/2026). O mapa usava o mesmo
  * lote de até 1.000 lugares da cidade que a aba Lugares — em Curitiba (~10.700 lugares) isso
  * mostrava sempre o mesmo recorte, não importa pra onde a câmera se movesse. Aqui o lote muda
  * com a área visível, como um mapa de verdade.

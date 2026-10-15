@@ -148,7 +148,7 @@ export function MapaMap({
   const sel = selectedId ?? "";
   const isSel: ["==", ["get", string], string] = ["==", ["get", "id"], sel];
 
-  // Avisa a área visível pro pai buscar lugares nela (migration 80). Debounced: só depois de
+  // Avisa a área visível pro pai buscar lugares nela (migration 82). Debounced: só depois de
   // 400 ms parado, pra não disparar uma consulta a cada pixel do gesto de arrastar/zoom.
   const boundsTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   function handleRegionChange(e: NativeSyntheticEvent<ViewStateChangeEvent>) {

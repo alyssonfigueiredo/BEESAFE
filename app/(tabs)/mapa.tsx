@@ -50,7 +50,7 @@ export default function MapaScreen() {
   const { data: cityPlaces = [], isLoading: loadingCity } = usePlaces(city?.id);
   // Com localização, os lugares mais perto de quem usa, de qualquer cidade (migration 41).
   const near = useNearPlaces(userLocation, null);
-  // Área visível da câmera (migration 80): sem isso, cidade grande sempre mostra o mesmo recorte
+  // Área visível da câmera (migration 82): sem isso, cidade grande sempre mostra o mesmo recorte
   // de até 1.000 lugares, não importa pra onde o mapa se move. `bounds` só existe depois do
   // primeiro onRegionDidChange — até lá o mapa mostra o lote da cidade (mapPlaces de baixo).
   const [bounds, setBounds] = useState<Bbox | null>(null);
