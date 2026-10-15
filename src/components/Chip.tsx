@@ -29,6 +29,9 @@ export function Chip({
   return (
     <Pressable
       onPress={onPress}
+      accessibilityRole="button"
+      accessibilityState={{ selected: active }}
+      accessibilityLabel={label}
       className={`items-center rounded-full px-3 py-2 active:opacity-80 ${grow ? "flex-1" : ""}`}
       style={[{ backgroundColor: bg }, glass ? shadow.card : null]}
     >
