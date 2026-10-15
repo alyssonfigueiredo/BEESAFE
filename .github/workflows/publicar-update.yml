@@ -1,0 +1,56 @@
+name: Publicar Update (EAS)
+
+# Mesmo que "bash scripts/publicar.sh", mas disparado pelo GitHub (app do celular ou navegador),
+# sem precisar de terminal. Publica EAS Update na versão que estiver em app.config.ts/package.json
+# na branch escolhida — confere a versão antes de rodar, igual ao script.
+
+on:
+  workflow_dispatch:
+    inputs:
+      mensagem:
+        description: "Mensagem do update (aparece no painel do EAS)"
+        required: true
+        type: string
+      versao:
+        description: "Versão que recebe o update (0.1.2 ou 0.1.3). Vazio = a do código"
+        required: false
+        default: ""
+        type: string
+
+permissions:
+  contents: read
+
+jobs:
+  publicar:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: npm ci
+      - name: Mostra a versão que vai publicar
+        run: |
+          echo "Versão (app.config/package.json): $(node -p "require('./package.json').version")"
+          echo "Branch: ${{ github.ref_name }}"
+          echo "Mensagem: ${{ inputs.mensagem }}"
+      - name: Ajusta a versão do runtime (só se informada)
+        env:
+          VERSAO: ${{ inputs.versao }}
+        run: |
+          if [ -n "$VERSAO" ]; then
+            if [[ ! "$VERSAO" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+              echo "Versão inválida: $VERSAO" && exit 1
+            fi
+            sed -i "s/^  version: \"[0-9.]*\",/  version: \"$VERSAO\",/" app.config.ts
+            echo "Publicando para runtime $VERSAO:"
+            grep -n '^  version:' app.config.ts
+          fi
+      - name: Publica (Android)
+        env:
+          EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
+        run: npx eas-cli update --branch production --platform android --message "${{ inputs.mensagem }}" --non-interactive --environment production
+      - name: Publica (iOS)
+        env:
+          EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
+        run: npx eas-cli update --branch production --platform ios --message "${{ inputs.mensagem }}" --non-interactive --environment production

@@ -56,25 +56,39 @@ export function ReportButton({
         {!compact && <Text className="font-body text-xs text-dim">Denunciar</Text>}
       </Pressable>
       <Modal visible={open} transparent animationType="fade" onRequestClose={() => setOpen(false)}>
+        {/* Fundo como IRMÃO da folha, não pai (13/10/2026, achado na auditoria: um Pressable
+            ANCESTRAL da alça reivindica o responder no touch-down antes do PanResponder da alça
+            ter chance de reagir no move — por isso o arrastar nunca pegava aqui, diferente das
+            outras 4 folhas, que já tinham o fundo como irmão). */}
         <Pressable
-          className="flex-1 justify-end"
-          style={{ backgroundColor: "rgba(20,24,41,0.38)" }}
+          style={{ flex: 1, backgroundColor: "rgba(20,24,41,0.38)" }}
           onPress={() => setOpen(false)}
+        />
+        <Animated.View
+          style={[
+            {
+              position: "absolute",
+              left: 0,
+              right: 0,
+              bottom: 0,
+              borderTopLeftRadius: 34,
+              borderTopRightRadius: 34,
+              backgroundColor: "#FBFCFE",
+            },
+            dragStyle,
+          ]}
         >
-          <Animated.View
-            style={[{ borderTopLeftRadius: 34, borderTopRightRadius: 34, backgroundColor: "#FBFCFE" }, dragStyle]}
+          <View
+            {...dragHandlers}
+            style={{ paddingTop: 10, alignItems: "center" }}
+            hitSlop={{ top: 10, bottom: 10, left: 60, right: 60 }}
           >
+            {/* Alça da folha, a mesma das folhas novas. */}
             <View
-              {...dragHandlers}
-              style={{ paddingTop: 10, alignItems: "center" }}
-              hitSlop={{ top: 10, bottom: 10, left: 60, right: 60 }}
-            >
-              {/* Alça da folha, a mesma das folhas novas. */}
-              <View
-                className="h-[5px] w-11 rounded-full"
-                style={{ backgroundColor: colors.border }}
-              />
-            </View>
+              className="h-[5px] w-11 rounded-full"
+              style={{ backgroundColor: colors.border }}
+            />
+          </View>
           <Pressable
             className="gap-3 px-6 pb-10 pt-1"
             onPress={() => {}}
@@ -107,8 +121,7 @@ export function ReportButton({
               onPress={submit}
             />
           </Pressable>
-          </Animated.View>
-        </Pressable>
+        </Animated.View>
       </Modal>
     </>
   );

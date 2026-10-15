@@ -249,5 +249,25 @@ select count(*) > 0 as admin_users_ok from public.admin_users(null, 50, 0, 'inte
 select irise_nome = 'Ali' as admin_users_irise from public.admin_users(null, 200, 0, 'recente') where id = '66666666-6666-6666-6666-666666666666';
 select public.admin_user('66666666-6666-6666-6666-666666666666')->>'irise_nome' = 'Ali' as admin_user_irise;
 select (public.admin_irise_metricas()->>'com_irise')::int >= 1 as metricas_ok;
+-- migration 79: agente por personagem
+select (public.admin_irise_agente_set(12::smallint, 'Fala pausado.', 2::smallint, 0::smallint)).giria = 2 as agente_ok;
+select count(*) >= 1 as agentes_lista_ok from public.admin_irise_agentes();
+select public.admin_personagem_voz_set(12::smallint, 'Voz nova.');
+select voz = 'Voz nova.' and giria = 2 as voz_antiga_compat from public.admin_irise_agentes() where n = 12;
+-- migration 80: uso do irise (só números, crise sem pessoa)
 reset role;
+insert into public.irise_uso (user_id, provedor, tipo, tokens_in, tokens_out, rl_pedidos_limite, rl_pedidos_restantes)
+values ('66666666-6666-6666-6666-666666666666', 'groq', 'conversa', 100, 20, 1000, 999),
+       ('66666666-6666-6666-6666-666666666666', 'gemini', 'ranking', 50, 10, null, null),
+       (null, 'nenhum', 'crise', 0, 0, null, null);
+select public.irise_msgs_hoje('66666666-6666-6666-6666-666666666666') = 1 as msgs_hoje_ok;
+set role authenticated;
+select (public.admin_irise_uso(7)->'hoje_resumo'->>'groq')::int = 120 as uso_groq_ok;
+select (public.admin_irise_uso(7)->'hoje_resumo'->>'crises')::int = 1 as uso_crise_ok;
+select (public.admin_irise_uso(7)->'cota_groq'->>'restantes')::int = 999 as cota_ok;
+select jsonb_array_length(public.admin_irise_uso(7)->'quem_hoje') = 1 as quem_ok;
+select public.admin_irise_limites_set(200000, 40);
+select (public.admin_irise_uso(7)->>'limite_msgs_pessoa')::int = 40 as limite_ok;
+reset role;
+
 

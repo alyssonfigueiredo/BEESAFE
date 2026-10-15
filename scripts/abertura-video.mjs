@@ -2,7 +2,7 @@
 // Roda: node scripts/abertura-video.mjs
 //   V=radar (padrão) | 1 (coração → espiral → radar) | 2 (radar → tela arco-íris) | 3 (teste: coração, cores saem com o radar da logo) | apple (logo vira maçã arco-íris)
 //   FORMATO=story (1080×1920, padrão) | quadrado (1080×1080)
-//   BG=paper (padrão) | night | verde (chroma para recortar no editor)
+//   BG=paper (padrão) | night | branco (puro) | verde (chroma para recortar no editor)
 //   FRASE="texto" troca a frase debaixo do nome · SEMFIM=1 segura no final em vez de sair de cena · K=1.5 estica a linha do tempo · OUT=arquivo.mp4
 // Precisa de ffmpeg com libx264 (FFMPEG=/caminho/ffmpeg para outro binário).
 import { chromium } from "playwright-core";
@@ -11,7 +11,7 @@ import { resolve } from "node:path";
 
 const FPS = Number(process.env.FPS ?? 30);
 const FORMATO = process.env.FORMATO === "quadrado" ? "quadrado" : "story";
-const BG = ["night", "verde"].includes(process.env.BG) ? process.env.BG : "paper";
+const BG = ["night", "verde", "branco"].includes(process.env.BG) ? process.env.BG : "paper";
 const K = Number(process.env.K ?? 1);
 const V = ["1", "2", "3", "apple"].includes(process.env.V) ? process.env.V : "radar";
 const OUT = process.env.OUT ?? `docs/Irisa-abertura${V === "radar" ? "" : "-v" + V}${FORMATO === "quadrado" ? "-quadrado" : ""}${BG === "paper" ? "" : "-" + BG}.mp4`;

@@ -1,7 +1,8 @@
-import { Sparkles, X, Send } from "lucide-react-native";
-import { useRef, useState } from "react";
+import { MessageCircle, Phone, Sparkles, X, Send } from "lucide-react-native";
+import { useEffect, useRef, useState } from "react";
 import {
-  KeyboardAvoidingView,
+  Keyboard,
+  Linking,
   Modal,
   Platform,
   Pressable,
@@ -22,6 +23,7 @@ import { useIriseNear, useIriseOrchestrate, useIriseSuggest, type OrchestratedPl
 import { useIrisePersonagens } from "@/hooks/useIrisePersonagens";
 import { useProfile } from "@/hooks/useProfile";
 import { useSheetDismiss } from "@/hooks/useSheetDismiss";
+import { CVV_CHAT, CVV_TEL, MENSAGEM_CRISE, ehCrise } from "@/lib/crise";
 import type { Acao } from "@/lib/iriseFalas";
 import type { PlaceCategory } from "@/theme/domain";
 import { colors, shadow } from "@/theme/tokens";
@@ -40,7 +42,8 @@ type LogItem =
   | { kind: "chips"; id: string; options: { label: string; onPick: () => void }[] }
   | { kind: "typing"; id: string }
   | { kind: "results"; id: string; places: OrchestratedPlace[] }
-  | { kind: "empty"; id: string; text: string };
+  | { kind: "empty"; id: string; text: string }
+  | { kind: "crise"; id: string };
 
 const INTENCAO_CHIPS: { label: string; categories: PlaceCategory[] | null }[] = [
   { label: "🍽️ Comer", categories: ["restaurante"] },
@@ -194,6 +197,30 @@ function Bubble({ text, mine }: { text: string; mine?: boolean }) {
   );
 }
 
+/** Botões do CVV embaixo da resposta de crise: ligar 188 direto e, para quem não consegue falar, o chat. */
+function CriseCard() {
+  return (
+    <Animated.View entering={FadeInDown.duration(260)} style={{ gap: 8 }}>
+      <Pressable
+        onPress={() => void Linking.openURL(CVV_TEL)}
+        className="flex-row items-center justify-center gap-2 rounded-full active:opacity-80"
+        style={{ backgroundColor: colors.coral, paddingVertical: 14 }}
+      >
+        <Phone size={17} color={colors.night} strokeWidth={2.4} />
+        <Text className="font-body-bold text-[15px] text-night">Ligar para o CVV · 188</Text>
+      </Pressable>
+      <Pressable
+        onPress={() => void Linking.openURL(CVV_CHAT)}
+        className="flex-row items-center justify-center gap-2 rounded-full bg-solid active:opacity-80"
+        style={[{ paddingVertical: 12 }, shadow.card]}
+      >
+        <MessageCircle size={16} color={colors.ink} strokeWidth={2.2} />
+        <Text className="font-body-bold text-[14px] text-ink">Conversar pelo chat do CVV</Text>
+      </Pressable>
+    </Animated.View>
+  );
+}
+
 function ChipsRow({ options }: { options: { label: string; onPick: () => void }[] }) {
   return (
     <Animated.View entering={FadeInDown.duration(260)} className="flex-row flex-wrap gap-2">
@@ -222,6 +249,32 @@ function TypingDots() {
 
 let seq = 0;
 const uid = () => `l${seq++}`;
+
+/**
+ * Altura do teclado no iOS. O KeyboardAvoidingView com `position: absolute` dentro do Modal só
+ * empurrava a folha sem encolher a conversa (a ScrollView tinha altura fixa e o `overflow: hidden`
+ * cortava o campo de texto embaixo do teclado, visto em aparelho em 14/10/2026). Aqui a folha sobe
+ * a altura exata do teclado e a conversa encolhe para caber. Android segue como antes.
+ */
+function useAlturaTeclado() {
+  const [altura, setAltura] = useState(0);
+  useEffect(() => {
+    if (Platform.OS !== "ios") return;
+    const show = Keyboard.addListener("keyboardWillShow", (e) => {
+      Keyboard.scheduleLayoutAnimation(e);
+      setAltura(e.endCoordinates.height);
+    });
+    const hide = Keyboard.addListener("keyboardWillHide", (e) => {
+      Keyboard.scheduleLayoutAnimation(e);
+      setAltura(0);
+    });
+    return () => {
+      show.remove();
+      hide.remove();
+    };
+  }, []);
+  return altura;
+}
 
 export function IriseSheet({
   visible,
@@ -254,6 +307,9 @@ export function IriseSheet({
   onAcao?: (a: Acao) => void;
 }) {
   const { height } = useWindowDimensions();
+  const teclado = useAlturaTeclado();
+  // Folga em cima para a folha nunca passar da ilha/status bar quando o teclado sobe.
+  const alturaMax = teclado > 0 ? height - teclado - 56 : height * 0.86;
   const [log, setLog] = useState<LogItem[]>([]);
   const [texto, setTexto] = useState("");
   const [poseAtual, setPoseAtual] = useState(1);
@@ -265,6 +321,10 @@ export function IriseSheet({
   const orchestrate = useIriseOrchestrate();
   const { data: irises = [] } = useIrisePersonagens();
   const { panHandlers: dragHandlers, style: dragStyle } = useSheetDismiss(onClose);
+  // A conversa encolhe quando o teclado sobe: rola até a última mensagem para ela não sumir.
+  useEffect(() => {
+    if (teclado > 0) setTimeout(() => scrollRef.current?.scrollToEnd({ animated: true }), 280);
+  }, [teclado]);
 
   function push(item: LogItem) {
     setLog((l) => [...l, item]);
@@ -418,18 +478,33 @@ export function IriseSheet({
   async function handleFreeText() {
     const t = texto.trim();
     if (!t) return;
+    // O que já foi dito nesta conversa (só o texto dos balões, as últimas 10 falas): é o que deixa o
+    // irise lembrar que a pessoa disse que estava triste, o que pediu, o que já sugeriu. Fica no
+    // celular; o servidor não guarda.
+    const historico = log
+      .filter((i): i is Extract<LogItem, { kind: "bubble" }> => i.kind === "bubble")
+      .slice(-10)
+      .map((i) => ({ de: i.mine ? ("eu" as const) : ("irise" as const), texto: i.text }));
     setTexto("");
     addBubble(t, true);
+    // Suicídio ou se machucar: resposta fixa com o CVV na hora, sem ir ao servidor nem ao modelo.
+    if (ehCrise(t)) {
+      addBubble(MENSAGEM_CRISE);
+      push({ kind: "crise", id: uid() });
+      return;
+    }
     await withTyping(async () => {
       try {
-        const { message, places } = await orchestrate.mutateAsync({
+        const { message, places, crise } = await orchestrate.mutateAsync({
           texto: t,
           cidade: cityName ?? "sua cidade",
           cityId,
           perto: userLocation,
           personagem,
+          historico,
         });
-        if (message) addBubble(message);
+        addBubble(message || "Tô aqui com você. Me conta um pouco mais?");
+        if (crise) push({ kind: "crise", id: uid() });
         if (places) mostrarOuVazio(places, false);
       } catch (err) {
         // Detalhe técnico só no console — pra quem usa o app, só a mensagem simples.
@@ -487,13 +562,13 @@ export function IriseSheet({
   return (
     <Modal visible={visible} transparent animationType="fade" onShow={onOpen} onRequestClose={onClose} statusBarTranslucent>
       <Pressable style={{ flex: 1, backgroundColor: "rgba(20,24,41,0.4)" }} onPress={onClose} />
-      <KeyboardAvoidingView
-        behavior={Platform.OS === "ios" ? "padding" : undefined}
-        style={{ position: "absolute", left: 0, right: 0, bottom: 0, maxHeight: height * 0.86 }}
-      >
+      <View style={{ position: "absolute", left: 0, right: 0, bottom: teclado, maxHeight: alturaMax }}>
         <Animated.View
           className="bg-solid"
-          style={[{ borderTopLeftRadius: 34, borderTopRightRadius: 34, overflow: "hidden" }, dragStyle]}
+          style={[
+            { borderTopLeftRadius: 34, borderTopRightRadius: 34, overflow: "hidden", maxHeight: alturaMax },
+            dragStyle,
+          ]}
         >
           <View
             {...dragHandlers}
@@ -534,8 +609,9 @@ export function IriseSheet({
           )}
           <ScrollView
             ref={scrollRef}
-            style={{ maxHeight: height * 0.62 }}
+            style={{ maxHeight: height * 0.62, flexGrow: 0, flexShrink: 1 }}
             contentContainerStyle={{ padding: 18, gap: 12 }}
+            keyboardShouldPersistTaps="handled"
             showsVerticalScrollIndicator={false}
           >
             {log.map((item) => {
@@ -543,6 +619,7 @@ export function IriseSheet({
               if (item.kind === "chips") return <ChipsRow key={item.id} options={item.options} />;
               if (item.kind === "typing") return <TypingDots key={item.id} />;
               if (item.kind === "empty") return <Bubble key={item.id} text={item.text} />;
+              if (item.kind === "crise") return <CriseCard key={item.id} />;
               return (
                 <View key={item.id} style={{ gap: 6 }}>
                   {item.places.map((p, i) => (
@@ -559,7 +636,10 @@ export function IriseSheet({
               );
             })}
           </ScrollView>
-          <View className="gap-2 border-t border-border px-[14px] pb-[max(14px,env(safe-area-inset-bottom))] pt-[10px]">
+          <View
+            className="gap-2 border-t border-border px-[14px] pb-[max(14px,env(safe-area-inset-bottom))] pt-[10px]"
+            style={teclado > 0 ? { paddingBottom: 10 } : undefined}
+          >
             <View className="h-[46px] flex-row items-center gap-2 rounded-full bg-subtle pl-4 pr-1.5">
               <TextInput
                 ref={inputRef}
@@ -580,7 +660,7 @@ export function IriseSheet({
             </View>
           </View>
         </Animated.View>
-      </KeyboardAvoidingView>
+      </View>
     </Modal>
   );
 }

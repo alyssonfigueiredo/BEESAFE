@@ -715,6 +715,101 @@ Nome: **Irisa** (INPI livre; @appirisa livre). Bundle id Android `br.com.irisa.a
   Sem isso configurado, o botão aparece no painel mas o clique dá "Unsupported provider: missing
   OAuth secret" (mesmo erro de 05/10).
 
+- **Irise responde sobre o próprio progresso e acolhe (13/10/2026, pedido do Leandro):** o chat
+  (`supabase/functions/irise-orchestrator`) não serve só pra sugerir lugar. Pergunta sobre nível, gomos,
+  o que falta pra subir, medalhas que tem e que faltam, avaliações, semana, faíscas ou caixinhas
+  (regex `PERGUNTA_PROGRESSO`) já leva na mesma chamada um resumo de `gami_stats` (nomes de medalha e
+  nível com a flexão do Perfil); o que escapar da regex chama a ferramenta `meu_progresso`. Nomes e
+  condições vêm de `catalogo.ts`, **gerado** por `node scripts/irise-catalogo.mjs` a partir de
+  `src/lib/medals.ts` e `src/lib/niveis.ts` — mudou medalha ou nível, rodar de novo. Prompt: no
+  máximo 3 frases curtas, texto puro, nunca fecha seco (sempre termina com calor/porta aberta);
+  acolhimento em uma frase + caminho do app (Apoio, relato anônimo, 190, CVV 188), sem terapia nem
+  pedir detalhe; assunto fora do app que pede conversa longa é recusado com carinho e redirecionado.
+
+- **Chat fala como o irise escolhido (migration 79, 14/10/2026, pedido do Leandro):** a função
+  `irise-orchestrator` lê o personagem do PERFIL (`profiles.irise_personagem`; o `personagem` do corpo
+  só se o perfil não tiver) e monta o bloco "QUEM VOCÊ É": nome, pronomes, classe, bio, atributos
+  (4–5 = traço forte, 0–2 = traço contido), gíria, emoji e a voz livre. Sem personagem, segue a voz
+  padrão da Irise. Config de conversa por personagem na tabela `irise_agentes` (sem policy: só
+  `admin_irise_agentes`/`admin_irise_agente_set` e a função leem; `irise_personagens` é público),
+  com a voz que estava em `app_settings.irise_voz_personagens` migrada; `admin_personagem_voz_set`
+  continua e grava lá. Editar: painel web → Personagens do irise → abrir → "Como ele conversa no
+  chat", ou app → admin do irise (só JS, chega por EAS Update). A voz geral segue em Chaves de API.
+  **Com personagem, a voz da Irise NÃO entra (14/10/2026, achado pelo Leandro com o Léo falando "mona"):**
+  `VOZ_IRISE` e a "Voz da Irise" do painel (`irise_voz_extra`) só vão no prompt de quem está sem
+  personagem; com personagem vai só o bloco dele. Gíria nível 0/1 proíbe gíria da comunidade (1 só
+  libera se a voz escrita pedir).
+
+- **Poses dos irises sem achatar (14/10/2026, pedido do Leandro):** as poses 1–6 (claro, `-escuro` e
+  `avatar-card-`) dos 8 originais menos o Ali tinham sido esticadas à força para 300 × 460 e saíam
+  espremidas. Refeitas a partir das imagens sem fundo (zip do Drive `TODAS_IMAGENS_SEM_FUNDO`) por
+  `python3 scripts/irise-poses-refazer.py <pasta>`: escala igual nos dois eixos, cabeça a 4 px do topo,
+  mesma cabeça em todas as poses do personagem, cartão escuro montado com `anel-arcoiris.png` igual ao
+  do Ali (pedaço solto fora do anel é removido). Mapa: 10 Kai = pessoa-nao-binarie-asiatica, 11 Léo =
+  leandro, 13 Bento = homem-gay-gordo, 14 Dante = homem-gay-urso, 15 Rafa = homem-trans-ruivo, 16 Yara =
+  mulher-bissexual-indigena, 17 Dandara = mulher-lesbica-negra, 18 Luna = mulher-trans; Ali (12) não mexe.
+  Imagem embutida: chega no app por EAS Update. O painel web enquadra sozinho qualquer foto enviada.
+
+- **Chat mudo e sem memória (14/10/2026, achado pelo Leandro: disse que estava triste e o irise
+  parou de responder):** o `openai/gpt-oss-120b` pensa antes de responder e o pensamento sai do mesmo
+  limite; com `max_tokens: 300` às vezes acabava tudo pensando, a resposta vinha vazia e o app (`if
+  (message) addBubble`) não mostrava nada. Agora `max_completion_tokens: 1000` + `reasoning_effort: low`,
+  o campo `reasoning` não volta pro modelo, resposta vazia tenta de novo sem ferramenta e, se ainda vier
+  vazia, sai uma frase de acolhimento; o app também nunca fica mudo. **Histórico:** o app manda as
+  últimas 10 falas da conversa aberta (`historico: [{de: "eu"|"irise", texto}]`, só texto, ficam no
+  celular; o servidor não guarda) e o prompt pede continuidade. A parte do servidor vale na hora; o
+  histórico só chega com EAS Update.
+
+- **Medalha voltando em loop e teclado no chat (14/10/2026, vídeos do Leandro):** a causa do loop era
+  `useMarkSeen`: `setQueriesData(["gamificacao"])` também pega `["gamificacao","avaliou-hoje",…]`
+  (booleano); com `true`, `g.conquistadas.map` quebrava o `onMutate` e o `mark_medals_seen` nunca
+  rodava. Agora só atualiza o que é objeto de gamificação (`ehGami`). Chat do irise no iOS: a folha
+  sobe a altura do teclado (`useAlturaTeclado`) e a conversa encolhe; o KeyboardAvoidingView saiu.
+  Só JS: sai por EAS Update.
+
+- **Suicídio e se machucar no chat vão direto para o CVV (14/10/2026, pedido do Leandro):** a mesma lista de
+  expressões em `src/lib/crise.ts` e no `irise-orchestrator` (`CRISE`; mudou num, mudar no outro). Bateu, a
+  resposta é fixa (CVV 188, grátis, 24 h; 192 se estiver em perigo agora), **não passa pelo modelo** e o chat
+  mostra os botões "Ligar para o CVV · 188" (`tel:188`) e "Conversar pelo chat do CVV" (cvv.org.br/chat).
+  O servidor já responde assim; o app novo nem chega a chamar o servidor. Botão só com EAS Update.
+
+- **Busto desfocado na Escolha (14/10/2026, achado pelo Leandro):** a tela Escolha mostra o busto com ~870 px
+  de largura no iPhone, e o painel gravava 300 × 460 reduzindo num drawImage só (o navegador perde nitidez).
+  Agora `paraWebp` em `docs/admin/admin.js` grava o busto em **900 × 1380** (mesma proporção; o app só usa a
+  proporção, `BUSTO_ASPECTO`), reduzindo pela metade de cada vez, WebP 0,92, e avisa quando a foto é pequena.
+  Corpo (pose 0) até 1600 de altura. **As fotos já enviadas continuam 300 × 460: reenviar pelo painel.**
+  O Ali (12) está bom porque usa a embutida (feita com redução de qualidade), não a do Storage.
+
+- **Chat mais natural, busca acolhedora e uso de tokens no painel (migration 80, 14/10/2026, retorno do Leandro):**
+  pediu café acolhedor e vieram bar de vinho, bar de rock e pizzaria: o caminho "perto de você" chamava
+  `places_near` sem categoria. Agora busca por categoria, ganhou `acolhedor` (selo e nota de atendimento/afeto
+  primeiro, balada por último), nunca devolve lugar fora da categoria pedida e o Gemini recebe as últimas falas da
+  pessoa, não só "pode ser". Prompt: 1–2 frases, cumprimento só na primeira, sem repetir oferta, sem frase de
+  manual, Apoio/relato no máximo uma vez e só quando cabe; `semOi` tira o "oi" do começo com conversa em andamento.
+  **Painel → Ajustes → Uso do irise:** tokens de hoje (Groq/Gemini), pedidos que sobram na cota do Groq (lido dos
+  cabeçalhos `x-ratelimit-*`), 14 dias, quem usou hoje e limites (tokens/dia só referência; mensagens por pessoa/dia
+  trava de verdade). Tabela `irise_uso` **só com números** (quem, quando, tokens, tipo), apagada depois de 180 dias.
+  **Decisão: o texto das conversas NÃO é guardado** (dado sensível pela LGPD — saúde, orientação sexual — de um
+  público em risco; guardar escondido continua sendo tratamento). Crise (CVV) conta sem a pessoa.
+
+- **Cota do Groq e gasto por mensagem (migration 81, 14/10/2026):** plano grátis do gpt-oss-120b = 30 pedidos/min,
+  1.000/dia, **8 mil tokens/min e 200 mil tokens/dia** para o app inteiro (a 81 grava 200 mil como referência do
+  painel). Cada mensagem gastava ~3 mil tokens (prompt de ~1.700 + ferramentas + histórico + o pensamento do modelo) e
+  uma busca o dobro. Enxugado: prompt de ~600 tokens; regras de lugar (`REGRAS_BUSCA`) e a ferramenta de busca só vão
+  quando a mensagem tem cara de pedido de lugar (`PEDE_LUGAR`) ou o irise acabou de oferecer um (`OFERECEU_LUGAR`);
+  ferramenta de progresso só com `PODE_SER_PROGRESSO`; histórico 8 falas de até 300 letras; a 2ª chamada da busca
+  usa só o jeito do irise + `FINAL_BUSCA`. **Groq em 429 → a conversa sai pelo Gemini** (`conversarGemini`, sem busca,
+  thinking desligado); o ranking do Gemini também com `thinkingBudget: 0` (o pensamento cortava o JSON).
+  `llama-prompt-guard` do Groq não conversa: é classificador de tentativa de manipulação, só devolve nota.
+
+- **Narração de story pela ElevenLabs (14/10/2026, pedido do Leandro):** `scripts/narrar.mjs` lê um texto (ex.
+  `docs/narracao/*.txt`; `#` é comentário, pausa com `<break time="1.0s" />`), mostra quantos caracteres vai gastar e
+  quanto sobra na conta, **pede confirmação** e grava o MP3 ao lado; `--video docs/X.mp4` gera `X-narrado.mp4` (voz
+  meio segundo depois do começo, o vídeo manda no tamanho, música entra no Instagram). `--vozes` lista as vozes sem
+  gastar. Chave `ELEVENLABS_API_KEY` (e opcional `ELEVENLABS_VOICE_ID`) no `.env.scripts` do Mac ou nas variáveis do
+  ambiente cloud; `--sim` pula a pergunta e só a sessão do Claude usa, depois do ok dele no chat. Plano grátis da
+  ElevenLabs não permite uso comercial: para post da Irisa, plano pago.
+
 ## Stack
 
 Expo SDK 57, Expo Router, NativeWind v4, TypeScript, TanStack Query, MapLibre React Native v11 com tiles Esri

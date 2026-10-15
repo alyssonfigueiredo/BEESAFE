@@ -1,3 +1,4 @@
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { router } from "expo-router";
 import { useEffect, useMemo, useState } from "react";
 import { Modal, Pressable, Text, View } from "react-native";
@@ -25,6 +26,28 @@ const ATRASO = 300; // o anel começa depois que a tela escureceu
 const ANEL = 1200; // o anel desenha em 1,2 s (AnimatedMedal), depois a cor aparece
 const T_NOME = ATRASO + ANEL - 200;
 
+// Ids de medalha já fechados no aparelho: gravado de verdade (AsyncStorage), não só em memória do
+// componente. Uma lembrança em useRef some quando a tela remonta (volta de uma avaliação, troca de
+// tela) — foi o que fazia a MESMA medalha reaparecer mesmo depois de fechada, mesmo o
+// mark_medals_seen tendo sido chamado. Carregado uma vez por processo do app; grava a cada fechar().
+const FECHADOS_KEY = "irisa.medalhas.fechadas.v1";
+let fechados: Set<string> | null = null;
+async function carregarFechados() {
+  if (fechados) return fechados;
+  try {
+    const salvo = await AsyncStorage.getItem(FECHADOS_KEY);
+    fechados = new Set(salvo ? (JSON.parse(salvo) as string[]) : []);
+  } catch {
+    fechados = new Set();
+  }
+  return fechados;
+}
+function marcarFechado(ids: string[]) {
+  if (!fechados) fechados = new Set();
+  ids.forEach((id) => fechados!.add(id));
+  AsyncStorage.setItem(FECHADOS_KEY, JSON.stringify([...fechados])).catch(() => {});
+}
+
 /**
  * Medalha nova, em tela cheia. Fica no layout raiz e aparece sozinha quando o banco desbloqueia
  * alguma medalha que a pessoa ainda não viu; espera a folha da avaliação fechar.
@@ -36,6 +59,15 @@ export function MedalCelebration() {
   const reduce = useReducedMotion();
   const [aberta, setAberta] = useState<string[] | null>(null);
   const [story, setStory] = useState<Compartilhavel | null>(null);
+  const [prontoFechados, setProntoFechados] = useState(false);
+  // Contador que força o `novas` abaixo recalcular (14/10/2026, causa real do loop: `fechados` é um
+  // Set mutável fora do React — marcar um id nele não reexecuta o useMemo, que não tinha esse Set
+  // nas dependências. O `novas` ficava "velho", ainda com o id recém-fechado, e o efeito reabria com
+  // ele — sempre, determinístico, nada a ver com timing do servidor).
+  const [versaoFechados, setVersaoFechados] = useState(0);
+  useEffect(() => {
+    carregarFechados().then(() => setProntoFechados(true));
+  }, []);
   const { data: profile } = useProfile();
   const { data: irises = [] } = useIrisePersonagens();
   const personagem = profile?.irise_personagem
@@ -43,8 +75,16 @@ export function MedalCelebration() {
     : null;
 
   const novas = useMemo(
-    () => (g?.conquistadas ?? []).filter((c) => !c.visto && getMedalha(c.id)).map((c) => c.id),
-    [g],
+    () =>
+      prontoFechados
+        ? (g?.conquistadas ?? [])
+            .filter((c) => !c.visto && getMedalha(c.id) && !fechados?.has(c.id))
+            .map((c) => c.id)
+        : [],
+    // versaoFechados não aparece no corpo: é só pra forçar recalcular quando `fechados` (Set fora
+    // do React) muda — sem ele, fechar() não fazia efeito nenhum aqui.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [g, prontoFechados, versaoFechados],
   );
 
   useEffect(() => {
@@ -54,7 +94,13 @@ export function MedalCelebration() {
   }, [novas, aberta, rewardOpen]);
 
   function fechar(irConquistas: boolean) {
-    if (aberta) marcar.mutate(aberta);
+    if (aberta) {
+      marcarFechado(aberta);
+      // Sem isso, o `novas` memoizado não percebe que `fechados` mudou (ele não é estado do React)
+      // e o efeito abaixo reabre a mesma medalha com o array velho.
+      setVersaoFechados((v) => v + 1);
+      marcar.mutate(aberta);
+    }
     setAberta(null);
     if (irConquistas) router.push("/conquistas");
   }

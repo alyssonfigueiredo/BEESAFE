@@ -242,3 +242,33 @@ export function useAdminIriseFotoEnviar() {
     onSuccess: () => invalidarCatalogo(client),
   });
 }
+
+/** Como cada personagem conversa no chat (migration 79): voz livre + níveis de gíria e emoji. Só admin lê. */
+export type IriseAgente = { n: number; voz: string; giria: number; emoji: number };
+
+export function useAdminIriseAgentes() {
+  return useQuery({
+    queryKey: ["admin-irise-agentes"],
+    queryFn: async () => {
+      const { data, error } = await supabase.rpc("admin_irise_agentes");
+      if (error) throw new Error(error.message);
+      return (data ?? []) as IriseAgente[];
+    },
+  });
+}
+
+export function useAdminIriseAgenteSalvar() {
+  const client = useQueryClient();
+  return useMutation({
+    mutationFn: async (a: IriseAgente) => {
+      const { error } = await supabase.rpc("admin_irise_agente_set", {
+        p_n: a.n,
+        p_voz: a.voz.trim(),
+        p_giria: a.giria,
+        p_emoji: a.emoji,
+      });
+      if (error) throw new Error(error.message);
+    },
+    onSuccess: () => client.invalidateQueries({ queryKey: ["admin-irise-agentes"] }),
+  });
+}

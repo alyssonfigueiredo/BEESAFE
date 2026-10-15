@@ -378,6 +378,7 @@ const ROUTES = {
   personagens: { title: "Personagens do irise", admin: true, group: "Conteúdo", render: viewPersonagens },
   config: { title: "Configurações", admin: true, group: "Ajustes", render: viewConfig },
   chaves: { title: "Chaves de API", admin: true, group: "Ajustes", render: viewChaves },
+  iriseuso: { title: "Uso do irise", admin: true, group: "Ajustes", render: viewIriseUso },
 };
 const canSee = (key) => !!ROUTES[key] && (!ROUTES[key].admin || me.role === "admin");
 const homeRoute = () => (me.role === "admin" ? "visao" : "denuncias");
@@ -1568,7 +1569,8 @@ async function viewPersonagens(ctx) {
     `<button class="btn" id="irNovo">Novo personagem</button>`) + `<div id="irbox"></div>`;
   const box = $("#irbox", ctx.el);
   const reload = () => load(box, async () => {
-    const [lista, m] = await Promise.all([carregarIrises(), rpc("admin_irise_metricas")]);
+    const [lista, m, ags] = await Promise.all([carregarIrises(), rpc("admin_irise_metricas"), rpc("admin_irise_agentes").catch(() => [])]);
+    const agentes = Object.fromEntries((ags || []).map((x) => [x.n, x]));
     if (!ctx.alive()) return;
     const por = Object.fromEntries((m?.por_personagem || []).map((x) => [x.n, Number(x.pessoas)]));
     const com = Number(m?.com_irise || 0), total = Number(m?.pessoas || 0);
@@ -1599,26 +1601,81 @@ async function viewPersonagens(ctx) {
           <div class="small">${plural(por[p.n] || 0, "pessoa", "pessoas")}</div>
           ${p.ativo ? chip("on", "no ar") : chip("warn", "fora do ar")}
         </button>`).join("")}</div>`;
-    $$(".icard", box).forEach((b) => b.addEventListener("click", () => iriseEditor(iriseCatalogo[b.dataset.n], por[b.dataset.n] || 0, reload)));
+    $$(".icard", box).forEach((b) => b.addEventListener("click", () => iriseEditor(iriseCatalogo[b.dataset.n], por[b.dataset.n] || 0, reload, agentes[b.dataset.n])));
   }, ctx);
-  $("#irNovo", ctx.el).addEventListener("click", () => iriseEditor(null, 0, reload));
+  $("#irNovo", ctx.el).addEventListener("click", () => iriseEditor(null, 0, reload, null));
   await reload();
 }
 
 // Converte para WebP no navegador (o app sempre lê `<pose>.webp`), mantendo o fundo transparente.
-async function paraWebp(file) {
+// Busto (poses 1 a 6) sai em 900 × 1380 (a proporção 300 × 460 em 3×: a tela Escolha mostra o busto
+// com ~870 px de largura no iPhone, e em 300 × 460 ficava desfocado, 14/10/2026), sem esticar: corta o
+// vazio, escala igual nos dois eixos (corpo com ~816 de largura e chegando pelo menos a 1020 de
+// altura), cabeça no centro a 12 px do topo. Corpo inteiro (pose 0) mantém a proporção, com até
+// 1600 de altura. A redução é feita pela metade de cada vez: num drawImage só, o navegador perde nitidez.
+const BUSTO_K = 3;
+function reduzir(img, sx, sy, sw, sh, dw, dh) {
+  let src = img, x = sx, y = sy, w = sw, h = sh;
+  while (w / 2 > dw && h / 2 > dh) {
+    const c = document.createElement("canvas");
+    c.width = Math.round(w / 2); c.height = Math.round(h / 2);
+    const cx = c.getContext("2d");
+    cx.imageSmoothingQuality = "high";
+    cx.drawImage(src, x, y, w, h, 0, 0, c.width, c.height);
+    src = c; x = 0; y = 0; w = c.width; h = c.height;
+  }
+  return { src, x, y, w, h };
+}
+async function paraWebp(file, pose) {
   const img = await createImageBitmap(file);
-  const escala = Math.min(1, 1200 / Math.max(img.width, img.height));
+  const tmp = document.createElement("canvas");
+  tmp.width = img.width; tmp.height = img.height;
+  const tc = tmp.getContext("2d");
+  tc.drawImage(img, 0, 0);
+  const px = tc.getImageData(0, 0, img.width, img.height).data;
+  let x0 = img.width, y0 = img.height, x1 = -1, y1 = -1;
+  for (let y = 0; y < img.height; y++) for (let x = 0; x < img.width; x++) {
+    if (px[(y * img.width + x) * 4 + 3] > 24) { if (x < x0) x0 = x; if (x > x1) x1 = x; if (y < y0) y0 = y; if (y > y1) y1 = y; }
+  }
+  if (x1 < 0) throw new Error("A imagem está vazia (toda transparente).");
+  const bw = x1 - x0 + 1, bh = y1 - y0 + 1;
   const c = document.createElement("canvas");
-  c.width = Math.round(img.width * escala); c.height = Math.round(img.height * escala);
-  c.getContext("2d").drawImage(img, 0, 0, c.width, c.height);
-  const blob = await new Promise((r) => c.toBlob(r, "image/webp", 0.9));
+  const ctx = c.getContext("2d");
+  ctx.imageSmoothingQuality = "high";
+  if (Number(pose) === 0) {
+    const s = Math.min(1, 1600 / bh);
+    c.width = Math.round(bw * s); c.height = Math.round(bh * s);
+    const r = reduzir(img, x0, y0, bw, bh, c.width, c.height);
+    ctx.drawImage(r.src, r.x, r.y, r.w, r.h, 0, 0, c.width, c.height);
+  } else {
+    const K = BUSTO_K;
+    c.width = 300 * K; c.height = 460 * K;
+    const s = Math.max((272 * K) / bw, (340 * K) / bh);
+    // centro da cabeça = meio do que aparece nas primeiras linhas do recorte
+    const faixa = Math.max(8, Math.round(bh / 8));
+    let hx0 = bw, hx1 = -1;
+    for (let y = y0; y < y0 + faixa; y++) for (let x = x0; x <= x1; x++) {
+      if (px[(y * img.width + x) * 4 + 3] > 24) { if (x - x0 < hx0) hx0 = x - x0; if (x - x0 > hx1) hx1 = x - x0; }
+    }
+    const cx = hx1 >= 0 ? (hx0 + hx1) / 2 : bw / 2;
+    if (s > 1.5 && !confirm("Essa foto é pequena e vai aparecer desfocada no app (o ideal é pelo menos 900 px de largura). Enviar mesmo assim?")) {
+      throw new Error("Envio cancelado.");
+    }
+    const dw = bw * s, dh = bh * s;
+    const r = reduzir(img, x0, y0, bw, bh, dw, dh);
+    ctx.drawImage(r.src, r.x, r.y, r.w, r.h, 150 * K - cx * s, 4 * K, dw, dh);
+  }
+  const blob = await new Promise((r) => c.toBlob(r, "image/webp", 0.92));
   if (!blob || blob.type !== "image/webp") throw new Error("Este navegador não converte para WebP. Tente pelo Chrome.");
   if (blob.size > 2 * 1024 * 1024) throw new Error("A imagem passa de 2 MB mesmo convertida. Use uma menor.");
   return blob;
 }
 
-function iriseEditor(p, pessoas, reload) {
+const GIRIA_OPC = ["Quase nenhuma", "Na medida", "Bastante"];
+const EMOJI_OPC = ["Nunca", "No máximo um", "À vontade"];
+
+function iriseEditor(p, pessoas, reload, agente) {
+  let ag = agente ? { ...agente } : { voz: "", giria: 1, emoji: 1 };
   const novo = !p;
   const proximo = Math.max(18, ...Object.keys(iriseCatalogo || {}).map(Number)) + 1;
   p = p ? { ...p } : { n: proximo, nome: "", pronomes: "ela/dela", classe: "", bio: "", stat_acolhimento: 3, stat_humor: 3, stat_papo_reto: 3, stat_role: 3, ativo: true };
@@ -1641,6 +1698,7 @@ function iriseEditor(p, pessoas, reload) {
       <label class="check"><input type="checkbox" name="ativo" ${p.ativo ? "checked" : ""}> Aparece para escolher no app <span class="small dim">(quem já escolheu continua com ele)</span></label>
       <div class="foot">${novo ? "" : `<button type="button" class="btn danger" id="irDel" style="margin-right:auto">Apagar</button>`}<button type="button" class="btn ghost" data-close>Fechar</button><button class="btn" type="submit" id="irSave">Salvar textos</button></div>
     </form>
+    <div id="irAgente"></div>
     <div id="irFotos"></div>`, { wide: true, onClose: () => { if (mudou) reload(); } });
   const f = $("#irf", d);
   counter(f.bio, $("#irBioN", d), 200);
@@ -1648,7 +1706,7 @@ function iriseEditor(p, pessoas, reload) {
     const host = $("#irFotos", d);
     if (novo && !mudou) { host.innerHTML = ""; return; }
     host.innerHTML = `<h3 style="margin-top:18px">Fotos</h3>
-      <p class="small muted" style="margin:4px 0 10px">Busto 300 × 460 com fundo transparente (PNG ou WebP), igual às do app; corpo inteiro também transparente. A troca vale para todo mundo na hora.</p>
+      <p class="small muted" style="margin:4px 0 10px">PNG ou WebP com fundo transparente, de qualquer tamanho: o painel enquadra sozinho em 900 × 1380 (busto, proporção 300 × 460) sem esticar, com a cabeça no topo. A troca vale para todo mundo na hora.</p>
       <div class="poses">${POSES.map(([pose, t]) => `<div class="pose">
           <div class="pv"><img src="${esc(iriseFoto(p, pose))}${p.foto_atualizada_em || IRISE_EMBUTIDOS.has(Number(p.n)) ? "" : `?t=${Date.now()}`}" alt=""
             onerror="if(this.dataset.r!=='1'&&${IRISE_EMBUTIDOS.has(Number(p.n))}){this.dataset.r='1';this.src='${pose === 1 ? `irise-${p.n}.webp` : `irise-${p.n}-${pose}.webp`}'}else{this.replaceWith(Object.assign(document.createElement('span'),{className:'small dim',textContent:'sem foto'}))}"></div>
@@ -1662,7 +1720,7 @@ function iriseEditor(p, pessoas, reload) {
       if (!file) return;
       busy($(`[data-pick="${inp.dataset.pose}"]`, host), async () => {
         if (!/^image\/(png|webp)$/.test(file.type)) throw new Error("Use PNG ou WebP com fundo transparente.");
-        const blob = await paraWebp(file);
+        const blob = await paraWebp(file, inp.dataset.pose);
         const up = await sb.storage.from("irise").upload(`${p.n}/${inp.dataset.pose}.webp`, blob, { contentType: "image/webp", upsert: true });
         if (up.error) throw new Error(ptErr(up.error));
         await rpc("admin_irise_personagem_tocar", { p_n: p.n });
@@ -1673,6 +1731,36 @@ function iriseEditor(p, pessoas, reload) {
       });
     }));
   };
+  const drawAgente = () => {
+    const host = $("#irAgente", d);
+    if (novo && !mudou) { host.innerHTML = ""; return; }
+    const opts = (lista, sel) => lista.map((t, i) => `<option value="${i}" ${i === Number(sel) ? "selected" : ""}>${esc(t)}</option>`).join("");
+    host.innerHTML = `<form class="form" id="irAgForm" novalidate style="margin-top:18px">
+      <h3>Como ${esc(p.nome || "ele")} conversa no chat</h3>
+      <p class="small muted" style="margin:4px 0 2px">O chat responde com o nome, os pronomes, a classe e a bio acima. Atributo 4 ou 5 vira traço forte (ex.: humor 5 = brinca e zoa) e 0 a 2 vira traço contido. As regras fixas (nunca inventar lugar, nunca dizer "seguro", respostas curtas e acolhedoras) valem para todos.</p>
+      <label class="f">Voz e personalidade <span class="hint" id="irVozN"></span>
+        <textarea class="input" name="voz" rows="5" maxlength="1500" placeholder="Ex.: fala pausado, chama todo mundo de 'meu bem', adora citar música, termina dizendo 'tô contigo'.">${esc(ag.voz || "")}</textarea></label>
+      <div class="row">
+        <label class="f">Gíria <select class="input" name="giria">${opts(GIRIA_OPC, ag.giria)}</select></label>
+        <label class="f">Emoji <select class="input" name="emoji">${opts(EMOJI_OPC, ag.emoji)}</select></label>
+      </div>
+      <div class="foot"><button class="btn" type="submit" id="irAgSave">Salvar conversa</button></div>
+    </form>`;
+    const af = $("#irAgForm", host);
+    counter(af.voz, $("#irVozN", host), 1500);
+    af.addEventListener("submit", (ev) => {
+      ev.preventDefault();
+      busy($("#irAgSave", host), async () => {
+        const salvo = await rpc("admin_irise_agente_set", {
+          p_n: Number(p.n), p_voz: af.voz.value.trim(), p_giria: Number(af.giria.value), p_emoji: Number(af.emoji.value),
+        });
+        ag = salvo || ag;
+        mudou = true;
+        toast("Salvo. Vale na próxima mensagem do chat.");
+      });
+    });
+  };
+  drawAgente();
   drawFotos();
   f.addEventListener("submit", (ev) => {
     ev.preventDefault();
@@ -1691,6 +1779,7 @@ function iriseEditor(p, pessoas, reload) {
       f.n.disabled = true;
       mudou = true;
       toast("Salvo");
+      drawAgente();
       drawFotos();
     });
   });
@@ -1848,26 +1937,86 @@ const API_KEYS = [
   { name: "GEMINI_API_KEY", label: "Gemini", hint: "Ranqueia e explica os lugares achados. aistudio.google.com (grátis)." },
 ];
 
+// Uso do chat do irise (migration 80): tokens por dia, cota do Groq e quem usou hoje. Só números —
+// o texto das conversas não é guardado em lugar nenhum (dado sensível, LGPD).
+async function viewIriseUso(ctx) {
+  ctx.el.innerHTML = headHTML("Uso do irise", "Quanto o chat gasta por dia e quem está usando. O que as pessoas escrevem não fica guardado: só a contagem.") + `<div id="iubox"></div>`;
+  const box = $("#iubox", ctx.el);
+  const reload = () => load(box, async () => {
+    const u = await rpc("admin_irise_uso", { p_dias: 14 });
+    if (!ctx.alive()) return;
+    const h = u?.hoje_resumo || {};
+    const groq = Number(h.groq || 0), gemini = Number(h.gemini || 0);
+    const limite = typeof u?.limite_tokens_dia === "number" ? u.limite_tokens_dia : null;
+    const limMsgs = typeof u?.limite_msgs_pessoa === "number" ? u.limite_msgs_pessoa : null;
+    const cota = u?.cota_groq || null;
+    const pctTok = limite ? Math.min(100, Math.round((groq / limite) * 100)) : null;
+    // série de 14 dias com os dias sem uso em zero
+    const porDia = Object.fromEntries((u?.por_dia || []).map((d) => [d.dia, d]));
+    const hoje = new Date(`${u?.hoje || new Date().toISOString().slice(0, 10)}T12:00:00`);
+    const serie = Array.from({ length: 14 }, (_, i) => {
+      const d = new Date(hoje); d.setDate(d.getDate() - (13 - i));
+      const k = d.toISOString().slice(0, 10), x = porDia[k] || {};
+      return { dia: k, tokens: Number(x.groq || 0) + Number(x.gemini || 0), mensagens: Number(x.mensagens || 0), pessoas: Number(x.pessoas || 0) };
+    });
+    const quem = u?.quem_hoje || [];
+    box.innerHTML = `
+      <h2 class="sec-title">Hoje</h2>
+      <div class="tiles">
+        <div class="tile"><b>${num(groq)}</b><span>tokens do Groq (conversa)${limite ? ` · ${pctTok}% de ${num(limite)}` : ""}</span>
+          ${limite ? `<div style="margin-top:6px;height:8px;border-radius:99px;background:var(--line-2);overflow:hidden"><i style="display:block;height:100%;width:${pctTok}%;border-radius:99px;background:${pctTok >= 85 ? "var(--coral, #FF6964)" : "linear-gradient(90deg,#FF6964,#FFA353,#FFD066,#49DCC0,#59A7FF,#A889FF)"}"></i></div>` : ""}</div>
+        <div class="tile"><b>${num(gemini)}</b><span>tokens do Gemini (ordenar lugares)</span></div>
+        <div class="tile"><b>${cota ? num(cota.restantes) : "—"}</b><span>${cota ? `pedidos que ainda sobram hoje na cota do Groq (de ${num(cota.limite)})` : "cota do Groq aparece depois da 1ª conversa"}</span></div>
+        <div class="tile"><b>${num(h.mensagens)}</b><span>mensagens de ${plural(Number(h.pessoas || 0), "pessoa", "pessoas")}</span></div>
+        <div class="tile"><b>${num(h.buscas)}</b><span>buscas de lugar</span></div>
+        <div class="tile"><b>${num(h.crises)}</b><span>vezes que o chat mostrou o CVV (sem saber quem)</span></div>
+        ${Number(h.barradas || 0) ? `<div class="tile"><b>${num(h.barradas)}</b><span>mensagens barradas pelo limite por pessoa</span></div>` : ""}
+      </div>
+      <h2 class="sec-title">Últimos 14 dias</h2>
+      <div class="charts">
+        ${chartCard(serie, "tokens", "Tokens (Groq + Gemini)", "token", "tokens", "soma")}
+        ${chartCard(serie, "mensagens", "Mensagens no chat", "mensagem", "mensagens", "soma")}
+        ${chartCard(serie, "pessoas", "Pessoas que usaram", "pessoa", "pessoas", "media")}
+      </div>
+      <h2 class="sec-title">Quem usou hoje</h2>
+      ${quem.length ? `<div class="table-wrap"><table><thead><tr><th>Pessoa</th><th class="r">Mensagens</th><th class="r">Tokens</th></tr></thead>
+        <tbody>${quem.map((q) => `<tr class="click" data-id="${esc(q.id)}"><td>${esc(q.nome)}</td><td class="r num">${num(q.mensagens)}</td><td class="r num">${num(q.tokens)}</td></tr>`).join("")}</tbody></table></div>`
+        : `<div class="card empty">Ninguém conversou com o irise hoje.</div>`}
+      <form class="card form" id="iuLim" style="margin-top:18px">
+        <h2>Limites</h2>
+        <p class="small muted">Tokens por dia é só a referência da barra acima (o plano grátis do Groq tem teto diário; confira o número em console.groq.com → Settings → Limits). Mensagens por pessoa trava de verdade: passou, o irise avisa com carinho que volta amanhã, sem gastar IA. Vazio = sem limite.</p>
+        <div class="row" style="gap:10px;flex-wrap:wrap">
+          <label style="flex:1;min-width:180px">Tokens por dia (Groq)<input class="input" id="iuTok" type="number" min="1" placeholder="sem limite" value="${limite ?? ""}"></label>
+          <label style="flex:1;min-width:180px">Mensagens por pessoa por dia<input class="input" id="iuMsg" type="number" min="1" placeholder="sem limite" value="${limMsgs ?? ""}"></label>
+        </div>
+        <div class="foot"><button class="btn" type="submit">Salvar limites</button></div>
+      </form>
+      <div class="card" style="margin-top:14px"><h2>Conversas não ficam guardadas</h2>
+        <p class="small muted">De propósito. No chat as pessoas contam como estão, se sofreram violência, às vezes que pensam em se machucar — é dado sensível pela LGPD (saúde e orientação sexual), de um público que já corre risco. Guardar, mesmo escondido, é tratamento de dado: pode vazar num backup, numa chave ou ser pedido por ordem judicial. Aqui fica só quando, quem, quantos tokens e que tipo de pedido. O histórico da conversa fica só no celular da pessoa, enquanto o app está aberto. Os números saem sozinhos depois de 180 dias.</p></div>`;
+    bindCharts(box);
+    $$("tr.click", box).forEach((tr) => tr.addEventListener("click", () => { location.hash = "#pessoa/" + tr.dataset.id; }));
+    $("#iuLim", box).addEventListener("submit", (e) => {
+      e.preventDefault();
+      const v = (id) => { const x = $(id, box).value.trim(); return x ? Math.max(1, Math.round(Number(x))) : null; };
+      busy(e.submitter, async () => {
+        await rpc("admin_irise_limites_set", { p_tokens_dia: v("#iuTok"), p_msgs_pessoa: v("#iuMsg") });
+        toast("Limites salvos.");
+        reload();
+      });
+    });
+  }, ctx);
+  await reload();
+}
+
 async function viewChaves(ctx) {
   ctx.el.innerHTML = headHTML("Chaves de API", "Cole aqui em vez de mexer no painel do Supabase. A chave fica criptografada — nem o painel consegue mostrar de volta, só sobrescrever.") + `<div id="kbox"></div>`;
   const box = $("#kbox", ctx.el);
   await load(box, async () => {
-    const [status, settings, personagens] = await Promise.all([
-      rpc("admin_api_keys_status"),
-      rpc("admin_settings"),
-      rpc("admin_irise_personagens"),
-    ]);
+    const [status, settings] = await Promise.all([rpc("admin_api_keys_status"), rpc("admin_settings")]);
     if (!ctx.alive()) return;
     const cfg = Object.fromEntries((status || []).map((s) => [s.name, s.configurado]));
     const iriseAtiva = !!(settings || {}).irise_ativa;
     const vozExtra = typeof (settings || {}).irise_voz_extra === "string" ? (settings || {}).irise_voz_extra : "";
-    const vozPersonagens = (settings || {}).irise_voz_personagens && typeof (settings || {}).irise_voz_personagens === "object"
-      ? (settings || {}).irise_voz_personagens
-      : {};
-    // Catálogo de verdade (migration 71): o painel já deixa criar/renomear/apagar personagem, então
-    // a voz tem que listar o que existe agora, não uma lista fixa. Inclui inativos — dá pra escrever
-    // a voz antes de ligar o personagem pro público.
-    const listaPersonagens = personagens || [];
     box.innerHTML = `
       <form class="card form" id="iriseForm" style="margin-bottom:14px">
         <h2>Botão da Irise no app</h2>
@@ -1876,22 +2025,12 @@ async function viewChaves(ctx) {
       </form>
       <form class="card form" id="vozForm" style="margin-bottom:14px">
         <h2>Voz da Irise</h2>
-        <p class="small muted">Texto extra de tom/personalidade, colado depois das regras fixas (nunca inventar lugar, nunca dizer "seguro" etc. continuam protegidas no código) e antes do texto do personagem escolhido, aqui embaixo. Vale pra conversa de todo mundo, mesmo quem está sem personagem.</p>
+        <p class="small muted">Jeito de falar da Irise, a assistente de quem ainda não escolheu personagem. Quem escolheu um irise conversa só com o jeito dele (Conteúdo → Personagens do irise), sem este texto. As regras fixas (nunca inventar lugar, nunca dizer "seguro" etc.) valem para todos.</p>
         <textarea class="input" id="vozExtra" rows="4" placeholder="Ex.: usa mais gíria tal, evita tal expressão…">${esc(vozExtra)}</textarea>
         <div class="foot"><button class="btn" type="submit">Salvar voz</button></div>
       </form>
-      <form class="card form" id="vozPersonagemForm" style="margin-bottom:14px">
-        <h2>Voz de cada personagem</h2>
-        <p class="small muted">Texto extra só desse personagem, somado depois da voz geral acima quando a pessoa escolhe ele no chat. Em branco, o personagem fala só com o texto-base + a voz geral.</p>
-        ${listaPersonagens.length ? `
-        <label class="small muted" for="vpSelect">Personagem</label>
-        <select class="input" id="vpSelect" style="margin-bottom:10px">
-          ${listaPersonagens.map((p) => `<option value="${p.n}">${esc(p.nome)}${p.ativo ? "" : " · inativo"}</option>`).join("")}
-        </select>
-        <textarea class="input" id="vpTexto" rows="4" placeholder="Ex.: fala mais pausado, gosta de citar um refrão…"></textarea>
-        <div class="foot"><button class="btn" type="submit">Salvar voz do personagem</button></div>
-        ` : `<p class="small muted">Nenhum personagem cadastrado ainda — crie um em Personagens do Irise.</p>`}
-      </form>` + API_KEYS.map((k) => `
+      <div class="card" style="margin-bottom:14px"><h2>Voz de cada personagem</h2>
+        <p class="small muted">Agora fica em <a href="#personagens">Conteúdo → Personagens do irise</a>: abra o personagem e use "Como ele conversa no chat" (voz, gíria e emoji).</p></div>` + API_KEYS.map((k) => `
       <form class="card form" data-key="${k.name}" style="margin-bottom:14px">
         <h2>${esc(k.label)} <span class="small ${cfg[k.name] ? "ok" : "dim"}">${cfg[k.name] ? "· configurada" : "· não configurada"}</span></h2>
         <p class="small muted">${esc(k.hint)}</p>
@@ -1917,23 +2056,6 @@ async function viewChaves(ctx) {
       ev.preventDefault();
       busy($("button", ev.currentTarget), async () => {
         await rpc("admin_setting_set", { p_key: "irise_voz_extra", p_value: $("#vozExtra", box).value.trim() });
-        toast("Salvo");
-      });
-    });
-    const vpSelect = $("#vpSelect", box), vpTexto = $("#vpTexto", box);
-    if (vpSelect && vpTexto) {
-      const vpCarregar = () => { vpTexto.value = vozPersonagens[vpSelect.value] || ""; };
-      vpSelect.addEventListener("change", vpCarregar);
-      vpCarregar();
-    }
-    $("#vozPersonagemForm", box).addEventListener("submit", (ev) => {
-      ev.preventDefault();
-      if (!vpSelect || !vpTexto) return;
-      busy($("button", ev.currentTarget), async () => {
-        const n = Number(vpSelect.value);
-        const texto = vpTexto.value.trim();
-        await rpc("admin_personagem_voz_set", { p_personagem: n, p_voz: texto });
-        vozPersonagens[String(n)] = texto;
         toast("Salvo");
       });
     });

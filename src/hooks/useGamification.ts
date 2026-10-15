@@ -301,6 +301,12 @@ export async function logVistaDeLugar(placeId: string) {
 }
 
 // ---------- ações ----------
+// O prefixo ["gamificacao"] também pega ["gamificacao", "avaliou-hoje", …], que guarda um booleano.
+// Atualizar esse com `g.conquistadas.map` quebrava o onMutate de useMarkSeen (true.conquistadas é
+// undefined) e o mark_medals_seen nunca rodava: a medalha voltava para sempre (14/10/2026).
+const ehGami = (g: unknown): g is Gamificacao =>
+  !!g && typeof g === "object" && Array.isArray((g as Gamificacao).conquistadas);
+
 export function useSetMedalForm() {
   const client = useQueryClient();
   return useMutation({
@@ -310,7 +316,7 @@ export function useSetMedalForm() {
     },
     onMutate: (forma) => {
       client.setQueriesData<Gamificacao | null>({ queryKey: ["gamificacao"] }, (g) =>
-        g ? { ...g, forma } : g,
+        ehGami(g) ? { ...g, forma } : g,
       );
     },
     onSettled: () => client.invalidateQueries({ queryKey: ["gamificacao"] }),
@@ -332,7 +338,7 @@ export function useMarkSeen() {
       await client.cancelQueries({ queryKey: ["gamificacao"] });
       const anteriores = client.getQueriesData<Gamificacao | null>({ queryKey: ["gamificacao"] });
       client.setQueriesData<Gamificacao | null>({ queryKey: ["gamificacao"] }, (g) =>
-        g
+        ehGami(g)
           ? {
               ...g,
               conquistadas: g.conquistadas.map((c) =>

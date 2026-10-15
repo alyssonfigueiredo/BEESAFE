@@ -39,7 +39,13 @@ export function useIriseNear() {
 }
 
 export type OrchestratedPlace = WelcomingPlace & { reason: string | null };
-type OrchestratorResponse = { message: string; places: OrchestratedPlace[] | null; error?: string };
+type OrchestratorResponse = {
+  message: string;
+  places: OrchestratedPlace[] | null;
+  /** Assunto de suicídio/se machucar: o chat mostra o botão de ligar para o CVV. */
+  crise?: boolean;
+  error?: string;
+};
 
 /**
  * Irise Orchestrator: um único assistente, por fora. Por dentro, o Groq decide se o pedido precisa
@@ -56,6 +62,7 @@ export function useIriseOrchestrate() {
       cityId: number | undefined;
       perto: { lat: number; lng: number } | null;
       personagem?: number | null;
+      historico?: { de: "eu" | "irise"; texto: string }[];
     }) => {
       const { data, error } = await supabase.functions.invoke<OrchestratorResponse>("irise-orchestrator", {
         body: {
@@ -64,12 +71,13 @@ export function useIriseOrchestrate() {
           cityId: args.cityId,
           perto: args.perto,
           personagem: args.personagem ?? null,
+          historico: args.historico ?? [],
         },
       });
       if (error || !data || data.error) {
         throw new Error(data?.error ?? error?.message ?? "A Irise não conseguiu entender agora.");
       }
-      return { message: data.message, places: data.places ?? null };
+      return { message: data.message, places: data.places ?? null, crise: !!data.crise };
     },
   });
 }

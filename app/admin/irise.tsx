@@ -17,7 +17,10 @@ import {
 import { Aurora } from "@/components/Aurora";
 import { Busto } from "@/components/irise-personagem/Busto";
 import { Corpo } from "@/components/irise-personagem/Corpo";
+import { Segmented } from "@/components/Segmented";
 import {
+  useAdminIriseAgentes,
+  useAdminIriseAgenteSalvar,
   useAdminIriseFotoEnviar,
   useAdminIrisePersonagemExcluir,
   useAdminIrisePersonagemSalvar,
@@ -160,6 +163,76 @@ const inputStyle = {
   fontSize: 15,
   color: colors.ink,
 };
+
+const NIVEIS_GIRIA = [
+  { key: "0", label: "Quase nada" },
+  { key: "1", label: "Na medida" },
+  { key: "2", label: "Bastante" },
+] as const;
+const NIVEIS_EMOJI = [
+  { key: "0", label: "Nunca" },
+  { key: "1", label: "Um no máx." },
+  { key: "2", label: "À vontade" },
+] as const;
+
+/** "Como ele conversa no chat": o chat já usa nome, pronomes, classe, bio e atributos; aqui entra a
+ * voz livre e os níveis de gíria e emoji (migration 79). Salva à parte dos textos do personagem. */
+function AgenteCampos({ n, nome }: { n: number; nome: string }) {
+  const { data: agentes, isLoading } = useAdminIriseAgentes();
+  if (isLoading) return <ActivityIndicator />;
+  const atual = agentes?.find((a) => a.n === n) ?? { n, voz: "", giria: 1, emoji: 1 };
+  return <AgenteForm key={n} inicial={atual} nome={nome} />;
+}
+
+function AgenteForm({ inicial, nome }: { inicial: { n: number; voz: string; giria: number; emoji: number }; nome: string }) {
+  const [ag, setAg] = useState(inicial);
+  const salvar = useAdminIriseAgenteSalvar();
+  return (
+    <Campo label={`Como ${nome || "ele"} conversa no chat`}>
+      <Text className="font-body text-xs text-dim">
+        O chat responde com o nome, os pronomes, a classe, a bio e os atributos acima (4 ou 5 vira traço forte, 0 a 2
+        vira traço contido). Aqui vai o jeito de falar.
+      </Text>
+      <TextInput
+        value={ag.voz}
+        onChangeText={(t) => setAg((a) => ({ ...a, voz: t.slice(0, 1500) }))}
+        multiline
+        numberOfLines={5}
+        placeholder="Ex.: fala pausado, chama todo mundo de 'meu bem', termina dizendo 'tô contigo'."
+        placeholderTextColor={colors.dim}
+        style={[inputStyle, { minHeight: 110, textAlignVertical: "top" }]}
+      />
+      <Text className="pt-1 font-body-bold text-[12px] text-ink">Gíria</Text>
+      <Segmented
+        options={NIVEIS_GIRIA}
+        value={String(ag.giria) as "0" | "1" | "2"}
+        onChange={(v) => setAg((a) => ({ ...a, giria: Number(v) }))}
+      />
+      <Text className="pt-1 font-body-bold text-[12px] text-ink">Emoji</Text>
+      <Segmented
+        options={NIVEIS_EMOJI}
+        value={String(ag.emoji) as "0" | "1" | "2"}
+        onChange={(v) => setAg((a) => ({ ...a, emoji: Number(v) }))}
+      />
+      <Pressable
+        disabled={salvar.isPending}
+        onPress={() =>
+          salvar.mutate(ag, {
+            onSuccess: () => Alert.alert("Salvo", "Vale na próxima mensagem do chat."),
+            onError: (e) => Alert.alert("Não deu pra salvar", e.message),
+          })
+        }
+        className="mt-2 h-[46px] items-center justify-center rounded-full bg-night active:opacity-80"
+      >
+        {salvar.isPending ? (
+          <ActivityIndicator color="#fff" />
+        ) : (
+          <Text className="font-body-bold text-sm text-white">Salvar conversa</Text>
+        )}
+      </Pressable>
+    </Campo>
+  );
+}
 
 function EditorModal({
   form,
@@ -353,6 +426,8 @@ function EditorModal({
             <Switch value={local.ativo} onValueChange={(v) => campo("ativo", v)} />
           </View>
 
+          {!criando && <AgenteCampos n={local.n} nome={local.nome} />}
+
           {!criando && (
             <Campo label="Foto de corpo inteiro (pra apresentação, 300×460, fundo transparente)">
               <Pressable onPress={() => trocarFoto(0)} className="items-start gap-1">
@@ -364,7 +439,7 @@ function EditorModal({
             </Campo>
           )}
           {!criando && (
-            <Campo label="Fotos de busto (precisam de 300×460, fundo transparente)">
+            <Campo label="Fotos de busto (900×1380, proporção 300×460, fundo transparente)">
               <View className="flex-row flex-wrap gap-3">
                 {[1, 2, 3, 4, 5, 6].map((pose) => (
                   <Pressable key={pose} onPress={() => trocarFoto(pose)} className="items-center gap-1">
@@ -382,7 +457,7 @@ function EditorModal({
                 </View>
               )}
               <Text className="pt-1 font-body text-xs text-dim">
-                Use PNG ou WebP com fundo transparente, 300×460, cabeça no topo e corte na curva do
+                Use PNG ou WebP com fundo transparente, 900×1380 (menor fica desfocado), cabeça no topo e corte na curva do
                 círculo.
               </Text>
             </Campo>
