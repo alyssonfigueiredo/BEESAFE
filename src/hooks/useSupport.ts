@@ -1,3 +1,4 @@
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 import { supabase } from "@/lib/supabase";
@@ -100,15 +101,48 @@ export function useWeeklyQuestion() {
   });
 }
 
+// Modo emergência offline (15/10/2026, análise de ponta a ponta do Leandro): o botão de SOS tem
+// os 4 números nacionais fixos no app (EMERGENCY_CONTACTS, discam sem rede), mas os serviços de
+// apoio da cidade vêm do banco — e é exatamente num beco sem sinal que isso não pode falhar.
+// Depois de toda busca que der certo, o resultado fica guardado; se a busca falhar (sem rede), a
+// última lista salva aparece no lugar, sem erro na tela.
+const CACHE_KEY = (cityId: number) => `irisa.emergencia.cache.v1.${cityId}`;
+
+async function lerCacheServicos(cityId: number): Promise<SupportService[] | null> {
+  try {
+    const raw = await AsyncStorage.getItem(CACHE_KEY(cityId));
+    return raw ? (JSON.parse(raw) as SupportService[]) : null;
+  } catch {
+    return null;
+  }
+}
+
+async function gravarCacheServicos(cityId: number, data: SupportService[]) {
+  try {
+    await AsyncStorage.setItem(CACHE_KEY(cityId), JSON.stringify(data));
+  } catch {
+    // sem espaço ou sem suporte: segue sem cache, não é motivo pra travar nada.
+  }
+}
+
 export function useSupportServices(cityId: number | undefined) {
+  const key = cityId ?? 0;
   return useQuery({
-    queryKey: ["support-services", cityId ?? 0],
+    queryKey: ["support-services", key],
     queryFn: async () => {
-      const { data, error } = await supabase.rpc("support_services_for", {
-        p_city_id: cityId ?? null,
-      });
-      if (error) throw error;
-      return data as SupportService[];
+      try {
+        const { data, error } = await supabase.rpc("support_services_for", {
+          p_city_id: cityId ?? null,
+        });
+        if (error) throw error;
+        const lista = data as SupportService[];
+        void gravarCacheServicos(key, lista);
+        return lista;
+      } catch (e) {
+        const cache = await lerCacheServicos(key);
+        if (cache) return cache;
+        throw e;
+      }
     },
   });
 }
