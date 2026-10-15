@@ -780,6 +780,36 @@ Nome: **Irisa** (INPI livre; @appirisa livre). Bundle id Android `br.com.irisa.a
   Corpo (pose 0) até 1600 de altura. **As fotos já enviadas continuam 300 × 460: reenviar pelo painel.**
   O Ali (12) está bom porque usa a embutida (feita com redução de qualidade), não a do Storage.
 
+- **Chat mais natural, busca acolhedora e uso de tokens no painel (migration 80, 14/10/2026, retorno do Leandro):**
+  pediu café acolhedor e vieram bar de vinho, bar de rock e pizzaria: o caminho "perto de você" chamava
+  `places_near` sem categoria. Agora busca por categoria, ganhou `acolhedor` (selo e nota de atendimento/afeto
+  primeiro, balada por último), nunca devolve lugar fora da categoria pedida e o Gemini recebe as últimas falas da
+  pessoa, não só "pode ser". Prompt: 1–2 frases, cumprimento só na primeira, sem repetir oferta, sem frase de
+  manual, Apoio/relato no máximo uma vez e só quando cabe; `semOi` tira o "oi" do começo com conversa em andamento.
+  **Painel → Ajustes → Uso do irise:** tokens de hoje (Groq/Gemini), pedidos que sobram na cota do Groq (lido dos
+  cabeçalhos `x-ratelimit-*`), 14 dias, quem usou hoje e limites (tokens/dia só referência; mensagens por pessoa/dia
+  trava de verdade). Tabela `irise_uso` **só com números** (quem, quando, tokens, tipo), apagada depois de 180 dias.
+  **Decisão: o texto das conversas NÃO é guardado** (dado sensível pela LGPD — saúde, orientação sexual — de um
+  público em risco; guardar escondido continua sendo tratamento). Crise (CVV) conta sem a pessoa.
+
+- **Cota do Groq e gasto por mensagem (migration 81, 14/10/2026):** plano grátis do gpt-oss-120b = 30 pedidos/min,
+  1.000/dia, **8 mil tokens/min e 200 mil tokens/dia** para o app inteiro (a 81 grava 200 mil como referência do
+  painel). Cada mensagem gastava ~3 mil tokens (prompt de ~1.700 + ferramentas + histórico + o pensamento do modelo) e
+  uma busca o dobro. Enxugado: prompt de ~600 tokens; regras de lugar (`REGRAS_BUSCA`) e a ferramenta de busca só vão
+  quando a mensagem tem cara de pedido de lugar (`PEDE_LUGAR`) ou o irise acabou de oferecer um (`OFERECEU_LUGAR`);
+  ferramenta de progresso só com `PODE_SER_PROGRESSO`; histórico 8 falas de até 300 letras; a 2ª chamada da busca
+  usa só o jeito do irise + `FINAL_BUSCA`. **Groq em 429 → a conversa sai pelo Gemini** (`conversarGemini`, sem busca,
+  thinking desligado); o ranking do Gemini também com `thinkingBudget: 0` (o pensamento cortava o JSON).
+  `llama-prompt-guard` do Groq não conversa: é classificador de tentativa de manipulação, só devolve nota.
+
+- **Narração de story pela ElevenLabs (14/10/2026, pedido do Leandro):** `scripts/narrar.mjs` lê um texto (ex.
+  `docs/narracao/*.txt`; `#` é comentário, pausa com `<break time="1.0s" />`), mostra quantos caracteres vai gastar e
+  quanto sobra na conta, **pede confirmação** e grava o MP3 ao lado; `--video docs/X.mp4` gera `X-narrado.mp4` (voz
+  meio segundo depois do começo, o vídeo manda no tamanho, música entra no Instagram). `--vozes` lista as vozes sem
+  gastar. Chave `ELEVENLABS_API_KEY` (e opcional `ELEVENLABS_VOICE_ID`) no `.env.scripts` do Mac ou nas variáveis do
+  ambiente cloud; `--sim` pula a pergunta e só a sessão do Claude usa, depois do ok dele no chat. Plano grátis da
+  ElevenLabs não permite uso comercial: para post da Irisa, plano pago.
+
 ## Stack
 
 Expo SDK 57, Expo Router, NativeWind v4, TypeScript, TanStack Query, MapLibre React Native v11 com tiles Esri
