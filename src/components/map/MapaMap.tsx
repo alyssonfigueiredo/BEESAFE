@@ -6,6 +6,7 @@ import {
   Layer,
   Map,
   type PressEventWithFeatures,
+  type ViewStateChangeEvent,
 } from "@maplibre/maplibre-react-native";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { StyleSheet, type NativeSyntheticEvent } from "react-native";
@@ -13,6 +14,7 @@ import { useReducedMotion } from "react-native-reanimated";
 
 import { distanceMeters } from "@/lib/geo";
 import { mapStyle } from "@/lib/mapStyle";
+import type { Bbox } from "@/hooks/usePlaces";
 import type { PublicPlace } from "@/lib/types";
 import { colors } from "@/theme/tokens";
 
@@ -39,6 +41,8 @@ type Props = {
   onSelectCluster: (places: PublicPlace[], count: number) => void;
   onSelectArea: (area: RelatoArea) => void;
   onPressEmpty: () => void;
+  /** Área visível da câmera, depois que ela termina de se mover (pan/zoom). */
+  onBoundsChange?: (bbox: Bbox) => void;
 };
 
 const EMPTY: GeoJSON.FeatureCollection = { type: "FeatureCollection", features: [] };
@@ -68,6 +72,7 @@ export function MapaMap({
   onSelectCluster,
   onSelectArea,
   onPressEmpty,
+  onBoundsChange,
 }: Props) {
   const reduce = useReducedMotion();
   const cameraRef = useRef<CameraRef>(null);
@@ -143,6 +148,22 @@ export function MapaMap({
   const sel = selectedId ?? "";
   const isSel: ["==", ["get", string], string] = ["==", ["get", "id"], sel];
 
+  // Avisa a área visível pro pai buscar lugares nela (migration 80). Debounced: só depois de
+  // 400 ms parado, pra não disparar uma consulta a cada pixel do gesto de arrastar/zoom.
+  const boundsTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  function handleRegionChange(e: NativeSyntheticEvent<ViewStateChangeEvent>) {
+    if (!onBoundsChange) return;
+    const [west, south, east, north] = e.nativeEvent.bounds;
+    if (boundsTimer.current) clearTimeout(boundsTimer.current);
+    boundsTimer.current = setTimeout(() => onBoundsChange({ west, south, east, north }), 400);
+  }
+  useEffect(
+    () => () => {
+      if (boundsTimer.current) clearTimeout(boundsTimer.current);
+    },
+    [],
+  );
+
   // O toque num pino também chega ao onPress do mapa. O pino marca a hora e o mapa ignora o que
   // vier logo em seguida (mesma solução do CityMap).
   const pinAt = useRef(0);
@@ -207,6 +228,7 @@ export function MapaMap({
       touchPitch={false}
       touchRotate={false}
       onDidFinishLoadingMap={() => setReady(true)}
+      onRegionDidChange={handleRegionChange}
       onPress={(e) => {
         const f = (e.nativeEvent as { features?: unknown[] }).features;
         if ((f && f.length > 0) || Date.now() - pinAt.current < 400) return;

@@ -1,5 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
+import { logEvent } from "@/lib/events";
 import { supabase } from "@/lib/supabase";
 import type { PublicPlace, PublicPlaceRating, WelcomingPlace } from "@/lib/types";
 import type { Axis, PlaceCategory } from "@/theme/domain";
@@ -93,6 +94,33 @@ export function useNearPlaces(
         p_lng: point!.lng,
         p_category: category,
         p_limit: 150,
+      });
+      if (error) throw error;
+      return data as PublicPlace[];
+    },
+  });
+}
+
+export type Bbox = { west: number; south: number; east: number; north: number };
+
+/**
+ * Lugares dentro do retângulo visível do mapa (migration 80, 15/10/2026). O mapa usava o mesmo
+ * lote de até 1.000 lugares da cidade que a aba Lugares — em Curitiba (~10.700 lugares) isso
+ * mostrava sempre o mesmo recorte, não importa pra onde a câmera se movesse. Aqui o lote muda
+ * com a área visível, como um mapa de verdade.
+ */
+export function useBboxPlaces(bbox: Bbox | null) {
+  return useQuery({
+    queryKey: ["places-bbox", bbox && [bbox.west, bbox.south, bbox.east, bbox.north]],
+    enabled: !!bbox,
+    staleTime: 15_000,
+    placeholderData: (prev) => prev,
+    queryFn: async () => {
+      const { data, error } = await supabase.rpc("places_in_bbox", {
+        p_west: bbox!.west,
+        p_south: bbox!.south,
+        p_east: bbox!.east,
+        p_north: bbox!.north,
       });
       if (error) throw error;
       return data as PublicPlace[];
@@ -231,6 +259,7 @@ export function useCreatePlace() {
       return data.id as string;
     },
     onSuccess: () => {
+      logEvent("cadastrou_lugar");
       client.invalidateQueries({ queryKey: ["places"] });
       client.invalidateQueries({ queryKey: ["places-total"] });
       client.invalidateQueries({ queryKey: ["places-busca"] });
@@ -264,6 +293,7 @@ export function useRatePlace(placeId: string) {
       if (error) throw translate(error);
     },
     onSuccess: () => {
+      logEvent("avaliou");
       client.invalidateQueries({ queryKey: ["place", placeId] });
       client.invalidateQueries({ queryKey: ["place-ratings", placeId] });
       client.invalidateQueries({ queryKey: ["places"] });
