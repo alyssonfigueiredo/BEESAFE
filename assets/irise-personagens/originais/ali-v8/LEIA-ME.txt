@@ -6,5 +6,5 @@ repositório pra elas valerem no app.
 
 As 6 poses do Ali (corpo-inteiro segue o da ali-v6, não mudou nesta leva):
   mao-no-peito, comemorando, preocupado, piscadinha, mao-estendida, dois-polegares.
-Esta leva trouxe: mao-estendida, piscadinha, preocupado, comemorando, mao-no-peito (5 das 6 — a
-de dois-polegares não veio nesta rodada).
+Esta leva trouxe as 6: mao-estendida, piscadinha, preocupado, comemorando, mao-no-peito e
+dois-polegares (a última chegou um pouco depois das outras 5, mesma rodada).
