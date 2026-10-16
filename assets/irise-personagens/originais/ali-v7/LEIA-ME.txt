@@ -1,0 +1,3 @@
+Mesma leva de fotos do Ali, atualizadas (16/10/2026) — substitui a v6 (assets/irise-personagens/originais/ali-v6/).
+Já sem fundo, resolução original preservada. Cópia de segurança; o Alysson está subindo pelo painel
+(Personagens do irise → Ali) direto, não precisa mexer no repositório pra elas valerem no app.
