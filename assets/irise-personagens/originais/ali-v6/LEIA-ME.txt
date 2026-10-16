@@ -1,0 +1,17 @@
+Fotos novas do Ali (16/10/2026), já sem fundo (recorte automático, resolução original
+preservada). O Alysson está subindo pelo painel (Personagens do irise → Ali) direto — isto
+aqui é só a cópia de segurança do que foi gerado, caso precise redo/reenviar depois.
+
+Mapeamento sugerido na hora (nada aplicado no app ainda):
+  corpo-inteiro.webp  -> pose 0 (corpo inteiro)
+  mao-no-peito.webp   -> pose 1 (mão no peito)
+  comemorando.webp    -> pose 2 (comemorando)
+  preocupado.webp     -> pose 3 (preocupado)
+  piscadinha.webp     -> pose 5 (piscadinha)
+  mao-estendida.webp  -> sobra (pose 4 "acolhendo"? ou pose extra)
+  dois-polegares.webp -> sobra (pose 6 "apoio"? ou pose extra)
+
+Como a foto do painel agora vale mais que a embutida sempre que for mais recente (ver
+EMBUTIDA_ATUALIZADA_EM em src/lib/irisePersonagens.ts e fotoDoPainelVence em
+useIrisePersonagens.ts), o upload pelo painel já é suficiente — não precisa mexer no
+repositório pra essas fotos valerem no app.
