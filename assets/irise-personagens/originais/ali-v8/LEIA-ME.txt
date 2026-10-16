@@ -1,0 +1,10 @@
+Mesma leva de fotos do Ali, nova atualização (16/10/2026) — substitui a v7 (assets/irise-personagens/originais/ali-v7/).
+Resolução original preservada, nas duas versões: os .webp soltos aqui são sem fundo; a pasta
+com-fundo/ guarda o original como veio (mesmo arquivo, antes do recorte). Cópia de segurança; o
+Alysson está subindo pelo painel (Personagens do irise → Ali) direto, não precisa mexer no
+repositório pra elas valerem no app.
+
+As 6 poses do Ali (corpo-inteiro segue o da ali-v6, não mudou nesta leva):
+  mao-no-peito, comemorando, preocupado, piscadinha, mao-estendida, dois-polegares.
+Esta leva trouxe: mao-estendida, piscadinha, preocupado, comemorando, mao-no-peito (5 das 6 — a
+de dois-polegares não veio nesta rodada).
