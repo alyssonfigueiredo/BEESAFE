@@ -1,3 +1,8 @@
 Mesma leva de fotos do Ali, atualizadas (16/10/2026) — substitui a v6 (assets/irise-personagens/originais/ali-v6/).
-Já sem fundo, resolução original preservada. Cópia de segurança; o Alysson está subindo pelo painel
-(Personagens do irise → Ali) direto, não precisa mexer no repositório pra elas valerem no app.
+Resolução original preservada, nas duas versões: os .webp/.jpg soltos aqui são sem fundo; a pasta
+com-fundo/ guarda o original como veio (mesmo arquivo, antes do recorte). Cópia de segurança; o
+Alysson está subindo pelo painel (Personagens do irise → Ali) direto, não precisa mexer no
+repositório pra elas valerem no app.
+Inclui comemorando (pose 2), que faltava na primeira leva — agora as 6 poses do Ali mais atual
+estão aqui: corpo-inteiro (ali-v6, não mudou nesta leva), mao-no-peito, comemorando, preocupado,
+mao-estendida e dois-polegares são extras sem pose fixa ainda, piscadinha.
