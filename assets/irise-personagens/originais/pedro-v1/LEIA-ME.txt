@@ -1,0 +1,17 @@
+Personagem novo do irise: Pedro (não existe ainda no app nem no código — é só o
+recorte das fotos, pra você subir pelo painel web, Personagens do irise). A bio
+você já escreveu lá no painel.
+
+Resolução original preservada, nas duas versões: os .webp soltos aqui são sem
+fundo; a pasta com-fundo/ guarda o original como veio.
+
+5 poses (das 7 que o painel pede — faltam Piscadinha e Apoio, é só mandar mais
+fotos quando tiver):
+  mao-no-peito (padrão), comemorando, preocupado, acolhendo, corpo-inteiro.
+
+corpo-inteiro.webp teve um retoque manual (não automático pelo remover-fundo.py):
+as duas sandálias (tiras de velcro quase brancas) tinham pedaços comidos pelo
+recorte — ficavam transparentes e furavam a tira quando colocado em fundo que
+não é branco (mesmo tipo de artefato já visto antes em sombra no chão, mas
+aqui foi direto na roupa clara). Recortado à mão só nas 6 manchas das tiras,
+sem mexer no resto do corpo nem nas sandálias de verdade.
