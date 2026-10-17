@@ -4,7 +4,10 @@ com-fundo/ guarda o original como veio (mesmo arquivo, antes do recorte). Cópia
 Alysson está subindo pelo painel (Personagens do irise → Ali) direto, não precisa mexer no
 repositório pra elas valerem no app.
 
-As 6 poses do Ali (corpo-inteiro segue o da ali-v6, não mudou nesta leva):
-  mao-no-peito, comemorando, preocupado, piscadinha, mao-estendida, dois-polegares.
-Esta leva trouxe as 6: mao-estendida, piscadinha, preocupado, comemorando, mao-no-peito e
-dois-polegares (a última chegou um pouco depois das outras 5, mesma rodada).
+As 6 poses de busto do Ali + corpo inteiro, todas atualizadas nesta leva:
+  mao-no-peito, comemorando, preocupado, piscadinha, mao-estendida, dois-polegares, corpo-inteiro.
+corpo-inteiro.webp teve um retoque manual (não automático pelo remover-fundo.py): a imagem trazia
+uma sombra larga no chão entre os pés com um resquício fantasma em forma de colchete/texto
+(provavelmente artefato do próprio recorte, não existe na foto original) que o script não limpou
+por inteiro — apagada à mão com uma máscara retangular suave só naquele trecho do chão, sem tocar
+nos tênis.
