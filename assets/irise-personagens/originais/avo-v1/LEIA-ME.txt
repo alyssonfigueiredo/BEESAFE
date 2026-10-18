@@ -6,10 +6,13 @@ Resolução original preservada, nas duas versões: os .webp soltos aqui são se
 pasta com-fundo/ guarda o original como veio.
 
 7/7 poses que o painel pede, completas:
-  mao-no-peito (padrão), comemorando (braços erguidos), preocupado, acolhendo (mão
-  estendida), piscadinha, dois-polegares (= Apoio), corpo-inteiro.
-Mais 2 bônus (mesma pose, foto/enquadramento diferente — não precisam subir no painel):
-  mao-no-peito-perto, apoio-maos-juntas.
+  mao-no-peito (padrão, mão de verdade no peito), comemorando (braços erguidos),
+  preocupado, acolhendo (mão estendida), piscadinha, dois-polegares (= Apoio),
+  corpo-inteiro.
+Mais 2 bônus (não precisam subir no painel):
+  sorriso (mesma ideia de mao-no-peito, mas a mão não aparece no quadro — troquei o
+  arquivo mao-no-peito por uma foto que mostra a mão de verdade, 18/10),
+  apoio-maos-juntas (outro ângulo do Apoio).
 
 O cabelo grisalho fino tinha a mesma mancha ferrugem/marrom do recorte automático que
 apareceu no vestido branco da outra personagem desta leva (ver LEIA-ME de drag-v1) — já
