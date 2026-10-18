@@ -1,0 +1,10 @@
+Personagem novo do irise, senhor cabelo e barba grisalhos, camisa floral tropical (não
+existe ainda no app nem no código — é só o recorte das fotos, pra você subir pelo painel
+web, Personagens do irise, e escolher o nome/bio lá).
+
+Resolução original preservada, nas duas versões: os .webp soltos aqui são sem fundo; a
+pasta com-fundo/ guarda o original como veio.
+
+2 poses (das 7 que o painel pede — faltam as outras 5: Mão no peito, Acolhendo,
+Piscadinha, Apoio, Corpo inteiro):
+  comemorando (batendo palma), preocupado.
