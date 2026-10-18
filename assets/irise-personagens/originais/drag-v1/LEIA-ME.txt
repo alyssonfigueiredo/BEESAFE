@@ -1,0 +1,19 @@
+Personagem novo do irise, drag queen peruca loira volumosa e vestido branco espinhado
+(não existe ainda no app nem no código — é só o recorte das fotos, pra você subir pelo
+painel web, Personagens do irise, e escolher o nome/bio lá).
+
+Resolução original preservada, nas duas versões: os .webp soltos aqui são sem fundo; a
+pasta com-fundo/ guarda o original como veio.
+
+5 poses (das 7 que o painel pede — faltam Piscadinha e Apoio):
+  mao-no-peito (padrão), mao-no-peito-perto (mesma pose, enquadramento mais fechado —
+  bônus, não é uma das 7 do painel), comemorando (braços erguidos), acolhendo (mão
+  estendida), preocupado.
+
+Achado e corrigido nesta leva: o vestido branco cheio de pontas finas (e, na outra
+personagem desta mesma leva, o cabelo grisalho fino) saía com manchas ferrugem/marrom
+no recorte automático — a descontaminação de cor do remover-fundo.py divide a cor pelo
+alfa pra tirar halo branco, e com textura clara bem fina quase grudada no fundo branco
+isso amplificava qualquer sombra de dobra em laranja. Corrigido no script (só descontamina
+acima de alfa 0,5 agora) e todas as 5 fotos foram recortadas de novo depois do ajuste —
+conferidas em fundo azul/colorido pra garantir que não sobrou mancha.
