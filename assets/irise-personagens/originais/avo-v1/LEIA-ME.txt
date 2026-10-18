@@ -5,9 +5,9 @@ web, Personagens do irise, e escolher o nome/bio lá).
 Resolução original preservada, nas duas versões: os .webp soltos aqui são sem fundo; a
 pasta com-fundo/ guarda o original como veio.
 
-5 poses (das 7 que o painel pede — faltam Piscadinha e Apoio):
+6 poses (das 7 que o painel pede — falta só Apoio):
   mao-no-peito (padrão), preocupado, acolhendo (mão estendida), dois-polegares,
-  corpo-inteiro.
+  corpo-inteiro, piscadinha.
 
 O cabelo grisalho fino tinha a mesma mancha ferrugem/marrom do recorte automático que
 apareceu no vestido branco da outra personagem desta leva (ver LEIA-ME de drag-v1) — já
