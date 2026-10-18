@@ -5,6 +5,5 @@ web, Personagens do irise, e escolher o nome/bio lá).
 Resolução original preservada, nas duas versões: os .webp soltos aqui são sem fundo; a
 pasta com-fundo/ guarda o original como veio.
 
-2 poses (das 7 que o painel pede — faltam as outras 5: Mão no peito, Acolhendo,
-Piscadinha, Apoio, Corpo inteiro):
-  comemorando (batendo palma), preocupado.
+3 poses (das 7 que o painel pede — faltam Mão no peito, Acolhendo, Apoio, Corpo inteiro):
+  comemorando (batendo palma), preocupado, piscadinha.
