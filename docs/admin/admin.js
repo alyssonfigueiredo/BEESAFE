@@ -1650,18 +1650,18 @@ async function paraWebp(file, pose) {
   } else {
     const K = BUSTO_K;
     c.width = 300 * K; c.height = 460 * K;
-    const s = Math.max((272 * K) / bw, (340 * K) / bh);
-    // centro da cabeça = meio do que aparece nas primeiras linhas do recorte
-    const faixa = Math.max(8, Math.round(bh / 8));
-    let hx0 = bw, hx1 = -1;
-    for (let y = y0; y < y0 + faixa; y++) for (let x = x0; x <= x1; x++) {
-      if (px[(y * img.width + x) * 4 + 3] > 24) { if (x - x0 < hx0) hx0 = x - x0; if (x - x0 > hx1) hx1 = x - x0; }
-    }
-    const cx = hx1 >= 0 ? (hx0 + hx1) / 2 : bw / 2;
+    // "contain": cresce até encostar numa das bordas, sem cortar mão/pé/braço nunca
+    // (antes era Math.max, que estourava a caixa — cortava ponta de mão/braço estendido
+    // e descentralizava, 19/10/2026).
+    const s = Math.min((272 * K) / bw, (340 * K) / bh);
+    const dw = bw * s, dh = bh * s;
+    // centralizado pelo recorte inteiro (bw/2), não só pela cabeça — centralizar só pela
+    // cabeça empurrava o corpo pra um lado quando a figura não é simétrica embaixo dela
+    // (achado com uma foto de palma estendida, 19/10/2026).
+    const cx = bw / 2;
     if (s > 1.5 && !confirm("Essa foto é pequena e vai aparecer desfocada no app (o ideal é pelo menos 900 px de largura). Enviar mesmo assim?")) {
       throw new Error("Envio cancelado.");
     }
-    const dw = bw * s, dh = bh * s;
     const r = reduzir(img, x0, y0, bw, bh, dw, dh);
     ctx.drawImage(r.src, r.x, r.y, r.w, r.h, 150 * K - cx * s, 4 * K, dw, dh);
   }

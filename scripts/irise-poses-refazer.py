@@ -95,9 +95,10 @@ def busto(im: Image.Image, s: float) -> Image.Image:
     bw, bh = im.size
     nw, nh = round(bw * s), round(bh * s)  # mesma escala nos dois eixos: nada achata
     im = im.resize((nw, nh), Image.LANCZOS)
-    a2 = np.array(im.getchannel("A"))
-    faixa = a2[: max(8, nh // 8)]
-    cx = np.where(faixa.max(0) > 24)[0].mean() if faixa.max() > 24 else nw / 2
+    # centralizado pelo recorte inteiro, não só pela cabeça — centralizar só pela cabeça
+    # empurrava o corpo pra um lado quando a figura não é simétrica embaixo dela (achado em
+    # fotos de mão estendida/braços erguidos do Ali, 19/10/2026; mesmo bug do admin.js).
+    cx = nw / 2
     x = round(W / 2 - cx)  # cabeça no centro
     tela = Image.new("RGBA", (W + 2 * nw, H + nh), (0, 0, 0, 0))
     tela.alpha_composite(im, (x + nw, TOPO))

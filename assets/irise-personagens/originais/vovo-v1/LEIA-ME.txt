@@ -34,3 +34,13 @@ no painel).
 desenhada (dh) — pouco, mas visível ampliado lado a lado. Recalculado com o valor real
 do arquivo de "Mão no peito" já publicado (dh-alvo, não uma estimativa) e conferido de
 novo pela simulação em Python até bater exato.
+
+19/10/2026, correção de verdade — achado na raiz: o bug não era nas fotos, era no
+`paraWebp` do docs/admin/admin.js. A escala usava `Math.max`, que podia estourar a
+caixa (cortava mão/braço estendido pra ficar "grande") e o centro era calculado só
+pela cabeça, que descentraliza quando o corpo não é simétrico embaixo dela — foi por
+isso que Acolhendo e Apoio saíam diferentes mesmo depois de eu recortar a mão à mão.
+Corrigido o algoritmo (`Math.min` — nunca corta — e centro pelo recorte inteiro, não
+só a cabeça); com isso **acolhendo.webp e apoio.webp voltaram a ser as fotos originais,
+com a mão inteira** — o corte manual não é mais necessário. Confira os 7 quadradinhos
+no painel depois de subir essas duas de novo.
