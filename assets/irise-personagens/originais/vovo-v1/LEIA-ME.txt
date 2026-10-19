@@ -13,10 +13,13 @@ personagem só, duas levas de fotos diferentes). Monte as 7 fotos do painel assi
                             pose combina mais com "apoio" do que com "comemorando")
   Corpo inteiro           → pedro-v1/corpo-inteiro.webp
 
-18/10/2026: o Acolhendo e o Apoio saíam menores que os outros no painel — a mão
-estendida pra câmera alarga a caixa de recorte, e o enquadramento automático do
-painel (300×460, sem esticar) encolhe a figura inteira pra caber na largura. Corrigido
-preenchendo as duas fotos com área transparente embaixo até a proporção 300:460 bater
-(a cabeça continua exatamente no topo, só ganhou mais "pé" transparente) — agora encaixam
-do mesmo tamanho que o resto. Esse mesmo ajuste foi feito em avo-v1/acolhendo.webp
-("Clécia" no painel), que tinha o mesmo problema.
+18-19/10/2026: o Acolhendo e o Apoio saíam menores que os outros no painel. Causa
+real (lendo o código do painel, `paraWebp` em docs/admin/admin.js): a escala do busto
+é `max(272/largura, 340/altura)` — quase sempre vence a LARGURA da caixa de recorte, não
+a altura. A mão estendida alarga essa caixa sem deixar a cabeça maior, então a largura
+"vence" com uma escala menor e a figura inteira sai mais zoom-out que as outras poses.
+(A primeira tentativa, preencher com transparência embaixo, não mudou nada — só mexe na
+altura, e é a largura que manda a escala.) Corrigido reduzindo a imagem inteira
+(largura E altura, proporção mantida) até a largura da caixa bater com a da pose padrão
+(Mão no peito, ~1000 px) — agora a escala sai igual. Mesmo ajuste em avo-v1/acolhendo.webp
+("Clécia" no painel).
