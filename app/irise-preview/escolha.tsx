@@ -106,6 +106,10 @@ export default function IrisePreviewEscolha() {
 
   // Posição contínua do carrossel (pode passar de 0/total — o wrap acontece por item, no render).
   const indiceSV = useSharedValue(indice);
+  // Para onde o carrossel está indo (sempre inteiro). A seta soma a partir daqui, não da posição
+  // em movimento: tocar de novo no meio da animação somava 1 a um valor quebrado (2,4 → 3,4) e o
+  // nome ficava trocado em relação ao personagem do centro até a pessoa arrastar.
+  const alvoSV = useSharedValue(indice);
 
   // O catálogo abre nos 9 embutidos: personagem criado pelo admin só aparece quando o banco
   // responde, e aí o índice inicial (achado na lista provisória) aponta pro personagem errado.
@@ -115,12 +119,15 @@ export default function IrisePreviewEscolha() {
   if (!mexeu && indiceDoAtual >= 0 && indiceDoAtual !== indice) {
     setIndice(indiceDoAtual);
     indiceSV.set(indiceDoAtual);
+    alvoSV.set(indiceDoAtual);
   }
 
   function mover(d: number) {
     setMexeu(true);
-    setIndice((i) => (i + d + total) % total);
-    indiceSV.set(withTiming(indiceSV.get() + d, { duration: DURACAO_CARROSSEL, easing: CURVA_CARROSSEL }));
+    const alvo = alvoSV.get() + d;
+    alvoSV.set(alvo);
+    setIndice(((alvo % total) + total) % total);
+    indiceSV.set(withTiming(alvo, { duration: DURACAO_CARROSSEL, easing: CURVA_CARROSSEL }));
   }
 
   // Arraste: a posição do carrossel segue o dedo 1:1 (mantido pela resposta da dúvida 4);
@@ -139,11 +146,13 @@ export default function IrisePreviewEscolha() {
         },
         onPanResponderRelease: () => {
           const alvo = Math.round(indiceSV.get());
+          alvoSV.set(alvo);
           indiceSV.set(withTiming(alvo, { duration: 320, easing: CURVA_CARROSSEL }));
           setIndice(((alvo % total) + total) % total);
         },
         onPanResponderTerminate: () => {
           const alvo = Math.round(indiceSV.get());
+          alvoSV.set(alvo);
           indiceSV.set(withTiming(alvo, { duration: 320, easing: CURVA_CARROSSEL }));
           setIndice(((alvo % total) + total) % total);
         },

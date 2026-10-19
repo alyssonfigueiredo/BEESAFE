@@ -810,6 +810,10 @@ Nome: **Irisa** (INPI livre; @appirisa livre). Bundle id Android `br.com.irisa.a
   ambiente cloud; `--sim` pula a pergunta e só a sessão do Claude usa, depois do ok dele no chat. Plano grátis da
   ElevenLabs não permite uso comercial: para post da Irisa, plano pago.
 
+- **Escolha do irise embaralhava pelas setas (19/10/2026, vídeo do Leandro):** a seta somava 1 à posição em
+  movimento; tocando de novo no meio da animação o carrossel parava entre dois personagens e o nome descolava
+  do busto até arrastar. Agora soma a partir do alvo inteiro (`alvoSV`). Só JS: EAS Update.
+
 ## Stack
 
 Expo SDK 57, Expo Router, NativeWind v4, TypeScript, TanStack Query, MapLibre React Native v11 com tiles Esri
