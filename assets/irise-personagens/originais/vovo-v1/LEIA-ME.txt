@@ -13,13 +13,19 @@ personagem só, duas levas de fotos diferentes). Monte as 7 fotos do painel assi
                             pose combina mais com "apoio" do que com "comemorando")
   Corpo inteiro           → pedro-v1/corpo-inteiro.webp
 
-18-19/10/2026: o Acolhendo e o Apoio saíam menores que os outros no painel. Causa
-real (lendo o código do painel, `paraWebp` em docs/admin/admin.js): a escala do busto
-é `max(272/largura, 340/altura)` — quase sempre vence a LARGURA da caixa de recorte, não
-a altura. A mão estendida alarga essa caixa sem deixar a cabeça maior, então a largura
-"vence" com uma escala menor e a figura inteira sai mais zoom-out que as outras poses.
-(A primeira tentativa, preencher com transparência embaixo, não mudou nada — só mexe na
-altura, e é a largura que manda a escala.) Corrigido reduzindo a imagem inteira
-(largura E altura, proporção mantida) até a largura da caixa bater com a da pose padrão
-(Mão no peito, ~1000 px) — agora a escala sai igual. Mesmo ajuste em avo-v1/acolhendo.webp
-("Clécia" no painel).
+18-19/10/2026: o Acolhendo e o Apoio saíam menores que os outros no painel. Causa real
+(lendo `paraWebp` em docs/admin/admin.js): a escala do busto é `max(272/largura,
+340/altura)` da caixa de recorte, e quase sempre vence a LARGURA — a mão estendida
+alarga a caixa sem deixar a cabeça maior, a largura "vence" com escala menor e a
+figura sai toda menor. **Duas tentativas que não funcionaram, registradas pra não
+repetir**: (1) preencher com transparência embaixo — não muda nada, porque o painel
+recorta de novo pelo conteúdo opaco antes de calcular a escala, descartando o
+preenchimento; (2) encolher a imagem inteira mantendo a proporção — não muda nada
+porque a proporção (altura/largura) continua igual, e é só ela que decide a escala
+quando a largura "vence". **O que funcionou**: cortar de verdade a largura (tirando
+um pedaço da mão/braço que se estende, do lado que sobra) até a proporção altura/
+largura bater com a da pose Mão no peito (referência que já fica certa). A mão fica
+parcialmente cortada pela borda do quadro — parece proposital (mão se estendendo pra
+fora do quadro), não ruim. Testado simulando o algoritmo do painel em Python antes de
+mandar, não só olhando a imagem solta. Mesmo ajuste em avo-v1/acolhendo.webp ("Clécia"
+no painel).
