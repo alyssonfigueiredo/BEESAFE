@@ -29,3 +29,8 @@ parcialmente cortada pela borda do quadro — parece proposital (mão se estende
 fora do quadro), não ruim. Testado simulando o algoritmo do painel em Python antes de
 mandar, não só olhando a imagem solta. Mesmo ajuste em avo-v1/acolhendo.webp ("Clécia"
 no painel).
+
+19/10/2026, acerto fino: a primeira leva do corte deixou ~17 px de diferença na altura
+desenhada (dh) — pouco, mas visível ampliado lado a lado. Recalculado com o valor real
+do arquivo de "Mão no peito" já publicado (dh-alvo, não uma estimativa) e conferido de
+novo pela simulação em Python até bater exato.
