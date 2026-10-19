@@ -8,8 +8,13 @@ Alysson (também assina Leandro). Português. Sem cumprimentos, sem formalidade,
 Não pergunte o que dá para decidir sozinho. Ele não é dev: dê comandos prontos para colar no Terminal
 do Mac e SQL pronto para colar no SQL Editor do Supabase. Nunca peça nem aceite chaves secretas em chat.
 **Regra dele (10/10/2026): avisar ANTES de qualquer coisa que gaste cota ou dinheiro** — `eas-cli build`,
-`eas-cli update`, Google Places, Cloud Vision, envio de push em massa, Actions pesadas. Dizer o que gasta e
+Google Places, Cloud Vision, envio de push em massa, Actions pesadas. Dizer o que gasta e
 quanto, e esperar o ok. `npx expo run:ios` / `expo start` são locais e não gastam nada.
+**EAS Update não gasta cota (19/10/2026):** o plano grátis não limita publicações (só aparelhos que baixam,
+1.000/mês, e banda). Quando ele pedir update, a sessão publica sozinha pelo GitHub Actions → workflow
+**Publicar Update (EAS)** (`publicar-update.yml`, `EXPO_TOKEN` nos secrets do repo), na branch
+`claude/laughing-keller-my8t7c`, uma vez para cada versão em uso nas lojas (input `versao`, hoje 0.1.2 e 0.1.3).
+Antes: lint + typecheck passando e tudo já no push. Update publicado chega em todo mundo: só código revisado.
 
 ## O que é
 
