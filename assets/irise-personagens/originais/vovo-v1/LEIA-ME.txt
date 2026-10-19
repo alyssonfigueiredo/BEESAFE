@@ -1,9 +1,22 @@
-Personagem novo do irise, senhor cabelo e barba grisalhos, camisa floral tropical (não
-existe ainda no app nem no código — é só o recorte das fotos, pra você subir pelo painel
-web, Personagens do irise, e escolher o nome/bio lá).
+Personagem novo do irise, senhor cabelo e barba grisalhos, camisa floral tropical —
+MESMA pessoa que a pasta pedro-v1 (foi engano meu separar em duas pastas; é um
+personagem só, duas levas de fotos diferentes). Monte as 7 fotos do painel assim:
 
-Resolução original preservada, nas duas versões: os .webp soltos aqui são sem fundo; a
-pasta com-fundo/ guarda o original como veio.
+  Mão no peito (padrão) → pedro-v1/preocupado.webp (o nome do arquivo ficou errado;
+                            o conteúdo é a mão no peito calma, não preocupado)
+  Comemorando            → vovo-v1/comemorando.webp (batendo palma)
+  Preocupade             → vovo-v1/preocupado.webp (olhando pra baixo)
+  Acolhendo              → pedro-v1/acolhendo.webp
+  Piscadinha              → vovo-v1/piscadinha.webp
+  Apoio                   → vovo-v1/apoio.webp (sinal de positivo com as duas mãos —
+                            é a mesma foto de pedro-v1/comemorando.webp, só que essa
+                            pose combina mais com "apoio" do que com "comemorando")
+  Corpo inteiro           → pedro-v1/corpo-inteiro.webp
 
-3 poses (das 7 que o painel pede — faltam Mão no peito, Acolhendo, Apoio, Corpo inteiro):
-  comemorando (batendo palma), preocupado, piscadinha.
+18/10/2026: o Acolhendo e o Apoio saíam menores que os outros no painel — a mão
+estendida pra câmera alarga a caixa de recorte, e o enquadramento automático do
+painel (300×460, sem esticar) encolhe a figura inteira pra caber na largura. Corrigido
+preenchendo as duas fotos com área transparente embaixo até a proporção 300:460 bater
+(a cabeça continua exatamente no topo, só ganhou mais "pé" transparente) — agora encaixam
+do mesmo tamanho que o resto. Esse mesmo ajuste foi feito em avo-v1/acolhendo.webp
+("Clécia" no painel), que tinha o mesmo problema.
