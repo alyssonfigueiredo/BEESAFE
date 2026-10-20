@@ -1650,18 +1650,21 @@ async function paraWebp(file, pose) {
   } else {
     const K = BUSTO_K;
     c.width = 300 * K; c.height = 460 * K;
-    // "contain": cresce até encostar numa das bordas, sem cortar mão/pé/braço nunca
-    // (antes era Math.max, que estourava a caixa — cortava ponta de mão/braço estendido
-    // e descentralizava, 19/10/2026).
-    const s = Math.min((272 * K) / bw, (340 * K) / bh);
+    // cresce até PREENCHER a caixa de 272 × 340 (o maior dos dois fatores vence) — é o
+    // padrão de verdade, igual ao Ali/Léo: a figura vai até a borda, com um braço/mão
+    // bem estendido às vezes perdendo a ponta pro corte do quadro, em vez de a figura
+    // inteira ficar menor com sobra vazia embaixo. Tentei "nunca cortar" (Math.min) em
+    // 19/10 achando que resolvia o Acolhendo/Apoio saírem menores — só trocou o problema:
+    // nenhuma pose chegava mais ao fim do quadrado (achado pelo Alysson, 20/10/2026,
+    // comparando com o Léo, que preenche 100% da altura).
+    const s = Math.max((272 * K) / bw, (340 * K) / bh);
     const dw = bw * s, dh = bh * s;
     // centro horizontal pela CABEÇA (faixa do topo do recorte), não pelo meio do recorte
     // inteiro: um braço que se estende de um só lado alarga a caixa sem a cabeça estar no
     // meio dela, e centralizar pelo meio do recorte jogava a cabeça pro lado contrário em
     // cada pose — dava pra notar comparando os quadradinhos lado a lado (achado pelo
-    // Alysson, 20/10/2026: "veja direito", depois do fix de 19/10 que só tirava o corte).
-    // Sem risco de voltar a cortar: a escala "contain" já garante que nada passa da borda,
-    // mesmo com a cabeça fora do centro do recorte.
+    // Alysson, 20/10/2026: "veja direito"). Isso continua valendo com Math.max: a cabeça
+    // fica no centro e o corte (quando sobra) acontece nas extremidades do corpo, não nela.
     const faixa = Math.max(8, Math.round(bh / 8));
     let hx0 = bw, hx1 = -1;
     for (let y = y0; y < y0 + faixa; y++) for (let x = x0; x <= x1; x++) {

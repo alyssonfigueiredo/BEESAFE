@@ -1,8 +1,8 @@
 """Sobe fotos de personagem do irise pro Storage sem precisar do painel web.
 
 Caminho alternativo pra quando não dá pra clicar no painel (ex.: sessão sem navegador):
-faz exatamente o que o `paraWebp` do docs/admin/admin.js faz no navegador (mesma escala
-"contain", mesmo centro pela cabeça, mesmo tamanho de tela) e sobe pro bucket `irise` pela
+faz exatamente o que o `paraWebp` do docs/admin/admin.js faz no navegador (mesma escala,
+mesmo centro pela cabeça, mesmo tamanho de tela) e sobe pro bucket `irise` pela
 API do Storage com a chave de serviço — nunca colada em chat, só como secret do GitHub
 Actions (SUPABASE_URL / SUPABASE_SERVICE_ROLE_KEY, os mesmos de `importar-cidade.yml`).
 
@@ -47,7 +47,11 @@ def busto(im: Image.Image) -> Image.Image:
     a = np.array(im.getchannel("A")) > 24
     x0, y0, x1, y1 = bbox(im)
     bw, bh = x1 - x0 + 1, y1 - y0 + 1
-    s = min((272 * K) / bw, (340 * K) / bh)  # "contain": nunca corta mão/braço
+    # cresce até PREENCHER a caixa de 272 × 340 (o maior dos dois fatores vence), igual
+    # ao admin.js: a figura vai até a borda (um braço bem estendido pode perder a ponta
+    # pro corte do quadro), nunca fica menor com sobra vazia embaixo (padrão confirmado
+    # pelo Alysson comparando com o Léo, que preenche 100% da altura, 20/10/2026).
+    s = max((272 * K) / bw, (340 * K) / bh)
     dw, dh = round(bw * s), round(bh * s)
     faixa = max(8, round(bh / 8))
     cx = centro_cabeca(a, x0, x1, y0, y0 + faixa) * s
