@@ -42,5 +42,18 @@ pela cabeça, que descentraliza quando o corpo não é simétrico embaixo dela �
 isso que Acolhendo e Apoio saíam diferentes mesmo depois de eu recortar a mão à mão.
 Corrigido o algoritmo (`Math.min` — nunca corta — e centro pelo recorte inteiro, não
 só a cabeça); com isso **acolhendo.webp e apoio.webp voltaram a ser as fotos originais,
-com a mão inteira** — o corte manual não é mais necessário. Confira os 7 quadradinhos
-no painel depois de subir essas duas de novo.
+com a mão inteira** — o corte manual não é mais necessário.
+
+20/10/2026, segundo acerto na raiz — o Alysson comparou os 7 quadradinhos de novo
+("veja direito") e tinha razão: com `Math.min` nenhuma pose corta mais e todas chegam
+à mesma altura (conferido simulando as 6 poses deste personagem em Python: a altura
+desenhada bate nas 6), mas a cabeça não ficava no mesmo lugar de uma pose pra outra —
+centralizar pelo MEIO DO RECORTE INTEIRO (a mudança de 19/10) desloca a cabeça pro
+lado contrário do braço estendido, porque o braço alarga o recorte só de um lado. Medido:
+a cabeça chegava a variar ~130 px de uma pose pra outra num quadro de 900 px. Voltou a
+centralizar pela CABEÇA (faixa de cima do recorte), mantendo a escala `Math.min` (que
+por si só já garante não cortar nada, mesmo com a cabeça fora do centro do recorte) —
+as duas correções de 19 e 20/10 juntas é que resolvem de verdade. Mesmo ajuste em
+`scripts/irise-poses-refazer.py` (usado pelos outros 8 personagens) e recentralizadas
+as 6 poses do Ali que já estavam no repositório (webp + cartão do Início), com limite
+pra nenhuma colar na borda.
