@@ -11,3 +11,13 @@ uma sombra larga no chão entre os pés com um resquício fantasma em forma de c
 (provavelmente artefato do próprio recorte, não existe na foto original) que o script não limpou
 por inteiro — apagada à mão com uma máscara retangular suave só naquele trecho do chão, sem tocar
 nos tênis.
+
+20/10/2026, achado pelo Alysson: o corpo-inteiro embutido no app tinha colar de corrente
+dourada com cruz, diferente do colar fino (só contorno, sem cruz) das 6 poses de busto —
+inconsistência real, não bug de sincronização. Conferido no histórico: o LEIA-ME da v7
+já dizia "corpo-inteiro (ali-v6, não mudou nesta leva)" — o corpo inteiro sempre foi pra
+ser o da v6, só que o arquivo embutido (p1-12.webp) estava vindo de outra fonte (parece
+a v8, que tem sua própria corpo-inteiro.webp com o colar de cruz, não enviada pelo
+Alysson). Regerado a partir de ali-v6/corpo-inteiro.webp (mesma fórmula do app: recorta
+pelo alfa, reduz só se passar de 1600 de altura, sem esticar) — 528×1600, colar bate com
+o das outras poses agora.
