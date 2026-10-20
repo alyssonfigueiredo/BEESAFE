@@ -1,0 +1,14 @@
+Mesma leva de fotos do Ali, 8K com textura melhorada (20/10/2026) — substitui a v8
+(assets/irise-personagens/originais/ali-v8/) pra 5 das 6 poses de busto + corpo inteiro.
+Resolução original preservada, nas duas versões: os .webp soltos aqui são sem fundo (removido
+nesta sessão, flood-fill + decontaminação só acima de alfa 0,5); a pasta com-fundo/ guarda o
+original como veio (PNG, não JPG — sem perda).
+
+mao-estendida.webp = pose Acolhendo. corpo-inteiro.webp também virou a fonte da pose Mão no
+peito (mesma foto, mão no peito, enquadramento de corpo inteiro).
+
+Falta Apoio (sinal de positivo com as duas mãos) — ninguém mandou foto nova dessa pose; a v8
+continua sendo a fonte dela (dois-polegares.webp).
+
+Já processado e aplicado ao app nesta sessão (assets/irise-personagens/b1-12.webp..b5-12.webp,
+p1-12.webp e os espelhos em docs/admin/), e sincronizado no Storage (painel).

@@ -21,3 +21,11 @@ a v8, que tem sua própria corpo-inteiro.webp com o colar de cruz, não enviada 
 Alysson). Regerado a partir de ali-v6/corpo-inteiro.webp (mesma fórmula do app: recorta
 pelo alfa, reduz só se passar de 1600 de altura, sem esticar) — 528×1600, colar bate com
 o das outras poses agora.
+
+20/10/2026, leva nova de fotos (8K, textura melhorada) mandada pelo Alysson: corpo-inteiro
+(mesma pose de mão no peito, também virou a fonte da pose 1) + comemorando, preocupado,
+acolhendo, piscadinha. Removido o fundo aqui mesmo (flood-fill a partir da borda + decontaminação
+de cor só acima de alfa 0,5, mesmo ajuste do remover-fundo.py de uma leva anterior) e processado
+pela mesma fórmula do app (busto: Math.max 272×410, centro pela cabeça; corpo inteiro: altura
+máxima 1600). Falta Apoio (sinal de positivo) — ninguém mandou foto nova dessa pose, continua a
+antiga.
