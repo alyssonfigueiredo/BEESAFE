@@ -91,13 +91,28 @@ def escalas(srcs: dict) -> dict:
     return {1: s_b, **{p: s_e for p in exp}}
 
 
+def centro_cabeca(im: Image.Image) -> float:
+    """Posição horizontal do centro da cabeça (mesma faixa de largura_cabeca). Usada para
+    centralizar pela cabeça, não pelo meio do recorte inteiro: um braço que se estende de
+    um só lado alarga o recorte sem a cabeça estar no meio dele, e centralizar pelo meio do
+    recorte jogava a cabeça pro lado contrário em cada pose (achado pelo Alysson comparando
+    as poses lado a lado, 20/10/2026 — a tentativa anterior, de 19/10, só tirava o corte da
+    mão/braço e piorou isso). A escala "contain" (`max` acima, nunca estoura a caixa de
+    LARGURA_CORPO/ALTURA_MINIMA) já garante que nada passa da borda, mesmo com a cabeça fora
+    do centro do recorte."""
+    a = np.array(im.getchannel("A")) > 60
+    ys = np.where(a.any(1))[0]
+    top = ys[0]
+    cols = np.where(a[top : top + 6].any(0))[0]
+    return float(cols.mean()) if len(cols) else im.width / 2
+
+
 def busto(im: Image.Image, s: float) -> Image.Image:
     bw, bh = im.size
+    cx0 = centro_cabeca(im)
     nw, nh = round(bw * s), round(bh * s)  # mesma escala nos dois eixos: nada achata
     im = im.resize((nw, nh), Image.LANCZOS)
-    a2 = np.array(im.getchannel("A"))
-    faixa = a2[: max(8, nh // 8)]
-    cx = np.where(faixa.max(0) > 24)[0].mean() if faixa.max() > 24 else nw / 2
+    cx = cx0 * s
     x = round(W / 2 - cx)  # cabeça no centro
     tela = Image.new("RGBA", (W + 2 * nw, H + nh), (0, 0, 0, 0))
     tela.alpha_composite(im, (x + nw, TOPO))
