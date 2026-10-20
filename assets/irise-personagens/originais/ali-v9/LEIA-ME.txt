@@ -21,4 +21,11 @@ Mapeamento final (20/10/2026, conferido foto por foto):
 
 Já processado e aplicado ao app nesta sessão (assets/irise-personagens/p1-12.webp, b2-12.webp,
 b3-12.webp, b4-12.webp, b5-12.webp, b6-12.webp e os espelhos em docs/admin/), e sincronizado
-no Storage (painel). b1-12.webp (Mão no peito) não mudou.
+no Storage (painel).
+
+20/10/2026, mesmo dia: o Alysson mandou a foto que faltava — mão no peito, corpo inteiro, COM
+os tênis (`mao-no-peito.webp`/`com-fundo/mao-no-peito.jpg`, nova). Essa foto virou a fonte de
+DUAS coisas: a pose Mão no peito (agora calibrada junto com as outras 5, mesma escala — a
+`escalas()` conseguiu medir a cabeça certo dessa vez, sem o bug do fio de cabelo solto da foto
+velha da v8) e o Corpo inteiro (substitui o que só ia até a coxa, sem pé, usado antes).
+`mao-no-peito.webp` da v8 não é mais usado em nada.
