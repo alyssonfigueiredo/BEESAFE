@@ -6,11 +6,14 @@ mesmo centro pela cabeça, mesmo tamanho de tela) e sobe pro bucket `irise` pela
 API do Storage com a chave de serviço — nunca colada em chat, só como secret do GitHub
 Actions (SUPABASE_URL / SUPABASE_SERVICE_ROLE_KEY, os mesmos de `importar-cidade.yml`).
 
-Uso: python3 scripts/irise-poses-upload.py <n> <pose>:<arquivo> [<pose>:<arquivo> ...]
+Uso: python3 scripts/irise-poses-upload.py <n> <pose>:<arquivo>[:raw] [<pose>:<arquivo> ...]
   n = id do personagem (o mesmo número da tabela irise_personagens)
   pose = 0 (corpo inteiro) a 6; arquivo = caminho do .webp/.png sem fundo
   (os pares pose:arquivo também podem vir todos juntos num argumento só, separados
   por espaço ou quebra de linha — como chega do campo multilinha do GitHub Actions)
+  ":raw" no final sobe o arquivo direto, sem recortar/escalar — pra quando o arquivo
+  já É o busto pronto (900×1380), como os personagens embutidos no app (Ali): usado pra
+  destravar o Storage ficar igual ao que está no repositório, sem reprocessar de novo.
 
 Precisa de SUPABASE_URL e SUPABASE_SERVICE_ROLE_KEY no ambiente.
 """
@@ -73,14 +76,18 @@ def corpo_inteiro(im: Image.Image) -> Image.Image:
     return recorte
 
 
-def upload(n: str, pose: str, caminho: str):
+def upload(n: str, pose: str, caminho: str, raw: bool = False):
     if not SUPABASE_URL or not SERVICE_KEY:
         raise SystemExit("faltam SUPABASE_URL / SUPABASE_SERVICE_ROLE_KEY no ambiente")
-    im = Image.open(caminho).convert("RGBA")
-    out = corpo_inteiro(im) if pose == "0" else busto(im)
-    buf = __import__("io").BytesIO()
-    out.save(buf, format="WEBP", quality=92, method=4)
-    data = buf.getvalue()
+    if raw:
+        with open(caminho, "rb") as f:
+            data = f.read()
+    else:
+        im = Image.open(caminho).convert("RGBA")
+        out = corpo_inteiro(im) if pose == "0" else busto(im)
+        buf = __import__("io").BytesIO()
+        out.save(buf, format="WEBP", quality=92, method=4)
+        data = buf.getvalue()
     if len(data) > 2 * 1024 * 1024:
         raise SystemExit(f"{caminho}: ficou com mais de 2 MB convertido ({len(data)} bytes)")
     url = f"{SUPABASE_URL}/storage/v1/object/irise/{n}/{pose}.webp"
@@ -106,7 +113,9 @@ if __name__ == "__main__":
     n = sys.argv[1]
     itens = " ".join(sys.argv[2:]).split()
     for item in itens:
-        pose, _, caminho = item.partition(":")
-        if not caminho:
+        pose, _, resto = item.partition(":")
+        if not resto:
             raise SystemExit(f"argumento inválido (esperado pose:arquivo): {item}")
-        upload(n, pose, caminho)
+        raw = resto.endswith(":raw")
+        caminho = resto[: -len(":raw")] if raw else resto
+        upload(n, pose, caminho, raw=raw)
