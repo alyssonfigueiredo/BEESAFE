@@ -1,14 +1,24 @@
 Mesma leva de fotos do Ali, 8K com textura melhorada (20/10/2026) — substitui a v8
-(assets/irise-personagens/originais/ali-v8/) pra 5 das 6 poses de busto + corpo inteiro.
+(assets/irise-personagens/originais/ali-v8/) pra 6 das 7 poses do painel.
 Resolução original preservada, nas duas versões: os .webp soltos aqui são sem fundo (removido
 nesta sessão, flood-fill + decontaminação só acima de alfa 0,5); a pasta com-fundo/ guarda o
 original como veio (PNG, não JPG — sem perda).
 
-mao-estendida.webp = pose Acolhendo. corpo-inteiro.webp também virou a fonte da pose Mão no
-peito (mesma foto, mão no peito, enquadramento de corpo inteiro).
+corpo-inteiro.webp = mão no peito, corpo inteiro (mandada primeiro, à parte, antes do zip).
+dois-polegares.webp = pose Apoio (as duas mãos em positivo — vem do zip, pose_8k_2.png; achei
+que fosse mão no peito pelo tamanho do arquivo bater com a foto de cima, sem olhar o conteúdo,
+e troquei a pose errada — corrigido no mesmo dia).
+mao-estendida.webp = pose Acolhendo.
 
-Falta Apoio (sinal de positivo com as duas mãos) — ninguém mandou foto nova dessa pose; a v8
-continua sendo a fonte dela (dois-polegares.webp).
+Mapeamento final (20/10/2026, conferido foto por foto):
+  Corpo inteiro → corpo-inteiro.webp
+  Mão no peito  → SEM foto nova neste lote; segue a da ali-v8 (mao-no-peito.webp)
+  Comemorando   → comemorando.webp
+  Preocupade    → preocupado.webp
+  Acolhendo     → mao-estendida.webp
+  Piscadinha    → piscadinha.webp
+  Apoio         → dois-polegares.webp
 
-Já processado e aplicado ao app nesta sessão (assets/irise-personagens/b1-12.webp..b5-12.webp,
-p1-12.webp e os espelhos em docs/admin/), e sincronizado no Storage (painel).
+Já processado e aplicado ao app nesta sessão (assets/irise-personagens/p1-12.webp, b2-12.webp,
+b3-12.webp, b4-12.webp, b5-12.webp, b6-12.webp e os espelhos em docs/admin/), e sincronizado
+no Storage (painel). b1-12.webp (Mão no peito) não mudou.
