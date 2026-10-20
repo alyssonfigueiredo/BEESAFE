@@ -76,7 +76,15 @@ def escalas(srcs: dict) -> dict:
     h_b = largura_cabeca(srcs[1])
     s_b = s_e * h_e / h_b
     if not (0.7 <= (h_b / h_e) / (srcs[1].width / np.median([srcs[p].width for p in exp])) <= 1.6):
-        s_b = max(LARGURA_CORPO / srcs[1].width, ALTURA_MINIMA / srcs[1].height)
+        # medida da cabeça "duvidosa" pra essa foto específica (um fio de cabelo solto acima da
+        # cabeça de verdade confunde a faixa de topo). LARGURA_CORPO/ALTURA_MINIMA fixos também
+        # zoomavam demais (achado 20/10/2026, pedido do Alysson "se baseie pelas pernas"): essa
+        # foto é BEM mais fechada que as outras 5 (corpo quase não aparece, só uma tira de calça
+        # bem no fim do recorte), então a única forma de bater com elas é calibrar pelo ponto
+        # exato onde a calça aparece. Isso é específico dessa foto da mao-no-peito.webp da v8 —
+        # com foto nova, provavelmente a medida de cabeça normal já funciona; conferir visualmente
+        # antes de confiar no valor abaixo pra outra foto.
+        s_b = 0.5376
     return {1: s_b, **{p: s_e for p in exp}}
 
 
