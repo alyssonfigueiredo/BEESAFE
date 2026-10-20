@@ -1,0 +1,33 @@
+# Sobe foto(s) de personagem do irise pro Storage sem precisar do painel web/navegador:
+# Actions → Subir foto do irise → Run workflow. Mesmo resultado de subir pelo painel
+# (Personagens do irise → editor de fotos), só que pela chave de serviço do Actions.
+name: Subir foto do irise
+
+on:
+  workflow_dispatch:
+    inputs:
+      personagem:
+        description: "Número do personagem (o mesmo da tabela irise_personagens)"
+        required: true
+        type: string
+      fotos:
+        description: "Uma por linha, pose:caminho (pose 0 a 6; caminho relativo ao repositório)"
+        required: true
+        type: string
+
+jobs:
+  subir:
+    runs-on: ubuntu-latest
+    env:
+      SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+      SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+      PERSONAGEM: ${{ inputs.personagem }}
+      FOTOS: ${{ inputs.fotos }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install pillow numpy requests
+      - name: Subir
+        run: python3 scripts/irise-poses-upload.py "$PERSONAGEM" "$FOTOS"
