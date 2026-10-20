@@ -1650,14 +1650,19 @@ async function paraWebp(file, pose) {
   } else {
     const K = BUSTO_K;
     c.width = 300 * K; c.height = 460 * K;
-    // cresce até PREENCHER a caixa de 272 × 340 (o maior dos dois fatores vence) — é o
+    // cresce até PREENCHER a caixa de 272 × 410 (o maior dos dois fatores vence) — é o
     // padrão de verdade, igual ao Ali/Léo: a figura vai até a borda, com um braço/mão
     // bem estendido às vezes perdendo a ponta pro corte do quadro, em vez de a figura
     // inteira ficar menor com sobra vazia embaixo. Tentei "nunca cortar" (Math.min) em
     // 19/10 achando que resolvia o Acolhendo/Apoio saírem menores — só trocou o problema:
     // nenhuma pose chegava mais ao fim do quadrado (achado pelo Alysson, 20/10/2026,
-    // comparando com o Léo, que preenche 100% da altura).
-    const s = Math.max((272 * K) / bw, (340 * K) / bh);
+    // comparando com o Léo, que preenche 100% da altura). A altura alvo era 340: poses
+    // com gesto bem aberto (Acolhendo, Apoio) ficam perto do quadrado de 272×340 (pouco
+    // mais larga que alta) e nunca "vencem" o suficiente pra encostar embaixo. Subida
+    // pra 410 (mesmo dia): as poses mais fechadas nem notam (já venciam pela largura),
+    // e Acolhendo/Apoio passam a encostar perto da base também, só perdendo um pouco
+    // mais da lateral da mão — conferido visualmente, a mão continua inteira.
+    const s = Math.max((272 * K) / bw, (410 * K) / bh);
     const dw = bw * s, dh = bh * s;
     // centro horizontal pela CABEÇA (faixa do topo do recorte), não pelo meio do recorte
     // inteiro: um braço que se estende de um só lado alarga a caixa sem a cabeça estar no

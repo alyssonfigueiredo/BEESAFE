@@ -70,3 +70,14 @@ mão bem estendida alarga demais o recorte e o lado da LARGURA é que vence — 
 esperado, é a mesma foto mais "aberta" que antes, não bug. Corrigido em
 docs/admin/admin.js e scripts/irise-poses-upload.py (usado pelo workflow "Subir foto do
 irise", que sobe sem precisar abrir o painel).
+
+20/10/2026, quarto acerto — o Alysson não aceitou a explicação de 340 (seu
+texto: "esta me tirando a paciencia isso, na sua propria conferencia da pra ver que nao
+estao encostando na base"), com razão: medi certo, Acolhendo/Apoio ficavam em ~1065/1380
+e ~1055/1380 de altura (77%), bem aquém da base, porque a proporção dessas duas fotos
+(braço bem aberto) fica perto demais do alvo 272×340 pra "vencer" por largura o
+suficiente. Subida a altura alvo de 340 pra 410 (só esse número, no admin.js e no
+irise-poses-upload.py): as poses mais fechadas nem notam (já venciam pela largura, sem
+mudança), e Acolhendo/Apoio passam a encostar perto da base (~1242/1380, 90%) perdendo só
+um pouco mais da lateral da mão — testei renderizando as duas antes de subir, mão
+continua inteira e visível.
