@@ -29,3 +29,17 @@ DUAS coisas: a pose Mão no peito (agora calibrada junto com as outras 5, mesma 
 `escalas()` conseguiu medir a cabeça certo dessa vez, sem o bug do fio de cabelo solto da foto
 velha da v8) e o Corpo inteiro (substitui o que só ia até a coxa, sem pé, usado antes).
 `mao-no-peito.webp` da v8 não é mais usado em nada.
+
+23/10/2026: o Alysson mandou as 5 fotos que faltavam no MESMO padrão (corpo inteiro, com tênis) —
+comemorando.webp, preocupado.webp, mao-estendida.webp (Acolhendo), piscadinha.webp,
+dois-polegares.webp (Apoio) — todas substituídas aqui (as versões antigas do zip de 20/10, sem
+tênis, saíram). Com as 6 fotos no mesmo padrão de corpo inteiro, a `escalas()` finalmente
+calibra as 6 juntas sem fallback nenhum (todas as medidas de cabeça bateram, 234–264 px) — as 6
+poses do app agora cortam no mesmíssimo ponto, nível de calça, como o Bento.
+**Achado no processo (remover_fundo.py do scratchpad, não versionado):** o Acolhendo (mão
+estendida) saiu com pedaço do tênis branco comido pelo removedor de fundo (a sombra fina entre
+pé e fundo branco deixava passar a ligação). Corrigido erodindo a máscara de "quase branco" 2 px
+antes de rotular os componentes ligados à borda (quebra a ponte fina) e dilatando de volta só o
+que sobrou ligado — sem isso, frestas finas entre dedos/tênis brancos e o fundo branco viram
+"furo" que o algoritmo não enxerga como fundo de verdade. Guardar esse ajuste se o script for
+usado de novo.
