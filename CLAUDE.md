@@ -819,6 +819,21 @@ Nome: **Irisa** (INPI livre; @appirisa livre). Bundle id Android `br.com.irisa.a
   movimento; tocando de novo no meio da animação o carrossel parava entre dois personagens e o nome descolava
   do busto até arrastar. Agora soma a partir do alvo inteiro (`alvoSV`). Só JS: EAS Update.
 
+- **Fotos do Ali trocadas (20/10/2026, conferido pelo Alysson — aviso pro Leandro, usar essas
+  nas referências de posts/carrossel/story a partir de agora):** leva nova 8K (corpo inteiro,
+  mão no peito segue a antiga, comemorando, preocupado, acolhendo, piscadinha, apoio). Fundo
+  removido e processado com o MESMO algoritmo do Bento/Léo (`escalas()` do
+  `scripts/irise-poses-refazer.py`, uma escala só calibrada pela largura da cabeça pras 6 poses,
+  não o Math.max por-foto do painel) — as 6 agora cortam embaixo exatamente no mesmo ponto
+  (a barra do casaco), pedido do Alysson depois de comparar com o Bento. Corpo inteiro é foto
+  separada (não tem shoes, a foto não desce até o pé — sem fonte melhor). Fontes arquivadas em
+  `assets/irise-personagens/originais/ali-v9/`. Script de upload direto (sem navegador):
+  `scripts/irise-poses-upload.py` + workflow **Subir foto do irise**; contraparte pra baixar o
+  que já está no Storage (o que o painel mostra, sem precisar de chave): `scripts/irise-poses-baixar.py`.
+  **Cuidado:** nesse processo achei e corrigi um colar errado no corpo inteiro antigo (tinha cruz,
+  diferente do resto do conjunto) e um Storage desatualizado nas 6 poses de busto — se mexer de
+  novo nas fotos do Ali, confira que o Storage bate com o repositório antes de dar como certo.
+
 ## Stack
 
 Expo SDK 57, Expo Router, NativeWind v4, TypeScript, TanStack Query, MapLibre React Native v11 com tiles Esri

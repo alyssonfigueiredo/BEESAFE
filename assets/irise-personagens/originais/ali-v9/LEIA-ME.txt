@@ -1,0 +1,45 @@
+Mesma leva de fotos do Ali, 8K com textura melhorada (20/10/2026) — substitui a v8
+(assets/irise-personagens/originais/ali-v8/) pra 6 das 7 poses do painel.
+Resolução original preservada, nas duas versões: os .webp soltos aqui são sem fundo (removido
+nesta sessão, flood-fill + decontaminação só acima de alfa 0,5); a pasta com-fundo/ guarda o
+original como veio (PNG, não JPG — sem perda).
+
+corpo-inteiro.webp = mão no peito, corpo inteiro (mandada primeiro, à parte, antes do zip).
+dois-polegares.webp = pose Apoio (as duas mãos em positivo — vem do zip, pose_8k_2.png; achei
+que fosse mão no peito pelo tamanho do arquivo bater com a foto de cima, sem olhar o conteúdo,
+e troquei a pose errada — corrigido no mesmo dia).
+mao-estendida.webp = pose Acolhendo.
+
+Mapeamento final (20/10/2026, conferido foto por foto):
+  Corpo inteiro → corpo-inteiro.webp
+  Mão no peito  → SEM foto nova neste lote; segue a da ali-v8 (mao-no-peito.webp)
+  Comemorando   → comemorando.webp
+  Preocupade    → preocupado.webp
+  Acolhendo     → mao-estendida.webp
+  Piscadinha    → piscadinha.webp
+  Apoio         → dois-polegares.webp
+
+Já processado e aplicado ao app nesta sessão (assets/irise-personagens/p1-12.webp, b2-12.webp,
+b3-12.webp, b4-12.webp, b5-12.webp, b6-12.webp e os espelhos em docs/admin/), e sincronizado
+no Storage (painel).
+
+20/10/2026, mesmo dia: o Alysson mandou a foto que faltava — mão no peito, corpo inteiro, COM
+os tênis (`mao-no-peito.webp`/`com-fundo/mao-no-peito.jpg`, nova). Essa foto virou a fonte de
+DUAS coisas: a pose Mão no peito (agora calibrada junto com as outras 5, mesma escala — a
+`escalas()` conseguiu medir a cabeça certo dessa vez, sem o bug do fio de cabelo solto da foto
+velha da v8) e o Corpo inteiro (substitui o que só ia até a coxa, sem pé, usado antes).
+`mao-no-peito.webp` da v8 não é mais usado em nada.
+
+23/10/2026: o Alysson mandou as 5 fotos que faltavam no MESMO padrão (corpo inteiro, com tênis) —
+comemorando.webp, preocupado.webp, mao-estendida.webp (Acolhendo), piscadinha.webp,
+dois-polegares.webp (Apoio) — todas substituídas aqui (as versões antigas do zip de 20/10, sem
+tênis, saíram). Com as 6 fotos no mesmo padrão de corpo inteiro, a `escalas()` finalmente
+calibra as 6 juntas sem fallback nenhum (todas as medidas de cabeça bateram, 234–264 px) — as 6
+poses do app agora cortam no mesmíssimo ponto, nível de calça, como o Bento.
+**Achado no processo (remover_fundo.py do scratchpad, não versionado):** o Acolhendo (mão
+estendida) saiu com pedaço do tênis branco comido pelo removedor de fundo (a sombra fina entre
+pé e fundo branco deixava passar a ligação). Corrigido erodindo a máscara de "quase branco" 2 px
+antes de rotular os componentes ligados à borda (quebra a ponte fina) e dilatando de volta só o
+que sobrou ligado — sem isso, frestas finas entre dedos/tênis brancos e o fundo branco viram
+"furo" que o algoritmo não enxerga como fundo de verdade. Guardar esse ajuste se o script for
+usado de novo.

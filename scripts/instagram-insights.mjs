@@ -103,6 +103,29 @@ async function performancePosts(limite = 50) {
   return { posts, porSlot: Object.values(porSlot).map((s) => ({ ...s, media: s.total / s.n })) };
 }
 
+// 4. Desempenho por formato (Reels, carrossel, imagem): alcance, salvos, compartilhamentos e views de
+// cada post. Insight por post é uma chamada por mídia; métrica que o formato não tem volta erro e vira 0.
+async function porFormato(limite = 40) {
+  const j = await chamar(`${IG}/media`, {
+    fields: "id,timestamp,media_type,media_product_type,caption,like_count,comments_count,permalink",
+    limit: String(limite),
+  });
+  const out = [];
+  for (const p of j.data ?? []) {
+    const formato = p.media_product_type === "REELS" ? "Reels" : p.media_type === "CAROUSEL_ALBUM" ? "Carrossel" : "Imagem";
+    const m = { reach: 0, saved: 0, shares: 0, views: 0, total_interactions: 0 };
+    for (const k of Object.keys(m)) {
+      try {
+        const r = await chamar(`${p.id}/insights`, { metric: k });
+        m[k] = r.data?.[0]?.values?.[0]?.value ?? r.data?.[0]?.total_value?.value ?? 0;
+      } catch { /* métrica indisponível pra esse formato */ }
+    }
+    out.push({ formato, data: p.timestamp.slice(0, 10), titulo: (p.caption ?? "").split("\n")[0].slice(0, 60),
+      curtidas: p.like_count ?? 0, comentarios: p.comments_count ?? 0, ...m });
+  }
+  return out;
+}
+
 function top(lista, n = 8) {
   return [...lista].sort((a, b) => b.valor - a.valor).slice(0, n);
 }
@@ -148,6 +171,26 @@ async function main() {
     linha("");
   } catch (e) {
     linha(`## Performance dos posts\n(não deu pra calcular: ${e.message})\n`);
+  }
+
+  try {
+    const posts = await porFormato(40);
+    linha(`## Desempenho por formato (últimos ${posts.length} posts)\n`);
+    const grupos = {};
+    for (const p of posts) (grupos[p.formato] ??= []).push(p);
+    linha("| Formato | Posts | Alcance médio | Views médias | Salvos médios | Compart. médios | Interações médias |");
+    linha("|---|---|---|---|---|---|---|");
+    const med = (l, k) => (l.reduce((a, p) => a + (p[k] || 0), 0) / l.length).toFixed(1);
+    for (const [f, l] of Object.entries(grupos)) {
+      linha(`| ${f} | ${l.length} | ${med(l, "reach")} | ${med(l, "views")} | ${med(l, "saved")} | ${med(l, "shares")} | ${med(l, "total_interactions")} |`);
+    }
+    linha("\n### Post a post (maior alcance primeiro)\n");
+    for (const p of [...posts].sort((a, b) => b.reach - a.reach)) {
+      linha(`- ${p.data} · ${p.formato} · alcance ${p.reach} · views ${p.views} · salvos ${p.saved} · compart. ${p.shares} · curtidas ${p.curtidas} · coment. ${p.comentarios} — ${p.titulo}`);
+    }
+    linha("");
+  } catch (e) {
+    linha(`## Desempenho por formato\n(não deu pra calcular: ${e.message})\n`);
   }
 
   if (process.env.GITHUB_STEP_SUMMARY) {
