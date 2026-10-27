@@ -711,8 +711,8 @@
  },
  {
   "id": "reels-suascores",
-  "aprovado": false,
-  "quando": "2026-10-28T19:00:00-03:00",
+  "aprovado": true,
+  "quando": "2026-10-27T22:59:08.000Z",
   "tipo": "REELS",
   "midias": [
    "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/Irisa-reels-suascores.mp4"
