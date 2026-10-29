@@ -137,11 +137,14 @@ def cartao(esc: Image.Image) -> Image.Image:
     arco = cy - np.sqrt(np.clip(r ** 2 - (xx - cx) ** 2, 0, None))
     acima = np.clip((arco + 2 - yy), 0, 1) * np.clip((cy - r + 14 - yy) / 3, 0, 1)
     acima *= np.clip((58 - np.abs(xx - cx)) / 4, 0, 1)
-    # escape lateral: faixa de altura por volta do ombro/punho erguido
-    y_banda, meia_banda = cy - r * 0.42, r * 0.62
+    # escape lateral: faixa de altura por volta do ombro/punho erguido. Faixa mais larga e queda
+    # bem mais suave (28, não 10) do que o "acima" do cabelo — sem isso o cotovelo cortava em
+    # degrau onde a faixa acabava, em vez de acompanhar o contorno da manga (achado do Alysson,
+    # 29/10/2026, comparando de perto).
+    y_banda, meia_banda = cy - r * 0.30, r * 0.95
     arco_dir = cx + np.sqrt(np.clip(r ** 2 - (yy - cy) ** 2, 0, None))
     arco_esq = cx - np.sqrt(np.clip(r ** 2 - (yy - cy) ** 2, 0, None))
-    banda = np.clip((meia_banda - np.abs(yy - y_banda)) / 10, 0, 1)
+    banda = np.clip((meia_banda - np.abs(yy - y_banda)) / 28, 0, 1)
     lado_dir = np.clip((xx - (arco_dir - 2)) / 3, 0, 1) * banda
     lado_esq = np.clip(((arco_esq + 2) - xx) / 3, 0, 1) * banda
     mscr = np.maximum(np.maximum(disco, acima), np.maximum(lado_dir, lado_esq))
