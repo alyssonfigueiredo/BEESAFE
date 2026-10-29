@@ -120,6 +120,11 @@ ANEL = Image.open(OUT / "anel-arcoiris.png").convert("RGBA").resize((220, 220), 
 
 
 def cartao(esc: Image.Image) -> Image.Image:
+    """Cartão redondo do avatar com efeito de profundidade (pedido do Alysson, 29/10/2026): além
+    da cabeça poder passar por cima da borda (`acima`, já existia), braço/punho erguido também pode
+    escapar pelos LADOS do anel — mesma lógica (arco do círculo + faixa de altura + sombra suave
+    nos pixels que escaparam), só que na horizontal. Sem gesto largo (a maioria das poses), as
+    janelas de escape nunca são alcançadas e o resultado é igual ao de antes."""
     cw, ch, cx, cy, r = 216, 281, 107.5, 172.0, 96.5
     c = Image.new("RGBA", (cw, ch), (0, 0, 0, 0))
     c.paste(ANEL, (-2, 62), ANEL)
@@ -132,12 +137,27 @@ def cartao(esc: Image.Image) -> Image.Image:
     arco = cy - np.sqrt(np.clip(r ** 2 - (xx - cx) ** 2, 0, None))
     acima = np.clip((arco + 2 - yy), 0, 1) * np.clip((cy - r + 14 - yy) / 3, 0, 1)
     acima *= np.clip((58 - np.abs(xx - cx)) / 4, 0, 1)
-    mscr = np.maximum(disco, acima)
+    # escape lateral: faixa de altura por volta do ombro/punho erguido
+    y_banda, meia_banda = cy - r * 0.42, r * 0.62
+    arco_dir = cx + np.sqrt(np.clip(r ** 2 - (yy - cy) ** 2, 0, None))
+    arco_esq = cx - np.sqrt(np.clip(r ** 2 - (yy - cy) ** 2, 0, None))
+    banda = np.clip((meia_banda - np.abs(yy - y_banda)) / 10, 0, 1)
+    lado_dir = np.clip((xx - (arco_dir - 2)) / 3, 0, 1) * banda
+    lado_esq = np.clip(((arco_esq + 2) - xx) / 3, 0, 1) * banda
+    mscr = np.maximum(np.maximum(disco, acima), np.maximum(lado_dir, lado_esq))
     al = np.array(camada.getchannel("A")).astype(float) * mscr
     rot, _ = ndimage.label(al > 8)
     miolo = set(np.unique(rot[(d < r - 4) & (al > 8)])) - {0}
     al[~np.isin(rot, list(miolo))] = 0
     camada.putalpha(Image.fromarray(al.astype("uint8")))
+    # sombra suave só na parte que escapou do disco, pra "flutuar" na frente do anel
+    fora = (d > r - 2) & (al > 8)
+    sombra_alpha = np.where(fora, al * 0.55, 0).astype("uint8")
+    sombra = Image.new("RGBA", (cw, ch), (10, 12, 20, 0))
+    sombra.putalpha(Image.fromarray(sombra_alpha).filter(ImageFilter.GaussianBlur(3)))
+    deslocada = Image.new("RGBA", (cw, ch), (0, 0, 0, 0))
+    deslocada.alpha_composite(sombra, (2, 3))
+    c.alpha_composite(deslocada)
     c.alpha_composite(camada)
     return c
 
