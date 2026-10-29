@@ -164,7 +164,7 @@ export function MedalCelebration() {
           {/* Prévia (09/10/2026): o irise comemora do lado, nunca no lugar da medalha. */}
           {!!personagem && (
             <FadeUp key={`irise-${m.id}`} delay={reduce ? 0 : T_NOME + 480} duration={450}>
-              <View className="mt-5 flex-row items-center gap-3 px-2">
+              <View className="mt-5 w-full flex-row items-center gap-3 px-2">
                 <Busto personagem={personagem.n} pose={2} size={72} />
                 <View
                   className="min-w-0 flex-1 rounded-2xl rounded-bl-[6px] px-4 py-3"
