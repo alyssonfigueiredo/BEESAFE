@@ -1,8 +1,9 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { router } from "expo-router";
 import { useEffect, useMemo, useState } from "react";
-import { Modal, Pressable, Text, View } from "react-native";
+import { Image, Modal, Pressable, Text, useWindowDimensions, View } from "react-native";
 import { useReducedMotion } from "react-native-reanimated";
+import Svg, { Defs, LinearGradient, Rect, Stop } from "react-native-svg";
 
 import { FadeUp } from "@/components/gami/Anim";
 import {
@@ -11,9 +12,9 @@ import {
   type Compartilhavel,
 } from "@/components/gami/Compartilhar";
 import { AnimatedMedal } from "@/components/gami/MedalView";
-import { Busto } from "@/components/irise-personagem/Busto";
 import { useGamification, useMarkSeen, useRewardOpen } from "@/hooks/useGamification";
-import { useIrisePersonagens } from "@/hooks/useIrisePersonagens";
+import { useBustoResolvido, useIrisePersonagens } from "@/hooks/useIrisePersonagens";
+import { BUSTO_ASPECTO } from "@/lib/irisePersonagens";
 import { useProfile } from "@/hooks/useProfile";
 import { getMedalha, nomeDa } from "@/lib/medals";
 import { colors } from "@/theme/tokens";
@@ -111,6 +112,15 @@ export function MedalCelebration() {
   const banho = g?.conquistadas.find((c) => c.id === id)?.banho ?? null;
   const resto = (aberta?.length ?? 1) - 1;
 
+  // Irise de corpo inteiro comemorando atrás de tudo (opção D aprovada pelo Alysson, 29/10/2026):
+  // sem bolha de fala, o personagem é a cena, com um véu que escurece até a cor sólida embaixo
+  // pra não brigar com os botões. O hook precisa de um `n` sempre — com `?? 1` e sem `personagem`
+  // a imagem simplesmente não é desenhada (`!!personagem` abaixo), então o fallback nunca aparece.
+  const { width: larguraTela } = useWindowDimensions();
+  const { source: fonteIrise, onError: onErrorIrise } = useBustoResolvido(2, personagem?.n ?? 1);
+  const larguraIrise = larguraTela * 1.45;
+  const alturaIrise = larguraIrise * BUSTO_ASPECTO;
+
   return (
     <Modal
       visible={!!m}
@@ -120,7 +130,45 @@ export function MedalCelebration() {
       statusBarTranslucent
     >
       {m && (
-        <View className="flex-1 items-center px-7 pt-24" style={{ backgroundColor: colors.night }}>
+        <View
+          className="flex-1 items-center px-7 pt-24"
+          style={{ backgroundColor: colors.night, overflow: "hidden" }}
+        >
+          {!!personagem && (
+            <FadeUp
+              delay={reduce ? 0 : T_NOME + 300}
+              duration={600}
+              style={{
+                position: "absolute",
+                left: (larguraTela - larguraIrise) / 2,
+                top: 150,
+                width: larguraIrise,
+                height: alturaIrise,
+              }}
+            >
+              <Image
+                source={fonteIrise}
+                onError={onErrorIrise}
+                style={{ width: larguraIrise, height: alturaIrise }}
+                resizeMode="contain"
+              />
+            </FadeUp>
+          )}
+          <Svg
+            width={larguraTela}
+            height={420}
+            style={{ position: "absolute", left: 0, bottom: 0 }}
+            pointerEvents="none"
+          >
+            <Defs>
+              <LinearGradient id="veu-medalha" x1="0" y1="0" x2="0" y2="1">
+                <Stop offset="0" stopColor={colors.night} stopOpacity={0} />
+                <Stop offset="0.62" stopColor={colors.night} stopOpacity={0.55} />
+                <Stop offset="1" stopColor={colors.night} stopOpacity={1} />
+              </LinearGradient>
+            </Defs>
+            <Rect x={0} y={0} width={larguraTela} height={420} fill="url(#veu-medalha)" />
+          </Svg>
           <FadeUp key={`d-${m.id}`} duration={400}>
             <Text
               className="font-body-medium text-[12px] uppercase tracking-wider"
@@ -161,23 +209,7 @@ export function MedalCelebration() {
               </Text>
             </FadeUp>
           )}
-          {/* Prévia (09/10/2026): o irise comemora do lado, nunca no lugar da medalha. */}
-          {!!personagem && (
-            <FadeUp key={`irise-${m.id}`} delay={reduce ? 0 : T_NOME + 480} duration={450}>
-              <View className="mt-5 w-full flex-row items-center gap-3 px-2">
-                <Busto personagem={personagem.n} pose={2} size={72} />
-                <View
-                  className="min-w-0 flex-1 rounded-2xl rounded-bl-[6px] px-4 py-3"
-                  style={{ backgroundColor: "rgba(255,255,255,0.12)" }}
-                >
-                  <Text className="font-body text-[13.5px] leading-[19px]" style={{ color: "#E4E6F2" }}>
-                    Mandou bem! Bora pra próxima?
-                  </Text>
-                </View>
-              </View>
-            </FadeUp>
-          )}
-          <View className="absolute bottom-12 left-6 right-6 gap-2">
+          <View className="absolute bottom-12 left-6 right-6 gap-2" style={{ zIndex: 2 }}>
             <BotaoCompartilhar
               escuro
               onPress={() => setStory({ tipo: "medalha", id: m.id, banho })}
