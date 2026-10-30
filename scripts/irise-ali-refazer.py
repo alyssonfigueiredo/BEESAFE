@@ -147,7 +147,13 @@ def cartao(esc: Image.Image) -> Image.Image:
     banda = np.clip((meia_banda - np.abs(yy - y_banda)) / 28, 0, 1)
     lado_dir = np.clip((xx - (arco_dir - 2)) / 3, 0, 1) * banda
     lado_esq = np.clip(((arco_esq + 2) - xx) / 3, 0, 1) * banda
-    mscr = np.maximum(np.maximum(disco, acima), np.maximum(lado_dir, lado_esq))
+    # fecha o vão de baixo: o canvas (ch=281) é mais alto que cy+r (268,5), então sem isso sobra
+    # uma faixa vazia entre a roupa e o arco de baixo do anel — existia desde sempre (achado nesse
+    # cartão, mas também no de outros personagens mais antigos como o Bento; não é regressão de
+    # hoje), ninguém tinha reparado antes (29/10/2026).
+    baixo = np.clip((yy - (cy + r - 6)) / 6, 0, 1)
+
+    mscr = np.maximum(np.maximum(disco, acima), np.maximum(np.maximum(lado_dir, lado_esq), baixo))
     al = np.array(camada.getchannel("A")).astype(float) * mscr
     rot, _ = ndimage.label(al > 8)
     miolo = set(np.unique(rot[(d < r - 4) & (al > 8)])) - {0}
