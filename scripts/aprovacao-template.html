@@ -454,16 +454,19 @@ async function initDb(){
     render(); renderS_ifOpen(); updateChip(); aplicarArquivadas();
     return;
   }
-  allIds.forEach(id=>{
-    dbNs.doc("aprovacoes/"+id).onSnapshot(snap=>{
-      lerAprovacao(id, (snap.data && snap.data()) || null);
-      atualizarEstado(id);
-    }, ()=>{});
-    dbNs.doc("publicados/"+id).onSnapshot(snap=>{
-      publicadoState[id] = !!(snap.data() && snap.data().publicado);
-      atualizarEstado(id);
-    }, ()=>{});
-  });
+  // Uma assinatura por item (2×62) passa longe do teto de 64 assinaturas por
+  // visão e o excesso falha calado (resource_exhausted no error handler vazio):
+  // por isso metade da fila nunca via o estado real, antes e depois de recarregar.
+  // Duas assinaturas de coleção inteira resolvem todos os itens de uma vez.
+  dbNs.collection("aprovacoes").limit(500).onSnapshot(snap=>{
+    snap.docs.forEach(d=>{ lerAprovacao(d.id, d.data()); atualizarEstado(d.id); });
+  }, ()=>{});
+  dbNs.collection("publicados").limit(500).onSnapshot(snap=>{
+    snap.docs.forEach(d=>{
+      publicadoState[d.id] = !!(d.data() && d.data().publicado);
+      atualizarEstado(d.id);
+    });
+  }, ()=>{});
 }
 function atualizarEstado(id){
   updateGridBadge(id);
