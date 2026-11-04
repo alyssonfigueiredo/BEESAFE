@@ -527,7 +527,10 @@ async function enviarPedido(id, texto){
 
 // grade (posts + reels)
 const grid=$('grid');
-FEED.forEach((p,i)=>{
+// Perfil real do Instagram mostra o mais recente primeiro; FEED está em ordem
+// cronológica crescente (mais antigo primeiro), então a grade é montada ao
+// contrário, mantendo o índice original (i) pra abrir/navegar certo na FEED.
+FEED.map((p,i)=>({p,i})).slice().reverse().forEach(({p,i})=>{
   const b=document.createElement('button'); b.className='tile'; b.dataset.id=p.id;
   const isReels = p.tipo==='REELS';
   const thumb = isReels
