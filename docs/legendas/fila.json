@@ -767,7 +767,7 @@
  },
  {
   "id": "post-cardapio",
-  "aprovado": false,
+  "aprovado": true,
   "quando": "2026-11-04T19:00:00-03:00",
   "tipo": "POST",
   "midias": [
