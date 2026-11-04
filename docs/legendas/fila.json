@@ -764,5 +764,265 @@
   ],
   "legenda": "Andar pela cidade não precisa ser sozinhe. 🚶🌈\n\n✨ As irises chegaram: oito personagens pra você escolher quem caminha com você.\n\n📱 Fica na sua tela inicial, te esperando\n📬 Traz a missão do dia\n🏅 Avisa quando falta pouco pra uma conquista\n📍 Sugere lugar de verdade, do mapa — irise não inventa endereço\n\nKai, Léo, Ali, Bento, Dante, Rafa, Yara e Dandara. 💛\n\nIrisa: o mapa dos lugares onde a gente é bem-vinde, feito por nós. 🗺️\n🍎 App Store · 🤖 Google Play\n\n💬 Comenta: qual é a sua?\n\n#Irisa #LGBTQIA #Orgulho #AppLGBT #Irises",
   "primeiro_comentario": "appirisa.com.br"
+ },
+ {
+  "id": "post-cardapio",
+  "aprovado": false,
+  "quando": "2026-11-04T19:00:00-03:00",
+  "tipo": "POST",
+  "midias": [
+   "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/post-cardapio/01.png"
+  ],
+  "legenda": "Antes do cardápio, a pergunta de sempre.\nNa Irisa, quem esteve lá responde: atendimento, afeto, banheiro e clientela.\nO link está na bio.\n\n#Irisa #LGBTQIA #Orgulho #AppLGBT #BemVinde",
+  "primeiro_comentario": "appirisa.com.br",
+  "publicado": false
+ },
+ {
+  "id": "story-enquete-pesquisa",
+  "aprovado": false,
+  "quando": "2026-11-04T20:00:00-03:00",
+  "tipo": "STORY",
+  "midias": [
+   "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/stories-novembro/story-03-enquete-pesquisa.png"
+  ],
+  "legenda": "",
+  "primeiro_comentario": "",
+  "publicado": false,
+  "nota": "Story manual: adesivo ENQUETE (Sim, sempre / Só se for novo). A área tracejada é onde ele vai."
+ },
+ {
+  "id": "reels-quero-ir",
+  "aprovado": false,
+  "quando": "2026-11-05T19:00:00-03:00",
+  "tipo": "REELS",
+  "midias": [
+   "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/Irisa-reels-quero-ir.mp4"
+  ],
+  "legenda": "Chegou o Quero ir.\nViu um lugar com cara de casa? Toca no coração e ele fica guardado.\nQuando você for e avaliar, ele vai pra Já fui sozinho.\nO link está na bio.\n\n#Irisa #LGBTQIA #Orgulho #AppLGBT #Novidade",
+  "primeiro_comentario": "appirisa.com.br",
+  "publicado": false
+ },
+ {
+  "id": "story-quiz-quero-ir",
+  "aprovado": false,
+  "quando": "2026-11-05T20:00:00-03:00",
+  "tipo": "STORY",
+  "midias": [
+   "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/stories-novembro/story-05-quiz-quero-ir.png"
+  ],
+  "legenda": "",
+  "primeiro_comentario": "",
+  "publicado": false,
+  "nota": "Story manual: adesivo QUIZ (Na ficha do lugar = certa / No mapa / No perfil) + adesivo de LINK. A área tracejada é onde ele vai."
+ },
+ {
+  "id": "reels-grupo-sexta",
+  "aprovado": false,
+  "quando": "2026-11-06T19:00:00-03:00",
+  "tipo": "REELS",
+  "midias": [
+   "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/Irisa-reels-grupo-sexta.mp4"
+  ],
+  "legenda": "Todo grupo tem essa conversa na sexta.\nManda pro seu e resolve antes.\nO link está na bio.\n\n#Irisa #LGBTQIA #Orgulho #AppLGBT #Sextou",
+  "primeiro_comentario": "appirisa.com.br",
+  "publicado": false
+ },
+ {
+  "id": "story-enquete-role",
+  "aprovado": false,
+  "quando": "2026-11-06T20:00:00-03:00",
+  "tipo": "STORY",
+  "midias": [
+   "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/stories-novembro/story-06-enquete-role.png"
+  ],
+  "legenda": "",
+  "primeiro_comentario": "",
+  "publicado": false,
+  "nota": "Story manual: adesivo ENQUETE (Rolê / Sofá). A área tracejada é onde ele vai."
+ },
+ {
+  "id": "reels-primeiro-lugar",
+  "aprovado": false,
+  "quando": "2026-11-07T19:00:00-03:00",
+  "tipo": "REELS",
+  "midias": [
+   "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/Irisa-reels-primeiro-lugar.mp4"
+  ],
+  "legenda": "Todo mundo tem um primeiro lugar onde deu pra ser inteire.\nQual foi o seu? Conta aqui.\nNa Irisa, a gente ajuda alguém a achar o seu. O link está na bio.\n\n#Irisa #LGBTQIA #Orgulho #AppLGBT #BemVinde",
+  "primeiro_comentario": "appirisa.com.br",
+  "publicado": false,
+  "nota": "VÍDEO FINAL PENDENTE: montar abertura e fecho (docs/reels-pecas/primeiro-lugar-*.mp4) com as cenas dos irises (Léo festa, Dandara bar, Luna Parada) e salvar como docs/Irisa-reels-primeiro-lugar.mp4. Fixar: \"O meu foi um karaokê numa terça qualquer. E o seu?\""
+ },
+ {
+  "id": "story-caixinha-primeiro-lugar",
+  "aprovado": false,
+  "quando": "2026-11-07T20:00:00-03:00",
+  "tipo": "STORY",
+  "midias": [
+   "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/stories-novembro/story-02-caixinha-primeiro-lugar.png"
+  ],
+  "legenda": "",
+  "primeiro_comentario": "",
+  "publicado": false,
+  "nota": "Story manual: adesivo CAIXA DE PERGUNTA (\"Conta qual e por quê\"). Respostas autorizadas viram o Reels do dia 15. A área tracejada é onde ele vai."
+ },
+ {
+  "id": "reels-intersexo",
+  "aprovado": false,
+  "quando": "2026-11-08T19:00:00-03:00",
+  "tipo": "REELS",
+  "midias": [
+   "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/Irisa-reels-intersexo.mp4"
+  ],
+  "legenda": "8 de novembro, Dia da Solidariedade Intersexo.\nO I da sigla existe, e a gente fala dele.\nSe você não sabia, tudo bem. Agora sabe.\n\n#Irisa #LGBTQIA #Orgulho #AppLGBT #Intersexo",
+  "primeiro_comentario": "appirisa.com.br",
+  "publicado": false,
+  "nota": "Antes de aprovar: pedir pra uma organização intersexo (ABRAI) ler o texto do vídeo."
+ },
+ {
+  "id": "story-quiz-intersexo",
+  "aprovado": false,
+  "quando": "2026-11-08T20:00:00-03:00",
+  "tipo": "STORY",
+  "midias": [
+   "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/stories-novembro/story-08-quiz-intersexo.png"
+  ],
+  "legenda": "",
+  "primeiro_comentario": "",
+  "publicado": false,
+  "nota": "Story manual: adesivo QUIZ (Intersexo = certa / Indefinido / Independente). A área tracejada é onde ele vai."
+ },
+ {
+  "id": "reels-checklist",
+  "aprovado": false,
+  "quando": "2026-11-09T19:00:00-03:00",
+  "tipo": "REELS",
+  "midias": [
+   "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/Irisa-reels-checklist.mp4"
+  ],
+  "legenda": "A checklist completa.\nO último item é o que mais importa.\nO link está na bio.\n\n#Irisa #LGBTQIA #Orgulho #AppLGBT #Role",
+  "primeiro_comentario": "appirisa.com.br",
+  "publicado": false
+ },
+ {
+  "id": "story-caixinha-bolsa",
+  "aprovado": false,
+  "quando": "2026-11-09T20:00:00-03:00",
+  "tipo": "STORY",
+  "midias": [
+   "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/stories-novembro/story-09-caixinha-bolsa.png"
+  ],
+  "legenda": "",
+  "primeiro_comentario": "",
+  "publicado": false,
+  "nota": "Story manual: adesivo CAIXA DE PERGUNTA. Repostar as respostas mais engraçadas no dia seguinte. A área tracejada é onde ele vai."
+ },
+ {
+  "id": "carrossel-anonimato",
+  "aprovado": false,
+  "quando": "2026-11-10T16:00:00-03:00",
+  "tipo": "POST",
+  "midias": [
+   "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/carrossel-anonimato/01.png",
+   "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/carrossel-anonimato/02.png",
+   "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/carrossel-anonimato/03.png",
+   "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/carrossel-anonimato/04.png",
+   "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/carrossel-anonimato/05.png",
+   "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/carrossel-anonimato/06.png"
+  ],
+  "legenda": "Pergunta que a gente mais recebe.\nResposta curta: não.\nArrasta pra entender como.\nO link está na bio.\n\n#Irisa #LGBTQIA #Orgulho #AppLGBT #Anonimato",
+  "primeiro_comentario": "appirisa.com.br",
+  "publicado": false,
+  "nota": "Teste de horário: 16h."
+ },
+ {
+  "id": "story-caixinha-relato",
+  "aprovado": false,
+  "quando": "2026-11-10T20:00:00-03:00",
+  "tipo": "STORY",
+  "midias": [
+   "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/stories-novembro/story-10-caixinha-relato.png"
+  ],
+  "legenda": "",
+  "primeiro_comentario": "",
+  "publicado": false,
+  "nota": "Story manual: adesivo CAIXA DE PERGUNTA. As dúvidas viram conteúdo depois. A área tracejada é onde ele vai."
+ },
+ {
+  "id": "post-nome",
+  "aprovado": false,
+  "quando": "2026-11-12T16:00:00-03:00",
+  "tipo": "POST",
+  "midias": [
+   "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/post-nome/01.png"
+  ],
+  "legenda": "Nome é a primeira coisa que um lugar aprende sobre você.\nÉ por isso que atendimento vale 30% da nota na Irisa.\nQual foi o último lugar que acertou o seu de primeira?\n\n#Irisa #LGBTQIA #Orgulho #AppLGBT #PessoasTrans",
+  "primeiro_comentario": "appirisa.com.br",
+  "publicado": false,
+  "nota": "Teste de horário: 16h. Abre a Semana de Conscientização Trans."
+ },
+ {
+  "id": "story-enquete-nome",
+  "aprovado": false,
+  "quando": "2026-11-12T20:00:00-03:00",
+  "tipo": "STORY",
+  "midias": [
+   "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/stories-novembro/story-12-enquete-nome.png"
+  ],
+  "legenda": "",
+  "primeiro_comentario": "",
+  "publicado": false,
+  "nota": "Story manual: adesivo ENQUETE (Já / Nunca). A área tracejada é onde ele vai."
+ },
+ {
+  "id": "reels-sexta13",
+  "aprovado": false,
+  "quando": "2026-11-13T19:00:00-03:00",
+  "tipo": "REELS",
+  "midias": [
+   "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/Irisa-reels-sexta13.mp4"
+  ],
+  "legenda": "Sexta-feira 13 e a lista de terror é outra.\nQual dá mais medo em você?\nO link está na bio.\n\n#Irisa #LGBTQIA #Orgulho #AppLGBT #Sextou",
+  "primeiro_comentario": "appirisa.com.br",
+  "publicado": false
+ },
+ {
+  "id": "story-enquete-medo",
+  "aprovado": false,
+  "quando": "2026-11-13T20:00:00-03:00",
+  "tipo": "STORY",
+  "midias": [
+   "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/stories-novembro/story-13-enquete-medo.png"
+  ],
+  "legenda": "",
+  "primeiro_comentario": "",
+  "publicado": false,
+  "nota": "Story manual: adesivo ENQUETE (Garçom errando o pronome / \"Ambiente família\"). A área tracejada é onde ele vai."
+ },
+ {
+  "id": "reels-lugares-casa",
+  "aprovado": false,
+  "quando": "2026-11-15T19:00:00-03:00",
+  "tipo": "REELS",
+  "midias": [
+   "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/Irisa-reels-lugares-casa.mp4"
+  ],
+  "legenda": "A gente perguntou, vocês responderam.\nCada lugar desses merece cor no mapa.\nO link está na bio.\n\n#Irisa #LGBTQIA #Orgulho #AppLGBT #BemVinde",
+  "primeiro_comentario": "appirisa.com.br",
+  "publicado": false,
+  "nota": "VÍDEO FINAL PENDENTE: abertura e fecho em docs/reels-pecas/lugares-casa-*.mp4; no meio, 4 a 6 respostas reais da caixinha do dia 07 (só de quem autorizou, sem nome de bar sem permissão). Salvar como docs/Irisa-reels-lugares-casa.mp4."
+ },
+ {
+  "id": "story-obrigade",
+  "aprovado": false,
+  "quando": "2026-11-15T20:00:00-03:00",
+  "tipo": "STORY",
+  "midias": [
+   "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/stories-novembro/story-15-obrigade.png"
+  ],
+  "legenda": "",
+  "primeiro_comentario": "",
+  "publicado": false,
+  "nota": "Story manual: adesivo de LINK (\"Avalia o seu lugar\"). A área tracejada é onde ele vai."
  }
 ]
