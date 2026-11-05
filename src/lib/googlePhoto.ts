@@ -1,8 +1,8 @@
-// Foto do lugar via Google Places (New). A imagem nunca passa pelo nosso banco: o app monta a
-// URL e o Google entrega. Sem chave configurada, o app simplesmente não mostra foto.
-const KEY = process.env.EXPO_PUBLIC_GOOGLE_MAPS_KEY;
-
-export function googlePhotoUrl(photoName: string | null | undefined, maxWidthPx: number) {
-  if (!KEY || !photoName) return null;
-  return `https://places.googleapis.com/v1/${photoName}/media?maxWidthPx=${maxWidthPx}&key=${KEY}`;
+// Foto do lugar via Google Places (New). DESLIGADO (05/11/2026, pedido do Alysson): cada
+// visualização de card chamava o endpoint de mídia do Google ao vivo, sem cache e sem o teto
+// de 150/dia do script — isso gerou R$95 em outubro (+689%) na SKU Place Details Photos.
+// Regra do projeto é zero gasto com a Google Places API: sem foto própria (Mapillary/comunidade),
+// o lugar cai no ícone da categoria em vez de buscar no Google.
+export function googlePhotoUrl(_photoName: string | null | undefined, _maxWidthPx: number) {
+  return null;
 }
