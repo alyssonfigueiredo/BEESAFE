@@ -105,6 +105,9 @@ h1,h2,h3{font-family:var(--display);text-transform:uppercase;margin:0}
 .pill-jaja{font-family:var(--display);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:#0F1830;background:var(--orange);padding:7px 14px;border-radius:999px;display:inline-flex;align-items:center;gap:6px}
 .btn-arquivar{color:var(--dim);font-size:11.5px;padding:7px 12px}
 .pill-arq{font-family:var(--display);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--dim);border:1px solid var(--line);padding:6px 13px;border-radius:999px;display:inline-flex;align-items:center;gap:6px}
+/* clique duplo substitui confirm() nativo, bloqueado nesta página */
+.btn.confirmando,.lbtn.confirmando,.sbtn.confirmando{background:var(--coral);border-color:var(--coral);color:#fff}
+.toast-erro{position:fixed;left:50%;bottom:22px;transform:translateX(-50%);z-index:50;background:#1E2340;color:#fff;font-size:13px;padding:10px 18px;border-radius:999px;box-shadow:0 4px 14px rgba(0,0,0,.3);max-width:90vw;text-align:center}
 
 /* arquivada: sai da fila sem sumir do repositório (dá pra reaproveitar depois) */
 .oculto{display:none !important}
@@ -501,15 +504,39 @@ const ACOES = {
   arquivar:    {arquivado:true, publicar_agora:false},
   desarquivar: {arquivado:false},
 };
-const AVISO_JAJA = 'Furar a fila com essa peça?\n\nEla fica aprovada e marcada pra sair na próxima rodada, sem esperar a data agendada. A publicação em si não sai daqui: eu vejo a marca e solto.';
+// O artefato roda numa página sem permissão de diálogo nativo (confirm/alert não abrem — o
+// clique simplesmente não fazia nada, achado em 05/11/2026): confirmação e erro viram inline.
+function confirmarNoClique(btn, textoNormal){
+  if(btn.dataset.confirmando === '1'){
+    clearTimeout(Number(btn.dataset.confirmTimer));
+    delete btn.dataset.confirmando; delete btn.dataset.confirmTimer;
+    btn.textContent = textoNormal; btn.classList.remove('confirmando');
+    return true;
+  }
+  btn.dataset.confirmando = '1';
+  btn.textContent = 'Toca de novo pra confirmar';
+  btn.classList.add('confirmando');
+  const t = setTimeout(()=>{
+    delete btn.dataset.confirmando; delete btn.dataset.confirmTimer;
+    btn.textContent = textoNormal; btn.classList.remove('confirmando');
+  }, 4000);
+  btn.dataset.confirmTimer = String(t);
+  return false;
+}
+function avisoErro(msg){
+  const t = document.createElement('div');
+  t.className = 'toast-erro'; t.textContent = msg;
+  document.body.appendChild(t);
+  setTimeout(()=>t.remove(), 4000);
+}
 async function acao(id, qual, btn){
   if(!dbNs) return;
-  if(qual==='jaja' && !confirm(AVISO_JAJA)) return;
+  if(qual==='jaja' && btn && !confirmarNoClique(btn, 'Publicar agora')) return;
   if(btn) btn.disabled = true;
   try {
     await gravarAprovacao(id, ACOES[qual]);
   } catch(e) {
-    alert('Não consegui gravar. Tenta de novo (conexão pode ter falhado).');
+    avisoErro('Não consegui gravar. Tenta de novo (conexão pode ter falhado).');
   } finally {
     if(btn) btn.disabled = false;
   }
@@ -635,8 +662,8 @@ function renderApprove(){
     }
     vapprove.innerHTML = partes.join('');
   }
-  const ba=document.getElementById('bapprove'); if(ba) ba.onclick=async()=>{ba.disabled=true;try{await setAprovado(cur.id,true);}catch(e){alert('Não consegui gravar. Tenta de novo (conexão pode ter falhado).');}finally{ba.disabled=false;}};
-  const bu=document.getElementById('bundo'); if(bu) bu.onclick=async()=>{bu.disabled=true;try{await setAprovado(cur.id,false);}catch(e){alert('Não consegui gravar. Tenta de novo (conexão pode ter falhado).');}finally{bu.disabled=false;}};
+  const ba=document.getElementById('bapprove'); if(ba) ba.onclick=async()=>{ba.disabled=true;try{await setAprovado(cur.id,true);}catch(e){avisoErro('Não consegui gravar. Tenta de novo (conexão pode ter falhado).');}finally{ba.disabled=false;}};
+  const bu=document.getElementById('bundo'); if(bu) bu.onclick=async()=>{bu.disabled=true;try{await setAprovado(cur.id,false);}catch(e){avisoErro('Não consegui gravar. Tenta de novo (conexão pode ter falhado).');}finally{bu.disabled=false;}};
   vapprove.querySelectorAll('button[data-a]').forEach(b=>{ b.onclick=()=>acao(id, b.dataset.a, b); });
 }
 function renderPublicado(){
@@ -648,8 +675,8 @@ function renderPublicado(){
     : (ja
         ? `<span class="pill-pub">✓ Marcado como publicado</span><button class="btn btn-desfazer" id="bpubundo" type="button">Desfazer</button>`
         : `<button class="btn btn-pub" id="bpub" type="button">Marcar como já publicado</button>`);
-  const bp=document.getElementById('bpub'); if(bp) bp.onclick=async()=>{bp.disabled=true;try{await setPublicado(cur.id,true);}catch(e){alert('Não consegui gravar. Tenta de novo (conexão pode ter falhado).');}finally{bp.disabled=false;}};
-  const bpu=document.getElementById('bpubundo'); if(bpu) bpu.onclick=async()=>{bpu.disabled=true;try{await setPublicado(cur.id,false);}catch(e){alert('Não consegui gravar. Tenta de novo (conexão pode ter falhado).');}finally{bpu.disabled=false;}};
+  const bp=document.getElementById('bpub'); if(bp) bp.onclick=async()=>{bp.disabled=true;try{await setPublicado(cur.id,true);}catch(e){avisoErro('Não consegui gravar. Tenta de novo (conexão pode ter falhado).');}finally{bp.disabled=false;}};
+  const bpu=document.getElementById('bpubundo'); if(bpu) bpu.onclick=async()=>{bpu.disabled=true;try{await setPublicado(cur.id,false);}catch(e){avisoErro('Não consegui gravar. Tenta de novo (conexão pode ter falhado).');}finally{bpu.disabled=false;}};
 }
 function fechar(){ov.classList.remove('on');document.body.style.overflow='';vvid.pause();}
 $('vx').onclick=fechar;
@@ -735,7 +762,7 @@ function renderSApprove(){
   sapprove.onclick = async(e)=>{
     e.stopPropagation(); clearTimeout(timer); sapprove.disabled=true;
     try { await setAprovado(sc.id,!aprovado); }
-    catch(err) { alert('Não consegui gravar. Tenta de novo (conexão pode ter falhado).'); }
+    catch(err) { avisoErro('Não consegui gravar. Tenta de novo (conexão pode ter falhado).'); }
     finally { sapprove.disabled=false; timer=setTimeout(proxS,DUR); }
   };
   sjaja.style.display = (arq || ja) ? 'none' : '';
@@ -754,7 +781,7 @@ function renderSApprove(){
     spub.onclick = async(e)=>{
       e.stopPropagation(); clearTimeout(timer); spub.disabled=true;
       try { await setPublicado(sc.id,!publicadoState[sc.id]); }
-      catch(err) { alert('Não consegui gravar. Tenta de novo (conexão pode ter falhado).'); }
+      catch(err) { avisoErro('Não consegui gravar. Tenta de novo (conexão pode ter falhado).'); }
       finally { spub.disabled=false; timer=setTimeout(proxS,DUR); }
     };
   }
@@ -1011,14 +1038,14 @@ function buildListCard(item){
     if(!dbNs){ bapprove.textContent='Indisponível aqui'; return; }
     bapprove.disabled=true;
     try { await setAprovado(item.id, !aprovadoState[item.id]); }
-    catch(e) { alert('Não consegui gravar. Tenta de novo (conexão pode ter falhado).'); }
+    catch(e) { avisoErro('Não consegui gravar. Tenta de novo (conexão pode ter falhado).'); }
     finally { bapprove.disabled=false; }
   });
   bpub.addEventListener('click', async()=>{
     if(!dbNs){ bpub.textContent='Indisponível aqui'; return; }
     bpub.disabled=true;
     try { await setPublicado(item.id, !publicadoState[item.id]); }
-    catch(e) { alert('Não consegui gravar. Tenta de novo (conexão pode ter falhado).'); }
+    catch(e) { avisoErro('Não consegui gravar. Tenta de novo (conexão pode ter falhado).'); }
     finally { bpub.disabled=false; }
   });
   renderApproveL();
@@ -1032,7 +1059,7 @@ function buildListCard(item){
     pedBtn.disabled=true;
     let ok = false;
     try { ok = await enviarPedido(item.id, pedTxt.value); }
-    catch(e) { alert('Não consegui gravar. Tenta de novo (conexão pode ter falhado).'); }
+    catch(e) { avisoErro('Não consegui gravar. Tenta de novo (conexão pode ter falhado).'); }
     finally { pedBtn.disabled=false; }
     if(ok){ pedTxt.value=''; pedOk.hidden=false; setTimeout(()=>{pedOk.hidden=true;},5000); }
   });
