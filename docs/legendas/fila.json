@@ -827,7 +827,7 @@
  },
  {
   "id": "reels-grupo-sexta",
-  "aprovado": false,
+  "aprovado": true,
   "quando": "2026-11-06T19:00:00-03:00",
   "tipo": "REELS",
   "midias": [
