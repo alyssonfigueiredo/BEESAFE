@@ -904,7 +904,7 @@
  },
  {
   "id": "reels-checklist",
-  "aprovado": false,
+  "aprovado": true,
   "quando": "2026-11-09T19:00:00-03:00",
   "tipo": "REELS",
   "midias": [
@@ -929,7 +929,7 @@
  },
  {
   "id": "carrossel-anonimato",
-  "aprovado": false,
+  "aprovado": true,
   "quando": "2026-11-10T16:00:00-03:00",
   "tipo": "POST",
   "midias": [
@@ -960,7 +960,7 @@
  },
  {
   "id": "post-nome",
-  "aprovado": false,
+  "aprovado": true,
   "quando": "2026-11-12T16:00:00-03:00",
   "tipo": "POST",
   "midias": [
@@ -986,7 +986,7 @@
  },
  {
   "id": "reels-sexta13",
-  "aprovado": false,
+  "aprovado": true,
   "quando": "2026-11-13T19:00:00-03:00",
   "tipo": "REELS",
   "midias": [
