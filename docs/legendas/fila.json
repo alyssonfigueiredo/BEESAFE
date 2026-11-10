@@ -938,6 +938,19 @@
   "nota": "Story manual: adesivo CAIXA DE PERGUNTA. Repostar as respostas mais engraçadas no dia seguinte. A área tracejada é onde ele vai."
  },
  {
+  "id": "story-caixinha-bolsa-sem-adesivo",
+  "aprovado": false,
+  "quando": "2026-11-09T20:00:00-03:00",
+  "tipo": "STORY",
+  "midias": [
+   "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/stories-novembro/story-09-caixinha-bolsa-sem-adesivo.png"
+  ],
+  "legenda": "",
+  "primeiro_comentario": "",
+  "publicado": false,
+  "nota": "ALTERNATIVA SEM ADESIVO do story-caixinha-bolsa: a pergunta está escrita na própria arte e pede para responder no story. Dá para o robô postar (imagem pura). Aprovar esta OU a original (manual com adesivo), nunca as duas."
+ },
+ {
   "id": "carrossel-anonimato",
   "aprovado": true,
   "quando": "2026-11-10T16:00:00-03:00",
@@ -969,6 +982,19 @@
   "nota": "Story manual: adesivo CAIXA DE PERGUNTA. As dúvidas viram conteúdo depois. A área tracejada é onde ele vai."
  },
  {
+  "id": "story-caixinha-relato-sem-adesivo",
+  "aprovado": false,
+  "quando": "2026-11-10T20:00:00-03:00",
+  "tipo": "STORY",
+  "midias": [
+   "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/stories-novembro/story-10-caixinha-relato-sem-adesivo.png"
+  ],
+  "legenda": "",
+  "primeiro_comentario": "",
+  "publicado": false,
+  "nota": "ALTERNATIVA SEM ADESIVO do story-caixinha-relato: a pergunta está escrita na própria arte e pede para responder no story. Dá para o robô postar (imagem pura). Aprovar esta OU a original (manual com adesivo), nunca as duas."
+ },
+ {
   "id": "post-nome",
   "aprovado": true,
   "quando": "2026-11-15T16:00:00-03:00",
@@ -993,6 +1019,19 @@
   "primeiro_comentario": "",
   "publicado": false,
   "nota": "Story manual: adesivo ENQUETE (Já / Nunca). A área tracejada é onde ele vai."
+ },
+ {
+  "id": "story-enquete-nome-sem-adesivo",
+  "aprovado": false,
+  "quando": "2026-11-15T20:00:00-03:00",
+  "tipo": "STORY",
+  "midias": [
+   "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/stories-novembro/story-12-enquete-nome-sem-adesivo.png"
+  ],
+  "legenda": "",
+  "primeiro_comentario": "",
+  "publicado": false,
+  "nota": "ALTERNATIVA SEM ADESIVO do story-enquete-nome: a pergunta está escrita na própria arte e pede para responder no story. Dá para o robô postar (imagem pura). Aprovar esta OU a original (manual com adesivo), nunca as duas."
  },
  {
   "id": "reels-sexta13",
@@ -1020,6 +1059,19 @@
   "nota": "Story manual: adesivo ENQUETE (Garçom errando o pronome / \"Ambiente família\"). A área tracejada é onde ele vai."
  },
  {
+  "id": "story-enquete-medo-sem-adesivo",
+  "aprovado": false,
+  "quando": "2026-11-13T20:00:00-03:00",
+  "tipo": "STORY",
+  "midias": [
+   "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/stories-novembro/story-13-enquete-medo-sem-adesivo.png"
+  ],
+  "legenda": "",
+  "primeiro_comentario": "",
+  "publicado": false,
+  "nota": "ALTERNATIVA SEM ADESIVO do story-enquete-medo: a pergunta está escrita na própria arte e pede para responder no story. Dá para o robô postar (imagem pura). Aprovar esta OU a original (manual com adesivo), nunca as duas."
+ },
+ {
   "id": "reels-lugares-casa",
   "aprovado": false,
   "quando": "2026-11-16T19:00:00-03:00",
@@ -1044,5 +1096,18 @@
   "primeiro_comentario": "",
   "publicado": false,
   "nota": "Story manual: adesivo de LINK (\"Avalia o seu lugar\"). A área tracejada é onde ele vai."
+ },
+ {
+  "id": "story-obrigade-sem-adesivo",
+  "aprovado": false,
+  "quando": "2026-11-16T20:00:00-03:00",
+  "tipo": "STORY",
+  "midias": [
+   "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/stories-novembro/story-15-obrigade-sem-adesivo.png"
+  ],
+  "legenda": "",
+  "primeiro_comentario": "",
+  "publicado": false,
+  "nota": "ALTERNATIVA SEM ADESIVO do story-obrigade: a pergunta está escrita na própria arte e pede para responder no story. Dá para o robô postar (imagem pura). Aprovar esta OU a original (manual com adesivo), nunca as duas."
  }
 ]
