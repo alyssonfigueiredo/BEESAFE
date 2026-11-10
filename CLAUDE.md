@@ -946,6 +946,11 @@ mais uma passada às 23h05 BRT. Sempre que uma sessão criar ou mudar um `quando
 não tem passada (`HH:05` do horário + 1 h), no mesmo turno ela atualiza o `cron` desse workflow na branch padrão e avisa
 o Alysson em uma linha. Hoje: 09h, 16h, 18h e 19h BRT → `5 13,20,22,23,2 * * *`.
 
+**Story automático (10/11/2026, pedido dele):** só as versões `*-sem-adesivo` (imagem pura, `"automatico": true` na fila)
+o robô publica sozinho quando `aprovado: true` e a hora vence; a conferência também cobre esses stories (pelo `publicado`/`confirmado`
+gravado pelo robô, já que story não aparece em `/media`). Story com adesivo segue manual: sem `automatico`, o robô ignora mesmo aprovado.
+Peça nova sem adesivo: marcar `"automatico": true`. Nunca aprovar a original e a `-sem-adesivo` do mesmo story.
+
 ### Como republicar o artefato (para a sessão da conta dele)
 
 **Regra dele (10/11/2026): republicar NA HORA.** Toda vez que a sessão da conta dele mudar `docs/legendas/fila.json`
