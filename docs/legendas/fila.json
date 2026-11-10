@@ -984,7 +984,7 @@
  {
   "id": "story-enquete-nome",
   "aprovado": false,
-  "quando": "2026-11-12T20:00:00-03:00",
+  "quando": "2026-11-15T20:00:00-03:00",
   "tipo": "STORY",
   "midias": [
    "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/stories-novembro/story-12-enquete-nome.png"
@@ -1035,7 +1035,7 @@
  {
   "id": "story-obrigade",
   "aprovado": false,
-  "quando": "2026-11-15T20:00:00-03:00",
+  "quando": "2026-11-16T20:00:00-03:00",
   "tipo": "STORY",
   "midias": [
    "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/stories-novembro/story-15-obrigade.png"
