@@ -401,7 +401,7 @@
  },
  {
   "id": "carrossel-7",
-  "aprovado": false,
+  "aprovado": true,
   "quando": "2026-11-12T19:00:00-03:00",
   "tipo": "POST",
   "midias": [
@@ -810,17 +810,7 @@
   ],
   "legenda": "Chegou o Quero ir.\nViu um lugar com cara de casa? Toca no coração e ele fica guardado.\nQuando você for e avaliar, ele vai pra Já fui sozinho.\nO link está na bio.\n\n#Irisa #LGBTQIA #Orgulho #AppLGBT #Novidade",
   "primeiro_comentario": "appirisa.com.br",
-  "publicado": true,
-  "publicado_em": "2026-11-05T23:52:57.363Z",
-  "media_id": "18091703894248823",
-  "confirmacao": {
-   "id": "18091703894248823",
-   "media_type": "VIDEO",
-   "permalink": "https://www.instagram.com/reel/DfYQZocDWDC/",
-   "timestamp": "2026-11-05T23:53:24+0000"
-  },
-  "confirmado": true,
-  "confirmado_em": "2026-11-05T23:53:32.996Z"
+  "publicado": false
  },
  {
   "id": "story-quiz-quero-ir",
