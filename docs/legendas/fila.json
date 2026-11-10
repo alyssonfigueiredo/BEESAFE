@@ -939,6 +939,7 @@
  },
  {
   "id": "story-caixinha-bolsa-sem-adesivo",
+  "automatico": true,
   "aprovado": false,
   "quando": "2026-11-09T20:00:00-03:00",
   "tipo": "STORY",
@@ -983,6 +984,7 @@
  },
  {
   "id": "story-caixinha-relato-sem-adesivo",
+  "automatico": true,
   "aprovado": true,
   "quando": "2026-11-10T20:00:00-03:00",
   "tipo": "STORY",
@@ -1022,6 +1024,7 @@
  },
  {
   "id": "story-enquete-nome-sem-adesivo",
+  "automatico": true,
   "aprovado": false,
   "quando": "2026-11-15T20:00:00-03:00",
   "tipo": "STORY",
@@ -1060,6 +1063,7 @@
  },
  {
   "id": "story-enquete-medo-sem-adesivo",
+  "automatico": true,
   "aprovado": false,
   "quando": "2026-11-13T20:00:00-03:00",
   "tipo": "STORY",
@@ -1099,6 +1103,7 @@
  },
  {
   "id": "story-obrigade-sem-adesivo",
+  "automatico": true,
   "aprovado": false,
   "quando": "2026-11-16T20:00:00-03:00",
   "tipo": "STORY",

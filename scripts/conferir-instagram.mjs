@@ -70,7 +70,9 @@ export function conferir({ filaPadrao, filaTrabalho, midias, agora }) {
     const p = porId.get(id);
     const t = trab.get(id);
     const item = p || t;
-    if (!item || item.tipo === "STORY") continue;
+    if (!item) continue;
+    const storyAuto = item.tipo === "STORY" && !!(p?.automatico || t?.automatico);
+    if (item.tipo === "STORY" && !storyAuto) continue; // story manual (com adesivo) fica de fora
     const aprovadoPadrao = !!p?.aprovado;
     const aprovadoTrabalho = !!t?.aprovado;
     if (!aprovadoPadrao && !aprovadoTrabalho) continue;
@@ -80,6 +82,17 @@ export function conferir({ filaPadrao, filaTrabalho, midias, agora }) {
     const atraso = agora - quando;
     if (atraso <= CARENCIA_MS || atraso > JANELA_MS) continue;
 
+    const rotuloStory = `${id} (STORY, ${(p || t).quando})`;
+    if (storyAuto) {
+      // Story não aparece em /media e não tem legenda: confere pelo registro do robô
+      // (media_id + confirmação feita na Graph API na hora da publicação).
+      const minS = Math.round(atraso / 60000);
+      if (!aprovadoPadrao) problemas.push({ id, motivo: "aprovacao-fora-da-padrao", texto: `${rotuloStory}: aprovado na fila de trabalho, mas NÃO na branch padrão que o robô lê. Venceu há ${minS} min.` });
+      else if (p.publicado && p.confirmado !== false) ok.push({ id, permalink: p.confirmacao?.permalink || "", timestamp: p.publicado_em });
+      else if (p.publicado) problemas.push({ id, motivo: "publicado-fantasma", texto: `${rotuloStory}: o robô diz que publicou, mas a confirmação na Graph API falhou: ${semSegredo(p.confirmado_erro || "?")}` });
+      else problemas.push({ id, motivo: "nao-saiu", texto: `${rotuloStory}: aprovado, venceu há ${minS} min e o robô NÃO publicou.${p.ultimo_erro ? ` Último erro: ${semSegredo(p.ultimo_erro)}` : ""}` });
+      continue;
+    }
     const chave = norm((p || t).legenda);
     const achadas = midias.filter((m) => norm(m.caption) === chave);
     const min = Math.round(atraso / 60000);
