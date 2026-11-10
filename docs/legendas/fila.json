@@ -402,7 +402,7 @@
  {
   "id": "carrossel-7",
   "aprovado": false,
-  "quando": "2026-10-25T19:00:00-03:00",
+  "quando": "2026-11-12T19:00:00-03:00",
   "tipo": "POST",
   "midias": [
    "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/carrossel-7/01.png",
