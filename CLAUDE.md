@@ -942,6 +942,13 @@ aí ela marca e avisa, para a sessão dele não desfazer.
 
 ### Como republicar o artefato (para a sessão da conta dele)
 
+**Regra dele (10/11/2026): republicar NA HORA.** Toda vez que a sessão da conta dele mudar `docs/legendas/fila.json`
+(data, legenda, peça nova, aprovação), no mesmo turno ela gera a página e republica o artefato, sem esperar
+ele pedir e sem esperar a rotina das 8h/16h. A fila no repositório e a página que ele vê têm que estar iguais.
+Também no mesmo turno: commit na `claude/laughing-keller-my8t7c` e merge do `fila.json` na branch padrão
+(o robô só lê a padrão). No cloud o `playwright-core` não está instalado: atalho em `node_modules/playwright-core`
+apontando para `/opt/node22/lib/node_modules/playwright` e `FFMPEG=/usr/bin/ffmpeg`; apagar `node_modules` e `build/` depois.
+
 A página era remontada à mão e por isso vivia atrasada: em 01/10 ela ainda mostrava o carrossel-6 com
 a lâmina "Ainda não tem no iPhone → **Verdade**" (virou **Mito** no mesmo dia), o fecho antigo
 "em fase de testes · Android" em meia dúzia de peças, e não tinha o carrossel-10 nem o 11. Aprovar
