@@ -951,6 +951,10 @@ o robô publica sozinho quando `aprovado: true` e a hora vence; a conferência t
 gravado pelo robô, já que story não aparece em `/media`). Story com adesivo segue manual: sem `automatico`, o robô ignora mesmo aprovado.
 Peça nova sem adesivo: marcar `"automatico": true`. Nunca aprovar a original e a `-sem-adesivo` do mesmo story.
 
+**Fecho das artes (10/11/2026):** o Android já está no Google Play, então nenhuma arte, vídeo ou legenda pode dizer "em fase de testes"
+nem "só iPhone". Fecho certo: "Nas duas lojas · App Store e Google Play". Antes de aprovar peça reaproveitada de outubro, olhar a última
+lâmina (a `carrossel-anonimato` saiu com "Android em fase de testes" em 10/11 e já não dá para trocar a imagem de um post publicado).
+
 ### Como republicar o artefato (para a sessão da conta dele)
 
 **Regra dele (10/11/2026): republicar NA HORA.** Toda vez que a sessão da conta dele mudar `docs/legendas/fila.json`
