@@ -5,7 +5,8 @@ name: Conferir Instagram
 
 on:
   schedule:
-    - cron: "*/30 * * * *"
+    # 1h depois de cada horário de postagem (09/16/18/19h BRT) + uma passada à noite (23h BRT)
+    - cron: "5 13,20,22,23,2 * * *"
   workflow_dispatch:
     inputs:
       email_teste:
