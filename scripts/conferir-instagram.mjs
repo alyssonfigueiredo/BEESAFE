@@ -16,6 +16,7 @@
 // só a de trabalho tem a aprovação, o robô nunca vai ver, e isso também é motivo de aviso.
 import { execSync } from "node:child_process";
 import { existsSync, readFileSync, writeFileSync } from "node:fs";
+import { createRequire } from "node:module";
 
 const IG = process.env.META_IG_USER_ID;
 const TOKEN = process.env.META_ACCESS_TOKEN;
@@ -104,7 +105,8 @@ async function enviarEmail(assunto, corpo) {
   const user = process.env.GMAIL_USER;
   const pass = process.env.GMAIL_APP_PASSWORD;
   if (!user || !pass) throw new Error("faltam GMAIL_USER / GMAIL_APP_PASSWORD (secrets do GitHub) para mandar o e-mail");
-  const { default: nodemailer } = await import("nodemailer");
+  // o workflow instala só o nodemailer em ./.mail (não o projeto inteiro)
+  const nodemailer = createRequire(`${process.cwd()}/.mail/package.json`)("nodemailer");
   const transporte = nodemailer.createTransport({ host: "smtp.gmail.com", port: 465, secure: true, auth: { user, pass } });
   await transporte.sendMail({
     from: `Irisa — conferência do Instagram <${user}>`,
