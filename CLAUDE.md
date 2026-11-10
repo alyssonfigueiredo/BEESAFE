@@ -940,6 +940,12 @@ data e ordem na fila, mas **não mexe no campo `aprovado`**: quem decide isso é
 transcreve é a sessão dele. Exceção única: o Alysson aprovar explicitamente no chat de outra sessão —
 aí ela marca e avisa, para a sessão dele não desfazer.
 
+**Regra dele (10/11/2026): conferência do Instagram acompanha os horários da fila.** O workflow
+`conferir-instagram.yml` (branch padrão) roda 1 h depois de cada horário de postagem de POST/REELS (cron em UTC = BRT + 3),
+mais uma passada às 23h05 BRT. Sempre que uma sessão criar ou mudar um `quando` de POST/REELS para um horário que ainda
+não tem passada (`HH:05` do horário + 1 h), no mesmo turno ela atualiza o `cron` desse workflow na branch padrão e avisa
+o Alysson em uma linha. Hoje: 09h, 16h, 18h e 19h BRT → `5 13,20,22,23,2 * * *`.
+
 ### Como republicar o artefato (para a sessão da conta dele)
 
 **Regra dele (10/11/2026): republicar NA HORA.** Toda vez que a sessão da conta dele mudar `docs/legendas/fila.json`
