@@ -828,7 +828,7 @@
  {
   "id": "reels-grupo-sexta",
   "aprovado": true,
-  "quando": "2026-11-10T19:00:00-03:00",
+  "quando": "2026-11-11T19:00:00-03:00",
   "tipo": "REELS",
   "midias": [
    "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/Irisa-reels-grupo-sexta.mp4"
@@ -853,7 +853,7 @@
  {
   "id": "reels-primeiro-lugar",
   "aprovado": true,
-  "quando": "2026-11-11T19:00:00-03:00",
+  "quando": "2026-11-12T19:00:00-03:00",
   "tipo": "REELS",
   "midias": [
    "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/Irisa-reels-primeiro-lugar.mp4"
@@ -905,7 +905,7 @@
  {
   "id": "reels-checklist",
   "aprovado": true,
-  "quando": "2026-11-12T19:00:00-03:00",
+  "quando": "2026-11-14T19:00:00-03:00",
   "tipo": "REELS",
   "midias": [
    "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/Irisa-reels-checklist.mp4"
@@ -961,7 +961,7 @@
  {
   "id": "post-nome",
   "aprovado": true,
-  "quando": "2026-11-12T16:00:00-03:00",
+  "quando": "2026-11-15T16:00:00-03:00",
   "tipo": "POST",
   "midias": [
    "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/post-nome/01.png"
@@ -1012,7 +1012,7 @@
  {
   "id": "reels-lugares-casa",
   "aprovado": false,
-  "quando": "2026-11-15T19:00:00-03:00",
+  "quando": "2026-11-16T19:00:00-03:00",
   "tipo": "REELS",
   "midias": [
    "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/Irisa-reels-lugares-casa.mp4"
