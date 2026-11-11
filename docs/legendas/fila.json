@@ -1003,8 +1003,19 @@
   ],
   "legenda": "",
   "primeiro_comentario": "",
-  "publicado": false,
-  "nota": "ALTERNATIVA SEM ADESIVO do story-caixinha-relato: a pergunta está escrita na própria arte e pede para responder no story. Dá para o robô postar (imagem pura). Aprovar esta OU a original (manual com adesivo), nunca as duas."
+  "publicado": true,
+  "nota": "ALTERNATIVA SEM ADESIVO do story-caixinha-relato: a pergunta está escrita na própria arte e pede para responder no story. Dá para o robô postar (imagem pura). Aprovar esta OU a original (manual com adesivo), nunca as duas.",
+  "publicado_em": "2026-11-11T01:03:59.609Z",
+  "media_id": "17922200517458897",
+  "confirmacao": {
+   "id": "17922200517458897",
+   "media_type": "IMAGE",
+   "permalink": "https://www.instagram.com/stories/appirisa/4027698024746888182",
+   "timestamp": "2026-11-11T01:04:09+0000",
+   "na_lista_de_stories_ativos": true
+  },
+  "confirmado": true,
+  "confirmado_em": "2026-11-11T01:04:13.166Z"
  },
  {
   "id": "post-nome",
