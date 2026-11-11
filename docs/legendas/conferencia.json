@@ -1,25 +1,25 @@
 {
- "alertas": {
-  "story-caixinha-relato-sem-adesivo": {
-   "em": "2026-11-11T00:36:38.368Z",
-   "motivo": "nao-saiu"
-  }
- },
+ "alertas": {},
  "confirmados": {
   "post-cardapio": {
    "permalink": "https://www.instagram.com/p/DfVkLZkjbCR/",
    "timestamp": "2026-11-04T22:48:13+0000",
-   "conferido_em": "2026-11-11T00:36:38.368Z"
+   "conferido_em": "2026-11-11T09:16:28.637Z"
   },
   "reels-quero-ir": {
    "permalink": "https://www.instagram.com/reel/DfYQZocDWDC/",
    "timestamp": "2026-11-05T23:53:24+0000",
-   "conferido_em": "2026-11-11T00:36:38.368Z"
+   "conferido_em": "2026-11-11T09:16:28.637Z"
   },
   "carrossel-anonimato": {
    "permalink": "https://www.instagram.com/p/Dfk-24djD0w/",
    "timestamp": "2026-11-10T22:30:15+0000",
-   "conferido_em": "2026-11-11T00:36:38.368Z"
+   "conferido_em": "2026-11-11T09:16:28.637Z"
+  },
+  "story-caixinha-relato-sem-adesivo": {
+   "permalink": "https://www.instagram.com/stories/appirisa/4027698024746888182",
+   "timestamp": "2026-11-11T01:03:59.609Z",
+   "conferido_em": "2026-11-11T09:16:28.637Z"
   }
  }
 }
