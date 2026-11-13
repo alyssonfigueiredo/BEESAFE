@@ -14,15 +14,17 @@ const { chromium } = await import(process.env.PW || root + "node_modules/playwri
 const exe = existsSync("/opt/pw-browsers/chromium") ? { executablePath: "/opt/pw-browsers/chromium" } : {};
 const previa = process.argv.includes("--previa");
 
-// [arquivo, início, duração] — soma 21 s; o fecho (21–25 s) é desenhado pela sobreposição.
-const CORTES = [["clip1-corredor.mp4", 0, 7], ["clip2-celular.mp4", 1, 4.5], ["clip3-porta.mp4", 0, 4.5], ["clip4-mesa.mp4", 0.5, 5]];
+// [arquivo, início, duração, lentidão, espera] — o 1º quadro do clip1 fica parado 5,2 s (a intro cobre com a "porta")
+// e o clipe roda 1,23x mais lento: 5,2 + 12,3 = 17,5 s. Soma 36 s; o fecho (36–41,5 s) é desenhado pela sobreposição.
+const CORTES = [["clip1-corredor.mp4", 0, 10, 1.23, 5.2], ["clip2-celular.mp4", 0.3, 6.5], ["clip3-porta.mp4", 0, 5.5], ["clip4-mesa.mp4", 0.5, 6.5]];
 const bg = dir + "fundo.mp4";
 if (!previa || !existsSync(bg)) {
   const S = "scale=1080:1920:flags=lanczos,setsar=1,fps=30";
   const args = ["-y", "-loglevel", "error"];
   CORTES.forEach(([f, ss, t]) => args.push("-ss", String(ss), "-t", String(t), "-i", dir + f));
-  args.push("-f", "lavfi", "-t", "4", "-i", "color=c=0x141829:s=1080x1920:r=30");
-  const fc = CORTES.map((_, i) => `[${i}:v]${S}[v${i}]`).join(";") + ";[4:v]setsar=1[v4];" + "[v0][v1][v2][v3][v4]concat=n=5:v=1:a=0[v]";
+  args.push("-f", "lavfi", "-t", "5.5", "-i", "color=c=0x141829:s=1080x1920:r=30");
+  const fc = CORTES.map(([, , , slow = 1, lead = 0], i) => `[${i}:v]` + (slow !== 1 ? `setpts=${slow}*PTS,minterpolate=fps=30:mi_mode=blend,` : "") + S +
+    (lead ? `,tpad=start_mode=clone:start_duration=${lead}` : "") + `[v${i}]`).join(";") + ";[4:v]setsar=1[v4];" + "[v0][v1][v2][v3][v4]concat=n=5:v=1:a=0[v]";
   args.push("-filter_complex", fc, "-map", "[v]", "-an", "-c:v", "libx264", "-crf", "14", "-pix_fmt", "yuv420p", bg);
   execFileSync(FF, args, { stdio: "inherit" });
 }
@@ -36,7 +38,7 @@ const shot = (o = {}) => pg.locator("#stage").screenshot({ type: "png", omitBack
 
 if (previa) {
   // quadro do fundo + sobreposição no mesmo tempo
-  for (const t of [2500, 6000, 10000, 14500, 19500, 23500]) {
+  for (const t of [1500, 4600, 5900, 9800, 15500, 22800, 27500, 34500, 41000]) {
     await pg.evaluate((x) => window.__setT(x), t);
     const ov = dir + `ov-${t}.png`;
     await shot({ path: ov });

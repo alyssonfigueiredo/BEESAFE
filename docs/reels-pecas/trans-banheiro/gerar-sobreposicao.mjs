@@ -75,12 +75,12 @@ A($(".h2"),[{transform:"translate(0,0) rotate(0)"},{transform:"translate(-6%,4%)
 A($("#brand"),[{opacity:0},{opacity:1}],300,600,"linear");
 $$(".scene").forEach(s=>{const a=+s.dataset.a,b=+s.dataset.b,last=b>=TOTAL;
   const dur=b-a;
-  A(s,last?[{opacity:0},{opacity:1,offset:300/dur},{opacity:1}]:[{opacity:0,transform:"none",filter:"blur(0)"},{opacity:1,transform:"none",filter:"blur(0)",offset:300/dur},{opacity:1,transform:"none",filter:"blur(0)",offset:(dur-400)/dur},{opacity:0,transform:"translateY(-50px)",filter:"blur(12px)"}],a,dur,"linear");
+  A(s,last?[{opacity:0},{opacity:1,offset:600/dur},{opacity:1}]:[{opacity:0,transform:"none",filter:"blur(0)"},{opacity:1,transform:"none",filter:"blur(0)",offset:600/dur},{opacity:1,transform:"none",filter:"blur(0)",offset:(dur-1000)/dur},{opacity:0,transform:"translateY(-50px)",filter:"blur(12px)"}],a,dur,"linear");
   s.querySelectorAll("[data-d]").forEach(el=>{const d=a+ +el.dataset.d,fx=el.dataset.fx||"in";
-    if(fx==="in")A(el,IN,d,750);
-    else if(fx==="pop")A(el,POP,d,550,BACK);
+    if(fx==="in")A(el,IN,d,1500,"cubic-bezier(.25,.6,.3,1)");
+    else if(fx==="pop")A(el,POP,d,1100,EO);
     else if(fx==="grow")A(el,[{transform:"scaleX(0)"},{transform:"scaleX(1)"}],d,700);
-    else if(fx==="show")A(el,[{opacity:0},{opacity:1}],d,250,"linear");
+    else if(fx==="show")A(el,[{opacity:0},{opacity:1}],d,500,"linear");
     else if(fx==="hide")A(el,[{opacity:1},{opacity:0}],d,200,"linear");
     else if(fx==="check")A(el,[{opacity:0,transform:"scale(.4)"},{opacity:1,transform:"scale(1)"}],d,380,BACK);
     else if(fx==="heart")A(el,[{opacity:0,transform:"scale(.3)"},{opacity:1,transform:"scale(1.25)",offset:.6},{opacity:1,transform:"scale(1)"}],d,650);
@@ -110,16 +110,24 @@ const heartFull = `<svg viewBox="0 0 24 24" style="position:absolute;inset:0"><d
 const tcss = `
 #stage{background:transparent!important}
 #stage>.bg,#stage>.halo{display:none}
-.scene{justify-content:flex-start;padding-top:250px}
+.scene{justify-content:flex-end;padding-bottom:570px}
 .big,.eyebrow,.body{text-shadow:0 4px 30px rgba(0,0,0,.55)}
 .grad{position:absolute;left:0;right:0;pointer-events:none}
-.gt{top:0;height:1000px;background:linear-gradient(rgba(12,14,26,.82),rgba(12,14,26,.55) 50%,transparent)}
-.gb{bottom:0;height:700px;background:linear-gradient(transparent,rgba(12,14,26,.6))}
+.gt{top:0;height:500px;background:linear-gradient(rgba(12,14,26,.5),transparent)}
+.gb{bottom:0;height:1350px;background:linear-gradient(transparent,rgba(12,14,26,.5) 36%,rgba(12,14,26,.64) 62%,rgba(12,14,26,.5))}
 #stage>.brand{z-index:5}
-.fim{background:#141829;justify-content:center;padding-top:220px}
+.fim{background:#141829;justify-content:center;padding-top:220px;padding-bottom:540px}
 .fim .bgx{position:absolute;inset:0;background:radial-gradient(40% 25% at 15% 10%,color-mix(in srgb,var(--turq) 40%,transparent),transparent 70%),radial-gradient(40% 25% at 90% 90%,color-mix(in srgb,var(--lilac) 40%,transparent),transparent 70%),radial-gradient(35% 22% at 85% 15%,color-mix(in srgb,var(--coral) 35%,transparent),transparent 70%),radial-gradient(35% 22% at 10% 88%,color-mix(in srgb,var(--yellow) 30%,transparent),transparent 70%);opacity:.85;mix-blend-mode:screen;filter:saturate(.8)}
 .fim>*:not(.bgx){position:relative}
-.ficha{width:880px;background:rgba(20,24,41,.6);color:#fff;border-radius:36px;box-shadow:inset 0 1px 0 rgba(255,255,255,.22),inset 0 0 0 1.5px rgba(255,255,255,.16),0 18px 50px rgba(0,0,0,.28);padding:44px 48px;margin-top:400px;text-shadow:0 2px 10px rgba(0,0,0,.45)}
+.porta{position:absolute;top:0;bottom:0;width:50.2%;background:#090B15;z-index:6}
+.pl{left:0}.pr{right:0}
+.luz{position:absolute;inset:0;z-index:7;pointer-events:none}
+.clarao{position:absolute;left:50%;top:60px;width:900px;height:1250px;margin-left:-450px;background:radial-gradient(50% 50% at 50% 45%,rgba(255,176,96,.20),rgba(255,176,96,.06) 45%,transparent 72%)}
+.fw{position:absolute;left:50%;top:170px;width:10px;height:700px;margin-left:-5px}
+.fresta{position:absolute;inset:0;border-radius:5px;transform-origin:50% 100%;background:linear-gradient(#FFE9C4,#FFCB85 70%,#FFB866);box-shadow:0 0 26px 6px rgba(255,190,110,.55),0 0 110px 30px rgba(255,160,80,.28)}
+.chao{position:absolute;left:50%;top:870px;width:460px;height:190px;margin-left:-260px;clip-path:polygon(49% 0,51% 0,100% 100%,0 100%);background:linear-gradient(rgba(255,196,120,.42),rgba(255,196,120,0))}
+.intro .big{font-weight:300;white-space:nowrap}
+.ficha{width:880px;background:rgba(20,24,41,.6);color:#fff;border-radius:36px;box-shadow:inset 0 1px 0 rgba(255,255,255,.22),inset 0 0 0 1.5px rgba(255,255,255,.16),0 18px 50px rgba(0,0,0,.28);padding:44px 48px;margin-top:44px;text-shadow:0 2px 10px rgba(0,0,0,.45)}
 .ficha .lb{font-family:var(--body);font-weight:700;font-size:26px;letter-spacing:.14em;text-transform:uppercase;color:#FFD166}
 .ficha h3{margin:12px 0 6px;font-family:var(--body);font-weight:700;font-size:52px}
 .ficha p{margin:0 0 30px;font-family:var(--body);font-size:32px;color:#E6ECF3}
@@ -127,15 +135,30 @@ const tcss = `
 .ficha .rb i b{position:absolute;inset:0;border-radius:15px}
 `;
 const rbc = ["var(--coral)", "var(--orange)", "var(--yellow)", "var(--turq)", "var(--lilac)"];
-const ficha = `<div class="ficha" data-d="300" data-fx="pop"><div class="lb">Banheiro</div><h3>E o banheiro?</h3><p>Usou o que quis, sem ser questionade.</p>
-<div class="rb">${rbc.map((c, i) => `<i><b data-d="${1100 + i * 220}" data-fx="show" style="background:${c}"></b></i>`).join("")}</div></div>`;
-reel("trans-banheiro", 25000,
-  `<div class="grad gt"></div><div class="grad gb"></div>` +
-  sc(0, 3600, eb("Semana da Visibilidade Trans", 0, "var(--turqInk)") + big(112, [L("Pra muita gente,", 150, "xl"), L("é só um banheiro.", 600)])) +
-  sc(3600, 7000, big(100, [L("Pra mim, é a parte", 0, "xl"), L("do rolê que eu penso", 300, "xl"), L("<span class=rainbow>antes de sair.</span>", 700)])) +
-  sc(7000, 11500, big(100, [L("Alguém já", 0, "xl"), L("tinha respondido.", 300)]) + ficha) +
-  sc(11500, 16000, big(108, [L("Quem esteve lá", 0, "xl"), L("<span class=rainbow>contou como foi.</span>", 400)])) +
-  sc(16000, 21000, big(100, [L("Ninguém devia", 0, "xl"), L("precisar de coragem", 350, "xl"), L("<span class=rainbow>pra ir ao banheiro.</span>", 800)])) +
-  `<div class="scene fim" data-a="21000" data-b="25000"><div class="bgx"></div>` + big(110, [L("Avalia o banheiro", 0, "xl"), L("<span class=rainbow>também.</span>", 350)]) +
-  `<div class="body c" data-d="900" style="margin-top:40px;font-size:42px;color:var(--muted)">Alguém vai ler antes de sair.</div>` + handle(1500) + `</div>`,
-  { night: true, css: tcss });
+const ficha = `<div class="ficha" data-d="2200" data-fx="pop"><div class="lb">Banheiro</div><h3>E o banheiro?</h3><p>Usou o que quis, sem ser questionade.</p>
+<div class="rb">${rbc.map((c, i) => `<i><b data-d="${3300 + i * 280}" data-fx="show" style="background:${c}"></b></i>`).join("")}</div></div>`;
+// Intro (0–6 s): escuro, uma fresta de luz de porta entreaberta; a porta abre para o corredor do clip1.
+const ABRE = 5200; // render.mjs segura o 1º quadro do clip1 até aqui
+const intro = `<div class="porta pl"></div><div class="porta pr"></div>
+<div class="luz"><div class="clarao"></div><div class="chao"></div><div class="fw"><div class="fresta"></div></div></div>` +
+  sc(0, 6000, big(76, [L("Tem uma porta", 600, "xl"), L("que quase ninguém repara.", 1700, "xl")]) +
+    `<div class="eyebrow c" data-d="3000" style="color:var(--turqInk);margin-top:60px">Semana da Visibilidade Trans</div>`, "z-index:8").replace('class="scene"', 'class="scene intro"');
+const introJs = `
+A($(".fresta"),[{opacity:0,transform:"scaleY(.15)"},{opacity:.6,transform:"scaleY(1)",offset:.45},{opacity:.3,transform:"scaleY(1)",offset:.58},{opacity:.85,transform:"scaleY(1)",offset:.7},{opacity:.6,transform:"scaleY(1)",offset:.8},{opacity:1,transform:"scaleY(1)"}],100,1600,"ease-out");
+A($(".chao"),[{opacity:0},{opacity:1}],900,1400,"ease-out");
+A($(".clarao"),[{opacity:0},{opacity:.75,offset:.25},{opacity:1,offset:.6},{opacity:.8}],300,5200,"ease-in-out");
+A($(".fw"),[{transform:"scaleX(1)"},{transform:"scaleX(24)"}],${ABRE},450,"cubic-bezier(.6,0,.4,1)");
+A($(".luz"),[{opacity:1},{opacity:0}],${ABRE},450,"ease-in");
+A($(".pl"),[{transform:"none"},{transform:"translateX(-101%)"}],${ABRE},1500,"cubic-bezier(.65,0,.3,1)");
+A($(".pr"),[{transform:"none"},{transform:"translateX(101%)"}],${ABRE},1500,"cubic-bezier(.65,0,.3,1)");
+`;
+reel("trans-banheiro", 41500,
+  `<div class="grad gt"></div><div class="grad gb"></div>` + intro +
+  sc(6000, 11500, big(112, [L("Pra muita gente,", 400, "xl"), L("é só um banheiro.", 1500)])) +
+  sc(11500, 17500, big(100, [L("Pra mim, é a parte", 300, "xl"), L("do rolê que eu penso", 1300, "xl"), L("<span class=rainbow>antes de sair.</span>", 2400)])) +
+  sc(17500, 24000, big(86, [L("Alguém já", 300, "xl"), L("tinha respondido.", 1200)]) + ficha) +
+  sc(24000, 29500, big(108, [L("Quem esteve lá", 400, "xl"), L("<span class=rainbow>contou como foi.</span>", 1600)])) +
+  sc(29500, 36000, big(100, [L("Ninguém devia", 400, "xl"), L("precisar de coragem", 1500, "xl"), L("<span class=rainbow>pra ir ao banheiro.</span>", 2700)])) +
+  `<div class="scene fim" data-a="36000" data-b="41500"><div class="bgx"></div>` + big(110, [L("Avalia o banheiro", 400, "xl"), L("<span class=rainbow>também.</span>", 1400)]) +
+  `<div class="body c" data-d="2400" style="margin-top:40px;font-size:42px;color:var(--muted)">Alguém vai ler antes de sair.</div>` + handle(3100) + `</div>`,
+  { night: true, css: tcss, js: introJs });

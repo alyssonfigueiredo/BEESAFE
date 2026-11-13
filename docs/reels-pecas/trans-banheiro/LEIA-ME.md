@@ -2,16 +2,19 @@
 
 Estado: clipes gerados no Gemini (Veo) e a sobreposição de texto prontos. **Falta renderizar, conferir e pôr na fila.**
 
-## Roteiro (25 s, capa escura, sem áudio — música no Instagram)
+## Roteiro (41,5 s, versão lenta de 13/11/2026, com trilha própria)
+
+Texto sempre na parte de baixo (termina a 570 px do fundo), para não cobrir o rosto. Cada linha entra em 1,5 s.
 
 | s | Fundo | Texto |
 |---|---|---|
-| 0–3,6 | clip1-corredor (Rafa olha a porta, dolly-in) | eyebrow "Semana da Visibilidade Trans" · "Pra muita gente, / é só um banheiro." |
-| 3,6–7 | idem | "Pra mim, é a parte / do rolê que eu penso / antes de sair." |
-| 7–11,5 | clip2-celular (do preocupado ao alívio) | "Alguém já / tinha respondido." + ficha do eixo Banheiro do app ("E o banheiro?" / "Usou o que quis, sem ser questionade.", régua de 5 cores enchendo) |
-| 11,5–16 | clip3-porta (empurra a porta e entra, não mostra dentro) | "Quem esteve lá / contou como foi." |
-| 16–21 | clip4-mesa (Rafa senta ao lado da Luna, desconhecidos) | "Ninguém devia / precisar de coragem / pra ir ao banheiro." |
-| 21–25 | night | "Avalia o banheiro / também." · "Alguém vai ler antes de sair." · @appirisa |
+| 0–6 | escuro, fresta de luz de porta entreaberta; aos 5,2 s a "porta" abre para o corredor | "Tem uma porta / que quase ninguém repara." · eyebrow "Semana da Visibilidade Trans" |
+| 6–11,5 | clip1-corredor (1,23x mais lento) | "Pra muita gente, / é só um banheiro." |
+| 11,5–17,5 | idem | "Pra mim, é a parte / do rolê que eu penso / antes de sair." |
+| 17,5–24 | clip2-celular (do preocupado ao alívio) | "Alguém já / tinha respondido." + ficha do eixo Banheiro em cartão de vidro escuro |
+| 24–29,5 | clip3-porta (empurra a porta e entra) | "Quem esteve lá / contou como foi." |
+| 29,5–36 | clip4-mesa (Rafa senta ao lado da Luna) | "Ninguém devia / precisar de coragem / pra ir ao banheiro." |
+| 36–41,5 | night | "Avalia o banheiro / também." · "Alguém vai ler antes de sair." · @appirisa |
 
 Personagens: Rafa (irise 15, homem trans) e Luna (18, mulher trans). A Luna NÃO é autora da avaliação (anonimato).
 Os textos de "Banheiro" vêm de `src/theme/domain.ts` (`restroom`).
@@ -50,7 +53,9 @@ node docs/reels-pecas/trans-banheiro/render.mjs            # gera docs/Irisa-ree
 
 ## Trilha (13/11/2026)
 
-O vídeo final leva trilha própria, sintetizada por `trilha.py` (piano + pad, 25 s, sem música de terceiros).
+O vídeo final leva trilha própria, sintetizada por `trilha.py` (piano + pad, 41,5 s, sem música de terceiros).
 `render.mjs` gera o vídeo mudo; depois: `python3 trilha.py trilha.wav` e juntar com
 `ffmpeg -i video.mp4 -i trilha.wav -map 0:v -map 1:a -c:v copy -af loudnorm=I=-15:TP=-1.5 -c:a aac -b:a 192k saida.mp4`.
-O cartão "E o banheiro?" é de vidro escuro e fica na altura do peito, para não cobrir o rosto.
+Mudou a duração de uma cena? Ajustar os três lugares: cenas em `gerar-sobreposicao.mjs`, `CORTES` em `render.mjs`
+e a tabela de tempos `M` em `trilha.py`. No cloud: `PW=/opt/node22/lib/node_modules/playwright/index.mjs`.
+Capa: quadro dos 9,8 s (`docs/Irisa-reels-trans-banheiro-capa.jpg`).
