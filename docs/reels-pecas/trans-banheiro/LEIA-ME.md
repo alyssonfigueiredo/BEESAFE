@@ -47,3 +47,10 @@ node docs/reels-pecas/trans-banheiro/render.mjs            # gera docs/Irisa-ree
 3. Resto da semana (planejado, não feito): 16/11 story caixinha (mesma pergunta); 18/11 post frase clara
    "Nome não é apelido. Pronome não é opinião."; 20/11 Dia da Memória Trans: post sóbrio, sem CTA, sem app,
    número só do Dossiê ANTRA com fonte, não usar a irise Dandara.
+
+## Trilha (13/11/2026)
+
+O vídeo final leva trilha própria, sintetizada por `trilha.py` (piano + pad, 25 s, sem música de terceiros).
+`render.mjs` gera o vídeo mudo; depois: `python3 trilha.py trilha.wav` e juntar com
+`ffmpeg -i video.mp4 -i trilha.wav -map 0:v -map 1:a -c:v copy -af loudnorm=I=-15:TP=-1.5 -c:a aac -b:a 192k saida.mp4`.
+O cartão "E o banheiro?" é de vidro escuro e fica na altura do peito, para não cobrir o rosto.
