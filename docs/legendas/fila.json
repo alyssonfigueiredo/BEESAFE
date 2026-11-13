@@ -1156,5 +1156,18 @@
   "primeiro_comentario": "",
   "publicado": false,
   "nota": "ALTERNATIVA SEM ADESIVO do story-obrigade: a pergunta está escrita na própria arte e pede para responder no story. Dá para o robô postar (imagem pura). Aprovar esta OU a original (manual com adesivo), nunca as duas."
+ },
+ {
+  "id": "reels-trans-banheiro",
+  "aprovado": false,
+  "quando": "2026-11-17T19:00:00-03:00",
+  "tipo": "REELS",
+  "midias": [
+   "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/Irisa-reels-trans-banheiro.mp4"
+  ],
+  "legenda": "Pra muita gente, é só um banheiro.\nPra quem é trans, é a parte do rolê que se pensa antes de sair de casa.\nNa Irisa, quem já foi conta como foi. E quem vai depois lê antes de sair.\n\nConta pra gente: qual lugar te tratou pelo nome certo de primeira?\n\n#Irisa #LGBTQIA #Orgulho #AppLGBT #VisibilidadeTrans",
+  "primeiro_comentario": "appirisa.com.br",
+  "publicado": false,
+  "nota": "Semana da Visibilidade Trans. Capa: docs/Irisa-reels-trans-banheiro-capa.jpg (escolher como capa ao publicar; o robô não envia capa). Música entra no Instagram."
  }
 ]
