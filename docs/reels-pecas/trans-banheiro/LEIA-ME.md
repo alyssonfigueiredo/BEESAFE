@@ -59,3 +59,19 @@ O vídeo final leva trilha própria, sintetizada por `trilha.py` (piano + pad, 4
 Mudou a duração de uma cena? Ajustar os três lugares: cenas em `gerar-sobreposicao.mjs`, `CORTES` em `render.mjs`
 e a tabela de tempos `M` em `trilha.py`. No cloud: `PW=/opt/node22/lib/node_modules/playwright/index.mjs`.
 Capa: quadro dos 9,8 s (`docs/Irisa-reels-trans-banheiro-capa.jpg`).
+
+## Intro por clipe do Gemini (pendente, 13/11/2026)
+
+A intro desenhada em HTML (fresta de luz) não agradou. Trocar por um clipe do Veo: `intro-referencia.png`
+(quadro vazio da porta do clip3, escurecido) como primeiro quadro + o prompt abaixo. Quando o clipe chegar,
+salvar como `clip0-intro.mp4`, pôr como primeiro item de `CORTES` (6 s), tirar a "porta" e a "luz" da intro em
+`gerar-sobreposicao.mjs` (fica só o texto) e tirar a espera de 5,2 s do clip1.
+
+```
+Animate this image as the first frame. Vertical 9:16, 8 seconds, one continuous shot, no cuts.
+Stylized 3D animation, same look as the image: a narrow wood-paneled back hallway of a bar at night, almost dark, lit only by the single bare ceiling bulb.
+Action: a very slow, steady dolly-in toward the closed wooden door at the end of the hallway. The bulb flickers softly twice, then steadies. A thin line of warm golden light glows under the door and along its edge and slowly gets brighter; a faint shadow passes behind it once. Fine dust floats in the light. The door stays closed the whole time.
+Mood: mysterious, intimate, quiet, cinematic, shallow depth of field.
+No people, no hands, no text, no signs, no symbols or pictograms on the door, no logos. Keep the bottom third of the frame dark and empty.
+Audio: muffled bar music and distant voices behind the wall, soft electric hum of the bulb. No narration.
+```
