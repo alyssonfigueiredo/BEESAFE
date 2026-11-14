@@ -935,14 +935,15 @@
  {
   "id": "reels-checklist",
   "aprovado": true,
-  "quando": "2026-11-14T19:00:00-03:00",
+  "quando": "2026-11-21T19:00:00-03:00",
   "tipo": "REELS",
   "midias": [
    "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/Irisa-reels-checklist.mp4"
   ],
   "legenda": "A checklist completa.\nO último item é o que mais importa.\nO link está na bio.\n\n#Irisa #LGBTQIA #Orgulho #AppLGBT #Role",
   "primeiro_comentario": "appirisa.com.br",
-  "publicado": false
+  "publicado": false,
+  "nota": "Adiado de 14/11 para 21/11 a pedido do Leandro (14/11), para a semana ficar só na temática da Visibilidade Trans."
  },
  {
   "id": "story-caixinha-bolsa",
