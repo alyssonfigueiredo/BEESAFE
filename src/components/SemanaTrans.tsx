@@ -126,7 +126,6 @@ export function SemanaTransCard() {
                 </RadialGradient>
                 <LinearGradient id="stBorda" x1="0" y1="0" x2="1" y2="1">
                   <Stop offset="0" stopColor="#5BCEFA" />
-                  <Stop offset="0.5" stopColor="#FFFFFF" />
                   <Stop offset="1" stopColor="#F5A9B8" />
                 </LinearGradient>
               </Defs>
