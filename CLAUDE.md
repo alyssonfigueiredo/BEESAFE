@@ -986,6 +986,15 @@ O smoke usa stubs de pg_net (`supabase/dev/pg_net/`), storage, vault e pgcrypto 
   (quadro do fim do vídeo; no reels-checklist, o gancho "Antes de sair"). A `capa` é a que o robô manda como capa
   no Instagram (`cover_url`) e a que a grade do painel mostra. Sem capa: reels-apple e reels-10 (sem vídeo na fila).
 
+- **Robô não cumpria o horário (14/11/2026):** o `schedule` do GitHub rodou 4 vezes no dia e o post das 17h só saiu
+  disparado à mão. Migration 85: o banco chama o workflow pela API do GitHub a cada 15 min (`ig_disparar_robo`, pg_cron
+  `ig-disparar-robo`), com o token `github_dispatch_token` no Vault (fine-grained, só o BEESAFE, Actions: Read and
+  write; **vence, anotar a data**). Sem o token não faz nada e sobra o `schedule` (agora nos minutos 7 e 37), que é
+  só reserva. O workflow tem `concurrency` para duas rodadas não publicarem a mesma peça.
+- **"Pode pular" a pergunta do banheiro é FALSO (14/11/2026, achado pelo Leandro):** o app e o banco exigem as quatro
+  respostas (`num_nonnulls(...) in (0, 4)`), mas o carrossel-banheiro publicado, a ficha na semana trans e a fala
+  rápida do irise diziam que dava para pular. Não escrever isso em arte nem no app enquanto a regra for essa.
+
 Artefato onde o Alysson aprova/reprova cada item de `docs/legendas/fila.json` antes de publicar:
 https://claude.ai/artifact/KZFTMrCF28RLVRJr7JXBC5
 Coleção `aprovacoes` (doc_id = id do item, `{aprovado, ts}`) e `pedidos` (pedidos de alteração,
