@@ -53,12 +53,19 @@ node docs/reels-pecas/trans-banheiro/render.mjs            # gera docs/Irisa-ree
 
 ## Som (14/11/2026)
 
-Pedido do Leandro: aproveitar o áudio que o Gemini gera junto com os clipes (bordão grave, lâmpada, porta
-rangendo, bar). `som.py` põe o áudio original dos cinco clipes na frente, nos mesmos cortes do vídeo, e a
-música de `trilha.py` (piano + pad sintetizados, sem música de terceiros) baixinha por baixo, só a partir
-dos 7 s: a intro fica só com o som do Gemini. `render.mjs` chama `som.py` sozinho e nivela em -16 LUFS.
+Pedido do Leandro: aproveitar o áudio que o Gemini gera junto com os clipes e ter uma música de piano no
+mesmo clima. Tudo fica em Fá sustenido, que é o tom do bordão grave que o Gemini pôs na intro. `som.py` mistura:
+1. o áudio original dos cinco clipes (lâmpada, porta, passos, bar), nos mesmos cortes do vídeo; o do clip1
+   desce 6 semitons para o bordão dele (Dó/Sol) cair no mesmo tom;
+2. o bordão do fim do `clip0-intro.mp4` esticado 12x por baixo do vídeo todo (é o "clima" do Gemini);
+3. o piano (`piano.flac`) na frente.
+
+`piano.py` escreve a música (notas no começo do arquivo), toca com o fluidsynth e grava `piano.flac`, que
+fica no repositório. Só rodar de novo se a música mudar: `apt-get install -y fluidsynth fluid-soundfont-gm`
+e `python3 piano.py`. O timbre é o piano do FluidR3_GM (licença MIT); a música é nossa, sem nada de terceiros.
+`render.mjs` chama `som.py` sozinho e nivela em -16 LUFS.
 Mudou a duração de uma cena? Ajustar: cenas em `gerar-sobreposicao.mjs`, `CORTES` em `render.mjs`, os
-cortes em `som.py` e a tabela de tempos `M` em `trilha.py`.
+cortes em `som.py` e os tempos das notas e do pedal em `piano.py`.
 Capa: quadro dos 10,8 s (`docs/Irisa-reels-trans-banheiro-capa.jpg`).
 `intro-referencia.png` + o prompt abaixo foram o que gerou o `clip0-intro.mp4`.
 

@@ -1,7 +1,7 @@
 // Reels "O banheiro" (Semana da Visibilidade Trans).
 // 1) monta o fundo com os 4 clipes do Gemini (cortes fixos abaixo) + 4 s de night para o fecho;
 // 2) grava sobreposicao.html quadro a quadro com fundo transparente;
-// 3) junta os dois e põe o som (som.py: áudio dos clipes + trilha.py) em docs/Irisa-reels-trans-banheiro.mp4.
+// 3) junta os dois e põe o som (som.py: áudio dos clipes + bordão + piano.flac) em docs/Irisa-reels-trans-banheiro.mp4.
 // Uso: node docs/reels-pecas/trans-banheiro/render.mjs [--previa]
 //   --previa só tira PNGs em alguns tempos (prev-*.png nesta pasta), sem gravar vídeo.
 // FFMPEG= aponta outro binário; PW= aponta o playwright-core (padrão: node_modules do repo).
@@ -15,7 +15,7 @@ const exe = existsSync("/opt/pw-browsers/chromium") ? { executablePath: "/opt/pw
 const previa = process.argv.includes("--previa");
 
 // [arquivo, início, duração, lentidão] — clip0 é a intro (7 s); clip1 roda 1,15x mais lento (11,5 s).
-// Soma 37 s; o fecho (37–42,5 s) é desenhado pela sobreposição. Mudou aqui? Mudar também em som.py e trilha.py.
+// Soma 37 s; o fecho (37–42,5 s) é desenhado pela sobreposição. Mudou aqui? Mudar também em som.py e piano.py.
 const CORTES = [["clip0-intro.mp4", 0, 7], ["clip1-corredor.mp4", 0, 10, 1.15], ["clip2-celular.mp4", 0.3, 6.5], ["clip3-porta.mp4", 1, 5.5], ["clip4-mesa.mp4", 0.5, 6.5]];
 const bg = dir + "fundo.mp4";
 if (!previa || !existsSync(bg)) {
@@ -58,7 +58,7 @@ for (let i = 0; i < frames; i++) {
   if (!ff.stdin.write(await shot())) await new Promise((r) => ff.stdin.once("drain", r));
 }
 ff.stdin.end(); await done; await b.close();
-// som: áudio original dos clipes + trilha (som.py), nivelado para -16 LUFS com limitador
+// som: áudio original dos clipes + bordão + piano (som.py), nivelado para -16 LUFS com limitador
 execFileSync("python3", [dir + "som.py", som], { stdio: "inherit", env: { ...process.env, FFMPEG: FF } });
 const med = spawnSync(FF, ["-hide_banner", "-i", som, "-af", "ebur128", "-f", "null", "-"], { encoding: "utf8" }).stderr;
 const I = +[...med.matchAll(/I:\s+(-?[\d.]+) LUFS/g)].pop()[1], g = (-16 - I).toFixed(1);
