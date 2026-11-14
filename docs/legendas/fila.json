@@ -1235,7 +1235,7 @@
  },
  {
   "id": "reels-nome-certo",
-  "aprovado": false,
+  "aprovado": true,
   "quando": "2026-11-18T19:00:00-03:00",
   "tipo": "REELS",
   "midias": [
@@ -1245,7 +1245,7 @@
   "legenda": "O garçom perguntou meu nome. E usou.\nSem pedir documento, sem perguntar duas vezes, sem errar na hora da conta.\nNome certo de primeira é acolhimento, e entra na nota de atendimento da Irisa.\nComenta onde isso aconteceu com você. Se foi ruim, o lugar pra contar é a avaliação no app.\nO link está na bio.\n\n#Irisa #LGBTQIA #Orgulho #AppLGBT #VisibilidadeTrans",
   "primeiro_comentario": "appirisa.com.br",
   "publicado": false,
-  "nota": "Semana da Visibilidade Trans. Reels de reconhecimento (18 s), pede comentário. As respostas viram o próximo Reels, sem citar lugar sem autorização."
+  "nota": "Semana da Visibilidade Trans. Reels de reconhecimento (18 s), pede comentário. As respostas viram o próximo Reels, sem citar lugar sem autorização. Aprovado pelo Leandro no chat em 14/11."
  },
  {
   "id": "carrossel-banheiro",
