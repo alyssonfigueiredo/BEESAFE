@@ -1,11 +1,11 @@
 // Reels "O banheiro" (Semana da Visibilidade Trans).
 // 1) monta o fundo com os 4 clipes do Gemini (cortes fixos abaixo) + 4 s de night para o fecho;
 // 2) grava sobreposicao.html quadro a quadro com fundo transparente;
-// 3) junta os dois em docs/Irisa-reels-trans-banheiro.mp4 (sem áudio: música entra no Instagram).
+// 3) junta os dois e põe o som (som.py: áudio dos clipes + trilha.py) em docs/Irisa-reels-trans-banheiro.mp4.
 // Uso: node docs/reels-pecas/trans-banheiro/render.mjs [--previa]
 //   --previa só tira PNGs em alguns tempos (prev-*.png nesta pasta), sem gravar vídeo.
 // FFMPEG= aponta outro binário; PW= aponta o playwright-core (padrão: node_modules do repo).
-import { spawn, execFileSync } from "node:child_process";
+import { spawn, spawnSync, execFileSync } from "node:child_process";
 import { existsSync } from "node:fs";
 const dir = new URL(".", import.meta.url).pathname;
 const root = new URL("../../../", import.meta.url).pathname;
@@ -14,17 +14,17 @@ const { chromium } = await import(process.env.PW || root + "node_modules/playwri
 const exe = existsSync("/opt/pw-browsers/chromium") ? { executablePath: "/opt/pw-browsers/chromium" } : {};
 const previa = process.argv.includes("--previa");
 
-// [arquivo, início, duração, lentidão, espera] — o 1º quadro do clip1 fica parado 5,2 s (a intro cobre com a "porta")
-// e o clipe roda 1,23x mais lento: 5,2 + 12,3 = 17,5 s. Soma 36 s; o fecho (36–41,5 s) é desenhado pela sobreposição.
-const CORTES = [["clip1-corredor.mp4", 0, 10, 1.23, 5.2], ["clip2-celular.mp4", 0.3, 6.5], ["clip3-porta.mp4", 0, 5.5], ["clip4-mesa.mp4", 0.5, 6.5]];
+// [arquivo, início, duração, lentidão] — clip0 é a intro (7 s); clip1 roda 1,15x mais lento (11,5 s).
+// Soma 37 s; o fecho (37–42,5 s) é desenhado pela sobreposição. Mudou aqui? Mudar também em som.py e trilha.py.
+const CORTES = [["clip0-intro.mp4", 0, 7], ["clip1-corredor.mp4", 0, 10, 1.15], ["clip2-celular.mp4", 0.3, 6.5], ["clip3-porta.mp4", 1, 5.5], ["clip4-mesa.mp4", 0.5, 6.5]];
 const bg = dir + "fundo.mp4";
 if (!previa || !existsSync(bg)) {
-  const S = "scale=1080:1920:flags=lanczos,setsar=1,fps=30";
+  const S = "scale=1080:1920:flags=lanczos,setsar=1,fps=30", N = CORTES.length;
   const args = ["-y", "-loglevel", "error"];
   CORTES.forEach(([f, ss, t]) => args.push("-ss", String(ss), "-t", String(t), "-i", dir + f));
   args.push("-f", "lavfi", "-t", "5.5", "-i", "color=c=0x141829:s=1080x1920:r=30");
-  const fc = CORTES.map(([, , , slow = 1, lead = 0], i) => `[${i}:v]` + (slow !== 1 ? `setpts=${slow}*PTS,minterpolate=fps=30:mi_mode=blend,` : "") + S +
-    (lead ? `,tpad=start_mode=clone:start_duration=${lead}` : "") + `[v${i}]`).join(";") + ";[4:v]setsar=1[v4];" + "[v0][v1][v2][v3][v4]concat=n=5:v=1:a=0[v]";
+  const fc = CORTES.map(([, , , slow = 1], i) => `[${i}:v]` + (slow !== 1 ? `setpts=${slow}*PTS,minterpolate=fps=30:mi_mode=blend,` : "") + S + `[v${i}]`).join(";") +
+    `;[${N}:v]setsar=1[v${N}];` + CORTES.map((_, i) => `[v${i}]`).join("") + `[v${N}]concat=n=${N + 1}:v=1:a=0[v]`;
   args.push("-filter_complex", fc, "-map", "[v]", "-an", "-c:v", "libx264", "-crf", "14", "-pix_fmt", "yuv420p", bg);
   execFileSync(FF, args, { stdio: "inherit" });
 }
@@ -38,7 +38,7 @@ const shot = (o = {}) => pg.locator("#stage").screenshot({ type: "png", omitBack
 
 if (previa) {
   // quadro do fundo + sobreposição no mesmo tempo
-  for (const t of [1500, 4600, 5900, 9800, 15500, 22800, 27500, 34500, 41000]) {
+  for (const t of [2500, 5200, 6900, 10800, 16500, 23800, 28500, 35500, 42000]) {
     await pg.evaluate((x) => window.__setT(x), t);
     const ov = dir + `ov-${t}.png`;
     await shot({ path: ov });
@@ -47,10 +47,10 @@ if (previa) {
   await b.close(); console.log("prévias em", dir); process.exit(0);
 }
 
-const out = root + "docs/Irisa-reels-trans-banheiro.mp4";
+const out = root + "docs/Irisa-reels-trans-banheiro.mp4", mudo = dir + "video-mudo.mp4", som = dir + "som.wav";
 const total = await pg.evaluate(() => window.__TOTAL), fps = 30, frames = Math.round((total / 1000) * fps);
 const ff = spawn(FF, ["-y", "-loglevel", "error", "-i", bg, "-f", "image2pipe", "-framerate", "30", "-c:v", "png", "-i", "-",
-  "-filter_complex", "[0:v][1:v]overlay=shortest=1", "-an", "-c:v", "libx264", "-preset", "medium", "-crf", "18", "-pix_fmt", "yuv420p", "-movflags", "+faststart", out],
+  "-filter_complex", "[0:v][1:v]overlay=shortest=1", "-an", "-c:v", "libx264", "-preset", "medium", "-crf", "18", "-pix_fmt", "yuv420p", mudo],
   { stdio: ["pipe", "inherit", "inherit"] });
 const done = new Promise((ok, no) => ff.on("close", (c) => (c ? no(new Error("ffmpeg " + c)) : ok())));
 for (let i = 0; i < frames; i++) {
@@ -58,4 +58,10 @@ for (let i = 0; i < frames; i++) {
   if (!ff.stdin.write(await shot())) await new Promise((r) => ff.stdin.once("drain", r));
 }
 ff.stdin.end(); await done; await b.close();
-console.log("ok", out, frames, "quadros");
+// som: áudio original dos clipes + trilha (som.py), nivelado para -16 LUFS com limitador
+execFileSync("python3", [dir + "som.py", som], { stdio: "inherit", env: { ...process.env, FFMPEG: FF } });
+const med = spawnSync(FF, ["-hide_banner", "-i", som, "-af", "ebur128", "-f", "null", "-"], { encoding: "utf8" }).stderr;
+const I = +[...med.matchAll(/I:\s+(-?[\d.]+) LUFS/g)].pop()[1], g = (-16 - I).toFixed(1);
+execFileSync(FF, ["-y", "-loglevel", "error", "-i", mudo, "-i", som, "-map", "0:v", "-map", "1:a", "-c:v", "copy",
+  "-af", `volume=${g}dB,alimiter=limit=0.84:level=false`, "-ar", "48000", "-c:a", "aac", "-b:a", "192k", "-shortest", "-movflags", "+faststart", out], { stdio: "inherit" });
+console.log("ok", out, frames, "quadros · som", I, "LUFS, ganho", g, "dB");

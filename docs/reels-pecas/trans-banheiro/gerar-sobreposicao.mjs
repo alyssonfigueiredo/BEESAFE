@@ -119,13 +119,7 @@ const tcss = `
 .fim{background:#141829;justify-content:center;padding-top:220px;padding-bottom:540px}
 .fim .bgx{position:absolute;inset:0;background:radial-gradient(40% 25% at 15% 10%,color-mix(in srgb,var(--turq) 40%,transparent),transparent 70%),radial-gradient(40% 25% at 90% 90%,color-mix(in srgb,var(--lilac) 40%,transparent),transparent 70%),radial-gradient(35% 22% at 85% 15%,color-mix(in srgb,var(--coral) 35%,transparent),transparent 70%),radial-gradient(35% 22% at 10% 88%,color-mix(in srgb,var(--yellow) 30%,transparent),transparent 70%);opacity:.85;mix-blend-mode:screen;filter:saturate(.8)}
 .fim>*:not(.bgx){position:relative}
-.porta{position:absolute;top:0;bottom:0;width:50.2%;background:#090B15;z-index:6}
-.pl{left:0}.pr{right:0}
-.luz{position:absolute;inset:0;z-index:7;pointer-events:none}
-.clarao{position:absolute;left:50%;top:60px;width:900px;height:1250px;margin-left:-450px;background:radial-gradient(50% 50% at 50% 45%,rgba(255,176,96,.20),rgba(255,176,96,.06) 45%,transparent 72%)}
-.fw{position:absolute;left:50%;top:170px;width:10px;height:700px;margin-left:-5px}
-.fresta{position:absolute;inset:0;border-radius:5px;transform-origin:50% 100%;background:linear-gradient(#FFE9C4,#FFCB85 70%,#FFB866);box-shadow:0 0 26px 6px rgba(255,190,110,.55),0 0 110px 30px rgba(255,160,80,.28)}
-.chao{position:absolute;left:50%;top:870px;width:460px;height:190px;margin-left:-260px;clip-path:polygon(49% 0,51% 0,100% 100%,0 100%);background:linear-gradient(rgba(255,196,120,.42),rgba(255,196,120,0))}
+.dip{position:absolute;inset:0;background:#090B15;opacity:0;z-index:4;pointer-events:none}
 .intro .big{font-weight:300;white-space:nowrap}
 .ficha{width:880px;background:rgba(20,24,41,.6);color:#fff;border-radius:36px;box-shadow:inset 0 1px 0 rgba(255,255,255,.22),inset 0 0 0 1.5px rgba(255,255,255,.16),0 18px 50px rgba(0,0,0,.28);padding:44px 48px;margin-top:44px;text-shadow:0 2px 10px rgba(0,0,0,.45)}
 .ficha .lb{font-family:var(--body);font-weight:700;font-size:26px;letter-spacing:.14em;text-transform:uppercase;color:#FFD166}
@@ -137,28 +131,19 @@ const tcss = `
 const rbc = ["var(--coral)", "var(--orange)", "var(--yellow)", "var(--turq)", "var(--lilac)"];
 const ficha = `<div class="ficha" data-d="2200" data-fx="pop"><div class="lb">Banheiro</div><h3>E o banheiro?</h3><p>Usou o que quis, sem ser questionade.</p>
 <div class="rb">${rbc.map((c, i) => `<i><b data-d="${3300 + i * 280}" data-fx="show" style="background:${c}"></b></i>`).join("")}</div></div>`;
-// Intro (0–6 s): escuro, uma fresta de luz de porta entreaberta; a porta abre para o corredor do clip1.
-const ABRE = 5200; // render.mjs segura o 1º quadro do clip1 até aqui
-const intro = `<div class="porta pl"></div><div class="porta pr"></div>
-<div class="luz"><div class="clarao"></div><div class="chao"></div><div class="fw"><div class="fresta"></div></div></div>` +
-  sc(0, 6000, big(76, [L("Tem uma porta", 600, "xl"), L("que quase ninguém repara.", 1700, "xl")]) +
-    `<div class="eyebrow c" data-d="3000" style="color:var(--turqInk);margin-top:60px">Semana da Visibilidade Trans</div>`, "z-index:8").replace('class="scene"', 'class="scene intro"');
-const introJs = `
-A($(".fresta"),[{opacity:0,transform:"scaleY(.15)"},{opacity:.6,transform:"scaleY(1)",offset:.45},{opacity:.3,transform:"scaleY(1)",offset:.58},{opacity:.85,transform:"scaleY(1)",offset:.7},{opacity:.6,transform:"scaleY(1)",offset:.8},{opacity:1,transform:"scaleY(1)"}],100,1600,"ease-out");
-A($(".chao"),[{opacity:0},{opacity:1}],900,1400,"ease-out");
-A($(".clarao"),[{opacity:0},{opacity:.75,offset:.25},{opacity:1,offset:.6},{opacity:.8}],300,5200,"ease-in-out");
-A($(".fw"),[{transform:"scaleX(1)"},{transform:"scaleX(24)"}],${ABRE},450,"cubic-bezier(.6,0,.4,1)");
-A($(".luz"),[{opacity:1},{opacity:0}],${ABRE},450,"ease-in");
-A($(".pl"),[{transform:"none"},{transform:"translateX(-101%)"}],${ABRE},1500,"cubic-bezier(.65,0,.3,1)");
-A($(".pr"),[{transform:"none"},{transform:"translateX(101%)"}],${ABRE},1500,"cubic-bezier(.65,0,.3,1)");
-`;
-reel("trans-banheiro", 41500,
+// Intro (0–7 s): clipe do Gemini (clip0-intro, a porta no corredor escuro) com o texto por cima;
+// aos 7 s um mergulho rápido no escuro cobre o corte para o clip1.
+const intro = `<div class="dip"></div>` +
+  sc(0, 7000, big(76, [L("Tem uma porta", 800, "xl"), L("que quase ninguém repara.", 2000, "xl")]) +
+    `<div class="eyebrow c" data-d="3400" style="color:var(--turqInk);margin-top:60px">Semana da Visibilidade Trans</div>`).replace('class="scene"', 'class="scene intro"');
+const introJs = `A($(".dip"),[{opacity:0},{opacity:1,offset:.45},{opacity:1,offset:.55},{opacity:0}],6550,900,"ease-in-out");`;
+reel("trans-banheiro", 42500,
   `<div class="grad gt"></div><div class="grad gb"></div>` + intro +
-  sc(6000, 11500, big(112, [L("Pra muita gente,", 400, "xl"), L("é só um banheiro.", 1500)])) +
-  sc(11500, 17500, big(100, [L("Pra mim, é a parte", 300, "xl"), L("do rolê que eu penso", 1300, "xl"), L("<span class=rainbow>antes de sair.</span>", 2400)])) +
-  sc(17500, 24000, big(86, [L("Alguém já", 300, "xl"), L("tinha respondido.", 1200)]) + ficha) +
-  sc(24000, 29500, big(108, [L("Quem esteve lá", 400, "xl"), L("<span class=rainbow>contou como foi.</span>", 1600)])) +
-  sc(29500, 36000, big(100, [L("Ninguém devia", 400, "xl"), L("precisar de coragem", 1500, "xl"), L("<span class=rainbow>pra ir ao banheiro.</span>", 2700)])) +
-  `<div class="scene fim" data-a="36000" data-b="41500"><div class="bgx"></div>` + big(110, [L("Avalia o banheiro", 400, "xl"), L("<span class=rainbow>também.</span>", 1400)]) +
+  sc(7000, 12500, big(112, [L("Pra muita gente,", 400, "xl"), L("é só um banheiro.", 1500)])) +
+  sc(12500, 18500, big(100, [L("Pra mim, é a parte", 300, "xl"), L("do rolê que eu penso", 1300, "xl"), L("<span class=rainbow>antes de sair.</span>", 2400)])) +
+  sc(18500, 25000, big(86, [L("Alguém já", 300, "xl"), L("tinha respondido.", 1200)]) + ficha) +
+  sc(25000, 30500, big(108, [L("Quem esteve lá", 400, "xl"), L("<span class=rainbow>contou como foi.</span>", 1600)])) +
+  sc(30500, 37000, big(100, [L("Ninguém devia", 400, "xl"), L("precisar de coragem", 1500, "xl"), L("<span class=rainbow>pra ir ao banheiro.</span>", 2700)])) +
+  `<div class="scene fim" data-a="37000" data-b="42500"><div class="bgx"></div>` + big(110, [L("Avalia o banheiro", 400, "xl"), L("<span class=rainbow>também.</span>", 1400)]) +
   `<div class="body c" data-d="2400" style="margin-top:40px;font-size:42px;color:var(--muted)">Alguém vai ler antes de sair.</div>` + handle(3100) + `</div>`,
   { night: true, css: tcss, js: introJs });

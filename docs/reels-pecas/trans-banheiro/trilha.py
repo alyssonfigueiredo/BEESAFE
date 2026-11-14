@@ -1,12 +1,13 @@
-# Trilha original do Reels "O banheiro" (41,5 s), sintetizada: sem música de terceiros, sem custo.
+# Trilha original do Reels "O banheiro" (música, 42,5 s; entra aos 7 s), sintetizada: sem música de terceiros, sem custo.
 # Uso: python3 trilha.py saida.wav   (precisa de numpy)
-# Arco: intro no escuro (bordão grave, notas soltas) -> corredor contido (Lá menor) -> alívio (Fá/Dó)
+# A intro (0–7 s) fica só com o áudio do clipe do Gemini; quem mistura tudo é som.py.
+# Arco: corredor contido (Lá menor, casa com o bordão Dó/Sol do clip1) -> alívio (Fá/Dó)
 #       -> mesa quente (Fá, Dó, Sol) -> Dó que some.
 # As notas foram escritas para a versão de 25 s; M() leva cada tempo para a cena certa da versão longa.
 import sys, wave, numpy as np
-SR = 44100; T = 41.5; n = int(SR * T); L = np.zeros(n); R = np.zeros(n)
+SR = 44100; T = 42.5; n = int(SR * T); L = np.zeros(n); R = np.zeros(n)
 f = lambda m: 440 * 2 ** ((m - 69) / 12)
-M = lambda t: float(np.interp(t, [0, 3.6, 7, 11.5, 16, 21, 25], [6, 11.5, 17.5, 24, 29.5, 36, 41.5]))
+M = lambda t: float(np.interp(t, [0, 3.6, 7, 11.5, 16, 21, 25], [7, 12.5, 18.5, 25, 30.5, 37, 42.5]))
 
 def put(sig, t0, pan=0.5, g=1.0, cru=False):
     i = int((t0 if cru else M(t0)) * SR); s = sig[: max(0, n - i)]
@@ -16,7 +17,7 @@ def piano(m, dur=4.0, vel=1.0):
     t = np.arange(int(dur * SR)) / SR; fr = f(m); o = np.zeros_like(t)
     for k, a in enumerate([1, .5, .28, .14, .07, .035], 1):
         o += a * np.sin(2 * np.pi * fr * k * (1 + .0004 * k * k) * t) * np.exp(-t * (1.1 + .55 * k))
-    return o * np.minimum(1, t / .006) * vel * .22
+    return o * np.minimum(1, t / .006) * vel * .16
 
 def pad(ms, dur, vel=1.0, atk=None):
     t = np.arange(int(dur * SR)) / SR; o = np.zeros_like(t)
@@ -28,11 +29,6 @@ def pad(ms, dur, vel=1.0, atk=None):
     return o * env * vel * .018 * (1 + .12 * np.sin(2 * np.pi * .23 * t))
 
 np.random.seed(7)
-# intro (tempos reais): bordão grave no escuro, três notas soltas, e um crescendo quando a porta abre (5,2 s)
-put(pad([33], 8.0, 1.5, 2.2), 0, .5, cru=True); put(pad([45, 52], 8.0, .9, 2.5), 0, .45, cru=True)
-put(pad([76], 5.5, .22, 2.5), .8, .7, cru=True); put(pad([57, 64, 69], 3.2, .8, 1.4), 4.4, .4, cru=True)
-for t0, m, v in [(.5, 76, .45), (1.9, 77, .4), (3.2, 71, .42), (4.4, 76, .35)]: put(piano(m, 5, v), t0, .6, cru=True)
-put(piano(45, 6, .6), 5.2, .5, cru=True)
 # (início, duração, acorde do pad, baixo, força)
 SEC = [(0, 3.9, [57, 64, 69], 45, .7), (3.5, 3.9, [57, 60, 64, 71], 45, .8), (7, 2.6, [53, 60, 65, 69], 41, 1.0),
        (9.2, 2.7, [55, 60, 64, 72], 48, 1.1), (11.5, 2.6, [55, 62, 67, 71], 43, 1.1), (13.7, 2.7, [57, 64, 69, 72], 45, 1.15),
