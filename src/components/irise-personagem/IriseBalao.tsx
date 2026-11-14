@@ -131,7 +131,7 @@ export function IriseBalao({
   }, [bob, reduce]);
   const estiloBob = useAnimatedStyle(() => ({ transform: [{ translateY: -1.5 * bob.get() }] }));
   const estiloTexto = useAnimatedStyle(() => ({ opacity: opacidade.get() }));
-  // Fala da Semana da Visibilidade Trans: balão quase opaco com a borda nas cores da bandeira.
+  // Fala da Semana da Visibilidade Trans: mesma transparência das outras, com a borda nas cores da bandeira.
   const trans = fala.id === "semana";
   
   // Pedido do Alysson (11/10/2026): o balão termina rente aos cards (12 pt da tela, igual ao card
@@ -182,7 +182,7 @@ export function IriseBalao({
               </Defs>
               {/* Um traço só: o balão e a ponta são o mesmo contorno, então a borda desce pela ponta
                   e volta, sem linha cortando a base dela. */}
-              <Path d={contorno} fill="#FFFFFF" stroke="url(#balaoTrans)" strokeWidth={1.5} strokeLinejoin="round" />
+              <Path d={contorno} fill="#FFFFFF" fillOpacity={0.55} stroke="url(#balaoTrans)" strokeWidth={1.5} strokeLinejoin="round" />
             </>
           ) : (
             <G opacity={0.55} fill="#FFFFFF">
