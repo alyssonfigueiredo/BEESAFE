@@ -1169,15 +1169,16 @@
  },
  {
   "id": "reels-trans-banheiro",
-  "aprovado": false,
-  "quando": "2026-11-17T19:00:00-03:00",
+  "aprovado": true,
+  "quando": "2026-11-13T21:25:00-03:00",
   "tipo": "REELS",
   "midias": [
-   "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/Irisa-reels-trans-banheiro.mp4"
+   "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/renderizar-reels-banheiro-ucv6n0/docs/Irisa-reels-trans-banheiro.mp4"
   ],
+  "capa": "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/renderizar-reels-banheiro-ucv6n0/docs/Irisa-reels-trans-banheiro-capa.jpg",
   "legenda": "Pra muita gente, é só um banheiro.\nPra quem é trans, é a parte do rolê que se pensa antes de sair de casa.\nNa Irisa, quem já foi conta como foi. E quem vai depois lê antes de sair.\n\nConta pra gente: qual lugar te tratou pelo nome certo de primeira?\n\n#Irisa #LGBTQIA #Orgulho #AppLGBT #VisibilidadeTrans",
   "primeiro_comentario": "appirisa.com.br",
   "publicado": false,
-  "nota": "Semana da Visibilidade Trans. Capa: docs/Irisa-reels-trans-banheiro-capa.jpg (escolher como capa ao publicar; o robô não envia capa). Já vai com som: áudio original dos clipes do Gemini + piano próprio (docs/reels-pecas/trans-banheiro/som.py e piano.py), sem música de terceiros."
+  "nota": "Semana da Visibilidade Trans. Aprovado e mandado publicar na hora pelo Leandro no chat da sessão de 13/11/2026 (era 17/11 19h). Publicado pelo robô rodando na branch claude/renderizar-reels-banheiro-ucv6n0, com capa (campo capa -> cover_url). Som: áudio original dos clipes do Gemini + piano próprio (docs/reels-pecas/trans-banheiro/som.py e piano.py), sem música de terceiros."
  }
 ]

@@ -86,7 +86,10 @@ async function publicarStory(item) {
 }
 
 async function publicarReels(item) {
-  const c = await chamar(`${IG}/media`, { video_url: item.midias[0], media_type: "REELS", caption: item.legenda || "" }, "POST");
+  // "capa" na fila (URL pública de um JPEG) vira a capa do Reels; sem ela, o Instagram usa o primeiro quadro.
+  const params = { video_url: item.midias[0], media_type: "REELS", caption: item.legenda || "" };
+  if (item.capa) params.cover_url = item.capa;
+  const c = await chamar(`${IG}/media`, params, "POST");
   await esperarPronto(c.id, 40, 5000); // vídeo demora mais pra processar que imagem
   const pub = await chamar(`${IG}/media_publish`, { creation_id: c.id }, "POST");
   if (item.primeiro_comentario) {
