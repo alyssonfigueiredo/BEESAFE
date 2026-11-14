@@ -8,6 +8,7 @@ import Animated, {
 } from "react-native-reanimated";
 
 import { EASE, FadeUp } from "@/components/gami/Anim";
+import { SeloTrans, useFaseTrans } from "@/components/SemanaTrans";
 import {
   flexWord,
   useForma,
@@ -27,6 +28,7 @@ export function FormaCard() {
   const forma = useForma();
   const setForma = useSetMedalForm();
   const reduce = useReducedMotion();
+  const semanaTrans = useFaseTrans() === "semana";
   const [w, setW] = useState(0);
   const x = useSharedValue(forma);
 
@@ -39,7 +41,11 @@ export function FormaCard() {
 
   if (!g) return null;
   return (
-    <View className="gap-3 rounded-[30px] bg-surface px-6 py-6" style={shadow.card}>
+    <View
+      className="gap-3 rounded-[30px] bg-surface px-6 py-6"
+      style={[shadow.card, semanaTrans && { borderWidth: 2, borderColor: "#5BCEFA" }]}
+    >
+      {semanaTrans && <SeloTrans texto="Semana da Visibilidade Trans" />}
       <Text className="font-body-medium text-[17px] text-ink">Como o app fala com você</Text>
       <View
         className="flex-row rounded-[18px] bg-subtle"

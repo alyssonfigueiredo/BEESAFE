@@ -9,6 +9,7 @@ import { Aurora } from "@/components/Aurora";
 import { PrimaryButton, SecondaryButton } from "@/components/Button";
 import { TextArea } from "@/components/Field";
 import { RewardSheet } from "@/components/gami/RewardSheet";
+import { SeloTrans, bordaTrans, useFaseTrans } from "@/components/SemanaTrans";
 import { FavHeart } from "@/components/FavHeart";
 import { Toggle } from "@/components/Toggle";
 import { useNaLista } from "@/hooks/useFavoritos";
@@ -72,6 +73,7 @@ export default function PlaceScreen() {
   // Estava no Quero ir antes de avaliar? A recompensa avisa que ele foi para Já fui.
   const naLista = useNaLista(id);
   const forma = gami?.forma ?? 2;
+  const semanaTrans = useFaseTrans() === "semana";
   // Descoberta: "começou a avaliar" é a primeira resposta, uma vez só.
   const comecou = useRef(false);
   // Com ?avaliar=1 o formulário já vem aberto; a tela rola até ele uma vez.
@@ -334,13 +336,27 @@ export default function PlaceScreen() {
               <Text className="font-body-bold text-base text-ink">
                 {mine ? "Sua avaliação" : "Como foi lá?"}
               </Text>
-              {AXIS_KEYS.map((k) => (
-                <View key={k} className="gap-2">
-                  <Text className="font-body-medium text-sm text-ink">{AXES[k].question}</Text>
-                  <Text className="font-body text-xs text-dim">{axisHint(k, forma)}</Text>
-                  <Rainbow value={current[k]} size={16} onChange={(v) => responder(k, v)} />
-                </View>
-              ))}
+              {AXIS_KEYS.map((k) => {
+                const destaque = k === "restroom" && semanaTrans;
+                return (
+                  <View
+                    key={k}
+                    className="gap-2"
+                    style={destaque ? [bordaTrans, { padding: 12, marginHorizontal: -12 }] : undefined}
+                  >
+                    {destaque && <SeloTrans texto="Semana Trans" />}
+                    <Text className="font-body-medium text-sm text-ink">{AXES[k].question}</Text>
+                    <Text className="font-body text-xs text-dim">{axisHint(k, forma)}</Text>
+                    <Rainbow value={current[k]} size={16} onChange={(v) => responder(k, v)} />
+                    {destaque && (
+                      <Text className="font-body text-xs leading-[17px] text-muted">
+                        Essa resposta é a que pessoas trans mais procuram antes de sair. Se não
+                        usou o banheiro, pode pular.
+                      </Text>
+                    )}
+                  </View>
+                );
+              })}
               <TextArea
                 minHeight={88}
                 placeholder="Quer contar como foi? (opcional, até 500 caracteres)"
