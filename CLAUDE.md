@@ -854,6 +854,13 @@ Nome: **Irisa** (INPI livre; @appirisa livre). Bundle id Android `br.com.irisa.a
   avatar é montado na hora nesses dias, porque o embutido tem o arco-íris pintado); o balão da fala da semana
   (id `semana`, última da rodada, onde ele para) fica quase opaco com borda nas cores da bandeira. Publicado por
   EAS Update sem rodar em aparelho. Depois de 20/11 dá para apagar tudo isso junto com o `SemanaTrans.tsx`.
+  Ajustes do mesmo dia: cartão da semana fica abaixo do cartão principal; "acolhimento." do título em degradê
+  azul→rosa (SVG); o balão fica por cima do cartão escuro (`zIndex`) para a ponta aparecer inteira.
+- **Cartão principal do Início mais baixo (14/11/2026, opção E aprovada pelo Leandro, pranchas no mesmo artefato;
+  PERMANENTE, não é da semana trans):** `CardCidadeIrise` foi de 248 para 211 de altura. A frase da marca saiu da
+  largura inteira e foi para a coluna da esquerda (208 de largura), ao lado do arco do irise; a linha
+  "Cidade · UF ⌄" virou "UF ⌄" ao lado do nome (o toque para trocar de cidade é nessa linha do título, que encolhe
+  a fonte em nome comprido); o fio arco-íris saiu. Balão mais rente ao cabeçalho (`marginTop` 10 → 2).
 
 ## Stack
 
