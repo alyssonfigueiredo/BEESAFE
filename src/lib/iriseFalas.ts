@@ -10,7 +10,7 @@ import { quaseLa } from "@/hooks/useGamification";
 export type Acao = "lugares" | "mapa" | "avaliar" | "apoio" | "conquistas" | "sugerir";
 
 export type Fala = {
-  id: "missao" | "falta" | "sugestao" | "alerta" | "conquista";
+  id: "missao" | "falta" | "sugestao" | "alerta" | "conquista" | "semana";
   tag: string;
   cor: string;
   texto: string;
@@ -136,14 +136,16 @@ export function falasDoIrise(
   const medalhaNova = gami?.conquistadas.find((c) => !c.visto);
   const nomeMedalhaNova = medalhaNova ? getMedalha(medalhaNova.id)?.t : undefined;
 
-  return FALAS.map((f) => {
-    // Semana da Visibilidade Trans (13–19/11/2026): a missão do dia vira a fala da semana, no
-    // mesmo lugar e com o mesmo destino. Todo irise fala; Rafa e Luna, em primeira pessoa.
+  const falas = FALAS.map((f): Fala => {
+    // Semana da Visibilidade Trans (13–19/11/2026): a missão do dia vira a fala da semana, com o
+    // mesmo destino. Todo irise fala; Rafa e Luna, em primeira pessoa. Ela vai para o fim da
+    // rodada (onde o balão para) e aparece a semana toda, mesmo com avaliação feita hoje.
     // O balão tem uma linha só: texto com até ~36 letras. Sai sozinho depois de 19/11.
     if (f.id === "missao" && semanaTrans) {
       const nossa = !!irise?.n && IRISES_TRANS.includes(irise.n);
       return {
         ...f,
+        id: "semana",
         tag: "SEMANA TRANS",
         texto: nossa ? "Semana nossa. Avaliou um banheiro?" : "Avaliou o banheiro de algum lugar?",
         abertura: nossa
@@ -188,4 +190,6 @@ export function falasDoIrise(
     }
     return f;
   });
+  // A fala da semana por último: é nela que o balão para.
+  return [...falas.filter((f) => f.id !== "semana"), ...falas.filter((f) => f.id === "semana")];
 }
