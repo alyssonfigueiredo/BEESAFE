@@ -1249,8 +1249,8 @@
  },
  {
   "id": "carrossel-banheiro",
-  "aprovado": false,
-  "quando": "2026-11-17T16:00:00-03:00",
+  "aprovado": true,
+  "quando": "2026-11-14T19:00:00-03:00",
   "tipo": "POST",
   "midias": [
    "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/carrossel-banheiro/01.png",
@@ -1264,6 +1264,6 @@
   "legenda": "“E o banheiro?” é uma das quatro perguntas da Irisa. E vale 25% da nota.\nEla não mede limpeza. Mede se você usou o banheiro que quis, sem ser questionade.\nDe 1 a 5: barraram é 1, ninguém reparou é 5.\nNão usou? Pode pular.\nSalva pra próxima avaliação e conta: em qual lugar você usou e ninguém reparou?\nO link está na bio. Na App Store e no Google Play.\n\n#Irisa #LGBTQIA #Orgulho #AppLGBT #VisibilidadeTrans",
   "primeiro_comentario": "appirisa.com.br",
   "publicado": false,
-  "nota": "Semana da Visibilidade Trans. Como responder a pergunta do banheiro (7 lâminas, capa escura para alternar com o post-nome). Horário de 16h, igual aos últimos posts."
+  "nota": "Semana da Visibilidade Trans. Como responder a pergunta do banheiro (7 lâminas, capa escura). Adiantado de 17/11 para 14/11 às 19h e aprovado pelo Leandro no chat em 14/11: continuação do Reels O banheiro de 13/11."
  }
 ]
