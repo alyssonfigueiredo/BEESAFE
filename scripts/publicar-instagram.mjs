@@ -86,7 +86,10 @@ async function publicarStory(item) {
 }
 
 async function publicarReels(item) {
-  const c = await chamar(`${IG}/media`, { video_url: item.midias[0], media_type: "REELS", caption: item.legenda || "" }, "POST");
+  // "capa" na fila (URL pública de um JPEG) vira a capa do Reels; sem ela, o Instagram usa o primeiro quadro.
+  const params = { video_url: item.midias[0], media_type: "REELS", caption: item.legenda || "" };
+  if (item.capa) params.cover_url = item.capa;
+  const c = await chamar(`${IG}/media`, params, "POST");
   await esperarPronto(c.id, 40, 5000); // vídeo demora mais pra processar que imagem
   const pub = await chamar(`${IG}/media_publish`, { creation_id: c.id }, "POST");
   if (item.primeiro_comentario) {
@@ -137,6 +140,7 @@ async function main() {
   for (const item of fila) {
     if (item.publicado) continue;
     if (!item.aprovado) continue; // nunca publica sem "aprovado": true marcado à mão
+    if (item.arquivado) continue; // arquivada = tirada da fila: nunca publica, mesmo aprovada
     // Story só sai sozinho se for imagem pura ("automatico": true, as versões -sem-adesivo).
     // Story com adesivo (link, enquete, caixinha) a API não posta: segue manual.
     if (item.tipo === "STORY" && !item.automatico) continue;
@@ -174,7 +178,7 @@ async function main() {
   // ninguém tentou, ou toda tentativa caiu. Também é motivo de aviso.
   const ATRASO_MS = 30 * 60 * 1000;
   for (const item of fila) {
-    if (item.publicado || !item.aprovado) continue;
+    if (item.publicado || !item.aprovado || item.arquivado) continue;
     if (item.tipo === "STORY" && !item.automatico) continue;
     const atraso = agora - new Date(item.quando);
     if (atraso > ATRASO_MS && !falhas.some((f) => f.startsWith(`${item.id} `))) {
