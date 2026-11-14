@@ -1268,7 +1268,7 @@
  },
  {
   "id": "carrossel-mito-trans",
-  "aprovado": false,
+  "aprovado": true,
   "quando": "2026-11-17T16:00:00-03:00",
   "tipo": "POST",
   "midias": [
@@ -1283,11 +1283,11 @@
   "legenda": "Mito ou verdade, edição trans.\nCirurgia pra mudar o nome no cartório? Mito.\nNome social no SUS e na escola? É direito.\nTransfobia é crime? Verdade, desde 2019.\nMas direito no papel não garante o nome certo no balcão. É por isso que a gente avalia.\nQual dessas você não sabia? Comenta o número da lâmina.\nO link está na bio. Na App Store e no Google Play.\n\n#Irisa #LGBTQIA #Orgulho #AppLGBT #VisibilidadeTrans",
   "primeiro_comentario": "appirisa.com.br",
   "publicado": false,
-  "nota": "Semana da Visibilidade Trans. Mito ou verdade, edição trans (7 lâminas, capa escura). Fontes conferidas em 14/11: STF ADI 4275 e Provimento CNJ 73/2018 (hoje arts. 516 a 523 do Provimento 149/2023); Portaria MS 1.820/2009; Resolução CNE/CP 1/2018 (arts. 3º e 4º); STF ADO 26 e MI 4733 (13/06/2019). A lâmina 2 não diz o ano de propósito: é a resposta do quiz do story das 20h."
+  "nota": "Semana da Visibilidade Trans. Mito ou verdade, edição trans (7 lâminas, capa escura). Fontes conferidas em 14/11: STF ADI 4275 e Provimento CNJ 73/2018 (hoje arts. 516 a 523 do Provimento 149/2023); Portaria MS 1.820/2009; Resolução CNE/CP 1/2018 (arts. 3º e 4º); STF ADO 26 e MI 4733 (13/06/2019). A lâmina 2 não diz o ano de propósito: é a resposta do quiz do story das 20h. Aprovado pelo Leandro no chat em 14/11."
  },
  {
   "id": "carrossel-eu-em-novembro",
-  "aprovado": false,
+  "aprovado": true,
   "quando": "2026-11-21T17:00:00-03:00",
   "tipo": "POST",
   "midias": [
@@ -1302,6 +1302,6 @@
   "legenda": "2026 ia ser meu ano. Ia.\nEu em janeiro: \"esse ano eu saio mais\".\nEu em novembro: ainda perguntando no grupo se o bar é de boa.\nAinda dá tempo de cumprir uma: avalia um lugar onde você foi bem recebide esse ano. Leva um minuto.\nQual promessa de janeiro você cumpriu? Vale contar a que não cumpriu também.\nO link está na bio. Na App Store e no Google Play.\n\n#Irisa #LGBTQIA #Orgulho #AppLGBT #EuEmNovembro",
   "primeiro_comentario": "appirisa.com.br",
   "publicado": false,
-  "nota": "Meme do momento (eu em janeiro × eu em novembro, \"2026 ia ser meu ano\"), 7 lâminas, capa clara. Sábado às 17h. Antes de aprovar, conferir no Instagram se o meme ainda está rodando."
+  "nota": "Meme do momento (eu em janeiro × eu em novembro, \"2026 ia ser meu ano\"), 7 lâminas, capa clara. Sábado às 17h. Antes de aprovar, conferir no Instagram se o meme ainda está rodando. Aprovado pelo Leandro no chat em 14/11."
  }
 ]
