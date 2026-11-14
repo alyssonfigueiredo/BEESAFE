@@ -17,6 +17,7 @@ import { OccurrenceCard } from "@/components/OccurrenceCard";
 import { PlaceCard } from "@/components/PlaceCard";
 import { RainbowLine } from "@/components/Rainbow";
 import { SearchField } from "@/components/SearchField";
+import { SemanaTransCard } from "@/components/SemanaTrans";
 import { StatCard } from "@/components/StatCard";
 import { TourTarget } from "@/components/Tour";
 import { useAlgumNudgeVisivel } from "@/hooks/useDiscovery";
@@ -220,6 +221,7 @@ export default function HomeScreen() {
             duplica aviso nenhum. */}
         <IriseNudge />
         <AvisoCard />
+        <SemanaTransCard />
 
         {irise ? (
           <View
