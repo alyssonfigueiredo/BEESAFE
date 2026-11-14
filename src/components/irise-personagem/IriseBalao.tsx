@@ -160,24 +160,28 @@ export function IriseBalao({
       {w > 0 && (
         <Svg width={w} height={h + 16} style={{ position: "absolute", left: 0, top: 0, overflow: "visible" }} pointerEvents="none">
           {trans && (
-            <>
-              <Defs>
-                <LinearGradient id="balaoTrans" x1="0" y1="0" x2="1" y2="0">
-                  <Stop offset="0" stopColor="#5BCEFA" />
-                  <Stop offset="0.25" stopColor="#F5A9B8" />
-                  <Stop offset="0.5" stopColor="#FFFFFF" />
-                  <Stop offset="0.75" stopColor="#F5A9B8" />
-                  <Stop offset="1" stopColor="#5BCEFA" />
-                </LinearGradient>
-              </Defs>
-              {/* Borda de 3: a metade de dentro fica por baixo do branco, sobra 1,5 por fora. */}
-              <Rect width={w} height={h} rx={18} fill="none" stroke="url(#balaoTrans)" strokeWidth={3} />
-            </>
+            <Defs>
+              <LinearGradient id="balaoTrans" x1="0" y1="0" x2="1" y2="0">
+                <Stop offset="0" stopColor="#5BCEFA" />
+                <Stop offset="0.25" stopColor="#F5A9B8" />
+                <Stop offset="0.5" stopColor="#FFFFFF" />
+                <Stop offset="0.75" stopColor="#F5A9B8" />
+                <Stop offset="1" stopColor="#5BCEFA" />
+              </LinearGradient>
+            </Defs>
           )}
           <G opacity={trans ? 0.94 : 0.55} fill="#FFFFFF">
             <Rect width={w} height={h} rx={18} />
             <Path d={ponta} />
           </G>
+          {trans && (
+            <>
+              {/* Borda por cima do branco, e a ponta de novo por cima da borda: sem isso a linha
+                  cortava a base da ponta e ela parecia estar atrás do balão. */}
+              <Rect x={0.75} y={0.75} width={w - 1.5} height={h - 1.5} rx={17.25} fill="none" stroke="url(#balaoTrans)" strokeWidth={1.5} />
+              <Path d={ponta.replace(`M${w - 132} ${h - 1}`, `M${w - 132} ${h - 2.5}`).replace(`${w - 132} ${h - 1} Z`, `${w - 132} ${h - 2.5} Z`)} fill="#FFFFFF" />
+            </>
+          )}
         </Svg>
       )}
       <View style={{ paddingTop: 6, paddingRight: 13, paddingBottom: 7, paddingLeft: 14 }}>
