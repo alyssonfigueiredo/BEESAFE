@@ -47,8 +47,8 @@ html = """<!doctype html>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Urbanist:wght@500&family=Space+Grotesk:wght@600&display=swap">
 <style>
 /* Vídeo da marca para a Semana da Visibilidade Trans (14/11/2026, pedido do Leandro).
-   A logo começa em tons de cinza; a primeira volta do radar traz as cores da marca e a segunda
-   troca pelas da bandeira trans. Três camadas iguais (cinza, cor, trans) empilhadas; as duas de
+   A logo começa em tons de cinza; a primeira volta do radar traz as cores da marca e a segunda,
+   emendada sem parar, troca pelas da bandeira trans. Três camadas iguais (cinza, cor, trans) empilhadas; as duas de
    cima aparecem por uma máscara cônica que abre junto com a varredura, centrada no olho.
    Relógio: window.__setT(ms). Gravar: FFMPEG=... node scripts/story-video.mjs docs/abertura-trans.html docs/Irisa-abertura-trans.mp4
    ?formato=quadrado troca para 1080 x 1080. */
@@ -71,7 +71,7 @@ body{display:flex;align-items:center;justify-content:center;height:100vh}
   radial-gradient(56% 34% at 104% 100%,rgba(91,206,250,.48),transparent 64%),
   radial-gradient(48% 30% at -4% 100%,rgba(245,169,184,.52),transparent 64%),
   radial-gradient(420px 420px at 540px var(--cy),rgba(120,170,235,.30),rgba(240,150,180,.20) 60%,transparent 100%),#F5F4F1}
-.cinza{filter:grayscale(1)}
+.cinza{filter:grayscale(1) contrast(.6) brightness(1.22)}
 .logo{position:absolute;left:260px;top:calc(var(--cy) - 280px);width:560px;height:560px;display:block}
 .marca{position:absolute;left:0;right:0;top:calc(var(--cy) + 340px);text-align:center;font:500 104px/1 Urbanist,'Helvetica Neue',Arial,sans-serif;letter-spacing:.2em;text-transform:uppercase;color:#141829;padding-left:.2em}
 .marca b{font-weight:500;color:#FFAD0F}
@@ -95,9 +95,9 @@ body{display:flex;align-items:center;justify-content:center;height:100vh}
 const $=(s)=>document.querySelector(s);
 const Q=new URLSearchParams(location.search);
 if(Q.get("formato")==="quadrado")document.documentElement.classList.add("quadrado");
-const TOTAL=9000;
+const TOTAL=8200;
 // A linha da varredura da logo aponta para 35 graus (a partir do topo, sentido horário).
-const PONTA=35, V1=[900,3500], V2=[4300,6900];
+const PONTA=35, GIRO=[900,5700];
 const cy=()=>getComputedStyle($("#stage")).getPropertyValue("--cy").trim();
 const suave=(p)=>p<0?0:p>1?1:p*p*(3-2*p);
 const entre=(t,a,b)=>Math.max(0,Math.min(1,(t-a)/(b-a)));
@@ -106,18 +106,22 @@ function mascara(el,ang){
   const m=ang<=0?"conic-gradient(transparent 0 360deg)":ang>=360?"none":`conic-gradient(from 0deg at 540px ${cy()},#000 0 ${Math.max(0,ang-1.2)}deg,transparent ${ang}deg 360deg)`;
   el.style.webkitMaskImage=m; el.style.maskImage=m;
 }
-function varre(el,t,[a,b]){
-  const p=entre(t,a,b), ang=suave(p)*360;
-  el.style.transform=`rotate(${ang-PONTA}deg)`;
-  el.style.opacity=String(Math.min(entre(t,a-250,a+150),1-entre(t,b-150,b+300)));
-  return ang;
-}
+// Duas voltas seguidas, sem parar: velocidade quase constante, com saída e chegada suaves.
+// Na primeira volta a varredura é a turquesa da marca; ao fechar a volta ela vira rosa e segue.
 window.__setT=function(t){
   $("#entra").style.opacity=String(suave(entre(t,0,600)));
   $("#entra").style.transform=`scale(${0.94+0.06*suave(entre(t,0,900))})`;
-  mascara($("#cor"),varre($("#v1"),t,V1));
-  mascara($("#trans"),varre($("#v2"),t,V2));
-  const s=suave(entre(t,7000,7700));
+  const p=entre(t,GIRO[0],GIRO[1]);
+  const ang=720*(0.8*p+0.2*suave(p));
+  const visivel=Math.min(entre(t,GIRO[0]-250,GIRO[0]+150),1-entre(t,GIRO[1]-150,GIRO[1]+300));
+  const troca=entre(ang,345,375);
+  for(const [id,peso] of [["#v1",1-troca],["#v2",troca]]){
+    $(id).style.transform=`rotate(${ang-PONTA}deg)`;
+    $(id).style.opacity=String(visivel*peso);
+  }
+  mascara($("#cor"),Math.min(ang,360));
+  mascara($("#trans"),ang-360);
+  const s=suave(entre(t,GIRO[1]+200,GIRO[1]+900));
   $("#assina").style.opacity=String(s);
   $("#assina").style.transform=`translateY(${(1-s)*18}px)`;
 };
