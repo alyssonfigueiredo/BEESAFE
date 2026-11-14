@@ -5,10 +5,10 @@ import { X } from "lucide-react-native";
 import { useState } from "react";
 import { Pressable, Text, View } from "react-native";
 import Animated, { FadeInDown } from "react-native-reanimated";
-import Svg, { Defs, Ellipse, LinearGradient, RadialGradient, Rect, Stop } from "react-native-svg";
+import Svg, { Defs, Ellipse, LinearGradient, RadialGradient, Rect, Stop, Text as SvgText } from "react-native-svg";
 
 import { faseTrans, type FaseTrans } from "@/lib/semanaTrans";
-import { colors, shadow } from "@/theme/tokens";
+import { colors, fonts, shadow } from "@/theme/tokens";
 
 // Semana de Conscientização Trans (13–19/11) e Dia da Memória Trans (20/11), 2026.
 // Entra e sai sozinho pela data do aparelho; nada no banco. Protótipo aprovado:
@@ -138,9 +138,26 @@ export function SemanaTransCard() {
         {topo}
         {fase === "semana" ? (
           <>
-            <Text className="font-display text-[24px] uppercase leading-[29px] text-ink">
-              {"Banheiro também\né acolhimento."}
-            </Text>
+            {/* "Acolhimento." nas cores da bandeira (opção 1 da prancha D, escolha do Leandro).
+                Degradê em texto só existe em SVG; o "É" vai no mesmo SVG para a linha de base bater.
+                16,9 é a largura de "É " em Oswald 700 a 24 (medida na fonte). */}
+            <View accessible accessibilityRole="header" accessibilityLabel="Banheiro também é acolhimento.">
+              <Text className="font-display text-[24px] uppercase leading-[29px] text-ink">Banheiro também</Text>
+              <Svg width={170} height={30}>
+                <Defs>
+                  <LinearGradient id="stPalavra" x1="0" y1="0" x2="1" y2="0">
+                    <Stop offset="0" stopColor="#5BCEFA" />
+                    <Stop offset="1" stopColor="#F5A9B8" />
+                  </LinearGradient>
+                </Defs>
+                <SvgText x={0} y={25.5} fontSize={24} fontFamily={fonts.display} fill={colors.ink}>
+                  É
+                </SvgText>
+                <SvgText x={16.9} y={25.5} fontSize={24} fontFamily={fonts.display} fill="url(#stPalavra)">
+                  ACOLHIMENTO.
+                </SvgText>
+              </Svg>
+            </View>
             <Text className="font-body text-[14px] leading-[20px] text-muted">
               Esteve num lugar essa semana? Responde a pergunta do banheiro. Alguém vai ler antes
               de sair de casa.
