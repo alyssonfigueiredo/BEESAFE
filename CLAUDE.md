@@ -834,6 +834,14 @@ Nome: **Irisa** (INPI livre; @appirisa livre). Bundle id Android `br.com.irisa.a
   diferente do resto do conjunto) e um Storage desatualizado nas 6 poses de busto — se mexer de
   novo nas fotos do Ali, confira que o Storage bate com o repositório antes de dar como certo.
 
+- **Semana da Visibilidade Trans no app (14/11/2026, pedido do Leandro; protótipo
+  https://claude.ai/artifact/4x4yJqGXR2D9fNRJZSzdCc):** `src/components/SemanaTrans.tsx` liga sozinho pela data
+  do aparelho: de 13 a 19/11 cartão no Início ("Banheiro também é acolhimento", Avaliar um lugar / Seu pronome),
+  a pergunta do Banheiro com borda e selo na ficha e a forma de tratamento em destaque no Perfil; em 20/11
+  (Dia da Memória Trans) o cartão vira um sóbrio, sem pedir avaliação, com CVV 188 e a aba Apoio. X guarda no
+  aparelho (`irisa.semanaTrans.2026.*`). Faixa com as cores da bandeira trans: exceção temporária. Perguntas,
+  escalas e pesos não mudam. Só JS (EAS Update). Depois de 20/11 some sozinho; pode apagar o arquivo e os 3 usos.
+
 ## Stack
 
 Expo SDK 57, Expo Router, NativeWind v4, TypeScript, TanStack Query, MapLibre React Native v11 com tiles Esri
