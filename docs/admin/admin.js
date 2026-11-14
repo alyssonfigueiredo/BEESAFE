@@ -1961,25 +1961,69 @@ const API_KEYS = [
 // A fila mora no repositório (docs/legendas/fila.json, branch padrão) e é lida direto de lá: o
 // que qualquer sessão do Claude mudar aparece aqui sem publicar nada. As decisões tomadas aqui
 // vão para a tabela ig_decisoes; o workflow "Publicar Instagram" aplica na fila a cada meia hora.
+// Três visões da mesma fila: Lista (dia a dia), Grade (como o perfil vai ficar, igual ao mockup
+// do artefato de aprovação) e Calendário (o mês). Na Grade e no Calendário, tocar numa peça abre
+// o cartão dela embaixo, com os mesmos botões da Lista.
 const IG_RAW = "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/legendas/fila.json";
 const IG_ACAO = { aprovar: "aprovar", desaprovar: "tirar a aprovação", arquivar: "arquivar", reaproveitar: "reaproveitar", publicar_agora: "publicar agora", publicado: "marcar como publicada" };
 const IG_TIPO = { POST: "Post", REELS: "Reels", STORY: "Story" };
+const IG_MESES = ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"];
 const igDia = new Intl.DateTimeFormat("pt-BR", { timeZone: TZ, weekday: "long", day: "2-digit", month: "2-digit" });
 const igHora = new Intl.DateTimeFormat("pt-BR", { timeZone: TZ, hour: "2-digit", minute: "2-digit" });
+const IG_CSS = `<style>
+  .ig-perfil { max-width: 520px; margin: 0 auto; }
+  .ig-stories { display: flex; gap: 12px; overflow-x: auto; padding: 4px 2px 12px; }
+  .ig-story { flex: none; width: 68px; border: 0; background: none; padding: 0; cursor: pointer; text-align: center; font: inherit; color: inherit; }
+  .ig-story i { display: block; width: 64px; height: 64px; margin: 0 auto; border-radius: 50%; padding: 3px; background: var(--line); }
+  .ig-story i.ok { background: linear-gradient(135deg, #49DCC0, #59A7FF); }
+  .ig-story i.esp { background: linear-gradient(135deg, #FFD066, #FFA353); }
+  .ig-story i.pub { background: #C9CDD8; }
+  .ig-story img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; object-position: center 35%; display: block; border: 2px solid #fff; box-sizing: border-box; background: #eee; }
+  .ig-story span { display: block; margin-top: 4px; font-size: 10.5px; line-height: 1.2; color: var(--muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .ig-grade { display: grid; grid-template-columns: repeat(3, 1fr); gap: 3px; }
+  .ig-tile { position: relative; aspect-ratio: 4/5; border: 0; padding: 0; cursor: pointer; background: #141829; overflow: hidden; }
+  .ig-tile img, .ig-tile video { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .ig-tile.futuro img, .ig-tile.futuro video { opacity: .82; }
+  .ig-tile b { position: absolute; left: 6px; top: 6px; padding: 2px 7px; border-radius: 99px; font: 600 11px/1.3 'Space Grotesk', sans-serif; background: rgba(20,24,41,.78); color: #fff; }
+  .ig-tile u { position: absolute; right: 6px; top: 6px; width: 12px; height: 12px; border-radius: 50%; border: 2px solid #fff; text-decoration: none; }
+  .ig-tile u.ok { background: #1FB89C; } .ig-tile u.esp { background: #FFB020; } .ig-tile u.pub { background: #8E96AE; }
+  .ig-tile s { position: absolute; left: 6px; bottom: 6px; padding: 2px 7px; border-radius: 99px; font: 600 10.5px/1.3 'Space Grotesk', sans-serif; background: rgba(255,255,255,.9); color: #141829; text-decoration: none; }
+  .ig-tile[aria-pressed="true"], .ig-story[aria-pressed="true"] i { outline: 3px solid var(--ink); outline-offset: -3px; }
+  .ig-cal { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; }
+  .ig-cal .dow { font-size: 11px; font-weight: 600; color: var(--dim); text-align: center; padding: 4px 0; }
+  .ig-cel { min-height: 84px; background: var(--card); border-radius: 10px; padding: 5px; box-shadow: var(--shadow); min-width: 0; }
+  .ig-cel.fora { background: transparent; box-shadow: none; }
+  .ig-cel.hoje { outline: 2px solid var(--turq); }
+  .ig-cel > em { display: block; font: 600 11.5px/1.2 'Space Grotesk', sans-serif; font-style: normal; color: var(--muted); margin-bottom: 3px; }
+  .ig-pill { display: block; width: 100%; border: 0; text-align: left; cursor: pointer; margin-top: 3px; padding: 3px 5px; border-radius: 6px; font: 500 10.5px/1.25 'Space Grotesk', sans-serif; background: #FFF1CC; color: #6B4A00; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .ig-pill.ok { background: #DDF6F0; color: #0A6B5E; } .ig-pill.pub { background: var(--paper); color: var(--dim); } .ig-pill.arq { background: var(--paper); color: var(--dim); text-decoration: line-through; }
+  .ig-pill[aria-pressed="true"] { outline: 2px solid var(--ink); }
+  @media (max-width: 640px) { .ig-cel { min-height: 64px; padding: 3px; } .ig-pill { font-size: 9.5px; padding: 2px 3px; } }
+</style>`;
 
 async function viewInstagram(ctx) {
   const box = ctx.el;
+  let modo = "lista";
   let filtro = "proximas";
-  box.innerHTML = `<h1>Instagram</h1>
+  let sel = null;
+  const agora = new Date();
+  let mes = { a: Number(isoDay.format(agora).slice(0, 4)), m: Number(isoDay.format(agora).slice(5, 7)) - 1 };
+  box.innerHTML = `${IG_CSS}<h1>Instagram</h1>
     <p class="muted" style="margin:6px 0 14px">A fila de publicação. O que você decidir aqui entra na fila em até 30 minutos, na próxima rodada do robô. Story com adesivo é sempre publicado à mão: depois de postar, marque como publicado.</p>
     <div id="igPedidos"></div>
-    <div class="toolbar"><div class="seg" id="igSeg">
+    <div class="toolbar"><div class="seg" id="igModo">
+      <button type="button" data-m="lista" aria-pressed="true">Lista</button>
+      <button type="button" data-m="grade" aria-pressed="false">Grade do perfil</button>
+      <button type="button" data-m="cal" aria-pressed="false">Calendário</button>
+    </div><button class="btn sm ghost" id="igAtualizar">Atualizar</button></div>
+    <div class="toolbar" id="igFiltros"><div class="seg" id="igSeg">
       <button type="button" data-f="proximas" aria-pressed="true">De hoje em diante</button>
       <button type="button" data-f="aprovar" aria-pressed="false">Esperando aprovação</button>
       <button type="button" data-f="passadas" aria-pressed="false">Já passaram</button>
       <button type="button" data-f="arquivadas" aria-pressed="false">Arquivadas</button>
-    </div><button class="btn sm ghost" id="igAtualizar">Atualizar</button></div>
-    <div id="igLista">${loadingHTML("Lendo a fila…")}</div>`;
+    </div></div>
+    <div id="igLista">${loadingHTML("Lendo a fila…")}</div>
+    <div id="igDetalhe"></div>`;
   let fila = [];
   let estado = { pendentes: [], pedidos: [], ultimas: [] };
 
@@ -1993,6 +2037,12 @@ async function viewInstagram(ctx) {
     estado = e || estado;
   };
 
+  const dia = (it) => isoDay.format(new Date(it.quando));
+  // ok = aprovada, esp = esperando aprovação, pub = já publicada, arq = arquivada
+  const situ = (it) => (it.publicado ? "pub" : it.arquivado ? "arq" : it.aprovado ? "ok" : "esp");
+  const SITU_TXT = { pub: "publicada", arq: "arquivada", ok: "aprovada", esp: "esperando aprovação" };
+  const curta = (it) => `${String(dia(it)).slice(8, 10)}/${String(dia(it)).slice(5, 7)}`;
+
   const midia = (it) => {
     const ms = it.midias || [];
     if (it.tipo === "REELS") {
@@ -2004,7 +2054,7 @@ async function viewInstagram(ctx) {
       `<a href="${esc(m)}" target="_blank" rel="noopener" style="flex:none"><img src="${esc(m)}" alt="Lâmina ${i + 1} de ${ms.length}" loading="lazy" style="height:${alt}px;border-radius:10px;display:block;background:#eee"></a>`).join("")}</div>`;
   };
 
-  const cartao = (it) => {
+  const cartao = (it, comData = false) => {
     const pend = estado.pendentes.filter((d) => d.peca === it.id);
     const situacao = it.publicado
       ? `<span class="chip enviada">Publicada</span>`
@@ -2029,8 +2079,9 @@ async function viewInstagram(ctx) {
         b("publicado", "Marcar como publicada") + b("arquivar", "Arquivar") + b("pedido", "Pedir alteração");
     }
     const d = new Date(it.quando);
+    const quando = comData ? `${curta(it)} às ${igHora.format(d)}` : igHora.format(d);
     return `<div class="card" style="margin-top:10px">
-      <div class="card-head"><div><strong>${esc(igHora.format(d))}</strong> · <span class="small muted">${esc(it.id)}</span></div><div>${chips}</div></div>
+      <div class="card-head"><div><strong>${esc(quando)}</strong> · <span class="small muted">${esc(it.id)}</span></div><div>${chips}</div></div>
       ${midia(it)}
       ${it.legenda ? `<details style="margin-top:10px"><summary class="small">Legenda</summary><p class="small" style="white-space:pre-wrap;margin-top:6px">${esc(it.legenda)}</p></details>` : ""}
       ${it.nota ? `<p class="small muted" style="margin-top:8px">${esc(it.nota)}</p>` : ""}
@@ -2038,9 +2089,8 @@ async function viewInstagram(ctx) {
     </div>`;
   };
 
-  const desenhar = () => {
+  const lista = () => {
     const hoje = todaySP();
-    const dia = (it) => isoDay.format(new Date(it.quando));
     let itens = fila.slice().sort((a, b) => new Date(a.quando) - new Date(b.quando));
     if (filtro === "arquivadas") itens = itens.filter((i) => i.arquivado);
     else {
@@ -2049,13 +2099,7 @@ async function viewInstagram(ctx) {
       else if (filtro === "aprovar") itens = itens.filter((i) => dia(i) >= hoje && !i.aprovado && !i.publicado);
       else itens = itens.filter((i) => dia(i) < hoje).reverse().slice(0, 60);
     }
-    const ped = $("#igPedidos", box);
-    ped.innerHTML = estado.pedidos.length
-      ? `<div class="card" style="margin-bottom:14px"><div class="card-head"><strong>Pedidos de alteração abertos</strong><span class="small muted">Ficam também em docs/legendas/pedidos.json, para a sessão do Claude ver.</span></div>${estado.pedidos.map((p) =>
-          `<div class="row" style="align-items:center;margin-top:8px"><div style="flex:1 1 260px"><span class="small muted">${esc(p.peca)} · ${esc(fmtDT(p.criado_em))}</span><div style="white-space:pre-wrap">${esc(p.texto)}</div></div><button class="btn sm ghost" data-resolver="${p.id}">Resolvido</button></div>`).join("")}</div>`
-      : "";
-    const lista = $("#igLista", box);
-    if (!itens.length) { lista.innerHTML = `<div class="empty">Nada aqui.</div>`; return; }
+    if (!itens.length) return `<div class="empty">Nada aqui.</div>`;
     let html = "";
     let atual = "";
     for (const it of itens) {
@@ -2067,7 +2111,72 @@ async function viewInstagram(ctx) {
       }
       html += cartao(it);
     }
-    lista.innerHTML = html;
+    return html;
+  };
+
+  // Como o perfil vai ficar: o que ainda vai ao ar em cima (mais distante primeiro), depois o que
+  // já foi publicado, do mais novo para o mais velho. Arquivada fica de fora.
+  const grade = () => {
+    const hoje = todaySP();
+    const feed = fila.filter((i) => i.tipo !== "STORY" && !i.arquivado).sort((a, b) => new Date(b.quando) - new Date(a.quando));
+    const stories = fila.filter((i) => i.tipo === "STORY" && !i.arquivado && dia(i) >= hoje).sort((a, b) => new Date(a.quando) - new Date(b.quando));
+    const tile = (it) => {
+      const s = situ(it);
+      const capa = it.tipo === "REELS" ? it.capa : (it.midias || [])[0];
+      const img = capa
+        ? `<img src="${esc(capa)}" alt="" loading="lazy">`
+        : `<video src="${esc((it.midias || [])[0] || "")}#t=0.1" preload="metadata" muted playsinline></video>`;
+      const n = (it.midias || []).length;
+      const tag = it.tipo === "REELS" ? "Reels" : n > 1 ? `${n} lâminas` : "";
+      return `<button type="button" class="ig-tile${it.publicado ? "" : " futuro"}" data-sel="${esc(it.id)}" aria-pressed="${sel === it.id}" aria-label="${esc(`${IG_TIPO[it.tipo]} ${it.id}, ${curta(it)}, ${SITU_TXT[s]}`)}">${img}<b>${esc(curta(it))}</b><u class="${s}"></u>${tag ? `<s>${esc(tag)}</s>` : ""}</button>`;
+    };
+    const story = (it) => {
+      const s = situ(it);
+      return `<button type="button" class="ig-story" data-sel="${esc(it.id)}" aria-pressed="${sel === it.id}" aria-label="${esc(`Story ${it.id}, ${curta(it)}, ${SITU_TXT[s]}`)}"><i class="${s}"><img src="${esc((it.midias || [])[0] || "")}" alt="" loading="lazy"></i><span>${esc(curta(it))}${it.automatico ? " · robô" : ""}</span></button>`;
+    };
+    return `<div class="ig-perfil">
+      <p class="small muted" style="margin-bottom:8px">Bolinha verde: aprovada. Amarela: esperando aprovação. Cinza: já publicada. As peças mais claras ainda não foram ao ar.</p>
+      ${stories.length ? `<div class="ig-stories">${stories.map(story).join("")}</div>` : ""}
+      <div class="ig-grade">${feed.map(tile).join("")}</div>
+    </div>`;
+  };
+
+  const calendario = () => {
+    const hoje = todaySP();
+    const primeiro = new Date(Date.UTC(mes.a, mes.m, 1));
+    const diasNoMes = new Date(Date.UTC(mes.a, mes.m + 1, 0)).getUTCDate();
+    const porDia = new Map();
+    for (const it of fila) {
+      const k = dia(it);
+      if (!porDia.has(k)) porDia.set(k, []);
+      porDia.get(k).push(it);
+    }
+    let cel = "";
+    for (let i = 0; i < primeiro.getUTCDay(); i++) cel += `<div class="ig-cel fora"></div>`;
+    for (let d = 1; d <= diasNoMes; d++) {
+      const k = `${mes.a}-${String(mes.m + 1).padStart(2, "0")}-${String(d).padStart(2, "0")}`;
+      const itens = (porDia.get(k) || []).slice().sort((a, b) => new Date(a.quando) - new Date(b.quando));
+      cel += `<div class="ig-cel${k === hoje ? " hoje" : ""}"><em>${d}</em>${itens.map((it) => {
+        const s = situ(it);
+        const rot = `${igHora.format(new Date(it.quando))} ${IG_TIPO[it.tipo] || it.tipo}`;
+        return `<button type="button" class="ig-pill ${s}" data-sel="${esc(it.id)}" aria-pressed="${sel === it.id}" title="${esc(`${it.id} · ${SITU_TXT[s]}`)}">${esc(rot)}</button>`;
+      }).join("")}</div>`;
+    }
+    return `<div class="toolbar" style="justify-content:space-between"><button class="btn sm ghost" data-mes="-1" aria-label="Mês anterior">‹</button><strong>${IG_MESES[mes.m]} de ${mes.a}</strong><button class="btn sm ghost" data-mes="1" aria-label="Mês seguinte">›</button></div>
+      <div class="ig-cal">${["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sáb"].map((x) => `<div class="dow">${x}</div>`).join("")}${cel}</div>
+      <p class="small muted" style="margin-top:10px">Verde: aprovada. Amarelo: esperando aprovação. Cinza: publicada. Riscada: arquivada.</p>`;
+  };
+
+  const desenhar = () => {
+    const ped = $("#igPedidos", box);
+    ped.innerHTML = estado.pedidos.length
+      ? `<div class="card" style="margin-bottom:14px"><div class="card-head"><strong>Pedidos de alteração abertos</strong><span class="small muted">Ficam também em docs/legendas/pedidos.json, para a sessão do Claude ver.</span></div>${estado.pedidos.map((p) =>
+          `<div class="row" style="align-items:center;margin-top:8px"><div style="flex:1 1 260px"><span class="small muted">${esc(p.peca)} · ${esc(fmtDT(p.criado_em))}</span><div style="white-space:pre-wrap">${esc(p.texto)}</div></div><button class="btn sm ghost" data-resolver="${p.id}">Resolvido</button></div>`).join("")}</div>`
+      : "";
+    $("#igFiltros", box).hidden = modo !== "lista";
+    $("#igLista", box).innerHTML = modo === "lista" ? lista() : modo === "grade" ? grade() : calendario();
+    const it = modo === "lista" ? null : fila.find((i) => i.id === sel);
+    $("#igDetalhe", box).innerHTML = it ? cartao(it, true) : "";
   };
 
   const recarregar = async () => {
@@ -2080,11 +2189,32 @@ async function viewInstagram(ctx) {
   };
 
   box.addEventListener("click", (ev) => {
+    const md = ev.target.closest("#igModo button");
+    if (md) {
+      modo = md.dataset.m;
+      $$("#igModo button", box).forEach((x) => x.setAttribute("aria-pressed", String(x === md)));
+      desenhar();
+      return;
+    }
     const seg = ev.target.closest("#igSeg button");
     if (seg) {
       filtro = seg.dataset.f;
       $$("#igSeg button", box).forEach((x) => x.setAttribute("aria-pressed", String(x === seg)));
       desenhar();
+      return;
+    }
+    const nav = ev.target.closest("[data-mes]");
+    if (nav) {
+      const d = new Date(Date.UTC(mes.a, mes.m + Number(nav.dataset.mes), 1));
+      mes = { a: d.getUTCFullYear(), m: d.getUTCMonth() };
+      desenhar();
+      return;
+    }
+    const alvo = ev.target.closest("[data-sel]");
+    if (alvo) {
+      sel = sel === alvo.dataset.sel ? null : alvo.dataset.sel;
+      desenhar();
+      if (sel) $("#igDetalhe", box).scrollIntoView({ behavior: "smooth", block: "nearest" });
       return;
     }
     const at = ev.target.closest("#igAtualizar");

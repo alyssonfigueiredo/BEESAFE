@@ -967,6 +967,14 @@ O smoke usa stubs de pg_net (`supabase/dev/pg_net/`), storage, vault e pgcrypto 
   peça com nota "Painel (...)" nem "aprovado no chat"**: quando o artefato e a fila discordarem e a nota tiver uma
   dessas marcas mais recente, vale a fila, e a sessão grava no artefato o estado da fila.
 - Sessão de outra conta (Conquer) não publica no artefato: de lá, o caminho é o painel.
+- **Três visões na tela (14/11/2026):** Lista (dia a dia), **Grade do perfil** (3 colunas 4:5, o que ainda vai ao ar
+  em cima, stories em bolinhas; bolinha verde = aprovada, amarela = esperando, cinza = publicada) e **Calendário**
+  (mês, domingo primeiro). Na Grade e no Calendário, tocar na peça abre o cartão dela embaixo com os mesmos botões.
+  Reels sem `capa` na fila aparece escuro na grade: pôr `capa` em Reels novo. O artefato do Alysson ficou como está.
+- **Semana trans nas artes (14/11/2026, pedido do Leandro):** nas peças da semana o destaque não é o arco-íris, é
+  azul→rosa da bandeira trans (`.rainbow` sobrescrito no próprio html: `#2FB4EC→#F07FA3` no papel, `#5BCEFA→#F5A9B8`
+  na capa escura). Vale para carrossel-banheiro, carrossel-mito-trans, story-quiz-cartorio, reels-nome-certo e
+  post-nome (refeito em `docs/post-nome.html`, porque a fonte não estava no repositório). Só nesta semana.
 
 Artefato onde o Alysson aprova/reprova cada item de `docs/legendas/fila.json` antes de publicar:
 https://claude.ai/artifact/KZFTMrCF28RLVRJr7JXBC5
