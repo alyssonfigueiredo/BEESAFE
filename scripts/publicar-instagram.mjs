@@ -140,6 +140,7 @@ async function main() {
   for (const item of fila) {
     if (item.publicado) continue;
     if (!item.aprovado) continue; // nunca publica sem "aprovado": true marcado à mão
+    if (item.arquivado) continue; // arquivada = tirada da fila: nunca publica, mesmo aprovada
     // Story só sai sozinho se for imagem pura ("automatico": true, as versões -sem-adesivo).
     // Story com adesivo (link, enquete, caixinha) a API não posta: segue manual.
     if (item.tipo === "STORY" && !item.automatico) continue;
@@ -177,7 +178,7 @@ async function main() {
   // ninguém tentou, ou toda tentativa caiu. Também é motivo de aviso.
   const ATRASO_MS = 30 * 60 * 1000;
   for (const item of fila) {
-    if (item.publicado || !item.aprovado) continue;
+    if (item.publicado || !item.aprovado || item.arquivado) continue;
     if (item.tipo === "STORY" && !item.automatico) continue;
     const atraso = agora - new Date(item.quando);
     if (atraso > ATRASO_MS && !falhas.some((f) => f.startsWith(`${item.id} `))) {
