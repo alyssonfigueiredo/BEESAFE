@@ -975,6 +975,11 @@ O smoke usa stubs de pg_net (`supabase/dev/pg_net/`), storage, vault e pgcrypto 
   azul→rosa da bandeira trans (`.rainbow` sobrescrito no próprio html: `#2FB4EC→#F07FA3` no papel, `#5BCEFA→#F5A9B8`
   na capa escura). Vale para carrossel-banheiro, carrossel-mito-trans, story-quiz-cartorio, reels-nome-certo e
   post-nome (refeito em `docs/post-nome.html`, porque a fonte não estava no repositório). Só nesta semana.
+  Também os stories de 15 e 16/11 (enquete do nome e obrigade, com e sem adesivo), refeitos em
+  `docs/stories-semana-trans.html` pelo mesmo motivo.
+- **Capa de Reels (14/11/2026):** todo Reels da fila com vídeo no repositório ganhou `capa` em `docs/capas/<id>.jpg`
+  (quadro do fim do vídeo; no reels-checklist, o gancho "Antes de sair"). A `capa` é a que o robô manda como capa
+  no Instagram (`cover_url`) e a que a grade do painel mostra. Sem capa: reels-apple e reels-10 (sem vídeo na fila).
 
 Artefato onde o Alysson aprova/reprova cada item de `docs/legendas/fila.json` antes de publicar:
 https://claude.ai/artifact/KZFTMrCF28RLVRJr7JXBC5
