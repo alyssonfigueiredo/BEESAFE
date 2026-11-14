@@ -1245,5 +1245,24 @@
   "primeiro_comentario": "appirisa.com.br",
   "publicado": false,
   "nota": "Semana da Visibilidade Trans. Reels de reconhecimento (18 s), pede comentário. As respostas viram o próximo Reels, sem citar lugar sem autorização."
+ },
+ {
+  "id": "carrossel-banheiro",
+  "aprovado": false,
+  "quando": "2026-11-17T16:00:00-03:00",
+  "tipo": "POST",
+  "midias": [
+   "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/carrossel-banheiro/01.png",
+   "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/carrossel-banheiro/02.png",
+   "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/carrossel-banheiro/03.png",
+   "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/carrossel-banheiro/04.png",
+   "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/carrossel-banheiro/05.png",
+   "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/carrossel-banheiro/06.png",
+   "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/carrossel-banheiro/07.png"
+  ],
+  "legenda": "“E o banheiro?” é uma das quatro perguntas da Irisa. E vale 25% da nota.\nEla não mede limpeza. Mede se você usou o banheiro que quis, sem ser questionade.\nDe 1 a 5: barraram é 1, ninguém reparou é 5.\nNão usou? Pode pular.\nSalva pra próxima avaliação e conta: em qual lugar você usou e ninguém reparou?\nO link está na bio. Na App Store e no Google Play.\n\n#Irisa #LGBTQIA #Orgulho #AppLGBT #VisibilidadeTrans",
+  "primeiro_comentario": "appirisa.com.br",
+  "publicado": false,
+  "nota": "Semana da Visibilidade Trans. Como responder a pergunta do banheiro (7 lâminas, capa escura para alternar com o post-nome). Horário de 16h, igual aos últimos posts."
  }
 ]
