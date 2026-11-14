@@ -977,6 +977,11 @@ O smoke usa stubs de pg_net (`supabase/dev/pg_net/`), storage, vault e pgcrypto 
   post-nome (refeito em `docs/post-nome.html`, porque a fonte não estava no repositório). Só nesta semana.
   Também os stories de 15 e 16/11 (enquete do nome e obrigade, com e sem adesivo), refeitos em
   `docs/stories-semana-trans.html` pelo mesmo motivo.
+- **Vídeo da logo para a Semana Trans (14/11/2026, pedido do Leandro):** `docs/abertura-trans.html` (gerado por
+  `python3 scripts/abertura-trans.py` a partir do `radar.svgfrag`): a logo começa em cinza, a 1ª volta do radar traz
+  as cores da marca e a 2ª troca pelas da bandeira trans (anel, pontos, fundo e o "A"), fechando com "Semana da
+  Visibilidade Trans". 9 s, sem áudio. `docs/Irisa-abertura-trans.mp4` (1080×1920) e `-quadrado.mp4` (1080×1080,
+  `VH=1080 EXTRA="formato=quadrado"` no `story-video.mjs`). Não está na fila do Instagram.
 - **Capa de Reels (14/11/2026):** todo Reels da fila com vídeo no repositório ganhou `capa` em `docs/capas/<id>.jpg`
   (quadro do fim do vídeo; no reels-checklist, o gancho "Antes de sair"). A `capa` é a que o robô manda como capa
   no Instagram (`cover_url`) e a que a grade do painel mostra. Sem capa: reels-apple e reels-10 (sem vídeo na fila).
