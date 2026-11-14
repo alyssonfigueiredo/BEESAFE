@@ -29,6 +29,14 @@ jobs:
           META_ACCESS_TOKEN: ${{ secrets.META_ACCESS_TOKEN }}
         run: node scripts/publicar-instagram.mjs --testar
 
+      # Decisões tomadas na tela "Instagram" do painel (aprovar, arquivar, publicar agora…) entram
+      # no fila.json antes de o robô olhar a fila. Sem o secret ou sem conexão, só avisa e segue.
+      - name: Aplica as decisões do painel
+        if: ${{ !inputs.testar }}
+        env:
+          SUPABASE_DB_URL: ${{ secrets.SUPABASE_DB_URL }}
+        run: node scripts/ig-decisoes-sync.mjs || echo "::warning::Não deu para ler as decisões do painel nesta rodada."
+
       - name: Publica o que venceu
         if: ${{ !inputs.testar }}
         id: publicar
@@ -42,11 +50,12 @@ jobs:
       - name: Grava a fila atualizada
         if: ${{ always() && !inputs.testar }}
         run: |
-          if ! git diff --quiet docs/legendas/fila.json; then
+          git add -N docs/legendas/pedidos.json 2>/dev/null || true
+          if ! git diff --quiet docs/legendas/fila.json docs/legendas/pedidos.json; then
             git config user.name "github-actions[bot]"
             git config user.email "github-actions[bot]@users.noreply.github.com"
-            git add docs/legendas/fila.json
-            git commit -m "Fila do Instagram: atualiza status de publicação"
+            git add docs/legendas/fila.json docs/legendas/pedidos.json
+            git commit -m "Fila do Instagram: atualiza status de publicação e decisões do painel"
             git push
           fi
 

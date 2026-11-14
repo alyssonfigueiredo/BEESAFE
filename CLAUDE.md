@@ -947,6 +947,27 @@ O smoke usa stubs de pg_net (`supabase/dev/pg_net/`), storage, vault e pgcrypto 
 
 ## Aprovação de posts do Instagram
 
+**Desde 14/11/2026 a aprovação também é feita no painel (pedido do Leandro): https://appirisa.com.br/admin/#instagram**
+(tela "Instagram", só admin). O `docs/legendas/fila.json` da branch padrão é o centro de tudo:
+
+- **Painel lê a fila direto do GitHub** (raw da branch padrão) toda vez que abre: o que qualquer sessão do Claude
+  mudar e mandar para a branch padrão aparece lá em poucos minutos, sem publicar nada e sem depender de conta.
+- **Decisão no painel** (aprovar, tirar aprovação, publicar agora, arquivar, reaproveitar, marcar como publicada,
+  pedir alteração) grava em `ig_decisoes` (migration 84, sem policy; RPCs `admin_ig_decidir`, `admin_ig_estado`,
+  `admin_ig_pedido_resolver`). O workflow **Publicar Instagram** (a cada 30 min) roda antes do robô
+  `scripts/ig-decisoes-sync.mjs`, que aplica no `fila.json`, anota "Painel (data): ação." na `nota` da peça e
+  commita. Usa o secret `SUPABASE_DB_URL`; sem ele só avisa e o robô segue.
+- **Pedidos de alteração abertos** ficam espelhados em `docs/legendas/pedidos.json`: toda sessão que mexer em post
+  lê esse arquivo antes. Fechar o pedido é no painel (botão Resolvido).
+- **Travas do script:** não aprova peça arquivada nem a segunda versão do mesmo story (original × `-sem-adesivo`);
+  o motivo fica em `ig_decisoes.resultado`.
+- **O artefato do Alysson continua valendo** e conversa com o painel pelo `fila.json`: a sessão da conta dele
+  segue transcrevendo as decisões do artefato para o `fila.json` (aí o painel mostra) e republicando o artefato
+  quando o `fila.json` muda (aí o artefato mostra o que foi decidido no painel). Na sincronização, **não desfazer
+  peça com nota "Painel (...)" nem "aprovado no chat"**: quando o artefato e a fila discordarem e a nota tiver uma
+  dessas marcas mais recente, vale a fila, e a sessão grava no artefato o estado da fila.
+- Sessão de outra conta (Conquer) não publica no artefato: de lá, o caminho é o painel.
+
 Artefato onde o Alysson aprova/reprova cada item de `docs/legendas/fila.json` antes de publicar:
 https://claude.ai/artifact/KZFTMrCF28RLVRJr7JXBC5
 Coleção `aprovacoes` (doc_id = id do item, `{aprovado, ts}`) e `pedidos` (pedidos de alteração,

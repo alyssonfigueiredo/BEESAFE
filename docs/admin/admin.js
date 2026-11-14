@@ -374,6 +374,7 @@ const ROUTES = {
   mensagens: { title: "Mensagens do mural", group: "Moderação", render: (c) => viewMod(c, MOD.mensagens) },
   relatos: { title: "Relatos", group: "Moderação", render: (c) => viewMod(c, MOD.relatos) },
   lugares: { title: "Lugares", group: "Conteúdo", render: viewLugares },
+  instagram: { title: "Instagram", admin: true, group: "Conteúdo", render: viewInstagram },
   servicos: { title: "Serviços de apoio", admin: true, group: "Conteúdo", render: viewServicos },
   personagens: { title: "Personagens do irise", admin: true, group: "Conteúdo", render: viewPersonagens },
   config: { title: "Configurações", admin: true, group: "Ajustes", render: viewConfig },
@@ -1956,6 +1957,170 @@ const API_KEYS = [
 
 // Uso do chat do irise (migration 80): tokens por dia, cota do Groq e quem usou hoje. Só números —
 // o texto das conversas não é guardado em lugar nenhum (dado sensível, LGPD).
+// ---------------------------------------------------------------- Instagram (fila de posts)
+// A fila mora no repositório (docs/legendas/fila.json, branch padrão) e é lida direto de lá: o
+// que qualquer sessão do Claude mudar aparece aqui sem publicar nada. As decisões tomadas aqui
+// vão para a tabela ig_decisoes; o workflow "Publicar Instagram" aplica na fila a cada meia hora.
+const IG_RAW = "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/legendas/fila.json";
+const IG_ACAO = { aprovar: "aprovar", desaprovar: "tirar a aprovação", arquivar: "arquivar", reaproveitar: "reaproveitar", publicar_agora: "publicar agora", publicado: "marcar como publicada" };
+const IG_TIPO = { POST: "Post", REELS: "Reels", STORY: "Story" };
+const igDia = new Intl.DateTimeFormat("pt-BR", { timeZone: TZ, weekday: "long", day: "2-digit", month: "2-digit" });
+const igHora = new Intl.DateTimeFormat("pt-BR", { timeZone: TZ, hour: "2-digit", minute: "2-digit" });
+
+async function viewInstagram(ctx) {
+  const box = ctx.el;
+  let filtro = "proximas";
+  box.innerHTML = `<h1>Instagram</h1>
+    <p class="muted" style="margin:6px 0 14px">A fila de publicação. O que você decidir aqui entra na fila em até 30 minutos, na próxima rodada do robô. Story com adesivo é sempre publicado à mão: depois de postar, marque como publicado.</p>
+    <div id="igPedidos"></div>
+    <div class="toolbar"><div class="seg" id="igSeg">
+      <button type="button" data-f="proximas" aria-pressed="true">De hoje em diante</button>
+      <button type="button" data-f="aprovar" aria-pressed="false">Esperando aprovação</button>
+      <button type="button" data-f="passadas" aria-pressed="false">Já passaram</button>
+      <button type="button" data-f="arquivadas" aria-pressed="false">Arquivadas</button>
+    </div><button class="btn sm ghost" id="igAtualizar">Atualizar</button></div>
+    <div id="igLista">${loadingHTML("Lendo a fila…")}</div>`;
+  let fila = [];
+  let estado = { pendentes: [], pedidos: [], ultimas: [] };
+
+  const carregar = async () => {
+    const [r, e] = await Promise.all([
+      fetch(`${IG_RAW}?t=${Date.now()}`, { cache: "no-store" }),
+      rpc("admin_ig_estado"),
+    ]);
+    if (!r.ok) throw new Error(`Não deu para ler a fila no GitHub (erro ${r.status}).`);
+    fila = await r.json();
+    estado = e || estado;
+  };
+
+  const midia = (it) => {
+    const ms = it.midias || [];
+    if (it.tipo === "REELS") {
+      const capa = it.capa ? ` poster="${esc(it.capa)}"` : "";
+      return `<video src="${esc(ms[0] || "")}"${capa} controls preload="none" style="width:132px;border-radius:10px;background:#141829"></video>`;
+    }
+    const alt = it.tipo === "STORY" ? 190 : 150;
+    return `<div style="display:flex;gap:6px;overflow-x:auto;max-width:100%;padding-bottom:4px">${ms.map((m, i) =>
+      `<a href="${esc(m)}" target="_blank" rel="noopener" style="flex:none"><img src="${esc(m)}" alt="Lâmina ${i + 1} de ${ms.length}" loading="lazy" style="height:${alt}px;border-radius:10px;display:block;background:#eee"></a>`).join("")}</div>`;
+  };
+
+  const cartao = (it) => {
+    const pend = estado.pendentes.filter((d) => d.peca === it.id);
+    const situacao = it.publicado
+      ? `<span class="chip enviada">Publicada</span>`
+      : it.arquivado
+        ? `<span class="chip off">Arquivada</span>`
+        : it.aprovado
+          ? `<span class="chip aprovada">Aprovada</span>`
+          : `<span class="chip pendente">Esperando aprovação</span>`;
+    const chips = [
+      `<span class="chip">${esc(IG_TIPO[it.tipo] || it.tipo)}</span>`,
+      situacao,
+      it.tipo === "STORY" && !it.automatico ? `<span class="chip">Manual, com adesivo</span>` : "",
+      it.tipo === "STORY" && it.automatico ? `<span class="chip">Robô publica</span>` : "",
+      ...pend.map((d) => `<span class="chip enviando">Na fila do robô: ${esc(IG_ACAO[d.acao] || d.acao)}</span>`),
+    ].join(" ");
+    const b = (acao, rotulo, cls = "ghost") => `<button class="btn sm ${cls}" data-ig="${acao}" data-peca="${esc(it.id)}">${rotulo}</button>`;
+    let botoes = "";
+    if (it.arquivado) botoes = b("reaproveitar", "Reaproveitar");
+    else if (!it.publicado) {
+      botoes = (it.aprovado ? b("desaprovar", "Tirar a aprovação") : b("aprovar", "Aprovar", "ok")) +
+        (it.tipo === "STORY" && !it.automatico ? "" : b("publicar_agora", "Publicar agora")) +
+        b("publicado", "Marcar como publicada") + b("arquivar", "Arquivar") + b("pedido", "Pedir alteração");
+    }
+    const d = new Date(it.quando);
+    return `<div class="card" style="margin-top:10px">
+      <div class="card-head"><div><strong>${esc(igHora.format(d))}</strong> · <span class="small muted">${esc(it.id)}</span></div><div>${chips}</div></div>
+      ${midia(it)}
+      ${it.legenda ? `<details style="margin-top:10px"><summary class="small">Legenda</summary><p class="small" style="white-space:pre-wrap;margin-top:6px">${esc(it.legenda)}</p></details>` : ""}
+      ${it.nota ? `<p class="small muted" style="margin-top:8px">${esc(it.nota)}</p>` : ""}
+      ${botoes ? `<div class="row" style="margin-top:12px">${botoes}</div>` : ""}
+    </div>`;
+  };
+
+  const desenhar = () => {
+    const hoje = todaySP();
+    const dia = (it) => isoDay.format(new Date(it.quando));
+    let itens = fila.slice().sort((a, b) => new Date(a.quando) - new Date(b.quando));
+    if (filtro === "arquivadas") itens = itens.filter((i) => i.arquivado);
+    else {
+      itens = itens.filter((i) => !i.arquivado);
+      if (filtro === "proximas") itens = itens.filter((i) => dia(i) >= hoje);
+      else if (filtro === "aprovar") itens = itens.filter((i) => dia(i) >= hoje && !i.aprovado && !i.publicado);
+      else itens = itens.filter((i) => dia(i) < hoje).reverse().slice(0, 60);
+    }
+    const ped = $("#igPedidos", box);
+    ped.innerHTML = estado.pedidos.length
+      ? `<div class="card" style="margin-bottom:14px"><div class="card-head"><strong>Pedidos de alteração abertos</strong><span class="small muted">Ficam também em docs/legendas/pedidos.json, para a sessão do Claude ver.</span></div>${estado.pedidos.map((p) =>
+          `<div class="row" style="align-items:center;margin-top:8px"><div style="flex:1 1 260px"><span class="small muted">${esc(p.peca)} · ${esc(fmtDT(p.criado_em))}</span><div style="white-space:pre-wrap">${esc(p.texto)}</div></div><button class="btn sm ghost" data-resolver="${p.id}">Resolvido</button></div>`).join("")}</div>`
+      : "";
+    const lista = $("#igLista", box);
+    if (!itens.length) { lista.innerHTML = `<div class="empty">Nada aqui.</div>`; return; }
+    let html = "";
+    let atual = "";
+    for (const it of itens) {
+      const k = dia(it);
+      if (k !== atual) {
+        atual = k;
+        const rot = igDia.format(new Date(it.quando));
+        html += `<h2 style="margin:22px 0 2px;font:700 15px/1.2 'Space Grotesk',sans-serif">${esc(rot.charAt(0).toUpperCase() + rot.slice(1))}${k === hoje ? ` <span class="chip today">Hoje</span>` : ""}</h2>`;
+      }
+      html += cartao(it);
+    }
+    lista.innerHTML = html;
+  };
+
+  const recarregar = async () => {
+    try {
+      await carregar();
+      if (ctx.alive()) desenhar();
+    } catch (e) {
+      if (ctx.alive()) { $("#igLista", box).innerHTML = errorHTML(e); bindRetry(box, recarregar); }
+    }
+  };
+
+  box.addEventListener("click", (ev) => {
+    const seg = ev.target.closest("#igSeg button");
+    if (seg) {
+      filtro = seg.dataset.f;
+      $$("#igSeg button", box).forEach((x) => x.setAttribute("aria-pressed", String(x === seg)));
+      desenhar();
+      return;
+    }
+    const at = ev.target.closest("#igAtualizar");
+    if (at) { busy(at, recarregar); return; }
+    const res = ev.target.closest("[data-resolver]");
+    if (res) {
+      busy(res, async () => {
+        await rpc("admin_ig_pedido_resolver", { p_id: Number(res.dataset.resolver) });
+        await recarregar();
+        toast("Pedido fechado");
+      });
+      return;
+    }
+    const bt = ev.target.closest("[data-ig]");
+    if (!bt) return;
+    const acao = bt.dataset.ig;
+    const peca = bt.dataset.peca;
+    let texto = null;
+    if (acao === "pedido") {
+      texto = window.prompt(`O que precisa mudar em ${peca}?`);
+      if (!texto || !texto.trim()) return;
+    } else if (acao === "publicar_agora") {
+      if (!window.confirm(`Publicar ${peca} na próxima rodada do robô (até 30 minutos)?`)) return;
+    } else if (acao === "arquivar") {
+      if (!window.confirm(`Arquivar ${peca}? Ela sai da fila e não é publicada.`)) return;
+    }
+    busy(bt, async () => {
+      await rpc("admin_ig_decidir", { p_peca: peca, p_acao: acao, p_texto: texto });
+      await recarregar();
+      toast(acao === "pedido" ? "Pedido registrado" : "Anotado. Entra na fila na próxima rodada do robô.");
+    });
+  });
+
+  await recarregar();
+}
+
 async function viewIriseUso(ctx) {
   ctx.el.innerHTML = headHTML("Uso do irise", "Quanto o chat gasta por dia e quem está usando. O que as pessoas escrevem não fica guardado: só a contagem.") + `<div id="iubox"></div>`;
   const box = $("#iubox", ctx.el);
