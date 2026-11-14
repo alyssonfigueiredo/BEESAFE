@@ -1265,5 +1265,24 @@
   "primeiro_comentario": "appirisa.com.br",
   "publicado": false,
   "nota": "Semana da Visibilidade Trans. Como responder a pergunta do banheiro (7 lâminas, capa escura). Adiantado de 17/11 para 14/11 às 17h (sábado) e aprovado pelo Leandro no chat em 14/11: continuação do Reels O banheiro de 13/11."
+ },
+ {
+  "id": "carrossel-mito-trans",
+  "aprovado": false,
+  "quando": "2026-11-17T16:00:00-03:00",
+  "tipo": "POST",
+  "midias": [
+   "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/carrossel-mito-trans/01.png",
+   "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/carrossel-mito-trans/02.png",
+   "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/carrossel-mito-trans/03.png",
+   "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/carrossel-mito-trans/04.png",
+   "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/carrossel-mito-trans/05.png",
+   "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/carrossel-mito-trans/06.png",
+   "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/carrossel-mito-trans/07.png"
+  ],
+  "legenda": "Mito ou verdade, edição trans.\nCirurgia pra mudar o nome no cartório? Mito.\nNome social no SUS e na escola? É direito.\nTransfobia é crime? Verdade, desde 2019.\nMas direito no papel não garante o nome certo no balcão. É por isso que a gente avalia.\nQual dessas você não sabia? Comenta o número da lâmina.\nO link está na bio. Na App Store e no Google Play.\n\n#Irisa #LGBTQIA #Orgulho #AppLGBT #VisibilidadeTrans",
+  "primeiro_comentario": "appirisa.com.br",
+  "publicado": false,
+  "nota": "Semana da Visibilidade Trans. Mito ou verdade, edição trans (7 lâminas, capa escura). Fontes conferidas em 14/11: STF ADI 4275 e Provimento CNJ 73/2018 (hoje arts. 516 a 523 do Provimento 149/2023); Portaria MS 1.820/2009; Resolução CNE/CP 1/2018 (arts. 3º e 4º); STF ADO 26 e MI 4733 (13/06/2019). A lâmina 2 não diz o ano de propósito: é a resposta do quiz do story das 20h."
  }
 ]
