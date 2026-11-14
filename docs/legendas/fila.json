@@ -1190,5 +1190,60 @@
   },
   "confirmado": true,
   "confirmado_em": "2026-11-14T00:26:22.420Z"
+ },
+ {
+  "id": "story-quiz-cartorio",
+  "aprovado": false,
+  "quando": "2026-11-17T20:00:00-03:00",
+  "tipo": "STORY",
+  "midias": [
+   "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/stories-novembro/story-17-quiz-cartorio.png"
+  ],
+  "legenda": "",
+  "primeiro_comentario": "",
+  "publicado": false,
+  "nota": "Semana da Visibilidade Trans. Story manual: adesivo QUIZ com 2009 / 2014 / 2018 / 2022, certa: 2018 (STF, ADI 4275, março de 2018). A área tracejada é onde ele vai."
+ },
+ {
+  "id": "story-quiz-cartorio-sem-adesivo",
+  "automatico": true,
+  "aprovado": false,
+  "quando": "2026-11-17T20:00:00-03:00",
+  "tipo": "STORY",
+  "midias": [
+   "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/stories-novembro/story-17-quiz-cartorio-sem-adesivo.png"
+  ],
+  "legenda": "",
+  "primeiro_comentario": "",
+  "publicado": false,
+  "nota": "ALTERNATIVA SEM ADESIVO do story-quiz-cartorio: as opções estão escritas na arte e pede para responder no story. Dá para o robô postar (imagem pura). Aprovar esta OU a original (manual com adesivo), nunca as duas."
+ },
+ {
+  "id": "story-quiz-cartorio-resposta",
+  "automatico": true,
+  "aprovado": false,
+  "quando": "2026-11-17T20:30:00-03:00",
+  "tipo": "STORY",
+  "midias": [
+   "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/stories-novembro/story-17-quiz-cartorio-resposta.png"
+  ],
+  "legenda": "",
+  "primeiro_comentario": "",
+  "publicado": false,
+  "nota": "A resposta do quiz (2018, STF). Imagem pura, sem adesivo: dá para o robô postar. Vai logo depois do quiz, qualquer que seja a versão aprovada."
+ },
+ {
+  "id": "reels-nome-certo",
+  "aprovado": false,
+  "quando": "2026-11-18T19:00:00-03:00",
+  "tipo": "REELS",
+  "midias": [
+   "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/Irisa-reels-nome-certo.mp4"
+  ],
+  "capa": "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/Irisa-reels-nome-certo-capa.jpg",
+  "legenda": "O garçom perguntou meu nome. E usou.\nSem pedir documento, sem perguntar duas vezes, sem errar na hora da conta.\nNome certo de primeira é acolhimento, e entra na nota de atendimento da Irisa.\nComenta onde isso aconteceu com você. Se foi ruim, o lugar pra contar é a avaliação no app.\nO link está na bio.\n\n#Irisa #LGBTQIA #Orgulho #AppLGBT #VisibilidadeTrans",
+  "primeiro_comentario": "appirisa.com.br",
+  "publicado": false,
+  "nota": "Semana da Visibilidade Trans. Reels de reconhecimento (18 s), pede comentário. As respostas viram o próximo Reels, sem citar lugar sem autorização."
  }
 ]

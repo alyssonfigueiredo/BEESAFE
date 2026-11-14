@@ -841,6 +841,12 @@ Nome: **Irisa** (INPI livre; @appirisa livre). Bundle id Android `br.com.irisa.a
   (Dia da Memória Trans) o cartão vira um sóbrio, sem pedir avaliação, com CVV 188 e a aba Apoio. X guarda no
   aparelho (`irisa.semanaTrans.2026.*`). Faixa com as cores da bandeira trans: exceção temporária. Perguntas,
   escalas e pesos não mudam. Só JS (EAS Update). Depois de 20/11 some sozinho; pode apagar o arquivo e os 3 usos.
+  **Segunda leva (14/11/2026, ok do Leandro):** na semana, a fala "missão do dia" do balão vira a fala da semana
+  para todo irise (`falasDoIrise` em `src/lib/iriseFalas.ts`; Rafa 15 e Luna 18 em primeira pessoa; balão tem uma
+  linha só, até ~36 letras) e o exemplo do campo de comentário da avaliação vira "Te chamaram pelo nome certo?".
+  Só JS, falta EAS Update. Instagram: `docs/story-quiz-cartorio.html` (quiz 2018/STF, 17/11) e
+  `docs/reels-nome-certo.html` (18/11), na fila sem aprovação. Pendente com ele: pergunta da semana pelo painel,
+  push de 17/11 (só com ok), telefones dos serviços trans conferidos por ligação antes de entrar no seed.
 
 ## Stack
 
