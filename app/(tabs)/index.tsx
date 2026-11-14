@@ -222,7 +222,6 @@ export default function HomeScreen() {
             duplica aviso nenhum. */}
         <IriseNudge />
         <AvisoCard />
-        <SemanaTransCard />
 
         {irise ? (
           <View
@@ -299,6 +298,9 @@ export default function HomeScreen() {
             </View>
           </View>
         )}
+
+        {/* Semana da Visibilidade Trans: logo abaixo do cartão principal (pedido do Leandro, 14/11). */}
+        <SemanaTransCard />
 
         {/* Gamificação: semana, cidade, caixinha e a medalha mais perto. Some se o banco não tiver. */}
         <View style={{ marginBottom: -4 }}>
