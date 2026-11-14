@@ -1178,7 +1178,17 @@
   "capa": "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/renderizar-reels-banheiro-ucv6n0/docs/Irisa-reels-trans-banheiro-capa.jpg",
   "legenda": "Pra muita gente, é só um banheiro.\nPra quem é trans, é a parte do rolê que se pensa antes de sair de casa.\nNa Irisa, quem já foi conta como foi. E quem vai depois lê antes de sair.\n\nConta pra gente: qual lugar te tratou pelo nome certo de primeira?\n\n#Irisa #LGBTQIA #Orgulho #AppLGBT #VisibilidadeTrans",
   "primeiro_comentario": "appirisa.com.br",
-  "publicado": false,
-  "nota": "Semana da Visibilidade Trans. Aprovado e mandado publicar na hora pelo Leandro no chat da sessão de 13/11/2026 (era 17/11 19h). Publicado pelo robô rodando na branch claude/renderizar-reels-banheiro-ucv6n0, com capa (campo capa -> cover_url). Som: áudio original dos clipes do Gemini + piano próprio (docs/reels-pecas/trans-banheiro/som.py e piano.py), sem música de terceiros."
+  "publicado": true,
+  "nota": "Semana da Visibilidade Trans. Aprovado e mandado publicar na hora pelo Leandro no chat da sessão de 13/11/2026 (era 17/11 19h). Publicado pelo robô rodando na branch claude/renderizar-reels-banheiro-ucv6n0, com capa (campo capa -> cover_url). Som: áudio original dos clipes do Gemini + piano próprio (docs/reels-pecas/trans-banheiro/som.py e piano.py), sem música de terceiros.",
+  "publicado_em": "2026-11-14T00:25:23.465Z",
+  "media_id": "18103053995387609",
+  "confirmacao": {
+   "id": "18103053995387609",
+   "media_type": "VIDEO",
+   "permalink": "https://www.instagram.com/reel/Dfs6egolfbV/",
+   "timestamp": "2026-11-14T00:26:11+0000"
+  },
+  "confirmado": true,
+  "confirmado_em": "2026-11-14T00:26:22.420Z"
  }
 ]
