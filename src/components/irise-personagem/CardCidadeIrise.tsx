@@ -9,6 +9,7 @@ import { useFotoTrocada } from "@/hooks/useIrisePersonagens";
 import { FALAS, type Fala } from "@/lib/iriseFalas";
 import { avatarCardSrc } from "@/lib/iriseImagensEscuras";
 import { BUNDLED_N } from "@/lib/irisePersonagens";
+import { faseTrans } from "@/lib/semanaTrans";
 
 const ARCO = ["#FF6964", "#FFA353", "#FFD066", "#49DCC0", "#59A7FF", "#A889FF"];
 
@@ -49,7 +50,9 @@ export function CardCidadeIrise({
   // Foto trocada pelo admin: mesmo um dos 9 originais passa a montar o avatar na hora (como um
   // personagem novo), em vez de ficar preso na versão "avatar-card" embutida e desatualizada.
   const fotoTrocada = useFotoTrocada(personagem);
-  const usaEmbutido = BUNDLED_N.has(personagem) && !fotoTrocada;
+  // Na Semana da Visibilidade Trans o anel muda de cor, e a versão embutida tem o arco-íris
+  // pintado na imagem: nesses dias monta o avatar na hora, como nos personagens novos.
+  const usaEmbutido = BUNDLED_N.has(personagem) && !fotoTrocada && faseTrans() !== "semana";
   return (
     <Animated.View layout={LinearTransition.duration(220)} style={{ marginTop: 10 }}>
       {falas.length > 0 && r.visivel ? (

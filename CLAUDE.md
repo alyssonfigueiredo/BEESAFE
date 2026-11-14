@@ -847,6 +847,13 @@ Nome: **Irisa** (INPI livre; @appirisa livre). Bundle id Android `br.com.irisa.a
   Só JS, falta EAS Update. Instagram: `docs/story-quiz-cartorio.html` (quiz 2018/STF, 17/11) e
   `docs/reels-nome-certo.html` (18/11), na fila sem aprovação. Pendente com ele: pergunta da semana pelo painel,
   push de 17/11 (só com ok), telefones dos serviços trans conferidos por ligação antes de entrar no seed.
+  **Cores da bandeira no app (14/11/2026, aprovado pelo Leandro; propostas A, B e C em
+  https://claude.ai/artifact/UbNsu1FKh3ENdAiwTyzXpS, as três aplicadas):** só de 13 a 19/11, pela data
+  (`src/lib/semanaTrans.ts`). `Aurora.tsx` troca as manchas do fundo do app inteiro por azul/rosa/branco; o cartão
+  da semana vira vidro tingido com borda em degradê; o anel do irise usa `anel-trans.png` (no cartão do Início o
+  avatar é montado na hora nesses dias, porque o embutido tem o arco-íris pintado); o balão da fala da semana
+  (id `semana`, última da rodada, onde ele para) fica quase opaco com borda nas cores da bandeira. Publicado por
+  EAS Update sem rodar em aparelho. Depois de 20/11 dá para apagar tudo isso junto com o `SemanaTrans.tsx`.
 
 ## Stack
 

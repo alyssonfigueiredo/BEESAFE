@@ -2,9 +2,12 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { router } from "expo-router";
 import { X } from "lucide-react-native";
+import { useState } from "react";
 import { Pressable, Text, View } from "react-native";
 import Animated, { FadeInDown } from "react-native-reanimated";
+import Svg, { Defs, Ellipse, LinearGradient, RadialGradient, Rect, Stop } from "react-native-svg";
 
+import { faseTrans, type FaseTrans } from "@/lib/semanaTrans";
 import { colors, shadow } from "@/theme/tokens";
 
 // Semana de Conscientização Trans (13–19/11) e Dia da Memória Trans (20/11), 2026.
@@ -13,24 +16,7 @@ import { colors, shadow } from "@/theme/tokens";
 // A faixa com as cores da bandeira trans é exceção temporária à regra de não usar bandeira.
 // Mexe só na apresentação: perguntas, escalas e pesos da avaliação não mudam.
 
-export type FaseTrans = "semana" | "memoria" | null;
-
-const INICIO = "2026-11-13";
-const FIM_SEMANA = "2026-11-19";
-const MEMORIA = "2026-11-20";
-
-function hojeISO(d = new Date()) {
-  const m = String(d.getMonth() + 1).padStart(2, "0");
-  const dia = String(d.getDate()).padStart(2, "0");
-  return `${d.getFullYear()}-${m}-${dia}`;
-}
-
-export function faseTrans(d = new Date()): FaseTrans {
-  const h = hojeISO(d);
-  if (h >= INICIO && h <= FIM_SEMANA) return "semana";
-  if (h === MEMORIA) return "memoria";
-  return null;
-}
+export { faseTrans, type FaseTrans };
 
 export const useFaseTrans = () => faseTrans();
 
@@ -85,7 +71,9 @@ export function SemanaTransCard() {
       }
     },
   });
+  const [{ w, h }, setTam] = useState({ w: 0, h: 0 });
   if (!fase || fechado !== false) return null;
+  const tingido = fase === "semana";
   const fechar = () => {
     qc.setQueryData(["semanaTrans", fase], true);
     AsyncStorage.setItem(chave(fase), "1").catch(() => {});
@@ -111,7 +99,43 @@ export function SemanaTransCard() {
 
   return (
     <Animated.View entering={FadeInDown.duration(400)}>
-      <View className="gap-3 rounded-3xl bg-solid p-5" style={shadow.card}>
+      <View
+        className="gap-3 rounded-3xl bg-solid p-5"
+        onLayout={(e) => setTam({ w: e.nativeEvent.layout.width, h: e.nativeEvent.layout.height })}
+        style={
+          tingido
+            ? { boxShadow: "0 18px 44px rgba(91,206,250,0.26), 0 6px 18px rgba(245,169,184,0.28)" }
+            : shadow.card
+        }
+      >
+        {/* Vidro tingido: azul num canto, rosa no outro, e a borda em degradê da bandeira. */}
+        {tingido && w > 0 && (
+          <View
+            pointerEvents="none"
+            style={{ position: "absolute", left: 0, top: 0, width: w, height: h, borderRadius: 24, overflow: "hidden" }}
+          >
+            <Svg width={w} height={h}>
+              <Defs>
+                <RadialGradient id="stAzul" cx="50%" cy="50%" r="50%">
+                  <Stop offset="0" stopColor="#5BCEFA" stopOpacity={0.38} />
+                  <Stop offset="1" stopColor="#5BCEFA" stopOpacity={0} />
+                </RadialGradient>
+                <RadialGradient id="stRosa" cx="50%" cy="50%" r="50%">
+                  <Stop offset="0" stopColor="#F5A9B8" stopOpacity={0.42} />
+                  <Stop offset="1" stopColor="#F5A9B8" stopOpacity={0} />
+                </RadialGradient>
+                <LinearGradient id="stBorda" x1="0" y1="0" x2="1" y2="1">
+                  <Stop offset="0" stopColor="#5BCEFA" />
+                  <Stop offset="0.5" stopColor="#FFFFFF" />
+                  <Stop offset="1" stopColor="#F5A9B8" />
+                </LinearGradient>
+              </Defs>
+              <Ellipse cx={0} cy={0} rx={w * 0.62} ry={h * 0.8} fill="url(#stAzul)" />
+              <Ellipse cx={w} cy={h} rx={w * 0.62} ry={h * 0.8} fill="url(#stRosa)" />
+              <Rect x={0.75} y={0.75} width={w - 1.5} height={h - 1.5} rx={23.25} fill="none" stroke="url(#stBorda)" strokeWidth={1.5} />
+            </Svg>
+          </View>
+        )}
         {topo}
         {fase === "semana" ? (
           <>
@@ -131,7 +155,7 @@ export function SemanaTransCard() {
               </Pressable>
               <Pressable
                 onPress={() => router.push("/perfil")}
-                className="h-11 justify-center rounded-full bg-subtle px-4 active:opacity-80"
+                className="h-11 justify-center rounded-full bg-solid px-4 active:opacity-80"
               >
                 <Text className="font-body-medium text-[14px] text-ink">Seu pronome</Text>
               </Pressable>

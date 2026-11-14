@@ -1,6 +1,6 @@
 import { flexionar, type Forma } from "@/lib/irisePersonagens";
 import { getMedalha } from "@/lib/medals";
-import { faseTrans } from "@/components/SemanaTrans";
+import { faseTrans } from "@/lib/semanaTrans";
 import type { Gamificacao } from "@/hooks/useGamification";
 import { quaseLa } from "@/hooks/useGamification";
 
@@ -147,6 +147,7 @@ export function falasDoIrise(
         ...f,
         id: "semana",
         tag: "SEMANA TRANS",
+        cor: "#A63A63",
         texto: nossa ? "Semana nossa. Avaliou um banheiro?" : "Avaliou o banheiro de algum lugar?",
         abertura: nossa
           ? "Essa semana é nossa: Visibilidade Trans. Avaliou o banheiro de algum lugar? Muita gente lê isso antes de sair de casa."

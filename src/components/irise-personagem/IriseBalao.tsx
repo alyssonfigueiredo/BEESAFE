@@ -9,7 +9,7 @@ import Animated, {
   withRepeat,
   withTiming,
 } from "react-native-reanimated";
-import Svg, { G, Path, Rect } from "react-native-svg";
+import Svg, { Defs, G, LinearGradient, Path, Rect, Stop } from "react-native-svg";
 
 import type { Fala } from "@/lib/iriseFalas";
 
@@ -131,6 +131,8 @@ export function IriseBalao({
   }, [bob, reduce]);
   const estiloBob = useAnimatedStyle(() => ({ transform: [{ translateY: -1.5 * bob.get() }] }));
   const estiloTexto = useAnimatedStyle(() => ({ opacity: opacidade.get() }));
+  // Fala da Semana da Visibilidade Trans: balão quase opaco com a borda nas cores da bandeira.
+  const trans = fala.id === "semana";
   
   // Pedido do Alysson (11/10/2026): o balão termina rente aos cards (12 pt da tela, igual ao card
   // da cidade), não mais a 44. A ponta anda +32 pra dentro pra continuar caindo no MESMO lugar da
@@ -157,7 +159,22 @@ export function IriseBalao({
     >
       {w > 0 && (
         <Svg width={w} height={h + 16} style={{ position: "absolute", left: 0, top: 0, overflow: "visible" }} pointerEvents="none">
-          <G opacity={0.55} fill="#FFFFFF">
+          {trans && (
+            <>
+              <Defs>
+                <LinearGradient id="balaoTrans" x1="0" y1="0" x2="1" y2="0">
+                  <Stop offset="0" stopColor="#5BCEFA" />
+                  <Stop offset="0.25" stopColor="#F5A9B8" />
+                  <Stop offset="0.5" stopColor="#FFFFFF" />
+                  <Stop offset="0.75" stopColor="#F5A9B8" />
+                  <Stop offset="1" stopColor="#5BCEFA" />
+                </LinearGradient>
+              </Defs>
+              {/* Borda de 3: a metade de dentro fica por baixo do branco, sobra 1,5 por fora. */}
+              <Rect width={w} height={h} rx={18} fill="none" stroke="url(#balaoTrans)" strokeWidth={3} />
+            </>
+          )}
+          <G opacity={trans ? 0.94 : 0.55} fill="#FFFFFF">
             <Rect width={w} height={h} rx={18} />
             <Path d={ponta} />
           </G>

@@ -13,8 +13,11 @@ import Svg, { Circle, Defs, RadialGradient, Stop } from "react-native-svg";
 import { useBustoResolvido } from "@/hooks/useIrisePersonagens";
 import { BUSTO_ASPECTO } from "@/lib/irisePersonagens";
 import { colors } from "@/theme/tokens";
+import { faseTrans } from "@/lib/semanaTrans";
 
 const ANEL_ARCOIRIS = require("../../../assets/irise-personagens/anel-arcoiris.png");
+// Semana da Visibilidade Trans (13–19/11/2026): o mesmo anel, nas cores da bandeira trans.
+const ANEL_TRANS = require("../../../assets/irise-personagens/anel-trans.png");
 
 /**
  * Avatar da referência aprovada (pacote 13 + respostas do pacote 14): anel arco-íris de 2,4% do
@@ -90,7 +93,7 @@ export function IriseAvatar({
         </Svg>
         {anel && (
           <Animated.Image
-            source={ANEL_ARCOIRIS}
+            source={faseTrans() === "semana" ? ANEL_TRANS : ANEL_ARCOIRIS}
             style={[{ position: "absolute", width: size, height: size }, estiloGiro]}
           />
         )}
