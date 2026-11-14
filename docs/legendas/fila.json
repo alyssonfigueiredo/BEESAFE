@@ -935,7 +935,7 @@
  {
   "id": "reels-checklist",
   "aprovado": true,
-  "quando": "2026-11-21T17:00:00-03:00",
+  "quando": "2026-11-22T19:00:00-03:00",
   "tipo": "REELS",
   "midias": [
    "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/Irisa-reels-checklist.mp4"
@@ -943,7 +943,7 @@
   "legenda": "A checklist completa.\nO último item é o que mais importa.\nO link está na bio.\n\n#Irisa #LGBTQIA #Orgulho #AppLGBT #Role",
   "primeiro_comentario": "appirisa.com.br",
   "publicado": false,
-  "nota": "Adiado de 14/11 para 21/11 a pedido do Leandro (14/11), para a semana ficar só na temática da Visibilidade Trans."
+  "nota": "Adiado de 14/11 para 21/11 a pedido do Leandro (14/11), para a semana ficar só na temática da Visibilidade Trans. Passou de 21/11 para 22/11 às 19h para dar o sábado ao carrossel Eu em novembro."
  },
  {
   "id": "story-caixinha-bolsa",
@@ -1284,5 +1284,24 @@
   "primeiro_comentario": "appirisa.com.br",
   "publicado": false,
   "nota": "Semana da Visibilidade Trans. Mito ou verdade, edição trans (7 lâminas, capa escura). Fontes conferidas em 14/11: STF ADI 4275 e Provimento CNJ 73/2018 (hoje arts. 516 a 523 do Provimento 149/2023); Portaria MS 1.820/2009; Resolução CNE/CP 1/2018 (arts. 3º e 4º); STF ADO 26 e MI 4733 (13/06/2019). A lâmina 2 não diz o ano de propósito: é a resposta do quiz do story das 20h."
+ },
+ {
+  "id": "carrossel-eu-em-novembro",
+  "aprovado": false,
+  "quando": "2026-11-21T17:00:00-03:00",
+  "tipo": "POST",
+  "midias": [
+   "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/carrossel-eu-em-novembro/01.png",
+   "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/carrossel-eu-em-novembro/02.png",
+   "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/carrossel-eu-em-novembro/03.png",
+   "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/carrossel-eu-em-novembro/04.png",
+   "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/carrossel-eu-em-novembro/05.png",
+   "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/carrossel-eu-em-novembro/06.png",
+   "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/carrossel-eu-em-novembro/07.png"
+  ],
+  "legenda": "2026 ia ser meu ano. Ia.\nEu em janeiro: \"esse ano eu saio mais\".\nEu em novembro: ainda perguntando no grupo se o bar é de boa.\nAinda dá tempo de cumprir uma: avalia um lugar onde você foi bem recebide esse ano. Leva um minuto.\nQual promessa de janeiro você cumpriu? Vale contar a que não cumpriu também.\nO link está na bio. Na App Store e no Google Play.\n\n#Irisa #LGBTQIA #Orgulho #AppLGBT #EuEmNovembro",
+  "primeiro_comentario": "appirisa.com.br",
+  "publicado": false,
+  "nota": "Meme do momento (eu em janeiro × eu em novembro, \"2026 ia ser meu ano\"), 7 lâminas, capa clara. Sábado às 17h. Antes de aprovar, conferir no Instagram se o meme ainda está rodando."
  }
 ]
