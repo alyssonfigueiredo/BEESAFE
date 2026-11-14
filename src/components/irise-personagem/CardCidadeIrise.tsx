@@ -9,8 +9,8 @@ import { useFotoTrocada } from "@/hooks/useIrisePersonagens";
 import { FALAS, type Fala } from "@/lib/iriseFalas";
 import { avatarCardSrc } from "@/lib/iriseImagensEscuras";
 import { BUNDLED_N } from "@/lib/irisePersonagens";
+import { faseTrans } from "@/lib/semanaTrans";
 
-const ARCO = ["#FF6964", "#FFA353", "#FFD066", "#49DCC0", "#59A7FF", "#A889FF"];
 
 /** Ocupa a largura toda da tela (sem padding lateral do pai). Substitui o card escuro da cidade. */
 export function CardCidadeIrise({
@@ -49,9 +49,12 @@ export function CardCidadeIrise({
   // Foto trocada pelo admin: mesmo um dos 9 originais passa a montar o avatar na hora (como um
   // personagem novo), em vez de ficar preso na versão "avatar-card" embutida e desatualizada.
   const fotoTrocada = useFotoTrocada(personagem);
-  const usaEmbutido = BUNDLED_N.has(personagem) && !fotoTrocada;
+  // Na Semana da Visibilidade Trans o anel muda de cor, e a versão embutida tem o arco-íris
+  // pintado na imagem: nesses dias monta o avatar na hora, como nos personagens novos.
+  const usaEmbutido = BUNDLED_N.has(personagem) && !fotoTrocada && faseTrans() !== "semana";
+  // Balão mais rente ao cabeçalho (14/11/2026): marginTop 10 → 2.
   return (
-    <Animated.View layout={LinearTransition.duration(220)} style={{ marginTop: 10 }}>
+    <Animated.View layout={LinearTransition.duration(220)} style={{ marginTop: 2 }}>
       {falas.length > 0 && r.visivel ? (
         <IriseBalao
           nome={nomeIrise}
@@ -72,7 +75,7 @@ export function CardCidadeIrise({
         <View style={{ height: 50 }} />
       )}
 
-      <View style={{ marginHorizontal: 12, marginTop: balaoFechado ? 2 : 8, height: 248 }}>
+      <View style={{ marginHorizontal: 12, marginTop: balaoFechado ? 2 : 8, height: 211 }}>
         <View style={{ flex: 1, borderRadius: 30, backgroundColor: "#171A2B", overflow: "hidden" }}>
           <Svg width={150} height={150} style={{ position: "absolute", right: -4, top: -20 }} pointerEvents="none">
             <Defs>
@@ -83,40 +86,47 @@ export function CardCidadeIrise({
             </Defs>
             <Rect width={150} height={150} fill="url(#glIrise)" />
           </Svg>
-          <View style={{ position: "absolute", left: 18, top: 20, width: 196 }}>
+          {/* Cartão mais baixo (14/11/2026, opção E aprovada pelo Leandro): a frase saiu da largura
+              inteira e foi para a coluna da esquerda, ao lado do arco do irise; a linha "Cidade · UF"
+              virou o "UF ⌄" ao lado do nome, e o fio arco-íris saiu. 248 → 211 de altura. */}
+          <View style={{ position: "absolute", left: 18, top: 20, width: 208 }}>
             <Text style={{ fontFamily: "SpaceGrotesk_700Bold", fontSize: 9, letterSpacing: 1.26, color: "#B7BCCB" }}>
               SUA CIDADE
             </Text>
-            <Text style={{ marginTop: 6, fontFamily: "Oswald_700Bold", fontSize: 28, color: "#FFFFFF" }}>
-              {cidade.toUpperCase()}
-            </Text>
-            <Pressable onPress={onTrocarCidade}>
-              <Text style={{ marginTop: 2, fontFamily: "SpaceGrotesk_400Regular", fontSize: 11, color: "#C9CDD8" }}>
-                {cidade} · {uf} ⌄
+            <Pressable
+              onPress={onTrocarCidade}
+              hitSlop={8}
+              accessibilityRole="button"
+              accessibilityLabel={`Trocar de cidade. Cidade atual: ${cidade}`}
+              className="active:opacity-80"
+              style={{ marginTop: 3, flexDirection: "row", alignItems: "baseline", gap: 8 }}
+            >
+              <Text
+                numberOfLines={1}
+                adjustsFontSizeToFit
+                minimumFontScale={0.55}
+                style={{ flexShrink: 1, fontFamily: "Oswald_700Bold", fontSize: 28, lineHeight: 34, color: "#FFFFFF" }}
+              >
+                {cidade.toUpperCase()}
+              </Text>
+              <Text style={{ fontFamily: "SpaceGrotesk_400Regular", fontSize: 12, color: "#C9CDD8" }}>
+                {uf ? `${uf} ⌄` : "⌄"}
               </Text>
             </Pressable>
-            <View style={{ marginTop: 12, width: 96, height: 4, borderRadius: 2, overflow: "hidden", flexDirection: "row" }}>
-              {ARCO.map((c) => (
-                <View key={c} style={{ flex: 1, backgroundColor: c }} />
-              ))}
-            </View>
+            <Text
+              style={{
+                marginTop: 9,
+                fontFamily: "SpaceGrotesk_400Regular",
+                fontSize: 11.5,
+                lineHeight: 16.3,
+                color: "#C9CDD8",
+              }}
+            >
+              O mapa dos lugares onde a gente é{" "}
+              <Text style={{ fontFamily: "SpaceGrotesk_700Bold", color: "#FFD066" }}>{bemVinde}</Text>, feito por nós.
+              Diga quanta cor tem os lugares por onde você passa.
+            </Text>
           </View>
-          <Text
-            style={{
-              position: "absolute",
-              left: 18,
-              right: 18,
-              top: 148,
-              fontFamily: "SpaceGrotesk_400Regular",
-              fontSize: 11.5,
-              lineHeight: 16.3,
-              color: "#C9CDD8",
-            }}
-          >
-            O mapa dos lugares onde a gente é{" "}
-            <Text style={{ fontFamily: "SpaceGrotesk_700Bold", color: "#FFD066" }}>{bemVinde}</Text>, feito por nós. Diga
-            quanta cor tem os lugares por onde você passa.
-          </Text>
           <View style={{ position: "absolute", left: 18, right: 18, bottom: 18, flexDirection: "row", gap: 8 }}>
             <TourTarget id="avaliar" style={{ flex: 1 }}>
               <Pressable

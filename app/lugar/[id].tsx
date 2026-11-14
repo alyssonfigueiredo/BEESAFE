@@ -359,7 +359,11 @@ export default function PlaceScreen() {
               })}
               <TextArea
                 minHeight={88}
-                placeholder="Quer contar como foi? (opcional, até 500 caracteres)"
+                placeholder={
+                  semanaTrans
+                    ? "Te chamaram pelo nome certo? Conta aqui. (opcional, até 500 caracteres)"
+                    : "Quer contar como foi? (opcional, até 500 caracteres)"
+                }
                 maxLength={500}
                 value={current.comment}
                 onChangeText={(v) => setDraft({ ...current, comment: v })}

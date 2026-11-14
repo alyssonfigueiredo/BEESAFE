@@ -9,7 +9,7 @@ import Animated, {
   withRepeat,
   withTiming,
 } from "react-native-reanimated";
-import Svg, { G, Path, Rect } from "react-native-svg";
+import Svg, { Defs, G, LinearGradient, Path, Rect, Stop } from "react-native-svg";
 
 import type { Fala } from "@/lib/iriseFalas";
 
@@ -131,11 +131,22 @@ export function IriseBalao({
   }, [bob, reduce]);
   const estiloBob = useAnimatedStyle(() => ({ transform: [{ translateY: -1.5 * bob.get() }] }));
   const estiloTexto = useAnimatedStyle(() => ({ opacity: opacidade.get() }));
+  // Fala da Semana da Visibilidade Trans: mesma transparência das outras, com a borda nas cores da bandeira.
+  const trans = fala.id === "semana";
   
   // Pedido do Alysson (11/10/2026): o balão termina rente aos cards (12 pt da tela, igual ao card
   // da cidade), não mais a 44. A ponta anda +32 pra dentro pra continuar caindo no MESMO lugar da
   // tela de antes — à esquerda da cabeça do irise, que ela nunca pode encostar.
   const ponta = `M${w - 132} ${h - 1} H${w - 106} C${w - 106} ${h + 6} ${w - 104} ${h + 11} ${w - 99} ${h + 14} C${w - 113} ${h + 15} ${w - 126} ${h + 10} ${w - 132} ${h - 1} Z`;
+  // Semana Trans: balão + ponta num contorno único (recuado 0,75 para o traço de 1,5 caber inteiro).
+  const o = 0.75;
+  const r = 18 - o;
+  const b = h - o;
+  const contorno =
+    `M${o + r} ${o} H${w - o - r} A${r} ${r} 0 0 1 ${w - o} ${o + r} V${b - r} A${r} ${r} 0 0 1 ${w - o - r} ${b}` +
+    ` H${w - 106} C${w - 106} ${b + 6} ${w - 104} ${b + 11} ${w - 99} ${b + 14}` +
+    ` C${w - 113} ${b + 15} ${w - 126} ${b + 10} ${w - 132} ${b}` +
+    ` H${o + r} A${r} ${r} 0 0 1 ${o} ${b - r} V${o + r} A${r} ${r} 0 0 1 ${o + r} ${o} Z`;
   return (
     <Animated.View
       onLayout={(e) => setTam({ w: e.nativeEvent.layout.width, h: e.nativeEvent.layout.height })}
@@ -143,6 +154,8 @@ export function IriseBalao({
         {
           alignSelf: "flex-end",
           marginRight: 12,
+          // Por cima do cartão escuro que vem logo abaixo: sem isso ele cobre metade da ponta.
+          zIndex: 2,
           minWidth: 220,
           maxWidth: 310,
           // Sombra do conjunto (SPEC-inicio §3). Props clássicas, não boxShadow: o iOS desenha a
@@ -157,10 +170,26 @@ export function IriseBalao({
     >
       {w > 0 && (
         <Svg width={w} height={h + 16} style={{ position: "absolute", left: 0, top: 0, overflow: "visible" }} pointerEvents="none">
-          <G opacity={0.55} fill="#FFFFFF">
-            <Rect width={w} height={h} rx={18} />
-            <Path d={ponta} />
-          </G>
+          {trans ? (
+            <>
+              <Defs>
+                {/* Sem branco no degradê: sobre o papel claro o trecho branco some e parece falha. */}
+                <LinearGradient id="balaoTrans" x1="0" y1="0" x2="1" y2="0">
+                  <Stop offset="0" stopColor="#5BCEFA" />
+                  <Stop offset="0.5" stopColor="#F5A9B8" />
+                  <Stop offset="1" stopColor="#5BCEFA" />
+                </LinearGradient>
+              </Defs>
+              {/* Um traço só: o balão e a ponta são o mesmo contorno, então a borda desce pela ponta
+                  e volta, sem linha cortando a base dela. */}
+              <Path d={contorno} fill="#FFFFFF" fillOpacity={0.55} stroke="url(#balaoTrans)" strokeWidth={1.5} strokeLinejoin="round" />
+            </>
+          ) : (
+            <G opacity={0.55} fill="#FFFFFF">
+              <Rect width={w} height={h} rx={18} />
+              <Path d={ponta} />
+            </G>
+          )}
         </Svg>
       )}
       <View style={{ paddingTop: 6, paddingRight: 13, paddingBottom: 7, paddingLeft: 14 }}>

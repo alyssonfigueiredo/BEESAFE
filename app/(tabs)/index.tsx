@@ -92,7 +92,7 @@ export default function HomeScreen() {
   // não tem tela própria — aqui ainda não existe fora do cartão "Sua semana" — então só rola até
   // ele, que é o mais perto que dá de "o destino" sem mexer no card (regra do pacote).
   function ctaDaFala(fala: Fala) {
-    if (fala.id === "missao") router.push("/lugares");
+    if (fala.id === "missao" || fala.id === "semana") router.push("/lugares");
     else if (fala.id === "falta") router.push("/conquistas");
     else if (fala.id === "sugestao") router.push("/lugares");
     else if (fala.id === "alerta") router.push("/mapa");
@@ -122,6 +122,7 @@ export default function HomeScreen() {
           if (f.id === "sugestao") return temSugestao;
           if (f.id === "alerta") return !!relatoRecente;
           if (f.id === "conquista") return semanaOuConquista;
+          if (f.id === "semana") return true;
           return !avaliouHoje; // "missao"
         })
         .map((f) => {
@@ -221,7 +222,6 @@ export default function HomeScreen() {
             duplica aviso nenhum. */}
         <IriseNudge />
         <AvisoCard />
-        <SemanaTransCard />
 
         {irise ? (
           <View
@@ -298,6 +298,9 @@ export default function HomeScreen() {
             </View>
           </View>
         )}
+
+        {/* Semana da Visibilidade Trans: logo abaixo do cartão principal (pedido do Leandro, 14/11). */}
+        <SemanaTransCard />
 
         {/* Gamificação: semana, cidade, caixinha e a medalha mais perto. Some se o banco não tiver. */}
         <View style={{ marginBottom: -4 }}>

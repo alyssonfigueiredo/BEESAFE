@@ -415,7 +415,17 @@
   ],
   "legenda": "Dá pra saber como é um bairro antes de chegar?\n\nA ficha do bairro é onde os dois lados do mapa se encontram: os lugares avaliados pela comunidade e os relatos registrados na região, numa tela só.\n\nEla mostra o total de relatos (e quantos foram graves), o tipo, onde e quando aconteceram, e o nível de atenção da área — atenção ou alerta, pelo peso dos relatos nos últimos 180 dias. Os lugares que já têm nota de acolhimento aparecem primeiro.\n\nUma coisa que ela nunca diz: que um bairro sem relato é um bairro seguro. Sem relato quer dizer que ninguém registrou ainda — dizer o contrário seria a falha mais perigosa que o app poderia cometer.\n\nJá testou a ficha do seu bairro? Abre o app, confere e comenta o que apareceu. 🌈\n\nO link está na bio. Na App Store e no Google Play.\n\n#Irisa #LGBTQIA #Orgulho #AppLGBT #Curitiba",
   "primeiro_comentario": "appirisa.com.br",
-  "publicado": false
+  "publicado": true,
+  "publicado_em": "2026-11-12T22:38:43.376Z",
+  "media_id": "18145186780606946",
+  "confirmacao": {
+   "id": "18145186780606946",
+   "media_type": "CAROUSEL_ALBUM",
+   "permalink": "https://www.instagram.com/p/DfqJkcTmo4x/",
+   "timestamp": "2026-11-12T22:39:46+0000"
+  },
+  "confirmado": true,
+  "confirmado_em": "2026-11-12T22:39:52.920Z"
  },
  {
   "id": "reels-8",
@@ -810,7 +820,17 @@
   ],
   "legenda": "Chegou o Quero ir.\nViu um lugar com cara de casa? Toca no coração e ele fica guardado.\nQuando você for e avaliar, ele vai pra Já fui sozinho.\nO link está na bio.\n\n#Irisa #LGBTQIA #Orgulho #AppLGBT #Novidade",
   "primeiro_comentario": "appirisa.com.br",
-  "publicado": false
+  "publicado": true,
+  "publicado_em": "2026-11-05T23:52:57.363Z",
+  "media_id": "18091703894248823",
+  "confirmacao": {
+   "id": "18091703894248823",
+   "media_type": "VIDEO",
+   "permalink": "https://www.instagram.com/reel/DfYQZocDWDC/",
+   "timestamp": "2026-11-05T23:53:24+0000"
+  },
+  "confirmado": true,
+  "confirmado_em": "2026-11-05T23:53:32.996Z"
  },
  {
   "id": "story-quiz-quero-ir",
@@ -860,8 +880,18 @@
   ],
   "legenda": "Todo mundo tem um primeiro lugar onde deu pra ser inteire.\nQual foi o seu? Conta aqui.\nNa Irisa, a gente ajuda alguém a achar o seu. O link está na bio.\n\n#Irisa #LGBTQIA #Orgulho #AppLGBT #BemVinde",
   "primeiro_comentario": "appirisa.com.br",
-  "publicado": false,
-  "nota": "Irises atuais (Léo, Dandara, Luna) das fotos do painel. Fixar no 1º comentário: \"O meu foi um karaokê numa terça qualquer. E o seu?\""
+  "publicado": true,
+  "nota": "Irises atuais (Léo, Dandara, Luna) das fotos do painel. Fixar no 1º comentário: \"O meu foi um karaokê numa terça qualquer. E o seu?\"",
+  "publicado_em": "2026-11-12T00:16:02.031Z",
+  "media_id": "18140594746631511",
+  "confirmacao": {
+   "id": "18140594746631511",
+   "media_type": "VIDEO",
+   "permalink": "https://www.instagram.com/reel/Dfnv3YqAJqY/",
+   "timestamp": "2026-11-12T00:16:58+0000"
+  },
+  "confirmado": true,
+  "confirmado_em": "2026-11-12T00:17:06.704Z"
  },
  {
   "id": "story-caixinha-primeiro-lugar",
@@ -905,14 +935,15 @@
  {
   "id": "reels-checklist",
   "aprovado": true,
-  "quando": "2026-11-14T19:00:00-03:00",
+  "quando": "2026-11-22T19:00:00-03:00",
   "tipo": "REELS",
   "midias": [
    "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/Irisa-reels-checklist.mp4"
   ],
   "legenda": "A checklist completa.\nO último item é o que mais importa.\nO link está na bio.\n\n#Irisa #LGBTQIA #Orgulho #AppLGBT #Role",
   "primeiro_comentario": "appirisa.com.br",
-  "publicado": false
+  "publicado": false,
+  "nota": "Adiado de 14/11 para 21/11 a pedido do Leandro (14/11), para a semana ficar só na temática da Visibilidade Trans. Passou de 21/11 para 22/11 às 19h para dar o sábado ao carrossel Eu em novembro."
  },
  {
   "id": "story-caixinha-bolsa",
@@ -956,8 +987,18 @@
   ],
   "legenda": "Pergunta que a gente mais recebe.\nResposta curta: não.\nArrasta pra entender como.\nO link está na bio.\n\n#Irisa #LGBTQIA #Orgulho #AppLGBT #Anonimato",
   "primeiro_comentario": "appirisa.com.br",
-  "publicado": false,
-  "nota": "Teste de horário: 16h."
+  "publicado": true,
+  "nota": "Teste de horário: 16h.",
+  "publicado_em": "2026-11-10T22:29:07.812Z",
+  "media_id": "18117924668115056",
+  "confirmacao": {
+   "id": "18117924668115056",
+   "media_type": "CAROUSEL_ALBUM",
+   "permalink": "https://www.instagram.com/p/Dfk-24djD0w/",
+   "timestamp": "2026-11-10T22:30:15+0000"
+  },
+  "confirmado": true,
+  "confirmado_em": "2026-11-10T22:30:20.177Z"
  },
  {
   "id": "story-caixinha-relato",
@@ -983,8 +1024,19 @@
   ],
   "legenda": "",
   "primeiro_comentario": "",
-  "publicado": false,
-  "nota": "ALTERNATIVA SEM ADESIVO do story-caixinha-relato: a pergunta está escrita na própria arte e pede para responder no story. Dá para o robô postar (imagem pura). Aprovar esta OU a original (manual com adesivo), nunca as duas."
+  "publicado": true,
+  "nota": "ALTERNATIVA SEM ADESIVO do story-caixinha-relato: a pergunta está escrita na própria arte e pede para responder no story. Dá para o robô postar (imagem pura). Aprovar esta OU a original (manual com adesivo), nunca as duas.",
+  "publicado_em": "2026-11-11T01:03:59.609Z",
+  "media_id": "17922200517458897",
+  "confirmacao": {
+   "id": "17922200517458897",
+   "media_type": "IMAGE",
+   "permalink": "https://www.instagram.com/stories/appirisa/4027698024746888182",
+   "timestamp": "2026-11-11T01:04:09+0000",
+   "na_lista_de_stories_ativos": true
+  },
+  "confirmado": true,
+  "confirmado_em": "2026-11-11T01:04:13.166Z"
  },
  {
   "id": "post-nome",
@@ -1037,7 +1089,17 @@
   ],
   "legenda": "Sexta-feira 13 e a lista de terror é outra.\nQual dá mais medo em você?\nO link está na bio.\n\n#Irisa #LGBTQIA #Orgulho #AppLGBT #Sextou",
   "primeiro_comentario": "appirisa.com.br",
-  "publicado": false
+  "publicado": true,
+  "publicado_em": "2026-11-14T00:15:01.289Z",
+  "media_id": "18095287883202092",
+  "confirmacao": {
+   "id": "18095287883202092",
+   "media_type": "VIDEO",
+   "permalink": "https://www.instagram.com/reel/Dfs5STrDWc1/",
+   "timestamp": "2026-11-14T00:15:32+0000"
+  },
+  "confirmado": true,
+  "confirmado_em": "2026-11-14T00:15:38.881Z"
  },
  {
   "id": "story-enquete-medo",
@@ -1105,5 +1167,141 @@
   "primeiro_comentario": "",
   "publicado": false,
   "nota": "ALTERNATIVA SEM ADESIVO do story-obrigade: a pergunta está escrita na própria arte e pede para responder no story. Dá para o robô postar (imagem pura). Aprovar esta OU a original (manual com adesivo), nunca as duas."
+ },
+ {
+  "id": "reels-trans-banheiro",
+  "aprovado": true,
+  "quando": "2026-11-13T21:25:00-03:00",
+  "tipo": "REELS",
+  "midias": [
+   "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/renderizar-reels-banheiro-ucv6n0/docs/Irisa-reels-trans-banheiro.mp4"
+  ],
+  "capa": "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/renderizar-reels-banheiro-ucv6n0/docs/Irisa-reels-trans-banheiro-capa.jpg",
+  "legenda": "Pra muita gente, é só um banheiro.\nPra quem é trans, é a parte do rolê que se pensa antes de sair de casa.\nNa Irisa, quem já foi conta como foi. E quem vai depois lê antes de sair.\n\nConta pra gente: qual lugar te tratou pelo nome certo de primeira?\n\n#Irisa #LGBTQIA #Orgulho #AppLGBT #VisibilidadeTrans",
+  "primeiro_comentario": "appirisa.com.br",
+  "publicado": true,
+  "nota": "Semana da Visibilidade Trans. Aprovado e mandado publicar na hora pelo Leandro no chat da sessão de 13/11/2026 (era 17/11 19h). Publicado pelo robô rodando na branch claude/renderizar-reels-banheiro-ucv6n0, com capa (campo capa -> cover_url). Som: áudio original dos clipes do Gemini + piano próprio (docs/reels-pecas/trans-banheiro/som.py e piano.py), sem música de terceiros.",
+  "publicado_em": "2026-11-14T00:25:23.465Z",
+  "media_id": "18103053995387609",
+  "confirmacao": {
+   "id": "18103053995387609",
+   "media_type": "VIDEO",
+   "permalink": "https://www.instagram.com/reel/Dfs6egolfbV/",
+   "timestamp": "2026-11-14T00:26:11+0000"
+  },
+  "confirmado": true,
+  "confirmado_em": "2026-11-14T00:26:22.420Z"
+ },
+ {
+  "id": "story-quiz-cartorio",
+  "aprovado": false,
+  "quando": "2026-11-17T20:00:00-03:00",
+  "tipo": "STORY",
+  "midias": [
+   "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/stories-novembro/story-17-quiz-cartorio.png"
+  ],
+  "legenda": "",
+  "primeiro_comentario": "",
+  "publicado": false,
+  "nota": "Semana da Visibilidade Trans. Story manual: adesivo QUIZ com 2009 / 2014 / 2018 / 2022, certa: 2018 (STF, ADI 4275, março de 2018). A área tracejada é onde ele vai."
+ },
+ {
+  "id": "story-quiz-cartorio-sem-adesivo",
+  "automatico": true,
+  "aprovado": false,
+  "quando": "2026-11-17T20:00:00-03:00",
+  "tipo": "STORY",
+  "midias": [
+   "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/stories-novembro/story-17-quiz-cartorio-sem-adesivo.png"
+  ],
+  "legenda": "",
+  "primeiro_comentario": "",
+  "publicado": false,
+  "nota": "ALTERNATIVA SEM ADESIVO do story-quiz-cartorio: as opções estão escritas na arte e pede para responder no story. Dá para o robô postar (imagem pura). Aprovar esta OU a original (manual com adesivo), nunca as duas."
+ },
+ {
+  "id": "story-quiz-cartorio-resposta",
+  "automatico": true,
+  "aprovado": false,
+  "quando": "2026-11-17T20:30:00-03:00",
+  "tipo": "STORY",
+  "midias": [
+   "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/stories-novembro/story-17-quiz-cartorio-resposta.png"
+  ],
+  "legenda": "",
+  "primeiro_comentario": "",
+  "publicado": false,
+  "nota": "A resposta do quiz (2018, STF). Imagem pura, sem adesivo: dá para o robô postar. Vai logo depois do quiz, qualquer que seja a versão aprovada."
+ },
+ {
+  "id": "reels-nome-certo",
+  "aprovado": true,
+  "quando": "2026-11-18T19:00:00-03:00",
+  "tipo": "REELS",
+  "midias": [
+   "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/Irisa-reels-nome-certo.mp4"
+  ],
+  "capa": "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/Irisa-reels-nome-certo-capa.jpg",
+  "legenda": "O garçom perguntou meu nome. E usou.\nSem pedir documento, sem perguntar duas vezes, sem errar na hora da conta.\nNome certo de primeira é acolhimento, e entra na nota de atendimento da Irisa.\nComenta onde isso aconteceu com você. Se foi ruim, o lugar pra contar é a avaliação no app.\nO link está na bio.\n\n#Irisa #LGBTQIA #Orgulho #AppLGBT #VisibilidadeTrans",
+  "primeiro_comentario": "appirisa.com.br",
+  "publicado": false,
+  "nota": "Semana da Visibilidade Trans. Reels de reconhecimento (18 s), pede comentário. As respostas viram o próximo Reels, sem citar lugar sem autorização. Aprovado pelo Leandro no chat em 14/11."
+ },
+ {
+  "id": "carrossel-banheiro",
+  "aprovado": true,
+  "quando": "2026-11-14T17:00:00-03:00",
+  "tipo": "POST",
+  "midias": [
+   "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/carrossel-banheiro/01.png",
+   "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/carrossel-banheiro/02.png",
+   "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/carrossel-banheiro/03.png",
+   "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/carrossel-banheiro/04.png",
+   "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/carrossel-banheiro/05.png",
+   "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/carrossel-banheiro/06.png",
+   "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/carrossel-banheiro/07.png"
+  ],
+  "legenda": "“E o banheiro?” é uma das quatro perguntas da Irisa. E vale 25% da nota.\nEla não mede limpeza. Mede se você usou o banheiro que quis, sem ser questionade.\nDe 1 a 5: barraram é 1, ninguém reparou é 5.\nNão usou? Pode pular.\nSalva pra próxima avaliação e conta: em qual lugar você usou e ninguém reparou?\nO link está na bio. Na App Store e no Google Play.\n\n#Irisa #LGBTQIA #Orgulho #AppLGBT #VisibilidadeTrans",
+  "primeiro_comentario": "appirisa.com.br",
+  "publicado": false,
+  "nota": "Semana da Visibilidade Trans. Como responder a pergunta do banheiro (7 lâminas, capa escura). Adiantado de 17/11 para 14/11 às 17h (sábado) e aprovado pelo Leandro no chat em 14/11: continuação do Reels O banheiro de 13/11."
+ },
+ {
+  "id": "carrossel-mito-trans",
+  "aprovado": true,
+  "quando": "2026-11-17T16:00:00-03:00",
+  "tipo": "POST",
+  "midias": [
+   "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/carrossel-mito-trans/01.png",
+   "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/carrossel-mito-trans/02.png",
+   "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/carrossel-mito-trans/03.png",
+   "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/carrossel-mito-trans/04.png",
+   "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/carrossel-mito-trans/05.png",
+   "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/carrossel-mito-trans/06.png",
+   "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/carrossel-mito-trans/07.png"
+  ],
+  "legenda": "Mito ou verdade, edição trans.\nCirurgia pra mudar o nome no cartório? Mito.\nNome social no SUS e na escola? É direito.\nTransfobia é crime? Verdade, desde 2019.\nMas direito no papel não garante o nome certo no balcão. É por isso que a gente avalia.\nQual dessas você não sabia? Comenta o número da lâmina.\nO link está na bio. Na App Store e no Google Play.\n\n#Irisa #LGBTQIA #Orgulho #AppLGBT #VisibilidadeTrans",
+  "primeiro_comentario": "appirisa.com.br",
+  "publicado": false,
+  "nota": "Semana da Visibilidade Trans. Mito ou verdade, edição trans (7 lâminas, capa escura). Fontes conferidas em 14/11: STF ADI 4275 e Provimento CNJ 73/2018 (hoje arts. 516 a 523 do Provimento 149/2023); Portaria MS 1.820/2009; Resolução CNE/CP 1/2018 (arts. 3º e 4º); STF ADO 26 e MI 4733 (13/06/2019). A lâmina 2 não diz o ano de propósito: é a resposta do quiz do story das 20h. Aprovado pelo Leandro no chat em 14/11."
+ },
+ {
+  "id": "carrossel-eu-em-novembro",
+  "aprovado": true,
+  "quando": "2026-11-21T17:00:00-03:00",
+  "tipo": "POST",
+  "midias": [
+   "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/carrossel-eu-em-novembro/01.png",
+   "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/carrossel-eu-em-novembro/02.png",
+   "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/carrossel-eu-em-novembro/03.png",
+   "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/carrossel-eu-em-novembro/04.png",
+   "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/carrossel-eu-em-novembro/05.png",
+   "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/carrossel-eu-em-novembro/06.png",
+   "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/carrossel-eu-em-novembro/07.png"
+  ],
+  "legenda": "2026 ia ser meu ano. Ia.\nEu em janeiro: \"esse ano eu saio mais\".\nEu em novembro: ainda perguntando no grupo se o bar é de boa.\nAinda dá tempo de cumprir uma: avalia um lugar onde você foi bem recebide esse ano. Leva um minuto.\nQual promessa de janeiro você cumpriu? Vale contar a que não cumpriu também.\nO link está na bio. Na App Store e no Google Play.\n\n#Irisa #LGBTQIA #Orgulho #AppLGBT #EuEmNovembro",
+  "primeiro_comentario": "appirisa.com.br",
+  "publicado": false,
+  "nota": "Meme do momento (eu em janeiro × eu em novembro, \"2026 ia ser meu ano\"), 7 lâminas, capa clara. Sábado às 17h. Antes de aprovar, conferir no Instagram se o meme ainda está rodando. Aprovado pelo Leandro no chat em 14/11."
  }
 ]

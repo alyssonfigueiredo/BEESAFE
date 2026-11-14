@@ -841,6 +841,26 @@ Nome: **Irisa** (INPI livre; @appirisa livre). Bundle id Android `br.com.irisa.a
   (Dia da Memória Trans) o cartão vira um sóbrio, sem pedir avaliação, com CVV 188 e a aba Apoio. X guarda no
   aparelho (`irisa.semanaTrans.2026.*`). Faixa com as cores da bandeira trans: exceção temporária. Perguntas,
   escalas e pesos não mudam. Só JS (EAS Update). Depois de 20/11 some sozinho; pode apagar o arquivo e os 3 usos.
+  **Segunda leva (14/11/2026, ok do Leandro):** na semana, a fala "missão do dia" do balão vira a fala da semana
+  para todo irise (`falasDoIrise` em `src/lib/iriseFalas.ts`; Rafa 15 e Luna 18 em primeira pessoa; balão tem uma
+  linha só, até ~36 letras) e o exemplo do campo de comentário da avaliação vira "Te chamaram pelo nome certo?".
+  Só JS, falta EAS Update. Instagram: `docs/story-quiz-cartorio.html` (quiz 2018/STF, 17/11) e
+  `docs/reels-nome-certo.html` (18/11), na fila sem aprovação. Pendente com ele: pergunta da semana pelo painel,
+  push de 17/11 (só com ok), telefones dos serviços trans conferidos por ligação antes de entrar no seed.
+  **Cores da bandeira no app (14/11/2026, aprovado pelo Leandro; propostas A, B e C em
+  https://claude.ai/artifact/UbNsu1FKh3ENdAiwTyzXpS, as três aplicadas):** só de 13 a 19/11, pela data
+  (`src/lib/semanaTrans.ts`). `Aurora.tsx` troca as manchas do fundo do app inteiro por azul/rosa/branco; o cartão
+  da semana vira vidro tingido com borda em degradê; o anel do irise usa `anel-trans.png` (no cartão do Início o
+  avatar é montado na hora nesses dias, porque o embutido tem o arco-íris pintado); o balão da fala da semana
+  (id `semana`, última da rodada, onde ele para) fica quase opaco com borda nas cores da bandeira. Publicado por
+  EAS Update sem rodar em aparelho. Depois de 20/11 dá para apagar tudo isso junto com o `SemanaTrans.tsx`.
+  Ajustes do mesmo dia: cartão da semana fica abaixo do cartão principal; "acolhimento." do título em degradê
+  azul→rosa (SVG); o balão fica por cima do cartão escuro (`zIndex`) para a ponta aparecer inteira.
+- **Cartão principal do Início mais baixo (14/11/2026, opção E aprovada pelo Leandro, pranchas no mesmo artefato;
+  PERMANENTE, não é da semana trans):** `CardCidadeIrise` foi de 248 para 211 de altura. A frase da marca saiu da
+  largura inteira e foi para a coluna da esquerda (208 de largura), ao lado do arco do irise; a linha
+  "Cidade · UF ⌄" virou "UF ⌄" ao lado do nome (o toque para trocar de cidade é nessa linha do título, que encolhe
+  a fonte em nome comprido); o fio arco-íris saiu. Balão mais rente ao cabeçalho (`marginTop` 10 → 2).
 
 ## Stack
 

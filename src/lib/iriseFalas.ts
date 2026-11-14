@@ -1,5 +1,6 @@
 import { flexionar, type Forma } from "@/lib/irisePersonagens";
 import { getMedalha } from "@/lib/medals";
+import { faseTrans } from "@/lib/semanaTrans";
 import type { Gamificacao } from "@/hooks/useGamification";
 import { quaseLa } from "@/hooks/useGamification";
 
@@ -9,7 +10,7 @@ import { quaseLa } from "@/hooks/useGamification";
 export type Acao = "lugares" | "mapa" | "avaliar" | "apoio" | "conquistas" | "sugerir";
 
 export type Fala = {
-  id: "missao" | "falta" | "sugestao" | "alerta" | "conquista";
+  id: "missao" | "falta" | "sugestao" | "alerta" | "conquista" | "semana";
   tag: string;
   cor: string;
   texto: string;
@@ -109,6 +110,9 @@ export const FALAS: Fala[] = [
   },
 ];
 
+// Rafa (15) e Luna (18): os irises trans dos nove originais.
+const IRISES_TRANS = [15, 18];
+
 export function formaDoPronome(pronomes: string): Forma {
   if (pronomes.startsWith("ela")) return 0;
   if (pronomes.startsWith("ele")) return 1;
@@ -121,9 +125,10 @@ export function formaDoPronome(pronomes: string): Forma {
  * ("falta") e a conquista do momento ("conquista" — semana acesa ou medalha nova). Não muda `FALAS`.
  */
 export function falasDoIrise(
-  irise: { nome: string; pronomes: string } | null,
+  irise: { n?: number; nome: string; pronomes: string } | null,
   gami?: Gamificacao | null,
 ): Fala[] {
+  const semanaTrans = faseTrans() === "semana";
   const formaIrise = irise ? formaDoPronome(irise.pronomes) : 2;
   const nomeIrise = irise?.nome ?? "seu irise";
   const quase = quaseLa(gami);
@@ -131,7 +136,33 @@ export function falasDoIrise(
   const medalhaNova = gami?.conquistadas.find((c) => !c.visto);
   const nomeMedalhaNova = medalhaNova ? getMedalha(medalhaNova.id)?.t : undefined;
 
-  return FALAS.map((f) => {
+  const falas = FALAS.map((f): Fala => {
+    // Semana da Visibilidade Trans (13–19/11/2026): a missão do dia vira a fala da semana, com o
+    // mesmo destino. Todo irise fala; Rafa e Luna, em primeira pessoa. Ela vai para o fim da
+    // rodada (onde o balão para) e aparece a semana toda, mesmo com avaliação feita hoje.
+    // O balão tem uma linha só: texto com até ~36 letras. Sai sozinho depois de 19/11.
+    if (f.id === "missao" && semanaTrans) {
+      const nossa = !!irise?.n && IRISES_TRANS.includes(irise.n);
+      return {
+        ...f,
+        id: "semana",
+        tag: "SEMANA TRANS",
+        cor: "#A63A63",
+        texto: nossa ? "Semana nossa. Avaliou um banheiro?" : "Avaliou o banheiro de algum lugar?",
+        abertura: nossa
+          ? "Essa semana é nossa: Visibilidade Trans. Avaliou o banheiro de algum lugar? Muita gente lê isso antes de sair de casa."
+          : "É a Semana da Visibilidade Trans. Avaliou o banheiro de algum lugar? Ajuda muita gente a escolher onde ir.",
+        rapidas: [
+          f.rapidas[0],
+          {
+            t: "Por que o banheiro?",
+            resposta:
+              "É a resposta que pessoas trans mais procuram antes de sair. Se não usou o banheiro, pode pular essa pergunta.",
+            pose: 1,
+          },
+        ],
+      };
+    }
     if (f.id === "falta") {
       if (!nomeFigurinha) return f;
       return {
@@ -160,4 +191,6 @@ export function falasDoIrise(
     }
     return f;
   });
+  // A fala da semana por último: é nela que o balão para.
+  return [...falas.filter((f) => f.id !== "semana"), ...falas.filter((f) => f.id === "semana")];
 }
