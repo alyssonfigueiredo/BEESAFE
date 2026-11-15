@@ -1068,8 +1068,18 @@
   ],
   "legenda": "Nome é a primeira coisa que um lugar aprende sobre você.\nÉ por isso que atendimento vale 30% da nota na Irisa.\nQual foi o último lugar que acertou o seu de primeira?\n\n#Irisa #LGBTQIA #Orgulho #AppLGBT #PessoasTrans",
   "primeiro_comentario": "appirisa.com.br",
-  "publicado": false,
-  "nota": "Teste de horário: 16h. Abre a Semana de Conscientização Trans."
+  "publicado": true,
+  "nota": "Teste de horário: 16h. Abre a Semana de Conscientização Trans.",
+  "publicado_em": "2026-11-15T20:24:19.862Z",
+  "media_id": "18011735423781813",
+  "confirmacao": {
+   "id": "18011735423781813",
+   "media_type": "IMAGE",
+   "permalink": "https://www.instagram.com/p/DfxoeKuF1TO/",
+   "timestamp": "2026-11-15T20:24:26+0000"
+  },
+  "confirmado": true,
+  "confirmado_em": "2026-11-15T20:24:31.205Z"
  },
  {
   "id": "story-enquete-nome",
@@ -1146,8 +1156,19 @@
   ],
   "legenda": "",
   "primeiro_comentario": "",
-  "publicado": false,
-  "nota": "ALTERNATIVA SEM ADESIVO do story-enquete-medo: a pergunta está escrita na própria arte e pede para responder no story. Dá para o robô postar (imagem pura). Aprovar esta OU a original (manual com adesivo), nunca as duas."
+  "publicado": true,
+  "nota": "ALTERNATIVA SEM ADESIVO do story-enquete-medo: a pergunta está escrita na própria arte e pede para responder no story. Dá para o robô postar (imagem pura). Aprovar esta OU a original (manual com adesivo), nunca as duas.",
+  "publicado_em": "2026-11-15T20:24:19.862Z",
+  "media_id": "18389460178229547",
+  "confirmacao": {
+   "id": "18389460178229547",
+   "media_type": "IMAGE",
+   "permalink": "https://www.instagram.com/stories/appirisa/4031181231916296606",
+   "timestamp": "2026-11-15T20:24:39+0000",
+   "na_lista_de_stories_ativos": true
+  },
+  "confirmado": true,
+  "confirmado_em": "2026-11-15T20:24:41.433Z"
  },
  {
   "id": "reels-lugares-casa",
