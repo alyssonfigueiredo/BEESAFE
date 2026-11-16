@@ -1325,5 +1325,24 @@
   "primeiro_comentario": "appirisa.com.br",
   "publicado": false,
   "nota": "Meme do momento (eu em janeiro × eu em novembro, \"2026 ia ser meu ano\"), 7 lâminas, capa clara. Sábado às 17h. Antes de aprovar, conferir no Instagram se o meme ainda está rodando. Aprovado pelo Leandro no chat em 14/11."
+ },
+ {
+  "id": "carrossel-lugar-acerta",
+  "quando": "2026-11-16T19:00:00-03:00",
+  "tipo": "POST",
+  "midias": [
+   "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/carrossel-lugar-acerta/01.png",
+   "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/carrossel-lugar-acerta/02.png",
+   "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/carrossel-lugar-acerta/03.png",
+   "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/carrossel-lugar-acerta/04.png",
+   "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/carrossel-lugar-acerta/05.png",
+   "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/carrossel-lugar-acerta/06.png",
+   "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/carrossel-lugar-acerta/07.png"
+  ],
+  "legenda": "Seu lugar favorito quer acolher gente trans? Manda isso pra ele.\nCinco coisas que custam zero:\nPerguntar o nome e usar.\nDocumento com outro nome? Vale o que a pessoa disse.\nNinguém fiscaliza a porta do banheiro.\nErrou o pronome? Corrige e segue.\nA equipe toda sabe, não só o dono.\nQual lugar já faz tudo isso? Marca aqui e avalia no app.\nO link está na bio. Na App Store e no Google Play.\n\n#Irisa #LGBTQIA #Orgulho #AppLGBT #VisibilidadeTrans",
+  "primeiro_comentario": "appirisa.com.br",
+  "aprovado": false,
+  "publicado": false,
+  "nota": "Semana da Visibilidade Trans. Cinco coisas que um lugar pode fazer para acolher gente trans (7 lâminas, capa clara), feito para mandar para o estabelecimento. Criado em 16/11 a pedido do Leandro porque a enquete de 15/11 não rendeu. Esperando aprovação."
  }
 ]
