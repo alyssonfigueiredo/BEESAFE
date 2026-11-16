@@ -58,6 +58,26 @@ do $$ begin
   insert into public.place_ratings (place_id, stars) values ('aaaaaaaa-0000-0000-0000-000000000001', 1);
   raise exception 'NAO DEVERIA';
 exception when unique_violation then raise notice 'duplicata rejeitada ok'; end $$;
+-- migration 86: banheiro em branco. A nota usa os outros três pesos na mesma proporção.
+do $$ declare v numeric; begin
+  update public.place_ratings set welcome = 5, affection = 4, crowd = 3, restroom = null
+   where user_id = '33333333-3333-3333-3333-333333333333' returning overall into v;
+  if v is distinct from 4.20 then raise exception 'sem banheiro deveria dar 4.20, deu %', v; end if;
+  if (select score_restroom from public.place_scores where place_id = 'aaaaaaaa-0000-0000-0000-000000000001') is not null
+    then raise exception 'nota do banheiro deveria ficar vazia'; end if;
+  update public.place_ratings set restroom = 2
+   where user_id = '33333333-3333-3333-3333-333333333333' returning overall into v;
+  if v is distinct from 3.65 then raise exception 'com banheiro deveria dar 3.65, deu %', v; end if;
+  if (select score_restroom from public.place_scores where place_id = 'aaaaaaaa-0000-0000-0000-000000000001') is distinct from 2.00
+    then raise exception 'nota do banheiro deveria ser 2.00'; end if;
+  begin
+    update public.place_ratings set welcome = null where user_id = '33333333-3333-3333-3333-333333333333';
+    raise exception 'NAO DEVERIA';
+  exception when check_violation then raise notice 'meia avaliação rejeitada ok'; end;
+  update public.place_ratings set welcome = null, affection = null, crowd = null, restroom = null, stars = 4
+   where user_id = '33333333-3333-3333-3333-333333333333' returning overall into v;
+  if v is distinct from 4.00 then raise exception 'só estrela deveria dar 4.00, deu %', v; end if;
+end $$;
 select name, score, rating_count, flagged, recent_high_occurrences from public.public_places; -- média 4.5 - 0.5*2 = 3.5
 select stars, nickname, is_mine from public.public_place_ratings order by stars desc;
 select count(*) as welcoming_needs_3_ratings from public.welcoming_ranking((select id from public.cities limit 1));

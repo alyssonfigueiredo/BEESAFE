@@ -991,9 +991,17 @@ O smoke usa stubs de pg_net (`supabase/dev/pg_net/`), storage, vault e pgcrypto 
   `ig-disparar-robo`), com o token `github_dispatch_token` no Vault (fine-grained, só o BEESAFE, Actions: Read and
   write; **vence, anotar a data**). Sem o token não faz nada e sobra o `schedule` (agora nos minutos 7 e 37), que é
   só reserva. O workflow tem `concurrency` para duas rodadas não publicarem a mesma peça.
-- **"Pode pular" a pergunta do banheiro é FALSO (14/11/2026, achado pelo Leandro):** o app e o banco exigem as quatro
-  respostas (`num_nonnulls(...) in (0, 4)`), mas o carrossel-banheiro publicado, a ficha na semana trans e a fala
-  rápida do irise diziam que dava para pular. Não escrever isso em arte nem no app enquanto a regra for essa.
+- **Banheiro pode ficar em branco (migration 86, 14/11/2026, decisão do Leandro; única mudança no cálculo das
+  avaliações desde a regra de não mexer):** o carrossel-banheiro publicado dizia "Não usou? Pode pular" e o app
+  obrigava as quatro. Agora atendimento, afeto e clientela seguem obrigatórias e o banheiro é opcional
+  (`restroom` nulo). Sem banheiro, a nota da avaliação é `(0,30·a + 0,30·f + 0,15·c) / 0,75`; com banheiro, igual a
+  antes. `overall` deixou de ser coluna gerada e é preenchida pelo gatilho `fill_rating_stars`; a nota de banheiro
+  do lugar é a média só de quem respondeu. Na ficha: "Não usou? Pode deixar em branco." e o link "Não usei o
+  banheiro" para apagar a resposta. Versão antiga do app continua exigindo as quatro (sem problema).
+- **Peça reagendada: reler tudo o que cita data (16/11/2026, bronca do Leandro: saiu peça reagendada dizendo
+  "sexta-feira 13" em outro dia).** Ao mudar o `quando` de uma peça, conferir legenda, primeiro comentário, arte e
+  vídeo atrás de dia da semana, dia do mês, "hoje", "amanhã", "essa semana" e data comemorativa; se citar, corrigir
+  ou não reagendar. Vale também para "publicar agora" pelo painel.
 
 Artefato onde o Alysson aprova/reprova cada item de `docs/legendas/fila.json` antes de publicar:
 https://claude.ai/artifact/KZFTMrCF28RLVRJr7JXBC5
