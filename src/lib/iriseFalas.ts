@@ -157,7 +157,7 @@ export function falasDoIrise(
           {
             t: "Por que o banheiro?",
             resposta:
-              "É a resposta que pessoas trans mais procuram antes de sair. Se não usou o banheiro, pode pular essa pergunta.",
+              "É a resposta que pessoas trans mais procuram antes de sair. Se não usou o banheiro, pode deixar essa em branco.",
             pose: 1,
           },
         ],
