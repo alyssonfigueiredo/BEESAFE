@@ -272,7 +272,12 @@ export function useCreatePlace() {
   });
 }
 
-export type RatingInput = Record<Axis, number> & { comment: string; anonymous: boolean };
+export type RatingInput = Record<Exclude<Axis, "restroom">, number> & {
+  /** null = não usou o banheiro (migration 86). */
+  restroom: number | null;
+  comment: string;
+  anonymous: boolean;
+};
 
 export function useRatePlace(placeId: string) {
   const client = useQueryClient();

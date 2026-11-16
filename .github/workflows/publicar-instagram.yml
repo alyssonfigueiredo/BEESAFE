@@ -2,13 +2,20 @@ name: Publicar Instagram
 
 on:
   schedule:
-    - cron: "*/30 * * * *"
+    # Minutos fora da hora cheia: o GitHub atrasa e pula o que cai em :00 e :30.
+    # O disparo que vale é o do banco (migration 85, pg_cron a cada 15 min); este é a reserva.
+    - cron: "7,37 * * * *"
   workflow_dispatch:
     inputs:
       testar:
         description: "Só testar o token (não publica nada)"
         type: boolean
         default: false
+
+# Uma rodada por vez: duas juntas publicariam a mesma peça duas vezes.
+concurrency:
+  group: publicar-instagram
+  cancel-in-progress: false
 
 permissions:
   contents: write

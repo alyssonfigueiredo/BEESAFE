@@ -986,6 +986,23 @@ O smoke usa stubs de pg_net (`supabase/dev/pg_net/`), storage, vault e pgcrypto 
   (quadro do fim do vídeo; no reels-checklist, o gancho "Antes de sair"). A `capa` é a que o robô manda como capa
   no Instagram (`cover_url`) e a que a grade do painel mostra. Sem capa: reels-apple e reels-10 (sem vídeo na fila).
 
+- **Robô não cumpria o horário (14/11/2026):** o `schedule` do GitHub rodou 4 vezes no dia e o post das 17h só saiu
+  disparado à mão. Migration 85: o banco chama o workflow pela API do GitHub a cada 15 min (`ig_disparar_robo`, pg_cron
+  `ig-disparar-robo`), com o token `github_dispatch_token` no Vault (fine-grained, só o BEESAFE, Actions: Read and
+  write; **vence, anotar a data**). Sem o token não faz nada e sobra o `schedule` (agora nos minutos 7 e 37), que é
+  só reserva. O workflow tem `concurrency` para duas rodadas não publicarem a mesma peça.
+- **Banheiro pode ficar em branco (migration 86, 14/11/2026, decisão do Leandro; única mudança no cálculo das
+  avaliações desde a regra de não mexer):** o carrossel-banheiro publicado dizia "Não usou? Pode pular" e o app
+  obrigava as quatro. Agora atendimento, afeto e clientela seguem obrigatórias e o banheiro é opcional
+  (`restroom` nulo). Sem banheiro, a nota da avaliação é `(0,30·a + 0,30·f + 0,15·c) / 0,75`; com banheiro, igual a
+  antes. `overall` deixou de ser coluna gerada e é preenchida pelo gatilho `fill_rating_stars`; a nota de banheiro
+  do lugar é a média só de quem respondeu. Na ficha: "Não usou? Pode deixar em branco." e o link "Não usei o
+  banheiro" para apagar a resposta. Versão antiga do app continua exigindo as quatro (sem problema).
+- **Peça reagendada: reler tudo o que cita data (16/11/2026, bronca do Leandro: saiu peça reagendada dizendo
+  "sexta-feira 13" em outro dia).** Ao mudar o `quando` de uma peça, conferir legenda, primeiro comentário, arte e
+  vídeo atrás de dia da semana, dia do mês, "hoje", "amanhã", "essa semana" e data comemorativa; se citar, corrigir
+  ou não reagendar. Vale também para "publicar agora" pelo painel.
+
 Artefato onde o Alysson aprova/reprova cada item de `docs/legendas/fila.json` antes de publicar:
 https://claude.ai/artifact/KZFTMrCF28RLVRJr7JXBC5
 Coleção `aprovacoes` (doc_id = id do item, `{aprovado, ts}`) e `pedidos` (pedidos de alteração,

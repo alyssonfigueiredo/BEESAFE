@@ -3,7 +3,7 @@ import { ptBR } from "date-fns/locale";
 import { Link, Stack, useLocalSearchParams } from "expo-router";
 import { AlertTriangle, BadgeCheck, Camera, Navigation } from "lucide-react-native";
 import { useEffect, useRef, useState } from "react";
-import { Alert, Linking, Platform, ScrollView, Text, View } from "react-native";
+import { Alert, Linking, Platform, Pressable, ScrollView, Text, View } from "react-native";
 
 import { Aurora } from "@/components/Aurora";
 import { PrimaryButton, SecondaryButton } from "@/components/Button";
@@ -100,9 +100,11 @@ export default function PlaceScreen() {
           // exceção que a pessoa escolhe, não o padrão.
           anon: mine?.is_anonymous ?? true,
         };
-  const missing = AXIS_KEYS.filter((k) => !current[k]);
+  // Banheiro é a única pergunta que pode ficar em branco (migration 86): quem não usou não
+  // tem o que responder, e resposta inventada suja justamente o dado que mais se procura.
+  const missing = AXIS_KEYS.filter((k) => k !== "restroom" && !current[k]);
   // Lugar sem nota: cada pergunta respondida devolve um quarto da cor à foto.
-  const respondidas = AXIS_KEYS.length - missing.length;
+  const respondidas = missing.length ? AXIS_KEYS.filter((k) => current[k]).length : AXIS_KEYS.length;
 
   function responder(k: Axis, v: number) {
     if (daDescoberta && id && !comecou.current) {
@@ -118,7 +120,7 @@ export default function PlaceScreen() {
       await rate.mutateAsync({
         welcome: current.welcome,
         affection: current.affection,
-        restroom: current.restroom,
+        restroom: current.restroom || null,
         crowd: current.crowd,
         comment: current.comment,
         anonymous: current.anon,
@@ -350,10 +352,26 @@ export default function PlaceScreen() {
                     <Rainbow value={current[k]} size={16} onChange={(v) => responder(k, v)} />
                     {destaque && (
                       <Text className="font-body text-xs leading-[17px] text-muted">
-                        Essa resposta é a que pessoas trans mais procuram antes de sair. Se não
-                        usou o banheiro, pode pular.
+                        Essa resposta é a que pessoas trans mais procuram antes de sair.
                       </Text>
                     )}
+                    {k === "restroom" &&
+                      (current.restroom ? (
+                        <Pressable
+                          onPress={() => setDraft({ ...current, restroom: 0 })}
+                          hitSlop={8}
+                          className="self-start active:opacity-80"
+                          accessibilityRole="button"
+                        >
+                          <Text className="font-body-medium text-xs text-muted underline">
+                            Não usei o banheiro
+                          </Text>
+                        </Pressable>
+                      ) : (
+                        <Text className="font-body text-xs text-dim">
+                          Não usou? Pode deixar em branco.
+                        </Text>
+                      ))}
                   </View>
                 );
               })}
