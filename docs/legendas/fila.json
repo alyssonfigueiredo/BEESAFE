@@ -1266,7 +1266,7 @@
  {
   "id": "story-quiz-cartorio-resposta",
   "automatico": true,
-  "aprovado": false,
+  "aprovado": true,
   "quando": "2026-11-17T20:30:00-03:00",
   "tipo": "STORY",
   "midias": [
