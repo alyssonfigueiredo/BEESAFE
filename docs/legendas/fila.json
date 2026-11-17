@@ -1251,7 +1251,7 @@
  {
   "id": "story-quiz-cartorio-sem-adesivo",
   "automatico": true,
-  "aprovado": false,
+  "aprovado": true,
   "quando": "2026-11-17T20:00:00-03:00",
   "tipo": "STORY",
   "midias": [
