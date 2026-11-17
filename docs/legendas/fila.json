@@ -815,6 +815,7 @@
  {
   "id": "story-enquete-pesquisa",
   "aprovado": false,
+  "arquivado": true,
   "quando": "2026-11-04T20:00:00-03:00",
   "tipo": "STORY",
   "midias": [
