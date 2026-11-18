@@ -1260,8 +1260,19 @@
   ],
   "legenda": "",
   "primeiro_comentario": "",
-  "publicado": false,
-  "nota": "ALTERNATIVA SEM ADESIVO do story-quiz-cartorio: as opções estão escritas na arte e pede para responder no story. Dá para o robô postar (imagem pura). Aprovar esta OU a original (manual com adesivo), nunca as duas."
+  "publicado": true,
+  "nota": "ALTERNATIVA SEM ADESIVO do story-quiz-cartorio: as opções estão escritas na arte e pede para responder no story. Dá para o robô postar (imagem pura). Aprovar esta OU a original (manual com adesivo), nunca as duas.",
+  "publicado_em": "2026-11-18T03:39:24.239Z",
+  "media_id": "17886799821628347",
+  "confirmacao": {
+   "id": "17886799821628347",
+   "media_type": "IMAGE",
+   "permalink": "https://www.instagram.com/stories/appirisa/4032849668174484146",
+   "timestamp": "2026-11-18T03:39:33+0000",
+   "na_lista_de_stories_ativos": true
+  },
+  "confirmado": true,
+  "confirmado_em": "2026-11-18T03:39:36.671Z"
  },
  {
   "id": "story-quiz-cartorio-resposta",
@@ -1274,8 +1285,19 @@
   ],
   "legenda": "",
   "primeiro_comentario": "",
-  "publicado": false,
-  "nota": "A resposta do quiz (2018, STF). Imagem pura, sem adesivo: dá para o robô postar. Vai logo depois do quiz, qualquer que seja a versão aprovada."
+  "publicado": true,
+  "nota": "A resposta do quiz (2018, STF). Imagem pura, sem adesivo: dá para o robô postar. Vai logo depois do quiz, qualquer que seja a versão aprovada.",
+  "publicado_em": "2026-11-18T03:39:24.239Z",
+  "media_id": "18139549390639580",
+  "confirmacao": {
+   "id": "18139549390639580",
+   "media_type": "IMAGE",
+   "permalink": "https://www.instagram.com/stories/appirisa/4032849773870956129",
+   "timestamp": "2026-11-18T03:39:44+0000",
+   "na_lista_de_stories_ativos": true
+  },
+  "confirmado": true,
+  "confirmado_em": "2026-11-18T03:39:46.841Z"
  },
  {
   "id": "reels-nome-certo",
