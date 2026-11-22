@@ -962,9 +962,19 @@
   ],
   "legenda": "A checklist completa.\nO último item é o que mais importa.\nO link está na bio.\n\n#Irisa #LGBTQIA #Orgulho #AppLGBT #Role",
   "primeiro_comentario": "appirisa.com.br",
-  "publicado": false,
+  "publicado": true,
   "nota": "Adiado de 14/11 para 21/11 a pedido do Leandro (14/11), para a semana ficar só na temática da Visibilidade Trans. Passou de 21/11 para 22/11 às 19h para dar o sábado ao carrossel Eu em novembro.",
-  "capa": "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/capas/reels-checklist.jpg"
+  "capa": "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/capas/reels-checklist.jpg",
+  "publicado_em": "2026-11-22T22:25:57.965Z",
+  "media_id": "17919386127497467",
+  "confirmacao": {
+   "id": "17919386127497467",
+   "media_type": "VIDEO",
+   "permalink": "https://www.instagram.com/reel/DgD3-iVgkZx/",
+   "timestamp": "2026-11-22T22:26:39+0000"
+  },
+  "confirmado": true,
+  "confirmado_em": "2026-11-22T22:26:50.146Z"
  },
  {
   "id": "story-caixinha-bolsa",
