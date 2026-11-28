@@ -872,8 +872,18 @@
   ],
   "legenda": "Todo grupo tem essa conversa na sexta.\nManda pro seu e resolve antes.\nO link está na bio.\n\n#Irisa #LGBTQIA #Orgulho #AppLGBT #Sextou",
   "primeiro_comentario": "appirisa.com.br",
-  "publicado": false,
-  "capa": "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/capas/reels-grupo-sexta.jpg"
+  "publicado": true,
+  "capa": "https://raw.githubusercontent.com/alyssonfigueiredo/BEESAFE/claude/ecstatic-darwin-cmf7sw/docs/capas/reels-grupo-sexta.jpg",
+  "publicado_em": "2026-11-28T01:53:54.044Z",
+  "media_id": "17971273143209360",
+  "confirmacao": {
+   "id": "17971273143209360",
+   "media_type": "VIDEO",
+   "permalink": "https://www.instagram.com/reel/DgRHu98B-3t/",
+   "timestamp": "2026-11-28T01:54:25+0000"
+  },
+  "confirmado": true,
+  "confirmado_em": "2026-11-28T01:54:34.406Z"
  },
  {
   "id": "story-enquete-role",
